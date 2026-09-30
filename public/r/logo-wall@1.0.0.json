@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "logo-wall",
+  "title": "LogoWall",
+  "description": "Proof right under the hero. Six or twelve customer names, one outline link to their stories.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/button.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/logo-wall/logo-wall.tsx",
+      "content": "import { Button } from '@/components/ds/ui/button';\nimport { Section } from '@/components/ds/ui/section';\n\nexport type LogoWallProps = { title: string; customers: string[]; cta?: { label: string; href: string } };\n\nexport function LogoWall({ title, customers, cta }: LogoWallProps) {\n\treturn (\n\t\t<Section block=\"logo-wall\">\n\t\t\t<div className=\"flex flex-col items-center gap-10\">\n\t\t\t\t<h2 className=\"text-center text-body-lg text-fg-muted\">{title}</h2>\n\t\t\t\t<ul className=\"grid w-full grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 lg:grid-cols-6\">\n\t\t\t\t\t{customers.slice(0, 12).map((name) => (\n\t\t\t\t\t\t<li key={name} className=\"text-center text-h5 text-fg-subtle\">{name}</li>\n\t\t\t\t\t))}\n\t\t\t\t</ul>\n\t\t\t\t{cta ? <Button variant=\"secondary\" href={cta.href}>{cta.label}</Button> : null}\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/logo-wall.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/logo-wall"
+  },
+  "type": "registry:block"
+}

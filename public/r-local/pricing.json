@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pricing",
+  "title": "PricingTemplate",
+  "description": "The pricing page. Plans, credit costs as a table, the FAQ that removes doubt, one close.",
+  "files": [
+    {
+      "path": "registry/templates/pricing/pricing.tsx",
+      "content": "import type { ReactNode } from 'react';\n\nexport type PricingTemplateProps = {\n\tnav?: ReactNode;\n\thero?: ReactNode;\n\tplans?: ReactNode;\n\tcosts?: ReactNode;\n\tfaq?: ReactNode;\n\tcta?: ReactNode;\n\tfooter?: ReactNode;\n};\n\nexport function PricingTemplate({ nav, hero, plans, costs, faq, cta, footer }: PricingTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"pricing\" className=\"min-h-screen bg-surface font-sans text-fg\">\n\t\t\t{nav}\n\t\t\t<main>\n\t\t\t\t{hero}\n\t\t\t\t{plans}\n\t\t\t\t{costs}\n\t\t\t\t{faq}\n\t\t\t\t{cta}\n\t\t\t</main>\n\t\t\t{footer}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/templates/pricing.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "template",
+    "id": "templates/pricing"
+  },
+  "type": "registry:block"
+}

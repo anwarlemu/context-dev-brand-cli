@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "table",
+  "title": "Table",
+  "description": "Data that people compare across rows: credit costs, plan limits, benchmark numbers. Tables, not cards, for data.",
+  "files": [
+    {
+      "path": "registry/ui/table/table.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type TableProps = { caption: string; columns: { key: string; label: string; align?: 'left' | 'right' }[]; rows: Record<string, ReactNode>[] };\n\nexport function Table({ caption, columns, rows }: TableProps) {\n\treturn (\n\t\t<div className=\"overflow-x-auto rounded-window bg-tint p-1\">\n\t\t\t<table className=\"w-full border-collapse rounded-card bg-surface text-body-sm\">\n\t\t\t\t<caption className=\"sr-only\">{caption}</caption>\n\t\t\t\t<thead>\n\t\t\t\t\t<tr className=\"border-b border-line\">\n\t\t\t\t\t\t{columns.map((c) => (\n\t\t\t\t\t\t\t<th key={c.key} scope=\"col\" className={cx('px-4 py-3 font-medium text-fg-muted', c.align === 'right' ? 'text-right' : 'text-left')}>{c.label}</th>\n\t\t\t\t\t\t))}\n\t\t\t\t\t</tr>\n\t\t\t\t</thead>\n\t\t\t\t<tbody>\n\t\t\t\t\t{rows.map((row, i) => (\n\t\t\t\t\t\t<tr key={i} className=\"border-b border-line-subtle last:border-b-0\">\n\t\t\t\t\t\t\t{columns.map((c) => (\n\t\t\t\t\t\t\t\t<td key={c.key} className={cx('px-4 py-3 text-fg tabular-nums', c.align === 'right' ? 'text-right' : 'text-left')}>{row[c.key]}</td>\n\t\t\t\t\t\t\t))}\n\t\t\t\t\t\t</tr>\n\t\t\t\t\t))}\n\t\t\t\t</tbody>\n\t\t\t</table>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/table.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/table"
+  },
+  "type": "registry:ui"
+}

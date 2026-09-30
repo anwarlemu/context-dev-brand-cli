@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "stat",
+  "title": "Stat",
+  "description": "One large, provable figure in Doto with a one-line label (\"94%\" of pages returned as clean content).",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/stat/stat.tsx",
+      "content": "import { cx } from '@/components/ds/ui/cx';\n\nexport function Stat({ value, label, tone = 'default' }: { value: string; label: string; tone?: 'default' | 'on-brand' }) {\n\treturn (\n\t\t<div className=\"flex flex-col gap-3\">\n\t\t\t<span className={cx('font-data text-stat', tone === 'default' ? 'text-brand' : 'text-on-brand')}>{value}</span>\n\t\t\t<span className={cx('max-w-xs text-body-lg', tone === 'default' ? 'text-fg-muted' : 'text-on-brand')}>{label}</span>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/stat.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/stat"
+  },
+  "type": "registry:ui"
+}

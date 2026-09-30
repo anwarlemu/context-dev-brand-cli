@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pricing-table",
+  "title": "PricingTable",
+  "description": "The plan comparison on the pricing page. One column per plan, price, credits, limits, one action each.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/badge.json",
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/pricing-table/pricing-table.tsx",
+      "content": "import { Badge } from '@/components/ds/ui/badge';\nimport { Button } from '@/components/ds/ui/button';\nimport { cx } from '@/components/ds/ui/cx';\nimport { Section } from '@/components/ds/ui/section';\n\nexport type PricingPlan = {\n\tid: string;\n\tname: string;\n\tfor: string;\n\tprice: string;\n\tperiod?: string;\n\taction: { label: string; href: string };\n\tfeatures: string[];\n};\n\nexport type PricingTableProps = { variant?: 'monthly'; plans: PricingPlan[]; recommended?: string; note?: string };\n\nexport function PricingTable({ plans, recommended, note }: PricingTableProps) {\n\treturn (\n\t\t<Section block=\"pricing-table\">\n\t\t\t<div className=\"flex flex-col gap-6\">\n\t\t\t\t<div className=\"rounded-window bg-tint p-1\">\n\t\t\t\t\t<div className=\"grid overflow-hidden rounded-card bg-surface md:grid-cols-3 lg:grid-cols-6\">\n\t\t\t\t\t\t{plans.map((plan) => {\n\t\t\t\t\t\t\tconst featured = plan.id === recommended;\n\t\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t\t<div key={plan.id} className={cx('flex flex-col gap-4 border-b border-line p-5 lg:border-b-0 lg:border-r lg:last:border-r-0', featured && 'bg-tint')}>\n\t\t\t\t\t\t\t\t\t<div className=\"flex items-center justify-between gap-2\">\n\t\t\t\t\t\t\t\t\t\t<h3 className=\"text-h5\">{plan.name}</h3>\n\t\t\t\t\t\t\t\t\t\t{featured ? <Badge tone=\"brand\">Popular</Badge> : null}\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<p className=\"min-h-10 text-body-sm text-fg-muted\">{plan.for}</p>\n\t\t\t\t\t\t\t\t\t<p className=\"flex items-baseline gap-1\">\n\t\t\t\t\t\t\t\t\t\t<span className=\"text-h3\">{plan.price}</span>\n\t\t\t\t\t\t\t\t\t\t{plan.period ? <span className=\"text-body-sm text-fg-muted\">{plan.period}</span> : null}\n\t\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t\t<Button variant={featured ? 'primary' : 'secondary'} size=\"small\" href={plan.action.href}>{plan.action.label}</Button>\n\t\t\t\t\t\t\t\t\t<ul className=\"flex flex-col gap-2 border-t border-line pt-4\">\n\t\t\t\t\t\t\t\t\t\t{plan.features.map((feature) => (\n\t\t\t\t\t\t\t\t\t\t\t<li key={feature} className=\"flex items-start gap-2 text-body-sm text-fg\">\n\t\t\t\t\t\t\t\t\t\t\t\t<span aria-hidden className=\"mt-1.5 size-2 shrink-0 rounded-full bg-brand\" />\n\t\t\t\t\t\t\t\t\t\t\t\t{feature}\n\t\t\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t\t\t))}\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t);\n\t\t\t\t\t\t})}\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t{note ? <p className=\"text-body-sm text-fg-muted\">{note}</p> : null}\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/pricing-table.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/pricing-table"
+  },
+  "type": "registry:block"
+}

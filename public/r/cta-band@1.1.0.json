@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cta-band",
+  "title": "CtaBand",
+  "description": "The closing section of every page. One headline, one line of sub, the free offer and one outline action.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/credits-dot-number.json",
+    "https://context-ds.vercel.app/r/hero-dot-field.json",
+    "https://context-ds.vercel.app/r/dot-engine.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/cta-band/cta-band.tsx",
+      "content": "import { Button } from '@/components/ds/ui/button';\nimport { CreditsDotNumber } from '@/components/ds/ui/credits-dot-number';\nimport { HeroDotField } from '@/components/ds/ui/hero-dot-field';\nimport { HERO_PATTERN_HOLE_ATTRIBUTE } from '@/components/ds/ui/hero-pattern-hole';\nimport { Section } from '@/components/ds/ui/section';\nimport { Highlighted } from '@/components/ds/ui/section-heading';\n\nexport type CtaBandProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub: string;\n\toffer: { value: string; label: string; note: string };\n\tcta: { label: string; href: string };\n\tdocs?: { label: string; href: string };\n};\n\nconst hole = (kind: 'text' | 'box') => ({ [HERO_PATTERN_HOLE_ATTRIBUTE]: kind });\nconst CORNERS = ['left-0 top-0', 'right-0 top-0', 'left-0 bottom-0', 'right-0 bottom-0'];\n\nexport function CtaBand({ title, highlight, sub, offer, cta, docs }: CtaBandProps) {\n\treturn (\n\t\t<Section block=\"cta-band\">\n\t\t\t<div className=\"rounded-window bg-tint p-1\">\n\t\t\t\t<div className=\"relative grid gap-8 overflow-hidden rounded-card bg-surface p-6 md:p-8 lg:grid-cols-5 lg:items-center lg:gap-12 lg:p-12\">\n\t\t\t\t\t<HeroDotField className=\"text-brand\" />\n\t\t\t\t\t{CORNERS.map((corner) => (\n\t\t\t\t\t\t<span key={corner} aria-hidden {...hole('box')} className={`absolute size-1 ${corner}`} />\n\t\t\t\t\t))}\n\t\t\t\t\t<div className=\"relative flex flex-col gap-4 lg:col-span-3\">\n\t\t\t\t\t\t<h2 className=\"text-h3 text-balance md:text-h2\">\n\t\t\t\t\t\t\t<span {...hole('text')}><Highlighted text={title} highlight={highlight} className=\"text-brand\" /></span>\n\t\t\t\t\t\t</h2>\n\t\t\t\t\t\t<p className=\"max-w-md text-body-lg text-fg-muted\">\n\t\t\t\t\t\t\t<span {...hole('text')}>{sub}</span>\n\t\t\t\t\t\t</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div className=\"relative lg:col-span-2\">\n\t\t\t\t\t\t<div className=\"rounded-window bg-tint p-1\">\n\t\t\t\t\t\t\t<div {...hole('box')} className=\"flex flex-col items-center gap-4 rounded-card bg-surface p-6\">\n\t\t\t\t\t\t\t\t<p className=\"flex w-full flex-col items-center text-center\">\n\t\t\t\t\t\t\t\t\t<span className=\"sr-only\">{offer.value}</span>\n\t\t\t\t\t\t\t\t\t<CreditsDotNumber value={offer.value} className=\"w-full max-w-xs\" />\n\t\t\t\t\t\t\t\t\t<span className=\"mt-2 text-h5\">{offer.label}</span>\n\t\t\t\t\t\t\t\t</p>\n\t\t\t\t\t\t\t\t<p className=\"text-center text-body-sm text-fg-muted\">{offer.note}</p>\n\t\t\t\t\t\t\t\t<Button variant=\"secondary\" href={cta.href}>{cta.label}</Button>\n\t\t\t\t\t\t\t\t{docs ? <a href={docs.href} className=\"text-center text-body-sm text-fg-muted hover:text-brand\">{docs.label}</a> : null}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/cta-band.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/cta-band"
+  },
+  "type": "registry:block"
+}

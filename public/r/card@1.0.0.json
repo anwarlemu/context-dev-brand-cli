@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "card",
+  "title": "Card",
+  "description": "The ringed card. White card inside a blue 10 ring, or a blue card inside a blue 80 ring.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/card/card.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type CardProps = { tone?: 'white' | 'blue'; padding?: 'default' | 'none'; children: ReactNode };\n\nexport function Card({ tone = 'white', padding = 'default', children }: CardProps) {\n\treturn (\n\t\t<div className={cx('rounded-window p-1', tone === 'white' ? 'bg-tint' : 'bg-blue-80')}>\n\t\t\t<div className={cx('flex h-full flex-col rounded-card', tone === 'white' ? 'bg-surface text-fg' : 'bg-brand text-on-brand', padding === 'default' && 'gap-4 p-6')}>{children}</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/card.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/card"
+  },
+  "type": "registry:ui"
+}

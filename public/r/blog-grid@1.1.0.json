@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "blog-grid",
+  "title": "BlogGrid",
+  "description": "The latest six posts on a black band, cards alternating white and blue, each with animated dot cover art.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/cx.json",
+    "https://context-ds.vercel.app/r/blog-cover.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/blog-grid/blog-grid.tsx",
+      "content": "import { assignBlogCoverMotifs, BlogCoverArt, blogCardSurface, type BlogCoverMotif } from '@/components/ds/ui/blog-cover-art';\nimport { cx } from '@/components/ds/ui/cx';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type BlogGridProps = {\n\ttitle: string;\n\thighlight?: string;\n\tposts: { title: string; slug: string; date: string; excerpt: string; href: string; motif?: BlogCoverMotif }[];\n};\n\nexport function BlogGrid({ title, highlight, posts }: BlogGridProps) {\n\tconst shown = posts.slice(0, 6);\n\tconst motifs = assignBlogCoverMotifs(shown);\n\treturn (\n\t\t<Section block=\"blog-grid\" surface=\"black\">\n\t\t\t<div className=\"flex flex-col gap-10\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} tone=\"inverse\" />\n\t\t\t\t<div className=\"grid gap-4 md:grid-cols-3\">\n\t\t\t\t\t{shown.map((post, i) => {\n\t\t\t\t\t\tconst surface = blogCardSurface(i);\n\t\t\t\t\t\tconst paper = surface === 'paper';\n\t\t\t\t\t\treturn (\n\t\t\t\t\t\t\t<a key={post.href} href={post.href} className=\"block rounded-window focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus\">\n\t\t\t\t\t\t\t\t<article className={cx('flex h-104 flex-col overflow-hidden rounded-card', paper ? 'bg-surface text-fg' : 'bg-brand text-on-brand')}>\n\t\t\t\t\t\t\t\t\t<div className=\"relative min-h-0 flex-1 overflow-hidden\">\n\t\t\t\t\t\t\t\t\t\t<BlogCoverArt motif={post.motif ?? motifs[i]} surface={surface} />\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t<div className=\"flex flex-col gap-2 p-6\">\n\t\t\t\t\t\t\t\t\t\t<p className={cx('text-caption', paper ? 'text-fg-muted' : 'text-on-brand')}>{post.date}</p>\n\t\t\t\t\t\t\t\t\t\t<h3 className=\"line-clamp-2 text-h5\">{post.title}</h3>\n\t\t\t\t\t\t\t\t\t\t<p className={cx('line-clamp-2 text-body-sm', paper ? 'text-fg-muted' : 'text-on-brand')}>{post.excerpt}</p>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</article>\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t);\n\t\t\t\t\t})}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/blog-grid.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/blog-grid"
+  },
+  "type": "registry:block"
+}

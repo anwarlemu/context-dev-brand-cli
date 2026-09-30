@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "cx",
+  "title": "Cx",
+  "description": "Join class names. Every registry component uses it.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "registry/ui/cx/cx.ts",
+      "content": "export function cx(...parts: Array<string | false | null | undefined>) {\n\treturn parts.filter(Boolean).join(' ');\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/cx.ts"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/cx"
+  },
+  "type": "registry:ui"
+}

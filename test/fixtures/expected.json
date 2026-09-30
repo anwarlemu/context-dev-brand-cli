@@ -1,0 +1,14 @@
+{
+  "app/raw/page.tsx": "no-unregistered-section",
+  "app/structure/page.tsx": "template-structure",
+  "app/primary/page.tsx": "single-primary-action",
+  "components/raw-color.tsx": "no-raw-color",
+  "components/spacing.tsx": "no-arbitrary-spacing",
+  "components/radius.tsx": "no-off-scale-radius",
+  "components/motion.tsx": "no-off-scale-motion",
+  "components/font.tsx": "font-family-from-tokens",
+  "components/copy.tsx": "copy-rules",
+  "components/contrast.tsx": "contrast",
+  "components/variant.tsx": "variant-from-list",
+  "components/ds/ui/chip.tsx": "registry-drift"
+}

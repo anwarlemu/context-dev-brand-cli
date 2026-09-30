@@ -1,0 +1,186 @@
+{
+  "color": {
+    "black": {
+      "$type": "color",
+      "$value": "#000000",
+      "$description": "Core palette. Brand guidelines page 16"
+    },
+    "white": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "Core palette. Brand guidelines page 16"
+    },
+    "blue": {
+      "10": {
+        "$type": "color",
+        "$value": "#E9EFFD",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "20": {
+        "$type": "color",
+        "$value": "#D3E0FB",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "30": {
+        "$type": "color",
+        "$value": "#BED0F9",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "40": {
+        "$type": "color",
+        "$value": "#A8C1F7",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#92B1F5",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "60": {
+        "$type": "color",
+        "$value": "#7CA1F3",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "70": {
+        "$type": "color",
+        "$value": "#6692F1",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "80": {
+        "$type": "color",
+        "$value": "#5182EF",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      },
+      "90": {
+        "$type": "color",
+        "$value": "#3B73ED",
+        "$description": "Blue spectrum, opacity step flattened on white. Guidelines page 18"
+      }
+    },
+    "navy": {
+      "10": {
+        "$type": "color",
+        "$value": "#040A18",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "20": {
+        "$type": "color",
+        "$value": "#07142F",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "30": {
+        "$type": "color",
+        "$value": "#0B1E46",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "40": {
+        "$type": "color",
+        "$value": "#0F285E",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#123276",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "60": {
+        "$type": "color",
+        "$value": "#163B8D",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "70": {
+        "$type": "color",
+        "$value": "#1A45A4",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "80": {
+        "$type": "color",
+        "$value": "#1E4FBC",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      },
+      "90": {
+        "$type": "color",
+        "$value": "#2159D4",
+        "$description": "Blue spectrum, opacity step flattened on black. Guidelines page 18"
+      }
+    },
+    "neutral": {
+      "5": {
+        "$type": "color",
+        "$value": "#F8F8F8",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "10": {
+        "$type": "color",
+        "$value": "#E6E6E6",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "20": {
+        "$type": "color",
+        "$value": "#CCCCCC",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "30": {
+        "$type": "color",
+        "$value": "#B2B2B2",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "40": {
+        "$type": "color",
+        "$value": "#999999",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "50": {
+        "$type": "color",
+        "$value": "#808080",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "60": {
+        "$type": "color",
+        "$value": "#666666",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "70": {
+        "$type": "color",
+        "$value": "#4D4D4D",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "80": {
+        "$type": "color",
+        "$value": "#333333",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      },
+      "90": {
+        "$type": "color",
+        "$value": "#191919",
+        "$description": "Neutral spectrum, black opacity step flattened on white. Guidelines page 17"
+      }
+    },
+    "green": {
+      "700": {
+        "$type": "color",
+        "$value": "#15803D",
+        "$description": "ASSUMPTION: status colour, not in brand guidelines"
+      }
+    },
+    "amber": {
+      "700": {
+        "$type": "color",
+        "$value": "#B45309",
+        "$description": "ASSUMPTION: status colour, not in brand guidelines"
+      }
+    },
+    "red": {
+      "600": {
+        "$type": "color",
+        "$value": "#DC2626",
+        "$description": "Matches the dashboard destructive colour in brand-dev-webapp"
+      }
+    },
+    "brand": {
+      "$type": "color",
+      "$value": "#2563EB",
+      "$description": "Brand blue. Core palette, guidelines page 16"
+    }
+  }
+}

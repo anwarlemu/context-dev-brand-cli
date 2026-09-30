@@ -1,0 +1,12 @@
+
+Overrides (8), report these in your summary:
+  components/ds/ui/assets-story-scenes.ts:57  no-raw-color  ds-override: example output data, a third-party palette the story shows being extracted
+  components/ds/ui/autofill-story-scenes.ts:72  no-raw-color  ds-override: example output data, the Linear brand color the story shows being extracted
+  components/ds/ui/dot-glyph-morph.ts:41  no-raw-color  ds-override: offscreen luminance mask sampled into dot states, never painted
+  components/ds/ui/footer-watermark.tsx:286  no-raw-color  ds-override: mask luminance, never painted
+  components/ds/ui/hero-dot-field.tsx:18  no-raw-color  ds-override: mask-image luminance ramp, never painted
+  components/ds/ui/type-story-scenes.ts:40  no-raw-color  ds-override: example output data, a third-party palette shown being extracted
+  components/ds/ui/type-story-scenes.ts:41  no-raw-color  ds-override: example output data, a third-party palette shown being extracted
+  components/ds/ui/type-story-scenes.ts:42  no-raw-color  ds-override: example output data, a third-party palette shown being extracted
+
+151 files, 0 errors, 0 warnings, 21 baselined (197ms)

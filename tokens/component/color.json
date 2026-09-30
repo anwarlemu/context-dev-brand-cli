@@ -1,0 +1,92 @@
+{
+  "color": {
+    "button": {
+      "primary-bg": {
+        "$type": "color",
+        "$value": "{color.action.primary}"
+      },
+      "primary-fg": {
+        "$type": "color",
+        "$value": "{color.action.primary-fg}"
+      },
+      "primary-hover": {
+        "$type": "color",
+        "$value": "{color.action.primary-hover}"
+      },
+      "secondary-border": {
+        "$type": "color",
+        "$value": "{color.action.secondary}"
+      },
+      "secondary-fg": {
+        "$type": "color",
+        "$value": "{color.action.secondary}"
+      },
+      "on-brand-border": {
+        "$type": "color",
+        "$value": "{color.border.on-brand}"
+      },
+      "on-brand-fg": {
+        "$type": "color",
+        "$value": "{color.text.on-brand}"
+      }
+    },
+    "card": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.bg.default}"
+      },
+      "ring": {
+        "$type": "color",
+        "$value": "{color.bg.tint}"
+      },
+      "brand-bg": {
+        "$type": "color",
+        "$value": "{color.bg.brand}"
+      }
+    },
+    "chip": {
+      "border": {
+        "$type": "color",
+        "$value": "{color.border.strong}"
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{color.text.muted}"
+      }
+    },
+    "input": {
+      "border": {
+        "$type": "color",
+        "$value": "{color.border.default}"
+      },
+      "bg": {
+        "$type": "color",
+        "$value": "{color.bg.default}"
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{color.text.default}"
+      }
+    },
+    "code": {
+      "bg": {
+        "$type": "color",
+        "$value": "{color.bg.inverse}"
+      },
+      "fg": {
+        "$type": "color",
+        "$value": "{color.text.inverse}"
+      }
+    },
+    "pattern": {
+      "dot": {
+        "$type": "color",
+        "$value": "{color.bg.brand}"
+      },
+      "dot-on-brand": {
+        "$type": "color",
+        "$value": "{color.text.on-brand}"
+      }
+    }
+  }
+}

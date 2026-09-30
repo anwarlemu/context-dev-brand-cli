@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "related-products",
+  "title": "RelatedProducts",
+  "description": "Two neighbouring APIs at the end of a product page, as linked cards.",
+  "files": [
+    {
+      "path": "registry/blocks/related-products/related-products.tsx",
+      "content": "import { Card } from '@/components/ds/ui/card';\nimport { Section } from '@/components/ds/ui/section';\n\nexport type RelatedProductsProps = { items: { title: string; text: string; href: string }[] };\n\nexport function RelatedProducts({ items }: RelatedProductsProps) {\n\treturn (\n\t\t<Section block=\"related-products\" spacing=\"tight\">\n\t\t\t<div className=\"grid gap-4 md:grid-cols-2\">\n\t\t\t\t{items.slice(0, 2).map((item) => (\n\t\t\t\t\t<a key={item.href} href={item.href} className=\"group block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus\">\n\t\t\t\t\t\t<Card>\n\t\t\t\t\t\t\t<div className=\"flex items-center justify-between gap-4\">\n\t\t\t\t\t\t\t\t<h3 className=\"text-h5 transition-colors duration-150 ease-out group-hover:text-brand\">{item.title}</h3>\n\t\t\t\t\t\t\t\t<span aria-hidden className=\"size-2.5 rounded-full border border-brand group-hover:bg-brand\" />\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<p className=\"text-body text-fg-muted\">{item.text}</p>\n\t\t\t\t\t\t</Card>\n\t\t\t\t\t</a>\n\t\t\t\t))}\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/related-products.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/related-products"
+  },
+  "type": "registry:block"
+}

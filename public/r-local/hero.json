@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "hero",
+  "title": "Hero",
+  "description": "Top of a marketing page. One message, one filled primary action, one outline secondary.",
+  "files": [
+    {
+      "path": "registry/blocks/hero/hero.tsx",
+      "content": "import { Button } from '@/components/ds/ui/button';\nimport { CodeWindow } from '@/components/ds/ui/code-window';\nimport { cx } from '@/components/ds/ui/cx';\nimport { HeroDotField } from '@/components/ds/ui/hero-dot-field';\nimport { HERO_PATTERN_HOLE_ATTRIBUTE } from '@/components/ds/ui/hero-pattern-hole';\nimport { HeroStatMorphs } from '@/components/ds/ui/hero-stat-morphs';\nimport { RingBackdrop } from '@/components/ds/ui/ring-backdrop';\nimport { Section } from '@/components/ds/ui/section';\nimport { Highlighted } from '@/components/ds/ui/section-heading';\n\nexport type HeroProps = {\n\tvariant?: 'centered' | 'product';\n\teyebrow?: string;\n\theadline: string;\n\thighlight?: string;\n\tsub: string;\n\tprimaryCta: { label: string; href: string };\n\tsecondaryCta?: { label: string; href: string };\n\tmedia?: { type: 'agent-setup'; prompt: string } | { type: 'code'; title: string; code: string } | { type: 'none' };\n\tchecks?: string[];\n\tstats?: boolean;\n};\n\nconst hole = (kind: 'text' | 'box' | 'snug-box') => ({ [HERO_PATTERN_HOLE_ATTRIBUTE]: kind });\n\nexport function Hero({ variant = 'centered', eyebrow, headline, highlight, sub, primaryCta, secondaryCta, media = { type: 'none' }, checks = [], stats = false }: HeroProps) {\n\tconst centered = variant === 'centered';\n\treturn (\n\t\t<Section block=\"hero\">\n\t\t\t<div className={cx('relative isolate flex flex-col gap-10', centered ? 'items-center py-8 text-center' : 'md:flex-row md:items-center md:justify-between')}>\n\t\t\t\t{centered ? <HeroDotField fine lively logoMark className=\"-z-10 text-brand\" /> : null}\n\t\t\t\t{centered && stats ? <HeroStatMorphs /> : null}\n\t\t\t\t<div className={cx('relative flex max-w-3xl flex-col gap-6', centered && 'items-center')}>\n\t\t\t\t\t{eyebrow ? <p {...hole('text')} className=\"text-body-sm text-fg-muted\">{eyebrow}</p> : null}\n\t\t\t\t\t<h1 {...hole('text')} className=\"text-h2 text-balance md:text-h1 lg:text-display\">\n\t\t\t\t\t\t<Highlighted text={headline} highlight={highlight} className=\"text-brand\" />\n\t\t\t\t\t</h1>\n\t\t\t\t\t<p {...hole('text')} className=\"max-w-xl text-body-lg text-fg-muted text-pretty\">{sub}</p>\n\t\t\t\t\t<div {...hole('snug-box')} className=\"flex flex-wrap items-center gap-3\">\n\t\t\t\t\t\t<Button variant=\"primary\" href={primaryCta.href}>{primaryCta.label}</Button>\n\t\t\t\t\t\t{secondaryCta ? <Button variant=\"secondary\" href={secondaryCta.href}>{secondaryCta.label}</Button> : null}\n\t\t\t\t\t</div>\n\t\t\t\t\t{checks.length ? (\n\t\t\t\t\t\t<ul {...hole('snug-box')} className=\"flex flex-wrap gap-x-6 gap-y-2 text-body-sm text-fg-muted\">\n\t\t\t\t\t\t\t{checks.slice(0, 3).map((check) => (\n\t\t\t\t\t\t\t\t<li key={check} className=\"flex items-center gap-2\"><span aria-hidden className=\"size-2 rounded-full bg-brand\" />{check}</li>\n\t\t\t\t\t\t\t))}\n\t\t\t\t\t\t</ul>\n\t\t\t\t\t) : null}\n\t\t\t\t</div>\n\t\t\t\t{media.type !== 'none' ? (\n\t\t\t\t\t<div {...hole('box')} className={cx('relative w-full', centered ? 'max-w-2xl' : 'md:max-w-md')}>\n\t\t\t\t\t\t<div className=\"relative rounded-window bg-brand p-3\">\n\t\t\t\t\t\t\t<RingBackdrop color=\"var(--ds-color-white)\" opacity={0.22} className=\"inset-1 rounded-window\" />\n\t\t\t\t\t\t\t<div className=\"relative\">\n\t\t\t\t\t\t\t\t{media.type === 'agent-setup' ? <CodeWindow title=\"agent setup\" code={media.prompt} tone=\"light\" /> : <CodeWindow title={media.title} code={media.code} tone=\"dark\" />}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t) : null}\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/hero.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/hero"
+  },
+  "type": "registry:block"
+}

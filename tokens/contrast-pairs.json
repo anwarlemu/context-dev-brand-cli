@@ -1,0 +1,126 @@
+{
+  "$description": "Every semantic foreground and background pair the system allows. use=text needs 4.5:1, use=large (18.66px+ at 500, 24px+ at 400) and use=ui (icons, borders, focus) need 3:1. The token build fails if any pair is under its minimum. The contrast check rule rejects pairs not listed here.",
+  "pairs": [
+    {
+      "fg": "text.default",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.muted",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.subtle",
+      "bg": "bg.default",
+      "min": 3,
+      "use": "large"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.default",
+      "bg": "bg.subtle",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.muted",
+      "bg": "bg.subtle",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "bg.subtle",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.default",
+      "bg": "bg.tint",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "bg.tint",
+      "min": 3,
+      "use": "large",
+      "note": "Blue on blue 10 is 4.49:1, a hair under AA for body text. Headings and large labels only."
+    },
+    {
+      "fg": "text.on-brand",
+      "bg": "bg.brand",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.inverse",
+      "bg": "bg.inverse",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "text.brand",
+      "bg": "bg.inverse",
+      "min": 3,
+      "use": "large"
+    },
+    {
+      "fg": "action.primary-fg",
+      "bg": "action.primary",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "action.primary-fg",
+      "bg": "action.primary-hover",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "action.secondary",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "status.success",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "status.warning",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "status.danger",
+      "bg": "bg.default",
+      "min": 4.5,
+      "use": "text"
+    },
+    {
+      "fg": "focus.ring",
+      "bg": "bg.default",
+      "min": 3,
+      "use": "ui"
+    },
+    {
+      "fg": "border.on-brand",
+      "bg": "bg.brand",
+      "min": 3,
+      "use": "ui"
+    }
+  ]
+}

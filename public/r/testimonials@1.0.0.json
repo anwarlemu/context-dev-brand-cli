@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "testimonials",
+  "title": "Testimonials",
+  "description": "Three short customer quotes with name, role and a link to the case study.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/card.json",
+    "https://context-ds.vercel.app/r/button.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/testimonials/testimonials.tsx",
+      "content": "import { Button } from '@/components/ds/ui/button';\nimport { Card } from '@/components/ds/ui/card';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type TestimonialsProps = {\n\ttitle: string;\n\thighlight?: string;\n\tquotes: { quote: string; name: string; role: string; href?: string }[];\n};\n\nexport function Testimonials({ title, highlight, quotes }: TestimonialsProps) {\n\treturn (\n\t\t<Section block=\"testimonials\">\n\t\t\t<div className=\"flex flex-col gap-12\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} />\n\t\t\t\t<div className=\"grid gap-4 md:grid-cols-3\">\n\t\t\t\t\t{quotes.slice(0, 3).map((q) => (\n\t\t\t\t\t\t<Card key={q.name}>\n\t\t\t\t\t\t\t<blockquote className=\"text-body text-fg\">{q.quote}</blockquote>\n\t\t\t\t\t\t\t<p className=\"text-body-sm text-fg-muted\">{q.name}, {q.role}</p>\n\t\t\t\t\t\t\t{q.href ? <div className=\"mt-auto\"><Button variant=\"secondary\" size=\"small\" href={q.href}>Read the case study</Button></div> : null}\n\t\t\t\t\t\t</Card>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/testimonials.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/testimonials"
+  },
+  "type": "registry:block"
+}

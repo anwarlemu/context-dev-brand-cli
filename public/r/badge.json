@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "badge",
+  "title": "Badge",
+  "description": "A one or two word status next to a title (\"Recommended\", \"Beta\").",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/badge/badge.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst TONES = { brand: 'bg-tint text-brand', neutral: 'bg-surface-subtle text-fg-muted', 'on-brand': 'bg-surface text-brand', success: 'bg-surface-subtle text-success' } as const;\n\nexport function Badge({ tone = 'brand', children }: { tone?: keyof typeof TONES; children: ReactNode }) {\n\treturn <span className={cx('inline-flex items-center gap-1.5 rounded-pill px-2.5 py-0.5 text-caption font-medium', TONES[tone])}>{children}</span>;\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/badge.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/badge"
+  },
+  "type": "registry:ui"
+}

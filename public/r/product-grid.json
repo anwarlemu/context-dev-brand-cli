@@ -1,0 +1,31 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "product-grid",
+  "title": "ProductGrid",
+  "description": "The four core APIs as a 2x2 grid of ringed cards, plus a row of links to the rest of the API.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/card.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/chip.json",
+    "https://context-ds.vercel.app/r/dot-story.json",
+    "https://context-ds.vercel.app/r/dot-engine.json",
+    "https://context-ds.vercel.app/r/blog-cover.json",
+    "https://context-ds.vercel.app/r/ring-backdrop.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/product-grid/product-grid.tsx",
+      "content": "import { backdropStyle } from '@/components/ds/ui/blog-cover-art';\nimport { Button } from '@/components/ds/ui/button';\nimport { Card } from '@/components/ds/ui/card';\nimport { Chip } from '@/components/ds/ui/chip';\nimport { DotScene, type DotSceneName } from '@/components/ds/ui/dot-scene';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type ProductGridProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\tproducts: { name: string; href: string; description: string; tags: string[]; scene: DotSceneName }[];\n\tmore?: { label: string; href: string }[];\n};\n\nexport function ProductGrid({ title, highlight, sub, products, more = [] }: ProductGridProps) {\n\treturn (\n\t\t<Section block=\"product-grid\">\n\t\t\t<div className=\"flex flex-col gap-12\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} sub={sub} />\n\t\t\t\t<div className=\"grid gap-4 md:grid-cols-2\">\n\t\t\t\t\t{products.slice(0, 4).map((p) => (\n\t\t\t\t\t\t<Card key={p.name}>\n\t\t\t\t\t\t\t<div className=\"flex items-start justify-between gap-4\">\n\t\t\t\t\t\t\t\t<h3 className=\"text-h4\">{p.name}</h3>\n\t\t\t\t\t\t\t\t<Button variant=\"secondary\" size=\"small\" href={p.href}>Explore</Button>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<p className=\"text-body text-fg-muted\">{p.description}</p>\n\t\t\t\t\t\t\t<div className=\"flex flex-wrap gap-2\">\n\t\t\t\t\t\t\t\t{p.tags.slice(0, 3).map((tag) => (\n\t\t\t\t\t\t\t\t\t<Chip key={tag}>{tag}</Chip>\n\t\t\t\t\t\t\t\t))}\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div className=\"relative mt-auto overflow-hidden rounded-card border border-line p-6\">\n\t\t\t\t\t\t\t\t<div aria-hidden className=\"absolute inset-2\" style={backdropStyle('paper')} />\n\t\t\t\t\t\t\t\t<DotScene variant={p.scene} className=\"relative mx-auto w-full max-w-sm\" />\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</Card>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t\t{more.length ? (\n\t\t\t\t\t<div className=\"flex flex-wrap items-center gap-2\">\n\t\t\t\t\t\t<span className=\"text-body-sm text-fg-muted\">Also in the API</span>\n\t\t\t\t\t\t{more.map((m) => (\n\t\t\t\t\t\t\t<Chip key={m.label} href={m.href}>{m.label}</Chip>\n\t\t\t\t\t\t))}\n\t\t\t\t\t</div>\n\t\t\t\t) : null}\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/product-grid.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/product-grid"
+  },
+  "type": "registry:block"
+}

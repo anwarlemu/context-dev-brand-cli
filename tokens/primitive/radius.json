@@ -1,0 +1,27 @@
+{
+  "radius": {
+    "none": {
+      "$type": "dimension",
+      "$value": "0px"
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "card": {
+      "$type": "dimension",
+      "$value": "8px",
+      "$description": "Cards and sections. Brand guidelines and site radius-brand-card"
+    },
+    "window": {
+      "$type": "dimension",
+      "$value": "12px",
+      "$description": "Code windows and ringed panels"
+    },
+    "pill": {
+      "$type": "dimension",
+      "$value": "9999px",
+      "$description": "Buttons and chips. Figma corner radius 88 on a 41px button"
+    }
+  }
+}

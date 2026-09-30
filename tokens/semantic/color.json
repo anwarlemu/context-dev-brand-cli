@@ -1,0 +1,113 @@
+{
+  "color": {
+    "bg": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.white}"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.neutral.5}"
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.brand}"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.black}"
+      },
+      "tint": {
+        "$type": "color",
+        "$value": "{color.blue.10}"
+      }
+    },
+    "text": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.black}"
+      },
+      "muted": {
+        "$type": "color",
+        "$value": "{color.neutral.70}"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.neutral.50}",
+        "$description": "Large text and decoration only. 3.95:1 on white"
+      },
+      "inverse": {
+        "$type": "color",
+        "$value": "{color.white}"
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.brand}"
+      },
+      "on-brand": {
+        "$type": "color",
+        "$value": "{color.white}"
+      }
+    },
+    "border": {
+      "default": {
+        "$type": "color",
+        "$value": "{color.neutral.10}"
+      },
+      "subtle": {
+        "$type": "color",
+        "$value": "{color.neutral.5}"
+      },
+      "strong": {
+        "$type": "color",
+        "$value": "{color.neutral.20}"
+      },
+      "brand": {
+        "$type": "color",
+        "$value": "{color.brand}"
+      },
+      "on-brand": {
+        "$type": "color",
+        "$value": "{color.white}"
+      }
+    },
+    "action": {
+      "primary": {
+        "$type": "color",
+        "$value": "{color.black}"
+      },
+      "primary-fg": {
+        "$type": "color",
+        "$value": "{color.white}"
+      },
+      "primary-hover": {
+        "$type": "color",
+        "$value": "{color.neutral.90}"
+      },
+      "secondary": {
+        "$type": "color",
+        "$value": "{color.brand}"
+      }
+    },
+    "status": {
+      "success": {
+        "$type": "color",
+        "$value": "{color.green.700}"
+      },
+      "warning": {
+        "$type": "color",
+        "$value": "{color.amber.700}"
+      },
+      "danger": {
+        "$type": "color",
+        "$value": "{color.red.600}"
+      }
+    },
+    "focus": {
+      "ring": {
+        "$type": "color",
+        "$value": "{color.brand}"
+      }
+    }
+  }
+}

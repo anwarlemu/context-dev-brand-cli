@@ -1,0 +1,1919 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "context-dev",
+  "homepage": "https://context-ds.vercel.app",
+  "items": [
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "title": "Accordion",
+      "description": "FAQ questions and answers. Native details and summary, ringed like cards.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/accordion/accordion.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/accordion.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/accordion"
+      }
+    },
+    {
+      "name": "announcement-dot-strip",
+      "type": "registry:ui",
+      "title": "AnnouncementDotStrip",
+      "description": "The animated dot strip behind the announcement bar.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/announcement-dot-strip/announcement-dot-strip.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/announcement-dot-strip.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/announcement-dot-strip"
+      }
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "title": "Badge",
+      "description": "A one or two word status next to a title (\"Recommended\", \"Beta\").",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/badge/badge.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/badge.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/badge"
+      }
+    },
+    {
+      "name": "blog-cover",
+      "type": "registry:ui",
+      "title": "BlogCoverArt",
+      "description": "Animated dot cover art for a post card. Six motifs, on paper (white) or blue.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/ring-backdrop.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/blog-cover/blog-cover-art.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/blog-cover-art.tsx"
+        },
+        {
+          "path": "registry/ui/blog-cover/blog-cover-dot-shader.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/blog-cover-dot-shader.ts"
+        },
+        {
+          "path": "registry/ui/blog-cover/blog-cover-morph-engine.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/blog-cover-morph-engine.ts"
+        },
+        {
+          "path": "registry/ui/blog-cover/blog-cover-morph.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/blog-cover-morph.tsx"
+        },
+        {
+          "path": "registry/ui/blog-cover/blog-cover-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/blog-cover-scenes.ts"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/agent-providers/claude.svg",
+          "type": "registry:file",
+          "target": "public/agent-providers/claude.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/agent-providers/cursor.svg",
+          "type": "registry:file",
+          "target": "public/agent-providers/cursor.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/blocked-halo.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/blocked-halo.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/blocked.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/blocked.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/extract-halo.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/extract-halo.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/extract.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/extract.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/images-halo.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/images-halo.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/images.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/images.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/integration-halo.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/integration-halo.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/integration.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/integration.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/pages-halo.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/pages-halo.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/pages.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/pages.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/trends-halo.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/trends-halo.svg"
+        },
+        {
+          "path": "registry/ui/blog-cover/public/blog-covers/trends.svg",
+          "type": "registry:file",
+          "target": "public/blog-covers/trends.svg"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/blog-cover"
+      }
+    },
+    {
+      "name": "button",
+      "type": "registry:ui",
+      "title": "Button",
+      "description": "Every action. Pill, 1px border, 16px label, sentence case.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/button/button.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/button.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/button"
+      }
+    },
+    {
+      "name": "card",
+      "type": "registry:ui",
+      "title": "Card",
+      "description": "The ringed card. White card inside a blue 10 ring, or a blue card inside a blue 80 ring.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/card/card.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/card.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/card"
+      }
+    },
+    {
+      "name": "checkbox",
+      "type": "registry:ui",
+      "title": "Checkbox",
+      "description": "A binary choice with a visible label. Also the check items under the hero demo (disabled, checked).",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/checkbox/checkbox.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/checkbox.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/checkbox"
+      }
+    },
+    {
+      "name": "chip",
+      "type": "registry:ui",
+      "title": "Chip",
+      "description": "Small tags under a card title (\"Fresh sources for RAG\") and \"Also in the API\" links.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/chip/chip.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/chip.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/chip"
+      }
+    },
+    {
+      "name": "code-window",
+      "type": "registry:ui",
+      "title": "CodeWindow",
+      "description": "SDK samples and the agent setup prompt. Window with three dots (first solid), title or tabs, copy.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/code-window/code-window.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/code-window.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/code-window"
+      }
+    },
+    {
+      "name": "credits-dot-number",
+      "type": "registry:ui",
+      "title": "CreditsDotNumber",
+      "description": "A figure drawn in dots that morphs into Doto, such as 1,000 free credits or a step number.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/credits-dot-number/credits-dot-number.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/credits-dot-number.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/credits-dot-number"
+      }
+    },
+    {
+      "name": "customer-logo-dots",
+      "type": "registry:ui",
+      "title": "CustomerLogoDots",
+      "description": "A customer logo sampled into the dot grid, white on a blue story card.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/customer-logo-dots/customer-logo-dots.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/customer-logo-dots.tsx"
+        },
+        {
+          "path": "registry/ui/customer-logo-dots/customer-logo-grid.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/customer-logo-grid.ts"
+        },
+        {
+          "path": "registry/ui/customer-logo-dots/customer-logo-morph.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/customer-logo-morph.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/customer-logo-dots"
+      }
+    },
+    {
+      "name": "cx",
+      "type": "registry:ui",
+      "title": "Cx",
+      "description": "Join and merge class names. A class passed in replaces the default it conflicts with. Every registry component uses it.",
+      "dependencies": [
+        "tailwind-merge@^3"
+      ],
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/cx/cx.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/cx.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "ui",
+        "id": "ui/cx"
+      }
+    },
+    {
+      "name": "dot-engine",
+      "type": "registry:ui",
+      "title": "resolveColor",
+      "description": "The shared dot animation engine: eased hollow and solid dots, liquid fusion, glyph morphs, story timing. Used by every animated dot item.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/dot-engine/dot-glyph-cells.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-glyph-cells.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-glyph-morph.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-glyph-morph.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-morph-dots.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-morph-dots.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-morph-goo.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-morph-goo.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-morph-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-morph-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-story-beats.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-story-beats.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-story-cells.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-story-cells.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/dot-svg-path.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-svg-path.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/ds-color.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/ds-color.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/hero-pattern-hole.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-pattern-hole.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/logo-dot-sampling.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/logo-dot-sampling.ts"
+        },
+        {
+          "path": "registry/ui/dot-engine/pause-when-offscreen.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/pause-when-offscreen.tsx"
+        },
+        {
+          "path": "registry/ui/dot-engine/use-hover-dot-morph.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/use-hover-dot-morph.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/dot-engine"
+      }
+    },
+    {
+      "name": "dot-grid",
+      "type": "registry:ui",
+      "title": "DotGrid",
+      "description": "Static dot drawings and simple patterns. For the animated pictures from context.dev, use dot-story.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/dot-grid/dot-grid.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-grid.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "ui",
+        "id": "ui/dot-grid"
+      }
+    },
+    {
+      "name": "dot-story",
+      "type": "registry:ui",
+      "title": "DotScene",
+      "description": "The animated dot pictures from context.dev. Each scene is a looping story drawn in the brand dot grid.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/dot-story/actions-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/actions-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/actions-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/actions-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/actions-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/actions-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/answer-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/answer-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/answer-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/answer-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/answer-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/answer-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/assets-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/assets-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/assets-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/assets-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/assets-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/assets-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/autofill-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/autofill-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/autofill-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/autofill-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/autofill-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/autofill-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/batch-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/batch-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/batch-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/batch-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/batch-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/batch-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/collect-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/collect-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/collect-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/collect-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/collect-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/collect-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/components-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/components-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/components-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/components-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/components-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/components-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/context-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/context-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/context-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/context-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/context-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/context-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/crawl-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/crawl-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/crawl-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/crawl-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/crawl-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/crawl-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/design-system-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/design-system-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/design-system-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/design-system-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/design-system-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/design-system-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/discover-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/discover-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/discover-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/discover-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/discover-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/discover-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/dot-scene.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-scene.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/dot-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/enrich-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/enrich-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/enrich-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/enrich-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/enrich-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/enrich-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/extract-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/extract-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/extract-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/extract-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/extract-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/extract-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/faq-demo-invite.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/faq-demo-invite.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/faq-demo-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/faq-demo-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/faq-demo-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/faq-demo-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/freshness-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/freshness-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/freshness-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/freshness-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/freshness-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/freshness-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/hero-circle-pattern.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-circle-pattern.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/identity-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/identity-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/identity-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/identity-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/identity-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/identity-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/metadata-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/metadata-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/metadata-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/metadata-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/metadata-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/metadata-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/output-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/output-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/output-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/output-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/output-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/output-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/question-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/question-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/question-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/question-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/question-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/question-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/rag-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/rag-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/rag-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/rag-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/rag-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/rag-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/research-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/research-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/research-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/research-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/research-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/research-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/scope-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/scope-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/scope-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/scope-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/scope-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/scope-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/scrape-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/scrape-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/scrape-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/scrape-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/scrape-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/scrape-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/search-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/search-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/search-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/search-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/search-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/search-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/setup-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/setup-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/setup-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/setup-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/setup-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/setup-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/site-map-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/site-map-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/site-map-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/site-map-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/site-map-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/site-map-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/sources-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/sources-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/sources-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/sources-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/sources-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/sources-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/spacing-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/spacing-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/spacing-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/spacing-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/spacing-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/spacing-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/story-caption.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/story-caption.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/story-stage.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/story-stage.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/structure-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/structure-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/structure-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/structure-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/structure-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/structure-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/style-guide-parts.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/style-guide-parts.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/type-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/type-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/type-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/type-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/type-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/type-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/url-list-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/url-list-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/url-list-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/url-list-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/url-list-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/url-list-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/watch-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/watch-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/watch-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/watch-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/watch-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/watch-story.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/dot-story"
+      }
+    },
+    {
+      "name": "footer-watermark",
+      "type": "registry:ui",
+      "title": "FooterWatermark",
+      "description": "The giant dotted context.dev wordmark at the bottom of the footer, with its cursor.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/footer-watermark/CursorClickIcon.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/CursorClickIcon.tsx"
+        },
+        {
+          "path": "registry/ui/footer-watermark/footer-watermark-dots.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/footer-watermark-dots.ts"
+        },
+        {
+          "path": "registry/ui/footer-watermark/footer-watermark.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/footer-watermark.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/footer-watermark"
+      }
+    },
+    {
+      "name": "hero-dot-field",
+      "type": "registry:ui",
+      "title": "HeroDotField",
+      "description": "The hero dot field: a live pattern with the logo cut from it, and optional stat morphs.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/hero-dot-field/hero-dot-field.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-dot-field.tsx"
+        },
+        {
+          "path": "registry/ui/hero-dot-field/hero-dot-logo-shape.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-dot-logo-shape.ts"
+        },
+        {
+          "path": "registry/ui/hero-dot-field/hero-stat-morphs.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-stat-morphs.tsx"
+        },
+        {
+          "path": "registry/ui/hero-dot-field/hero-stat-shapes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-stat-shapes.ts"
+        },
+        {
+          "path": "registry/ui/hero-dot-field/public/onboarding/tools/claude-color.svg",
+          "type": "registry:file",
+          "target": "public/onboarding/tools/claude-color.svg"
+        },
+        {
+          "path": "registry/ui/hero-dot-field/public/onboarding/tools/codex-color.svg",
+          "type": "registry:file",
+          "target": "public/onboarding/tools/codex-color.svg"
+        },
+        {
+          "path": "registry/ui/hero-dot-field/public/onboarding/tools/cursor-cube.svg",
+          "type": "registry:file",
+          "target": "public/onboarding/tools/cursor-cube.svg"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/hero-dot-field"
+      }
+    },
+    {
+      "name": "input",
+      "type": "registry:ui",
+      "title": "Input",
+      "description": "Single-line text fields. Always labelled.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/input/input.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/input.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/input"
+      }
+    },
+    {
+      "name": "logo",
+      "type": "registry:ui",
+      "title": "Logo",
+      "description": "The Context.dev logo. Logomark, horizontal or vertical combination mark, in the approved colorways.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/logo/logo.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/logo.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/logo"
+      }
+    },
+    {
+      "name": "ring-backdrop",
+      "type": "registry:ui",
+      "title": "RingBackdrop",
+      "description": "A faint field of hollow rings behind art or a card, clipped to whole rings.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/ring-backdrop/ring-backdrop.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/ring-backdrop.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/ring-backdrop"
+      }
+    },
+    {
+      "name": "section",
+      "type": "registry:ui",
+      "title": "Section",
+      "description": "The outer shell of every block. Surface, ruled center column, vertical rhythm, data-ds-block.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/section/section.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/section.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/section"
+      }
+    },
+    {
+      "name": "section-heading",
+      "type": "registry:ui",
+      "title": "SectionHeading",
+      "description": "The heading of every section. Headline with the key phrase in blue, one line of muted sub, optional action on the right.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/section-heading/section-heading.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/section-heading.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/section-heading"
+      }
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "title": "Select",
+      "description": "Choosing one of a short list (plan, SDK language). Native select for accessibility.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/select/select.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/select.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/select"
+      }
+    },
+    {
+      "name": "stat",
+      "type": "registry:ui",
+      "title": "Stat",
+      "description": "One large, provable figure in Doto with a one-line label (\"94%\" of pages returned as clean content).",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/stat/stat.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/stat.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/stat"
+      }
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "Data that people compare across rows: credit costs, plan limits, benchmark numbers. Tables, not cards, for data.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/table/table.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/table.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/table"
+      }
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "title": "Tabs",
+      "description": "Switching between 2 to 6 parallel views of one thing (benchmark metrics, FAQ topics, SDK languages).",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/tabs/tabs.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/tabs.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/tabs"
+      }
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "Multi-line text, such as the FAQ \"Ask anything\" box or a contact message.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/textarea/textarea.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/textarea.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/textarea"
+      }
+    },
+    {
+      "name": "tooltip",
+      "type": "registry:ui",
+      "title": "Tooltip",
+      "description": "A short label for an icon-only control or an abbreviation. Hover and focus.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/tooltip/tooltip.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/tooltip.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/tooltip"
+      }
+    },
+    {
+      "name": "trust-mark",
+      "type": "registry:ui",
+      "title": "TrustMark",
+      "description": "Animated dot marks for the trust cards: SOC 2, zero data retention, uptime.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/trust-mark/trust-mark-morph.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/trust-mark-morph.ts"
+        },
+        {
+          "path": "registry/ui/trust-mark/trust-mark.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/trust-mark.tsx"
+        },
+        {
+          "path": "registry/ui/trust-mark/trust-marks.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/trust-marks.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/trust-mark"
+      }
+    },
+    {
+      "name": "agent-onboarding",
+      "type": "registry:block",
+      "title": "AgentOnboarding",
+      "description": "The two ways to start, side by side. Do it yourself (white card), or let your agent do it (blue card, recommended).",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/card.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/badge.json",
+        "https://context-ds.vercel.app/r/code-window.json",
+        "https://context-ds.vercel.app/r/dot-story.json",
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/blog-cover.json",
+        "https://context-ds.vercel.app/r/ring-backdrop.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/agent-onboarding/agent-onboarding.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/agent-onboarding.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/agent-onboarding"
+      }
+    },
+    {
+      "name": "announcement-bar",
+      "type": "registry:block",
+      "title": "AnnouncementBar",
+      "description": "One line above the nav announcing one new API or feature, with a link.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/announcement-dot-strip.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/announcement-bar/announcement-bar.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/announcement-bar.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/announcement-bar"
+      }
+    },
+    {
+      "name": "benchmark",
+      "type": "registry:block",
+      "title": "Benchmark",
+      "description": "The proof that Context.dev is better and cheaper. Tabs of metrics, each a dot bar chart against named competitors.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/tabs.json",
+        "https://context-ds.vercel.app/r/dot-grid.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/benchmark/benchmark.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/benchmark.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/benchmark"
+      }
+    },
+    {
+      "name": "blog-grid",
+      "type": "registry:block",
+      "title": "BlogGrid",
+      "description": "The latest six posts on a black band, cards alternating white and blue, each with animated dot cover art.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/blog-cover.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/blog-grid/blog-grid.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/blog-grid.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/blog-grid"
+      }
+    },
+    {
+      "name": "code-showcase",
+      "type": "registry:block",
+      "title": "CodeShowcase",
+      "description": "Show the real SDK call for each job, one tab per job, description left and code right.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/tabs.json",
+        "https://context-ds.vercel.app/r/code-window.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/code-showcase/code-showcase.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/code-showcase.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/code-showcase"
+      }
+    },
+    {
+      "name": "credit-costs",
+      "type": "registry:block",
+      "title": "CreditCosts",
+      "description": "What each API costs in credits, grouped by product area, as tables.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/table.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/credit-costs/credit-costs.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/credit-costs.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/credit-costs"
+      }
+    },
+    {
+      "name": "cta-band",
+      "type": "registry:block",
+      "title": "CtaBand",
+      "description": "The closing section of every page. One headline, one line of sub, the free offer and one outline action.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/credits-dot-number.json",
+        "https://context-ds.vercel.app/r/hero-dot-field.json",
+        "https://context-ds.vercel.app/r/dot-engine.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/cta-band/cta-band.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/cta-band.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/cta-band"
+      }
+    },
+    {
+      "name": "faq",
+      "type": "registry:block",
+      "title": "Faq",
+      "description": "Questions that remove doubt before sign-up. Heading and one action on the left, questions on the right.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/tabs.json",
+        "https://context-ds.vercel.app/r/accordion.json",
+        "https://context-ds.vercel.app/r/dot-story.json",
+        "https://context-ds.vercel.app/r/dot-engine.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/faq/faq.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/faq.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/faq"
+      }
+    },
+    {
+      "name": "feature-trio",
+      "type": "registry:block",
+      "title": "FeatureTrio",
+      "description": "Three things you control with one API, side by side, each with an animated dot scene.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/dot-story.json",
+        "https://context-ds.vercel.app/r/dot-engine.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/feature-trio/feature-trio.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/feature-trio.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/feature-trio"
+      }
+    },
+    {
+      "name": "footer",
+      "type": "registry:block",
+      "title": "Footer",
+      "description": "The site footer on black. Logo, tagline, four link columns, compliance, status, legal links, dotted watermark.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/logo.json",
+        "https://context-ds.vercel.app/r/footer-watermark.json",
+        "https://context-ds.vercel.app/r/dot-engine.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/footer/footer.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/footer.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/footer"
+      }
+    },
+    {
+      "name": "hero",
+      "type": "registry:block",
+      "title": "Hero",
+      "description": "Top of a marketing page. One message, one filled primary action, one outline secondary.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/code-window.json",
+        "https://context-ds.vercel.app/r/hero-dot-field.json",
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/ring-backdrop.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/hero/hero.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/hero.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/hero"
+      }
+    },
+    {
+      "name": "logo-wall",
+      "type": "registry:block",
+      "title": "LogoWall",
+      "description": "Proof right under the hero. Six or twelve customer names, one outline link to their stories.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/logo-wall/logo-wall.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/logo-wall.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/logo-wall"
+      }
+    },
+    {
+      "name": "nav",
+      "type": "registry:block",
+      "title": "Nav",
+      "description": "The top navigation on every marketing page. Logo, five links, \"Book demo\", \"Start for free\".",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/logo.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/nav/nav.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/nav.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/nav"
+      }
+    },
+    {
+      "name": "pricing-table",
+      "type": "registry:block",
+      "title": "PricingTable",
+      "description": "The plan comparison on the pricing page. One column per plan, price, credits, limits, one action each.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/badge.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/pricing-table/pricing-table.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/pricing-table.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/pricing-table"
+      }
+    },
+    {
+      "name": "product-grid",
+      "type": "registry:block",
+      "title": "ProductGrid",
+      "description": "The four core APIs as a 2x2 grid of ringed cards, plus a row of links to the rest of the API.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/card.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/chip.json",
+        "https://context-ds.vercel.app/r/dot-story.json",
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/blog-cover.json",
+        "https://context-ds.vercel.app/r/ring-backdrop.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/product-grid/product-grid.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/product-grid.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/product-grid"
+      }
+    },
+    {
+      "name": "related-products",
+      "type": "registry:block",
+      "title": "RelatedProducts",
+      "description": "Two neighbouring APIs at the end of a product page, as linked cards.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/card.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/related-products/related-products.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/related-products.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/related-products"
+      }
+    },
+    {
+      "name": "steps",
+      "type": "registry:block",
+      "title": "Steps",
+      "description": "Three numbered steps from sign-up to a working feature, with the heading and one action on the left.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/credits-dot-number.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/steps/steps.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/steps.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/steps"
+      }
+    },
+    {
+      "name": "story-rail",
+      "type": "registry:block",
+      "title": "StoryRail",
+      "description": "Customer stories as a horizontal row of blue cards the visitor scrolls themselves.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/card.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/dot-grid.json",
+        "https://context-ds.vercel.app/r/customer-logo-dots.json",
+        "https://context-ds.vercel.app/r/dot-engine.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/story-rail/story-rail.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/story-rail.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/story-rail"
+      }
+    },
+    {
+      "name": "testimonials",
+      "type": "registry:block",
+      "title": "Testimonials",
+      "description": "Three short customer quotes with name, role and a link to the case study.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/card.json",
+        "https://context-ds.vercel.app/r/button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/testimonials/testimonials.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/testimonials.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/testimonials"
+      }
+    },
+    {
+      "name": "trust-grid",
+      "type": "registry:block",
+      "title": "TrustGrid",
+      "description": "Security and reliability for the buyer who spends 100k. Three cards and a link to the trust center.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/card.json",
+        "https://context-ds.vercel.app/r/button.json",
+        "https://context-ds.vercel.app/r/trust-mark.json",
+        "https://context-ds.vercel.app/r/dot-engine.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/trust-grid/trust-grid.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/trust-grid.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/trust-grid"
+      }
+    },
+    {
+      "name": "use-case-grid",
+      "type": "registry:block",
+      "title": "UseCaseGrid",
+      "description": "What teams build with the API. Two or six ringed cards in a two-column grid, each with a dot drawing.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/section-heading.json",
+        "https://context-ds.vercel.app/r/card.json",
+        "https://context-ds.vercel.app/r/dot-story.json",
+        "https://context-ds.vercel.app/r/dot-engine.json",
+        "https://context-ds.vercel.app/r/blog-cover.json",
+        "https://context-ds.vercel.app/r/ring-backdrop.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/use-case-grid/use-case-grid.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/use-case-grid.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "block",
+        "id": "blocks/use-case-grid"
+      }
+    },
+    {
+      "name": "landing",
+      "type": "registry:block",
+      "title": "LandingTemplate",
+      "description": "The homepage and campaign landing pages. One message, one primary action, the agent path next to it.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json"
+      ],
+      "files": [
+        {
+          "path": "registry/templates/landing/landing.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/landing.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/landing"
+      }
+    },
+    {
+      "name": "pricing",
+      "type": "registry:block",
+      "title": "PricingTemplate",
+      "description": "The pricing page. Plans, credit costs as a table, the FAQ that removes doubt, one close.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json"
+      ],
+      "files": [
+        {
+          "path": "registry/templates/pricing/pricing.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/pricing.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/pricing"
+      }
+    },
+    {
+      "name": "product",
+      "type": "registry:block",
+      "title": "ProductTemplate",
+      "description": "A page for one API (Search, Scrape, Research, Monitors, Map, Crawl, Batches, Brand). What it returns, the code, how to start.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/section.json"
+      ],
+      "files": [
+        {
+          "path": "registry/templates/product/product.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/product.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/product"
+      }
+    }
+  ]
+}

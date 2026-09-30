@@ -1,0 +1,7 @@
+node_modules
+dist
+**/.ds/session-cache.json
+**/.ds/review
+*.log
+.DS_Store
+.stage

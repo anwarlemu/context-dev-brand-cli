@@ -1,0 +1,25 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "footer",
+  "title": "Footer",
+  "description": "The site footer on black. Logo, tagline, four link columns, compliance, status, legal links, dotted watermark.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/logo.json",
+    "https://context-ds.vercel.app/r/dot-grid.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/footer/footer.tsx",
+      "content": "import { DotGrid } from '@/components/ds/ui/dot-grid';\nimport { Logo } from '@/components/ds/ui/logo';\nimport { Section } from '@/components/ds/ui/section';\n\nexport type FooterProps = {\n\ttagline: string;\n\tcolumns: { title: string; links: { label: string; href: string }[] }[];\n\tlegal: { label: string; href: string }[];\n\tcompliance?: string;\n\tstatus?: { label: string; href: string };\n\tcopyright: string;\n};\n\nconst WATERMARK = ['oxxxoooxxxoooxxxoooxxxoooxxxoooxxxoooxxxo', 'xoooxoxoooxoxoooxoxoooxoxoooxoxoooxoxoooxo', 'xoooooxoooxoxoooxoxxxxooxxxooxoooxoxoooxo', 'xoooxoxoooxoxoooxoxoooooooooxxoooxoxoooxo', 'oxxxoooxxxoooxxxoooxxxoooxxxoooxxxoooxxxo'];\n\nexport function Footer({ tagline, columns, legal, compliance, status, copyright }: FooterProps) {\n\treturn (\n\t\t<Section block=\"footer\" surface=\"black\" divider={false}>\n\t\t\t<div className=\"flex flex-col gap-12\">\n\t\t\t\t<div className=\"flex flex-col justify-between gap-6 md:flex-row\">\n\t\t\t\t\t<div className=\"flex flex-col gap-4\">\n\t\t\t\t\t\t<Logo variant=\"horizontal\" tone=\"white\" height={24} />\n\t\t\t\t\t\t<p className=\"max-w-sm text-body-sm text-neutral-30\">{tagline}</p>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div className=\"flex flex-col gap-2 text-body-sm text-neutral-30 md:items-end\">\n\t\t\t\t\t\t{compliance ? <p>{compliance}</p> : null}\n\t\t\t\t\t\t{status ? <a href={status.href} className=\"flex items-center gap-2 hover:text-fg-inverse\"><span aria-hidden className=\"size-2 rounded-full bg-success\" />{status.label}</a> : null}\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\t\t\t\t<nav aria-label=\"Footer\" className=\"grid grid-cols-2 gap-8 border-t border-neutral-80 pt-10 md:grid-cols-4\">\n\t\t\t\t\t{columns.slice(0, 4).map((col) => (\n\t\t\t\t\t\t<div key={col.title} className=\"flex flex-col gap-3\">\n\t\t\t\t\t\t\t<h2 className=\"text-body-sm font-medium text-fg-inverse\">{col.title}</h2>\n\t\t\t\t\t\t\t<ul className=\"flex flex-col gap-2\">\n\t\t\t\t\t\t\t\t{col.links.map((link) => (\n\t\t\t\t\t\t\t\t\t<li key={link.href}><a href={link.href} className=\"text-body-sm text-neutral-30 transition-colors duration-150 ease-out hover:text-fg-inverse\">{link.label}</a></li>\n\t\t\t\t\t\t\t\t))}\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t))}\n\t\t\t\t</nav>\n\t\t\t\t<div className=\"flex flex-col justify-between gap-4 border-t border-neutral-80 pt-6 text-body-sm text-neutral-30 md:flex-row\">\n\t\t\t\t\t<p>{copyright}</p>\n\t\t\t\t\t<ul className=\"flex gap-4\">\n\t\t\t\t\t\t{legal.map((link) => (\n\t\t\t\t\t\t\t<li key={link.href}><a href={link.href} className=\"hover:text-fg-inverse\">{link.label}</a></li>\n\t\t\t\t\t\t))}\n\t\t\t\t\t</ul>\n\t\t\t\t</div>\n\t\t\t\t<div className=\"hidden justify-center overflow-hidden md:flex\"><DotGrid pattern={WATERMARK} tone=\"on-black\" size=\"sm\" /></div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/footer.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/footer"
+  },
+  "type": "registry:block"
+}

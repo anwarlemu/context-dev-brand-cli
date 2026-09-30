@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "select",
+  "title": "Select",
+  "description": "Choosing one of a short list (plan, SDK language). Native select for accessibility.",
+  "files": [
+    {
+      "path": "registry/ui/select/select.tsx",
+      "content": "import type { SelectHTMLAttributes } from 'react';\n\nexport type SelectProps = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'className' | 'style' | 'children'> & { label: string; options: { value: string; label: string }[] };\n\nexport function Select({ label, options, id, ...props }: SelectProps) {\n\tconst fieldId = id ?? props.name;\n\treturn (\n\t\t<label htmlFor={fieldId} className=\"flex flex-col gap-2\">\n\t\t\t<span className=\"text-body-sm text-fg-muted\">{label}</span>\n\t\t\t<select id={fieldId} {...props} className=\"w-full rounded-card border border-line bg-surface px-4 py-3 text-body text-fg placeholder:text-fg-subtle transition-colors duration-150 ease-out focus-visible:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus appearance-none\">\n\t\t\t\t{options.map((o) => (\n\t\t\t\t\t<option key={o.value} value={o.value}>{o.label}</option>\n\t\t\t\t))}\n\t\t\t</select>\n\t\t</label>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/select.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/select"
+  },
+  "type": "registry:ui"
+}

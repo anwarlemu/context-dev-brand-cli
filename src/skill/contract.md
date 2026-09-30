@@ -1,0 +1,11 @@
+# {{brand}} design system
+- Start every UI task with `{{bin}} resolve "<task>"`. Use the template or flow it returns.
+- Build pages with `{{bin}} scaffold <template>`. Never write page structure by hand.
+- Before using any item, its docs will be shown to you. Follow them. If not shown, run `{{bin}} docs <name>`.
+- Add items with `{{bin}} add <name>`. Do not hand-write anything that exists in the registry.
+- Only registry blocks may appear as sections. Only listed variants may be used.
+- No raw color, spacing, radius, font, or motion values. Use `{{bin}} tokens <path>`.
+- Copy follows voice.md. Word limits apply to headlines, subheads, buttons.
+- `{{bin}} check` runs automatically and will block you. Fix every error, do not work around it.
+- Done is not good. Run `{{bin}} review` on any new page or flow and address the punch list.
+- Deviating from the registry requires `// ds-override: <reason>` on line 1 and a note in your summary.

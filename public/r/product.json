@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "product",
+  "title": "ProductTemplate",
+  "description": "A page for one API (Search, Scrape, Research, Monitors, Map, Crawl, Batches, Brand). What it returns, the code, how to start.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json"
+  ],
+  "files": [
+    {
+      "path": "registry/templates/product/product.tsx",
+      "content": "import type { ReactNode } from 'react';\n\nexport type ProductTemplateProps = {\n\tnav?: ReactNode;\n\thero?: ReactNode;\n\tproof?: ReactNode;\n\tfeatures?: ReactNode;\n\tshowcase?: ReactNode;\n\tsteps?: ReactNode;\n\tfaq?: ReactNode;\n\trelated?: ReactNode;\n\tcta?: ReactNode;\n\tfooter?: ReactNode;\n};\n\nexport function ProductTemplate({ nav, hero, proof, features, showcase, steps, faq, related, cta, footer }: ProductTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"product\" className=\"min-h-screen bg-surface font-sans text-fg\">\n\t\t\t{nav}\n\t\t\t<main>\n\t\t\t\t{hero}\n\t\t\t\t{proof}\n\t\t\t\t{features}\n\t\t\t\t{showcase}\n\t\t\t\t{steps}\n\t\t\t\t{faq}\n\t\t\t\t{related}\n\t\t\t\t{cta}\n\t\t\t</main>\n\t\t\t{footer}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/templates/product.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "template",
+    "id": "templates/product"
+  },
+  "type": "registry:block"
+}

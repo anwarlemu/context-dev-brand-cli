@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "input",
+  "title": "Input",
+  "description": "Single-line text fields. Always labelled.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "registry/ui/input/input.tsx",
+      "content": "import type { InputHTMLAttributes } from 'react';\n\nexport type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'style'> & { label: string; hideLabel?: boolean };\n\nexport function Input({ label, hideLabel, id, ...props }: InputProps) {\n\tconst inputId = id ?? props.name;\n\treturn (\n\t\t<label htmlFor={inputId} className=\"flex flex-col gap-2\">\n\t\t\t<span className={hideLabel ? 'sr-only' : 'text-body-sm text-fg-muted'}>{label}</span>\n\t\t\t<input id={inputId} {...props} className=\"w-full rounded-card border border-line bg-surface px-4 py-3 text-body text-fg placeholder:text-fg-subtle transition-colors duration-150 ease-out focus-visible:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus\" />\n\t\t</label>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/input.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/input"
+  },
+  "type": "registry:ui"
+}

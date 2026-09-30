@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dot-grid",
+  "title": "DotGrid",
+  "description": "Static dot drawings and simple patterns. For the animated pictures from context.dev, use dot-story.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/dot-grid/dot-grid.tsx",
+      "content": "import { cx } from '@/components/ds/ui/cx';\n\nexport type DotGridProps = {\n\tpattern?: string[];\n\tcols?: number;\n\trows?: number;\n\tsolid?: Array<[number, number]>;\n\ttone?: 'on-white' | 'on-brand' | 'on-black';\n\tsize?: 'sm' | 'md' | 'lg';\n\tlabel?: string;\n};\n\nconst SIZES = { sm: 'size-2 gap-2', md: 'size-3 gap-3', lg: 'size-5 gap-5' } as const;\nconst TONES = {\n\t'on-white': { hollow: 'border border-brand', solid: 'bg-brand' },\n\t'on-brand': { hollow: 'border border-on-brand', solid: 'bg-white' },\n\t'on-black': { hollow: 'border border-blue-60', solid: 'bg-brand' },\n} as const;\n\nexport function DotGrid({ pattern, cols = 12, rows = 8, solid = [], tone = 'on-white', size = 'md', label }: DotGridProps) {\n\tconst grid = pattern ?? Array.from({ length: rows }, (_, r) => Array.from({ length: cols }, (_, c) => (solid.some(([sr, sc]) => sr === r && sc === c) ? 'x' : 'o')).join(''));\n\tconst width = Math.max(...grid.map((row) => row.length));\n\tconst [dot, gap] = SIZES[size].split(' ');\n\treturn (\n\t\t<div role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} className={cx('grid w-max', gap)} style={{ gridTemplateColumns: `repeat(${width}, min-content)` }}>\n\t\t\t{grid.flatMap((row, r) =>\n\t\t\t\tArray.from({ length: width }, (_, c) => {\n\t\t\t\t\tconst ch = row[c] ?? ' ';\n\t\t\t\t\treturn <span key={`${r}-${c}`} className={cx(dot, 'rounded-full', ch === 'x' ? TONES[tone].solid : ch === 'o' ? TONES[tone].hollow : 'invisible')} />;\n\t\t\t\t}),\n\t\t\t)}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/dot-grid.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "ui",
+    "id": "ui/dot-grid"
+  },
+  "type": "registry:ui"
+}

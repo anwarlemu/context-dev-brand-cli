@@ -1,0 +1,224 @@
+
+=== page 1 (110:49449) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Brand\nGuidelines'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 2 (110:49445) bg=['#FFFFFF']
+[Rethink Sans 400 64.0 #000000] 'Introduction'
+[Rethink Sans 400 24.0 #000000] "Welcome to the Context.dev Brand Guidelines. This document is your essential resource for understanding and implementing our brand's visual language.\n\nInside, you'll find the core elements of our identity, from our logo and color palette to our typography and imagery. Consistent application of these guidelines is key to building a strong, recognizable, and trusted brand."
+
+=== page 3 (110:49441) bg=['#FFFFFF']
+[Rethink Sans 400 64.0 #000000] 'Table of Contents'
+[Rethink Sans 400 32.0 #000000] 'Logo System\nColor Palette\nTypography System\nBrand Pattern\nBrand Imagery\nBrand Applications'
+
+=== page 4 (110:49437) bg=['#FFFFFF']
+[Rethink Sans 400 64.0 #000000] 'The Idea'
+[Rethink Sans 400 24.0 #000000] 'The Context.dev identity is built from a single idea found in our logo: the circle is the exact shape of the hole in the square, a missing piece that fits perfectly into place. We carry that idea through the whole brand.\n\nHollow circles represent the open web, full of information an agent cannot use yet, and solid circles represent context, the piece that fills the gap and lets an agent finish its task. Every pattern, chart and layout is built from that one circle, so the brand tells the same story everywhere it appears.'
+
+=== page 5 (110:46947) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Logo\nSystem'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 6 (110:46937) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Logomark'
+[Rethink Sans 400 18.0 #000000] "The logomark is the symbol element of our logo, used independently of the wordmark. It is used on its own when there isn't enough space to show the full logo. This mark should always keep its proportions and structure, no matter where it is used, and should be given proper clear space to maintain its visual integrity."
+[Rethink Sans 400 18.0 #000000] 'Page 6'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 7 (110:46916) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Wordmark'
+[Rethink Sans 400 18.0 #000000] "The wordmark is the text-based element of our logo, showing the brand name as a fixed piece of lettering. It is used on its own when the logomark isn't needed or when a text-only version fits better. This mark should always keep its proportions and structure, no matter where it is used, and should be given proper clear space to maintain its visual integrity."
+[Rethink Sans 400 18.0 #000000] 'Page 7'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 8 (110:46861) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Combination Marks'
+[Rethink Sans 400 18.0 #000000] 'The combination mark brings together the logomark and wordmark as a single, unified lockup. It is available in two layouts, horizontal and vertical, to suit different spacing needs across various applications. Both versions should always keep their proportions and structure, no matter where they are used, and should be given proper clear space to maintain their visual integrity.'
+[Rethink Sans 400 18.0 #000000] 'Page 8'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 9 (110:46769) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Clear Space'
+[Rethink Sans 400 18.0 #000000] 'Clear space is the minimum area around the logo that must be kept free of text, images, or other visual elements. This ensures the logo remains visually distinct and is never crowded, preserving its clarity and impact wherever it is placed.'
+[Rethink Sans 400 18.0 #000000] 'Page 9'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 10 (110:46664) bg=['#FFFFFF']
+[Rethink Sans 400 20.0 #000000] '36 px'
+[Rethink Sans 400 32.0 #000000] 'Logo Scaling'
+[Rethink Sans 400 20.0 #000000] '64 px'
+[Rethink Sans 400 18.0 #000000] 'Logo scaling shows how the logo should be resized proportionally across different applications, without distorting its shape or ratio. This keeps the mark accurate and recognizable at any size.'
+[Rethink Sans 400 20.0 #000000] '96 px'
+[Rethink Sans 400 20.0 #000000] '128 px'
+[Rethink Sans 400 20.0 #000000] '160 px'
+[Rethink Sans 400 18.0 #000000] 'Page 10'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 11 (110:46595) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Minimum Sizes'
+[Rethink Sans 400 18.0 #000000] 'To maintain legibility and visual integrity, the logo should never be reproduced below its specified minimum size. This applies across digital applications, ensuring the mark remains clear and recognizable at all times.'
+[Rethink Sans 400 20.0 #000000] '16px high'
+[Rethink Sans 400 20.0 #000000] '16px high'
+[Rethink Sans 400 20.0 #000000] '32px high'
+[Rethink Sans 400 18.0 #000000] 'Page 11'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 12 (110:46582) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Primary Logo Background'
+[Rethink Sans 400 18.0 #000000] 'This section shows the preferred background for the primary logo. The primary logo is designed to work best on this background, ensuring maximum contrast, clarity, and brand consistency. This background should be used whenever possible as the default choice.'
+[Rethink Sans 400 18.0 #000000] 'Page 12'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 13 (110:46553) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Secondary Logo Backgrounds'
+[Rethink Sans 400 18.0 #000000] "This section shows the alternate background options for the logo, used when the primary background isn't suitable. These variations ensure the logo maintains strong contrast, clarity, and brand consistency across different colored, dark, or textured backgrounds."
+[Rethink Sans 400 18.0 #000000] 'Page 13'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 14 (110:46505) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Common Mistakes'
+[Rethink Sans 400 18.0 #000000] 'This section highlights common errors to avoid when using the logo, such as stretching, recoloring, rotating, adding effects like shadows and outlines, or changing the order of the logomark and wordmark. Avoiding these mistakes ensures the logo is always represented accurately and consistently across all applications.'
+[Rethink Sans 400 18.0 #000000] 'Page 14'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 15 (110:44015) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Color\nPalette'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 16 (110:43992) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Color Palette'
+[Rethink Sans 400 18.0 #000000] "The color palette brings together the core colors of the brand: Black, Blue and White. Together they define the brand's visual personality and should be used consistently across all materials. The neutral and blue spectrums on the following pages extend these colors for wider use."
+[Rethink Sans 400 56.0 #FFFFFF] 'Black'
+[Rethink Sans 400 56.0 #FFFFFF] 'Blue'
+[Rethink Sans 400 56.0 #2563EB] 'White'
+[Rethink Sans 400 24.0 #FFFFFF] 'HEX: #000000\nRGB: 0 / 0 / 0\nHSL: 0° / 0% / 0%\nCMYK: 0 / 0 / 0 / 100'
+[Rethink Sans 400 24.0 #FFFFFF] 'HEX: #2563EB\nRGB: 37 / 99 / 235\nHSL: 221° / 83% / 53%\nCMYK: 84 / 58 / 0 / 8'
+[Rethink Sans 400 24.0 #2563EB] 'HEX: #FFFFFF\nRGB: 255 / 255 / 255\nHSL: 0° / 0% / 100%\nCMYK: 0 / 0 / 0 / 0'
+[Rethink Sans 400 18.0 #000000] 'Page 16'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 17 (110:43972) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Neutral Spectrum'
+[Rethink Sans 400 18.0 #000000] "The neutral spectrum ranges from black to white, used for text, backgrounds, and supporting UI elements. It provides a calm, functional base that lets the brand's core colors stand out where it matters most."
+[Rethink Sans 400 18.0 #000000] 'Page 17'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 18 (110:43940) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #212121] 'Blue Spectrum'
+[Rethink Sans 400 18.0 #000000] "The blue spectrum is the brand's primary color range, from deep navy to light tints. It should be used across key brand and product touchpoints to keep the identity consistent and instantly recognizable."
+[Rethink Sans 400 18.0 #000000] 'Page 18'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 19 (110:41450) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Typography\nSystem'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 20 (110:41437) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Primary Font'
+[Rethink Sans 400 18.0 #000000] 'The primary font is used for headings, subheadings, and body text across all brand communications and product design. It establishes visual hierarchy and should be applied consistently to maintain a strong, unified brand voice.'
+[Rethink Sans 400 32.0 #000000] 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789\xa0'
+[Rethink Sans 400 56.0 #000000] 'Rethink Sans'
+[Rethink Sans 400 18.0 #000000] 'Page 20'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 21 (110:41423) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Secondary Font'
+[Rethink Sans 400 18.0 #000000] 'The secondary font is reserved for numbers and data, used when a figure needs to stand out and can be shown at a large size. It is not intended for everyday product use and should appear only in rare cases where emphasis on the data is needed.'
+[Doto 800 32.0 #000000] 'ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n0123456789\xa0'
+[Doto 800 56.0 #000000] 'Doto'
+[Rethink Sans 400 18.0 #000000] 'Page 21'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 22 (110:41379) bg=['#FFFFFF']
+[Rethink Sans 400 96.0 #000000] 'Display XL'
+[Rethink Sans 400 20.0 #000000] '96 px'
+[Rethink Sans 400 32.0 #000000] 'Type Hierarchy'
+[Rethink Sans 400 18.0 #000000] "Type hierarchy defines how different text sizes are used to organize content and guide the reader's attention. The sizes shown here are a general guide, not fixed rules, and may be adjusted to suit specific design decisions and situations. Applying them consistently keeps content clear and gives a unified reading experience across all materials."
+[Rethink Sans 400 64.0 #000000] 'Display'
+[Rethink Sans 400 20.0 #000000] '64 px'
+[Rethink Sans 400 56.0 #000000] 'Heading 1'
+[Rethink Sans 400 20.0 #000000] '56 px'
+[Rethink Sans 400 44.0 #000000] 'Heading 2'
+[Rethink Sans 400 20.0 #000000] '44 px'
+[Rethink Sans 400 32.0 #000000] 'Heading 3'
+[Rethink Sans 400 20.0 #000000] '32 px'
+[Rethink Sans 400 24.0 #000000] 'Heading 4'
+[Rethink Sans 400 20.0 #000000] '24 px'
+[Rethink Sans 400 20.0 #000000] 'Heading 5'
+[Rethink Sans 400 20.0 #000000] '20 px'
+[Rethink Sans 400 18.0 #000000] 'Body - Large'
+[Rethink Sans 400 20.0 #000000] '18 px'
+[Rethink Sans 400 20.0 #000000] '16 px'
+[Rethink Sans 400 16.0 #000000] 'Body '
+[Rethink Sans 400 20.0 #000000] '14 px'
+[Rethink Sans 400 14.0 #000000] 'Body - Small'
+[Rethink Sans 400 18.0 #000000] 'Page 22'
+[Rethink Sans 400 12.0 #000000] 'Caption'
+[Rethink Sans 400 20.0 #000000] '12 px'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 23 (110:38889) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Brand\u2028Pattern'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 24 (110:37918) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Brand Pattern'
+[Rethink Sans 400 18.0 #000000] "The brand pattern is built from the circle in the Context.dev logo, arranged on a consistent grid. It tells the brand story in a single view: hollow circles are the open web, full of information an agent can't use yet, and solid circles are context, the pieces that fill the gap. The pattern is a supporting element that adds texture and meaning across applications."
+[Rethink Sans 400 18.0 #000000] 'Page 24'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 25 (110:35428) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Brand\nImagery'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 26 (110:22259) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Brand Imagery'
+[Rethink Sans 400 18.0 #000000] "The brand's imagery is built by applying a shader effect to the subject, so it appears to be made from a pattern of hollow and filled circles. The subject has no background of its own, so it can sit cleanly on white, blue, black or any brand surface. This creates a distinctive, recognizable style that stays consistent across all applications."
+[Rethink Sans 400 18.0 #000000] 'Page 26'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 27 (110:19769) bg=['#2563EB']
+[Rethink Sans 400 200.0 #FFFFFF] 'Brand\nApplications'
+[Rethink Sans 400 18.0 #FFFFFF] 'Context.dev\u2028Brand Guidelines'
+
+=== page 28 (110:16048) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Feature Announcement Social Media Post'
+[Rethink Sans 400 18.0 #000000] 'This template is used to announce new product features and updates on social media. It keeps the message clear and focused, with the logo, color, and typography staying true to the brand so every announcement is instantly recognizable in the feed.'
+[Rethink Sans 400 18.0 #000000] 'Page 28'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 29 (110:15876) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Advertisement Design'
+[Rethink Sans 400 18.0 #000000] 'This shows how the brand identity is applied to paid digital advertising. The layout keeps the message short and the visuals bold, with the logo, color, and typography making the brand easy to recognize at a glance, even in a fast-moving feed.'
+[Rethink Sans 400 18.0 #000000] 'Page 29'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 30 (110:11831) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Social Media Banner'
+[Rethink Sans 400 18.0 #000000] "This mockup demonstrates how the brand's social media presence looks within a real platform context, showing the profile banner as it would appear live. The banner color should always be white, ensuring enough contrast against the profile photo, which is the logo."
+[Rethink Sans 400 18.0 #000000] 'Page 30'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 31 (110:11338) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Website Favicon'
+[Rethink Sans 400 18.0 #000000] 'The favicon mockup demonstrates how the logomark is adapted for use as a browser tab icon. It ensures the mark remains clear and recognizable even at very small sizes, maintaining brand presence across web browsers.'
+[Rethink Sans 400 18.0 #000000] 'Page 31'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 32 (110:11327) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Branded Merchandise'
+[Rethink Sans 400 18.0 #000000] 'This mockup shows how the logomark is applied to branded merchandise, using a cap as the example. The mark is placed in white on the brand blue, keeping it bold and recognizable at a glance. Merchandise should always use approved logo colors and sit on brand-colored or neutral materials, so the identity feels consistent off-screen too.'
+[Rethink Sans 400 18.0 #000000] 'Page 32'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 33 (110:10851) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'App Icon'
+[Rethink Sans 400 18.0 #000000] 'The app icon mockup demonstrates how the logomark is adapted for use as an application icon. It ensures the mark remains clear, recognizable, and consistent at small sizes and within platform-specific shapes.'
+[Rethink Sans 400 18.0 #000000] 'Page 33'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'
+
+=== page 34 (110:10840) bg=['#FFFFFF']
+[Rethink Sans 400 32.0 #000000] 'Smartwatch Display'
+[Rethink Sans 400 18.0 #000000] 'This mockup shows how the logomark appears on a smartwatch screen, one of the smallest surfaces the brand will live on. The white mark on a solid blue background keeps it clear and instantly recognizable, even at a glance on the wrist.'
+[Rethink Sans 400 18.0 #000000] 'Page 34'
+[Rethink Sans 400 18.0 #000000] 'Context.dev\u2028Brand Guidelines'

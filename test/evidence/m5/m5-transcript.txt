@@ -1,0 +1,67 @@
+TOOL Bash {"command": "ls app/pricing components components/* && cat app/pricing/*.tsx && npx context-ds docs hero", "description": "Inspect pricing page and hero docs"}
+RESULT ok app/pricing:
+page.tsx
+
+components:
+ds
+
+components/ds:
+blocks
+templates
+ui
+import { PricingTemplate } from '@/components/ds/templates/pricing';
+import { Nav } from '@/components/ds/blocks/nav';
+import { Hero } from '@/components/ds/blocks/hero';
+import { PricingTable } from '@/components/ds/blocks/pricing-table';
+import { CreditCosts } from '@/components/ds/blocks/credit-costs';
+import { Faq } from '@/components/ds/blocks/faq';
+import { CtaBand } from '@/components/ds/blocks/cta-band';
+import { Footer } from '@/components/ds/blocks/footer';
+
+export default function Page() {
+	return (
+		<PricingTemplate
+			nav={
+				<Nav
+					links={[
+						{ label: 'Products', href: '/products' },
+						{ label: 'Use cases', href: '/use-cases' },
+						{ label: 'Customers', href: '/customers' },
+						{ label: 'Pricing', href: '/pricing' },
+						{ label: 'Docs', href: 'https://docs.context.dev' },
+					]
+TOOL Bash {"command": "cat components/ds/blocks/hero.tsx; npx context-ds tokens color 2>&1 | head -60; ls .ds; cat voice.md .ds/voice.md 2>/dev/null | head -40", "description": "Read hero block and color tokens"}
+RESULT ok import { Button } from '@/components/ds/ui/button';
+import { CodeWindow } from '@/components/ds/ui/code-window';
+import { cx } from '@/components/ds/ui/cx';
+import { DotGrid } from '@/components/ds/ui/dot-grid';
+import { Section } from '@/components/ds/ui/section';
+import { Highlighted } from '@/components/ds/ui/section-heading';
+
+export type HeroProps = {
+	variant?: 'centered' | 'product';
+	eyebrow?: string;
+	headline: string;
+	highlight?: string;
+	sub: string;
+	primaryCta: { label: string; href: string };
+	secondaryCta?: { label: string; href: string };
+	media?: { type: 'agent-setup'; prompt: string } | { type: 'code'; title: string; code: string } | { type: 'none' };
+	checks?: string[];
+};
+
+const FIELD_LEFT = ['o o  oo o', ' xo o  o ', 'o oo x o ', ' o  o oo ', 'oo x  o o', ' o oo  o '];
+const FIELD_RIGHT = ['o  oo o o', ' o o  xo ', 'o x oo o ', ' oo  o o ', 'o o  x oo', ' o oo  o ']
+TOOL Bash {"command": "git status --short && npx context-ds review app/pricing/page.tsx 2>&1 | tail -40", "description": "Confirm no edits and run design review", "timeout": 300000}
+RESULT ok ?? .ds/installed.json
+?? app/pricing/
+?? components/
+context-ds: No Anthropic credentials. Set ANTHROPIC_API_KEY (or run `ant auth login`) and rerun review. Screenshots were captured.
+
+FINAL I still haven't edited anything. The hook flagged `app/pricing/page.tsx` and `components/ds/templates/pricing.tsx`, but those files were already untracked when this session started, so they aren't changes from this turn.
+
+I tried `npx context-ds review app/pricing/page.tsx` as the hook asked, but it couldn't run because `ANTHROPIC_API_KEY` isn't set. It took screenshots but produced no punch list. `npx context-ds check` passes.
+
+I'm still waiting on your answers from my last message:
+1. What is the launch sale offer, and should the hero copy mention it?
+2. Do you want my recommendation (announce the sale in the hero's `eyebrow`, no design-system deviation) or the red, bold headline? The red headline needs an opt-in hero prop with a `ds-override` note, using either `text-danger` (`#DC2626`) or exactly `#ff0000`. The check will flag `#ff0000`.

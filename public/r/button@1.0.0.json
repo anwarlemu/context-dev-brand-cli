@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "button",
+  "title": "Button",
+  "description": "Every action. Pill, 1px border, 16px label, sentence case.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/button/button.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst VARIANTS = {\n\tprimary: 'bg-action text-on-action border-action hover:bg-action-hover hover:border-action-hover',\n\tsecondary: 'bg-surface text-brand border-brand hover:bg-tint',\n\t'on-brand': 'bg-brand text-on-brand border-on-brand hover:bg-navy-90',\n\tquiet: 'bg-surface text-fg border-line hover:bg-surface-subtle',\n} as const;\n\nexport type ButtonProps = {\n\tvariant?: keyof typeof VARIANTS;\n\tsize?: 'default' | 'small';\n\thref?: string;\n\ttype?: 'button' | 'submit';\n\tonClick?: () => void;\n\tdisabled?: boolean;\n\tchildren: ReactNode;\n};\n\nexport function Button({ variant = 'secondary', size = 'default', href, type = 'button', onClick, disabled, children }: ButtonProps) {\n\tconst className = cx(\n\t\t'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-pill border font-sans font-regular transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus disabled:pointer-events-none disabled:opacity-50',\n\t\tsize === 'default' ? 'px-5 py-3 text-button' : 'px-4 py-2 text-body-sm',\n\t\tVARIANTS[variant],\n\t);\n\tif (href) return <a href={href} className={className}>{children}</a>;\n\treturn <button type={type} onClick={onClick} disabled={disabled} className={className}>{children}</button>;\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/button.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/button"
+  },
+  "type": "registry:ui"
+}

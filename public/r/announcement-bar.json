@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "announcement-bar",
+  "title": "AnnouncementBar",
+  "description": "One line above the nav announcing one new API or feature, with a link.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/announcement-dot-strip.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/announcement-bar/announcement-bar.tsx",
+      "content": "import { AnnouncementDotStrip } from '@/components/ds/ui/announcement-dot-strip';\nimport { Section } from '@/components/ds/ui/section';\n\nexport type AnnouncementBarProps = { text: string; linkLabel: string; href: string };\n\nexport function AnnouncementBar({ text, linkLabel, href }: AnnouncementBarProps) {\n\treturn (\n\t\t<Section block=\"announcement-bar\" surface=\"blue\" spacing=\"tight\">\n\t\t\t<div className=\"relative isolate\">\n\t\t\t\t<AnnouncementDotStrip />\n\t\t\t\t<p className=\"flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center text-body-sm\">\n\t\t\t\t\t<span>{text}</span>\n\t\t\t\t\t<a href={href} className=\"underline underline-offset-4 transition-opacity duration-150 ease-out hover:opacity-80\">{linkLabel}</a>\n\t\t\t\t</p>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/announcement-bar.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/announcement-bar"
+  },
+  "type": "registry:block"
+}

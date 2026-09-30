@@ -1,0 +1,22 @@
+{
+  "version": "1.0.0",
+  "ui_triggers": ["page", "section", "landing", "homepage", "home page", "hero", "footer", "nav", "layout", "design", "component", "ui", "screen", "website", "site", "marketing", "pricing", "block", "template", "cta", "banner", "faq", "testimonial", "feature", "style", "restyle", "redesign", "build the", "make a", "create a"],
+  "synonyms": {
+    "landing page": ["homepage", "home page", "marketing page", "front page", "index page", "splash page", "launch page"],
+    "pricing page": ["pricing", "plans page", "price page", "plans and pricing", "pricing table"],
+    "product page": ["api page", "endpoint page", "feature page", "product detail", "capability page", "search page", "scrape page", "research page", "monitor page", "monitors page", "answers page", "map page", "crawl page", "batches page", "brand api page", "styleguide page", "enrich page"]
+  },
+  "intents": {
+    "landing page": "templates/landing",
+    "pricing page": "templates/pricing",
+    "product page": "templates/product"
+  },
+  "out_of_scope": {
+    "dashboard": "The dashboard uses the app design system (IBM Plex, design.md in the app), not the Context.dev brand system. Follow design.md.",
+    "settings": "Settings live in the dashboard. Follow design.md in the app, not this brand system.",
+    "sign in": "Auth screens keep the app design system. Follow design.md in the app.",
+    "sign up form": "Auth screens keep the app design system. Follow design.md in the app.",
+    "login": "Auth screens keep the app design system. Follow design.md in the app.",
+    "email template": "Emails are not covered by this brand system yet."
+  }
+}

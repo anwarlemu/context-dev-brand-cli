@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "trust-grid",
+  "title": "TrustGrid",
+  "description": "Security and reliability for the buyer who spends 100k. Three cards and a link to the trust center.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/card.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/dot-grid.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/trust-grid/trust-grid.tsx",
+      "content": "import { Button } from '@/components/ds/ui/button';\nimport { Card } from '@/components/ds/ui/card';\nimport { DotGrid } from '@/components/ds/ui/dot-grid';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type TrustGridProps = {\n\ttitle: string;\n\thighlight?: string;\n\titems: { title: string; description: string; href?: string }[];\n\tcta: { label: string; href: string };\n};\n\nconst MARKS = [\n\t['ooxxoo', 'oxxxxo', 'xxxxxx', 'oxxxxo', 'ooxxoo'],\n\t['xxxxxo', 'xooooo', 'xoxxxo', 'xoooxo', 'oxxxxx'],\n\t['xxxxxx', 'xooxox', 'xoxoox', 'xooxox', 'xxxxxx'],\n];\n\nexport function TrustGrid({ title, highlight, items, cta }: TrustGridProps) {\n\treturn (\n\t\t<Section block=\"trust-grid\">\n\t\t\t<div className=\"flex flex-col gap-12\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} action={<Button variant=\"secondary\" href={cta.href}>{cta.label}</Button>} />\n\t\t\t\t<div className=\"grid gap-4 md:grid-cols-3\">\n\t\t\t\t\t{items.slice(0, 3).map((item, i) => (\n\t\t\t\t\t\t<Card key={item.title}>\n\t\t\t\t\t\t\t<DotGrid pattern={MARKS[i % MARKS.length]} size=\"sm\" />\n\t\t\t\t\t\t\t<h3 className=\"text-h5\">{item.title}</h3>\n\t\t\t\t\t\t\t<p className=\"text-body text-fg-muted\">{item.description}</p>\n\t\t\t\t\t\t\t{item.href ? <a href={item.href} className=\"mt-auto text-body-sm text-brand underline-offset-4 hover:underline\">Learn more</a> : null}\n\t\t\t\t\t\t</Card>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/trust-grid.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/trust-grid"
+  },
+  "type": "registry:block"
+}

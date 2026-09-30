@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tooltip",
+  "title": "Tooltip",
+  "description": "A short label for an icon-only control or an abbreviation. Hover and focus.",
+  "files": [
+    {
+      "path": "registry/ui/tooltip/tooltip.tsx",
+      "content": "import type { ReactNode } from 'react';\n\nexport function Tooltip({ label, children }: { label: string; children: ReactNode }) {\n\treturn (\n\t\t<span className=\"group relative inline-flex\">\n\t\t\t{children}\n\t\t\t<span role=\"tooltip\" className=\"pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-sm bg-surface-inverse px-2 py-1 text-caption text-fg-inverse opacity-0 transition-opacity duration-150 ease-out group-focus-within:opacity-100 group-hover:opacity-100\">{label}</span>\n\t\t</span>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/tooltip.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/tooltip"
+  },
+  "type": "registry:ui"
+}

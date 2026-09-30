@@ -1,0 +1,50 @@
+===== hook_success SessionStart:startup 
+ Context.dev design system 0.1.0 is active in this project (npx context-ds).
+Framework: next 16.3.8. Tailwind: ^4. Tokens: 0.1.0.
+Installed: none yet.
+Before any UI work run `npx context-ds resolve "<task>"` and start from the template it returns.
+Writes are checked before they reach disk. `npx context-ds check` must pass before you finish. 
+
+===== hook_success UserPromptSubmit 
+ npx context-ds resolve: "pricing page" -> templates/pricing. Start from `npx context-ds scaffold pricing`. Do not build structure by hand.
+
+Context.dev design system: docs for templates/pricing (task matched "pricing page"). Follow them.
+
+--- templates/pricing ---
+---
+name: pricing
+type: template
+version: 1.0.0
+route: /pricing
+use_for: The pricing page. Plans, credit costs as a table, the FAQ that removes doubt, one close.
+structure:
+  slots:
+    nav: { allowed: [nav], default: nav, required: true, max: 1 }
+    hero: { allowed: [hero], default: hero, required: true, max: 1 }
+    plans: { allowed: [pricing-table], default: pricing-table, required: true, max: 1 }
+    costs: { allowed: [credit-costs], default: credit-costs, required: true, max: 1 }
+    faq: { allowed: [faq], default: faq, required: true, max: 1 }
+    cta: { allowed: [cta-band], default: cta-band, required: true, max: 1 }
+    footer: { allowed: [footer], default: footer, required: true, max: 1 }
+  forbidden: [dialog, toast, carousel]
+never:
+  - Plan cards for data that belongs in a table
+  - More than one filled button per plan column; only the recommended plan's action is primary
+  - Hidden prices ("Contact us" is only for Enterprise)
+  - Testimonials or logos on the pricing page; proof lives on the landing page
+copy_rules: voice.md#mechanics
+dependencies: [section]
+---
+
+Every slot is required, so every pricing page has the same structure. The hero is `centered` with
+no media: the headline states the pricing pri 
+
+===== hook_success PreToolUse:Edit 
+ {"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"allow","additionalContext":"Context.dev design system: docs for blocks/nav, blocks/hero, blocks/pricing-table (imported in app/pricing/page.tsx). Follow them.\n\n--- blocks/nav ---\n---\nname: nav\ntype: block\nversion: 1.0.0\nuse_for: The top navigation on every marketing page. Logo, five links, \"Book demo\", \"Start for free\".\nnever:\n  - More than 6 links\n  - Mega menus with icons or illustrations\n  - A second filled button in the nav\n  - Sticky navs with shadows or blur\nprops: links ({ label, href }[]), demoCta? { label, href }, primaryCta { label, href }\nvariants: []\ncopy_rules: voice.md#mechanics\ndependencies: [section, button, logo]\nexample: nav.example.tsx\n---\n\nThe nav's \"Start for free\" is the site-wide primary action and is not counted against the page's\nsingle primary. On mobile the links collapse into a native details menu, no script needed.\n\nExample (nav.example.tsx):\n```tsx\nimport { Nav } from '@/components/ds/blocks/nav';\n\nexport default function Example() {\n\treturn (\n\t\t<Nav\n\t\t\tlinks={[\n\t\t\t\t{ label: 'Products', href: '/products' },\n\t\t\t\t{ label: 'Use cases', href: '/use-cases' },\n\t\t\t\t{ label: 'Customers', href: '/customers' },\n\t\t\t\t{ label: 'Pricing', href: '/pricing' },\n\t\t\t\t{ label: 'Docs', href: 'https://docs.context.dev' },\n\t\t\t]}\n\t\t\tdemoCta={{ label: 'Book demo', href: '/demo' }}\n\t\t\tprimaryCta={{ label: 'Start for free' 
+
+===== hook_additional_context PreToolUse:Edit 
+ ["Context.dev design system: docs for blocks/nav, blocks/hero, blocks/pricing-table (imported in app/pricing/page.tsx). Follow them.\n\n--- blocks/nav ---\n---\nname: nav\ntype: block\nversion: 1.0.0\nuse_for: The top navigation on every marketing page. Logo, five links, \"Book demo\", \"Start for free\".\nnever:\n  - More than 6 links\n  - Mega menus with icons or illustrations\n  - A second filled button in the nav\n  - Sticky navs with shadows or blur\nprops: links ({ label, href }[]), demoCta? { label, href }, primaryCta { label, href }\nvariants: []\ncopy_rules: voice.md#mechanics\ndependencies: [section, button, logo]\nexample: nav.example.tsx\n---\n\nThe nav's \"Start for free\" is the site-wide primary action and is not counted against the page's\nsingle primary. On mobile the links collapse into a native details menu, no script needed.\n\nExample (nav.example.tsx):\n```tsx\nimport { Nav } from '@/components/ds/blocks/nav';\n\nexport default function Example() {\n\treturn (\n\t\t<Nav\n\t\t\tlinks={[\n\t\t\t\t{ label: 'Products', href: '/products' },\n\t\t\t\t{ label: 'Use cases', href: '/use-cases' },\n\t\t\t\t{ label: 'Customers', href: '/customers' },\n\t\t\t\t{ label: 'Pricing', href: '/pricing' },\n\t\t\t\t{ label: 'Docs', href: 'https://docs.context.dev' },\n\t\t\t]}\n\t\t\tdemoCta={{ label: 'Book demo', href: '/demo' }}\n\t\t\tprimaryCta={{ label: 'Start for free', href: '/signup' }}\n\t\t/>\n\t);\n}\n```\n\n--- blocks/hero ---\n---\nname: hero\ntype: block\nver 
+
+===== hook_blocking_error Stop 
+ {"type": "hook_blocking_error", "hookName": "Stop", "toolUseID": "edab0f6b-d21b-4769-be5a-6acb33a85d0d", "hookEvent": "Stop", "blockingError": {"blockingError": "npx context-ds check passed. Done is not good: you changed app/pricing/page.tsx, components/ds/templates/pricing.tsx. Run `npx context-ds review app/pricing/page.tsx` and address the punch list before handing over. If review cannot run (no ANTHROPIC_API_KEY or no dev server), say so in your summary.", "command": "node \"$CLAUDE_PROJECT_DIR/node_modules/context-ds/bin.js\" hook stop"}} 
+

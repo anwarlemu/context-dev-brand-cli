@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "story-rail",
+  "title": "StoryRail",
+  "description": "Customer stories as a horizontal row of blue cards the visitor scrolls themselves.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/card.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/dot-grid.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/story-rail/story-rail.tsx",
+      "content": "import { Button } from '@/components/ds/ui/button';\nimport { Card } from '@/components/ds/ui/card';\nimport { DotGrid } from '@/components/ds/ui/dot-grid';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type StoryRailProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\taction?: { label: string; href: string };\n\tstories: { company: string; date: string; summary: string; href: string; art: string[] }[];\n};\n\nexport function StoryRail({ title, highlight, sub, action, stories }: StoryRailProps) {\n\treturn (\n\t\t<Section block=\"story-rail\">\n\t\t\t<div className=\"flex flex-col gap-10\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} sub={sub} align=\"center\" action={action ? <Button variant=\"secondary\" href={action.href}>{action.label}</Button> : undefined} />\n\t\t\t\t<div className=\"-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:-mx-10 md:px-10\">\n\t\t\t\t\t{stories.map((story) => (\n\t\t\t\t\t\t<div key={story.company} className=\"w-72 shrink-0 snap-start md:w-80\">\n\t\t\t\t\t\t\t<Card tone=\"blue\">\n\t\t\t\t\t\t\t\t<div className=\"flex justify-center py-4\"><DotGrid pattern={story.art} tone=\"on-brand\" size=\"sm\" /></div>\n\t\t\t\t\t\t\t\t<p className=\"text-caption text-on-brand\">{story.date}</p>\n\t\t\t\t\t\t\t\t<h3 className=\"text-h4\">{story.company}</h3>\n\t\t\t\t\t\t\t\t<p className=\"line-clamp-4 text-body-sm text-on-brand\">{story.summary}</p>\n\t\t\t\t\t\t\t\t<div className=\"mt-auto pt-2\"><Button variant=\"on-brand\" size=\"small\" href={story.href}>Read their story</Button></div>\n\t\t\t\t\t\t\t</Card>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/story-rail.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/story-rail"
+  },
+  "type": "registry:block"
+}

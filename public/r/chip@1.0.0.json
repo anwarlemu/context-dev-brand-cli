@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "chip",
+  "title": "Chip",
+  "description": "Small tags under a card title (\"Fresh sources for RAG\") and \"Also in the API\" links.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/chip/chip.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type ChipProps = { href?: string; tone?: 'default' | 'on-brand'; children: ReactNode };\n\nexport function Chip({ href, tone = 'default', children }: ChipProps) {\n\tconst className = cx('inline-flex items-center rounded-pill border px-2.5 py-1 text-body-sm', tone === 'default' ? 'border-line-strong bg-surface text-fg-muted' : 'border-on-brand text-on-brand', href && 'transition-colors duration-150 ease-out hover:border-brand hover:text-brand');\n\treturn href ? <a href={href} className={className}>{children}</a> : <span className={className}>{children}</span>;\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/chip.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/chip"
+  },
+  "type": "registry:ui"
+}

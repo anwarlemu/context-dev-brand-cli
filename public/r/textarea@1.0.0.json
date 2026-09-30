@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "textarea",
+  "title": "Textarea",
+  "description": "Multi-line text, such as the FAQ \"Ask anything\" box or a contact message.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "registry/ui/textarea/textarea.tsx",
+      "content": "import type { TextareaHTMLAttributes } from 'react';\n\nexport type TextareaProps = Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'className' | 'style'> & { label: string; hideLabel?: boolean };\n\nexport function Textarea({ label, hideLabel, id, rows = 4, ...props }: TextareaProps) {\n\tconst fieldId = id ?? props.name;\n\treturn (\n\t\t<label htmlFor={fieldId} className=\"flex flex-col gap-2\">\n\t\t\t<span className={hideLabel ? 'sr-only' : 'text-body-sm text-fg-muted'}>{label}</span>\n\t\t\t<textarea id={fieldId} rows={rows} {...props} className=\"w-full rounded-card border border-line bg-surface px-4 py-3 text-body text-fg placeholder:text-fg-subtle transition-colors duration-150 ease-out focus-visible:border-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus resize-y\" />\n\t\t</label>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/textarea.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/textarea"
+  },
+  "type": "registry:ui"
+}

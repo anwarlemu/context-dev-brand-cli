@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "checkbox",
+  "title": "Checkbox",
+  "description": "A binary choice with a visible label. Also the check items under the hero demo (disabled, checked).",
+  "files": [
+    {
+      "path": "registry/ui/checkbox/checkbox.tsx",
+      "content": "import type { InputHTMLAttributes, ReactNode } from 'react';\n\nexport type CheckboxProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'className' | 'style' | 'type'> & { children: ReactNode };\n\nexport function Checkbox({ children, ...props }: CheckboxProps) {\n\treturn (\n\t\t<label className=\"inline-flex items-center gap-2 text-body-sm text-fg\">\n\t\t\t<input type=\"checkbox\" {...props} className=\"size-4 rounded-sm border border-line-strong accent-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus\" />\n\t\t\t{children}\n\t\t</label>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/checkbox.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/checkbox"
+  },
+  "type": "registry:ui"
+}

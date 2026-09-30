@@ -1,0 +1,9 @@
+{
+    "layout": {
+        "content-width": {
+            "$type": "dimension",
+            "$value": "1152px",
+            "$description": "The ruled center column (max-w-6xl)"
+        }
+    }
+}

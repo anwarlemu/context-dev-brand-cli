@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "agent-onboarding",
+  "title": "AgentOnboarding",
+  "description": "The two ways to start, side by side. Do it yourself (white card), or let your agent do it (blue card, recommended).",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/card.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/badge.json",
+    "https://context-ds.vercel.app/r/code-window.json",
+    "https://context-ds.vercel.app/r/dot-grid.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/agent-onboarding/agent-onboarding.tsx",
+      "content": "import { Badge } from '@/components/ds/ui/badge';\nimport { Button } from '@/components/ds/ui/button';\nimport { Card } from '@/components/ds/ui/card';\nimport { CodeWindow } from '@/components/ds/ui/code-window';\nimport { DotGrid } from '@/components/ds/ui/dot-grid';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type AgentOnboardingProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\tmanual: { title: string; steps: string[]; cta: { label: string; href: string } };\n\tagent: { title: string; body: string; prompt: string; cta: { label: string; href: string } };\n};\n\nexport function AgentOnboarding({ title, highlight, sub, manual, agent }: AgentOnboardingProps) {\n\treturn (\n\t\t<Section block=\"agent-onboarding\">\n\t\t\t<div className=\"flex flex-col gap-12\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} sub={sub} />\n\t\t\t\t<div className=\"grid gap-4 md:grid-cols-2\">\n\t\t\t\t\t<Card>\n\t\t\t\t\t\t<div className=\"flex justify-center rounded-card bg-tint p-6\">\n\t\t\t\t\t\t\t<DotGrid pattern={['oooxxooo', 'ooxxxxoo', 'oxxxxxxo', 'ooxxxxoo', 'oooxxooo']} size=\"sm\" />\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<h3 className=\"text-h4\">{manual.title}</h3>\n\t\t\t\t\t\t<ol className=\"flex flex-col gap-2 text-body text-fg-muted\">\n\t\t\t\t\t\t\t{manual.steps.slice(0, 4).map((step, i) => (\n\t\t\t\t\t\t\t\t<li key={step}>{i + 1}. {step}</li>\n\t\t\t\t\t\t\t))}\n\t\t\t\t\t\t</ol>\n\t\t\t\t\t\t<div className=\"mt-auto\"><Button variant=\"secondary\" href={manual.cta.href}>{manual.cta.label}</Button></div>\n\t\t\t\t\t</Card>\n\t\t\t\t\t<Card tone=\"blue\">\n\t\t\t\t\t\t<CodeWindow title=\"agent setup\" code={agent.prompt} tone=\"light\" />\n\t\t\t\t\t\t<div className=\"flex items-center gap-3\">\n\t\t\t\t\t\t\t<h3 className=\"text-h4\">{agent.title}</h3>\n\t\t\t\t\t\t\t<Badge tone=\"on-brand\">Recommended</Badge>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<p className=\"text-body\">{agent.body}</p>\n\t\t\t\t\t\t<div className=\"mt-auto\"><Button variant=\"on-brand\" href={agent.cta.href}>{agent.cta.label}</Button></div>\n\t\t\t\t\t</Card>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/agent-onboarding.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/agent-onboarding"
+  },
+  "type": "registry:block"
+}

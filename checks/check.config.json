@@ -1,0 +1,21 @@
+{
+  "include": ["**/*.{tsx,jsx,ts,js,css,md,mdx}"],
+  "exclude": ["**/*.d.ts", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}", "tokens/**", "build/**", "public/**", "**/next.config.*", "**/tailwind.config.*", "**/postcss.config.*", "**/eslint.config.*", "CLAUDE.md", "AGENTS.md", "README.md", "CHANGELOG.md", ".claude/**", ".cursor/**", ".codex/**"],
+  "pageGlobs": ["**/app/**/page.{tsx,jsx}", "**/pages/**/*.{tsx,jsx}"],
+  "allowRawValues": ["**/tokens.css", "**/theme.css", "**/theme.scoped.css", "**/context-ds/**/*.css"],
+  "rules": {
+    "no-raw-color": "error",
+    "no-arbitrary-spacing": "error",
+    "no-off-scale-radius": "error",
+    "no-off-scale-motion": "error",
+    "font-family-from-tokens": "error",
+    "copy-rules": "error",
+    "contrast": "error",
+    "template-structure": "error",
+    "no-unregistered-section": "error",
+    "variant-from-list": "error",
+    "registry-drift": "error",
+    "single-primary-action": "error"
+  },
+  "fast": ["no-raw-color", "no-arbitrary-spacing", "no-off-scale-radius", "no-off-scale-motion", "font-family-from-tokens", "copy-rules", "template-structure", "no-unregistered-section", "variant-from-list", "single-primary-action"]
+}

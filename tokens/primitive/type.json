@@ -1,0 +1,48 @@
+{
+  "font": {
+    "family": {
+      "sans": {
+        "$type": "fontFamily",
+        "$value": [
+          "var(--font-rethink-sans, \"Rethink Sans\")",
+          "system-ui",
+          "sans-serif"
+        ],
+        "$description": "Primary. Google Fonts"
+      },
+      "data": {
+        "$type": "fontFamily",
+        "$value": [
+          "var(--font-doto, \"Doto\")",
+          "ui-monospace",
+          "monospace"
+        ],
+        "$description": "Numbers and data only, large, rare. Google Fonts"
+      },
+      "mono": {
+        "$type": "fontFamily",
+        "$value": [
+          "var(--font-ibm-plex-mono, \"IBM Plex Mono\")",
+          "ui-monospace",
+          "monospace"
+        ],
+        "$description": "Code samples. Taken from brand-dev-webapp; guidelines name no code font"
+      }
+    },
+    "weight": {
+      "regular": {
+        "$type": "fontWeight",
+        "$value": 400
+      },
+      "medium": {
+        "$type": "fontWeight",
+        "$value": 500,
+        "$description": "Headers. Decision by Anwar, 2026-09-30"
+      },
+      "data": {
+        "$type": "fontWeight",
+        "$value": 800
+      }
+    }
+  }
+}

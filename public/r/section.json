@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "section",
+  "title": "Section",
+  "description": "The outer shell of every block. Surface, ruled center column, vertical rhythm, data-ds-block.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/section/section.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst SURFACES = {\n\twhite: 'bg-surface text-fg',\n\tblue: 'bg-brand text-on-brand',\n\tblack: 'bg-surface-inverse text-fg-inverse',\n} as const;\n\nexport type SectionProps = {\n\tblock: string;\n\tsurface?: keyof typeof SURFACES;\n\tspacing?: 'default' | 'tight' | 'none';\n\tdivider?: boolean;\n\tid?: string;\n\tchildren: ReactNode;\n};\n\nexport function Section({ block, surface = 'white', spacing = 'default', divider = true, id, children }: SectionProps) {\n\treturn (\n\t\t<section data-ds-block={block} id={id} className={cx(SURFACES[surface], divider && 'border-b border-line')}>\n\t\t\t<div className={cx('mx-auto w-full max-w-6xl border-x border-line px-6 md:px-10', spacing === 'default' && 'py-16 md:py-24', spacing === 'tight' && 'py-8 md:py-10')}>{children}</div>\n\t\t</section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/section.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/section"
+  },
+  "type": "registry:ui"
+}

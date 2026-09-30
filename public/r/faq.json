@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "faq",
+  "title": "Faq",
+  "description": "Questions that remove doubt before sign-up. Heading and one action on the left, questions on the right.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/button.json",
+    "https://context-ds.vercel.app/r/tabs.json",
+    "https://context-ds.vercel.app/r/accordion.json",
+    "https://context-ds.vercel.app/r/dot-story.json",
+    "https://context-ds.vercel.app/r/dot-engine.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/faq/faq.tsx",
+      "content": "import { Accordion } from '@/components/ds/ui/accordion';\nimport { Button } from '@/components/ds/ui/button';\nimport { FaqDemoInvite } from '@/components/ds/ui/faq-demo-invite';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\nimport { Tabs } from '@/components/ds/ui/tabs';\n\nexport type FaqProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\taction?: { label: string; href: string };\n\ttopics: { id: string; label: string; items: { question: string; answer: string }[] }[];\n\tdemo?: boolean;\n};\n\nexport function Faq({ title, highlight, sub, action, topics, demo = true }: FaqProps) {\n\treturn (\n\t\t<Section block=\"faq\">\n\t\t\t<div className=\"grid gap-12 md:grid-cols-5\">\n\t\t\t\t<div className=\"flex flex-col items-start gap-6 md:col-span-2\">\n\t\t\t\t\t<SectionHeading title={title} highlight={highlight} sub={sub} />\n\t\t\t\t\t{action ? <Button variant=\"secondary\" href={action.href}>{action.label}</Button> : null}\n\t\t\t\t\t{demo ? <FaqDemoInvite className=\"mt-auto w-full\" /> : null}\n\t\t\t\t</div>\n\t\t\t\t<div className=\"md:col-span-3\">\n\t\t\t\t\t{topics.length > 1 ? (\n\t\t\t\t\t\t<Tabs label=\"Question topics\" items={topics.map((t) => ({ id: t.id, label: t.label, content: <Accordion items={t.items} /> }))} />\n\t\t\t\t\t) : (\n\t\t\t\t\t\t<Accordion items={topics[0]?.items ?? []} />\n\t\t\t\t\t)}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/faq.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/faq"
+  },
+  "type": "registry:block"
+}

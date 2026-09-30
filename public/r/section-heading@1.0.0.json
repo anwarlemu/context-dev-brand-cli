@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "section-heading",
+  "title": "SectionHeading",
+  "description": "The heading of every section. Headline with the key phrase in blue, one line of muted sub, optional action on the right.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/section-heading/section-heading.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type SectionHeadingProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\talign?: 'left' | 'center';\n\tlevel?: 'h1' | 'h2';\n\tsize?: 'display' | 'h1' | 'h2';\n\taction?: ReactNode;\n\ttone?: 'default' | 'on-brand' | 'inverse';\n};\n\nexport function Highlighted({ text, highlight, className }: { text: string; highlight?: string; className: string }) {\n\tconst at = highlight ? text.indexOf(highlight) : -1;\n\tif (!highlight || at < 0) return <>{text}</>;\n\treturn (\n\t\t<>\n\t\t\t{text.slice(0, at)}\n\t\t\t<span className={className}>{highlight}</span>\n\t\t\t{text.slice(at + highlight.length)}\n\t\t</>\n\t);\n}\n\nexport function SectionHeading({ title, highlight, sub, align = 'left', level = 'h2', size = 'h2', action, tone = 'default' }: SectionHeadingProps) {\n\tconst Tag = level;\n\tconst accent = tone === 'default' ? 'text-brand' : tone === 'inverse' ? 'text-blue-60' : 'text-on-brand';\n\tconst subTone = tone === 'default' ? 'text-fg-muted' : tone === 'inverse' ? 'text-neutral-30' : 'text-on-brand';\n\tconst sizeClass = size === 'display' ? 'text-h1 md:text-display' : size === 'h1' ? 'text-h2 md:text-h1' : 'text-h3 md:text-h2';\n\treturn (\n\t\t<div className={cx('flex flex-col gap-6', align === 'center' ? 'items-center text-center' : 'md:flex-row md:items-end md:justify-between')}>\n\t\t\t<div className={cx('flex max-w-2xl flex-col gap-4', align === 'center' && 'items-center')}>\n\t\t\t\t<Tag className={cx(sizeClass, 'text-balance')}>\n\t\t\t\t\t<Highlighted text={title} highlight={highlight} className={accent} />\n\t\t\t\t</Tag>\n\t\t\t\t{sub ? <p className={cx('text-body-lg text-pretty', subTone)}>{sub}</p> : null}\n\t\t\t</div>\n\t\t\t{action ? <div className=\"shrink-0\">{action}</div> : null}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/section-heading.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/section-heading"
+  },
+  "type": "registry:ui"
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tabs",
+  "title": "Tabs",
+  "description": "Switching between 2 to 6 parallel views of one thing (benchmark metrics, FAQ topics, SDK languages).",
+  "files": [
+    {
+      "path": "registry/ui/tabs/tabs.tsx",
+      "content": "'use client';\n\nimport { type ReactNode, useId, useState } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type TabsProps = { label: string; items: { id: string; label: string; content: ReactNode }[]; defaultId?: string };\n\nexport function Tabs({ label, items, defaultId }: TabsProps) {\n\tconst [active, setActive] = useState(defaultId ?? items[0]?.id);\n\tconst base = useId();\n\treturn (\n\t\t<div className=\"flex flex-col gap-6\">\n\t\t\t<div role=\"tablist\" aria-label={label} className=\"flex flex-wrap gap-2\">\n\t\t\t\t{items.map((item) => (\n\t\t\t\t\t<button\n\t\t\t\t\t\tkey={item.id}\n\t\t\t\t\t\trole=\"tab\"\n\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\tid={`${base}-${item.id}-tab`}\n\t\t\t\t\t\taria-selected={active === item.id}\n\t\t\t\t\t\taria-controls={`${base}-${item.id}-panel`}\n\t\t\t\t\t\tonClick={() => setActive(item.id)}\n\t\t\t\t\t\tclassName={cx('rounded-pill border px-4 py-2 text-body-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus', active === item.id ? 'border-brand text-brand' : 'border-line text-fg-muted hover:text-fg')}\n\t\t\t\t\t>\n\t\t\t\t\t\t{item.label}\n\t\t\t\t\t</button>\n\t\t\t\t))}\n\t\t\t</div>\n\t\t\t{items.map((item) => (\n\t\t\t\t<div key={item.id} role=\"tabpanel\" id={`${base}-${item.id}-panel`} aria-labelledby={`${base}-${item.id}-tab`} hidden={active !== item.id}>\n\t\t\t\t\t{item.content}\n\t\t\t\t</div>\n\t\t\t))}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/tabs.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/tabs"
+  },
+  "type": "registry:ui"
+}

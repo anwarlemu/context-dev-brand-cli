@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-case-grid",
+  "title": "UseCaseGrid",
+  "description": "What teams build with the API. Two or six ringed cards in a two-column grid, each with a dot drawing.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/section.json",
+    "https://context-ds.vercel.app/r/section-heading.json",
+    "https://context-ds.vercel.app/r/card.json",
+    "https://context-ds.vercel.app/r/dot-story.json",
+    "https://context-ds.vercel.app/r/dot-engine.json",
+    "https://context-ds.vercel.app/r/blog-cover.json",
+    "https://context-ds.vercel.app/r/ring-backdrop.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/use-case-grid/use-case-grid.tsx",
+      "content": "import { backdropStyle } from '@/components/ds/ui/blog-cover-art';\nimport { Card } from '@/components/ds/ui/card';\nimport { DotScene, type DotSceneName } from '@/components/ds/ui/dot-scene';\nimport { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\n\nexport type UseCaseGridProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\tcases: { title: string; description: string; scene: DotSceneName }[];\n};\n\nexport function UseCaseGrid({ title, highlight, sub, cases }: UseCaseGridProps) {\n\treturn (\n\t\t<Section block=\"use-case-grid\">\n\t\t\t<div className=\"flex flex-col gap-12\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} sub={sub} />\n\t\t\t\t<div className=\"grid gap-4 md:grid-cols-2\">\n\t\t\t\t\t{cases.slice(0, 6).map((c) => (\n\t\t\t\t\t\t<Card key={c.title}>\n\t\t\t\t\t\t\t<h3 className=\"text-h4\">{c.title}</h3>\n\t\t\t\t\t\t\t<p className=\"text-body text-fg-muted\">{c.description}</p>\n\t\t\t\t\t\t\t<div className=\"relative mt-auto overflow-hidden rounded-card border border-line p-6\">\n\t\t\t\t\t\t\t\t<div aria-hidden className=\"absolute inset-2\" style={backdropStyle('paper')} />\n\t\t\t\t\t\t\t\t<DotScene variant={c.scene} className=\"relative mx-auto w-full max-w-sm\" />\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</Card>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/use-case-grid.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.1.0",
+    "dsType": "block",
+    "id": "blocks/use-case-grid"
+  },
+  "type": "registry:block"
+}

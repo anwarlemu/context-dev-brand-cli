@@ -1,0 +1,23 @@
+{
+  "$schema": "./src/schema/ds-config.schema.json",
+  "brand": "Context.dev",
+  "bin": "context-ds",
+  "registryUrl": "https://context-ds.vercel.app",
+  "registryMode": "local",
+  "siteUrl": "https://www.context.dev",
+  "framework": "next",
+  "packageManager": "npm",
+  "presetId": "context-dev",
+  "scopeClass": "brand-system",
+  "blocksImportPrefix": "@/components/ds/blocks/",
+  "uiImportPrefix": "@/components/ds/ui/",
+  "templatesImportPrefix": "@/components/ds/templates/",
+  "harnesses": ["claude-code", "cursor", "codex"],
+  "docsMaxLines": 80,
+  "contractMaxLines": 15,
+  "review": {
+    "model": "claude-opus-5-5",
+    "threshold": 7,
+    "viewports": ["desktop", "tablet", "mobile"]
+  }
+}
