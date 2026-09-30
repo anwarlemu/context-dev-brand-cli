@@ -1,0 +1,54 @@
+# context-ds (working on the harness itself)
+
+This repo is the Context.dev design system and the CLI (`context-ds`) that makes coding agents use
+it. `BRIEF.md` is the original spec (milestones M0 to M8), `README.md` explains usage, `intake/` holds the brand inputs and `ASSUMPTIONS.md` the open questions.
+This file is for agents changing the harness. Apps that install it get a different contract,
+written by `init` from `src/skill/`.
+
+## Setup and the loop
+
+```sh
+npm run setup            # install, build CLI, tokens, registry, tests
+npm run build            # after any change in src/
+npm run tokens           # after any change in tokens/ (also regenerates registry/ui/cx/cx.ts)
+npm run registry:build   # after any change in registry/ (validates, type-checks, shadcn build)
+npm run ci               # build, tokens, limits, tests; must pass before you finish
+node bin.js check registry   # registry must stay at 0 errors
+```
+
+## Where things are
+
+- `principles.md`, `voice.md` (YAML header is machine-read), `intents.json`: brand decisions. Change only with the brand owner's say-so; open questions are in `ASSUMPTIONS.md`.
+- `tokens/` DTCG source; `build/` is generated, never edit it.
+- `registry/{ui,blocks,templates}/<name>/`: source, `docs.md`, one `<name>.example.tsx`. Template slot copy overrides live in `registry/templates/<t>/slots/<slot>.<block>.example.tsx`.
+- `registry/ui/{dot-engine,dot-story,blog-cover,...}`: ported from brand-dev-webapp by `scripts/port-dots.mjs`. Do not hand-edit; change the script's PATCHES and re-run it against the site. `dot-story/dot-scene.tsx` and its docs table are generated from the story list.
+- `src/`: the engine. `check/rules/*` (one file per rule family), `hooks/handlers.ts`, `commands/*`.
+- `test/harness.test.ts`, `test/fixtures/violations` (one violation per rule) with `expected.json`, `test/evidence/` (M5 and M8 results).
+- `intake/`: what the brand owner supplied. Read-only.
+
+## Rules for changes
+
+- No brand strings or the binary name in `src/`; read them from `ds.config.json` (`scripts/ci-limits.ts` enforces this).
+- Each item's docs.md plus example stays under 80 lines. Contract stays under 15.
+- Every block's root is `<Section block="<name>">`. Examples render the item once with literal props only (scaffold copies that JSX verbatim).
+- Only token classes in the registry. A real exception needs `// ds-override: <reason>` on the line.
+- Bump an item's `version` in docs.md when you change it.
+- No em dashes anywhere; American spelling; sentence case.
+- A new rule needs a fixture in `test/fixtures/violations` and a line in `expected.json`.
+- Agents are told to run `npx context-ds`, never bare `context-ds` (it is not on the shell PATH in apps).
+
+## Verifying in a real app
+
+```sh
+npx create-next-app@latest /tmp/ds-try --ts --tailwind --app --use-npm --yes
+cd /tmp/ds-try && npm i -D <this repo> && npx context-ds init && npx context-ds scaffold landing --force
+npx context-ds check && npx next build
+```
+For hook behavior, run `claude -p "Build the pricing page for Context.dev."` in such an app and read
+the transcript. `review` works without an API key through `claude -p`.
+
+## Do not
+
+- Kill processes by pattern (`pkill -f "next dev"`): the owner's brand-dev-webapp dev server runs on :3000.
+- Modify `~/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp` without being asked; use `init --dry-run` there.
+- Commit `.stage`, `.stage2`, `dist`, or `node_modules`.
