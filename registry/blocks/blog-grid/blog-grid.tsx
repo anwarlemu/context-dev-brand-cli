@@ -13,9 +13,8 @@ export function BlogGrid({ title, highlight, posts }: BlogGridProps) {
 	const shown = posts.slice(0, 6);
 	const motifs = assignBlogCoverMotifs(shown);
 	return (
-		<Section block="blog-grid" surface="black">
+		<Section block="blog-grid" surface="black" heading={<SectionHeading title={title} highlight={highlight} tone="inverse" />}>
 			<div className="flex flex-col gap-10">
-				<SectionHeading title={title} highlight={highlight} tone="inverse" />
 				<div className="grid gap-4 md:grid-cols-3">
 					{shown.map((post, i) => {
 						const surface = blogCardSurface(i);

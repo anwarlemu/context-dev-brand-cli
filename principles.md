@@ -47,7 +47,9 @@ Refuse:
 - One primary action per screen: the filled black pill. Every other action is an outline pill.
 - Every section is a registry block. Every page starts from a template.
 - Claims are provable. A number on the page links to its benchmark or source.
-- Doto is for one large figure at a time, never for text.
+- Doto is the figure face. Use it for: a section's one large stat (`<Stat>`), animated counts and
+  step numbers (`<CreditsDotNumber>`), values on charts, and the typed input in the hero demo.
+  Never for headings, body, buttons, labels or navigation. Words next to a figure stay in Rethink Sans.
 - Dot illustrations are drawn from the circle grid. No stock icons as illustrations, no photos with backgrounds.
 - Motion is the dot engine: dots ease between hollow and solid, play only on screen, and rest still with reduced motion. No other animation styles (no parallax, no bouncing cards, no gradient shifts).
 

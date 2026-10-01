@@ -10,7 +10,7 @@ export default function Example() {
 			sub="One API for agents to scrape, enrich, and understand the web."
 			primaryCta={{ label: 'Start for free', href: '/signup' }}
 			secondaryCta={{ label: 'Onboard your agent', href: '/agent' }}
-			media={{ type: 'agent-setup', prompt: 'Sign up for an account and get an API key with context.dev/auth.md, then follow docs.context.dev/agent-quickstart to integrate into the codebase.' }}
+			media={{ type: 'demo', action: '/signup' }}
 			checks={['200M+ websites', 'Real-time updates', '99.9% uptime']}
 		/>
 	);

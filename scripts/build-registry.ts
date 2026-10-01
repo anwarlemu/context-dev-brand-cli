@@ -19,6 +19,7 @@ for (const item of items) {
 	if (lines > config.docsMaxLines) problems.push(`${item.id}: docs plus example is ${lines} lines, cap ${config.docsMaxLines}. Split the item.`);
 	for (const dep of item.docs.dependencies) if (!findItem(dep)) problems.push(`${item.id}: unknown dependency ${dep}`);
 	if (!item.sourceFiles.length) problems.push(`${item.id}: no source file`);
+	for (const f of item.sourceFiles) if (/\.(png|jpe?g|gif|webp|avif|ico|woff2?|ttf|otf)$/i.test(f)) problems.push(`${item.id}: ${f.slice(process.cwd().length + 1)} is binary; shadcn registry files are text. Wrap images in an SVG data URI or ship SVG.`);
 	if (item.type === 'block') {
 		const src = item.sourceFiles.map((f) => readFileSync(f, 'utf8')).join('\n');
 		if (!src.includes(`block="${item.name}"`)) problems.push(`${item.id}: root Section must set block="${item.name}"`);

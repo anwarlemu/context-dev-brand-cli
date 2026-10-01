@@ -1,56 +1,21 @@
-import { DotGrid } from '@/components/ds/ui/dot-grid';
+import { BENCHMARKS, type BenchmarkData } from '@/components/ds/ui/benchmark-data';
+import { BenchmarkPanel } from '@/components/ds/ui/benchmark-chart';
+import { BenchmarkComparison } from '@/components/ds/ui/benchmark-comparison';
 import { Section } from '@/components/ds/ui/section';
 import { SectionHeading } from '@/components/ds/ui/section-heading';
-import { Tabs } from '@/components/ds/ui/tabs';
 
-type Metric = { id: string; label: string; unit: string; higherIsBetter: boolean; groups: { name: string; values: { provider: string; value: number }[] }[] };
+export type BenchmarkProps = { title: string; highlight?: string; sub?: string; data?: BenchmarkData; sourceLabel: string; sourceHref: string };
 
-export type BenchmarkProps = { title: string; highlight?: string; sub?: string; ours: string; metrics: Metric[]; sourceLabel: string; sourceHref: string };
+// Sample figures never reach production: until the data is verified, production shows the sourced feature table.
+const showsCharts = (data: BenchmarkData) => data.status === 'verified' || process.env.NODE_ENV !== 'production';
 
-const ROWS = 10;
-
-function column(value: number, max: number, ours: boolean) {
-	const filled = Math.max(1, Math.round((value / max) * ROWS));
-	return Array.from({ length: ROWS }, (_, r) => (ROWS - r <= filled ? (ours ? 'x' : 'o') : ' ')).join('');
-}
-
-export function Benchmark({ title, highlight, sub, ours, metrics, sourceLabel, sourceHref }: BenchmarkProps) {
+export function Benchmark({ title, highlight, sub, data = BENCHMARKS, sourceLabel, sourceHref }: BenchmarkProps) {
+	const charts = showsCharts(data);
 	return (
 		<Section block="benchmark">
-			<div className="flex flex-col gap-12">
-				<SectionHeading title={title} highlight={highlight} sub={sub} />
-				<Tabs
-					label="Benchmark metric"
-					items={metrics.map((m) => {
-						const max = Math.max(...m.groups.flatMap((g) => g.values.map((v) => v.value)));
-						return {
-							id: m.id,
-							label: m.label,
-							content: (
-								<div className="grid gap-8 md:grid-cols-3">
-									{m.groups.map((g) => (
-										<figure key={g.name} className="flex flex-col items-center gap-4 rounded-card border border-line p-6">
-											<div className="flex items-end gap-3">
-												{g.values.map((v) => {
-													const rows = column(v.value, max, v.provider === ours).split('');
-													return (
-														<div key={v.provider} className="flex flex-col items-center gap-2">
-															<span className={v.provider === ours ? 'text-body-sm font-medium text-brand' : 'text-body-sm text-fg-muted'}>{v.value}{m.unit}</span>
-															<DotGrid pattern={rows} size="sm" label={`${v.provider} ${v.value}${m.unit}`} />
-															<span className="text-caption text-fg-muted">{v.provider}</span>
-														</div>
-													);
-												})}
-											</div>
-											<figcaption className="text-caption text-fg-muted">{g.name}</figcaption>
-										</figure>
-									))}
-								</div>
-							),
-						};
-					})}
-				/>
-				<a href={sourceHref} className="self-start text-body-sm text-brand underline-offset-4 hover:underline">{sourceLabel}</a>
+			<div className="flex flex-col gap-10">
+				<SectionHeading title={title} highlight={highlight} sub={sub} action={charts ? undefined : <a href={sourceHref} className="text-body-sm font-medium text-brand/85 underline-offset-4 hover:text-brand hover:underline">{sourceLabel}</a>} />
+				{charts ? <BenchmarkPanel data={data} sourceHref={sourceHref} sourceLabel={sourceLabel} /> : <BenchmarkComparison />}
 			</div>
 		</Section>
 	);

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { PageGuides } from '@/components/ds/ui/page-guides';
 
 export type LandingTemplateProps = {
 	announcement?: ReactNode;
@@ -22,7 +23,8 @@ export type LandingTemplateProps = {
 
 export function LandingTemplate({ announcement, nav, hero, proof, products, benchmark, onboarding, showcase, use_cases, trust, testimonials, stories, updates, steps, faq, cta, footer }: LandingTemplateProps) {
 	return (
-		<div data-ds-template="landing" className="min-h-screen bg-surface font-sans text-fg">
+		<div data-ds-template="landing" className="relative min-h-screen overflow-x-clip bg-surface font-sans text-fg">
+			<PageGuides />
 			{announcement}
 			{nav}
 			<main>

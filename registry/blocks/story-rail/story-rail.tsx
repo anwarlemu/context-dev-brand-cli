@@ -15,9 +15,8 @@ export type StoryRailProps = {
 
 export function StoryRail({ title, highlight, sub, action, stories }: StoryRailProps) {
 	return (
-		<Section block="story-rail">
+		<Section block="story-rail" heading={<SectionHeading title={title} highlight={highlight} sub={sub} align="center" action={action ? <Button variant="secondary" href={action.href}>{action.label}</Button> : undefined} />}>
 			<div className="flex flex-col gap-10">
-				<SectionHeading title={title} highlight={highlight} sub={sub} align="center" action={action ? <Button variant="secondary" href={action.href}>{action.label}</Button> : undefined} />
 				<div className="-mx-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 md:-mx-10 md:px-10">
 					{stories.map((story) => (
 						<div key={story.company} className="w-72 shrink-0 snap-start md:w-80">

@@ -1,7 +1,7 @@
 ---
 name: story-rail
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: Customer stories as a horizontal row of blue cards the visitor scrolls themselves.
 never:
   - Autoplay, timers or a carousel library

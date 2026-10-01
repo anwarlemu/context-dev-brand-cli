@@ -6,13 +6,13 @@
   "files": [
     {
       "path": "registry/templates/landing/landing.tsx",
-      "content": "import type { ReactNode } from 'react';\n\nexport type LandingTemplateProps = {\n\tannouncement?: ReactNode;\n\tnav?: ReactNode;\n\thero?: ReactNode;\n\tproof?: ReactNode;\n\tproducts?: ReactNode;\n\tbenchmark?: ReactNode;\n\tonboarding?: ReactNode;\n\tshowcase?: ReactNode;\n\tuse_cases?: ReactNode;\n\ttrust?: ReactNode;\n\ttestimonials?: ReactNode;\n\tstories?: ReactNode;\n\tupdates?: ReactNode;\n\tsteps?: ReactNode;\n\tfaq?: ReactNode;\n\tcta?: ReactNode;\n\tfooter?: ReactNode;\n};\n\nexport function LandingTemplate({ announcement, nav, hero, proof, products, benchmark, onboarding, showcase, use_cases, trust, testimonials, stories, updates, steps, faq, cta, footer }: LandingTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"landing\" className=\"min-h-screen bg-surface font-sans text-fg\">\n\t\t\t{announcement}\n\t\t\t{nav}\n\t\t\t<main>\n\t\t\t\t{hero}\n\t\t\t\t{proof}\n\t\t\t\t{products}\n\t\t\t\t{benchmark}\n\t\t\t\t{onboarding}\n\t\t\t\t{showcase}\n\t\t\t\t{use_cases}\n\t\t\t\t{trust}\n\t\t\t\t{testimonials}\n\t\t\t\t{stories}\n\t\t\t\t{updates}\n\t\t\t\t{steps}\n\t\t\t\t{faq}\n\t\t\t\t{cta}\n\t\t\t</main>\n\t\t\t{footer}\n\t\t</div>\n\t);\n}\n",
+      "content": "import type { ReactNode } from 'react';\nimport { PageGuides } from '@/components/ds/ui/page-guides';\n\nexport type LandingTemplateProps = {\n\tannouncement?: ReactNode;\n\tnav?: ReactNode;\n\thero?: ReactNode;\n\tproof?: ReactNode;\n\tproducts?: ReactNode;\n\tbenchmark?: ReactNode;\n\tonboarding?: ReactNode;\n\tshowcase?: ReactNode;\n\tuse_cases?: ReactNode;\n\ttrust?: ReactNode;\n\ttestimonials?: ReactNode;\n\tstories?: ReactNode;\n\tupdates?: ReactNode;\n\tsteps?: ReactNode;\n\tfaq?: ReactNode;\n\tcta?: ReactNode;\n\tfooter?: ReactNode;\n};\n\nexport function LandingTemplate({ announcement, nav, hero, proof, products, benchmark, onboarding, showcase, use_cases, trust, testimonials, stories, updates, steps, faq, cta, footer }: LandingTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"landing\" className=\"relative min-h-screen overflow-x-clip bg-surface font-sans text-fg\">\n\t\t\t<PageGuides />\n\t\t\t{announcement}\n\t\t\t{nav}\n\t\t\t<main>\n\t\t\t\t{hero}\n\t\t\t\t{proof}\n\t\t\t\t{products}\n\t\t\t\t{benchmark}\n\t\t\t\t{onboarding}\n\t\t\t\t{showcase}\n\t\t\t\t{use_cases}\n\t\t\t\t{trust}\n\t\t\t\t{testimonials}\n\t\t\t\t{stories}\n\t\t\t\t{updates}\n\t\t\t\t{steps}\n\t\t\t\t{faq}\n\t\t\t\t{cta}\n\t\t\t</main>\n\t\t\t{footer}\n\t\t</div>\n\t);\n}\n",
       "type": "registry:file",
       "target": "components/ds/templates/landing.tsx"
     }
   ],
   "meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "dsType": "template",
     "id": "templates/landing"
   },

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "page-guides",
+  "title": "PageGuides",
+  "description": "The dashed outer guides of a marketing page. Rendered by every template, never by blocks.",
+  "files": [
+    {
+      "path": "registry/ui/page-guides/page-guides.tsx",
+      "content": "/** The page's outer guides: two dashed hairlines just outside the content column, the full page height. */\nexport function PageGuides() {\n\treturn (\n\t\t<div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 z-0 hidden justify-center md:flex\">\n\t\t\t<div className=\"relative h-full w-full max-w-7xl\">\n\t\t\t\t<div className=\"absolute inset-y-0 left-0 border-l border-dashed border-line\" />\n\t\t\t\t<div className=\"absolute inset-y-0 right-0 border-r border-dashed border-line\" />\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/page-guides.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/page-guides"
+  },
+  "type": "registry:ui"
+}

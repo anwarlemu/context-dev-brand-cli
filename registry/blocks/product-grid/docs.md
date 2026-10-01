@@ -1,7 +1,7 @@
 ---
 name: product-grid
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: The four core APIs as a 2x2 grid of ringed cards, plus a row of links to the rest of the API.
 never:
   - More or fewer than 4 cards

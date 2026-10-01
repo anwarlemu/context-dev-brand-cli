@@ -7,7 +7,7 @@ const src = join(process.argv[2], 'src', 'components', 'sections');
 const list = (dir, re) => readdirSync(join(src, dir)).filter((f) => re.test(f) && !/\.test\./.test(f)).map((f) => `${dir}/${f}`);
 const MANIFEST = {
 	'dot-engine': ['shared/dot-morph-dots.ts', 'shared/dot-morph-goo.ts', 'shared/dot-morph-player.ts', 'shared/dot-glyph-cells.ts', 'shared/dot-glyph-morph.ts', 'shared/dot-svg-path.ts', 'shared/dot-story-player.ts', 'shared/dot-story-cells.ts', 'shared/dot-story-beats.ts', 'shared/logo-dot-sampling.ts', 'shared/use-hover-dot-morph.ts', 'shared/pause-when-offscreen.tsx', 'shared/hero-pattern-hole.ts'],
-	'dot-story': ['shared/dot-story.tsx', 'shared/hero-circle-pattern.tsx', 'home/story-stage.tsx', 'products/story-caption.ts', 'products/style-guide-parts.ts', ...list('home', /-story(-player|-scenes)?\.tsx?$/), ...list('products', /-story(-player|-scenes)?\.tsx?$/), ...list('.', /^faq-demo-(story|invite)/)],
+	'dot-story': ['shared/dot-story.tsx', 'shared/hero-circle-pattern.tsx', 'home/story-stage.tsx', 'products/story-caption.ts', 'products/style-guide-parts.ts', 'products/prompt-field.ts', ...list('home', /-story(-player|-scenes)?\.tsx?$/), ...list('products', /-story(-player|-scenes)?\.tsx?$/), ...list('.', /^faq-demo-(story|invite)/)],
 	'ring-backdrop': ['shared/ring-backdrop.tsx'],
 	'blog-cover': list('home', /^blog-cover-(art|dot-shader|morph-engine|morph|scenes)\.tsx?$/),
 	'trust-mark': ['home/trust-mark.tsx', 'home/trust-mark-morph.ts', 'home/trust-marks.ts'],
@@ -95,8 +95,10 @@ const PATCHES = {
 		[/(export function backdropTile\(surface: BlogCardSurface\) \{)/, "// Used as a mask: the ring's color comes from the element's background-color, so tokens apply.\nexport function backdropStyle(surface: BlogCardSurface) {\n\tconst tile = backdropTile(surface);\n\treturn { backgroundColor: BLOG_CARD_PALETTES[surface].dots, maskImage: tile, WebkitMaskImage: tile, maskRepeat: 'space', WebkitMaskRepeat: 'space' } as const;\n}\n\n$1"],
 	],
 	'customer-logo-dots/customer-logo-dots.tsx': [
-		[/stroke="white"/g, "style={{ stroke: 'var(--ds-color-white)' }}"],
-		['<path fill="white" ', "<path style={{ fill: 'var(--ds-color-white)' }} "],
+		["const dotColor = tone === 'onWhite' ? 'currentColor' : 'white';", "const dotColor = tone === 'onWhite' ? 'currentColor' : 'var(--ds-color-white)';"],
+		["palette: { dots: tone === 'onWhite' ? getComputedStyle(canvas).color : 'white',", "palette: { dots: tone === 'onWhite' ? getComputedStyle(canvas).color : 'var(--ds-color-white)',"],
+		[/stroke=\{dotColor\}/g, 'style={{ stroke: dotColor }}'],
+		[/fill=\{dotColor\}/g, 'style={{ fill: dotColor }}'],
 		['rounded-2xl', 'rounded-window'],
 	],
 	'footer-watermark/footer-watermark.tsx': [
@@ -130,6 +132,27 @@ for (const [file, edits] of Object.entries(PATCHES)) {
 		if (before === text) console.warn(`patch did not apply: ${file}: ${String(find).slice(0, 60)}`);
 	}
 	writeFileSync(path, text);
+}
+
+// Regenerates the DotScene selector and the scene table in dot-story/docs.md from the ported stories.
+{
+	const dir = join('registry', 'ui', 'dot-story');
+	const stories = readdirSync(dir).filter((f) => f.endsWith('-story.tsx') && f !== 'dot-story.tsx').sort().map((f) => {
+		const text = readFileSync(join(dir, f), 'utf8');
+		const name = f.replace(/-story\.tsx$/, '');
+		const exportName = text.match(/export function (\w+)/)[1];
+		const doc = (text.match(/\/\*\*\s*([\s\S]*?)\*\//)?.[1] ?? '').replace(/\s*\n\s*\*\s*/g, ' ').trim();
+		const shows = (doc.split(/(?<=[.:])\s/)[0] ?? '').replace(/[.:]$/, '').replace(/^The /, '').replace(/'s picture/, '').replace(/ card/, '').replace(/"/g, '');
+		return { name, exportName, shows };
+	});
+	const tsx = ["import type { ComponentType } from 'react';", ...stories.map((s) => `import { ${s.exportName} } from '@/components/ds/ui/${s.name}-story';`), '', 'const SCENES = {', ...stories.map((s) => `\t'${s.name}': ${s.exportName},`), '} satisfies Record<string, ComponentType<{ className?: string }>>;', '', 'export type DotSceneName = keyof typeof SCENES;', 'export const DOT_SCENES = Object.keys(SCENES) as DotSceneName[];', '', 'export function DotScene({ variant, className }: { variant: DotSceneName; className?: string }) {', '\tconst Scene = SCENES[variant];', '\treturn <Scene className={className} />;', '}', ''].join('\n');
+	writeFileSync(join(dir, 'dot-scene.tsx'), tsx);
+	const docsPath = join(dir, 'docs.md');
+	let docs = readFileSync(docsPath, 'utf8');
+	docs = docs.replace(/^variants: \[.*\]$/m, `variants: [${stories.map((s) => s.name).join(', ')}]`);
+	docs = docs.replace(/\| Scene \| Shows \|\n\|---\|---\|\n[\s\S]*$/, `| Scene | Shows |\n|---|---|\n${stories.map((s) => `| \`${s.name}\` | ${s.shows} |`).join('\n')}\n`);
+	writeFileSync(docsPath, docs);
+	console.log(`dot-scene: ${stories.length} scenes`);
 }
 
 for (const [k, v] of Object.entries(report)) console.log(`external in ${k}:`, [...v]);

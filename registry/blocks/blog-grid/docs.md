@@ -1,7 +1,7 @@
 ---
 name: blog-grid
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: The latest six posts on a black band, cards alternating white and blue, each with animated dot cover art.
 never:
   - Stock photos or cover images; post art is a dot cover motif

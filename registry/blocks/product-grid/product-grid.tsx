@@ -16,9 +16,8 @@ export type ProductGridProps = {
 
 export function ProductGrid({ title, highlight, sub, products, more = [] }: ProductGridProps) {
 	return (
-		<Section block="product-grid">
+		<Section block="product-grid" heading={<SectionHeading title={title} highlight={highlight} sub={sub} />}>
 			<div className="flex flex-col gap-12">
-				<SectionHeading title={title} highlight={highlight} sub={sub} />
 				<div className="grid gap-4 md:grid-cols-2">
 					{products.slice(0, 4).map((p) => (
 						<Card key={p.name}>

@@ -1,4 +1,5 @@
 import { CodeWindow } from '@/components/ds/ui/code-window';
+import { DotPanel } from '@/components/ds/ui/dot-panel';
 import { Section } from '@/components/ds/ui/section';
 import { SectionHeading } from '@/components/ds/ui/section-heading';
 import { Tabs } from '@/components/ds/ui/tabs';
@@ -23,10 +24,14 @@ export function CodeShowcase({ title, highlight, sub, items }: CodeShowcaseProps
 								id: item.id,
 								label: item.label,
 								content: (
-									<div className="grid gap-6 md:grid-cols-3">
+									<div className="grid items-center gap-6 md:grid-cols-3">
 										<p className="text-body text-fg-muted">{item.description}</p>
 										<div className="md:col-span-2">
-											<CodeWindow title={item.label} code={item.code} tone="dark" />
+											<DotPanel tone="white">
+												<div className="w-full max-w-3xl">
+													<CodeWindow title={item.label} code={item.code} tone="dark" />
+												</div>
+											</DotPanel>
 										</div>
 									</div>
 								),

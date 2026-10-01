@@ -1,7 +1,7 @@
 ---
 name: landing
 type: template
-version: 1.0.0
+version: 1.1.0
 route: /
 use_for: The homepage and campaign landing pages. One message, one primary action, the agent path next to it.
 structure:
@@ -30,7 +30,7 @@ never:
   - Reordering sections; the template fixes the order
   - A benchmark without a link to the full comparison
 copy_rules: voice.md#mechanics
-dependencies: [section]
+dependencies: [section, page-guides]
 ---
 
 Mirrors the context.dev homepage. The order tells the story: what it is (hero), who trusts it

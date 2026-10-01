@@ -72,6 +72,14 @@ describe('check fixtures (M6)', () => {
 		const { findings } = checkText(FIXTURES, 'components/x.tsx', 'export const X = () => <p className="text-brand-primary text-center text-h3 bg-cover border-2 border-line">Search</p>;');
 		expect(findings.map((f) => f.message)).toEqual(['Unknown color token `text-brand-primary`']);
 	});
+	it('knows when Doto applies', () => {
+		const words = checkText(FIXTURES, 'components/x.tsx', 'export const X = () => <h2 className="font-data text-h2">Start building</h2>;');
+		expect(words.findings.map((f) => f.message)).toEqual(['Doto on words: "Start building"']);
+		const figure = checkText(FIXTURES, 'components/x.tsx', 'export const X = () => <span className="text-display text-brand">94%</span>;');
+		expect(figure.findings.map((f) => f.message)).toEqual(['Large figure "94%" is not in Doto']);
+		const ok = checkText(FIXTURES, 'components/x.tsx', 'export const X = () => <span className="font-data text-stat text-brand">1,000</span>;');
+		expect(ok.findings).toEqual([]);
+	});
 	it('enforces the closed scene list on DotScene', () => {
 		const { findings } = checkText(FIXTURES, 'components/x.tsx', "import { DotScene } from '@/components/ds/ui/dot-scene';\nexport const X = () => <DotScene variant=\"fireworks\" />;");
 		expect(findings.map((f) => f.rule)).toEqual(['variant-from-list']);

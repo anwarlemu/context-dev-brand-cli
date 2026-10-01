@@ -6,13 +6,13 @@
   "files": [
     {
       "path": "registry/templates/product/product.tsx",
-      "content": "import type { ReactNode } from 'react';\n\nexport type ProductTemplateProps = {\n\tnav?: ReactNode;\n\thero?: ReactNode;\n\tproof?: ReactNode;\n\tfeatures?: ReactNode;\n\tshowcase?: ReactNode;\n\tsteps?: ReactNode;\n\tfaq?: ReactNode;\n\trelated?: ReactNode;\n\tcta?: ReactNode;\n\tfooter?: ReactNode;\n};\n\nexport function ProductTemplate({ nav, hero, proof, features, showcase, steps, faq, related, cta, footer }: ProductTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"product\" className=\"min-h-screen bg-surface font-sans text-fg\">\n\t\t\t{nav}\n\t\t\t<main>\n\t\t\t\t{hero}\n\t\t\t\t{proof}\n\t\t\t\t{features}\n\t\t\t\t{showcase}\n\t\t\t\t{steps}\n\t\t\t\t{faq}\n\t\t\t\t{related}\n\t\t\t\t{cta}\n\t\t\t</main>\n\t\t\t{footer}\n\t\t</div>\n\t);\n}\n",
+      "content": "import type { ReactNode } from 'react';\nimport { PageGuides } from '@/components/ds/ui/page-guides';\n\nexport type ProductTemplateProps = {\n\tnav?: ReactNode;\n\thero?: ReactNode;\n\tproof?: ReactNode;\n\tfeatures?: ReactNode;\n\tshowcase?: ReactNode;\n\tsteps?: ReactNode;\n\tfaq?: ReactNode;\n\trelated?: ReactNode;\n\tcta?: ReactNode;\n\tfooter?: ReactNode;\n};\n\nexport function ProductTemplate({ nav, hero, proof, features, showcase, steps, faq, related, cta, footer }: ProductTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"product\" className=\"relative min-h-screen overflow-x-clip bg-surface font-sans text-fg\">\n\t\t\t<PageGuides />\n\t\t\t{nav}\n\t\t\t<main>\n\t\t\t\t{hero}\n\t\t\t\t{proof}\n\t\t\t\t{features}\n\t\t\t\t{showcase}\n\t\t\t\t{steps}\n\t\t\t\t{faq}\n\t\t\t\t{related}\n\t\t\t\t{cta}\n\t\t\t</main>\n\t\t\t{footer}\n\t\t</div>\n\t);\n}\n",
       "type": "registry:file",
       "target": "components/ds/templates/product.tsx"
     }
   ],
   "meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "dsType": "template",
     "id": "templates/product"
   },

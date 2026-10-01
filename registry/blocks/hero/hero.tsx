@@ -1,10 +1,11 @@
 import { Button } from '@/components/ds/ui/button';
 import { CodeWindow } from '@/components/ds/ui/code-window';
 import { cx } from '@/components/ds/ui/cx';
+import { DemoInput } from '@/components/ds/ui/demo-input';
+import { DotPanel } from '@/components/ds/ui/dot-panel';
 import { HeroDotField } from '@/components/ds/ui/hero-dot-field';
 import { HERO_PATTERN_HOLE_ATTRIBUTE } from '@/components/ds/ui/hero-pattern-hole';
 import { HeroStatMorphs } from '@/components/ds/ui/hero-stat-morphs';
-import { RingBackdrop } from '@/components/ds/ui/ring-backdrop';
 import { Section } from '@/components/ds/ui/section';
 import { Highlighted } from '@/components/ds/ui/section-heading';
 
@@ -16,12 +17,28 @@ export type HeroProps = {
 	sub: string;
 	primaryCta: { label: string; href: string };
 	secondaryCta?: { label: string; href: string };
-	media?: { type: 'agent-setup'; prompt: string } | { type: 'code'; title: string; code: string } | { type: 'none' };
+	media?: { type: 'demo'; action?: string } | { type: 'agent-setup'; prompt: string } | { type: 'code'; title: string; code: string } | { type: 'none' };
 	checks?: string[];
 	stats?: boolean;
 };
 
 const hole = (kind: 'text' | 'box' | 'snug-box') => ({ [HERO_PATTERN_HOLE_ATTRIBUTE]: kind });
+
+function Checks({ items }: { items: string[] }) {
+	return (
+		<ul {...hole('snug-box')} className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-body-sm text-fg-muted">
+			{items.slice(0, 3).map((item) => (
+				<li key={item} className="flex items-center gap-2">
+					<svg aria-hidden="true" viewBox="0 0 16 16" className="size-4 shrink-0">
+						<rect width="16" height="16" rx="5" className="fill-brand" />
+						<path d="M4.75 8.25 7 10.5l4.25-4.75" fill="none" className="stroke-white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+					</svg>
+					{item}
+				</li>
+			))}
+		</ul>
+	);
+}
 
 export function Hero({ variant = 'centered', eyebrow, headline, highlight, sub, primaryCta, secondaryCta, media = { type: 'none' }, checks = [], stats = false }: HeroProps) {
 	const centered = variant === 'centered';
@@ -40,22 +57,16 @@ export function Hero({ variant = 'centered', eyebrow, headline, highlight, sub, 
 						<Button variant="primary" href={primaryCta.href}>{primaryCta.label}</Button>
 						{secondaryCta ? <Button variant="secondary" href={secondaryCta.href}>{secondaryCta.label}</Button> : null}
 					</div>
-					{checks.length ? (
-						<ul {...hole('snug-box')} className="flex flex-wrap gap-x-6 gap-y-2 text-body-sm text-fg-muted">
-							{checks.slice(0, 3).map((check) => (
-								<li key={check} className="flex items-center gap-2"><span aria-hidden className="size-2 rounded-full bg-brand" />{check}</li>
-							))}
-						</ul>
-					) : null}
+					{checks.length > 0 && media.type !== 'demo' ? <Checks items={checks} /> : null}
 				</div>
 				{media.type !== 'none' ? (
-					<div {...hole('box')} className={cx('relative w-full', centered ? 'max-w-2xl' : 'md:max-w-md')}>
-						<div className="relative rounded-window bg-brand p-3">
-							<RingBackdrop color="var(--ds-color-white)" opacity={0.22} className="inset-1 rounded-window" />
-							<div className="relative">
-								{media.type === 'agent-setup' ? <CodeWindow title="agent setup" code={media.prompt} tone="light" /> : <CodeWindow title={media.title} code={media.code} tone="dark" />}
-							</div>
-						</div>
+					<div {...hole('box')} className={cx('relative flex w-full flex-col items-center gap-5', centered ? (media.type === 'demo' ? 'max-w-4xl' : 'max-w-2xl') : 'md:max-w-md')}>
+						<DotPanel tone="blue" padding={media.type === 'demo' ? 'default' : 'none'}>
+							{media.type === 'demo' ? <DemoInput action={media.action} /> : null}
+							{media.type === 'agent-setup' ? <div className="w-full p-3"><CodeWindow title="agent setup" code={media.prompt} tone="light" /></div> : null}
+							{media.type === 'code' ? <div className="w-full p-3"><CodeWindow title={media.title} code={media.code} tone="dark" /></div> : null}
+						</DotPanel>
+						{checks.length > 0 && media.type === 'demo' ? <Checks items={checks} /> : null}
 					</div>
 				) : null}
 			</div>

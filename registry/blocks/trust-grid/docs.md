@@ -1,13 +1,13 @@
 ---
 name: trust-grid
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: Security and reliability for the buyer who spends 100k. Three cards and a link to the trust center.
 never:
   - Claims without an audit, policy or status page behind them
   - Badge walls or shield icons
   - More than 3 cards
-props: title, highlight?, items ({ title, description, mark (compliance | retention | reliability), href? }[], 3), cta { label, href }
+props: title, highlight?, items ({ title, description, mark (compliance | policies | controls), href?, linkLabel? }[], 3), cta { label, href }
 variants: []
 copy_rules: voice.md#mechanics
 dependencies: [section, section-heading, card, button, trust-mark, dot-engine]

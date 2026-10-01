@@ -1,19 +1,21 @@
 ---
 name: benchmark
 type: block
-version: 1.0.0
-use_for: The proof that Context.dev is better and cheaper. Tabs of metrics, each a dot bar chart against named competitors.
+version: 1.2.0
+use_for: The proof that Context.dev is better and cheaper. The live site's benchmark panel, with a sourced feature table while the figures are unverified.
 never:
-  - A number without sourceHref pointing at the published comparison
-  - Bars from a charting library; bars are dot columns
-  - Coloring competitors; they are hollow, ours is solid
+  - Shipping sample figures; set data.status to verified only with published results
+  - A figure without sourceHref pointing at the published comparison
+  - Coloring competitors; Context is brand blue, the rest neutral
   - Rounding in our favor
-props: title, highlight?, sub?, ours (provider name), metrics ({ id, label, unit, higherIsBetter, groups ({ name, values ({ provider, value }[]) }[]) }[]), sourceLabel, sourceHref
+props: "title, highlight? (phrase inside title), sub?, data? (BenchmarkData from benchmark-data; defaults to the bundled sample), sourceLabel, sourceHref"
 variants: []
 copy_rules: voice.md#mechanics
-dependencies: [section, section-heading, tabs, dot-grid]
+dependencies: [section, section-heading, benchmark-chart]
 example: benchmark.example.tsx
 ---
 
-Our column is solid dots, competitors are hollow: the brand story as a chart. Every figure must
-come from the published comparison at `sourceHref`. Keep to three groups per metric.
+Renders the ported benchmark panel (tabs, dot meters, Doto values, provider logos). The bundled
+figures are the site's placeholders (`status: 'sample'`): they show in development and are replaced
+by the feature table in production builds, so no unverified number ships. Pass `data` with real
+results and `status: 'verified'` to show the charts everywhere.

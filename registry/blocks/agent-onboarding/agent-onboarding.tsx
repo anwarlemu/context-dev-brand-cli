@@ -17,9 +17,8 @@ export type AgentOnboardingProps = {
 
 export function AgentOnboarding({ title, highlight, sub, manual, agent }: AgentOnboardingProps) {
 	return (
-		<Section block="agent-onboarding">
+		<Section block="agent-onboarding" heading={<SectionHeading title={title} highlight={highlight} sub={sub} />}>
 			<div className="flex flex-col gap-12">
-				<SectionHeading title={title} highlight={highlight} sub={sub} />
 				<div className="grid gap-4 md:grid-cols-2">
 					<Card>
 						<div className="relative flex justify-center p-4">

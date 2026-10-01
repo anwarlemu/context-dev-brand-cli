@@ -1,7 +1,7 @@
 ---
 name: code-showcase
 type: block
-version: 1.0.0
+version: 1.2.0
 use_for: Show the real SDK call for each job, one tab per job, description left and code right.
 never:
   - Code that does not run against the current SDK
@@ -10,9 +10,10 @@ never:
 props: title, highlight?, sub?, items ({ id, label, description, code }[], max 6)
 variants: []
 copy_rules: voice.md#mechanics
-dependencies: [section, section-heading, tabs, code-window]
+dependencies: [section, section-heading, tabs, code-window, dot-panel]
 example: code-showcase.example.tsx
 ---
 
-Each tab is one job with the shortest working request. Copy the code from the SDK docs and run it
+Each tab is one job with the shortest working request. The code window sits on the white
+dot-panel, the hollow rings clearing around it, as on the homepage. Copy the code from the SDK docs and run it
 before shipping. On product pages keep a single item for that API.

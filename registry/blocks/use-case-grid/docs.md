@@ -1,7 +1,7 @@
 ---
 name: use-case-grid
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: What teams build with the API. Two or six ringed cards in a two-column grid, each with a dot drawing.
 never:
   - An odd number of cards

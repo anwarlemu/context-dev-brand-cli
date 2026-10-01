@@ -1,11 +1,11 @@
 ---
 name: trust-mark
 type: ui
-version: 1.0.0
-use_for: "Animated dot marks for the trust cards: SOC 2, zero data retention, uptime."
+version: 1.1.0
+use_for: "Animated dot marks for the trust cards: SOC 2, security policies, security controls."
 never:
   - Icons from an icon set in trust cards
-props: "mark (compliance | retention | reliability)"
+props: "mark (compliance | policies | controls)"
 variants: []
 dependencies: [dot-engine, cx]
 example: trust-mark.example.tsx

@@ -11,9 +11,8 @@ export type TestimonialsProps = {
 
 export function Testimonials({ title, highlight, quotes }: TestimonialsProps) {
 	return (
-		<Section block="testimonials">
+		<Section block="testimonials" heading={<SectionHeading title={title} highlight={highlight} />}>
 			<div className="flex flex-col gap-12">
-				<SectionHeading title={title} highlight={highlight} />
 				<div className="grid gap-4 md:grid-cols-3">
 					{quotes.slice(0, 3).map((q) => (
 						<Card key={q.name}>

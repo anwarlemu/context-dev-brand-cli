@@ -67,7 +67,8 @@ const centre = (index: number) => (index + 0.5) * DOT_PITCH;
  * The customer's logo redrawn in the brand dot grid, over a faint backdrop of rings that stays clear of it.
  * Inside a link, hovering the link melts the logo into an arrow.
  */
-export function CustomerLogoDots({ src, background, className }: { src: string; background?: string; className?: string }) {
+export function CustomerLogoDots({ src, background, className, tone = 'onBlue' }: { src: string; background?: string; className?: string; /** `onWhite` draws the dots in the brand blue, for a white panel. */ tone?: 'onBlue' | 'onWhite' }) {
+	const dotColor = tone === 'onWhite' ? 'currentColor' : 'var(--ds-color-white)';
 	const [cells, setCells] = useState<LogoCell[] | null>(null);
 	const [samplingFailed, setSamplingFailed] = useState(false);
 	const [bounds, setBounds] = useState<ViewBounds | null>(null);
@@ -83,11 +84,11 @@ export function CustomerLogoDots({ src, background, className }: { src: string; 
 				canvas,
 				cells,
 				clearedBackdrop: { cells: field.cleared.map((cell) => cell.row * GRID_COLUMNS + cell.column), opacity: FIELD_OPACITY },
-				palette: { dots: 'white', background: surface ? getComputedStyle(surface).backgroundColor : 'transparent' },
+				palette: { dots: tone === 'onWhite' ? getComputedStyle(canvas).color : 'var(--ds-color-white)', background: surface ? getComputedStyle(surface).backgroundColor : 'transparent' },
 				onPlayingChange,
 			});
 		},
-		[cells, field]
+		[cells, field, tone]
 	);
 	const isMorphing = useHoverDotMorph(canvasRef, loadMorph);
 
@@ -134,12 +135,12 @@ export function CustomerLogoDots({ src, background, className }: { src: string; 
 	const logoCell = (cell: LogoCell) => ({ cx: centre(cell.column + LOGO_LEFT), cy: centre(cell.row + LOGO_TOP) });
 
 	return (
-		<div className={cn('relative', className)} aria-hidden="true">
+		<div className={cn('relative', tone === 'onWhite' && 'text-brand', className)} aria-hidden="true">
 			<svg ref={svgRef} viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`} preserveAspectRatio="xMidYMid slice" className={cn('block size-full transition-opacity duration-500 motion-reduce:transition-none', cells ? 'opacity-100' : 'opacity-0')}>
 				{field && (
 					<path
 						fill="none"
-						style={{ stroke: 'var(--ds-color-white)' }}
+						style={{ stroke: dotColor }}
 						strokeWidth={RING_STROKE}
 						opacity={FIELD_OPACITY}
 						d={dotsPath(
@@ -150,8 +151,8 @@ export function CustomerLogoDots({ src, background, className }: { src: string; 
 				)}
 				{cells && (
 					<g className={cn(isMorphing && 'invisible')}>
-						<path fill="none" style={{ stroke: 'var(--ds-color-white)' }} strokeWidth={RING_STROKE} d={dotsPath(cells.filter((cell) => !cell.filled).map(logoCell), ringRadius)} />
-						<path style={{ fill: 'var(--ds-color-white)' }} d={dotsPath(cells.filter((cell) => cell.filled).map(logoCell), DOT_RADIUS)} />
+						<path fill="none" style={{ stroke: dotColor }} strokeWidth={RING_STROKE} d={dotsPath(cells.filter((cell) => !cell.filled).map(logoCell), ringRadius)} />
+						<path style={{ fill: dotColor }} d={dotsPath(cells.filter((cell) => cell.filled).map(logoCell), DOT_RADIUS)} />
 					</g>
 				)}
 			</svg>

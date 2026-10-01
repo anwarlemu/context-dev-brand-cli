@@ -1,7 +1,7 @@
 ---
 name: testimonials
 type: block
-version: 1.0.0
+version: 1.1.0
 use_for: Three short customer quotes with name, role and a link to the case study.
 never:
   - Anonymous or invented quotes

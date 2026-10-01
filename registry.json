@@ -65,6 +65,56 @@
       }
     },
     {
+      "name": "benchmark-chart",
+      "type": "registry:ui",
+      "title": "BenchmarkPanel",
+      "description": "The homepage benchmark panel from context.dev: tabs for success rate, latency and cost vs success, drawn as dot meters over a ring backdrop, with values in Doto.",
+      "dependencies": [
+        "motion@^12"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/ring-backdrop.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/benchmark-chart/benchmark-chart.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/benchmark-chart.tsx"
+        },
+        {
+          "path": "registry/ui/benchmark-chart/benchmark-comparison.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/benchmark-comparison.tsx"
+        },
+        {
+          "path": "registry/ui/benchmark-chart/benchmark-data.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/benchmark-data.ts"
+        },
+        {
+          "path": "registry/ui/benchmark-chart/public/benchmarks/exa.svg",
+          "type": "registry:file",
+          "target": "public/benchmarks/exa.svg"
+        },
+        {
+          "path": "registry/ui/benchmark-chart/public/benchmarks/firecrawl.svg",
+          "type": "registry:file",
+          "target": "public/benchmarks/firecrawl.svg"
+        },
+        {
+          "path": "registry/ui/benchmark-chart/public/benchmarks/parallel.svg",
+          "type": "registry:file",
+          "target": "public/benchmarks/parallel.svg"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/benchmark-chart"
+      }
+    },
+    {
       "name": "blog-cover",
       "type": "registry:ui",
       "title": "BlogCoverArt",
@@ -356,6 +406,42 @@
       }
     },
     {
+      "name": "demo-input",
+      "type": "registry:ui",
+      "title": "DemoInput",
+      "description": "The homepage hero demo. Pick a job (Scrape, Search, Research, Crawl, Map, Brand) and type a URL or question.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/demo-input/demo-input.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/demo-input.tsx"
+        },
+        {
+          "path": "registry/ui/demo-input/glide-hover.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/glide-hover.tsx"
+        },
+        {
+          "path": "registry/ui/demo-input/hero-demo-jobs.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/hero-demo-jobs.ts"
+        },
+        {
+          "path": "registry/ui/demo-input/use-tab-glide.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/use-tab-glide.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/demo-input"
+      }
+    },
+    {
       "name": "dot-engine",
       "type": "registry:ui",
       "title": "resolveColor",
@@ -463,6 +549,28 @@
       }
     },
     {
+      "name": "dot-panel",
+      "type": "registry:ui",
+      "title": "DotPanel",
+      "description": "The ring-filled panel the site sets its one interactive or code element on (the hero demo, the code showcase).",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/ring-backdrop.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/dot-panel/dot-panel.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/dot-panel.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/dot-panel"
+      }
+    },
+    {
       "name": "dot-story",
       "type": "registry:ui",
       "title": "DotScene",
@@ -546,6 +654,21 @@
           "path": "registry/ui/dot-story/batch-story.tsx",
           "type": "registry:file",
           "target": "components/ds/ui/batch-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/brand-kit-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/brand-kit-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/brand-kit-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/brand-kit-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/brand-kit-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/brand-kit-story.tsx"
         },
         {
           "path": "registry/ui/dot-story/collect-story-player.ts",
@@ -708,6 +831,21 @@
           "target": "components/ds/ui/freshness-story.tsx"
         },
         {
+          "path": "registry/ui/dot-story/generate-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/generate-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/generate-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/generate-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/generate-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/generate-story.tsx"
+        },
+        {
           "path": "registry/ui/dot-story/hero-circle-pattern.tsx",
           "type": "registry:file",
           "target": "components/ds/ui/hero-circle-pattern.tsx"
@@ -743,6 +881,21 @@
           "target": "components/ds/ui/metadata-story.tsx"
         },
         {
+          "path": "registry/ui/dot-story/monitor-ways-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/monitor-ways-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/monitor-ways-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/monitor-ways-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/monitor-ways-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/monitor-ways-story.tsx"
+        },
+        {
           "path": "registry/ui/dot-story/output-story-player.ts",
           "type": "registry:file",
           "target": "components/ds/ui/output-story-player.ts"
@@ -756,6 +909,26 @@
           "path": "registry/ui/dot-story/output-story.tsx",
           "type": "registry:file",
           "target": "components/ds/ui/output-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/parse-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/parse-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/parse-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/parse-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/parse-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/parse-story.tsx"
+        },
+        {
+          "path": "registry/ui/dot-story/prompt-field.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/prompt-field.ts"
         },
         {
           "path": "registry/ui/dot-story/question-story-player.ts",
@@ -938,6 +1111,21 @@
           "target": "components/ds/ui/style-guide-parts.ts"
         },
         {
+          "path": "registry/ui/dot-story/tenant-theme-story-player.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/tenant-theme-story-player.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/tenant-theme-story-scenes.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/tenant-theme-story-scenes.ts"
+        },
+        {
+          "path": "registry/ui/dot-story/tenant-theme-story.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/tenant-theme-story.tsx"
+        },
+        {
           "path": "registry/ui/dot-story/type-story-player.ts",
           "type": "registry:file",
           "target": "components/ds/ui/type-story-player.ts"
@@ -1114,6 +1302,25 @@
       }
     },
     {
+      "name": "page-guides",
+      "type": "registry:ui",
+      "title": "PageGuides",
+      "description": "The dashed outer guides of a marketing page. Rendered by every template, never by blocks.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/ui/page-guides/page-guides.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/page-guides.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/page-guides"
+      }
+    },
+    {
       "name": "ring-backdrop",
       "type": "registry:ui",
       "title": "RingBackdrop",
@@ -1138,7 +1345,7 @@
       "name": "section",
       "type": "registry:ui",
       "title": "Section",
-      "description": "The outer shell of every block. Surface, ruled center column, vertical rhythm, data-ds-block.",
+      "description": "The outer shell of every block. Surface, ruled center column with dot nodes, vertical rhythm, data-ds-block.",
       "registryDependencies": [
         "https://context-ds.vercel.app/r/cx.json"
       ],
@@ -1150,7 +1357,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "ui",
         "id": "ui/section"
       }
@@ -1211,7 +1418,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "ui",
         "id": "ui/stat"
       }
@@ -1300,7 +1507,7 @@
       "name": "trust-mark",
       "type": "registry:ui",
       "title": "TrustMark",
-      "description": "Animated dot marks for the trust cards: SOC 2, zero data retention, uptime.",
+      "description": "Animated dot marks for the trust cards: SOC 2, security policies, security controls.",
       "registryDependencies": [
         "https://context-ds.vercel.app/r/dot-engine.json",
         "https://context-ds.vercel.app/r/cx.json"
@@ -1323,7 +1530,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "ui",
         "id": "ui/trust-mark"
       }
@@ -1353,7 +1560,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/agent-onboarding"
       }
@@ -1384,12 +1591,11 @@
       "name": "benchmark",
       "type": "registry:block",
       "title": "Benchmark",
-      "description": "The proof that Context.dev is better and cheaper. Tabs of metrics, each a dot bar chart against named competitors.",
+      "description": "The proof that Context.dev is better and cheaper. The live site's benchmark panel, with a sourced feature table while the figures are unverified.",
       "registryDependencies": [
         "https://context-ds.vercel.app/r/section.json",
         "https://context-ds.vercel.app/r/section-heading.json",
-        "https://context-ds.vercel.app/r/tabs.json",
-        "https://context-ds.vercel.app/r/dot-grid.json"
+        "https://context-ds.vercel.app/r/benchmark-chart.json"
       ],
       "files": [
         {
@@ -1399,7 +1605,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/benchmark"
       }
@@ -1423,7 +1629,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/blog-grid"
       }
@@ -1437,7 +1643,8 @@
         "https://context-ds.vercel.app/r/section.json",
         "https://context-ds.vercel.app/r/section-heading.json",
         "https://context-ds.vercel.app/r/tabs.json",
-        "https://context-ds.vercel.app/r/code-window.json"
+        "https://context-ds.vercel.app/r/code-window.json",
+        "https://context-ds.vercel.app/r/dot-panel.json"
       ],
       "files": [
         {
@@ -1447,7 +1654,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/code-showcase"
       }
@@ -1470,7 +1677,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "block",
         "id": "blocks/credit-costs"
       }
@@ -1547,7 +1754,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/feature-trio"
       }
@@ -1585,9 +1792,10 @@
         "https://context-ds.vercel.app/r/section.json",
         "https://context-ds.vercel.app/r/button.json",
         "https://context-ds.vercel.app/r/code-window.json",
+        "https://context-ds.vercel.app/r/demo-input.json",
+        "https://context-ds.vercel.app/r/dot-panel.json",
         "https://context-ds.vercel.app/r/hero-dot-field.json",
         "https://context-ds.vercel.app/r/dot-engine.json",
-        "https://context-ds.vercel.app/r/ring-backdrop.json",
         "https://context-ds.vercel.app/r/section-heading.json",
         "https://context-ds.vercel.app/r/cx.json"
       ],
@@ -1599,7 +1807,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/hero"
       }
@@ -1697,7 +1905,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/product-grid"
       }
@@ -1770,7 +1978,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/story-rail"
       }
@@ -1794,7 +2002,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "block",
         "id": "blocks/testimonials"
       }
@@ -1820,7 +2028,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/trust-grid"
       }
@@ -1847,7 +2055,7 @@
         }
       ],
       "meta": {
-        "version": "1.1.0",
+        "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/use-case-grid"
       }
@@ -1858,7 +2066,8 @@
       "title": "LandingTemplate",
       "description": "The homepage and campaign landing pages. One message, one primary action, the agent path next to it.",
       "registryDependencies": [
-        "https://context-ds.vercel.app/r/section.json"
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/page-guides.json"
       ],
       "files": [
         {
@@ -1868,7 +2077,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "template",
         "id": "templates/landing"
       }
@@ -1879,7 +2088,8 @@
       "title": "PricingTemplate",
       "description": "The pricing page. Plans, credit costs as a table, the FAQ that removes doubt, one close.",
       "registryDependencies": [
-        "https://context-ds.vercel.app/r/section.json"
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/page-guides.json"
       ],
       "files": [
         {
@@ -1889,7 +2099,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "template",
         "id": "templates/pricing"
       }
@@ -1900,7 +2110,8 @@
       "title": "ProductTemplate",
       "description": "A page for one API (Search, Scrape, Research, Monitors, Map, Crawl, Batches, Brand). What it returns, the code, how to start.",
       "registryDependencies": [
-        "https://context-ds.vercel.app/r/section.json"
+        "https://context-ds.vercel.app/r/section.json",
+        "https://context-ds.vercel.app/r/page-guides.json"
       ],
       "files": [
         {
@@ -1910,7 +2121,7 @@
         }
       ],
       "meta": {
-        "version": "1.0.0",
+        "version": "1.1.0",
         "dsType": "template",
         "id": "templates/product"
       }

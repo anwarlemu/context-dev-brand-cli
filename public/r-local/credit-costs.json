@@ -6,13 +6,13 @@
   "files": [
     {
       "path": "registry/blocks/credit-costs/credit-costs.tsx",
-      "content": "import { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\nimport { Table } from '@/components/ds/ui/table';\n\nexport type CreditCostsProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\tgroups: { title: string; rows: { api: string; description: string; cost: string }[] }[];\n};\n\nexport function CreditCosts({ title, highlight, sub, groups }: CreditCostsProps) {\n\treturn (\n\t\t<Section block=\"credit-costs\">\n\t\t\t<div className=\"flex flex-col gap-10\">\n\t\t\t\t<SectionHeading title={title} highlight={highlight} sub={sub} />\n\t\t\t\t<div className=\"flex flex-col gap-6\">\n\t\t\t\t\t{groups.map((group) => (\n\t\t\t\t\t\t<div key={group.title} className=\"flex flex-col gap-3\">\n\t\t\t\t\t\t\t<h3 className=\"text-h5\">{group.title}</h3>\n\t\t\t\t\t\t\t<Table\n\t\t\t\t\t\t\t\tcaption={`${group.title} credit costs`}\n\t\t\t\t\t\t\t\tcolumns={[{ key: 'api', label: 'API' }, { key: 'description', label: 'What it does' }, { key: 'cost', label: 'Cost', align: 'right' }]}\n\t\t\t\t\t\t\t\trows={group.rows.map((r) => ({ api: r.api, description: <span className=\"text-fg-muted\">{r.description}</span>, cost: r.cost }))}\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
+      "content": "import { Section } from '@/components/ds/ui/section';\nimport { SectionHeading } from '@/components/ds/ui/section-heading';\nimport { Table } from '@/components/ds/ui/table';\n\nexport type CreditCostsProps = {\n\ttitle: string;\n\thighlight?: string;\n\tsub?: string;\n\tgroups: { title: string; rows: { api: string; description: string; cost: string }[] }[];\n};\n\nexport function CreditCosts({ title, highlight, sub, groups }: CreditCostsProps) {\n\treturn (\n\t\t<Section block=\"credit-costs\" heading={<SectionHeading title={title} highlight={highlight} sub={sub} />}>\n\t\t\t<div className=\"flex flex-col gap-10\">\n\t\t\t\t<div className=\"flex flex-col gap-6\">\n\t\t\t\t\t{groups.map((group) => (\n\t\t\t\t\t\t<div key={group.title} className=\"flex flex-col gap-3\">\n\t\t\t\t\t\t\t<h3 className=\"text-h5\">{group.title}</h3>\n\t\t\t\t\t\t\t<Table\n\t\t\t\t\t\t\t\tcaption={`${group.title} credit costs`}\n\t\t\t\t\t\t\t\tcolumns={[{ key: 'api', label: 'API' }, { key: 'description', label: 'What it does' }, { key: 'cost', label: 'Cost', align: 'right' }]}\n\t\t\t\t\t\t\t\trows={group.rows.map((r) => ({ api: r.api, description: <span className=\"text-fg-muted\">{r.description}</span>, cost: r.cost }))}\n\t\t\t\t\t\t\t/>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t))}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</Section>\n\t);\n}\n",
       "type": "registry:file",
       "target": "components/ds/blocks/credit-costs.tsx"
     }
   ],
   "meta": {
-    "version": "1.0.0",
+    "version": "1.1.0",
     "dsType": "block",
     "id": "blocks/credit-costs"
   },

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dot-panel",
+  "title": "DotPanel",
+  "description": "The ring-filled panel the site sets its one interactive or code element on (the hero demo, the code showcase).",
+  "files": [
+    {
+      "path": "registry/ui/dot-panel/dot-panel.tsx",
+      "content": "'use client';\n\nimport type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\nimport { RING_CLEAR_ATTRIBUTE, RingBackdrop } from '@/components/ds/ui/ring-backdrop';\n\nconst TONES = {\n\tblue: { ring: 'bg-tint', panel: 'bg-brand', color: 'var(--ds-color-white)', opacity: 0.22 },\n\twhite: { ring: 'bg-tint', panel: 'bg-surface', color: 'var(--ds-color-brand)', opacity: 0.25 },\n} as const;\n\nexport type DotPanelProps = { tone?: keyof typeof TONES; padding?: 'default' | 'none'; children: ReactNode };\n\n// The rings clear around the content (RING_CLEAR_ATTRIBUTE), so no ring is ever cut by it.\nexport function DotPanel({ tone = 'white', padding = 'default', children }: DotPanelProps) {\n\tconst t = TONES[tone];\n\treturn (\n\t\t<div className={cx('w-full rounded-window p-2', t.ring)}>\n\t\t\t<div className={cx('relative overflow-hidden rounded-window', t.panel, padding === 'default' && 'p-6 md:px-12 md:py-10')}>\n\t\t\t\t<RingBackdrop color={t.color} opacity={t.opacity} className=\"inset-2 rounded-window md:inset-3\" />\n\t\t\t\t<div {...{ [RING_CLEAR_ATTRIBUTE]: '' }} className=\"relative flex w-full justify-center\">{children}</div>\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/dot-panel.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/dot-panel"
+  },
+  "type": "registry:ui"
+}

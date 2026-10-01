@@ -1,6 +1,6 @@
 {
   "name": "context-ds",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Design system harness for AI coding agents: templates, docs at the right time, and checks that block off-brand code.",
   "type": "module",
   "bin": {
@@ -34,7 +34,8 @@
     "test": "vitest run",
     "ci": "npm run build && npm run tokens && tsx scripts/ci-limits.ts && vitest run",
     "setup": "npm install && npm run build && npm run tokens && npm run registry:build && npm test",
-    "prepare": "tsc -p tsconfig.json"
+    "prepare": "tsc -p tsconfig.json",
+    "port": "node scripts/port-dots.mjs \"${DS_SITE:-$HOME/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp}\" && node scripts/port-benchmark.mjs \"${DS_SITE:-$HOME/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp}\" && node scripts/port-demo.mjs \"${DS_SITE:-$HOME/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp}\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
@@ -51,6 +52,8 @@
   "devDependencies": {
     "@types/node": "^22.20.4",
     "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "motion": "^12.43.0",
     "react": "^19.3.0",
     "style-dictionary": "^5.5.5",
     "tailwind-merge": "^3.7.0",

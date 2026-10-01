@@ -5,6 +5,7 @@
 - Add items with `{{bin}} add <name>`. Do not hand-write anything that exists in the registry.
 - Only registry blocks may appear as sections. Only listed variants may be used.
 - No raw color, spacing, radius, font, or motion values. Use `{{bin}} tokens <path>`.
+- Doto is only for figures (stats, counts, step numbers, chart values) via `<Stat>`, `<CreditsDotNumber>` or `font-data`. Never for words.
 - Copy follows voice.md. Word limits apply to headlines, subheads, buttons.
 - `{{bin}} check` runs automatically and will block you. Fix every error, do not work around it.
 - Done is not good. Run `{{bin}} review` on any new page or flow and address the punch list.

@@ -3,12 +3,12 @@ import { TrustGrid } from '@/components/ds/blocks/trust-grid';
 export default function Example() {
 	return (
 		<TrustGrid
-			title="Security you can review."
-			highlight="Security"
+			title="Enterprise-grade security."
+			highlight="security."
 			items={[
-				{ title: 'SOC 2 Type I and II', mark: 'compliance', description: 'Documented security controls, independently audited. Review our compliance in the trust center.', href: '/trust' },
-				{ title: 'Zero data retention', mark: 'retention', description: 'Built for privacy-sensitive workloads. See how Tinfoil uses Context.dev with zero data retention.', href: '/customers/tinfoil' },
-				{ title: 'Reliability, in the open', mark: 'reliability', description: 'Check service availability and incident history on our public status page, whenever you need it.', href: 'https://status.context.dev' },
+				{ title: 'SOC 2 Type 1 and Type 2', mark: 'compliance', description: 'Review our compliance status and request access to security information through the trust center.', href: '/trust', linkLabel: 'View compliance' },
+				{ title: 'Security policies', mark: 'policies', description: 'Review the policies covering data handling, access control, and incident response.', href: '/trust#policies', linkLabel: 'Review policies' },
+				{ title: 'Security controls', mark: 'controls', description: 'Explore published controls for encryption at rest, security monitoring, and supplier security.', href: '/trust#controls', linkLabel: 'Review controls' },
 			]}
 			cta={{ label: 'Visit trust center', href: '/trust' }}
 		/>

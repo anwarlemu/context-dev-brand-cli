@@ -11,9 +11,8 @@ export type FeatureTrioProps = {
 
 export function FeatureTrio({ title, highlight, sub, features }: FeatureTrioProps) {
 	return (
-		<Section block="feature-trio">
+		<Section block="feature-trio" heading={title ? <SectionHeading title={title} highlight={highlight} sub={sub} /> : undefined}>
 			<div className="flex flex-col gap-10">
-				{title ? <SectionHeading title={title} highlight={highlight} sub={sub} /> : null}
 				<div className="grid gap-10 md:grid-cols-3">
 					{features.slice(0, 3).map((feature) => (
 						<div key={feature.title} className="flex flex-col gap-3">

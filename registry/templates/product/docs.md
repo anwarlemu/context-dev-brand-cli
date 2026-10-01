@@ -1,7 +1,7 @@
 ---
 name: product
 type: template
-version: 1.0.0
+version: 1.1.0
 route: /product
 use_for: A page for one API (Search, Scrape, Research, Monitors, Map, Crawl, Batches, Brand). What it returns, the code, how to start.
 structure:
@@ -22,7 +22,7 @@ never:
   - A code sample that does not run against the real API
   - More than one API per page
 copy_rules: voice.md#mechanics
-dependencies: [section]
+dependencies: [section, page-guides]
 ---
 
 Use `--out app/<api>/page.tsx`. The hero is `variant="product"` with the shortest working SDK call

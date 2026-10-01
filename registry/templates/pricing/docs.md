@@ -1,7 +1,7 @@
 ---
 name: pricing
 type: template
-version: 1.0.0
+version: 1.1.0
 route: /pricing
 use_for: The pricing page. Plans, credit costs as a table, the FAQ that removes doubt, one close.
 structure:
@@ -20,7 +20,7 @@ never:
   - Hidden prices ("Contact us" is only for Enterprise)
   - Testimonials or logos on the pricing page; proof lives on the landing page
 copy_rules: voice.md#mechanics
-dependencies: [section]
+dependencies: [section, page-guides]
 ---
 
 Every slot is required, so every pricing page has the same structure. The hero is `centered` with

@@ -13,7 +13,7 @@ a template, not a model decision. Copy is the only thing left to the agent.
 You need read access to `anwarlemu/context-dev-brand-cli` on GitHub. In your app:
 
 ```sh
-npm i -D github:anwarlemu/context-dev-brand-cli#v0.1.1
+npm i -D github:anwarlemu/context-dev-brand-cli#v0.2.0
 npx context-ds init --dry-run     # preview
 npx context-ds init
 npx playwright install chromium    # only for review
@@ -140,7 +140,8 @@ All commands take `--json` and `--help`.
 - **A template:** `registry/templates/<name>/` with the slot component and `structure:` in docs.md.
   Per-template copy for a slot goes in `slots/<slot>.<block>.example.tsx`. Map task words to it in
   `intents.json`.
-- **The dot animations:** they are ported from the website, which stays the source of truth for
+- **The dot animations, benchmark chart and hero demo:** `npm run port` re-syncs all three from the
+  website. The dot animations are ported from the website, which stays the source of truth for
   motion. When the site's animations change, run `node scripts/port-dots.mjs <path to brand-dev-webapp>`.
   It copies the engine, the 31 story scenes, blog covers, trust marks, customer logos, the credits
   figure, the hero field and the footer watermark into `registry/ui`, rewrites imports, and applies

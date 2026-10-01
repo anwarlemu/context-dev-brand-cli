@@ -1,7 +1,7 @@
 ---
 name: credit-costs
 type: block
-version: 1.0.0
+version: 1.1.0
 use_for: What each API costs in credits, grouped by product area, as tables.
 never:
   - Cards for this data; it is a table

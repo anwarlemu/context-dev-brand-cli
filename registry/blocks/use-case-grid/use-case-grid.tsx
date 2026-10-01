@@ -13,10 +13,9 @@ export type UseCaseGridProps = {
 
 export function UseCaseGrid({ title, highlight, sub, cases }: UseCaseGridProps) {
 	return (
-		<Section block="use-case-grid">
+		<Section block="use-case-grid" heading={<SectionHeading title={title} highlight={highlight} sub={sub} />}>
 			<div className="flex flex-col gap-12">
-				<SectionHeading title={title} highlight={highlight} sub={sub} />
-				<div className="grid gap-4 md:grid-cols-2">
+				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
 					{cases.slice(0, 6).map((c) => (
 						<Card key={c.title}>
 							<h3 className="text-h4">{c.title}</h3>

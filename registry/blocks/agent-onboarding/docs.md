@@ -1,7 +1,7 @@
 ---
 name: agent-onboarding
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: The two ways to start, side by side. Do it yourself (white card), or let your agent do it (blue card, recommended).
 never:
   - The agent path as the secondary card; it is the blue, recommended one

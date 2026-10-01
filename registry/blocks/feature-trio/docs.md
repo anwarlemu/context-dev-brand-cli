@@ -1,7 +1,7 @@
 ---
 name: feature-trio
 type: block
-version: 1.1.0
+version: 1.2.0
 use_for: Three things you control with one API, side by side, each with an animated dot scene.
 never:
   - More or fewer than 3 features

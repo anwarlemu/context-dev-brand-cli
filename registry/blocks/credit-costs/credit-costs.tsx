@@ -11,9 +11,8 @@ export type CreditCostsProps = {
 
 export function CreditCosts({ title, highlight, sub, groups }: CreditCostsProps) {
 	return (
-		<Section block="credit-costs">
+		<Section block="credit-costs" heading={<SectionHeading title={title} highlight={highlight} sub={sub} />}>
 			<div className="flex flex-col gap-10">
-				<SectionHeading title={title} highlight={highlight} sub={sub} />
 				<div className="flex flex-col gap-6">
 					{groups.map((group) => (
 						<div key={group.title} className="flex flex-col gap-3">

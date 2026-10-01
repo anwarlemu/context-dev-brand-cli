@@ -40,7 +40,7 @@ export const copyRules: Rule = {
 					if (us) out.push({ rule: 'copy-rules', message: `British spelling "${m[0]}"`, hint: `Write "${us}"`, offset: offset + (m.index ?? 0), length: m[0].length });
 				}
 			}
-			if (voice.announcement_label && /^(new feature:|new!|new\b(?!:))/i.test(text.trim()) && !text.trim().startsWith(voice.announcement_label)) {
+			if (voice.announcement_label && /^(New feature:|NEW\b|New!|New -)/.test(text.trim()) && !text.trim().startsWith(voice.announcement_label)) {
 				out.push({ rule: 'copy-rules', message: `Announcement label "${text.trim().split(/\s+/)[0]}"`, hint: `Start announcements with "${voice.announcement_label}"`, offset, length: text.length });
 			}
 		};
