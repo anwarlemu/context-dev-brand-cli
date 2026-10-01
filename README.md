@@ -8,6 +8,23 @@ off-brand code: a hook checks every write before it reaches disk, and they canno
 Three people typing the same prompt get the same page structure, because structure is a lookup and
 a template, not a model decision. Copy is the only thing left to the agent.
 
+## For teammates
+
+You need read access to `anwarlemu/context-dev-brand-cli` on GitHub. In your app:
+
+```sh
+npm i -D github:anwarlemu/context-dev-brand-cli#v0.1.1
+npx context-ds init --dry-run     # preview
+npx context-ds init
+npx playwright install chromium    # only for review
+```
+
+Then use Claude Code as usual. `review` uses your `ANTHROPIC_API_KEY`, or your Claude Code login if
+no key is set. To update, change the tag in `package.json` (for example `#v0.1.2`) and run `npm install`.
+
+Releasing a new version (maintainers): commit, run `npm run ci`, bump `version` in `package.json`,
+then `git tag -a vX.Y.Z -m "context-ds X.Y.Z" && git push origin main vX.Y.Z`.
+
 ## Use it locally
 
 One-time, in this repo:

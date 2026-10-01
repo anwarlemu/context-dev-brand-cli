@@ -34,7 +34,7 @@ export function gatherInfo(root: string) {
 		bin: config.bin,
 		version: JSON.parse(readFileSync(join(PKG_ROOT, 'package.json'), 'utf8')).version,
 		tokenVersion: JSON.parse(readFileSync(join(PKG_ROOT, 'package.json'), 'utf8')).version,
-		registryUrl: config.registryUrl,
+		registryUrl: config.registryMode === 'local' && !process.env.DS_REGISTRY_URL ? 'bundled with the package (registryMode local)' : process.env.DS_REGISTRY_URL ?? config.registryUrl,
 		project,
 		installed: items,
 		hooks: hookStatus(root),

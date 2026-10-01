@@ -1,6 +1,6 @@
 {
   "name": "context-ds",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Design system harness for AI coding agents: templates, docs at the right time, and checks that block off-brand code.",
   "type": "module",
   "bin": {
