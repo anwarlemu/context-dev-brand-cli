@@ -33,7 +33,8 @@
     "registry:build": "tsx scripts/build-registry.ts && shadcn build registry.json --output public/r && tsx scripts/post-registry.ts",
     "test": "vitest run",
     "ci": "npm run build && npm run tokens && tsx scripts/ci-limits.ts && vitest run",
-    "setup": "npm install && npm run build && npm run tokens && npm run registry:build && npm test"
+    "setup": "npm install && npm run build && npm run tokens && npm run registry:build && npm test",
+    "prepare": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
