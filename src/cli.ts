@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { loadConfig } from './lib/config.js';
 import { registerAdd } from './commands/add.js';
+import { registerApprove } from './commands/approve.js';
 import { registerCheck } from './commands/check.js';
 import { registerDiff } from './commands/diff.js';
 import { registerDocs } from './commands/docs.js';
@@ -37,6 +38,7 @@ registerReview(program);
 registerDiff(program);
 registerHook(program);
 registerWatch(program);
+registerApprove(program);
 
 program.parseAsync(process.argv).catch((error) => {
 	process.stderr.write(`${config.bin}: ${(error as Error).message}\n`);

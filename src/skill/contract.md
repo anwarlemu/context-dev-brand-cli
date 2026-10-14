@@ -10,4 +10,4 @@
 - Copy follows voice.md. Word limits apply to headlines, subheads, buttons.
 - `{{bin}} check` runs automatically and will block you. Fix every error, do not work around it.
 - Done is not good. Run `{{bin}} review` on any new page or flow and address the punch list.
-- Deviating from the registry requires `// ds-override: <reason>` on line 1 and a note in your summary.
+- A `// ds-override: <reason>` only counts once the user approves it with `{{bin}} approve` in their terminal. You cannot approve it; prefer fixing the finding.

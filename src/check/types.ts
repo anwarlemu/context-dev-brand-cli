@@ -13,6 +13,8 @@ export type Finding = {
 	snippet: string;
 	fix?: Fix;
 	overridden?: string;
+	/** On an override-approval finding: the rule the override skips. */
+	overrideOf?: string;
 };
 
 export type RawFinding = Omit<Finding, 'file' | 'severity' | 'line' | 'column' | 'snippet'> & { offset: number; length?: number };

@@ -10,5 +10,6 @@
   "components/copy.tsx": "copy-rules",
   "components/contrast.tsx": "contrast",
   "components/variant.tsx": "variant-from-list",
-  "components/ds/ui/chip.tsx": "registry-drift"
+  "components/ds/ui/chip.tsx": "registry-drift",
+  "components/override.tsx": "override-approval"
 }

@@ -271,7 +271,9 @@ export function registerInit(program: Command) {
 			}
 
 			const gitignore = existsSync(join(root, '.gitignore')) ? readFileSync(join(root, '.gitignore'), 'utf8') : '';
-			if (!gitignore.includes('.ds/session-cache.json')) writeIfChanged(root, '.gitignore', `${gitignore.trimEnd()}\n.ds/session-cache.json\n.ds/review/\n`.replace(/^\n/, ''), changes, 'patched');
+			// Local run state stays out of git; .ds/baseline.json and .ds/approved-overrides.json are committed.
+			const ignoreLines = ['.ds/session-cache.json', '.ds/review/', '.ds/hooks.log', '.ds/watch.json'].filter((l) => !gitignore.split('\n').includes(l));
+			if (ignoreLines.length) writeIfChanged(root, '.gitignore', `${gitignore.trimEnd()}\n${ignoreLines.join('\n')}\n`.replace(/^\n/, ''), changes, 'patched');
 
 			if (opts.baseline && !readBaseline(root)) {
 				const result = runCheck({ projectRoot: root, useBaseline: false, include: scopedInclude });

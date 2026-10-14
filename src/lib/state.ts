@@ -40,3 +40,9 @@ export function sessionState(root: string, sessionId: string) {
 export type Baseline = { createdAt: string; findings: Record<string, number> };
 export const readBaseline = (root: string) => readJson<Baseline | null>(join(dsDir(root), 'baseline.json'), null);
 export const writeBaseline = (root: string, data: Baseline) => writeJson(join(dsDir(root), 'baseline.json'), data);
+
+// Overrides a person approved with `approve`. Keyed by file, rule and reason (not line), so moving code keeps approval.
+export type Approval = { key: string; file: string; rule: string; reason: string; at: string };
+export const overrideKey = (o: { file: string; rule: string; overridden?: string }) => `${o.file}|${o.rule}|${o.overridden ?? ''}`;
+export const readApprovals = (root: string) => readJson<{ approvals: Approval[] }>(join(dsDir(root), 'approved-overrides.json'), { approvals: [] });
+export const writeApprovals = (root: string, data: { approvals: Approval[] }) => writeJson(join(dsDir(root), 'approved-overrides.json'), data);

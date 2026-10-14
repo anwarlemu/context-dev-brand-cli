@@ -1,14 +1,15 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join, relative, sep } from 'node:path';
-import { loadCheckConfig } from '../lib/config.js';
+import { isAbsolute, join, relative, resolve, sep } from 'node:path';
+import { loadCheckConfig, loadConfig } from '../lib/config.js';
 import { matchesAny, walkFiles } from '../lib/glob.js';
-import { readBaseline, readInstalled } from '../lib/state.js';
+import { PKG_ROOT } from '../lib/paths.js';
+import { overrideKey, readApprovals, readBaseline, readInstalled } from '../lib/state.js';
 import { loadVoice } from '../lib/voice.js';
 import type { CheckConfig } from '../schema/index.js';
 import type { RuleContext } from './context.js';
 import { RULES } from './rules/index.js';
 import { lineOf, loadSource } from './source.js';
-import type { Finding, Fix } from './types.js';
+import type { Finding, Fix, Severity } from './types.js';
 import { loadVocab } from './vocab.js';
 
 export type CheckOptions = { projectRoot: string; paths?: string[]; fast?: boolean; fix?: boolean; useBaseline?: boolean; include?: string[] };
@@ -121,6 +122,20 @@ export function runCheck(opts: CheckOptions): CheckResult {
 		}
 		findings.push(...result.findings);
 		overrides.push(...result.overrides);
+	}
+	// A ds-override is an exception a person must sign off. Until `approve` records it, it counts as an error (not in the
+	// fast pre-write check, so the write lands and the agent is stopped at finish and at commit instead).
+	// The design system's own registry carries reviewed overrides (ported code), so they need no approval here.
+	if (!opts.fast && (config.rules['override-approval'] ?? 'off') !== 'off' && resolve(opts.projectRoot) !== resolve(PKG_ROOT)) {
+		const approved = new Set(readApprovals(opts.projectRoot).approvals.map((a) => a.key));
+		const registryFiles = new Set(Object.values(readInstalled(opts.projectRoot)).flatMap((e) => e.files));
+		const seen = new Set<string>();
+		for (const o of overrides) {
+			const key = overrideKey(o);
+			if (approved.has(key) || registryFiles.has(o.file) || seen.has(key)) continue;
+			seen.add(key);
+			findings.push({ ...o, overrideOf: o.rule, rule: 'override-approval', severity: config.rules['override-approval'] as Severity, message: `ds-override not approved: ${o.rule} (${o.overridden})`, hint: `A person approves it in a terminal with \`${loadConfig().cli} approve\`. Agents cannot approve; ask the user, or remove the override and fix the finding.`, fix: undefined });
+		}
 	}
 	let baselined = 0;
 	if (opts.useBaseline !== false) {

@@ -109,7 +109,10 @@ the pre-commit hook and by CI. `info` shows when each agent's hooks last ran and
 blocked, so you can see they are live.
 
 The only escape hatch is `// ds-override: <reason>`, on the line above a finding or on line 1 for a
-file. Every override is listed in check output and at Stop.
+file. An override does not count until a person approves it with `approve` (recorded in
+`.ds/approved-overrides.json`, which you commit). Until then `override-approval` fails the Stop hook,
+the pre-commit hook and CI. Overrides in installed registry files and those present at `init` are
+accepted.
 
 Always-loaded context is the 11-line contract in `AGENTS.md` / `CLAUDE.md`. Any single docs
 injection is capped at 80 lines, enforced by `npm run ci`.
@@ -131,13 +134,14 @@ All commands take `--json` and `--help`.
 | `review [url\|path] [--viewports] [--threshold 7]` | Needs `ANTHROPIC_API_KEY`; model from `DS_REVIEW_MODEL` or ds.config.json |
 | `diff` | Items behind the registry or edited by hand |
 | `watch` | Check every file the moment it is saved. For agents and editors without hooks |
+| `approve [--list]` | A person reviews and approves `ds-override` exceptions. Refuses to run without an interactive terminal, so agents cannot approve their own |
 
 ## Check rules
 
 `no-raw-color`, `no-arbitrary-spacing`, `no-off-scale-radius`, `no-off-scale-motion`,
 `font-family-from-tokens` (family, weight, size, tracking), `copy-rules` (voice.md header),
 `contrast`, `template-structure`, `no-unregistered-section`, `variant-from-list`, `registry-drift`,
-`single-primary-action`. Levels live in `checks/check.config.json`; a project can override them in
+`single-primary-action`, `override-approval`. Levels live in `checks/check.config.json`; a project can override them in
 `.ds/check.config.json`. `test/fixtures/violations` has one violation per rule and
 `test/fixtures/expected.json` the expected result.
 

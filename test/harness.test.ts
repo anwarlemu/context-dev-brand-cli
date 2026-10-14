@@ -10,6 +10,7 @@ import { patchWrites, proposedWrite } from '../src/hooks/payload.js';
 import { resolveIntent } from '../src/lib/intents.js';
 import { isProductTarget } from '../src/review/critique.js';
 import { checkChanged } from '../src/commands/watch.js';
+import { overrideKey, writeApprovals } from '../src/lib/state.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
 const expected: Record<string, string> = JSON.parse(readFileSync(join(__dirname, 'fixtures', 'expected.json'), 'utf8'));
@@ -87,7 +88,7 @@ describe('check fixtures (M6)', () => {
 		expect(result.errors).toBe(Object.keys(expected).length);
 		for (const [file, rule] of Object.entries(expected)) expect(result.findings.filter((f) => f.file === file).map((f) => f.rule)).toEqual([rule]);
 	});
-	it('covers every rule', () => expect(new Set(Object.values(expected)).size).toBe(12));
+	it('covers every rule', () => expect(new Set(Object.values(expected)).size).toBe(13));
 	it('--fix resolves the fixable ones', () => {
 		const dir = mkdtempSync(join(tmpdir(), 'ds-fix-'));
 		cpSync(FIXTURES, dir, { recursive: true });
@@ -173,6 +174,19 @@ describe('hooks (M5 logic)', () => {
 		const status = {};
 		expect(checkChanged(dir, 'components/raw-color.tsx', status)?.errors).toBe(1);
 		expect(checkChanged(dir, 'node_modules/x.tsx', status)).toBeUndefined();
+		rmSync(dir, { recursive: true });
+	});
+	it('an override needs a person: approve refuses without a terminal, and the approval clears it', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-approve-'));
+		writeFileSync(join(dir, 'package.json'), '{}');
+		cpSync(join(FIXTURES, 'components/override.tsx'), join(dir, 'components/override.tsx'), { recursive: true });
+		const pending = runCheck({ projectRoot: dir }).findings.filter((f) => f.rule === 'override-approval');
+		expect(pending.map((f) => [f.overrideOf, f.overridden])).toEqual([['no-raw-color', 'the agent decided this was fine']]);
+		const cli = spawnSync('node', [join(__dirname, '..', 'bin.js'), 'approve'], { cwd: dir, encoding: 'utf8', stdio: 'pipe' });
+		expect(cli.status).not.toBe(0);
+		expect(cli.stderr).toMatch(/person at an interactive terminal/);
+		writeApprovals(dir, { approvals: [{ key: overrideKey({ file: 'components/override.tsx', rule: 'no-raw-color', overridden: 'the agent decided this was fine' }), file: 'components/override.tsx', rule: 'no-raw-color', reason: 'the agent decided this was fine', at: '' }] });
+		expect(runCheck({ projectRoot: dir }).errors).toBe(0);
 		rmSync(dir, { recursive: true });
 	});
 	it('only blocks errors the edit introduces, not legacy ones', () => {

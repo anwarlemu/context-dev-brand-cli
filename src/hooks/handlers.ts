@@ -117,6 +117,14 @@ export function stop(root: string, input: HookInput): HookResult {
 	const changed = changedFiles(root).filter((f) => isInScope(f, config) && existsSync(join(root, f)) && statSync(join(root, f)).mtimeMs >= since);
 	if (!changed.length) return {};
 	const result = runCheck({ projectRoot: root, paths: changed.map((f) => join(root, f)) });
+	const errors = result.findings.filter((f) => f.severity === 'error');
+	if (errors.length && errors.every((f) => f.rule === 'override-approval')) {
+		// The agent cannot fix this itself: only a person can approve. Say so once, then let it finish and report.
+		if (state.entry.injected.includes('approval-asked')) return { stdout: `${bin}: ${errors.length} ds-override(s) still wait for the user's approval.` };
+		state.entry.injected.push('approval-asked');
+		state.save();
+		return { json: { decision: 'block', reason: [`${bin}: ${errors.length} ds-override(s) you added need a person's approval. You cannot approve them.`, ...errors.map((f) => `${f.file}:${f.line}  ${f.overrideOf} (${f.overridden})`), `Either remove each override and fix the finding properly, or end your turn by listing them and asking the user to run \`${bin} approve\` in their terminal. Until then the commit hook and CI will fail.`].join('\n') } };
+	}
 	if (result.errors) {
 		state.entry.stopBlocks++;
 		state.save();
