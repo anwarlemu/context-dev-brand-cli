@@ -55,26 +55,32 @@ function upsertBlock(existing: string, block: string, start = START, end = END) 
 	return existing.trim() ? `${existing.trimEnd()}\n\n${wrapped}\n` : `${wrapped}\n`;
 }
 
-export function binCommand(root: string, harness: 'claude-code' | 'other') {
-	const local = join(root, 'node_modules', loadConfig().bin, 'bin.js');
-	if (existsSync(local)) return harness === 'claude-code' ? `node "$CLAUDE_PROJECT_DIR/node_modules/${loadConfig().bin}/bin.js"` : `node node_modules/${loadConfig().bin}/bin.js`;
-	return `node "${join(PKG_ROOT, 'bin.js')}"`;
+// Each harness runs hooks from a different directory, so the command finds the project's copy its own way: Claude Code
+// and Cursor name the project dir; Codex runs in the session's cwd, which may be a subfolder, so it asks git.
+export function binCommand(root: string, harness: 'claude-code' | 'codex' | 'cursor' | 'other') {
+	const bin = loadConfig().bin;
+	if (!existsSync(join(root, 'node_modules', bin, 'bin.js'))) return `node "${join(PKG_ROOT, 'bin.js')}"`;
+	if (harness === 'claude-code') return `node "$CLAUDE_PROJECT_DIR/node_modules/${bin}/bin.js"`;
+	if (harness === 'cursor') return `node "$CURSOR_PROJECT_DIR/node_modules/${bin}/bin.js"`;
+	if (harness === 'codex') return `node "$(git rev-parse --show-toplevel 2>/dev/null || pwd)/node_modules/${bin}/bin.js"`;
+	return `node node_modules/${bin}/bin.js`;
 }
 
-function mergeClaudeHooks(existing: any, cmd: string, bin: string) {
+function mergeClaudeHooks(existing: any, cmd: string, bin: string, harness: 'claude-code' | 'codex' = 'claude-code') {
 	const settings = existing ?? {};
 	settings.hooks ??= {};
 	const ours = (c: string) => c.includes(' hook ') && (c.includes(bin) || c.includes('bin.js'));
 	const events: [string, string | undefined, string, number][] = [
 		['SessionStart', undefined, 'session-start', 10],
 		['UserPromptSubmit', undefined, 'user-prompt-submit', 10],
-		['PreToolUse', 'Write|Edit|MultiEdit', 'pre-tool-use', 20],
+		// Codex reports file edits as apply_patch; Edit and Write are its aliases for it.
+		['PreToolUse', harness === 'codex' ? 'apply_patch|Edit|Write' : 'Write|Edit|MultiEdit', 'pre-tool-use', 20],
 		['PostToolUse', 'Bash', 'post-tool-use', 10],
 		['Stop', undefined, 'stop', 120],
 	];
 	for (const [event, matcher, name, timeout] of events) {
 		const groups: any[] = (settings.hooks[event] ?? []).map((g: any) => ({ ...g, hooks: (g.hooks ?? []).filter((h: any) => !ours(String(h.command ?? ''))) })).filter((g: any) => g.hooks.length);
-		groups.push({ ...(matcher ? { matcher } : {}), hooks: [{ type: 'command', command: `${cmd} hook ${name}`, timeout }] });
+		groups.push({ ...(matcher ? { matcher } : {}), hooks: [{ type: 'command', command: `${cmd} hook ${name}${harness === 'codex' ? ' --harness codex' : ''}`, timeout }] });
 		settings.hooks[event] = groups;
 	}
 	return settings;
@@ -225,21 +231,26 @@ export function registerInit(program: Command) {
 			if (harnesses.includes('codex')) writeIfChanged(root, `.agents/skills/${config.bin}/SKILL.md`, skill, changes);
 
 			const claudeCmd = binCommand(root, 'claude-code');
-			const otherCmd = binCommand(root, 'other');
+			const codexCmd = binCommand(root, 'codex');
+			const cursorCmd = binCommand(root, 'cursor');
 			if (harnesses.includes('claude-code')) {
 				const settings = mergeClaudeHooks(readJson(join(root, '.claude', 'settings.json')), claudeCmd, config.bin);
 				writeIfChanged(root, '.claude/settings.json', `${JSON.stringify(settings, null, 2)}\n`, changes);
 			}
 			if (harnesses.includes('codex')) {
-				const settings = mergeClaudeHooks(readJson(join(root, '.codex', 'hooks.json')), otherCmd.replace(/^node /, 'node '), config.bin);
+				const settings = mergeClaudeHooks(readJson(join(root, '.codex', 'hooks.json')), codexCmd, config.bin, 'codex');
 				writeIfChanged(root, '.codex/hooks.json', `${JSON.stringify(settings, null, 2)}\n`, changes);
+				notes.push(`Codex runs project hooks only once they are trusted: open codex here and run /hooks to trust them (automation: codex exec --dangerously-bypass-hook-trust).`);
 			}
 			if (harnesses.includes('cursor')) {
 				const existing = readJson(join(root, '.cursor', 'hooks.json')) ?? { version: 1, hooks: {} };
 				existing.hooks ??= {};
 				const strip = (list: any[] = []) => list.filter((h) => !String(h.command ?? '').includes(' hook '));
-				existing.hooks.afterFileEdit = [...strip(existing.hooks.afterFileEdit), { command: `${otherCmd} hook after-file-edit --harness cursor` }];
-				existing.hooks.stop = [...strip(existing.hooks.stop), { command: `${otherCmd} hook stop --harness cursor` }];
+				// preToolUse can deny a write before it lands (afterFileEdit cannot); stop sends the agent back while errors remain.
+				existing.hooks.afterFileEdit = strip(existing.hooks.afterFileEdit);
+				if (!existing.hooks.afterFileEdit.length) delete existing.hooks.afterFileEdit;
+				existing.hooks.preToolUse = [...strip(existing.hooks.preToolUse), { command: `${cursorCmd} hook pre-tool-use --harness cursor`, matcher: 'Write|Edit|MultiEdit|StrReplace|apply_patch', timeout: 20 }];
+				existing.hooks.stop = [...strip(existing.hooks.stop), { command: `${cursorCmd} hook stop --harness cursor`, loop_limit: 5 }];
 				writeIfChanged(root, '.cursor/hooks.json', `${JSON.stringify(existing, null, 2)}\n`, changes);
 			}
 
@@ -248,7 +259,7 @@ export function registerInit(program: Command) {
 			if (existsSync(join(root, '.git'))) {
 				const hookPath = join(root, '.git', 'hooks', 'pre-commit');
 				const existing = existsSync(hookPath) ? readFileSync(hookPath, 'utf8') : '#!/bin/sh\n';
-				const block = `${otherCmd} check --changed || { echo "${config.cli} check failed. Fix the errors above before committing."; exit 1; }`;
+				const block = `${binCommand(root, 'other')} check --changed || { echo "${config.cli} check failed. Fix the errors above before committing."; exit 1; }`;
 				const next = upsertBlock(existing.startsWith('#!') ? existing : `#!/bin/sh\n${existing}`, block, '# ds:pre-commit:start', '# ds:pre-commit:end');
 				if (next !== existing && dryRun) changes.push({ file: '.git/hooks/pre-commit', action: 'would write' });
 				else if (next !== existing) {

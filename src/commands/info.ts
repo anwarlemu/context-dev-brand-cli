@@ -20,6 +20,23 @@ export function hookStatus(root: string) {
 	};
 }
 
+// When each harness's hooks last ran and how often they blocked, from .ds/hooks.log. Proves the hooks are live.
+export function hookActivity(root: string) {
+	const path = join(root, '.ds', 'hooks.log');
+	const out: Record<string, { last: string; runs: number; blocks: number }> = {};
+	if (!existsSync(path)) return out;
+	for (const line of readFileSync(path, 'utf8').trim().split('\n').slice(-2000)) {
+		try {
+			const e = JSON.parse(line) as { at: string; harness: string; blocked?: boolean };
+			const a = (out[e.harness] ??= { last: e.at, runs: 0, blocks: 0 });
+			a.runs++;
+			if (e.blocked) a.blocks++;
+			if (e.at > a.last) a.last = e.at;
+		} catch {}
+	}
+	return out;
+}
+
 export function gatherInfo(root: string) {
 	const config = loadConfig();
 	const project = detectProject(root);
@@ -38,6 +55,7 @@ export function gatherInfo(root: string) {
 		project,
 		installed: items,
 		hooks: hookStatus(root),
+		hookActivity: hookActivity(root),
 		baseline: baseline ? Object.values(baseline.findings).reduce((a, b) => a + b, 0) : 0,
 	};
 }
@@ -57,6 +75,7 @@ export function registerInfo(program: Command) {
 					`Tokens: ${info.tokenVersion}  Registry: ${info.registryUrl}`,
 					`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id}@${i.installed}${i.drift === 'behind' ? ` (latest ${i.latest})` : ''}`).join(', ') : 'none'}`,
 					`Hooks: claude-code [${h['claude-code'].join(', ') || 'none'}], cursor [${h.cursor.join(', ') || 'none'}], codex [${h.codex.join(', ') || 'none'}], pre-commit [${h['pre-commit'].join(', ') || 'none'}]`,
+					`Hook activity: ${Object.entries(info.hookActivity).map(([k, a]) => `${k} last ran ${a.last} (${a.runs} runs, ${a.blocks} blocks)`).join('; ') || 'none recorded yet (hooks have not fired in this project)'}`,
 					`Contract in: ${h.contract.join(', ') || 'none'}`,
 					`Baseline: ${info.baseline} legacy findings accepted`,
 				].join('\n');

@@ -5,10 +5,11 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { applyFixes, checkText, runCheck } from '../src/check/engine.js';
 import { planScaffold } from '../src/commands/scaffold.js';
-import { preToolUse, userPromptSubmit } from '../src/hooks/handlers.js';
-import { proposedWrite } from '../src/hooks/payload.js';
+import { cursorPreToolUse, cursorStop, preToolUse, userPromptSubmit } from '../src/hooks/handlers.js';
+import { patchWrites, proposedWrite } from '../src/hooks/payload.js';
 import { resolveIntent } from '../src/lib/intents.js';
 import { isProductTarget } from '../src/review/critique.js';
+import { checkChanged } from '../src/commands/watch.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
 const expected: Record<string, string> = JSON.parse(readFileSync(join(__dirname, 'fixtures', 'expected.json'), 'utf8'));
@@ -140,6 +141,39 @@ describe('hooks (M5 logic)', () => {
 		const r = preToolUse(FIXTURES, { session_id: 't1', tool_name: 'Write', tool_input: { file_path: join(FIXTURES, 'components/new.tsx'), content: 'export const N = () => <p style={{ color: "#ff0000" }}>Search</p>;' } });
 		expect(r.exitCode).toBe(2);
 		expect(r.stderr).toMatch(/no-raw-color/);
+	});
+	it('parses Codex apply_patch: added, updated and moved files', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-patch-'));
+		writeFileSync(join(dir, 'a.tsx'), 'line one\nline two\nline three\n');
+		const patch = ['*** Begin Patch', '*** Add File: b.tsx', '+export const B = 1;', '+// two', '*** Update File: a.tsx', '@@', ' line one', '-line two', '+line 2', ' line three', '*** Delete File: c.tsx', '*** End Patch'].join('\n');
+		const writes = patchWrites(patch, dir);
+		expect(writes.map((w) => w.relPath)).toEqual(['b.tsx', 'a.tsx']);
+		expect(writes[0].after).toBe('export const B = 1;\n// two');
+		expect(writes[1].after).toBe('line one\nline 2\nline three\n');
+		rmSync(dir, { recursive: true });
+	});
+	it('blocks a Codex patch that adds a raw color', () => {
+		const patch = ['*** Begin Patch', '*** Add File: components/codex.tsx', '+export const N = () => <p className="text-[#ff0000]">Search</p>;', '*** End Patch'].join('\n');
+		const r = preToolUse(FIXTURES, { session_id: 'cx', cwd: FIXTURES, tool_name: 'apply_patch', tool_input: { command: patch } });
+		expect(r.exitCode).toBe(2);
+		expect(r.stderr).toMatch(/components\/codex\.tsx/);
+		expect(r.stderr).toMatch(/no-raw-color/);
+	});
+	it('denies a Cursor write with the reason for the agent, and keeps it going at stop', () => {
+		const r = cursorPreToolUse(FIXTURES, { tool_name: 'Write', tool_input: { file_path: join(FIXTURES, 'components/cur.tsx'), contents: 'export const N = () => <p style={{ color: "#ff0000" }}>Search</p>;' } });
+		expect(r.json).toMatchObject({ permission: 'deny' });
+		expect(String((r.json as any).agent_message)).toMatch(/no-raw-color/);
+		expect(cursorPreToolUse(FIXTURES, { tool_name: 'Write', tool_input: { file_path: join(FIXTURES, 'components/ok.tsx'), contents: 'export const N = () => null;' } }).json).toEqual({ permission: 'allow' });
+		expect(typeof cursorStop).toBe('function');
+	});
+	it('watch reports a saved file with errors, and nothing for files out of scope', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-watch-'));
+		writeFileSync(join(dir, 'package.json'), '{}');
+		cpSync(join(FIXTURES, 'components/raw-color.tsx'), join(dir, 'components/raw-color.tsx'), { recursive: true });
+		const status = {};
+		expect(checkChanged(dir, 'components/raw-color.tsx', status)?.errors).toBe(1);
+		expect(checkChanged(dir, 'node_modules/x.tsx', status)).toBeUndefined();
+		rmSync(dir, { recursive: true });
 	});
 	it('only blocks errors the edit introduces, not legacy ones', () => {
 		const r = preToolUse(FIXTURES, { session_id: 't2', tool_name: 'Edit', tool_input: { file_path: join(FIXTURES, 'components/radius.tsx'), old_string: 'Search', new_string: 'Search the web' } });

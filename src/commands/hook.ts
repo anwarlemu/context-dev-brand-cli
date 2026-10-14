@@ -1,7 +1,9 @@
+import { appendFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
 import type { Command } from 'commander';
 import { loadConfig } from '../lib/config.js';
-import { findProjectRoot } from '../lib/paths.js';
-import { type HookResult, cursorAfterEdit, cursorStop, postToolUse, preToolUse, sessionStart, stop, userPromptSubmit } from '../hooks/handlers.js';
+import { dsDir, findProjectRoot } from '../lib/paths.js';
+import { type HookResult, cursorAfterEdit, cursorPreToolUse, cursorStop, postToolUse, preToolUse, sessionStart, stop, userPromptSubmit } from '../hooks/handlers.js';
 import { readHookInput } from '../hooks/payload.js';
 
 const EVENTS = ['session-start', 'user-prompt-submit', 'pre-tool-use', 'post-tool-use', 'stop'] as const;
@@ -13,11 +15,12 @@ export function registerHook(program: Command) {
 		.option('--harness <name>', 'claude-code | cursor | codex', 'claude-code')
 		.action((event: string, opts) => {
 			const input = readHookInput();
-			const root = findProjectRoot(input.cwd ?? process.env.CLAUDE_PROJECT_DIR ?? process.cwd());
+			const root = findProjectRoot(input.cwd ?? process.env.CLAUDE_PROJECT_DIR ?? process.env.CURSOR_PROJECT_DIR ?? process.cwd());
 			let result: HookResult = {};
 			try {
 				if (opts.harness === 'cursor') {
-					if (event === 'after-file-edit') result = cursorAfterEdit(root, input);
+					if (event === 'pre-tool-use') result = cursorPreToolUse(root, input);
+					else if (event === 'after-file-edit') result = cursorAfterEdit(root, input);
 					else if (event === 'stop') result = cursorStop(root, input);
 				} else if (event === 'session-start') result = sessionStart(root, input);
 				else if (event === 'user-prompt-submit') result = userPromptSubmit(root, input);
@@ -29,6 +32,11 @@ export function registerHook(program: Command) {
 				process.stderr.write(`${loadConfig().bin} hook ${event} failed open: ${(error as Error).message}\n`);
 				process.exit(0);
 			}
+			// One line per run, so `info` can show that each harness's hooks really fire.
+			try {
+				mkdirSync(dsDir(root), { recursive: true });
+				appendFileSync(join(dsDir(root), 'hooks.log'), `${JSON.stringify({ at: new Date().toISOString(), harness: opts.harness, event, exit: result.exitCode ?? 0, blocked: result.exitCode === 2 || (result.json as any)?.permission === 'deny' || (result.json as any)?.decision === 'block' })}\n`);
+			} catch {}
 			if (result.json) process.stdout.write(`${JSON.stringify(result.json)}\n`);
 			else if (result.stdout) process.stdout.write(`${result.stdout}\n`);
 			if (result.stderr) process.stderr.write(`${result.stderr}\n`);

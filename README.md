@@ -101,6 +101,13 @@ components with their variants and states (`npx context-ds docs` lists them unde
 | Stop | Full check on changed files. Errors block completion. Changed pages trigger one "run review" |
 | Commit and CI | The same check in the git pre-commit hook and CI |
 
+Per agent: Claude Code and Codex block a bad write before it lands and refuse to finish while errors
+remain (Codex: tested live with `apply_patch`; trust the project hooks once with `/hooks`). Cursor
+denies the write through `preToolUse` and sends the agent back at `stop` (checked against Cursor's
+hook docs, not yet in a live session). Agents with no hooks are caught by `watch` as files save, by
+the pre-commit hook and by CI. `info` shows when each agent's hooks last ran and how often they
+blocked, so you can see they are live.
+
 The only escape hatch is `// ds-override: <reason>`, on the line above a finding or on line 1 for a
 file. Every override is listed in check output and at Stop.
 
@@ -123,6 +130,7 @@ All commands take `--json` and `--help`.
 | `check [paths] [--fix] [--fast] [--changed] [--write-baseline]` | The rules below |
 | `review [url\|path] [--viewports] [--threshold 7]` | Needs `ANTHROPIC_API_KEY`; model from `DS_REVIEW_MODEL` or ds.config.json |
 | `diff` | Items behind the registry or edited by hand |
+| `watch` | Check every file the moment it is saved. For agents and editors without hooks |
 
 ## Check rules
 

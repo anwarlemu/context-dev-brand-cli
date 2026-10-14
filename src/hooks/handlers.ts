@@ -10,7 +10,7 @@ import { matchesAny } from '../lib/glob.js';
 import { dsDir } from '../lib/paths.js';
 import { findItem, itemByImport, type RegistryItem, renderDocs } from '../lib/registry.js';
 import { readInstalled, sessionState } from '../lib/state.js';
-import { type HookInput, promptOf, proposedWrite, sessionIdOf } from './payload.js';
+import { type HookInput, promptOf, proposedWrites, sessionIdOf } from './payload.js';
 
 export type HookResult = { stdout?: string; stderr?: string; exitCode?: number; json?: Record<string, unknown> };
 
@@ -59,29 +59,36 @@ export function userPromptSubmit(root: string, input: HookInput): HookResult {
 }
 
 export function preToolUse(root: string, input: HookInput): HookResult {
-	const write = proposedWrite(input, root);
-	if (!write) return {};
 	const config = loadCheckConfig(root);
-	if (!isInScope(write.relPath, config)) return {};
+	const writes = proposedWrites(input, root).filter((w) => isInScope(w.relPath, config));
+	if (!writes.length) return {};
 	const bin = loadConfig().cli;
-	const after = checkText(root, write.relPath, write.after, { fast: true, config });
-	const before = write.before ? checkText(root, write.relPath, write.before, { fast: true, config }) : { findings: [], overrides: [] };
-	const introduced = newFindings(before.findings, after.findings).filter((f) => f.severity === 'error');
-	if (introduced.length) {
-		const shown = introduced.slice(0, 25).map(formatFinding);
+	const blocked: string[] = [];
+	const notes: string[] = [];
+	for (const write of writes) {
+		const after = checkText(root, write.relPath, write.after, { fast: true, config });
+		const before = write.before ? checkText(root, write.relPath, write.before, { fast: true, config }) : { findings: [], overrides: [] };
+		const introduced = newFindings(before.findings, after.findings).filter((f) => f.severity === 'error');
+		if (introduced.length) {
+			blocked.push(`${write.relPath}: ${introduced.length} brand error${introduced.length > 1 ? 's' : ''}`, ...introduced.slice(0, 25).map(formatFinding), introduced.length > 25 ? `...and ${introduced.length - 25} more` : '');
+			continue;
+		}
+		const file = loadSource(write.relPath, write.after);
+		const items = file.imports.map((i) => itemByImport(i.source)).filter((i): i is RegistryItem => !!i);
+		const ordered = [...items.filter((i) => i.type === 'template'), ...items.filter((i) => i.type === 'block'), ...items.filter((i) => i.type === 'ui')];
+		const docs = injectDocs(root, sessionIdOf(input), ordered, `imported in ${write.relPath}`);
+		const newOverrides = newFindings(before.overrides, after.overrides);
+		notes.push(docs, newOverrides.length ? `ds-override recorded in ${write.relPath}: ${newOverrides.map((o) => `${o.rule} (${o.overridden})`).join('; ')}. Report it in your summary.` : '');
+	}
+	if (blocked.length) {
 		return {
 			exitCode: 2,
-			stderr: [`${bin} blocked this write to ${write.relPath}: ${introduced.length} brand error${introduced.length > 1 ? 's' : ''}. Nothing was written.`, ...shown, introduced.length > 25 ? `...and ${introduced.length - 25} more` : '', `Fix them and write again. Only if a deviation is genuinely required, add \`// ds-override: <reason>\` above the line and report it in your summary.`].filter(Boolean).join('\n'),
+			stderr: [`${bin} blocked this write. Nothing was written.`, ...blocked, `Fix them and write again. Only if a deviation is genuinely required, add \`// ds-override: <reason>\` above the line and report it in your summary.`].filter(Boolean).join('\n'),
 		};
 	}
-	const file = loadSource(write.relPath, write.after);
-	const items = file.imports.map((i) => itemByImport(i.source)).filter((i): i is RegistryItem => !!i);
-	const ordered = [...items.filter((i) => i.type === 'template'), ...items.filter((i) => i.type === 'block'), ...items.filter((i) => i.type === 'ui')];
-	const docs = injectDocs(root, sessionIdOf(input), ordered, `imported in ${write.relPath}`);
-	const newOverrides = newFindings(before.overrides, after.overrides);
-	const notes = [docs, newOverrides.length ? `ds-override recorded in ${write.relPath}: ${newOverrides.map((o) => `${o.rule} (${o.overridden})`).join('; ')}. Report it in your summary.` : ''].filter(Boolean).join('\n\n');
-	if (!notes) return {};
-	return { json: { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'allow', additionalContext: notes } } };
+	const context = notes.filter(Boolean).join('\n\n');
+	if (!context) return {};
+	return { json: { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'allow', additionalContext: context } } };
 }
 
 export function postToolUse(root: string, input: HookInput): HookResult {
@@ -109,7 +116,7 @@ export function stop(root: string, input: HookInput): HookResult {
 	const since = state.entry.startedAt ?? 0;
 	const changed = changedFiles(root).filter((f) => isInScope(f, config) && existsSync(join(root, f)) && statSync(join(root, f)).mtimeMs >= since);
 	if (!changed.length) return {};
-	const result = runCheck({ projectRoot: root, paths: changed });
+	const result = runCheck({ projectRoot: root, paths: changed.map((f) => join(root, f)) });
 	if (result.errors) {
 		state.entry.stopBlocks++;
 		state.save();
@@ -136,6 +143,13 @@ export function cursorAfterEdit(root: string, input: HookInput): HookResult {
 	if (!isInScope(rel, config) || !existsSync(join(root, rel))) return {};
 	const { findings } = checkText(root, rel, readFileSync(join(root, rel), 'utf8'), { config });
 	return findings.length ? { stderr: findings.map(formatFinding).join('\n') } : {};
+}
+
+// Cursor's preToolUse answers with permission and an agent_message, which Cursor feeds back to the agent on a deny.
+export function cursorPreToolUse(root: string, input: HookInput): HookResult {
+	const r = preToolUse(root, input);
+	if (r.exitCode === 2) return { json: { permission: 'deny', agent_message: r.stderr, user_message: `${loadConfig().cli} blocked a write with brand errors.` } };
+	return { json: { permission: 'allow' } };
 }
 
 export function cursorStop(root: string, input: HookInput): HookResult {
