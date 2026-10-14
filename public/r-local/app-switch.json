@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-switch",
+  "title": "AppSwitch",
+  "description": "An on or off setting that applies at once (Main content only, Include frames, a Parameters panel toggle).",
+  "files": [
+    {
+      "path": "registry/ui/app-switch/app-switch.tsx",
+      "content": "'use client';\n\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type AppSwitchProps = {\n\tchecked: boolean;\n\tonCheckedChange: (checked: boolean) => void;\n\tlabel: string;\n\tdisabled?: boolean;\n};\n\nexport function AppSwitch({ checked, onCheckedChange, label, disabled }: AppSwitchProps) {\n\treturn (\n\t\t<button\n\t\t\ttype=\"button\"\n\t\t\trole=\"switch\"\n\t\t\taria-checked={checked}\n\t\t\taria-label={label}\n\t\t\tdisabled={disabled}\n\t\t\tonClick={() => onCheckedChange(!checked)}\n\t\t\t// The thumb sits 3/16 of a rem inside the track on every side, so it reads as held by the track. Off, a hairline gives\n\t\t\t// the pale track an edge; on, the brand blue needs none.\n\t\t\tclassName={cx(\n\t\t\t\t'relative inline-flex h-5 w-9 shrink-0 items-center rounded-pill outline-none transition-[background-color,box-shadow] duration-200 ease-out focus-visible:shadow-ring-hover disabled:pointer-events-none disabled:opacity-50',\n\t\t\t\tchecked ? 'bg-brand' : 'bg-neutral-10 shadow-inset-hairline',\n\t\t\t)}\n\t\t>\n\t\t\t{/* A soft shadow only: a dark one turns into a gray halo against the blue. */}\n\t\t\t<span\n\t\t\t\tclassName={cx(\n\t\t\t\t\t'size-3.5 rounded-pill bg-white shadow-thumb transition-transform duration-200 ease-emphasized motion-reduce:transition-none',\n\t\t\t\t\t// In rem like the track and thumb, so the travel scales with them.\n\t\t\t\t\tchecked ? 'translate-x-[1.1875rem]' : 'translate-x-[0.1875rem]',\n\t\t\t\t)}\n\t\t\t/>\n\t\t</button>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-switch.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-switch"
+  },
+  "type": "registry:ui"
+}

@@ -1,6 +1,6 @@
 import type { Command } from 'commander';
 import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadConfig } from '../lib/config.js';
 import { gitDiff } from '../lib/git.js';
@@ -72,7 +72,8 @@ export function registerReview(program: Command) {
 			const outDir = join(dsDir(root), 'review', new Date().toISOString().replace(/[:.]/g, '-'));
 			try {
 				const shots = await capture(url, viewports, outDir);
-				const { card, model } = await critique(shots, gitDiff(root, diffPaths), url);
+				const source = diffPaths.map((p) => readFileSync(join(root, p), 'utf8')).join('\n');
+				const { card, model } = await critique(shots, gitDiff(root, diffPaths), url, source);
 				const failing = Object.entries(card.scores).filter(([, v]) => v < threshold);
 				const report = { url, model, threshold, pass: failing.length === 0, ...card, screenshots: shots.map((s) => s.path) };
 				mkdirSync(join(dsDir(root), 'review'), { recursive: true });

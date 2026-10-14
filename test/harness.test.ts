@@ -8,6 +8,7 @@ import { planScaffold } from '../src/commands/scaffold.js';
 import { preToolUse, userPromptSubmit } from '../src/hooks/handlers.js';
 import { proposedWrite } from '../src/hooks/payload.js';
 import { resolveIntent } from '../src/lib/intents.js';
+import { isProductTarget } from '../src/review/critique.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
 const expected: Record<string, string> = JSON.parse(readFileSync(join(__dirname, 'fixtures', 'expected.json'), 'utf8'));
@@ -24,7 +25,12 @@ describe('resolve', () => {
 		expect(r.kind).toBe('match');
 		expect(r.kind === 'match' && r.target).toBe(target);
 	});
-	it('routes dashboard work out of scope', () => expect(resolveIntent('add a usage chart to the dashboard').kind).toBe('out_of_scope'));
+	it('routes dashboard work to the product templates', () => {
+		expect(resolveIntent('add a usage chart to the dashboard')).toMatchObject({ kind: 'match', target: 'templates/app-overview' });
+		expect(resolveIntent('build the API keys page')).toMatchObject({ kind: 'match', target: 'templates/app-list' });
+		expect(resolveIntent('build the settings page')).toMatchObject({ kind: 'match', target: 'templates/app-settings' });
+	});
+	it('keeps auth screens out of scope', () => expect(resolveIntent('build the sign in screen').kind).toBe('out_of_scope'));
 	it('says no match and flags UI intent', () => expect(resolveIntent('design a careers section')).toEqual({ kind: 'none', ui: true }));
 	it('ignores non-UI prompts', () => expect(resolveIntent('fix the flaky vitest in utils')).toEqual({ kind: 'none', ui: false }));
 });
@@ -41,6 +47,36 @@ describe('scaffold', () => {
 			const { findings } = checkText(FIXTURES, `app/${t}/page.tsx`, planScaffold(t, {}, FIXTURES).code);
 			expect(findings.map((f) => `${f.rule} ${f.message}`)).toEqual([]);
 		}
+	});
+});
+
+describe('product templates', () => {
+	const PAGES = ['app-overview', 'app-list', 'app-detail', 'app-form', 'app-settings', 'app-playground'];
+	it('scaffolded product pages pass check', () => {
+		for (const t of PAGES) {
+			const plan = planScaffold(t, {}, FIXTURES);
+			const { findings } = checkText(FIXTURES, plan.out, plan.code);
+			expect(findings.map((f) => `${t}: ${f.rule} ${f.message}`)).toEqual([]);
+		}
+	});
+	it('the first-run list page swaps the table for the empty page', () => {
+		const plan = planScaffold('app-list', { header: 'none', banner: 'none', content: 'app-empty-page' }, FIXTURES);
+		expect(plan.code).toContain('AppEmptyPage');
+		expect(checkText(FIXTURES, plan.out, plan.code).findings).toEqual([]);
+	});
+	it('app-shell scaffolds a layout with children', () => {
+		const plan = planScaffold('app-shell', {}, FIXTURES);
+		expect(plan.out).toMatch(/\(dashboard\)\/layout\.tsx$/);
+		expect(plan.code).toContain('{children}');
+		expect(checkText(FIXTURES, plan.out, plan.code).findings).toEqual([]);
+	});
+	it('review judges product pages by the product rubric', () => {
+		expect(isProductTarget('http://localhost:3000/team', '', "import { AppListTemplate } from '@/components/ds/templates/app-list';")).toBe(true);
+		expect(isProductTarget('http://localhost:3000/pricing', '', "import { PricingTemplate } from '@/components/ds/templates/pricing';")).toBe(false);
+	});
+	it('counts one brand button per product page', () => {
+		const code = `import { AppButton } from '@/components/ds/ui/app-button';\nimport { AppListTemplate } from '@/components/ds/templates/app-list';\nexport default function Page() {\n\treturn <AppListTemplate content={<><AppButton variant="brand">Create key</AppButton><AppButton variant="brand">Create batch</AppButton></>} />;\n}\n`;
+		expect(checkText(FIXTURES, 'app/(dashboard)/x/page.tsx', code).findings.map((f) => f.rule)).toContain('single-primary-action');
 	});
 });
 

@@ -61,22 +61,46 @@ export function planScaffold(templateName: string, overrides: Record<string, str
 	const imports = new Map<string, string>([[template.importPath!, template.exportName]]);
 	for (const s of slots) for (const b of s.blocks) imports.set(b.importPath!, b.exportName);
 	const indentBlock = (text: string, tabs: number) => text.split('\n').map((l, i) => (i === 0 ? l : `${'\t'.repeat(tabs)}${l}`)).join('\n');
+	// Imports the copied JSX needs besides the block itself (an example's AppButton children, a lucide icon).
+	const extraImports = new Map<string, Set<string>>();
+	const carryImports = (source: string, jsx: string) => {
+		const ast = parse(source, { sourceType: 'module', plugins: ['jsx', 'typescript'] }) as any;
+		for (const node of ast.program.body) {
+			if (node.type !== 'ImportDeclaration' || node.importKind === 'type') continue;
+			for (const spec of node.specifiers) {
+				if (spec.type !== 'ImportSpecifier' || spec.importKind === 'type') continue;
+				const name = spec.local.name;
+				if (!new RegExp(`[<{\\s(]${name}\\b`).test(jsx)) continue;
+				const set = extraImports.get(node.source.value) ?? new Set<string>();
+				set.add(spec.imported.name === name ? name : `${spec.imported.name} as ${name}`);
+				extraImports.set(node.source.value, set);
+			}
+		}
+	};
 	const snippet = (slot: string, block: RegistryItem) => {
 		const override = join(template.dir, 'slots', `${slot}.${block.name}.example.tsx`);
-		return existsSync(override) ? usageSnippet(block, readFileSync(override, 'utf8'), override) : usageSnippet(block);
+		const source = existsSync(override) ? readFileSync(override, 'utf8') : block.example!;
+		const jsx = existsSync(override) ? usageSnippet(block, source, override) : usageSnippet(block);
+		carryImports(source, jsx);
+		return jsx;
 	};
 	const props = slots.map(({ slot, blocks }) => {
 		if (blocks.length === 1) return `\t\t\t${slot}={\n\t\t\t\t${indentBlock(snippet(slot, blocks[0]), 4)}\n\t\t\t}`;
 		return `\t\t\t${slot}={\n\t\t\t\t<>\n${blocks.map((b) => `\t\t\t\t\t${indentBlock(snippet(slot, b), 5)}`).join('\n')}\n\t\t\t\t</>\n\t\t\t}`;
 	});
+	const isLayout = !!template.docs.layout;
+	for (const [source, name] of imports) extraImports.get(source)?.delete(name);
+	const extra = [...extraImports].filter(([source, names]) => names.size && !imports.has(source)).sort(([a], [b]) => a.localeCompare(b));
 	const code = [
+		...(isLayout ? ["import type { ReactNode } from 'react';"] : []),
 		...[...imports].map(([source, name]) => `import { ${name} } from '${source}';`),
+		...extra.map(([source, names]) => `import { ${[...names].sort().join(', ')} } from '${source}';`),
 		'',
-		'export default function Page() {',
+		isLayout ? 'export default function Layout({ children }: { children: ReactNode }) {' : 'export default function Page() {',
 		'\treturn (',
 		`\t\t<${template.exportName}`,
 		...props,
-		'\t\t/>',
+		...(isLayout ? ['\t\t>', '\t\t\t{children}', `\t\t</${template.exportName}>`] : ['\t\t/>']),
 		'\t);',
 		'}',
 		'',
@@ -84,7 +108,7 @@ export function planScaffold(templateName: string, overrides: Record<string, str
 	const project = detectProject(root);
 	const appDir = project.appDir ?? (project.srcDir ? 'src/app' : 'app');
 	const route = (template.docs.route ?? `/${template.name}`).replace(/^\//, '');
-	return { template, slots, code, out: out ?? join(appDir, route, 'page.tsx') };
+	return { template, slots, code, out: out ?? join(appDir, route, isLayout ? 'layout.tsx' : 'page.tsx') };
 }
 
 export function registerScaffold(program: Command) {

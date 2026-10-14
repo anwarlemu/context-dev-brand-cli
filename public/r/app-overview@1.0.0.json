@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-overview",
+  "title": "AppOverviewTemplate",
+  "description": "The dashboard home. Try an API, see usage over time, get started, and read the credit figures at a glance.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/templates/app-overview/app-overview.tsx",
+      "content": "'use client';\n\nimport { type CSSProperties, type ReactNode, useEffect, useState } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type AppOverviewTemplateProps = {\n\theader?: ReactNode;\n\tlead?: ReactNode;\n\tchart?: ReactNode;\n\taside?: ReactNode;\n\tstats?: ReactNode;\n};\n\n// The cards rise once, 50ms apart; after that the page is marked entered so cards that mount later simply appear.\nconst ENTRANCE_MS = 1200;\n\nfunction Rise({ index, className, children }: { index: number; className?: string; children: ReactNode }) {\n\treturn (\n\t\t<div className={cx('rise-in grid', className)} style={{ '--rise-index': index } as CSSProperties}>\n\t\t\t{children}\n\t\t</div>\n\t);\n}\n\nexport function AppOverviewTemplate({ header, lead, chart, aside, stats }: AppOverviewTemplateProps) {\n\tconst [entered, setEntered] = useState(false);\n\tuseEffect(() => {\n\t\tconst timeout = setTimeout(() => setEntered(true), ENTRANCE_MS);\n\t\treturn () => clearTimeout(timeout);\n\t}, []);\n\treturn (\n\t\t<div data-ds-template=\"app-overview\" className=\"@container scrollbar-thin scrollbar-stable flex-1 overflow-y-auto fade-in\">\n\t\t\t<div data-entered={entered || undefined} className=\"page-column flex min-h-full flex-col gap-3 px-4 pt-2 pb-8 @2xl:px-8\">\n\t\t\t\t<div className=\"mb-3\">{header}</div>\n\t\t\t\t{lead && (\n\t\t\t\t\t<Rise index={0} className=\"mb-3\">\n\t\t\t\t\t\t{lead}\n\t\t\t\t\t</Rise>\n\t\t\t\t)}\n\t\t\t\t<div className=\"grid gap-3 @4xl:grid-cols-2\">\n\t\t\t\t\t<Rise index={1} className=\"min-h-0\">\n\t\t\t\t\t\t{chart}\n\t\t\t\t\t</Rise>\n\t\t\t\t\t{aside && (\n\t\t\t\t\t\t<Rise index={2} className=\"min-h-0 @4xl:row-span-2\">\n\t\t\t\t\t\t\t{aside}\n\t\t\t\t\t\t</Rise>\n\t\t\t\t\t)}\n\t\t\t\t\t<Rise index={3}>{stats}</Rise>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/templates/app-overview.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "template",
+    "id": "templates/app-overview"
+  },
+  "type": "registry:block"
+}

@@ -74,6 +74,22 @@ npx context-ds review app/pricing/page.tsx
 
 Run `init --dry-run` there first. Do it on a branch.
 
+## Product surfaces (the dashboard)
+
+The system also covers signed-in product screens, learned from the context-dashboard prototype:
+`product.md` holds the product principles, and the `app-*` items, blocks and templates hold its
+components with their variants and states (`npx context-ds docs` lists them under "product").
+
+- Product tokens apply under the `ds-product` class: the 15px root, the product type scale (12.6px
+  main UI size), canvas and frame surfaces, the wash hover, hairline shadows, squareish radii, chart
+  colors, and a dark theme switched by `data-theme="dark"` on `<html>`.
+- Put `className="ds-product"` on `<html>` in the app's root layout and build the layout from the
+  `app-shell` template. Marketing pages and product pages can live in one app; only the product
+  routes carry the class.
+- `resolve` maps dashboard, list, detail, form, settings and playground tasks to the `app-*`
+  templates. `review` judges product pages against `product.md` and `review/rubric.product.md`.
+- Reference screens (light, dark and states) are in `intake/screens/dashboard/`.
+
 ## How it keeps agents on brand
 
 | Moment | What happens |

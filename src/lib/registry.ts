@@ -92,7 +92,7 @@ export function loadRegistry(): RegistryItem[] {
 				type: 'flow',
 				version: fm.version,
 				dir: flowDir,
-				docs: { name: fm.name, type: 'flow', version: fm.version, use_for: fm.use_for, never: [], dependencies: [], npm: [] },
+				docs: { name: fm.name, type: 'flow', version: fm.version, use_for: fm.use_for, never: [], dependencies: [], npm: [], surface: fm.name.startsWith('app-') ? 'product' : 'marketing' },
 				body: parsed.body,
 				docsRaw: parsed.raw,
 				sourceFiles: [],

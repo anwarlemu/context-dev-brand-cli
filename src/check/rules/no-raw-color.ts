@@ -64,6 +64,10 @@ export const noRawColor: Rule = {
 				continue;
 			}
 			const name = rest.split('/')[0];
+			if (prefix === 'shadow' && !vocab.colors.has(name)) {
+				if (!vocab.shadows.has(name) && name !== 'none') out.push({ rule: 'no-raw-color', message: `Unknown shadow \`${token.value}\``, hint: `Shadows are tokens: ${[...vocab.shadows].map((x) => `shadow-${x}`).join(', ')}`, offset: token.offset, length: token.value.length });
+				continue;
+			}
 			if (!vocab.colors.has(name) && !isNonColorValue(prefix, name, vocab.textSizes)) {
 				const paletteLike = /^([a-z]+)-(\d{2,3})$/.exec(name);
 				if (!(paletteLike && TAILWIND_PALETTE.has(paletteLike[1])) && !TAILWIND_PALETTE.has(name)) {

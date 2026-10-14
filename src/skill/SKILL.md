@@ -1,6 +1,6 @@
 ---
 name: {{name}}
-description: {{brand}} design system harness. Use for any UI, page, section, landing, pricing or marketing work in this project, and whenever {{bin}} check or a hook blocks a write.
+description: {{brand}} design system harness. Use for any UI, page, section, landing, pricing, marketing, dashboard, settings or product screen work in this project, and whenever {{bin}} check or a hook blocks a write.
 ---
 
 {{contract}}
@@ -38,7 +38,18 @@ Then edit copy only: headline, sub, labels. Keep every slot's block. `{{bin}} ch
 ```
 Set `variant="product"` on the hero only if the docs list it. Unknown variants fail `variant-from-list`.
 
-## Example 3: fixing a blocked write
+## Example 3: a dashboard page
+
+```sh
+{{bin}} resolve "build the API keys page"        # -> templates/app-list
+{{bin}} scaffold app-list --out app/(dashboard)/api-keys/page.tsx
+{{bin}} docs app-table                           # states: default, row hover, empty, loading
+```
+Product screens use only `app-*` items, under `className="ds-product"` on `<html>`, laid out by the
+`app-shell` template in the dashboard layout. Follow product.md: one brand button per page, wash
+hovers, squareish corners, every data view designs loading, empty, error and populated states.
+
+## Example 4: fixing a blocked write
 
 The hook printed:
 ```

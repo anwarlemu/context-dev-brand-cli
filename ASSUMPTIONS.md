@@ -32,7 +32,7 @@ Everything here is in force in the harness today. Each line says where it lives,
 
 ## Scope
 
-20. The harness covers marketing and pricing pages. The dashboard keeps its own system (`design.md` in the app), and dashboard, settings and auth prompts are routed out of scope.
+20. The harness covers marketing, pricing and product (dashboard) pages. Auth screens and emails are routed out of scope. (Earlier, the dashboard kept its own system; it is now learned from context-dashboard, see Product below.)
 21. v1 templates: landing, pricing, product. No flows yet, because the flows would live in the dashboard.
 22. Registry URL `https://context-ds.vercel.app` is a placeholder. Nothing is deployed. `add --local` installs from the package.
 23. Binary and package name: `context-ds`.
@@ -42,3 +42,12 @@ Everything here is in force in the harness today. Each line says where it lives,
 24. Testimonial attributions are role and company only. Real names and permission are needed.
 25. The `answers` SDK snippet in code-showcase was inferred from FAQ text, not checked against the SDK.
 26. Benchmark numbers (94, 97, 92 and the competitor values) are copied from the live homepage chart.
+
+## Product (`product.md`, `app-*` items, learned from context-dashboard at c0ddf7a)
+
+27. `product.md` treats the context-dashboard prototype (markwillcraft/context-dashboard) as the product reference. It overrides `principles.md` inside the product: canvas gray page, squareish 8px controls, a filled blue main action, the glass hover ring. Confirm the prototype is the direction for the real dashboard.
+28. Focus: the dashboard removes focus rings by design. The harness shows the brand glass ring on keyboard focus instead (`focus-visible:shadow-ring-hover`), for accessibility.
+29. Dark theme: the dashboard's dark brand blue `#3B73ED` is 4.22:1 as text on the dark surface. Brand text and edges use blue-80 `#5182EF` (5.03:1) in dark (`text-accent`, `border-accent`); filled brand stays `#2563EB` so white labels are 5.17:1.
+30. Copy: the dashboard uses Title Case card titles ("Credits Used Today"). Product copy follows `voice.md` sentence case; product names keep their capitals.
+31. Product figures are Rethink Sans with tabular numbers, as in the dashboard. Doto stays for the credits glyph and dot charts.
+32. The product items were ported by hand, not by a script, because the dashboard's classes needed mapping to tokens. When the dashboard changes, re-port the affected item and bump its version.

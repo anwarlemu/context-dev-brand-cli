@@ -129,6 +129,17 @@
         "fontWeight": "{font.weight.data}",
         "letterSpacing": "0px"
       }
+    },
+    "micro": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "{font.family.sans}",
+        "fontSize": "11px",
+        "lineHeight": 1.45,
+        "fontWeight": "{font.weight.regular}",
+        "letterSpacing": "0px"
+      },
+      "$description": "Tooltips and sidebar group tags"
     }
   }
 }

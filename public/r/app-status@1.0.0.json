@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-status",
+  "title": "AppStatus",
+  "description": "The state of a job, monitor, key or request. AppStatus draws it as a dot, a mono label, a code pill or a haloed dot; AppSpinner and AppProgressBar show work under way.",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/app-status/app-status.tsx",
+      "content": "import { Loader } from 'lucide-react';\nimport type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst TONES = {\n\tsuccess: { text: 'text-success', dot: 'bg-success', halo: 'bg-success/10' },\n\trunning: { text: 'text-accent', dot: 'bg-brand', halo: 'bg-blue-10' },\n\tneutral: { text: 'text-fg-subtle', dot: 'bg-neutral-30', halo: 'bg-subtle' },\n\twarning: { text: 'text-warning', dot: 'bg-alert', halo: 'bg-alert-soft/40' },\n\tdanger: { text: 'text-danger', dot: 'bg-alert-strong', halo: 'bg-alert-soft/40' },\n} as const;\n\nexport type AppStatusTone = keyof typeof TONES;\n\nexport type AppStatusProps = {\n\tvariant?: AppStatusTone;\n\t/** dot: a dot and the label in the tone (table cells). label: the uppercase mono label (list rows). boxed: that label outlined (detail headers). code: an outlined pill with a dot, for HTTP codes. halo: a dot in a soft ring, before a row's title. */\n\tappearance?: 'dot' | 'label' | 'boxed' | 'code' | 'halo';\n\tchildren?: ReactNode;\n\tclassName?: string;\n};\n\nexport function AppStatus({ variant = 'neutral', appearance = 'dot', children, className }: AppStatusProps) {\n\tconst tone = TONES[variant];\n\tif (appearance === 'halo')\n\t\treturn (\n\t\t\t<span aria-hidden className={cx('grid size-6 shrink-0 place-items-center rounded-pill', tone.halo, className)}>\n\t\t\t\t<span className={cx('size-2 rounded-pill', tone.dot)} />\n\t\t\t</span>\n\t\t);\n\tif (appearance === 'code')\n\t\treturn (\n\t\t\t<span className={cx('flex h-5 shrink-0 items-center gap-1.5 rounded-control-sm border border-line px-2 text-caption text-fg-muted tabular-nums', className)}>\n\t\t\t\t<span aria-hidden className={cx('size-1.5 rounded-pill', tone.dot)} />\n\t\t\t\t{children}\n\t\t\t</span>\n\t\t);\n\tif (appearance === 'label' || appearance === 'boxed')\n\t\treturn <span className={cx('font-mono text-micro uppercase', tone.text, appearance === 'boxed' && 'rounded-control-sm border border-line px-1.5 py-0.5', className)}>{children}</span>;\n\treturn (\n\t\t<span className={cx('flex items-center gap-1.5', tone.text, className)}>\n\t\t\t<span aria-hidden className={cx('size-1.5 rounded-pill', tone.dot)} />\n\t\t\t{children}\n\t\t</span>\n\t);\n}\n\n/** Beside a running job's count. Constant motion, so linear; it stops turning with reduced motion. */\nexport function AppSpinner({ className }: { className?: string }) {\n\treturn <Loader aria-hidden strokeWidth={1.75} className={cx('size-3.5 animate-spin text-accent motion-reduce:animate-none', className)} />;\n}\n\n/** A job's progress: done in brand, failed in alert, on a neutral track. Each segment scales on transform. */\nexport function AppProgressBar({ done, failed = 0, total }: { done: number; failed?: number; total: number }) {\n\tconst share = (value: number) => (total === 0 ? 0 : value / total);\n\treturn (\n\t\t<div role=\"progressbar\" aria-valuemin={0} aria-valuemax={total} aria-valuenow={done + failed} className=\"relative h-1.5 w-full overflow-hidden rounded-pill bg-neutral-10\">\n\t\t\t<span className=\"absolute inset-0 origin-left bg-brand transition-transform duration-500 ease-linear\" style={{ transform: `scaleX(${share(done)})` }} />\n\t\t\t<span className=\"absolute inset-0 origin-left bg-alert transition-transform duration-500 ease-linear\" style={{ transform: `translateX(${share(done) * 100}%) scaleX(${share(failed)})` }} />\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-status.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-status"
+  },
+  "type": "registry:ui"
+}

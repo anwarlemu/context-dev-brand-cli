@@ -4,6 +4,8 @@ import { pkgPath } from '../lib/paths.js';
 export type Vocab = {
 	colors: Set<string>;
 	colorHex: Map<string, string>;
+	/** colorHex as re-pointed under .ds-product (light), for product files. */
+	productColorHex: Map<string, string>;
 	hexToClass: Map<string, string>;
 	hexToVar: Map<string, string>;
 	textSizes: Set<string>;
@@ -11,6 +13,7 @@ export type Vocab = {
 	fontFamilies: Set<string>;
 	fontWeights: Set<string>;
 	radii: Set<string>;
+	shadows: Set<string>;
 	easings: Set<string>;
 	durations: Set<string>;
 	spacing: Map<string, number>;
@@ -24,9 +27,15 @@ export function loadVocab(): Vocab {
 	const theme = readFileSync(pkgPath('build', 'theme.css'), 'utf8');
 	const tokensCss = readFileSync(pkgPath('build', 'tokens.css'), 'utf8');
 	const vars = new Map<string, string>();
-	for (const m of tokensCss.matchAll(/(--ds-[a-z0-9-]+):\s*([^;]+);/g)) vars.set(m[1], m[2].trim());
+	// The :root block only; the mode blocks after it (.ds-product, dark) re-point the same names.
+	const rootBlock = tokensCss.slice(0, tokensCss.indexOf('\n}') + 2);
+	for (const m of rootBlock.matchAll(/(--ds-[a-z0-9-]+):\s*([^;]+);/g)) vars.set(m[1], m[2].trim());
 	const names = (prefix: string) => [...theme.matchAll(new RegExp(`--${prefix}-([a-z0-9-]+?)(?:--[a-z-]+)?:\\s*([^;]+);`, 'g'))].filter((m) => m[1] !== '*').map((m) => [m[1], m[2].trim()] as const);
 
+	const productBlock = tokensCss.match(/\n\.ds-product \{([^}]*)\}/)?.[1] ?? '';
+	const productVars = new Map(vars);
+	for (const m of productBlock.matchAll(/(--ds-[a-z0-9-]+):\s*([^;]+);/g)) productVars.set(m[1], m[2].trim());
+	const productColorHex = new Map<string, string>();
 	const colorHex = new Map<string, string>();
 	const hexToClass = new Map<string, string>();
 	for (const [name, value] of names('color')) {
@@ -34,6 +43,7 @@ export function loadVocab(): Vocab {
 		const hex = varName ? vars.get(varName) : undefined;
 		if (!hex) continue;
 		colorHex.set(name, hex.toUpperCase());
+		productColorHex.set(name, (productVars.get(varName!) ?? hex).toUpperCase());
 		const current = hexToClass.get(hex.toUpperCase());
 		if (!current || name.length < current.length || /^(black|white|brand)$/.test(name)) hexToClass.set(hex.toUpperCase(), name);
 	}
@@ -55,6 +65,7 @@ export function loadVocab(): Vocab {
 	cached = {
 		colors: new Set([...colorHex.keys(), 'transparent', 'current', 'inherit', 'currentColor']),
 		colorHex,
+		productColorHex,
 		hexToClass,
 		hexToVar,
 		textSizes,
@@ -62,6 +73,7 @@ export function loadVocab(): Vocab {
 		fontFamilies: new Set(names('font').filter(([n]) => !n.startsWith('weight')).map(([n]) => n)),
 		fontWeights: new Set([...theme.matchAll(/--font-weight-([a-z]+):/g)].map((m) => m[1])),
 		radii: new Set(names('radius').map(([n]) => n)),
+		shadows: new Set(names('shadow').map(([n]) => n)),
 		easings: new Set([...names('ease').map(([n]) => n), 'linear']),
 		durations: new Set(['0', ...[...vars].filter(([k]) => k.startsWith('--ds-duration-')).map(([, v]) => String(parseFloat(v)))]),
 		spacing,

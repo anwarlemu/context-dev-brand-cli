@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-detail",
+  "title": "AppDetailTemplate",
+  "description": "One record's page (a batch, a monitor run, a request). Breadcrumb back to the list, then the record's status and its sections.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "registry/templates/app-detail/app-detail.tsx",
+      "content": "import type { ReactNode } from 'react';\n\nexport type AppDetailTemplateProps = {\n\theader?: ReactNode;\n\tcontent?: ReactNode;\n};\n\n/** A detail page: the breadcrumb header, then one card with the record's status and its sections. */\nexport function AppDetailTemplate({ header, content }: AppDetailTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"app-detail\" className=\"@container scrollbar-thin scrollbar-stable flex-1 overflow-y-auto content-in\">\n\t\t\t<div className=\"page-column flex flex-col gap-5 px-8 pt-8 pb-12\">\n\t\t\t\t{header}\n\t\t\t\t{content}\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/templates/app-detail.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "template",
+    "id": "templates/app-detail"
+  },
+  "type": "registry:block"
+}

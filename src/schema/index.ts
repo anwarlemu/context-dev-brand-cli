@@ -43,10 +43,16 @@ export const docsFrontmatterSchema = z
 		never: z.array(z.string()).default([]),
 		props: z.string().optional(),
 		variants: z.array(z.string()).optional(),
+		/** Which surface the item belongs to. Product items (the dashboard) are named app-* and render under .ds-product. */
+		surface: z.enum(['marketing', 'product']).default('marketing'),
+		/** The interaction and data states the item draws, each described in the body. A closed list, like variants. */
+		states: z.array(z.string()).optional(),
 		copy_rules: z.string().optional(),
 		example: z.string().optional(),
 		export: z.string().optional(),
 		route: z.string().optional(),
+		/** A layout template (the app shell): scaffold writes layout.tsx with {children} instead of a page. */
+		layout: z.boolean().optional(),
 		dependencies: z.array(z.string()).default([]),
 		npm: z.array(z.string()).default([]),
 		structure: z
@@ -58,6 +64,7 @@ export const docsFrontmatterSchema = z
 	})
 	.superRefine((doc, ctx) => {
 		if (doc.type === 'template' && !doc.structure) ctx.addIssue({ code: 'custom', message: 'templates need structure:' });
+		if ((doc.surface === 'product') !== doc.name.startsWith('app-')) ctx.addIssue({ code: 'custom', message: 'product items are named app-*, and only product items are' });
 		for (const [slot, def] of Object.entries(doc.structure?.slots ?? {})) {
 			if (!def.allowed.includes(def.default)) ctx.addIssue({ code: 'custom', message: `slot ${slot}: default ${def.default} is not in allowed` });
 		}

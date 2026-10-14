@@ -22,6 +22,21 @@
       "$type": "dimension",
       "$value": "9999px",
       "$description": "Buttons and chips. Figma corner radius 88 on a 41px button"
+    },
+    "control-sm": {
+      "$type": "dimension",
+      "$value": "6px",
+      "$description": "Small product controls: chips, small tabs, tags"
+    },
+    "control": {
+      "$type": "dimension",
+      "$value": "8px",
+      "$description": "Product buttons, fields, menu rows, nav links"
+    },
+    "shell": {
+      "$type": "dimension",
+      "$value": "12px",
+      "$description": "Product dialogs, menus and the drawer"
     }
   }
 }

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-settings",
+  "title": "AppSettingsTemplate",
+  "description": "Settings. Centered header with tabs (Personal, Organization, Billing), then titled sections of rows, the danger zone last.",
+  "files": [
+    {
+      "path": "registry/templates/app-settings/app-settings.tsx",
+      "content": "import type { ReactNode } from 'react';\n\nexport type AppSettingsTemplateProps = {\n\theader?: ReactNode;\n\tsections?: ReactNode;\n};\n\n/** Settings: centered header with the tabs under it, then titled sections of rows. */\nexport function AppSettingsTemplate({ header, sections }: AppSettingsTemplateProps) {\n\treturn (\n\t\t<div data-ds-template=\"app-settings\" className=\"@container scrollbar-thin scrollbar-stable flex-1 overflow-y-auto content-in\">\n\t\t\t<div className=\"page-column flex flex-col gap-6 px-8 pt-6 pb-10\">\n\t\t\t\t{header}\n\t\t\t\t{sections}\n\t\t\t</div>\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/templates/app-settings.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "template",
+    "id": "templates/app-settings"
+  },
+  "type": "registry:block"
+}

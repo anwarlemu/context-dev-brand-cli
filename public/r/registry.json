@@ -44,6 +44,536 @@
       }
     },
     {
+      "name": "app-bar-chart",
+      "type": "registry:ui",
+      "title": "AppBarChart",
+      "description": "Usage over time. A stacked bar a bucket, each series a band in its color, a value axis, three dates and a legend that picks a series out.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-bar-chart/app-bar-chart.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-bar-chart.tsx"
+        },
+        {
+          "path": "registry/ui/app-bar-chart/app-chart-tooltip.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-chart-tooltip.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-bar-chart"
+      }
+    },
+    {
+      "name": "app-block",
+      "type": "registry:ui",
+      "title": "AppBlock",
+      "description": "The root element of every product block (app-*). Names the block and opts it into the first-visit entrance.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-block/app-block.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-block.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-block"
+      }
+    },
+    {
+      "name": "app-button",
+      "type": "registry:ui",
+      "title": "AppButton",
+      "description": "Every action in the product. 8px corners, 12.6px label, sentence case, an optional leading icon.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-button/app-button.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-button.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-button"
+      }
+    },
+    {
+      "name": "app-card",
+      "type": "registry:ui",
+      "title": "AppCard",
+      "description": "The white card every product panel sits in. Hairline edge and soft shadow, 10px corners, optional header and footer.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-card/app-card.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-card.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-card"
+      }
+    },
+    {
+      "name": "app-copy-button",
+      "type": "registry:ui",
+      "title": "AppCopyButton",
+      "description": "Copying a value (an API key, a code sample, a command) with one click. useCopy for a copy action with its own label.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-copy-button/app-copy-button.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-copy-button.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-copy-button"
+      }
+    },
+    {
+      "name": "app-dialog",
+      "type": "registry:ui",
+      "title": "AppDialog",
+      "description": "Product dialogs (create a key, confirm a delete, pick a plan). A white box in a glass frame over a light scrim, near the top of the window.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-dialog/app-dialog.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-dialog.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-dialog"
+      }
+    },
+    {
+      "name": "app-dot-glyph",
+      "type": "registry:ui",
+      "title": "AppDotGlyph",
+      "description": "Small icons drawn on the dot grid (the credits gem, plan marks), where a product icon should speak the brand's dot language.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-dot-glyph/app-dot-glyph.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-dot-glyph.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-dot-glyph"
+      }
+    },
+    {
+      "name": "app-empty-state",
+      "type": "registry:ui",
+      "title": "AppEmptyState",
+      "description": "A section with nothing made yet (no batches, no monitors), or a card before its first run. A fine-dot picture, what the section does, and the one next action.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/dot-story.json",
+        "https://context-ds.vercel.app/r/app-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-empty-state/app-empty-state.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-empty-state.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-empty-state"
+      }
+    },
+    {
+      "name": "app-field",
+      "type": "registry:ui",
+      "title": "AppField",
+      "description": "A labeled form control in the product. AppField (label, help, error) around AppInput or AppTextarea.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-field/app-field.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-field.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-field"
+      }
+    },
+    {
+      "name": "app-hold-button",
+      "type": "registry:ui",
+      "title": "AppHoldButton",
+      "description": "A destructive action (delete a key, remove a member, delete an account) that fires only after being held for 1.2s.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-hold-button/app-hold-button.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-hold-button.tsx"
+        },
+        {
+          "path": "registry/ui/app-hold-button/app-hold.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-hold.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-hold-button"
+      }
+    },
+    {
+      "name": "app-icon-button",
+      "type": "registry:ui",
+      "title": "AppIconButton",
+      "description": "An icon-only action (close, row menu, search, reveal, copy). A square ghost button that always carries a tooltip.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-icon-button/app-icon-button.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-icon-button.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-icon-button"
+      }
+    },
+    {
+      "name": "app-menu",
+      "type": "registry:ui",
+      "title": "AppMenu",
+      "description": "Every dropdown in the product. SelectMenu picks one value (filters, form selects, chart periods); ActionMenu is the overflow menu at the end of a table row.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-menu/app-menu-dismiss.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-menu-dismiss.ts"
+        },
+        {
+          "path": "registry/ui/app-menu/app-menu-hold.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-menu-hold.ts"
+        },
+        {
+          "path": "registry/ui/app-menu/app-menu.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-menu.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-menu"
+      }
+    },
+    {
+      "name": "app-scroll-area",
+      "type": "registry:ui",
+      "title": "AppScrollArea",
+      "description": "A panel or card body that may run taller than its space (parameters panel, long lists, onboarding steps). Fades at the edges with more beyond, and offers a chevron to scroll on.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-scroll-area/app-scroll-area.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-scroll-area.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-scroll-area"
+      }
+    },
+    {
+      "name": "app-secret-field",
+      "type": "registry:ui",
+      "title": "AppSecretField",
+      "description": "Showing a secret (an API key, a webhook secret) masked, with reveal and copy. SecretText for a masked value in a table cell.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json",
+        "https://context-ds.vercel.app/r/app-copy-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-secret-field/app-secret-field.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-secret-field.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-secret-field"
+      }
+    },
+    {
+      "name": "app-skeleton",
+      "type": "registry:ui",
+      "title": "AppSkeleton",
+      "description": "Loading states. Skeleton is one shimmering block; LoadingGate swaps a page's skeleton for the page when its data arrives.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-skeleton/app-skeleton.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-skeleton.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-skeleton"
+      }
+    },
+    {
+      "name": "app-status",
+      "type": "registry:ui",
+      "title": "AppStatus",
+      "description": "The state of a job, monitor, key or request. AppStatus draws it as a dot, a mono label, a code pill or a haloed dot; AppSpinner and AppProgressBar show work under way.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-status/app-status.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-status.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-status"
+      }
+    },
+    {
+      "name": "app-switch",
+      "type": "registry:ui",
+      "title": "AppSwitch",
+      "description": "An on or off setting that applies at once (Main content only, Include frames, a Parameters panel toggle).",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-switch/app-switch.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-switch.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-switch"
+      }
+    },
+    {
+      "name": "app-table",
+      "type": "registry:ui",
+      "title": "AppTable",
+      "description": "Every list of records in the product (API keys, batches, monitors, team members, invites). A white card with a gray header row, hairline row dividers and a menu at the end of each row.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-skeleton.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-status.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-table/app-table.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-table.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-table"
+      }
+    },
+    {
+      "name": "app-tabs",
+      "type": "registry:ui",
+      "title": "AppTabs",
+      "description": "Switching views on a page (Personal, Organization, Billing) or picking one value in a form or chart (7D, 30D, 3M). AppSegmentedControl is the radio form.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-tabs/app-tab-glide.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-tab-glide.ts"
+        },
+        {
+          "path": "registry/ui/app-tabs/app-tabs.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-tabs.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.1.0",
+        "dsType": "ui",
+        "id": "ui/app-tabs"
+      }
+    },
+    {
+      "name": "app-tags-input",
+      "type": "registry:ui",
+      "title": "AppTagsInput",
+      "description": "A field for a list of short values (domains, URLs, CSS selectors, emails) entered as removable tags.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-tags-input/app-tags-input.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-tags-input.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-tags-input"
+      }
+    },
+    {
+      "name": "app-theme",
+      "type": "registry:ui",
+      "title": "AppTheme",
+      "description": "The product's light, dark and system themes. THEME_SCRIPT for the root layout, hooks, and the three-option theme switch.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-theme/app-theme-store.ts",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-theme-store.ts"
+        },
+        {
+          "path": "registry/ui/app-theme/app-theme.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-theme.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-theme"
+      }
+    },
+    {
+      "name": "app-tooltip",
+      "type": "registry:ui",
+      "title": "AppTooltip",
+      "description": "The label for an icon-only control or a truncated value. Appears beside or above its trigger on hover or keyboard focus.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/ui/app-tooltip/app-tooltip.tsx",
+          "type": "registry:file",
+          "target": "components/ds/ui/app-tooltip.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "ui",
+        "id": "ui/app-tooltip"
+      }
+    },
+    {
       "name": "badge",
       "type": "registry:ui",
       "title": "Badge",
@@ -1588,6 +2118,467 @@
       }
     },
     {
+      "name": "app-banner",
+      "type": "registry:block",
+      "title": "AppBanner",
+      "description": "A card-wide note above a list, usually a plan limit and the way past it (\"You’ve used 1 of 2 API keys\").",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-banner/app-banner.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-banner.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-banner"
+      }
+    },
+    {
+      "name": "app-chart-card",
+      "type": "registry:block",
+      "title": "AppChartCard",
+      "description": "The overview's usage chart. One card with a breakdown picker as its title, a range switch at the right and a stacked bar chart.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-bar-chart.json",
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-tabs.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-chart-card/app-chart-card.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-chart-card.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-chart-card"
+      }
+    },
+    {
+      "name": "app-code-card",
+      "type": "registry:block",
+      "title": "AppCodeCard",
+      "description": "Code a user copies into their app or agent (the playground call, a form's API equivalent). Code on the card, copy in the corner, one quiet footer for language, fold and agents.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-copy-button.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-code-card/app-code-card.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-code-card.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-code-card"
+      }
+    },
+    {
+      "name": "app-composer",
+      "type": "registry:block",
+      "title": "AppComposer",
+      "description": "The playground's request bar. One field, the Parameters toggle, and the brand run button that carries its credit cost.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-composer/app-composer.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-composer.tsx"
+        },
+        {
+          "path": "registry/blocks/app-composer/app-parameters-store.ts",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-parameters-store.ts"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-composer"
+      }
+    },
+    {
+      "name": "app-data-table",
+      "type": "registry:block",
+      "title": "AppDataTable",
+      "description": "A list page's toolbar and table card (API keys, batches, monitors, team). Search, tabs or one filter, rows as data, row menus, pagination.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-table.json",
+        "https://context-ds.vercel.app/r/app-tabs.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-status.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-data-table/app-data-table.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-data-table.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-data-table"
+      }
+    },
+    {
+      "name": "app-detail-card",
+      "type": "registry:block",
+      "title": "AppDetailCard",
+      "description": "The body of a detail page (a batch, a run, a request). Status head, gray detail lists in titled sections, and a paged results list.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-copy-button.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-status.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-detail-card/app-detail-card.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-detail-card.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-detail-card"
+      }
+    },
+    {
+      "name": "app-empty-page",
+      "type": "registry:block",
+      "title": "AppEmptyPage",
+      "description": "The whole page of a list feature before anything exists (batches, monitors). A dot story, what the feature is for, one brand action, the docs, the plan limit.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json",
+        "https://context-ds.vercel.app/r/app-empty-state.json",
+        "https://context-ds.vercel.app/r/dot-story.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-empty-page/app-empty-page.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-empty-page.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-empty-page"
+      }
+    },
+    {
+      "name": "app-form-panel",
+      "type": "registry:block",
+      "title": "AppFormPanel",
+      "description": "A create or edit form (new batch, new monitor). Mode bar, fields as data, an Advanced disclosure, and a footer that says the cost beside the brand submit.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json",
+        "https://context-ds.vercel.app/r/app-field.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-switch.json",
+        "https://context-ds.vercel.app/r/app-tabs.json",
+        "https://context-ds.vercel.app/r/app-tags-input.json",
+        "https://context-ds.vercel.app/r/app-code-card.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-form-panel/app-form-panel.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-form-panel.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-form-panel"
+      }
+    },
+    {
+      "name": "app-page-header",
+      "type": "registry:block",
+      "title": "AppPageHeader",
+      "description": "The head of every product page. Centered title, one muted sentence, the page's actions under it. A back link (forms) or breadcrumb (detail pages) above.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-page-header/app-page-header.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-page-header.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.1",
+        "dsType": "block",
+        "id": "blocks/app-page-header"
+      }
+    },
+    {
+      "name": "app-parameters-panel",
+      "type": "registry:block",
+      "title": "AppParametersPanel",
+      "description": "The playground's docked parameters panel. Output-format toggles, then groups of parameter rows in soft gray boxes, with a changed count and Reset.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-composer.json",
+        "https://context-ds.vercel.app/r/app-icon-button.json",
+        "https://context-ds.vercel.app/r/app-switch.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-parameters-panel/app-parameters-panel.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-parameters-panel.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-parameters-panel"
+      }
+    },
+    {
+      "name": "app-quickstart",
+      "type": "registry:block",
+      "title": "AppQuickstart",
+      "description": "The overview's quickstart card. Numbered steps from signing up to a first call. Copy the key, set up an agent with one snippet, paste one prompt.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json",
+        "https://context-ds.vercel.app/r/app-copy-button.json",
+        "https://context-ds.vercel.app/r/app-scroll-area.json",
+        "https://context-ds.vercel.app/r/app-secret-field.json",
+        "https://context-ds.vercel.app/r/app-tabs.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-quickstart/app-quickstart.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-quickstart.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-quickstart"
+      }
+    },
+    {
+      "name": "app-result-card",
+      "type": "registry:block",
+      "title": "AppResultCard",
+      "description": "What a playground call returned. A tabs row above the card with the response status, and the card's states from ready to result.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-tabs.json",
+        "https://context-ds.vercel.app/r/app-composer.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-result-card/app-result-card.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-result-card.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-result-card"
+      }
+    },
+    {
+      "name": "app-settings-section",
+      "type": "registry:block",
+      "title": "AppSettingsSection",
+      "description": "One titled group on a settings page (auto-join, data retention, SSO, the Danger zone). A small label over a white card of rows, each a sentence and one control.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json",
+        "https://context-ds.vercel.app/r/app-dialog.json",
+        "https://context-ds.vercel.app/r/app-field.json",
+        "https://context-ds.vercel.app/r/app-hold-button.json",
+        "https://context-ds.vercel.app/r/app-switch.json",
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-settings-section/app-settings-section.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-settings-section.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-settings-section"
+      }
+    },
+    {
+      "name": "app-sidebar",
+      "type": "registry:block",
+      "title": "AppSidebar",
+      "description": "The product's navigation, in the app-shell's sidebar slot. Workspace switcher, search, grouped links, help links and the account menu. A drawer below md.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-icon-button.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-sidebar/app-shell-icons.ts",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-shell-icons.ts"
+        },
+        {
+          "path": "registry/blocks/app-sidebar/app-shell-store.ts",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-shell-store.ts"
+        },
+        {
+          "path": "registry/blocks/app-sidebar/app-sidebar.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-sidebar.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-sidebar"
+      }
+    },
+    {
+      "name": "app-stat-cards",
+      "type": "registry:block",
+      "title": "AppStatCards",
+      "description": "A few headline figures as small cards, two by two (credits used, remaining, plan). Each card that leads somewhere is a link.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-block.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-stat-cards/app-stat-cards.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-stat-cards.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.1",
+        "dsType": "block",
+        "id": "blocks/app-stat-cards"
+      }
+    },
+    {
+      "name": "app-top-bar",
+      "type": "registry:block",
+      "title": "AppTopBar",
+      "description": "The bar above every product page, in the app-shell's topbar slot. The drawer's menu button (below md) and the credits menu at the right.",
+      "dependencies": [
+        "lucide-react@^1.51.0"
+      ],
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json",
+        "https://context-ds.vercel.app/r/app-block.json",
+        "https://context-ds.vercel.app/r/app-button.json",
+        "https://context-ds.vercel.app/r/app-dot-glyph.json",
+        "https://context-ds.vercel.app/r/app-menu.json",
+        "https://context-ds.vercel.app/r/app-tooltip.json",
+        "https://context-ds.vercel.app/r/app-sidebar.json"
+      ],
+      "files": [
+        {
+          "path": "registry/blocks/app-top-bar/app-top-bar.tsx",
+          "type": "registry:file",
+          "target": "components/ds/blocks/app-top-bar.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "block",
+        "id": "blocks/app-top-bar"
+      }
+    },
+    {
       "name": "benchmark",
       "type": "registry:block",
       "title": "Benchmark",
@@ -2058,6 +3049,143 @@
         "version": "1.2.0",
         "dsType": "block",
         "id": "blocks/use-case-grid"
+      }
+    },
+    {
+      "name": "app-detail",
+      "type": "registry:block",
+      "title": "AppDetailTemplate",
+      "description": "One record's page (a batch, a monitor run, a request). Breadcrumb back to the list, then the record's status and its sections.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/templates/app-detail/app-detail.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-detail.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-detail"
+      }
+    },
+    {
+      "name": "app-form",
+      "type": "registry:block",
+      "title": "AppFormTemplate",
+      "description": "A create or edit page (new batch, new monitor, edit monitor). Back link, centered header, then the form with its cost and submit.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/templates/app-form/app-form.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-form.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-form"
+      }
+    },
+    {
+      "name": "app-list",
+      "type": "registry:block",
+      "title": "AppListTemplate",
+      "description": "A list of records (API keys, batches, monitors, members). Header with the one brand action, then the table, or the first-run empty state.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/templates/app-list/app-list.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-list.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-list"
+      }
+    },
+    {
+      "name": "app-overview",
+      "type": "registry:block",
+      "title": "AppOverviewTemplate",
+      "description": "The dashboard home. Try an API, see usage over time, get started, and read the credit figures at a glance.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/cx.json"
+      ],
+      "files": [
+        {
+          "path": "registry/templates/app-overview/app-overview.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-overview.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-overview"
+      }
+    },
+    {
+      "name": "app-playground",
+      "type": "registry:block",
+      "title": "AppPlaygroundTemplate",
+      "description": "An API's playground. Make a request, see the code for the same call, read what came back, tune parameters.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/templates/app-playground/app-playground.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-playground.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-playground"
+      }
+    },
+    {
+      "name": "app-settings",
+      "type": "registry:block",
+      "title": "AppSettingsTemplate",
+      "description": "Settings. Centered header with tabs (Personal, Organization, Billing), then titled sections of rows, the danger zone last.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "registry/templates/app-settings/app-settings.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-settings.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-settings"
+      }
+    },
+    {
+      "name": "app-shell",
+      "type": "registry:block",
+      "title": "AppShellTemplate",
+      "description": "The dashboard layout. Sidebar and top bar around every product page. Scaffolds layout.tsx, not a page.",
+      "registryDependencies": [
+        "https://context-ds.vercel.app/r/app-theme.json"
+      ],
+      "files": [
+        {
+          "path": "registry/templates/app-shell/app-shell.tsx",
+          "type": "registry:file",
+          "target": "components/ds/templates/app-shell.tsx"
+        }
+      ],
+      "meta": {
+        "version": "1.0.0",
+        "dsType": "template",
+        "id": "templates/app-shell"
       }
     },
     {

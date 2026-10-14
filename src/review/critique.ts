@@ -54,16 +54,29 @@ export function pickEngine(): ReviewEngine {
 	throw new Error('No way to run the critique: set ANTHROPIC_API_KEY, or install and log in to Claude Code (`claude`). Screenshots were captured.');
 }
 
-function contextText(diff: string, target: string) {
+// Product pages (built from app-* items) are judged against product.md and the product rubric, on top of the brand belief.
+export function isProductTarget(target: string, diff = '', source = '') {
+	if (process.env.DS_REVIEW_SURFACE) return process.env.DS_REVIEW_SURFACE === 'product';
+	const file = target.split(/\s/)[0];
+	const text = source || (existsSync(file) ? readFileSync(file, 'utf8') : '');
+	return /\/(ui|blocks|templates)\/app-|data-ds-template="app-/.test(`${text}\n${diff}`);
+}
+
+function guides(target: string, diff: string, source = '') {
 	const read = (p: string) => readFileSync(pkgPath(p), 'utf8');
-	return `# principles.md\n${read('principles.md')}\n\n# voice.md\n${read('voice.md')}\n\n# review/rubric.md\n${read('review/rubric.md')}\n\n# Target\n${target}\n\n# git diff (may be truncated)\n${diff.slice(0, 60_000) || '(no diff)'}`;
+	const files = isProductTarget(target, diff, source) ? ['product.md', 'principles.md', 'voice.md', 'review/rubric.product.md'] : ['principles.md', 'voice.md', 'review/rubric.md'];
+	return files.map((f) => `# ${f}\n${read(f)}`).join('\n\n');
+}
+
+function contextText(diff: string, target: string, source = '') {
+	return `${guides(target, diff, source)}\n\n# Target\n${target}\n\n# git diff (may be truncated)\n${diff.slice(0, 60_000) || '(no diff)'}`;
 }
 
 // Uses the local Claude Code login, so review works without an API key.
-function critiqueWithClaudeCode(shots: Shot[], diff: string, target: string, system: string) {
+function critiqueWithClaudeCode(shots: Shot[], diff: string, target: string, system: string, source = '') {
 	const shotDir = dirname(shots[0].path);
 	const prompt = [
-		contextText(diff, target),
+		contextText(diff, target, source),
 		'',
 		'# Screenshots',
 		'Read every one of these image files with the Read tool before scoring. They are slices of the page, top to bottom, per viewport:',
@@ -84,15 +97,14 @@ function critiqueWithClaudeCode(shots: Shot[], diff: string, target: string, sys
 	return { card, model: `claude-code (${Object.keys(out.modelUsage ?? {}).join(', ') || 'default model'})` };
 }
 
-export async function critique(shots: Shot[], diff: string, target: string): Promise<{ card: Scorecard; model: string; refused?: string }> {
+export async function critique(shots: Shot[], diff: string, target: string, source = ''): Promise<{ card: Scorecard; model: string; refused?: string }> {
 	const config = loadConfig();
 	const model = process.env.DS_REVIEW_MODEL ?? config.review.model;
 	const system = SYSTEM.replaceAll('{{brand}}', config.brand);
-	if (pickEngine() === 'claude-code') return critiqueWithClaudeCode(shots, diff, target, system);
-	const read = (p: string) => readFileSync(pkgPath(p), 'utf8');
+	if (pickEngine() === 'claude-code') return critiqueWithClaudeCode(shots, diff, target, system, source);
 	const client = new Anthropic();
 	const content: Anthropic.Beta.BetaContentBlockParam[] = [
-		{ type: 'text', text: `# principles.md\n${read('principles.md')}\n\n# voice.md\n${read('voice.md')}\n\n# review/rubric.md\n${read('review/rubric.md')}` },
+		{ type: 'text', text: guides(target, diff, source) },
 		{ type: 'text', text: `# Target\n${target}\n\n# git diff (may be truncated)\n${diff.slice(0, 60_000) || '(no diff)'}` },
 	];
 	for (const shot of shots) {

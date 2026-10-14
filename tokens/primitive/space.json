@@ -67,6 +67,18 @@
     "2-5": {
       "$type": "dimension",
       "$value": "10px"
+    },
+    "3-5": {
+      "$type": "dimension",
+      "$value": "14px"
+    },
+    "4-5": {
+      "$type": "dimension",
+      "$value": "18px"
+    },
+    "7": {
+      "$type": "dimension",
+      "$value": "28px"
     }
   }
 }

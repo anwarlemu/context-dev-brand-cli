@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-dialog",
+  "title": "AppDialog",
+  "description": "Product dialogs (create a key, confirm a delete, pick a plan). A white box in a glass frame over a light scrim, near the top of the window.",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/app-dialog/app-dialog.tsx",
+      "content": "'use client';\n\nimport { X } from 'lucide-react';\nimport { type ReactNode, useEffect, useId } from 'react';\nimport { createPortal } from 'react-dom';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst WIDTHS = { md: 'max-w-lg', lg: 'max-w-3xl', xl: 'max-w-5xl', '2xl': 'max-w-6xl' } as const;\n\nexport type AppDialogProps = {\n\ttitle: string;\n\tdescription?: ReactNode;\n\tonClose: () => void;\n\tchildren: ReactNode;\n\tfooter?: ReactNode;\n\t/** A hairline above the footer; leave it off where the footer is a quiet line rather than the dialog's actions. */\n\tfooterDivider?: boolean;\n\t/** md: forms and confirms. lg: pickers laid out in columns. xl: a row of four plan cards. 2xl: a row of five. */\n\tsize?: keyof typeof WIDTHS;\n};\n\nexport function AppDialog({ title, description, onClose, children, footer, footerDivider = true, size = 'md' }: AppDialogProps) {\n\tconst titleId = useId();\n\n\tuseEffect(() => {\n\t\tfunction closeOnEscape(event: KeyboardEvent) {\n\t\t\tif (event.key === 'Escape') onClose();\n\t\t}\n\t\tdocument.addEventListener('keydown', closeOnEscape);\n\t\treturn () => document.removeEventListener('keydown', closeOnEscape);\n\t}, [onClose]);\n\n\t// Portaled to the body, so a transformed ancestor (a card mid-animation) can't trap the fixed overlay inside it.\n\treturn createPortal(\n\t\t<div\n\t\t\t// The overlay itself scrolls, so a dialog taller than the screen can be read to its end.\n\t\t\tclassName=\"fade-in fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overscroll-contain bg-scrim px-4 pt-24 pb-6 max-md:pt-4\"\n\t\t\tonMouseDown={onClose}\n\t\t>\n\t\t\t<div\n\t\t\t\trole=\"dialog\"\n\t\t\t\taria-modal=\"true\"\n\t\t\t\taria-labelledby={titleId}\n\t\t\t\tclassName={cx('glass-frame content-in w-full', WIDTHS[size])}\n\t\t\t\tonMouseDown={(event) => event.stopPropagation()}\n\t\t\t>\n\t\t\t\t<div className=\"rounded-shell bg-surface\">\n\t\t\t\t\t<div className=\"flex items-start gap-4 px-5 pt-5\">\n\t\t\t\t\t\t<div className=\"min-w-0 flex-1\">\n\t\t\t\t\t\t\t<h3 id={titleId} className=\"text-h5\">\n\t\t\t\t\t\t\t\t{title}\n\t\t\t\t\t\t\t</h3>\n\t\t\t\t\t\t\t{description && <p className=\"mt-1.5 text-body-sm text-fg-muted\">{description}</p>}\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<button\n\t\t\t\t\t\t\ttype=\"button\"\n\t\t\t\t\t\t\tonClick={onClose}\n\t\t\t\t\t\t\taria-label=\"Close\"\n\t\t\t\t\t\t\t// Pulled up and out by its own padding, so the X's center sits on the title's line.\n\t\t\t\t\t\t\tclassName=\"-mt-1.5 -mr-2 grid size-8 shrink-0 place-items-center rounded-control text-fg-subtle outline-none transition-colors duration-150 ease-out hover:bg-wash/4 hover:text-fg focus-visible:shadow-ring-hover\"\n\t\t\t\t\t\t>\n\t\t\t\t\t\t\t<X className=\"size-4\" strokeWidth={1.5} />\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t<div className=\"p-5\">{children}</div>\n\t\t\t\t\t{footer && <div className={cx('flex items-center justify-end gap-2 px-5', footerDivider ? 'border-t border-line-subtle py-3.5' : 'pb-5')}>{footer}</div>}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>,\n\t\tdocument.body,\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-dialog.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-dialog"
+  },
+  "type": "registry:ui"
+}

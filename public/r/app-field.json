@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-field",
+  "title": "AppField",
+  "description": "A labeled form control in the product. AppField (label, help, error) around AppInput or AppTextarea.",
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/app-field/app-field.tsx",
+      "content": "'use client';\n\nimport { type InputHTMLAttributes, type ReactNode, type TextareaHTMLAttributes, useId } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst FIELD_STATES = 'outline-none transition-[border-color,box-shadow] duration-150 ease-out placeholder:text-fg-subtle hover:border-line-strong focus:border-brand disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-danger';\n\nexport const APP_INPUT_CLASS = cx('h-10 w-full rounded-control border border-line bg-surface px-3.5 text-body-sm text-fg', FIELD_STATES);\n\nexport const APP_TEXTAREA_CLASS = cx('w-full resize-none rounded-control border border-line bg-surface px-3.5 py-2.5 text-body-sm text-fg', FIELD_STATES);\n\nexport type AppFieldProps = {\n\tlabel: string;\n\t/** A quiet line under the control, replaced by the error when there is one. */\n\thelp?: ReactNode;\n\terror?: string;\n\t/** A quiet action beside the label, such as \"Change\". */\n\tlabelAction?: ReactNode;\n\t/** Renders the control with the id that ties it to the label. */\n\tchildren: (id: string, invalid: boolean) => ReactNode;\n};\n\n/** Label, control and one line of help or error, 8px apart. */\nexport function AppField({ label, help, error, labelAction, children }: AppFieldProps) {\n\tconst id = useId();\n\treturn (\n\t\t<div className=\"flex flex-col gap-2\">\n\t\t\t<div className=\"flex items-baseline gap-2\">\n\t\t\t\t<label htmlFor={id} className=\"text-body-sm text-fg\">\n\t\t\t\t\t{label}\n\t\t\t\t</label>\n\t\t\t\t{labelAction}\n\t\t\t</div>\n\t\t\t{children(id, !!error)}\n\t\t\t{(error || help) && <p className={cx('text-caption', error ? 'text-danger' : 'text-fg-subtle')}>{error ?? help}</p>}\n\t\t</div>\n\t);\n}\n\nexport function AppInput({ className, invalid, ...props }: InputHTMLAttributes<HTMLInputElement> & { invalid?: boolean }) {\n\treturn <input aria-invalid={invalid || undefined} className={cx(APP_INPUT_CLASS, className)} {...props} />;\n}\n\nexport function AppTextarea({ className, invalid, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & { invalid?: boolean }) {\n\treturn <textarea aria-invalid={invalid || undefined} className={cx(APP_TEXTAREA_CLASS, className)} {...props} />;\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-field.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-field"
+  },
+  "type": "registry:ui"
+}

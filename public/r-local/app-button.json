@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-button",
+  "title": "AppButton",
+  "description": "Every action in the product. 8px corners, 12.6px label, sentence case, an optional leading icon.",
+  "files": [
+    {
+      "path": "registry/ui/app-button/app-button.tsx",
+      "content": "import type { ButtonHTMLAttributes } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst VARIANTS = {\n\tbrand: 'bg-brand text-on-brand hover:bg-blue-90',\n\tprimary: 'bg-action text-on-action hover:bg-action-hover',\n\toutline: 'border border-line-strong text-fg hover:border-fg',\n\t'outline-brand': 'border border-accent text-accent hover:bg-blue-10',\n\tghost: 'text-fg-muted hover:bg-wash/4 hover:text-fg',\n\t'on-brand': 'border border-on-brand text-on-brand hover:bg-white/10',\n} as const;\n\nconst SIZES = {\n\tsm: 'h-8 gap-1.5 px-3.5 text-body-sm',\n\tmd: 'h-10 gap-1.5 px-4.5 text-body-sm',\n} as const;\n\nexport type AppButtonVariant = keyof typeof VARIANTS;\n\n/** Classes for anything that should look like a button, such as a Next.js Link. */\nexport function appButtonClassName(variant: AppButtonVariant = 'outline', size: keyof typeof SIZES = 'md') {\n\treturn cx(\n\t\t'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-control font-sans outline-none transition-[color,background-color,border-color,box-shadow,scale] duration-150 ease-out focus-visible:shadow-ring-hover active:scale-97 motion-reduce:active:scale-100 disabled:pointer-events-none disabled:opacity-50',\n\t\tVARIANTS[variant],\n\t\tSIZES[size],\n\t);\n}\n\nexport type AppButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {\n\tvariant?: AppButtonVariant;\n\tsize?: keyof typeof SIZES;\n};\n\nexport function AppButton({ variant, size, className, type = 'button', ...props }: AppButtonProps) {\n\treturn <button type={type} className={cx(appButtonClassName(variant, size), className)} {...props} />;\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-button.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-button"
+  },
+  "type": "registry:ui"
+}

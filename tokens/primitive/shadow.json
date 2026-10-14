@@ -1,0 +1,47 @@
+{
+  "shadow": {
+    "card": {
+      "$type": "shadow",
+      "$value": "0 0 0 1px var(--ds-color-border-hairline), 0 1px 1px rgb(0 0 0 / 0.05), 0 2px 4px rgb(0 0 0 / 0.06), 0 4px 14px -4px rgb(0 0 0 / 0.1)",
+      "$description": "Product cards float on the page: a hairline edge, a crisp line of shade along the bottom, a soft shadow beneath"
+    },
+    "raised": {
+      "$type": "shadow",
+      "$value": "0 0 0 1px var(--ds-color-border-hairline), 0 1px 3px rgb(0 0 0 / 0.04), 0 4px 12px -6px rgb(0 0 0 / 0.07)",
+      "$description": "A card inside a card, or a quieter card"
+    },
+    "glass-hover": {
+      "$type": "shadow",
+      "$value": "0 0 0 1px var(--ds-color-border-hairline), 0 0 0 4px rgb(37 99 235 / 0.1), 0 1px 1px rgb(0 0 0 / 0.05), 0 2px 4px rgb(0 0 0 / 0.06), 0 4px 14px -4px rgb(0 0 0 / 0.1)",
+      "$description": "A clickable card on hover: the card wrapped in a thin translucent brand-blue ring, not a deeper shadow"
+    },
+    "ring-hover": {
+      "$type": "shadow",
+      "$value": "0 0 0 4px rgb(37 99 235 / 0.1)",
+      "$description": "Hover for anything bordered you can click, outside its own border"
+    },
+    "floating": {
+      "$type": "shadow",
+      "$value": "0 0 0 1px var(--ds-color-border-hairline), 0 0.5rem 1.5rem -0.5rem rgb(0 0 0 / 0.16)",
+      "$description": "Menus, dialogs and popovers over the page"
+    },
+    "tooltip": {
+      "$type": "shadow",
+      "$value": "0 0 0 1px var(--ds-color-border-hairline), 0 4px 12px rgb(0 0 0 / 0.08)"
+    },
+    "drawer": {
+      "$type": "shadow",
+      "$value": "0 0 0 1px var(--ds-color-border-hairline), 0 12px 32px rgb(0 0 0 / 0.16)"
+    },
+    "thumb": {
+      "$type": "shadow",
+      "$value": "0 1px 2px rgb(0 0 0 / 0.12)",
+      "$description": "Switch thumb. Soft only: a dark one turns into a gray halo against the blue"
+    },
+    "inset-hairline": {
+      "$type": "shadow",
+      "$value": "inset 0 0 0 1px var(--ds-color-border-subtle)",
+      "$description": "Quiet wells: secret fields, code blocks, switch tracks"
+    }
+  }
+}

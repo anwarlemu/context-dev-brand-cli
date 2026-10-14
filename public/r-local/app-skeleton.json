@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-skeleton",
+  "title": "AppSkeleton",
+  "description": "Loading states. Skeleton is one shimmering block; LoadingGate swaps a page's skeleton for the page when its data arrives.",
+  "files": [
+    {
+      "path": "registry/ui/app-skeleton/app-skeleton.tsx",
+      "content": "'use client';\n\nimport type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\n/** One gray block with a shine sliding across it. Size and round it to the thing it stands in for. */\nexport function Skeleton({ className }: { className?: string }) {\n\treturn <div aria-hidden className={cx('skeleton rounded-control-sm', className)} />;\n}\n\nexport type LoadingGateProps = {\n\tisLoading: boolean;\n\t/** The page's skeleton: the same column, the same blocks at the same sizes, so nothing moves when the data arrives. */\n\tskeleton: ReactNode;\n\t/** For pages whose cards rise in on their own (rise-in): the page only fades, so the two entrances don't stack. */\n\tfadeOnly?: boolean;\n\tchildren: ReactNode;\n};\n\n/** Shows the skeleton while loading, then the page, fading (and rising 4px) in. */\nexport function LoadingGate({ isLoading, skeleton, fadeOnly = false, children }: LoadingGateProps) {\n\tif (isLoading)\n\t\treturn (\n\t\t\t<div className=\"flex min-w-0 flex-1\" role=\"status\" aria-label=\"Loading\">\n\t\t\t\t{skeleton}\n\t\t\t</div>\n\t\t);\n\treturn <div className={cx('flex min-w-0 flex-1', fadeOnly ? 'fade-in' : 'content-in')}>{children}</div>;\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-skeleton.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-skeleton"
+  },
+  "type": "registry:ui"
+}

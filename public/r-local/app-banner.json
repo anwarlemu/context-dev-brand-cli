@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-banner",
+  "title": "AppBanner",
+  "description": "A card-wide note above a list, usually a plan limit and the way past it (\"You’ve used 1 of 2 API keys\").",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/app-banner/app-banner.tsx",
+      "content": "import { ArrowRight } from 'lucide-react';\nimport { AppBlock } from '@/components/ds/ui/app-block';\nimport { appButtonClassName } from '@/components/ds/ui/app-button';\n\nexport type AppBannerProps = {\n\t/** default: a plain note with an outline action. upsell: a limit, its action outlined in brand. */\n\tvariant?: 'default' | 'upsell';\n\ttitle: string;\n\tbody?: string;\n\taction: { label: string; href: string };\n};\n\n/** One card-wide note above a list: what limit applies and the one way past it. */\nexport function AppBanner({ variant = 'default', title, body, action }: AppBannerProps) {\n\treturn (\n\t\t<AppBlock block=\"app-banner\">\n\t\t\t<section className=\"flex items-center gap-6 rounded-window bg-surface px-5 py-4 shadow-card max-sm:flex-col max-sm:items-start max-sm:gap-3\">\n\t\t\t\t<div className=\"min-w-0 flex-1\">\n\t\t\t\t\t<p className=\"text-body-sm text-fg\">{title}</p>\n\t\t\t\t\t{body && <p className=\"mt-1 text-body-sm text-fg-muted\">{body}</p>}\n\t\t\t\t</div>\n\t\t\t\t<a href={action.href} className={appButtonClassName(variant === 'upsell' ? 'outline-brand' : 'outline', 'sm')}>\n\t\t\t\t\t{action.label}\n\t\t\t\t\t<ArrowRight className=\"size-3.5\" strokeWidth={1.5} />\n\t\t\t\t</a>\n\t\t\t</section>\n\t\t</AppBlock>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/app-banner.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/app-banner"
+  },
+  "type": "registry:block"
+}

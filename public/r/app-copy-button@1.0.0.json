@@ -1,0 +1,27 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-copy-button",
+  "title": "AppCopyButton",
+  "description": "Copying a value (an API key, a code sample, a command) with one click. useCopy for a copy action with its own label.",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/cx.json",
+    "https://context-ds.vercel.app/r/app-tooltip.json"
+  ],
+  "files": [
+    {
+      "path": "registry/ui/app-copy-button/app-copy-button.tsx",
+      "content": "'use client';\n\nimport { Check, Copy } from 'lucide-react';\nimport { useCallback, useEffect, useRef, useState } from 'react';\nimport { AppTooltip } from '@/components/ds/ui/app-tooltip';\nimport { cx } from '@/components/ds/ui/cx';\n\nconst COPIED_FEEDBACK_MS = 1500;\n\n/** Copies text and reports `hasCopied` for 1.5s. A failed write (no permission) shows nothing rather than a false check. */\nexport function useCopy() {\n\tconst [hasCopied, setHasCopied] = useState(false);\n\tconst timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);\n\tuseEffect(() => () => clearTimeout(timeoutRef.current), []);\n\n\tconst copy = useCallback(async (text: string) => {\n\t\ttry {\n\t\t\tawait navigator.clipboard.writeText(text);\n\t\t} catch {\n\t\t\treturn;\n\t\t}\n\t\tsetHasCopied(true);\n\t\tclearTimeout(timeoutRef.current);\n\t\ttimeoutRef.current = setTimeout(() => setHasCopied(false), COPIED_FEEDBACK_MS);\n\t}, []);\n\n\treturn { hasCopied, copy };\n}\n\nexport type AppCopyButtonProps = { value: string; label?: string; className?: string };\n\nexport function AppCopyButton({ value, label = 'Copy', className }: AppCopyButtonProps) {\n\tconst { hasCopied, copy } = useCopy();\n\treturn (\n\t\t<AppTooltip label={hasCopied ? 'Copied' : label} side=\"top\" className=\"shrink-0\">\n\t\t\t<button\n\t\t\t\ttype=\"button\"\n\t\t\t\tonClick={() => copy(value)}\n\t\t\t\taria-label={hasCopied ? 'Copied' : label}\n\t\t\t\tclassName={cx(\n\t\t\t\t\t'grid size-7 shrink-0 place-items-center rounded-control outline-none transition-colors duration-150 ease-out hover:bg-wash/5 focus-visible:shadow-ring-hover',\n\t\t\t\t\thasCopied ? 'text-success' : 'text-fg-subtle hover:text-fg',\n\t\t\t\t\tclassName,\n\t\t\t\t)}\n\t\t\t>\n\t\t\t\t{hasCopied ? <Check className=\"size-3.5\" strokeWidth={1.75} /> : <Copy className=\"size-3.5\" strokeWidth={1.5} />}\n\t\t\t</button>\n\t\t</AppTooltip>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-copy-button.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-copy-button"
+  },
+  "type": "registry:ui"
+}

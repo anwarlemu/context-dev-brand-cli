@@ -4,11 +4,12 @@ import { extendTailwindMerge } from 'tailwind-merge';
 const merge = extendTailwindMerge({
 	extend: {
 		theme: {
-			color: ["black","white","blue-10","blue-20","blue-30","blue-40","blue-50","blue-60","blue-70","blue-80","blue-90","navy-10","navy-20","navy-30","navy-40","navy-50","navy-60","navy-70","navy-80","navy-90","neutral-5","neutral-10","neutral-20","neutral-30","neutral-40","neutral-50","neutral-60","neutral-70","neutral-80","neutral-90","surface","surface-subtle","brand","surface-inverse","tint","fg","fg-muted","fg-subtle","fg-inverse","on-brand","line","line-subtle","line-strong","action","on-action","action-hover","success","warning","danger","focus"],
-			text: ["display-xl","display","h1","h2","h3","h4","h5","body-lg","body","body-sm","caption","button","stat"],
-			radius: ["sm","card","window","pill"],
-			ease: ["out","in-out","emphasized"],
+			color: ["black","white","blue-10","blue-20","blue-30","blue-40","blue-50","blue-60","blue-70","blue-80","blue-90","navy-10","navy-20","navy-30","navy-40","navy-50","navy-60","navy-70","navy-80","navy-90","neutral-5","neutral-10","neutral-20","neutral-30","neutral-40","neutral-50","neutral-60","neutral-70","neutral-80","neutral-90","surface","surface-subtle","brand","surface-inverse","tint","canvas","frame","wash","scrim","shine","fg","fg-muted","fg-subtle","fg-inverse","accent","on-brand","line","line-subtle","line-strong","hairline","action","on-action","action-hover","success","warning","danger","focus","series-1","series-2","series-3","series-4","alert-strong","alert","alert-soft","chart-ok","chart-client-error","chart-server-error"],
+			text: ["display-xl","display","h1","h2","h3","h4","h5","body-lg","body","body-sm","caption","button","stat","micro"],
+			radius: ["sm","card","window","pill","control-sm","control","shell"],
+			ease: ["out","in-out","emphasized","drawer"],
 			'font-weight': ["regular","medium","data"],
+			shadow: ["card","raised","glass-hover","ring-hover","floating","tooltip","drawer","thumb","inset-hairline"],
 		},
 	},
 });

@@ -167,17 +167,27 @@ export const singlePrimaryAction: Rule = {
 	run({ file, isPage }) {
 		if (!isPage) return [];
 		const primaries: Node[] = [];
+		let product = false;
 		const insideNav = (node: Node) => {
 			for (let p = file.parents.get(node); p; p = file.parents.get(p)) if (p.type === 'JSXElement' && registryItemFor(file, p)?.name === 'nav') return true;
 			return false;
 		};
 		for (const el of file.jsxElements) {
-			if (registryItemFor(file, el)?.name === 'nav' || insideNav(el)) continue;
+			const item = registryItemFor(file, el);
+			if (item?.name === 'nav' || insideNav(el)) continue;
+			// Product pages: the one main action is the brand button; filled black (primary) is allowed inside cards.
+			if (item?.docs.surface === 'product') {
+				if (literalAttr(el, 'variant') === 'brand') {
+					primaries.push(el);
+					product = true;
+				}
+				continue;
+			}
 			if (literalAttr(el, 'variant') === 'primary') primaries.push(el);
 			const attr = jsxAttr(el, 'primaryCta');
 			if (attr) primaries.push(attr);
 		}
-		return primaries.slice(1).map((node) => ({ rule: 'single-primary-action', message: `${primaries.length} primary actions on one page`, hint: 'Keep one filled primary. Make the rest variant="secondary" (outline)', offset: node.start }));
+		return primaries.slice(1).map((node) => ({ rule: 'single-primary-action', message: `${primaries.length} primary actions on one page`, hint: product ? 'Keep one brand button per page. Make the rest variant="outline"' : 'Keep one filled primary. Make the rest variant="secondary" (outline)', offset: node.start }));
 	},
 };
 

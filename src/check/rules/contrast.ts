@@ -17,8 +17,11 @@ function classesOf(ctxFile: { classTokens: { value: string; element?: Node }[] }
 export const contrast: Rule = {
 	id: 'contrast',
 	description: 'Text and background token pairs meet WCAG AA, using the token contrast matrix.',
-	run({ file, vocab }) {
+	run({ file, vocab, relPath }) {
 		const out: RawFinding[] = [];
+		// Product files are measured with the product values (.ds-product), where fg-subtle is AA for small text.
+		const product = /(^|\/)(ui|blocks|templates)\/app-/.test(relPath) || /\/(ui|blocks|templates)\/app-|ds-product/.test(file.text);
+		const hexes = product ? vocab.productColorHex : vocab.colorHex;
 		const allowed = new Map(vocab.pairs.map((p) => [`${p.fg}|${p.bg}`, p.min]));
 		const textColor = (cls: ReturnType<typeof parseClass>[]) => cls.map((c) => c.utility.match(/^text-([a-z0-9-]+)(?:\/(\d+))?$/)).find((m) => m && vocab.colorHex.has(m[1]) && !m[2])?.[1];
 		const bgColor = (cls: ReturnType<typeof parseClass>[]) => cls.map((c) => c.utility.match(/^bg-([a-z0-9-]+)(?:\/(\d+))?$/)).find((m) => m && vocab.colorHex.has(m[1]) && !m[2])?.[1];
@@ -34,13 +37,13 @@ export const contrast: Rule = {
 				parent = file.parents.get(parent);
 			}
 			if (!bg) continue;
-			const fgHex = vocab.colorHex.get(fg)!;
-			const bgHex = vocab.colorHex.get(bg)!;
+			const fgHex = hexes.get(fg)!;
+			const bgHex = hexes.get(bg)!;
 			const ratio = contrastRatio(fgHex, bgHex);
 			const large = isLarge(own);
 			const listedMin = ALIAS_TO_SEMANTIC[fg] && ALIAS_TO_SEMANTIC[bg] ? allowed.get(`${ALIAS_TO_SEMANTIC[fg]}|${ALIAS_TO_SEMANTIC[bg]}`) : undefined;
 			const required = listedMin ?? (large ? 3 : 4.5);
-			if (listedMin !== undefined && listedMin < 4.5 && !large) {
+			if (listedMin !== undefined && listedMin < 4.5 && !large && !(product && ratio >= 4.5)) {
 				out.push({ rule: 'contrast', message: `text-${fg} on bg-${bg} is ${ratio.toFixed(2)}:1, allowed for large text only`, hint: 'Use a heading size (text-h4 or larger) or text-fg / text-fg-muted', offset: el.start });
 			} else if (ratio < required) {
 				out.push({ rule: 'contrast', message: `text-${fg} on bg-${bg} is ${ratio.toFixed(2)}:1, needs ${required}:1`, hint: 'Pick a pair from build/contrast-report.md', offset: el.start });

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-empty-page",
+  "title": "AppEmptyPage",
+  "description": "The whole page of a list feature before anything exists (batches, monitors). A dot story, what the feature is for, one brand action, the docs, the plan limit.",
+  "dependencies": [
+    "lucide-react@^1.51.0"
+  ],
+  "registryDependencies": [
+    "https://context-ds.vercel.app/r/app-block.json",
+    "https://context-ds.vercel.app/r/app-button.json",
+    "https://context-ds.vercel.app/r/app-empty-state.json",
+    "https://context-ds.vercel.app/r/dot-story.json"
+  ],
+  "files": [
+    {
+      "path": "registry/blocks/app-empty-page/app-empty-page.tsx",
+      "content": "import { BookOpen, Plus } from 'lucide-react';\nimport { AppBlock } from '@/components/ds/ui/app-block';\nimport { appButtonClassName } from '@/components/ds/ui/app-button';\nimport { AppEmptyState } from '@/components/ds/ui/app-empty-state';\nimport { DotScene, type DotSceneName } from '@/components/ds/ui/dot-scene';\n\nexport type AppEmptyPageProps = {\n\t/** The fine-dot story that shows what the feature does. */\n\tscene: DotSceneName;\n\ttitle: string;\n\tbody: string;\n\tprimary: { label: string; href: string };\n\tdocs?: { label: string; href: string };\n\t/** The plan limit under the actions: \"Running 0 / 1 concurrent\" with a way to raise it. */\n\tusage?: { label: string; used: number; limit: number; unit?: string; upgrade?: { label: string; href: string } };\n};\n\nexport function AppEmptyPage({ scene, title, body, primary, docs, usage }: AppEmptyPageProps) {\n\treturn (\n\t\t<AppBlock block=\"app-empty-page\" className=\"flex flex-1\">\n\t\t\t<AppEmptyState\n\t\t\t\tmedia={<DotScene variant={scene} className=\"w-full\" />}\n\t\t\t\ttitle={title}\n\t\t\t\tbody={body}\n\t\t\t\tactions={\n\t\t\t\t\t<>\n\t\t\t\t\t\t<a href={primary.href} className={appButtonClassName('brand', 'sm')}>\n\t\t\t\t\t\t\t<Plus className=\"size-3.5\" strokeWidth={1.75} />\n\t\t\t\t\t\t\t{primary.label}\n\t\t\t\t\t\t</a>\n\t\t\t\t\t\t{docs && (\n\t\t\t\t\t\t\t<a href={docs.href} className={appButtonClassName('outline', 'sm')}>\n\t\t\t\t\t\t\t\t<BookOpen className=\"size-3.5\" strokeWidth={1.5} />\n\t\t\t\t\t\t\t\t{docs.label}\n\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t)}\n\t\t\t\t\t</>\n\t\t\t\t}\n\t\t\t\tfootnote={\n\t\t\t\t\tusage && (\n\t\t\t\t\t\t<span className=\"flex items-center gap-3\">\n\t\t\t\t\t\t\t<span>\n\t\t\t\t\t\t\t\t{usage.label}{' '}\n\t\t\t\t\t\t\t\t<span className=\"text-fg tabular-nums\">\n\t\t\t\t\t\t\t\t\t{usage.used} / {usage.limit}\n\t\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t\t{usage.unit && ` ${usage.unit}`}\n\t\t\t\t\t\t\t</span>\n\t\t\t\t\t\t\t{usage.upgrade && (\n\t\t\t\t\t\t\t\t<a href={usage.upgrade.href} className=\"flex h-7 w-fit items-center rounded-control-sm border border-accent px-3 text-body-sm text-accent outline-none transition-colors duration-150 ease-out hover:bg-blue-10 focus-visible:shadow-ring-hover\">\n\t\t\t\t\t\t\t\t\t{usage.upgrade.label}\n\t\t\t\t\t\t\t\t</a>\n\t\t\t\t\t\t\t)}\n\t\t\t\t\t\t</span>\n\t\t\t\t\t)\n\t\t\t\t}\n\t\t\t/>\n\t\t</AppBlock>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/blocks/app-empty-page.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "block",
+    "id": "blocks/app-empty-page"
+  },
+  "type": "registry:block"
+}

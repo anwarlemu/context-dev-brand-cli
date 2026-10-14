@@ -7,8 +7,10 @@ import { readInstalled } from '../lib/state.js';
 export function docsIndex() {
 	const groups: Record<string, string[]> = {};
 	for (const item of loadRegistry()) {
-		const label = item.type === 'flow-step' ? 'flow steps' : `${item.type}s`;
-		(groups[label] ??= []).push(`${item.id}  ${item.docs.use_for}${item.docs.variants ? `  [${item.docs.variants.join(', ')}]` : ''}`);
+		const type = item.type === 'flow-step' ? 'flow steps' : `${item.type}s`;
+		const label = item.docs.surface === 'product' ? `product ${type} (dashboard, under .ds-product)` : type;
+		const states = item.docs.states ? `  states: ${item.docs.states.join(', ')}` : '';
+		(groups[label] ??= []).push(`${item.id}  ${item.docs.use_for}${item.docs.variants ? `  [${item.docs.variants.join(', ')}]` : ''}${states}`);
 	}
 	return groups;
 }

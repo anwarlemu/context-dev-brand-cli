@@ -117,54 +117,117 @@ const TAILWIND_COLOR_ALIASES: Record<string, string> = {
 	'color.status.warning': 'warning',
 	'color.status.danger': 'danger',
 	'color.focus.ring': 'focus',
+	'color.text.brand': 'accent',
+	'color.bg.canvas': 'canvas',
+	'color.bg.frame': 'frame',
+	'color.bg.wash': 'wash',
+	'color.bg.scrim': 'scrim',
+	'color.bg.shine': 'shine',
+	'color.border.hairline': 'hairline',
+	'color.chart.series-1': 'series-1',
+	'color.chart.series-2': 'series-2',
+	'color.chart.series-3': 'series-3',
+	'color.chart.series-4': 'series-4',
+	'color.chart.alert-strong': 'alert-strong',
+	'color.chart.alert': 'alert',
+	'color.chart.alert-soft': 'alert-soft',
+	'color.chart.ok': 'chart-ok',
+	'color.chart.client-error': 'chart-client-error',
+	'color.chart.server-error': 'chart-server-error',
 };
 
-const cssLines: string[] = [];
 const themeColor: string[] = [];
 walk(tree, [], (path, token) => {
+	if (token.$type !== 'color') return;
 	const key = path.join('.');
-	const value = resolveValue(tree, token.$value);
-	if (token.$type === 'color') {
-		cssLines.push(`\t${cssName(path)}: ${value};`);
-		if (path[1] && ['black', 'white', 'blue', 'navy', 'neutral'].includes(path[1]) && path.length > 2 || ['black', 'white'].includes(path[1])) {
-			themeColor.push(`\t--color-${path.slice(1).join('-')}: var(${cssName(path)});`);
-		}
-		if (TAILWIND_COLOR_ALIASES[key]) themeColor.push(`\t--color-${TAILWIND_COLOR_ALIASES[key]}: var(${cssName(path)});`);
+	if (path[1] && ['black', 'white', 'blue', 'navy', 'neutral'].includes(path[1]) && path.length > 2 || ['black', 'white'].includes(path[1])) {
+		themeColor.push(`\t--color-${path.slice(1).join('-')}: var(${cssName(path)});`);
 	}
+	if (TAILWIND_COLOR_ALIASES[key]) themeColor.push(`\t--color-${TAILWIND_COLOR_ALIASES[key]}: var(${cssName(path)});`);
 });
+
+const rem = (px: string) => `${parseFloat(px) / 16}rem`;
+const bezier = (v: unknown) => `cubic-bezier(${(v as number[]).join(', ')})`;
+const own = (node: TokenNode | undefined) => Object.entries(node ?? {}).filter(([k]) => !k.startsWith('$')) as [string, TokenNode][];
+
+// Every CSS variable a token tree defines, in order. Base sizes are rem; a mode's text sizes are written as given (px), so they hold when the mode changes the root size.
+function cssVars(t: TokenNode, { pxText = false } = {}): [string, string][] {
+	const out: [string, string][] = [];
+	walk(t, [], (path, token) => {
+		if (token.$type === 'color') out.push([cssName(path), String(resolveValue(t, token.$value))]);
+	});
+	for (const [k, v] of own(t.layout as TokenNode)) out.push([`--ds-layout-${k}`, String(v.$value)]);
+	for (const [k, v] of own(t.space as TokenNode)) out.push([`--ds-space-${k}`, String(v.$value)]);
+	for (const [k, v] of own(t.radius as TokenNode)) out.push([`--ds-radius-${k}`, String(v.$value)]);
+	for (const [k, v] of own(t.shadow as TokenNode)) out.push([`--ds-shadow-${k}`, String(v.$value)]);
+	for (const [k, v] of own(t.duration as TokenNode)) out.push([`--ds-duration-${k}`, String(v.$value)]);
+	for (const [k, v] of own(t.easing as TokenNode)) out.push([`--ds-easing-${k}`, bezier(v.$value)]);
+	const fam = ((t.font as TokenNode).family as TokenNode);
+	for (const [k, v] of own(fam)) out.push([`--ds-font-${k}`, (v.$value as string[]).map((f) => (f.includes(' ') && !f.startsWith('var(') ? `"${f}"` : f)).join(', ')]);
+	for (const [k, v] of own((t.font as TokenNode).weight as TokenNode)) out.push([`--ds-font-weight-${k}`, String(v.$value)]);
+	for (const [k, v] of own(t.text as TokenNode)) {
+		const x = resolveValue(t, v.$value) as { fontSize: string; lineHeight: number; fontWeight: number };
+		out.push([`--ds-text-${k}`, pxText ? x.fontSize : rem(x.fontSize)], [`--ds-text-${k}-line-height`, String(x.lineHeight)], [`--ds-text-${k}-weight`, String(x.fontWeight)]);
+	}
+	return out;
+}
 
 const space = tree.space as TokenNode;
 const radius = tree.radius as TokenNode;
-const duration = tree.duration as TokenNode;
+const shadow = (tree.shadow as TokenNode) ?? {};
 const easing = tree.easing as TokenNode;
 const text = tree.text as TokenNode;
 const fontFamily = (tree.font as TokenNode).family as TokenNode;
 const fontWeight = (tree.font as TokenNode).weight as TokenNode;
+const families = Object.fromEntries(own(fontFamily).map(([k]) => [k, true]));
+void space;
 
-const rem = (px: string) => `${parseFloat(px) / 16}rem`;
-const families = Object.fromEntries(
-	Object.entries(fontFamily).filter(([k]) => !k.startsWith('$')).map(([k, v]) => [k, ((v as TokenNode).$value as string[]).map((f) => (f.includes(' ') && !f.startsWith('var(') ? `"${f}"` : f)).join(', ')]),
-);
-const bezier = (v: unknown) => `cubic-bezier(${(v as number[]).join(', ')})`;
+const baseVars = cssVars(tree);
+const baseMap = new Map(baseVars);
 
-for (const [k, v] of Object.entries((tree.layout as TokenNode) ?? {})) if (!k.startsWith('$')) cssLines.push(`\t--ds-layout-${k}: ${(v as TokenNode).$value};`);
-for (const [k, v] of Object.entries(space)) if (!k.startsWith('$')) cssLines.push(`\t--ds-space-${k}: ${(v as TokenNode).$value};`);
-for (const [k, v] of Object.entries(radius)) if (!k.startsWith('$')) cssLines.push(`\t--ds-radius-${k}: ${(v as TokenNode).$value};`);
-for (const [k, v] of Object.entries(duration)) if (!k.startsWith('$')) cssLines.push(`\t--ds-duration-${k}: ${(v as TokenNode).$value};`);
-for (const [k, v] of Object.entries(easing)) if (!k.startsWith('$')) cssLines.push(`\t--ds-easing-${k}: ${bezier((v as TokenNode).$value)};`);
-for (const [k, v] of Object.entries(families)) cssLines.push(`\t--ds-font-${k}: ${v};`);
-for (const [k, v] of Object.entries(fontWeight)) if (!k.startsWith('$')) cssLines.push(`\t--ds-font-weight-${k}: ${(v as TokenNode).$value};`);
+// Modes: partial token trees layered over the base under a selector. Only variables whose value changes are written.
+const MODES: { file: string; selector: string }[] = [
+	{ file: 'product.json', selector: '.ds-product' },
+	{ file: 'product-dark.json', selector: '.ds-product[data-theme="dark"],\n[data-theme="dark"] .ds-product' },
+];
+const modeBlocks: string[] = [];
+const modeFailures: string[] = [];
+// Each mode layers over the one before it (dark over product), and writes only what changes from that layer.
+let layered = JSON.parse(JSON.stringify(tree)) as TokenNode;
+let previous = baseMap;
+for (const mode of MODES) {
+	const partial = JSON.parse(readFileSync(join(ROOT, 'tokens/modes', mode.file), 'utf8')) as TokenNode;
+	delete partial.$description;
+	layered = JSON.parse(JSON.stringify(layered)) as TokenNode;
+	deepMerge(layered, partial);
+	const vars = cssVars(layered, { pxText: true });
+	const changed = vars.filter(([k, v]) => {
+		const textName = k.match(/^--ds-text-(.+?)(?:-line-height|-weight)?$/)?.[1];
+		if (textName && !(partial.text as TokenNode | undefined)?.[textName]) return false;
+		return previous.get(k) !== v;
+	});
+	// Text the mode does not set keeps the previous layer's value (rem in the base), so it is not rewritten in px.
+	previous = new Map([...previous, ...changed]);
+	for (const pair of pairs) {
+		const fg = resolveValue(layered, `{color.${pair.fg}}`) as string;
+		const bg = resolveValue(layered, `{color.${pair.bg}}`) as string;
+		if (/^#[0-9a-f]{6}$/i.test(fg) && /^#[0-9a-f]{6}$/i.test(bg) && contrastRatio(fg, bg) < pair.min) modeFailures.push(`${mode.file}: ${pair.fg} on ${pair.bg} is ${contrastRatio(fg, bg).toFixed(2)}:1, needs ${pair.min}:1`);
+	}
+	// Values that read other variables (the shadows read the hairline color) resolve where they are declared, so they are
+	// declared again inside the mode for its colors to reach them.
+	const rescoped = vars.filter(([k, v]) => v.includes('var(--ds-') && !changed.some(([c]) => c === k));
+	modeBlocks.push(`${mode.selector} {\n${[...changed, ...rescoped].map(([k, v]) => `\t${k}: ${v};`).join('\n')}\n}`);
+}
 
 const version = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8')).version;
 const header = `/* Generated by context-ds ${version} from tokens/. Do not edit. */`;
-writeFileSync(join(BUILD, 'tokens.css'), `${header}\n:root {\n${cssLines.join('\n')}\n}\n`);
+writeFileSync(join(BUILD, 'tokens.css'), `${header}\n:root {\n${baseVars.map(([k, v]) => `\t${k}: ${v};`).join('\n')}\n}\n\n${modeBlocks.join('\n\n')}\n`);
 
 const textLines: string[] = [];
-for (const [name, token] of Object.entries(text)) {
-	if (name.startsWith('$')) continue;
-	const t = resolveValue(tree, (token as TokenNode).$value) as { fontSize: string; lineHeight: number; fontWeight: number; fontFamily: string[] };
-	textLines.push(`\t--text-${name}: ${rem(t.fontSize)};`, `\t--text-${name}--line-height: ${t.lineHeight};`, `\t--text-${name}--font-weight: ${t.fontWeight};`, `\t--text-${name}--letter-spacing: 0;`);
+for (const [name] of own(text)) {
+	textLines.push(`\t--text-${name}: var(--ds-text-${name});`, `\t--text-${name}--line-height: var(--ds-text-${name}-line-height);`, `\t--text-${name}--font-weight: var(--ds-text-${name}-weight);`, `\t--text-${name}--letter-spacing: 0;`);
 }
+const productCss = readFileSync(join(ROOT, 'tokens/product.css'), 'utf8');
 
 const theme = `${header}
 @import "./tokens.css";
@@ -185,10 +248,14 @@ ${textLines.join('\n')}
 \t--radius-*: initial;
 ${Object.keys(radius).filter((k) => !k.startsWith('$') && k !== 'none').map((k) => `\t--radius-${k}: var(--ds-radius-${k});`).join('\n')}
 
+\t--shadow-*: initial;
+${Object.keys(shadow).filter((k) => !k.startsWith('$')).map((k) => `\t--shadow-${k}: var(--ds-shadow-${k});`).join('\n')}
+
 \t--ease-*: initial;
 ${Object.keys(easing).filter((k) => !k.startsWith('$') && k !== 'linear').map((k) => `\t--ease-${k}: var(--ds-easing-${k});`).join('\n')}
 }
-`;
+
+${productCss}`;
 writeFileSync(join(BUILD, 'theme.css'), theme);
 writeFileSync(join(BUILD, 'theme.scoped.css'), theme.replace(/^\t--[a-z-]+-\*: initial;\n/gm, '').replace('@theme inline {', '/* Scoped: adds Context.dev utilities without removing the app\'s own theme. */\n@theme inline {'));
 
@@ -235,6 +302,7 @@ const merge = extendTailwindMerge({
 			radius: ${JSON.stringify(radiusNames)},
 			ease: ${JSON.stringify(easeNames)},
 			'font-weight': ${JSON.stringify(weightNames)},
+			shadow: ${JSON.stringify(Object.keys(shadow).filter((k) => !k.startsWith('$')))},
 		},
 	},
 });
@@ -254,6 +322,8 @@ const sd = new StyleDictionary({
 await sd.buildAllPlatforms();
 
 console.log(`tokens: ${rows.length} contrast pairs, ${failures.length} failures. Wrote build/tokens.css, build/theme.css, build/tailwind.preset.ts, build/tokens.flat.json, build/contrast-report.md`);
+for (const f of modeFailures) console.error(`contrast FAIL ${f}`);
+if (modeFailures.length) process.exit(1);
 if (failures.length) {
 	for (const f of failures) console.error(`contrast FAIL ${f.fg} on ${f.bg}: ${f.ratio.toFixed(2)}:1, needs ${f.min}:1`);
 	process.exit(1);

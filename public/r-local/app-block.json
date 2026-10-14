@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "app-block",
+  "title": "AppBlock",
+  "description": "The root element of every product block (app-*). Names the block and opts it into the first-visit entrance.",
+  "files": [
+    {
+      "path": "registry/ui/app-block/app-block.tsx",
+      "content": "import type { ReactNode } from 'react';\nimport { cx } from '@/components/ds/ui/cx';\n\nexport type AppBlockProps = {\n\tblock: string;\n\t/** The block's place in a page's first-visit entrance, 50ms apart. Omit to skip the entrance. */\n\triseIndex?: number;\n\tclassName?: string;\n\tchildren: ReactNode;\n};\n\n/** The root of every product block: names the block for the checks and review, and opts into the staggered entrance. */\nexport function AppBlock({ block, riseIndex, className, children }: AppBlockProps) {\n\treturn (\n\t\t<div data-ds-block={block} className={cx(riseIndex !== undefined && 'rise-in', className)} style={riseIndex !== undefined ? ({ '--rise-index': riseIndex } as React.CSSProperties) : undefined}>\n\t\t\t{children}\n\t\t</div>\n\t);\n}\n",
+      "type": "registry:file",
+      "target": "components/ds/ui/app-block.tsx"
+    }
+  ],
+  "meta": {
+    "version": "1.0.0",
+    "dsType": "ui",
+    "id": "ui/app-block"
+  },
+  "type": "registry:ui"
+}
