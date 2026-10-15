@@ -3011,7 +3011,7 @@
    "surface": "marketing",
    "group": "navigation",
    "name": "Header (scrolled)",
-   "use_for": "The header once the page scrolls: it gathers into a floating white pill.",
+   "use_for": "The header once the page scrolls: it gathers into a floating white pill inside a frosted ring.",
    "not_for": "The unscrolled state.",
    "match": {
     "tags": [
@@ -3031,19 +3031,26 @@
    },
    "css": {
     "top": "var(--ds-space-2)",
-    "max-width": "calc(var(--ds-layout-content-width) + var(--ds-space-24))",
+    "box-sizing": "border-box",
+    "width": "min(100% - var(--ds-space-4), calc(var(--ds-layout-content-width) + var(--ds-space-24)))",
+    "height": "calc(var(--ds-space-16) + var(--ds-space-1))",
     "margin-inline": "auto",
+    "padding-inline": "var(--ds-space-4)",
+    "border": "var(--ds-space-1-5) solid color-mix(in srgb, var(--ds-color-brand) 10%, transparent)",
     "border-radius": "var(--ds-radius-pill)",
     "background-color": "var(--ds-color-bg-default)",
+    "background-clip": "padding-box",
     "box-shadow": "var(--ds-shadow-floating)",
-    "outline": "var(--ds-space-1-5) solid var(--ds-color-card-ring)",
+    "backdrop-filter": "blur(var(--ds-space-4))",
     "transition": "border-radius var(--ds-duration-moderate) var(--ds-easing-emphasized), background-color var(--ds-duration-moderate) var(--ds-easing-emphasized), box-shadow var(--ds-duration-base) var(--ds-easing-out)"
    },
    "states": {},
-   "tailwind": "top-2 mx-auto rounded-pill bg-surface shadow-floating outline-6 outline-tint transition-[border-radius,background-color,box-shadow] duration-250 ease-emphasized motion-reduce:transition-none",
+   "tailwind": "top-2 mx-auto box-border h-[calc(var(--ds-space-16)+var(--ds-space-1))] w-[min(100%-var(--ds-space-4),calc(var(--ds-layout-content-width)+var(--ds-space-24)))] rounded-pill border-6 border-brand/10 bg-surface bg-clip-padding px-4 shadow-floating backdrop-blur-[var(--ds-space-4)] transition-[border-radius,background-color,box-shadow] duration-250 ease-emphasized motion-reduce:transition-none",
    "rules": [
-    "A 6px translucent ring around a white pill, 68px tall, 8px from the top of the window.",
-    "The nav content never moves while the bar morphs.",
+    "A white pill 68px tall, 8px from the top of the window, inside a 6px ring of brand blue at 10% that is see-through and frosted (the background is clipped to the padding box, the blur shows through the ring). Never an opaque pale outline.",
+    "A 1px hairline and a soft drop shadow (shadow-floating) carry the edge over white sections.",
+    "Inside: logo left, links centered as link-nav (body-sm, medium, muted, 32px tall pills), two 42px pill actions right (tertiary, then primary). The items keep their size and place while the bar morphs.",
+    "On phones (under 880px) the pill is 52px with a 5px ring: logo and the menu toggle only.",
     "No transition with reduced motion."
    ],
    "source": [

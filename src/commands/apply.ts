@@ -159,6 +159,17 @@ export function registerApply(program: Command) {
 			const nativeFiles = files.filter((rel) => NATIVE.test(rel) || ANDROID_XML.test(rel));
 			const palette = { ...(cssPalette.found || !nativeFiles.length ? cssPalette : nativePalette(nativeFiles.map((rel) => readFileSync(join(root, rel), 'utf8')))), target: (surface === 'product' && theme === 'dark' ? 'dark' : 'light') as 'light' | 'dark' };
 			const switches = darkSwitches(styleText);
+			// A page that styles itself apart from the site (a dark case study inside a light site, with its own page
+			// colors) is read against its own background and text, and so are the files beside its stylesheet.
+			const ownPalettes = new Map<string, typeof palette>();
+			for (const rel of files.filter((f) => STYLES.test(f) && f !== main)) {
+				const local = sitePalette(readFileSync(join(root, rel), 'utf8'));
+				if (local.found && local.mode !== palette.mode) ownPalettes.set(dirname(rel), { ...palette, mode: local.mode, bg: local.bg, fg: local.fg, vars: new Map([...(palette.vars ?? []), ...(local.vars ?? [])]) });
+			}
+			const paletteFor = (rel: string) => {
+				for (let dir = dirname(rel); dir && dir !== '.'; dir = dirname(dir)) if (ownPalettes.has(dir)) return ownPalettes.get(dir)!;
+				return palette;
+			};
 			// With Tailwind, the root layout's classes set the page colors for every page that does not set its own.
 			const layoutFile = ['tsx', 'jsx', 'js'].map((ext) => `${project.appDir ?? 'app'}/layout.${ext}`).find((rel) => existsSync(join(root, rel)));
 			const layoutPalette = layoutFile ? classPalette(readFileSync(join(root, layoutFile), 'utf8'), palette) : palette;
@@ -169,11 +180,12 @@ export function registerApply(program: Command) {
 			for (const rel of files) {
 				const before = readFileSync(join(root, rel), 'utf8');
 				let after = before;
-				if (STYLES.test(rel)) after = rebrandCss(before, /\.(sass|styl)$/.test(rel) ? { ...palette, lines: true } : palette, stats);
+				const own = paletteFor(rel);
+				if (STYLES.test(rel)) after = rebrandCss(before, /\.(sass|styl)$/.test(rel) ? { ...own, lines: true } : own, stats);
 				else if (MARKUP.test(rel)) {
-					after = rebrandMarkup(before, palette, stats);
-					if (tailwind) after = after.replace(/(\sclass(?:Name)?\s*=\s*)(["'])([^"']*)\2/g, (all, head: string, q: string, cls: string) => `${head}${q}${rebrandClasses(cls, palette, stats, tailwind === 'theme')}${q}`);
-				} else if (SCRIPT.test(rel)) after = rebrandScript(before, tailwind ? classPalette(before, layoutPalette) : palette, stats, { tailwind, hex: (t) => brandLiteral(t, literalTheme) });
+					after = rebrandMarkup(before, own, stats);
+					if (tailwind) after = after.replace(/(\sclass(?:Name)?\s*=\s*)(["'])([^"']*)\2/g, (all, head: string, q: string, cls: string) => `${head}${q}${rebrandClasses(cls, own, stats, tailwind === 'theme')}${q}`);
+				} else if (SCRIPT.test(rel)) after = rebrandScript(before, tailwind ? classPalette(before, own === palette ? layoutPalette : own) : own, stats, { tailwind, hex: (t) => brandLiteral(t, literalTheme) });
 				else if (NATIVE.test(rel) || ANDROID_XML.test(rel) || THEME_DATA.test(rel)) after = rebrandNative(before, palette, stats, literalTheme, rel.endsWith('.xml') || rel.endsWith('.xaml'));
 				if (rel === main) {
 					// Next apps load the typefaces through next/font (init wrote lib/ds-fonts.ts); everything else gets the stylesheet.
@@ -205,6 +217,10 @@ export function registerApply(program: Command) {
 					}
 				}
 			}
+			// Raster logos drawn for a dark page cannot be recolored in code; the agent checks each one on the white page.
+			const rasterMarks = palette.mode === 'dark' && literalTheme !== 'product-dark'
+				? [...new Set(files.filter((rel) => MARKUP.test(rel) || SCRIPT.test(rel)).flatMap((rel) => [...readFileSync(join(root, rel), 'utf8').matchAll(/<img\b[^>]*>/gi)].map((m) => m[0]).filter((tag) => /(logo|wordmark|lockup|brand-mark)/i.test(tag)).map((tag) => tag.match(/src=["']([^"']+\.(?:png|webp|jpe?g|gif|avif))["']/i)?.[1]).filter((src): src is string => !!src)))].slice(0, 8)
+				: [];
 			const layerDir = main ? join(root, dirname(main), bin) : undefined;
 			if (layerDir && !opts.dryRun) {
 				mkdirSync(layerDir, { recursive: true });
@@ -262,6 +278,7 @@ export function registerApply(program: Command) {
 					`   ${stats.colors} colors mapped by role${palette.mode === 'dark' && literalTheme !== 'product-dark' ? ' (a dark interface turned into the brand\'s light one)' : ''}, ${stats.fonts} font stacks to Rethink Sans, ${stats.type} sizes, weights and tracking to the type scale,`,
 					`   ${stats.radius} radii, ${stats.spacing} spacings, ${stats.shadows} shadows and ${stats.motion} transitions to the nearest brand token.${kinds.native ? ' Native and other code gets the brand\'s literal values in its own color form (no new imports).' : ''}`,
 					...(marks.length ? [`   ${marks.length} one-color marks drawn light for the dark site redrawn in brand text: ${marks.slice(0, 6).join(', ')}${marks.length > 6 ? ', ...' : ''}`] : []),
+					...(rasterMarks.length ? [`   Logo images drawn for the dark site (raster, not recolored): ${rasterMarks.join(', ')}. Look at each on the white page; a white one-color mark needs \`filter: brightness(0)\` on its img (a colored logo stays as it is).`] : []),
 					'',
 					color.bold(`3. ${surface === 'product' ? 'Product theme' : 'Typefaces and frame'}:`),
 					surface === 'product'

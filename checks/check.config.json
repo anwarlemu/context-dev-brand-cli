@@ -9,6 +9,7 @@
     "tokens/**",
     "build/**",
     "public/**/*.{js,mjs,cjs,html}",
+    "**/context-ds/*.js",
     "public/r/**",
     "public/r-local/**",
     "**/dist/**",

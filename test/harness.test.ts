@@ -316,6 +316,24 @@ describe('apply', () => {
 		expect(out).toContain('--ea-light: var(--ds-color-border-subtle)');
 		expect(out).toContain('--dk-text-1: var(--ds-color-text-default)');
 	});
+	it('reads channel-triplet colors and gives a self-styled page its own palette', () => {
+		const css = '#x-root { --x-black: 0 0 0; --x-paper: 244 242 238; --x-bg: rgb(var(--x-black)); color: rgb(var(--x-paper)); }\nbody:has(#x-root) { background: #000; }\n.card { background: rgb(var(--x-black) / 0.5); }';
+		const own = sitePalette(css);
+		expect(own.mode).toBe('dark');
+		const out = rebrandCss(css, own, stats());
+		expect(out).toContain('--x-bg: var(--ds-color-bg-default)');
+		expect(out).toContain('color: var(--ds-color-text-default)');
+		expect(out).toMatch(/\.card \{ background: color-mix\(in srgb, var\(--ds-color-bg-default\) 50%/);
+		// A comment above :root naming the dark scheme does not make the light theme dark.
+		expect(rebrandCss('/* same under prefers-color-scheme: dark */\n:root { --background: #ffffff; }\nbody { background: var(--background); color: #222; }', sitePalette(':root { --background: #ffffff; } body { background: var(--background); color: #222; }'), stats())).toContain('--background: var(--ds-color-bg-default)');
+		// A maroon ink is black and a rose accent is not an error; a warm paper page is white.
+		const warm = ':root { --ink: #2b1a1f; --wine: #5c1a2c; --rose: #b85566; --paper: #fbf6f0; }\nbody { background: var(--paper); color: var(--ink); }\n.btn { background: var(--wine); }\n.err { color: #dc2626; }';
+		const w = rebrandCss(warm, sitePalette(warm), stats());
+		expect(w).toContain('--ink: var(--ds-color-text-default)');
+		expect(w).toContain('--rose: var(--ds-color-bg-brand)');
+		expect(w).toContain('--paper: var(--ds-color-bg-default)');
+		expect(w).toContain('.err { color: var(--ds-color-status-danger)');
+	});
 	it('reads sizes kept in site variables through to the brand scale', () => {
 		const css = ':root { --fs-main: 15px; --radius-md: 12px; }\n.a { font-size: var(--fs-main); border-radius: var(--radius-md); animation-delay: .4s; }\n.b { border-radius: 50%; }';
 		const out = rebrandCss(css, sitePalette(css), stats());

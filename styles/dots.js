@@ -79,7 +79,7 @@
 				continue;
 			}
 			const s = getComputedStyle(child);
-			const filled = s.backgroundColor !== 'rgba(0, 0, 0, 0)' && s.backgroundColor !== 'transparent';
+			const filled = s.backgroundColor !== 'transparent' && !/,\s*0\)$/.test(s.backgroundColor);
 			if (filled || s.borderTopWidth !== '0px' || s.boxShadow !== 'none') push(box);
 		}
 		return holes;

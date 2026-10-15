@@ -132,7 +132,19 @@ export function findGlobalCss(root: string) {
 		}
 	};
 	for (const dir of ['src', 'styles', 'public', 'app']) visit(dir, 0);
-	return best?.rel;
+	if (best) return best.rel;
+	// A plain site: the stylesheet its pages link most (index.html first), wherever it lives.
+	const linked = new Map<string, number>();
+	const pages = readdirSync(root).filter((f) => /\.html?$/.test(f));
+	for (const page of pages) {
+		for (const m of readFileSync(join(root, page), 'utf8').matchAll(/<link\b[^>]*rel=["']?stylesheet[^>]*>/gi)) {
+			const href = m[0].match(/href=["']([^"']+)["']/)?.[1];
+			if (!href || /^(https?:)?\/\//.test(href)) continue;
+			const rel = href.replace(/^\.?\//, '').split(/[?#]/)[0];
+			if (existsSync(join(root, rel))) linked.set(rel, (linked.get(rel) ?? 0) + (page === 'index.html' ? 2 : 1));
+		}
+	}
+	return [...linked].sort((a, b) => b[1] - a[1])[0]?.[0];
 }
 
 /** The agent running this command, from the variables each one sets in its shell tool. Codex is checked first because

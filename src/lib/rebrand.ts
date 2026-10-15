@@ -72,10 +72,16 @@ export function sitePalette(css: string): SitePalette {
 	const resolve = (v?: string, depth = 0): RGBA | undefined => {
 		if (!v) return undefined;
 		const ref = v.match(/^var\((--[\w-]+)/)?.[1];
-		return ref && depth < 5 ? resolve(vars.get(ref), depth + 1) : parseColor(v);
+		if (ref && depth < 5) return resolve(vars.get(ref), depth + 1);
+		const triplet = v.match(/^rgba?\(\s*var\((--[\w-]+)\)/)?.[1];
+		const channels = triplet ? vars.get(triplet)?.match(/^(\d{1,3})[\s,]+(\d{1,3})[\s,]+(\d{1,3})$/) : undefined;
+		return channels ? parseColor(`rgb(${channels[1]}, ${channels[2]}, ${channels[3]})`) : parseColor(v);
 	};
 	const pick = (re: RegExp) => [...vars].find(([n, v]) => re.test(n) && resolve(v))?.[1];
-	const body = css.match(/(?:^|[}\s])body\s*\{([^}]*)\}/)?.[1] ?? '';
+	// The page's own colors: body or html, also scoped (body:has(#app)), or the root element of a page that styles
+	// itself apart from the rest of the site (#fx-root, .page-root).
+	const roots = [...css.matchAll(/(?:^|[}\s,])((?:html|body)(?:[:.#[][^{,]*)?|[#.][\w-]*(?:root|page|site|app)\b[^{,]*)\s*\{([^}]*)\}/g)].map((m) => m[2]);
+	const body = roots.find((r) => /background(?:-color)?\s*:/.test(r) && resolve(r.match(/background(?:-color)?\s*:\s*([^;]+)/)?.[1])) ?? roots[0] ?? '';
 	const bg = resolve(body.match(/background(?:-color)?\s*:\s*([^;]+)/)?.[1]) ?? resolve(pick(/^--(bg|background|surface|paper|canvas|base)$/)) ?? resolve(pick(/(bg|background|paper|canvas)/));
 	const fg = resolve(body.match(/(?:^|;|\s)color\s*:\s*([^;]+)/)?.[1]) ?? resolve(pick(/^--(ink|text|fg|foreground|body)$/)) ?? resolve(pick(/(ink|text|fg|foreground)/));
 	const lbg = bg ? hsl(bg).l : 1;
@@ -111,27 +117,39 @@ export const cssColor = (t: ColorToken | 'transparent') => (t === 'transparent' 
  * The brand token for the role a color plays on this site. A `series` key (a chart's colors, by the name they were
  * declared under) keeps each data series its own brand series color instead of turning them all brand blue.
  */
-export function colorToken(rgba: RGBA, family: Family, palette: SitePalette, series?: string): ColorToken | 'transparent' {
+// Where a red, green or amber means a state (an error, a success, a warning) rather than a site's own accent.
+const STATUS_CONTEXT = /(\bok\b|\berr\b|error|danger|invalid|destruct|delete|remove|alert|warn|caution|success|valid|positive|negative|online|offline|status|badge|toast|notice|delta|trend|increase|decrease|paid|overdue|pending|fail|pass|health|uptime|required)/i;
+
+/**
+ * The brand token for one of the site's colors, by the role it plays. `context` (the selector, variable name or code
+ * line) decides whether a red, green or amber is a state; without it, as with Tailwind palette classes, it is.
+ */
+export function colorToken(rgba: RGBA, family: Family, palette: SitePalette, series?: string, context?: string): ColorToken | 'transparent' {
 	const { h, s, l } = hsl(rgba);
 	const a = rgba[3];
 	if (a === 0) return 'transparent';
-	if (s > 0.3 && l > 0.12 && l < 0.88) {
+	// A dark color (a maroon or navy ink, a deep button) plays the part of black: the brand's text and primary action.
+	if (s > 0.3 && l > 0.28 && l < 0.88) {
 		if (series && palette.series) {
 			const seen = palette.series;
 			if (!seen.has(series)) seen.set(series, (seen.size % 4) + 1);
 			return { name: `chart-series-${seen.get(series)}`, alpha: a };
 		}
-		if (h >= 85 && h < 165) return { name: 'status-success', alpha: a };
-		if (h < 18 || h >= 345) return { name: 'status-danger', alpha: a };
-		if (h >= 18 && h < 60) return { name: 'status-warning', alpha: a };
+		const status = context === undefined || STATUS_CONTEXT.test(context);
+		if (status && h >= 85 && h < 165) return { name: 'status-success', alpha: a };
+		if (status && (h < 18 || h >= 345)) return { name: 'status-danger', alpha: a };
+		if (status && h >= 18 && h < 60) return { name: 'status-warning', alpha: a };
 		return { name: family === 'text' ? 'text-brand' : family === 'border' ? 'border-brand' : 'bg-brand', alpha: a };
 	}
 	// A pale tint of a hue (an info box, a selected row) is the brand tint; a pale status color stays its status, faint.
 	if (s > 0.3 && l >= 0.88 && family === 'surface' && a >= 0.995) {
-		if (h >= 85 && h < 165) return { name: 'status-success', alpha: 0.1 };
-		if (h < 18 || h >= 345) return { name: 'status-danger', alpha: 0.1 };
-		if (h >= 18 && h < 60) return { name: 'status-warning', alpha: 0.12 };
-		return { name: 'bg-tint', alpha: 1 };
+		const status = context === undefined || STATUS_CONTEXT.test(context);
+		if (status && h >= 85 && h < 165) return { name: 'status-success', alpha: 0.1 };
+		if (status && (h < 18 || h >= 345)) return { name: 'status-danger', alpha: 0.1 };
+		if (status && h >= 18 && h < 60) return { name: 'status-warning', alpha: 0.12 };
+		// A pale blue, or a tint marking a state (selected, active, info), is the brand tint. A site's warm paper,
+		// blush or sage is its page and panel color: the brand's white page and quiet neutral panels, read by lightness.
+		if (context === undefined || (h >= 190 && h < 265) || /(selected|active|current|info|highlight|tint|accent|primary|brand)/i.test(context)) return { name: 'bg-tint', alpha: 1 };
 	}
 	// How far this neutral sits from the site's background toward its text: 0 is the page, 1 is the main text.
 	const t = Math.max(0, Math.min(1, (l - palette.bg) / (palette.fg - palette.bg || 1)));
@@ -161,8 +179,8 @@ function onColor(rgba: RGBA, family: Family, background?: RGBA, palette?: SitePa
 }
 
 /** One color, as the CSS for the brand token it maps to. */
-export function mapColor(rgba: RGBA, family: Family, palette: SitePalette, series?: string): string {
-	return cssColor(colorToken(rgba, family, palette, series));
+export function mapColor(rgba: RGBA, family: Family, palette: SitePalette, series?: string, context?: string): string {
+	return cssColor(colorToken(rgba, family, palette, series, context));
 }
 
 const COLOR_IN_VALUE = /#[0-9a-fA-F]{3,8}\b|\b(?:rgba?|hsla?)\([^()]*\)|(?<![\w-])(?:white|black)(?![\w-])/g;
@@ -275,7 +293,9 @@ function walkCss(css: string, each: (decls: string, ctx: CssContext) => string) 
 			const prelude = css.slice(b + 1, i);
 			out += `${prelude}{`;
 			const parent = current();
-			stack.push({ mode: DARK_CONTEXT.test(prelude) ? 'dark' : LIGHT_CONTEXT.test(prelude) ? 'light' : parent.mode, selector: /^\s*@/.test(prelude) ? parent.selector : prelude.trim(), fontFace: /^\s*@font-face\b/.test(prelude) });
+			// A comment before the rule (a section banner) is not part of its selector.
+			const bare = prelude.replace(/\/\*[\s\S]*?\*\//g, '');
+			stack.push({ mode: DARK_CONTEXT.test(bare) ? 'dark' : LIGHT_CONTEXT.test(bare) ? 'light' : parent.mode, selector: /^\s*@/.test(bare) ? parent.selector : bare.trim(), fontFace: /^\s*@font-face\b/.test(bare) });
 			segStart = i + 1;
 		} else if (ch === '}') {
 			flush(i);
@@ -345,6 +365,13 @@ function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, se
 		// A size the site keeps in its own scale (font-size: var(--fs-main), border-radius: var(--radius-md)) is read
 		// through to its value, so the declaration lands on the brand's scale directly.
 		let next = !isVar && SCALED.test(p) && palette.vars ? resolveSiteVars(value, palette.vars) : value;
+		// Colors kept as channel triplets (--black: 0 0 0, used as rgb(var(--black) / 0.6)) read as the color they make.
+		if (palette.vars) next = next.replace(/\b(rgba?)\(\s*var\((--[\w-]+)\)\s*(?:[/,]\s*([\d.]+%?)\s*)?\)/g, (all, fn: string, name: string, alpha?: string) => {
+			const channels = palette.vars?.get(name)?.match(/^(\d{1,3})[\s,]+(\d{1,3})[\s,]+(\d{1,3})$/);
+			if (!channels) return all;
+			const a = alpha ? (alpha.endsWith('%') ? Number(alpha.slice(0, -1)) / 100 : Number(alpha)) : 1;
+			return `rgba(${channels[1]}, ${channels[2]}, ${channels[3]}, ${a})`;
+		});
 		if (!/var\(--ds-/.test(next) || /,/.test(next)) {
 			const series = SERIES_NAME.test(isVar ? p : selector) ? (isVar ? p : selector) : undefined;
 			const replaced = next.replace(COLOR_IN_VALUE, (c) => {
@@ -354,7 +381,7 @@ function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, se
 				const family = (isVar && palette.usage?.get(p)) || familyOf(prop);
 				if (family === 'surface' && rgba[3] >= 0.3 && rgba[3] < 0.995 && hsl(rgba).l < 0.2 && SCRIM.test(selector)) return 'var(--ds-color-bg-scrim)';
 				const on = isVar ? undefined : onColor(rgba, family, background, pal);
-				return on ? cssColor(on) : mapColor(rgba, family, pal, series);
+				return on ? cssColor(on) : mapColor(rgba, family, pal, series, isVar ? p : `${selector} ${p}`);
 			});
 			next = replaced;
 		}
@@ -572,7 +599,7 @@ export function rebrandLiterals(text: string, palette: SitePalette, stats: Rebra
 				const rgba = parseColor(value);
 				if (!rgba) return all;
 				stats.colors++;
-				const mapped = colorToken(rgba, lineFamily(line), palette, seriesKey ? `${seriesKey}:${n++}` : undefined);
+				const mapped = colorToken(rgba, lineFamily(line), palette, seriesKey ? `${seriesKey}:${n++}` : undefined, line);
 				return `${q}${hex(mapped)}${q}`;
 			});
 		})

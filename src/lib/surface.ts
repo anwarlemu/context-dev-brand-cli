@@ -9,12 +9,12 @@ import type { Surface } from './recipes.js';
 export type InterfaceProfile = { surface: Surface; product: number; marketing: number; reasons: string[]; screens: string[]; mixed: boolean };
 
 const SIGNALS: { surface: Surface; label: string; path?: RegExp; text?: RegExp; weight: number }[] = [
-	{ surface: 'product', label: 'dashboard, admin or settings routes', path: /(^|\/)(\(?dash(board)?\)?|admin|console|settings|account|billing|workspace|\(app\)|portal)(\/|$)/i, weight: 3 },
+	{ surface: 'product', label: 'dashboard, admin or settings routes', path: /(^|\/)(\(?dash(board)?\)?|admin|console|settings|account|billing|workspace|\((app|shell|main|authenticated|protected|private)\)|portal)(\/|$)/i, weight: 3 },
 	{ surface: 'product', label: 'a sign-in screen', path: /(^|\/)(login|signin|sign-in|auth)(\/|\.|$)/i, weight: 2 },
 	{ surface: 'product', label: 'data tables', text: /<(table|DataGrid|DataTable|Table)\b|\bTable\(|\bLazyColumn\b|\bUITableView\b|\bList\s*\{/, weight: 2 },
-	{ surface: 'product', label: 'charts', text: /from ['"](recharts|chart\.js|react-chartjs-2|d3|@visx|apexcharts|echarts|@nivo|victory|lightweight-charts)|\b(LineChart|BarChart|AreaChart|Sparkline|TrendChart)\b|<polyline\b/, weight: 3 },
-	{ surface: 'product', label: 'a sidebar, topbar or tabbed shell', text: /\b(sidebar|side-nav|topbar|app-shell|TabView|NavigationView|NavigationSplitView|BottomNavigation|Scaffold)\b/i, weight: 2 },
-	{ surface: 'product', label: 'filters, periods and refresh controls', text: /\b(filter|period|date-range|refresh|pagination|paginate)\b/i, weight: 1 },
+	{ surface: 'product', label: 'charts', text: /from ['"](recharts|chart\.js|react-chartjs-2|d3|@visx|apexcharts|echarts|@nivo|victory|lightweight-charts)|\b(LineChart|BarChart|AreaChart|Sparkline|TrendChart)\b/, weight: 3 },
+	{ surface: 'product', label: 'an app shell (sidebar layout, tab view)', text: /\b(app-shell|AppShell|SidebarProvider|SidebarInset|dashboard-layout|TabView|NavigationView|NavigationSplitView|BottomNavigation|Scaffold)\b/, weight: 2 },
+	{ surface: 'product', label: 'filters, periods and refresh controls', text: /\b(date-range|DateRange|pagination|paginate|Pagination)\b|<(select|input)[^>]*\b(filter|period)\b/i, weight: 1 },
 	{ surface: 'product', label: 'metrics and status badges', text: /\b(metric|kpi|delta|status-badge|uptime|usage)\b/i, weight: 1 },
 	{ surface: 'product', label: 'a native app (SwiftUI, Compose, Flutter, Android)', text: /\bimport SwiftUI\b|androidx\.compose|package:flutter\/|\bimport UIKit\b|<LinearLayout\b|<ConstraintLayout\b/, weight: 5 },
 	{ surface: 'marketing', label: 'a hero section', text: /\b(hero)\b/i, weight: 3 },
@@ -22,9 +22,12 @@ const SIGNALS: { surface: Surface; label: string; path?: RegExp; text?: RegExp; 
 	{ surface: 'marketing', label: 'calls to action (get started, book a demo, sign up)', text: /(get started|book a demo|start free|sign up free|try it free|request a demo|join the waitlist)/i, weight: 2 },
 	{ surface: 'marketing', label: 'blog, changelog or docs pages', path: /(^|\/)(blog|changelog|posts|articles|docs|legal|privacy|terms)(\/|$)/i, weight: 2 },
 	{ surface: 'marketing', label: 'a site footer with link columns', text: /<footer\b/i, weight: 1 },
+	{ surface: 'marketing', label: 'about, contact, careers or locations pages', path: /(^|\/)(about|contact|careers|locations|services|press|menu|wholesale|story)(\/|\.|$)/i, weight: 2 },
 ];
 
 const SCREEN = /(^|\/)(app\/.*page\.[jt]sx?|pages\/[^_].*\.(tsx|jsx|astro|vue|svelte|md)|src\/routes\/.*\+page\.svelte|.*(Screen|View|Page|Activity|Fragment)\.(swift|kt|dart|tsx|jsx|vue)|.*\.html)$/;
+
+const ROUTE = /(^|\/)(app|pages|routes|views|screens|templates)\/.*\.(tsx|jsx|ts|js|astro|vue|svelte|mdx?|html|erb|php|hbs|liquid|njk|twig|cshtml)$|^[^/]+\.html?$|(Screen|View|Page|Activity|Fragment)\.(swift|kt|dart)$/;
 
 export function profileInterface(root: string, files: string[]): InterfaceProfile {
 	const score = { product: 0, marketing: 0 };
@@ -35,7 +38,8 @@ export function profileInterface(root: string, files: string[]): InterfaceProfil
 	for (const signal of SIGNALS) {
 		let n = 0;
 		for (const rel of sample) {
-			if (signal.path?.test(rel)) {
+			// Routes say what a project is; a notes folder or a library file named "changelog" does not.
+			if (signal.path?.test(rel) && ROUTE.test(rel)) {
 				n++;
 				routes[signal.surface]++;
 			}

@@ -1,6 +1,14 @@
 /* The brand's page frame, written by `apply`. Hairlines run down both edges of the content column for the whole
    page, top-level sections are divided by a full-bleed rule, and a solid node sits where a rule crosses a column
    edge. It only draws lines: no element moves. Remove this import to drop the frame. */
+/* The brand's site renders its rem scale at 90% from 43.2rem up, so type, spacing and controls keep its proportions
+   (a 14px token reads 12.6px, as on the site). Phones keep the full size. */
+@media (min-width: 43.2rem) {
+	html {
+		font-size: 90%;
+	}
+}
+
 :root {
 	--ds-frame-column: min(calc(100% - 2 * var(--ds-space-6)), var(--ds-layout-content-width));
 }
