@@ -148,7 +148,8 @@ export function stop(root: string, input: HookInput): HookResult {
 	}
 	const touchesTemplates = changed.filter((f) => matchesAny(f, config.pageGlobs));
 	const reviewNudged = state.entry.injected.includes('review-nudge');
-	if (touchesTemplates.length && !reviewedSince(root, touchesTemplates) && !reviewNudged) {
+	// Review scores pages against the brand's own page rubric, so it is for apps built from the templates, not restyled sites.
+	if (brandRules(root) === 'all' && touchesTemplates.length && !reviewedSince(root, touchesTemplates) && !reviewNudged) {
 		state.entry.injected.push('review-nudge');
 		state.save();
 		return { json: { decision: 'block', reason: `${bin} check passed. Done is not good: you changed ${touchesTemplates.join(', ')}. Run \`${bin} review ${touchesTemplates[0]}\` and address the punch list before handing over. If review cannot run (no ANTHROPIC_API_KEY or no dev server), say so in your summary.` } };

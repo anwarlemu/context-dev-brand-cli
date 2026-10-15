@@ -2,7 +2,7 @@ import type { Command } from 'commander';
 import { spawn, type ChildProcess } from 'node:child_process';
 import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { loadConfig } from '../lib/config.js';
+import { brandRules, loadConfig } from '../lib/config.js';
 import { gitDiff } from '../lib/git.js';
 import { color, emit } from '../lib/output.js';
 import { dsDir, findProjectRoot } from '../lib/paths.js';
@@ -55,6 +55,12 @@ export function registerReview(program: Command) {
 		.action(async (target: string | undefined, opts) => {
 			const root = findProjectRoot();
 			const config = loadConfig();
+			// The rubric judges layout, sections and copy against the brand's own pages. A restyled site keeps its own, so
+			// there is nothing for review to judge; `check` covers its styling.
+			if (brandRules(root) === 'styles') {
+				emit(opts, { skipped: true, reason: 'styling-only project' }, () => `review is for pages built from the ${config.brand} templates. This project is styling only (its own copy and structure stay), so \`${config.cli} check\` covers it.`);
+				return;
+			}
 			const threshold = Number(opts.threshold ?? config.review.threshold);
 			const viewports = (opts.viewports ? String(opts.viewports).split(',') : config.review.viewports) as ViewportName[];
 			let url: string;
