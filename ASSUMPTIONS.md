@@ -51,3 +51,14 @@ Everything here is in force in the harness today. Each line says where it lives,
 30. Copy: the dashboard uses Title Case card titles ("Credits Used Today"). Product copy follows `voice.md` sentence case; product names keep their capitals.
 31. Product figures are Rethink Sans with tabular numbers, as in the dashboard. Doto stays for the credits glyph and dot charts.
 32. The product items were ported by hand, not by a script, because the dashboard's classes needed mapping to tokens. When the dashboard changes, re-port the affected item and bump its version.
+
+## Recipes (`styles/recipes.json`, how each kind of element is styled)
+
+Learned from brand-dev-webapp `agencidev/redesign-dashboard-and-website` (marketing) and context-dashboard `c0ddf7a` (product). Values the sources disagree on, and values with no token yet, are in `styles/recipes.notes.json`.
+
+33. Heading weight: the tokens set h1 to h5 at 500; the Figma guide (`AGD-DESIGN.md`, "Regular 400") and the live site (`font-normal`) use 400. Recipes reference `var(--ds-text-hN-weight)`, so changing that one token settles it. Brand owner to choose.
+34. Headline tracking: the site sets -0.035em on redesigned headlines; the brand guide says 0 and the check rejects tracking. Recipes use 0.
+35. Card ring: the site draws it as a 10% blue wrapper with 8px padding and an 8% black hairline on the card; the registry `card` uses a solid tint, 4px padding and a 12px outer radius. Recipes follow the site; the registry card should be aligned.
+36. Buttons: recipes use the brand pill and the system's hover `#191919`. The site also has a header-only `#222` button with hover `#333` and legacy `#268bff` buttons; those are not recipes.
+37. Motion: hover and color transitions use ease-out at the 150 to 250ms tokens. Both sources used ease-in-out for color, and the site's header morph (500ms) and dropdown (300 to 400ms) run longer; recipes hold them to the animation rules.
+38. Size: the site renders rem at 90% from 43.2rem and the dashboard uses a 15px root, so recipes in CSS read about 6 to 10% larger than the live pages at nominal token sizes. The Tailwind forms match under `.ds-product`.

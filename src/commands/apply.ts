@@ -1,7 +1,9 @@
 import type { Command } from 'commander';
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { formatFinding, runCheck } from '../check/engine.js';
+import { collectFiles, formatFinding, runCheck } from '../check/engine.js';
+import { loadCheckConfig } from '../lib/config.js';
+import { detectComponents, surfaceFor } from '../lib/recipes.js';
 import { loadConfig } from '../lib/config.js';
 import { color, emit } from '../lib/output.js';
 import { findProjectRoot } from '../lib/paths.js';
@@ -162,10 +164,17 @@ export function registerApply(program: Command) {
 			}
 			const fixed = opts.dryRun ? { fixed: 0 } : runCheck({ projectRoot: root, useBaseline: false, fix: true, styleOnly: true });
 			const left = runCheck({ projectRoot: root, useBaseline: false, styleOnly: true });
+			// Every element with a recipe, so each button, card, field and nav gets the brand's styling for its situation.
+			const components = collectFiles(root, loadCheckConfig(root)).flatMap((rel) => {
+				const surface = surfaceFor(root, rel);
+				return detectComponents(rel, readFileSync(join(root, rel), 'utf8'), surface).map((c) => ({ file: rel, ...c }));
+			});
+			const byRecipe = new Map<string, number>();
+			for (const c of components) byRecipe.set(c.recipe, (byRecipe.get(c.recipe) ?? 0) + 1);
 			const byFile = new Map<string, number>();
 			for (const f of left.findings) if (f.severity === 'error') byFile.set(f.file, (byFile.get(f.file) ?? 0) + 1);
 			const files = [...byFile].sort((a, b) => b[1] - a[1]);
-			emit(opts, { stylesheets: sheets, written, mappings, skipped, fontFamilies, fixed: fixed.fixed, remaining: Object.fromEntries(files) }, () =>
+			emit(opts, { stylesheets: sheets, written, mappings, skipped, fontFamilies, fixed: fixed.fixed, remaining: Object.fromEntries(files), components }, () =>
 				[
 					opts.dryRun ? 'Dry run, nothing written.' : 'Applied the brand to the site styles.',
 					'',
@@ -182,6 +191,15 @@ export function registerApply(program: Command) {
 					...(files.length
 						? [...files.slice(0, 25).map(([f, n]) => `   ${String(n).padStart(4)}  ${f}`), files.length > 25 ? `   ... and ${files.length - 25} more` : '', `   Work through them: \`${cli} apply --list <file>\` shows each value and the token to use (\`${cli} tokens --search <term>\` to look one up). Replace the value with var(--ds-*); do not add overrides.`].filter(Boolean)
 						: ['   nothing; every style uses the tokens.']),
+					'',
+					color.bold(`5. Components to restyle with their recipe (${components.length} elements, ${byRecipe.size} recipes):`),
+					...(components.length
+						? [
+								...components.slice(0, 40).map((c) => `   ${c.file}:${c.line}  ${c.label}  ->  ${c.recipe}`),
+								components.length > 40 ? `   ... and ${components.length - 40} more (\`${cli} style --detect <file>\` lists a file's)` : '',
+								`   For each recipe: \`${cli} style <recipe>\` prints the brand's declarations for that element and situation (CSS and Tailwind), states included. Put them on the element's existing rule or classes; keep the element, its content and its place.`,
+							].filter(Boolean)
+						: ['   none recognized.']),
 					'',
 					color.bold('Change style values only.') + ' Keep every word, heading, link, image, element, section and layout exactly as it is. Do not add templates, sections or components, and do not rewrite copy.',
 					`Then: open the site and compare it with before (same content, new look), run \`${cli} apply --list\` until it is empty, and commit.`,

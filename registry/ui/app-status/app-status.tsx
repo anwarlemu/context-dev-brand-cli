@@ -5,7 +5,7 @@ import { cx } from '@/components/ds/ui/cx';
 const TONES = {
 	success: { text: 'text-success', dot: 'bg-success', halo: 'bg-success/10' },
 	running: { text: 'text-accent', dot: 'bg-brand', halo: 'bg-blue-10' },
-	neutral: { text: 'text-fg-subtle', dot: 'bg-neutral-30', halo: 'bg-subtle' },
+	neutral: { text: 'text-fg-subtle', dot: 'bg-neutral-30', halo: 'bg-surface-subtle' },
 	warning: { text: 'text-warning', dot: 'bg-alert', halo: 'bg-alert-soft/40' },
 	danger: { text: 'text-danger', dot: 'bg-alert-strong', halo: 'bg-alert-soft/40' },
 } as const;

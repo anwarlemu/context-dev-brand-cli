@@ -13,6 +13,7 @@ import { checkChanged } from '../src/commands/watch.js';
 import { overrideKey, writeApprovals } from '../src/lib/state.js';
 import { gitRemote, installedCommit } from '../src/lib/source.js';
 import { colorRole, remapVariables } from '../src/commands/apply.js';
+import { detectComponents, findRecipe, loadRecipes, recipeCss } from '../src/lib/recipes.js';
 import { runningHarness } from '../src/commands/init.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
@@ -306,6 +307,28 @@ describe('styling only', () => {
 	});
 });
 
+describe('recipes', () => {
+	it('cover both surfaces and render states, hover gated to real pointers', () => {
+		const recipes = loadRecipes();
+		expect(recipes.filter((r) => r.surface === 'marketing').length).toBeGreaterThan(40);
+		expect(recipes.filter((r) => r.surface === 'product').length).toBeGreaterThan(40);
+		const css = recipeCss(findRecipe('button-primary')!, '.btn');
+		expect(css).toContain('.btn {');
+		expect(css).toMatch(/@media \(hover: hover\) and \(pointer: fine\) \{\n  \.btn:hover/);
+	});
+	it('match marketing elements by what they are, not by utility classes', () => {
+		const page = '<section className="hero"><h1 className="text-[52px] font-bold">Hi</h1><p className="text-lg">Sub</p><a href="/x" className="rounded bg-orange-600 px-5 py-3">Go</a><a href="/y" className="rounded border px-5 py-3">More</a></section><nav><a href="/a">A</a></nav><footer><a href="/b">B</a></footer><div className="pricing-card featured">P</div>';
+		const kinds = detectComponents('app/page.tsx', page, 'marketing').map((h) => h.recipe);
+		expect(kinds).toEqual(['section', 'text-display', 'text-lede', 'button-primary', 'button-secondary', 'header', 'link-nav', 'footer', 'link-footer', 'card-pricing-featured']);
+	});
+	it('match product elements to the dashboard recipes, and CSS selectors too', () => {
+		const page = '<aside className="sidebar"><a href="/">Overview</a></aside><button className="btn btn-outline">Docs</button><table><thead><tr><th>N</th></tr></thead><tbody><tr><td>x</td></tr></tbody></table>';
+		expect(detectComponents('app/dashboard/page.tsx', page, 'product').map((h) => h.recipe)).toEqual(['app-sidebar', 'app-sidebar-item', 'app-button-outline', 'app-table', 'app-table-header-cell', 'app-table-row', 'app-table-cell']);
+		const css = 'body { margin: 0; }\nnav a { color: red; }\n.btn-secondary { border: 1px solid; }\n.btn:hover { opacity: 1; }\nh2 { font-size: 2rem; }';
+		expect(detectComponents('styles.css', css, 'marketing').map((h) => h.recipe)).toEqual(['page-background', 'link-nav', 'button-secondary', 'text-h2']);
+	});
+});
+
 describe('running harness', () => {
 	it('tells the agents apart, Codex first', () => {
 		expect(runningHarness({ CLAUDECODE: '1' })).toBe('claude-code');
@@ -334,7 +357,7 @@ describe('source', () => {
 
 describe('cli', () => {
 	it('every command supports --help', () => {
-		for (const c of ['init', 'info', 'resolve', 'scaffold', 'docs', 'add', 'tokens', 'check', 'review', 'diff', 'hook', 'watch', 'approve', 'update', 'apply']) {
+		for (const c of ['init', 'info', 'resolve', 'scaffold', 'docs', 'add', 'tokens', 'check', 'review', 'diff', 'hook', 'watch', 'approve', 'update', 'apply', 'style']) {
 			expect(spawnSync(process.execPath, [join(__dirname, '..', 'bin.js'), c, '--help'], { encoding: 'utf8' }).status).toBe(0);
 		}
 	});

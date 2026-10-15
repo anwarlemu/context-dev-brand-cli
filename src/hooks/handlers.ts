@@ -11,6 +11,7 @@ import { matchesAny } from '../lib/glob.js';
 import { detectProject, supportsComponents } from '../lib/project.js';
 import { dsDir } from '../lib/paths.js';
 import { findItem, itemByImport, type RegistryItem, renderDocs } from '../lib/registry.js';
+import { detectComponents, findRecipe, renderRecipe, surfaceFor } from '../lib/recipes.js';
 import { updateAvailable } from '../lib/source.js';
 import { readInstalled, sessionState } from '../lib/state.js';
 import { type HookInput, promptOf, proposedWrites, sessionIdOf } from './payload.js';
@@ -27,6 +28,22 @@ function injectDocs(root: string, sessionId: string, items: RegistryItem[], reas
 	state.entry.injected.push(...fresh.map((i) => i.id));
 	state.save();
 	return [`${loadConfig().brand} design system: docs for ${fresh.map((i) => i.id).join(', ')} (${reason}). Follow them.`, ...fresh.map((i) => `\n--- ${i.id} ---\n${renderDocs(i, installed[i.id]?.version)}`)].join('\n');
+}
+
+const MAX_RECIPES_PER_INJECTION = 3;
+
+/** The recipes for the elements a write touches (its buttons, cards, fields...), each shown once per session. */
+function injectRecipes(root: string, sessionId: string, rel: string, text: string) {
+	const ids = [...new Set(detectComponents(rel, text, surfaceFor(root, rel)).map((c) => c.recipe))];
+	if (!ids.length) return '';
+	const state = sessionState(root, sessionId);
+	const fresh = ids.filter((id) => !state.entry.injected.includes(`recipe:${id}`)).slice(0, MAX_RECIPES_PER_INJECTION);
+	if (!fresh.length) return '';
+	state.entry.injected.push(...fresh.map((id) => `recipe:${id}`));
+	state.save();
+	const recipes = fresh.map((id) => findRecipe(id)).filter((r) => !!r);
+	const format = /\.(tsx|jsx)$/.test(rel) && (detectProject(root).tailwindMajor ?? 0) >= 4 ? 'tailwind' : 'css';
+	return [`${loadConfig().brand} styling for the elements in ${rel}. Style each one this way; keep its content and structure. (\`${loadConfig().cli} style <id>\` for any other element.)`, ...recipes.map((r) => `\n--- ${r.id} ---\n${renderRecipe(r, { format })}`)].join('\n');
 }
 
 export function sessionStart(root: string, input: HookInput = {}): HookResult {
@@ -91,6 +108,7 @@ export function preToolUse(root: string, input: HookInput): HookResult {
 		const items = file.imports.map((i) => itemByImport(i.source)).filter((i): i is RegistryItem => !!i);
 		const ordered = [...items.filter((i) => i.type === 'template'), ...items.filter((i) => i.type === 'block'), ...items.filter((i) => i.type === 'ui')];
 		const docs = injectDocs(root, sessionIdOf(input), ordered, `imported in ${write.relPath}`);
+		notes.push(injectRecipes(root, sessionIdOf(input), write.relPath, write.after));
 		const newOverrides = newFindings(before.overrides, after.overrides);
 		notes.push(docs, newOverrides.length ? `ds-override recorded in ${write.relPath}: ${newOverrides.map((o) => `${o.rule} (${o.overridden})`).join('; ')}. Report it in your summary.` : '');
 	}

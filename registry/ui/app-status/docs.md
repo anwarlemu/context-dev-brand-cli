@@ -2,7 +2,7 @@
 name: app-status
 type: ui
 surface: product
-version: 1.0.0
+version: 1.0.1
 use_for: The state of a job, monitor, key or request. AppStatus draws it as a dot, a mono label, a code pill or a haloed dot; AppSpinner and AppProgressBar show work under way.
 never:
   - Colored badge pills with a fill; status is a dot or colored text, never a filled chip

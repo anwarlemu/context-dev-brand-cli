@@ -6,7 +6,7 @@
 - Add items with `{{bin}} add <name>`. Do not hand-write anything that exists in the registry.
 - Product screens (dashboard, settings, playground) use only `app-*` items and templates; marketing pages never do.
 - Only registry blocks may appear as sections. Only listed variants may be used.
-- No raw color, spacing, radius, font, or motion values. Use `{{bin}} tokens <path>`.
+- No raw color, spacing, radius, font, or motion values. Use `{{bin}} tokens <path>`. Elements outside registry items follow their recipe: `{{bin}} style <id>` (`{{bin}} style` lists them).
 - Doto is only for figures (stats, counts, step numbers, chart values) via `<Stat>`, `<CreditsDotNumber>` or `font-data`. Never for words.
 - Copy follows voice.md. Word limits apply to headlines, subheads, buttons.
 - `{{bin}} check` runs automatically and will block you. Fix every error, do not work around it.

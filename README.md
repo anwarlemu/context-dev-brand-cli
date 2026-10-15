@@ -21,6 +21,12 @@ else: copy, content, markup, layout and page structure stay exactly as they are.
   variables are re-pointed at the brand tokens, so every page changes at once; the brand typefaces
   are loaded; values with an exact token are replaced; and every value left is listed by file, with
   the token to use, for the agent to finish.
+- `style` knows how the brand styles each kind of element in each situation: 155 recipes learned
+  from the brand's own site and dashboard (primary button, button on blue, clickable card, pricing
+  card, input, nav link, footer, table row, sidebar item, menu, dialog...). `apply` lists every
+  element of the site with its recipe, `style <recipe>` prints the declarations (CSS and Tailwind,
+  hover, focus and disabled included), and the hooks show an agent the recipe for each element it
+  edits. Recipes live in `styles/recipes.json`; open questions in `ASSUMPTIONS.md` 33 to 38.
 - From then on, writes with raw values (a hex color, a 13px gap, a stray font) are blocked by the
   hooks, the pre-commit hook and CI, and the agent is told which token to use instead.
 - Existing sites run only the style rules (`rules: styles` in `.ds/config.json`). The copy, section
@@ -175,6 +181,7 @@ All commands take `--json` and `--help`.
 | Command | |
 |---|---|
 | `init [--mode new\|scoped] [--harness ...]` | Install into a project |
+| `style [recipe] [--detect <files>] [--for <selector>] [--surface marketing\|product]` | How the brand styles a kind of element per situation; `--detect` matches a file's elements to recipes |
 | `apply [--dry-run] [--list [paths]]` | Restyle the existing site with the brand (styling only), then list the style values left |
 | `info` | Framework, tokens, installed items and drift, hooks, baseline |
 | `resolve "<task>"` | Task to template, by lookup against `intents.json` |

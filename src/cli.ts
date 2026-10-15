@@ -12,6 +12,7 @@ import { registerInit } from './commands/init.js';
 import { registerResolve } from './commands/resolve.js';
 import { registerReview } from './commands/review.js';
 import { registerScaffold } from './commands/scaffold.js';
+import { registerStyle } from './commands/style.js';
 import { registerTokens } from './commands/tokens.js';
 import { registerUpdate } from './commands/update.js';
 import { registerWatch } from './commands/watch.js';
@@ -30,6 +31,7 @@ const program = new Command()
 
 registerInit(program);
 registerApply(program);
+registerStyle(program);
 registerInfo(program);
 registerResolve(program);
 registerScaffold(program);
@@ -58,6 +60,8 @@ if (process.argv.length <= 2) {
 			`  ${c} apply             restyle the existing site with the brand: colors, type, spacing and so on.`,
 			'                                  Styling only; copy, content and structure stay as they are.',
 			`  ${c} apply --list      the style values still off-brand, with the token for each`,
+			`  ${c} style <element>   how the brand styles a kind of element: button-primary, card-clickable,`,
+			'                                  app-table-row... (`style` alone lists them; --detect <file> matches a file)',
 			`  ${c} check             what is off-brand right now (--no-baseline includes code from before init)`,
 			`  ${c} tokens --search   find the token for a value: tokens --search blue`,
 			`  ${c} resolve "<task>"  new React + Tailwind 4 apps: which page template to start from`,
