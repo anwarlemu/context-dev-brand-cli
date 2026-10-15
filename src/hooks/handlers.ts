@@ -43,7 +43,7 @@ function injectRecipes(root: string, sessionId: string, rel: string, text: strin
 	state.save();
 	const recipes = fresh.map((id) => findRecipe(id)).filter((r) => !!r);
 	const format = /\.(tsx|jsx)$/.test(rel) && (detectProject(root).tailwindMajor ?? 0) >= 4 ? 'tailwind' : 'css';
-	return [`${loadConfig().brand} styling for the elements in ${rel}. Style each one this way; keep its content and structure. (\`${loadConfig().cli} style <id>\` for any other element.)`, ...recipes.map((r) => `\n--- ${r.id} ---\n${renderRecipe(r, { format })}`)].join('\n');
+	return [`${loadConfig().brand} styling for the elements in ${rel}. Style each one this way; keep its content and the elements as they are. (\`${loadConfig().cli} style <id>\` for any other element.)`, ...recipes.map((r) => `\n--- ${r.id} ---\n${renderRecipe(r, { format })}`)].join('\n');
 }
 
 export function sessionStart(root: string, input: HookInput = {}): HookResult {
@@ -63,7 +63,7 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 		`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id.split('/').pop()}@${i.installed}${i.drift === 'behind' ? '*' : ''}`).join(', ') : 'none yet'}.`,
 		info.installed.some((i) => i.drift === 'behind') ? `* behind the registry. Run \`${bin} diff\`.` : '',
 		update ? `A newer design system is on ${update.ref} (${update.installed.slice(0, 7)} -> ${update.latest.slice(0, 7)}). Run \`${bin} update\` first and commit what it changes.` : '',
-		brandRules(root) === 'styles' ? `Styling only: this site keeps its own copy, content and structure. Change only style values, using var(--ds-*) tokens (\`${bin} tokens --search <term>\`). To apply the brand when asked: \`${bin} apply\`.` : supportsComponents(info.project) ? `Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.` : `Components and templates need React with Tailwind 4, which this project does not use: style with var(--ds-*) tokens (\`${bin} tokens --search <term>\`).`,
+		brandRules(root) === 'styles' ? `Styling only: this site keeps its own copy and elements; how they look follows the brand (var(--ds-*) tokens, \`${bin} style <component>\` recipes). To apply the brand when asked: \`${bin} apply\`.` : supportsComponents(info.project) ? `Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.` : `Components and templates need React with Tailwind 4, which this project does not use: style with var(--ds-*) tokens (\`${bin} tokens --search <term>\`).`,
 		`Writes are checked before they reach disk. \`${bin} check\` must pass before you finish.`,
 	].filter(Boolean);
 	return { stdout: lines.slice(0, 15).join('\n') };

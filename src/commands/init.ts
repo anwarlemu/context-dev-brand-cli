@@ -164,7 +164,7 @@ function nextSteps(harnesses: string[], dry: boolean, full: boolean) {
 	else if (!current && harnesses.includes('codex')) lines.push('  Codex users trust the hooks once with /hooks in Codex.');
 	if (full) lines.push(`  From now on: \`${cli} resolve "<task>"\` before UI work; \`${cli} update\` for design system changes.`);
 	else {
-		lines.push(`  Styling only: the design system changes how this site looks, never its copy, content or structure.`);
+		lines.push(`  Styling only: the design system changes how this site looks, never its copy or which elements it has.`);
 		lines.push(`  The brand is installed, not applied: pages look the same until \`${cli} apply\` runs. It restyles every page, so run it only when the user asks to apply the brand.`);
 		lines.push(`  From now on: no raw values in styles (\`${cli} tokens --search <term>\` finds the token); \`${cli} update\` for design system changes.`);
 	}

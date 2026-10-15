@@ -35,7 +35,8 @@ export function walkFiles(root: string, include: string[], exclude: string[]): s
 	const results: string[] = [];
 	const visit = (dir: string) => {
 		for (const entry of readdirSync(dir, { withFileTypes: true })) {
-			if (ALWAYS_SKIP.has(entry.name)) continue;
+			// Hidden folders (.agents, .claude, .github...) hold tooling, never the site.
+			if (ALWAYS_SKIP.has(entry.name) || entry.name.startsWith('.')) continue;
 			const abs = join(dir, entry.name);
 			const rel = relative(root, abs).split(sep).join('/');
 			if (entry.isDirectory()) {

@@ -84,7 +84,7 @@ export type ComponentHit = { line: number; label: string; kind: string; recipe: 
 // Detection works in two steps: what kind of element this is (from its tag, its semantic class names and component
 // name, its role, where it sits, and visual cues such as a link drawn as a button), then which recipe that kind uses on
 // this surface. Utility classes (Tailwind's text-lg, px-4) are cues, never names, so they cannot pass as a recipe.
-type Element = { tag: string; names: string; utilities: string; attrs: string; context: string[] };
+type Element = { tag: string; names: string; heads?: string; utilities: string; attrs: string; context: string[] };
 
 const KIND_RECIPES: Record<Surface, Record<string, string>> = {
 	marketing: {
@@ -116,7 +116,9 @@ function splitClasses(classes: string[]) {
 	const names: string[] = [];
 	const utilities: string[] = [];
 	for (const c of classes) (UTILITY.test(c) ? utilities : names).push(c.toLowerCase());
-	return { names: names.join(' ').replace(/[_-]+/g, ' '), utilities: utilities.join(' ') };
+	// The last word of a class name says what the part is: plan-card is a card, plan-badge a badge, faq-grid a layout.
+	const heads = names.map((n) => n.split(/[_-]+/).filter((w) => !/^(is|has)$/.test(w)).pop() ?? '').join(' ');
+	return { names: names.join(' ').replace(/[_-]+/g, ' '), heads, utilities: utilities.join(' ') };
 }
 
 function buttonKind(el: Element) {
@@ -162,8 +164,8 @@ export function kindOf(el: Element): string | undefined {
 		case 'h6':
 			return 'h5';
 		case 'p':
-			if (has(/\b(lede|lead|intro|subtitle|subhead|subheading|tagline|summary|description)\b/) || (el.context.includes('hero') && !has(/\b(small|caption)\b/))) return 'lede';
 			if (has(/\b(eyebrow|overline|kicker)\b/)) return 'eyebrow';
+			if (has(/\b(lede|lead|intro|subtitle|subhead|subheading|tagline|summary|description)\b/) || (el.context.includes('hero') && !has(/\b(small|caption)\b/))) return 'lede';
 			if (has(/\b(error|invalid)\b/)) return 'field-error';
 			if (has(/\b(help|hint)\b/)) return 'help-text';
 			if (/(^|\s)text-(lg|xl|2xl)\b/.test(el.utilities)) return 'lede';
@@ -195,10 +197,11 @@ export function kindOf(el: Element): string | undefined {
 		case 'td':
 			return 'table-cell';
 		case 'nav':
-			if (has(/\bbreadcrumb/)) return 'breadcrumb';
-			if (has(/\bpagination\b/)) return 'pagination';
+			if (has(/\b(breadcrumbs?|crumbs?)\b/)) return 'breadcrumb';
+			if (has(/\b(pagination|pager)\b/)) return 'pagination';
 			return el.context.includes('header') ? undefined : has(/\b(sidebar|side nav|sidenav)\b/) || el.context.includes('aside') ? 'sidebar' : 'nav';
 		case 'header':
+			if (has(/\bhero\b/)) return 'section';
 			return el.context.includes('header') || el.context.includes('article') ? undefined : 'header';
 		case 'footer':
 			return el.context.includes('article') ? undefined : 'footer';
@@ -213,25 +216,25 @@ export function kindOf(el: Element): string | undefined {
 		case 'progress':
 			return 'progress';
 	}
-	if (has(/\b(pricing|plan|tier)\b/)) return has(/\b(featured|popular|highlight|highlighted|recommended)\b/) ? 'card-pricing-featured' : 'card-pricing';
-	if (has(/\bhero\b/)) return el.tag === 'section' ? 'section' : undefined;
-	if (has(/\b(card|tile|panel)\b/)) return has(/\bfeature/) ? 'card-feature' : 'card';
-	if (has(/\b(badge|chip|tag|pill)\b/)) return 'badge';
-	if (has(/\bstatus\b/)) return 'status';
-	if (has(/\b(banner|callout|alert|notice)\b/)) return 'banner';
-	if (has(/\b(toast|snackbar)\b/)) return 'toast';
-	if (has(/\b(testimonial|quote)\b/)) return 'testimonial';
-	if (has(/\b(faq|accordion)\b/)) return 'faq';
-	if (has(/\bempty\b/)) return 'empty-state';
-	if (has(/\b(stat|metric|kpi)\b/)) return 'stat';
-	if (has(/\bskeleton\b/)) return 'skeleton';
-	if (has(/\b(dropdown|popover|menu)\b/)) return 'menu-panel';
-	if (has(/\bdrawer\b/)) return 'drawer';
-	if (has(/\bbreadcrumb/)) return 'breadcrumb';
+	const head = (re: RegExp) => re.test(el.heads ?? n);
+	if (head(/\b(card|plan|tier|tile|box)\b/) && has(/\b(plan|tier|pricing)\b/)) return has(/\b(featured|popular|highlight|highlighted|recommended)\b/) ? 'card-pricing-featured' : 'card-pricing';
+	if (head(/\b(card|tile|panel)\b/)) return has(/\bfeature/) ? 'card-feature' : 'card';
+	if (head(/\b(badge|chip|tag|pill)\b/)) return 'badge';
+	if (head(/\bstatus\b/)) return 'status';
+	if (head(/\b(banner|callout|alert|notice)\b/)) return 'banner';
+	if (head(/\b(toast|snackbar)\b/)) return 'toast';
+	if (head(/\b(testimonial|quote)\b/)) return 'testimonial';
+	if ((head(/\b(item|q|question|entry)\b/) && has(/\bfaq\b/)) || head(/\baccordion\b/) || el.tag === 'details') return 'faq';
+	if (head(/\bempty\b/)) return 'empty-state';
+	if (head(/\b(stat|metric|kpi)\b/)) return 'stat';
+	if (head(/\bskeleton\b/)) return 'skeleton';
+	if (head(/\b(dropdown|popover|menu)\b/)) return 'menu-panel';
+	if (head(/\bdrawer\b/)) return 'drawer';
+	if (head(/\b(breadcrumbs?|crumbs?)\b/)) return 'breadcrumb';
 	if (has(/\b(btn|button|cta)\b/)) return buttonKind(el);
 	if (has(/\b(input|field|text field)\b/)) return 'input';
 	if (has(/\b(screenshot|frame|media)\b/) && ['img', 'figure', 'video', 'picture'].includes(el.tag)) return 'media';
-	if (el.tag === 'section') return has(/\b(blue|brand)\b/) ? 'section-blue' : has(/\b(dark|inverse|black)\b/) ? 'section-dark' : 'section';
+	if (el.tag === 'section') return has(/\b(blue|on brand)\b/) ? 'section-blue' : has(/\b(dark|inverse|black)\b/) ? 'section-dark' : 'section';
 	if ((el.tag === 'ul' || el.tag === 'ol') && has(/\b(list|features|checklist|bullets)\b/)) return 'list';
 	// A box drawn as a card: a fill plus a radius, shadow or border, plus padding.
 	const u = el.utilities;
@@ -266,16 +269,17 @@ export function detectComponents(rel: string, text: string, surface: Surface): C
 		if (kind && recipe && recipes.has(recipe)) hits.push({ line: lineAt(offset), label: label.replace(/\s+/g, ' '), kind, recipe });
 	};
 	if (/\.(css|scss)$/.test(rel)) {
-		for (const m of text.matchAll(/(^|[};])\s*([^{}@;/][^{};]*?)\s*\{/g)) {
+		const css = text.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, ' '));
+		for (const m of css.matchAll(/(^|[};])\s*([^{}@;/][^{};]*?)\s*\{/g)) {
 			const selector = m[2].trim().split(',')[0].trim();
 			if (!selector || selector.startsWith(':root') || /^(from|to|\d+%)$/.test(selector) || /::?(before|after|placeholder|-webkit)/.test(selector)) continue;
 			const compounds = selector.split(/\s*[>+~]\s*|\s+/).filter(Boolean);
 			const last = compounds.pop() ?? '';
 			const tag = (last.match(/^[a-z][a-z0-9]*/i)?.[0] ?? 'div').toLowerCase();
-			const { names, utilities } = splitClasses([...last.matchAll(/\.([\w-]+)/g)].map((c) => c[1]));
+			const { names, heads, utilities } = splitClasses([...last.matchAll(/\.([\w-]+)/g)].map((c) => c[1]));
 			const context = compounds.flatMap((c) => contextLabels((c.match(/^[a-z][a-z0-9]*/i)?.[0] ?? '').toLowerCase(), splitClasses([...c.matchAll(/\.([\w-]+)/g)].map((x) => x[1])).names));
 			if (/:(hover|focus|active|disabled|visited|focus-visible|checked)/.test(last)) continue;
-			push(m.index + m[1].length, selector.length > 60 ? `${selector.slice(0, 57)}...` : selector, { tag, names, utilities, attrs: last.match(/\[[^\]]*\]/g)?.join(' ') ?? '', context });
+			push(m.index + m[1].length, selector.length > 60 ? `${selector.slice(0, 57)}...` : selector, { tag, names, heads, utilities, attrs: last.match(/\[[^\]]*\]/g)?.join(' ') ?? '', context });
 		}
 		return hits;
 	}
@@ -295,9 +299,10 @@ export function detectComponents(rel: string, text: string, surface: Surface): C
 		const classText = classAttr ? (classAttr[1] ?? classAttr[2] ?? (classAttr[3] ?? '').match(/["'`]([^"'`]*)["'`]/g)?.join(' ') ?? '') : '';
 		const split = splitClasses(classText.replace(/["'`]/g, ' ').split(/\s+/).filter(Boolean));
 		const names = `${split.names} ${component.toLowerCase()}`.trim();
+		const heads = `${split.heads} ${component.toLowerCase().split(' ').pop() ?? ''}`.trim();
 		const tag = component ? (/\bbutton\b/i.test(component) ? 'button' : /\b(link|anchor)\b/i.test(component) ? 'a' : /\b(input|text field)\b/i.test(component) ? 'input' : /\btextarea\b/i.test(component) ? 'textarea' : /\bselect\b/i.test(component) ? 'select' : 'div') : name;
 		const context = stack.flatMap((s) => s.labels);
-		push(m.index, `<${rawName}${attrs.length > 50 ? `${attrs.slice(0, 47)}...` : attrs}>`, { tag, names, utilities: split.utilities, attrs, context });
+		push(m.index, `<${rawName}${attrs.length > 50 ? `${attrs.slice(0, 47)}...` : attrs}>`, { tag, names, heads, utilities: split.utilities, attrs, context });
 		if (!selfClosing && !VOID.has(name)) stack.push({ name, labels: contextLabels(tag, names) });
 	}
 	return hits;

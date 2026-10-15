@@ -14,6 +14,7 @@ import { overrideKey, writeApprovals } from '../src/lib/state.js';
 import { gitRemote, installedCommit } from '../src/lib/source.js';
 import { colorRole, remapVariables } from '../src/commands/apply.js';
 import { detectComponents, findRecipe, loadRecipes, recipeCss } from '../src/lib/recipes.js';
+import { rebrandCss, rebrandSvgAsset, sitePalette } from '../src/lib/rebrand.js';
 import { runningHarness } from '../src/commands/init.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
@@ -327,6 +328,33 @@ describe('recipes', () => {
 		expect(detectComponents('app/dashboard/page.tsx', page, 'product').map((h) => h.recipe)).toEqual(['app-sidebar', 'app-sidebar-item', 'app-button-outline', 'app-table', 'app-table-header-cell', 'app-table-row', 'app-table-cell']);
 		const css = 'body { margin: 0; }\nnav a { color: red; }\n.btn-secondary { border: 1px solid; }\n.btn:hover { opacity: 1; }\nh2 { font-size: 2rem; }';
 		expect(detectComponents('styles.css', css, 'marketing').map((h) => h.recipe)).toEqual(['page-background', 'link-nav', 'button-secondary', 'text-h2']);
+	});
+});
+
+describe('rebrand', () => {
+	const dark = ':root { --bg: #08090a; --ink: #f7f8f8; --ink-3: #8a8f98; --border: rgba(255,255,255,.08); --font: "Host Grotesk", sans-serif; }\nbody { background: var(--bg); color: var(--ink); }\n.card { background: #141516; border: 1px solid rgba(255,255,255,.12); border-radius: 15px; padding: 23px; box-shadow: 0 12px 32px rgba(0,0,0,.45); }\n.btn { background: #fff; color: #08090a; font-weight: 600; letter-spacing: -0.02em; transition: all .3s ease-in; }\n.ok { color: #3fb950; }';
+	const stats = () => ({ colors: 0, fonts: 0, type: 0, radius: 0, spacing: 0, motion: 0, shadows: 0 });
+	it('turns a dark site into the light brand by role', () => {
+		const palette = sitePalette(dark);
+		expect(palette.mode).toBe('dark');
+		const out = rebrandCss(dark, palette, stats());
+		expect(out).toContain('--bg: var(--ds-color-bg-default)');
+		expect(out).toContain('--ink: var(--ds-color-text-default)');
+		expect(out).toContain('--border: color-mix(in srgb, var(--ds-color-text-default) 8%, transparent)');
+		expect(out).toContain('--font: var(--ds-font-sans)');
+		expect(out).toContain('.card { background: var(--ds-color-bg-subtle)');
+		expect(out).toContain('border-radius: var(--ds-radius-shell)');
+		expect(out).toContain('box-shadow: var(--ds-shadow-floating)');
+		expect(out).toContain('.btn { background: var(--ds-color-action-primary); color: var(--ds-color-text-inverse); font-weight: var(--ds-font-weight-medium); letter-spacing: normal;');
+		expect(out).not.toMatch(/transition:[^;]*\ball\b|ease-in\b/);
+		expect(out).toContain('.ok { color: var(--ds-color-status-success); }');
+	});
+	it('keeps a light site light and redraws only light one-color marks on a dark one', () => {
+		const light = sitePalette(':root { --bg: #ffffff; --text: #111111; }');
+		expect(light.mode).toBe('light');
+		expect(rebrandCss('.a { color: #111; background: #fff; }', light, stats())).toBe('.a { color: var(--ds-color-text-default); background: var(--ds-color-bg-default); }');
+		expect(rebrandSvgAsset('<svg><path fill="#FFFFFF"/></svg>', sitePalette(dark))).toBe('<svg><path fill="#000000"/></svg>');
+		expect(rebrandSvgAsset('<svg><path fill="#E4572E"/></svg>', sitePalette(dark))).toBe('<svg><path fill="#E4572E"/></svg>');
 	});
 });
 

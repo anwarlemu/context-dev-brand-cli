@@ -17,10 +17,14 @@ else: copy, content, markup, layout and page structure stay exactly as they are.
 - `init` installs it: the brand tokens (colors, type, spacing, radius, motion as CSS variables),
   short rules in `AGENTS.md` / `CLAUDE.md`, and hooks that check every file an agent writes. Nothing
   on the site changes yet.
-- `apply` restyles the site that is already there. The site's own color and font
-  variables are re-pointed at the brand tokens, so every page changes at once; the brand typefaces
-  are loaded; values with an exact token are replaced; and every value left is listed by file, with
-  the token to use, for the agent to finish.
+- `apply` restyles the site that is already there. It converts the site's own styling, declaration
+  by declaration, keeping every selector and element: each color is mapped by the role it plays
+  (a dark site becomes the brand's light one: near-black surfaces turn white, white text turns
+  black, white hairlines turn black hairlines, accents turn brand blue, greens and reds become the
+  status colors), font stacks become Rethink Sans, sizes, weights, radii, spacing, shadows and
+  motion move to the nearest brand token, and one-color marks drawn for a dark page are redrawn.
+  It adds the brand's page frame (ruled column edges, section rules and nodes), loads the
+  typefaces, then lists every component with the recipe to finish it with.
 - `style` knows how the brand styles each kind of element in each situation: 155 recipes learned
   from the brand's own site and dashboard (primary button, button on blue, clickable card, pricing
   card, input, nav link, footer, table row, sidebar item, menu, dialog...). `apply` lists every

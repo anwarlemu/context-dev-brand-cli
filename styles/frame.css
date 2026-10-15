@@ -1,0 +1,41 @@
+/* The brand's page frame, written by `apply`. Hairlines run down both edges of the content column for the whole
+   page, top-level sections are divided by a full-bleed rule, and a solid node sits where a rule crosses a column
+   edge. It only draws lines: no element moves. Remove this import to drop the frame. */
+:root {
+	--ds-frame-column: min(calc(100% - 2 * var(--ds-space-6)), var(--ds-layout-content-width));
+}
+
+body {
+	position: relative;
+}
+
+body::after {
+	content: "";
+	position: absolute;
+	inset-block: 0;
+	left: 50%;
+	z-index: 40;
+	width: var(--ds-frame-column);
+	transform: translateX(-50%);
+	border-inline: 1px solid var(--ds-color-border-default);
+	pointer-events: none;
+}
+
+:where(body, main) > :where(section) + :where(section, footer) {
+	position: relative;
+	border-top: 1px solid var(--ds-color-border-default);
+}
+
+:where(body, main) > :where(section) + :where(section, footer)::before {
+	content: "";
+	position: absolute;
+	top: calc(-1 * var(--ds-space-1) - 0.5px);
+	left: calc(50% - var(--ds-frame-column) / 2 - var(--ds-space-1));
+	z-index: 41;
+	width: calc(var(--ds-frame-column) + var(--ds-space-2));
+	height: var(--ds-space-2);
+	background:
+		radial-gradient(circle closest-side, var(--ds-color-border-strong) 92%, transparent) left center / var(--ds-space-2) var(--ds-space-2) no-repeat,
+		radial-gradient(circle closest-side, var(--ds-color-border-strong) 92%, transparent) right center / var(--ds-space-2) var(--ds-space-2) no-repeat;
+	pointer-events: none;
+}

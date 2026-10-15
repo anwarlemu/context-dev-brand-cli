@@ -1,14 +1,16 @@
 import type { Command } from 'commander';
-import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { collectFiles, formatFinding, runCheck } from '../check/engine.js';
 import { loadCheckConfig } from '../lib/config.js';
-import { detectComponents, surfaceFor } from '../lib/recipes.js';
+import { detectComponents, findRecipe, surfaceFor } from '../lib/recipes.js';
 import { loadConfig } from '../lib/config.js';
 import { color, emit } from '../lib/output.js';
-import { findProjectRoot } from '../lib/paths.js';
+import { findProjectRoot, pkgPath } from '../lib/paths.js';
 import { detectProject } from '../lib/project.js';
 import { findGlobalCss } from './init.js';
+import { type RebrandStats, rebrandCss, rebrandMarkup, rebrandSvgAsset, sitePalette } from '../lib/rebrand.js';
+import { walkFiles } from '../lib/glob.js';
 
 // Applies the brand to a site that already has its own styles: the site's variables are re-pointed at the brand
 // tokens (so every rule using them changes at once), the brand typefaces are loaded, raw values with an exact token
@@ -142,68 +144,98 @@ export function registerApply(program: Command) {
 				process.exitCode = result.errors ? 1 : 0;
 				return;
 			}
-			const sheets = siteStylesheets(root);
+			const bin = loadConfig().bin;
+			const own = new RegExp(`(^|/)(${bin}|components/ds)/`);
+			const files = collectFiles(root, loadCheckConfig(root)).filter((rel) => !own.test(rel) && !/\.min\.css$/.test(rel));
 			const main = findGlobalCss(root);
-			const mappings: Mapping[] = [];
-			const skipped: string[] = [];
+			// The site's own background and text decide what each of its colors means, so read them before changing anything.
+			const styleText = files.filter((rel) => /\.(css|scss|astro|vue|svelte|html)$/.test(rel)).map((rel) => readFileSync(join(root, rel), 'utf8')).join('\n');
+			const palette = sitePalette([...(main ? [readFileSync(join(root, main), 'utf8')] : []), styleText].join('\n'));
+			const stats: RebrandStats = { colors: 0, fonts: 0, type: 0, radius: 0, spacing: 0, motion: 0, shadows: 0 };
 			const written: string[] = [];
-			let fontFamilies = 0;
-			for (const rel of sheets) {
+			for (const rel of files) {
 				const before = readFileSync(join(root, rel), 'utf8');
-				const remapped = remapVariables(before, rel);
-				mappings.push(...remapped.mappings);
-				skipped.push(...remapped.skipped);
-				const families = brandFontFamilies(remapped.css);
-				fontFamilies += families.changed;
-				// Next apps load the typefaces through next/font (init wrote lib/ds-fonts.ts); everything else gets the stylesheet.
-				const after = rel === main && project.framework !== 'next' ? loadFonts(families.css) : families.css;
+				let after = /\.(css|scss)$/.test(rel) ? rebrandCss(before, palette, stats) : /\.(astro|vue|svelte|html)$/.test(rel) ? rebrandMarkup(before, palette, stats) : before;
+				if (rel === main) {
+					// Next apps load the typefaces through next/font (init wrote lib/ds-fonts.ts); everything else gets the stylesheet.
+					if (project.framework !== 'next') after = loadFonts(after);
+					const frame = `@import "./${bin}/frame.css";`;
+					const tokensImport = after.match(new RegExp(`@import\\s+["']\\./${bin}/(tokens|theme)\\.css["'];`))?.[0];
+					if (!after.includes(frame)) after = tokensImport ? after.replace(tokensImport, `${tokensImport}\n${frame}`) : `${frame}\n${after}`;
+				}
 				if (after !== before) {
 					written.push(rel);
 					if (!opts.dryRun) writeFileSync(join(root, rel), after);
 				}
 			}
+			// Marks drawn for a dark site (a white logo file) would vanish on the brand's white page.
+			const marks: string[] = [];
+			for (const rel of walkFiles(root, ['**/*.svg'], ['node_modules/**', `**/${bin}/**`])) {
+				const before = readFileSync(join(root, rel), 'utf8');
+				const after = rebrandSvgAsset(before, palette);
+				if (after !== before) {
+					marks.push(rel);
+					if (!opts.dryRun) writeFileSync(join(root, rel), after);
+				}
+			}
+			const frameTarget = main ? join(root, dirname(main), bin, 'frame.css') : undefined;
+			if (frameTarget && !opts.dryRun) {
+				mkdirSync(dirname(frameTarget), { recursive: true });
+				writeFileSync(frameTarget, readFileSync(pkgPath('styles', 'frame.css'), 'utf8'));
+			}
 			const fixed = opts.dryRun ? { fixed: 0 } : runCheck({ projectRoot: root, useBaseline: false, fix: true, styleOnly: true });
 			const left = runCheck({ projectRoot: root, useBaseline: false, styleOnly: true });
 			// Every element with a recipe, so each button, card, field and nav gets the brand's styling for its situation.
-			const own = new RegExp(`(^|/)(${loadConfig().bin}|components/ds)/`);
-			const components = collectFiles(root, loadCheckConfig(root)).filter((rel) => !own.test(rel)).flatMap((rel) => {
+			const components = files.flatMap((rel) => {
 				const surface = surfaceFor(root, rel);
 				return detectComponents(rel, readFileSync(join(root, rel), 'utf8'), surface).map((c) => ({ file: rel, ...c }));
 			});
 			const byRecipe = new Map<string, number>();
 			for (const c of components) byRecipe.set(c.recipe, (byRecipe.get(c.recipe) ?? 0) + 1);
+			// One line per recipe, each distinct selector or class once, page structure and actions before details.
+			const ORDER = ['page', 'navigation', 'actions', 'containers', 'forms', 'text', 'data', 'feedback'];
+			const grouped = new Map<string, { key: string; file: string; line: number }[]>();
+			for (const c of components) {
+				const key = c.label.startsWith('<') ? c.label.replace(/^<([\w.-]+).*?class(?:Name)?=["'{`]*([^"'`}]*).*$/s, (all, tag: string, cls: string) => `<${tag}${cls ? ` class="${cls.trim().split(/\s+/).slice(0, 2).join(' ')}"` : ''}>`).replace(/^<([\w.-]+)\s[^"]*$/, '<$1>') : c.label;
+				const list = grouped.get(c.recipe) ?? [];
+				if (!list.some((x) => x.key === key)) list.push({ key, file: c.file, line: c.line });
+				grouped.set(c.recipe, list);
+			}
+			const groupOf = (id: string) => ORDER.indexOf(findRecipe(id)?.group ?? 'feedback');
+			const groups = [...grouped].sort((a, b) => groupOf(a[0]) - groupOf(b[0]) || b[1].length - a[1].length);
 			const byFile = new Map<string, number>();
 			for (const f of left.findings) if (f.severity === 'error') byFile.set(f.file, (byFile.get(f.file) ?? 0) + 1);
-			const files = [...byFile].sort((a, b) => b[1] - a[1]);
-			emit(opts, { stylesheets: sheets, written, mappings, skipped, fontFamilies, fixed: fixed.fixed, remaining: Object.fromEntries(files), components }, () =>
+			const remaining = [...byFile].sort((a, b) => b[1] - a[1]);
+			emit(opts, { palette, written, marks, stats, fixed: fixed.fixed, remaining: Object.fromEntries(remaining), components }, () =>
 				[
 					opts.dryRun ? 'Dry run, nothing written.' : 'Applied the brand to the site styles.',
 					'',
-					color.bold(`1. Site variables re-pointed at brand tokens (${mappings.length}):`),
-					...(mappings.length ? mappings.map((m) => `   ${m.file}  ${m.name}: ${m.from} -> var(${m.to})${m.how === 'value' ? '  (by value; check it)' : ''}`) : ['   none found (no :root variables in the site stylesheets)']),
-					...skipped.map((s) => `   left as is: ${s}`),
+					color.bold(`1. The site's styling converted to the brand (${written.length} files; a ${palette.mode} site turned into the brand's light one):`),
+					`   ${stats.colors} colors mapped by role, ${stats.fonts} font stacks to Rethink Sans, ${stats.type} sizes, weights and tracking to the type scale,`,
+					`   ${stats.radius} radii, ${stats.spacing} spacings, ${stats.shadows} shadows and ${stats.motion} transitions to the nearest brand token.`,
+					...(marks.length ? [`   ${marks.length} one-color marks drawn light for the dark site redrawn in brand text: ${marks.slice(0, 6).join(', ')}${marks.length > 6 ? ', ...' : ''}`] : []),
 					'',
-					color.bold('2. Typefaces:'),
-					`   ${project.framework === 'next' ? 'loaded through next/font by init' : main ? `Rethink Sans, Doto and IBM Plex Mono loaded at the top of ${main}` : 'no main stylesheet found; load them from Google Fonts in the base layout'}; ${fontFamilies} body/html font stacks now use var(--ds-font-sans).`,
+					color.bold('2. Typefaces and frame:'),
+					`   ${project.framework === 'next' ? 'typefaces load through next/font (init)' : main ? `Rethink Sans, Doto and IBM Plex Mono load at the top of ${main}` : 'no main stylesheet found; load the typefaces in the base layout'}; ${main ? `the page frame (column rulers, section rules and nodes) is ${dirname(main)}/${bin}/frame.css` : 'no main stylesheet for the frame'}.`,
 					'',
 					color.bold(`3. Raw values replaced with exact tokens: ${fixed.fixed}.`),
 					'',
-					color.bold(`4. Left for you (${files.reduce((a, [, n]) => a + n, 0)} errors in ${files.length} files):`),
-					...(files.length
-						? [...files.slice(0, 25).map(([f, n]) => `   ${String(n).padStart(4)}  ${f}`), files.length > 25 ? `   ... and ${files.length - 25} more` : '', `   Work through them: \`${cli} apply --list <file>\` shows each value and the token to use (\`${cli} tokens --search <term>\` to look one up). Replace the value with var(--ds-*); do not add overrides.`].filter(Boolean)
+					color.bold(`4. Left for you (${remaining.reduce((a, [, n]) => a + n, 0)} errors in ${remaining.length} files):`),
+					...(remaining.length
+						? [...remaining.slice(0, 25).map(([f, n]) => `   ${String(n).padStart(4)}  ${f}`), remaining.length > 25 ? `   ... and ${remaining.length - 25} more` : '', `   Work through them: \`${cli} apply --list <file>\` shows each value and the token to use (\`${cli} tokens --search <term>\` to look one up). Replace the value with var(--ds-*); do not add overrides.`].filter(Boolean)
 						: ['   nothing; every style uses the tokens.']),
 					'',
-					color.bold(`5. Components to restyle with their recipe (${components.length} elements, ${byRecipe.size} recipes):`),
+					color.bold(`5. Components: restyle each with its recipe (${components.length} elements, ${byRecipe.size} recipes; page structure first):`),
 					...(components.length
 						? [
-								...components.slice(0, 40).map((c) => `   ${c.file}:${c.line}  ${c.label}  ->  ${c.recipe}`),
-								components.length > 40 ? `   ... and ${components.length - 40} more (\`${cli} style --detect <file>\` lists a file's)` : '',
+								...groups.slice(0, 30).map(([recipe, list]) => `   ${recipe.padEnd(24)} ${list.slice(0, 4).map((c) => `${c.key} (${c.file}:${c.line})`).join(', ')}${list.length > 4 ? ` +${list.length - 4} more` : ''}`),
+								groups.length > 30 ? `   ... and ${groups.length - 30} more recipes (\`${cli} style --detect <file>\` lists a file's)` : '',
 								`   For each recipe: \`${cli} style <recipe>\` prints the brand's declarations for that element and situation (CSS and Tailwind), states included. Put them on the element's existing rule or classes; keep the element, its content and its place.`,
 							].filter(Boolean)
 						: ['   none recognized.']),
 					'',
-					color.bold('Change style values only.') + ' Keep every word, heading, link, image, element, section and layout exactly as it is. Do not add templates, sections or components, and do not rewrite copy.',
-					`Then: open the site and compare it with before (same content, new look), run \`${cli} apply --list\` until it is empty, and commit.`,
+					color.bold('Styling only.') + ' Keep every word, link, image and element where it is; do not add templates, sections or components, and do not rewrite copy. Visual layout is styling: spacing, widths, alignment, borders and backgrounds follow the recipes (page-column, section, header, the cards and buttons).',
+					`Then: look at every page next to the brand (white page, black text, blue accents, black pill buttons, ruled column), run \`${cli} apply --list\` until it is empty, and commit.`,
 				].join('\n'),
 			);
 		});
