@@ -57,7 +57,7 @@ function hsl([r, g, b]: RGBA) {
 	return { h: (h * 60 + 360) % 360, s, l };
 }
 
-export type SitePalette = { mode: 'dark' | 'light'; bg: number; fg: number; series?: Map<string, number>; vars?: Map<string, string>; usage?: Map<string, Family>; modes?: Map<string, 'dark' | 'light'>; found?: boolean };
+export type SitePalette = { mode: 'dark' | 'light'; bg: number; fg: number; series?: Map<string, number>; vars?: Map<string, string>; usage?: Map<string, Family>; modes?: Map<string, 'dark' | 'light'>; found?: boolean; lines?: boolean; target?: 'light' | 'dark' };
 
 /** The palette for rules that only apply in the other theme (a site's own dark or light mode block). */
 function themed(palette: SitePalette, mode: 'dark' | 'light' | undefined): SitePalette {
@@ -334,7 +334,10 @@ function variableUse(css: string) {
 function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, selector: string) {
 	const bgValue = css.match(/(?:^|[;{\s])background(?:-color)?\s*:\s*([^;}]+)/)?.[1];
 	const background = bgValue?.match(COLOR_IN_VALUE)?.map((c) => parseColor(c)).find(Boolean);
-	return css.replace(/(^|[{;\s])(--[\w-]+|[a-z-]+)(\s*:\s*)([^;{}]+?)(\s*)(?=;|\}|$)/gm, (all, lead: string, prop: string, sep: string, value: string, trail: string) => {
+	// A value runs to its semicolon, across lines (a shadow list written one layer per line); indented Sass and Stylus
+	// have no semicolons, so there a value ends with its line.
+	const decl = palette.lines ? /(^|[{;\s])(--[\w-]+|[a-z-]+)(\s*:\s*)([^;{}\n]+?)(\s*)(?=;|\}|$)/gm : /(^|[{;\s])(--[\w-]+|[a-z-]+)(\s*:\s*)([^;{}]+?)(\s*)(?=;|\}|$)/g;
+	return css.replace(decl, (all, lead: string, prop: string, sep: string, value: string, trail: string) => {
 		if (prop.startsWith('--ds-') || /^(src|content|grid-template|grid-area|font-feature|unicode-range|size-adjust|ascent|descent|line-gap)/.test(prop) || /url\(/.test(value) && !/gradient/.test(value)) return all;
 		const p = prop.toLowerCase();
 		const isVar = p.startsWith('--');
@@ -386,10 +389,19 @@ function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, se
 		} else if (/^(padding|margin|gap|row-gap|column-gap)(-[a-z]+)*$/.test(p) && /\d(px|rem)/.test(next) && !/calc|clamp|min\(|max\(/.test(next)) {
 			stats.spacing++;
 			next = mapLengths(next, scales().space);
+		} else if (/^(-webkit-)?filter$/.test(p) && palette.mode === 'dark' && palette.target !== 'dark' && /\binvert\((1|100%)?\)/.test(next)) {
+			// Logos and icons whitened for the dark page (brightness(0) invert(1)) are drawn dark on the light one.
+			stats.colors++;
+			next = next.replace(/\binvert\((1|100%)?\)/g, 'invert(0)');
 		} else if (/^(transition|animation)(-duration|-timing-function|-delay)?$/.test(p)) {
 			const before = next;
 			next = next
-				.replace(/(?<![\w.-])(\d*\.?\d+)(ms|s)\b/g, (all, n: string, unit: string) => `var(${nearest(scales().duration, Number(n) * (unit === 's' ? 1000 : 1))})`)
+				// A looping or long animation (a marquee, a spinner, an ambient drift) keeps its own timing; interface motion
+				// moves to the brand's durations.
+				.replace(/(?<![\w.-])(\d*\.?\d+)(ms|s)\b/g, (all, n: string, unit: string) => {
+					const ms = Number(n) * (unit === 's' ? 1000 : 1);
+					return p.startsWith('animation') && (ms > 1000 || /\binfinite\b/.test(value)) ? all : `var(${nearest(scales().duration, ms)})`;
+				})
 				.replace(/\bcubic-bezier\([^)]*\)|\bease-in-out\b|\bease-in\b|\bease-out\b|(?<![\w-])ease(?![\w-])/g, (e) => (e === 'ease-in-out' ? 'var(--ds-easing-in-out)' : 'var(--ds-easing-out)'))
 				.replace(/(?<![\w-])all(?![\w-])/g, 'color, background-color, border-color, box-shadow, opacity, transform');
 			if (next !== before) stats.motion++;
@@ -398,11 +410,23 @@ function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, se
 	});
 }
 
+/**
+ * A swatch or a type specimen (a brand page, a style guide): the color or font it sets is printed right after it, so it
+ * is content and keeps its own value.
+ */
+function specimen(css: string, after: string) {
+	const text = after.replace(/<[^>]*>/g, ' ');
+	const hexes = css.match(/#[0-9a-fA-F]{3,8}\b/g) ?? [];
+	if (hexes.some((h) => text.toLowerCase().includes(h.toLowerCase()))) return true;
+	const font = css.match(/font-family\s*:\s*["']?([^,"';]+)/i)?.[1]?.trim();
+	return !!font && !/^(inherit|var\()/.test(font) && text.includes(font);
+}
+
 /** The CSS inside a markup file: <style> blocks and style attributes, rebranded in place. */
 export function rebrandMarkup(text: string, palette: SitePalette, stats: RebrandStats) {
 	return text
 		.replace(/(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi, (all, open: string, css: string, close: string) => `${open}${rebrandCss(css, palette, stats)}${close}`)
-		.replace(/(\sstyle\s*=\s*)(["'])([^"']*)\2/gi, (all, head: string, q: string, css: string) => `${head}${q}${rebrandCss(css, palette, stats)}${q}`)
+		.replace(/(\sstyle\s*=\s*)(["'])([^"']*)\2/gi, (all, head: string, q: string, css: string, offset: number, whole: string) => (specimen(css, whole.slice(offset, offset + 600)) ? all : `${head}${q}${rebrandCss(css, palette, stats)}${q}`))
 		.replace(/(\s(?:fill|stroke|stop-color|color)\s*=\s*)(["'])([^"']+)\2/gi, (all, head: string, q: string, value: string) => {
 			const rgba = parseColor(value);
 			if (!rgba) return all;

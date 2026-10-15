@@ -13,7 +13,7 @@ import { checkChanged } from '../src/commands/watch.js';
 import { overrideKey, writeApprovals } from '../src/lib/state.js';
 import { gitRemote, installedCommit } from '../src/lib/source.js';
 import { detectComponents, findRecipe, loadRecipes, recipeCss } from '../src/lib/recipes.js';
-import { brandLiteral, classPalette, rebrandClasses, rebrandCss, rebrandNative, rebrandScript, rebrandSvgAsset, sitePalette } from '../src/lib/rebrand.js';
+import { brandLiteral, classPalette, rebrandClasses, rebrandCss, rebrandMarkup, rebrandNative, rebrandScript, rebrandSvgAsset, sitePalette } from '../src/lib/rebrand.js';
 import { profileInterface } from '../src/lib/surface.js';
 import { runningHarness } from '../src/commands/init.js';
 
@@ -302,6 +302,13 @@ describe('apply', () => {
 		const dark = sitePalette('body { background: #0b0b0c; color: #fafafa; }');
 		expect(rebrandCss('.nav { background: rgba(11, 11, 12, 0.7); }', dark, stats())).toContain('color-mix(in srgb, var(--ds-color-bg-default) 70%, transparent)');
 		expect(rebrandCss('.modal-backdrop { background: rgba(0, 0, 0, 0.6); }', dark, stats())).toContain('var(--ds-color-bg-scrim)');
+		// A shadow list written one layer per line stays one valid value.
+		expect(rebrandCss('.s {\n  box-shadow:\n    0 1px 2px rgba(0,0,0,.3),\n    0 14px 44px rgba(0,0,0,.45);\n}', dark, stats())).toBe('.s {\n  box-shadow:\n    var(--ds-shadow-floating);\n}');
+		// Loops keep their timing; whitened logos are drawn dark on the light page.
+		expect(rebrandCss('.m { animation: marquee 48s linear infinite; }', dark, stats())).toContain('48s');
+		expect(rebrandCss('.logo img { filter: brightness(0) invert(1); }', dark, stats())).toContain('invert(0)');
+		// A swatch that prints its own color keeps it.
+		expect(rebrandMarkup('<div style="background:#08090A"></div><span>Canvas #08090A</span>', dark, stats())).toContain('#08090A"');
 	});
 	it('gives each chart series its own brand series color', () => {
 		const css = '.chart-revenue { stroke: #3b82f6; } .chart-cost { stroke: #ef4444; }';

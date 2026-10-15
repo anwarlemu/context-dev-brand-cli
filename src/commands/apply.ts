@@ -149,7 +149,7 @@ export function registerApply(program: Command) {
 			const styleText = files.filter((rel) => STYLES.test(rel) || MARKUP.test(rel)).map((rel) => readFileSync(join(root, rel), 'utf8')).join('\n');
 			const cssPalette = sitePalette([...(main ? [readFileSync(join(root, main), 'utf8')] : []), styleText].join('\n'));
 			const nativeFiles = files.filter((rel) => NATIVE.test(rel) || ANDROID_XML.test(rel));
-			const palette = cssPalette.found || !nativeFiles.length ? cssPalette : nativePalette(nativeFiles.map((rel) => readFileSync(join(root, rel), 'utf8')));
+			const palette = { ...(cssPalette.found || !nativeFiles.length ? cssPalette : nativePalette(nativeFiles.map((rel) => readFileSync(join(root, rel), 'utf8')))), target: (surface === 'product' && theme === 'dark' ? 'dark' : 'light') as 'light' | 'dark' };
 			const switches = darkSwitches(styleText);
 			// With Tailwind, the root layout's classes set the page colors for every page that does not set its own.
 			const layoutFile = ['tsx', 'jsx', 'js'].map((ext) => `${project.appDir ?? 'app'}/layout.${ext}`).find((rel) => existsSync(join(root, rel)));
@@ -161,7 +161,7 @@ export function registerApply(program: Command) {
 			for (const rel of files) {
 				const before = readFileSync(join(root, rel), 'utf8');
 				let after = before;
-				if (STYLES.test(rel)) after = rebrandCss(before, palette, stats);
+				if (STYLES.test(rel)) after = rebrandCss(before, /\.(sass|styl)$/.test(rel) ? { ...palette, lines: true } : palette, stats);
 				else if (MARKUP.test(rel)) {
 					after = rebrandMarkup(before, palette, stats);
 					if (tailwind) after = after.replace(/(\sclass(?:Name)?\s*=\s*)(["'])([^"']*)\2/g, (all, head: string, q: string, cls: string) => `${head}${q}${rebrandClasses(cls, palette, stats, tailwind === 'theme')}${q}`);
@@ -185,7 +185,10 @@ export function registerApply(program: Command) {
 			// Marks drawn for a dark site (a white logo file) would vanish on the brand's white page.
 			const marks: string[] = [];
 			if (literalTheme !== 'product-dark') {
-				for (const rel of walkFiles(root, ['**/*.svg'], ['node_modules/**', `**/${bin}/**`])) {
+				// Only marks the pages draw (img src, CSS url(), imports); a file offered as a download stays as it is.
+				const drawn = files.filter((rel) => MARKUP.test(rel) || SCRIPT.test(rel) || STYLES.test(rel)).map((rel) => readFileSync(join(root, rel), 'utf8')).join('\n');
+				const isDrawn = (name: string) => new RegExp(`(src(set)?\\s*=\\s*["'{][^"'}]*|url\\(\\s*["']?[^)]*|import[^;]*|:\\s*["'][^"']*)${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(drawn);
+				for (const rel of walkFiles(root, ['**/*.svg'], ['node_modules/**', `**/${bin}/**`]).filter((rel) => isDrawn(rel.split('/').pop()!))) {
 					const before = readFileSync(join(root, rel), 'utf8');
 					const after = rebrandSvgAsset(before, palette);
 					if (after !== before) {
