@@ -1,19 +1,19 @@
-/* The brand's dot moments, written by `apply` next to dots.js. Mark elements in the markup; nothing moves or changes
-   size, these only paint. Remove this import and the script to drop them. */
+/* The brand's few signature touches, written by `apply` next to dots.js. They only paint: nothing moves or changes
+   size. Remove this import and the script to drop them. */
 
+/* The hero's dot streams (dots.js) sit behind its content, in the brand blue at 60%, as on the site's white hero. */
 [data-ds-dots] {
 	position: relative;
 	isolation: isolate;
 }
 
-/* The dots sit behind the content and above the element's own background. */
 [data-ds-dots] > [data-ds-dots-layer] {
 	position: absolute;
 	inset: 0;
 	z-index: -1;
 	width: 100%;
 	height: 100%;
-	overflow: visible;
+	color: color-mix(in srgb, var(--ds-color-brand) 60%, transparent);
 	pointer-events: none;
 	opacity: 0;
 	/* Fades in once the dots are measured, so they never pop in around the text. */
@@ -22,63 +22,6 @@
 
 [data-ds-dots] > [data-ds-dots-layer][data-ready] {
 	opacity: 1;
-}
-
-[data-ds-dots-lit] {
-	opacity: 0;
-	transition: opacity var(--ds-duration-base) var(--ds-easing-in-out);
-}
-
-[data-ds-dots-lit][data-on] {
-	opacity: var(--ds-dots-lit);
-}
-
-/* The hero's one block of color: a blue panel inside a pale ring, white rings around the visual it holds. */
-/* Repeated attribute: the panel and frame win over the element's own class rules, whatever the import order. */
-[data-ds-dots="panel"][data-ds-dots][data-ds-dots] {
-	--ds-dots-inset: var(--ds-space-6);
-	box-sizing: border-box;
-	padding: var(--ds-dots-inset);
-	border-radius: var(--ds-radius-window);
-	background-color: var(--ds-color-bg-brand);
-	box-shadow: 0 0 0 var(--ds-space-2) var(--ds-color-card-ring);
-}
-
-/* An image, screenshot or illustration on a white frame of faint rings, inside the brand's pale ring. */
-[data-ds-dots="frame"][data-ds-dots][data-ds-dots] {
-	--ds-dots-inset: var(--ds-space-4);
-	box-sizing: border-box;
-	padding: var(--ds-dots-inset);
-	border: 1px solid var(--ds-color-border-default);
-	border-radius: var(--ds-radius-card);
-	background-color: var(--ds-color-bg-default);
-	box-shadow: 0 0 0 var(--ds-space-2) var(--ds-color-card-ring);
-}
-
-@media (min-width: 768px) {
-	[data-ds-dots="panel"][data-ds-dots][data-ds-dots] {
-		--ds-dots-inset: var(--ds-space-12);
-	}
-
-	[data-ds-dots="frame"][data-ds-dots][data-ds-dots] {
-		--ds-dots-inset: var(--ds-space-8);
-	}
-}
-
-/* The visual inside a panel or frame sits on the dots as one card. */
-:where([data-ds-dots="panel"], [data-ds-dots="frame"]) > :where(img, video, picture, iframe, canvas) {
-	max-width: 100%;
-	height: auto;
-	border-radius: var(--ds-radius-card);
-}
-
-/* A stack of positioned images (a crossfade) keeps its positioning and moves in by the frame's inset; dots.js marks
-   them, since CSS cannot tell a positioned image from one in the flow. */
-[data-ds-dots][data-ds-dots] > [data-ds-dots-fill] {
-	inset: var(--ds-dots-inset);
-	width: calc(100% - 2 * var(--ds-dots-inset));
-	height: calc(100% - 2 * var(--ds-dots-inset));
-	object-fit: cover;
 }
 
 /* Emphasis in a headline is color: the key phrase in brand blue, same weight. */

@@ -293,10 +293,9 @@ describe('apply', () => {
 		write('src/pages/index.astro', '<section class="hero"><h1>All your work in one place</h1><div class="shot"><img src="/app.png" /></div></section>');
 		const files = ['src/components/Nav.astro', 'src/pages/index.astro'];
 		const missing = missingMoments(dir, files);
-		expect(missing.map((m) => m.id)).toEqual(['field', 'panel', 'accent', 'frame']);
+		expect(missing.map((m) => m.id)).toEqual(['field', 'accent']);
 		expect(missing[0].where[0]).toBe('src/pages/index.astro:1');
-		expect(missing.find((m) => m.id === 'frame')?.where.join()).not.toContain('Nav');
-		write('src/pages/index.astro', '<section class="hero" data-ds-dots><h1>All your work <span class="ds-accent">in one place</span></h1><div class="shot" data-ds-dots="panel"><img src="/app.png" /></div><figure data-ds-dots="frame"><img src="/b.png" /></figure></section>');
+		write('src/pages/index.astro', '<section class="hero" data-ds-dots><h1>All your work <span class="ds-accent">in one place</span></h1><div class="shot"><img src="/app.png" /></div></section>');
 		expect(missingMoments(dir, files)).toEqual([]);
 		const writes: Record<string, string> = {};
 		expect(wireDots(dir, ['src/layouts/Base.astro'], '/ds/dots.js', false, (rel, text) => (writes[rel] = text))).toEqual(['src/layouts/Base.astro']);

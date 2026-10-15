@@ -1,146 +1,130 @@
-/* The brand's dot patterns for any stack, written by `apply`. No framework, no dependencies: mark an element and the
-   script draws the circle grid behind its content, cleared around every line of text and every image, button or card
-   in it, the way the brand's site does.
+/* The brand's hero dot field for any stack, written by `apply`: a port of the site's stream field (hero-dot-field
+   with streams, on the white surface). Curved streams of small dots run in from the hero's edges toward its content,
+   wide where they enter and fraying to a thread, so the middle stays bare. Mark the hero section with data-ds-dots;
+   the dots also clear around any text, button or image they reach. No framework, no dependencies.
 
-     data-ds-dots            hero field: faint brand rings with four solid diamonds, lit under the pointer
-     data-ds-dots="panel"    blue panel with white rings around the one visual it holds (the hero's screenshot or demo)
-     data-ds-dots="frame"    white frame with faint rings around an image, screenshot or illustration
-     data-ds-hole            on any descendant: the dots clear around its box as well
-
-   Styles for the containers are in dots.css. Dots are drawn once per layout (resize, fonts, images) and rest still;
-   the only motion is a fade in and, with a mouse, the rings filling near the pointer. */
+   The field fades in once and then rests still. */
 (() => {
 	if (typeof window === 'undefined' || window.__dsDots) return;
 	window.__dsDots = true;
 	const SVG = 'http://www.w3.org/2000/svg';
-	const TONES = {
-		field: { color: 'var(--ds-color-brand)', hollow: 0.25, solid: 0.4, clusters: true, spotlight: 0.5, clear: 1.25 },
-		panel: { color: 'var(--ds-color-white)', hollow: 0.5, solid: 1, clusters: false, spotlight: 0, clear: 0.75 },
-		frame: { color: 'var(--ds-color-brand)', hollow: 0.2, solid: 0.3, clusters: false, spotlight: 0, clear: 0.75 },
-	};
-	const DOT_RADIUS_RATIO = 0.31;
-	const CLUSTERS = [
-		{ x: 0.12, y: 0.2 },
-		{ x: 0.86, y: 0.3 },
-		{ x: 0.1, y: 0.78 },
-		{ x: 0.9, y: 0.84 },
+	// The site's fine field: the narrow-screen pitch at every width.
+	const PITCH = 12;
+	const DOT_RADIUS_RATIO = 0.32;
+	const CLEARANCE_RATIO = 1;
+	const ENTRY_HALF_WIDTH = 5.5;
+	const TAIL_HALF_WIDTH = 0.5;
+	const SAMPLES = 120;
+	const RING_SHARE = 0.3;
+	const LIT_SHARE = 0.12;
+	const TAIL_OPACITY = 0.5;
+	const DIM_OPACITY = 0.14;
+	const RING_OPACITY = 0.55;
+	const SEED = 7;
+	// Each stream points at the headline, so the web reads as flowing into the content; the two sides differ on purpose.
+	const CURVES = [
+		[[-0.04, 0.04], [0.12, 0.08], [0.23, 0.36]],
+		[[-0.04, 0.42], [0.08, 0.54], [0.22, 0.62]],
+		[[0.04, 1.05], [0.08, 0.82], [0.22, 0.78]],
+		[[0.9, -0.05], [0.9, 0.16], [0.78, 0.3]],
+		[[1.04, 0.3], [0.9, 0.3], [0.77, 0.46]],
+		[[1.04, 0.62], [0.92, 0.7], [0.78, 0.7]],
+		[[0.97, 1.05], [0.94, 0.9], [0.8, 0.82]],
 	];
-	// Elements whose whole box is content: the dots clear around the box, not just its text.
+	// On a phone the side streams are slivers, so two more sweep in across the foot.
+	const PHONE_CURVES = [
+		[[-0.06, 0.74], [0.28, 0.84], [0.46, 1.05]],
+		[[1.06, 0.82], [0.72, 0.88], [0.58, 1.05]],
+	];
 	const BOXES = 'img,picture,video,canvas,iframe,svg,button,a,input,select,textarea,table,pre,[data-ds-hole]';
-	const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	const finePointer = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-	// Rows and columns stretch by a fraction of a pixel so the outer dots sit half a pitch inside every edge.
-	function fitAxis(extent, pitch) {
-		const count = Math.max(1, Math.round(extent / pitch));
-		const step = count > 1 ? (extent - pitch) / (count - 1) : 0;
-		return { count, at: (i) => pitch / 2 + i * step };
+	function hash(x, y) {
+		let h = Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(SEED, 2147483647);
+		h = Math.imul(h ^ (h >>> 13), 1274126177);
+		return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
 	}
 
-	// Hidden or faded-out elements (a decorative window shown only on wide screens) leave the dots alone.
-	// Decorative layers (aria-hidden) may overlap the dots: only content people read or use clears them.
+	function pointOn([a, b, c], t, w, h) {
+		const u = 1 - t;
+		return [(u * u * a[0] + 2 * u * t * b[0] + t * t * c[0]) * w, (u * u * a[1] + 2 * u * t * b[1] + t * t * c[1]) * h];
+	}
+
+	// Decorative layers (aria-hidden) and hidden elements leave the dots alone; only content people read or use clears them.
 	function shown(el) {
 		if (!el || el.closest('[aria-hidden="true"]')) return false;
 		if (el.checkVisibility) return el.checkVisibility({ opacityProperty: true, visibilityProperty: true });
-		const style = getComputedStyle(el);
-		return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+		const s = getComputedStyle(el);
+		return s.display !== 'none' && s.visibility !== 'hidden' && s.opacity !== '0';
 	}
 
-	function visibleBox(r) {
-		return r.width > 0 && r.height > 0;
-	}
-
-	// Text clears line by line, so the cut-out follows a headline's ragged edge; boxes and cards clear whole.
-	function measureHoles(el, layer, framed) {
-		const origin = el.getBoundingClientRect();
+	// Text clears line by line, so the cut follows a headline's ragged edge; buttons, images and cards clear whole.
+	function measureHoles(el, layer) {
+		const o = el.getBoundingClientRect();
 		const holes = [];
-		const push = (r, snug) => visibleBox(r) && holes.push({ l: r.left - origin.left, t: r.top - origin.top, r: r.right - origin.left, b: r.bottom - origin.top, snug });
+		const push = (r) => r.width > 0 && r.height > 0 && holes.push([r.left - o.left, r.top - o.top, r.right - o.left, r.bottom - o.top]);
 		const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
 		const range = document.createRange();
-		for (let node = walker.nextNode(), n = 0; node && n < 2000; node = walker.nextNode(), n++) {
-			if (!node.textContent.trim() || layer.contains(node) || !shown(node.parentElement)) continue;
-			range.selectNodeContents(node);
-			for (const r of range.getClientRects()) push(r, false);
+		for (let n = walker.nextNode(), i = 0; n && i < 2000; n = walker.nextNode(), i++) {
+			if (!n.textContent.trim() || layer.contains(n) || !shown(n.parentElement)) continue;
+			range.selectNodeContents(n);
+			for (const r of range.getClientRects()) push(r);
 		}
 		for (const child of el.querySelectorAll('*')) {
 			if (layer.contains(child) || !shown(child)) continue;
-			// In a panel or frame only the visual it holds clears the rings, not what floats over it.
-			if (framed && !child.hasAttribute('data-ds-dots-fill') && /^(absolute|fixed)$/.test(getComputedStyle(child).position)) continue;
-			// Anything filling most of the section is its background (a canvas effect, a wrapper), not content.
 			const box = child.getBoundingClientRect();
-			if (box.width * box.height > 0.6 * origin.width * origin.height) continue;
+			// Anything filling most of the hero is its background (a canvas effect, a wrapper), not content.
+			if (box.width * box.height > 0.6 * o.width * o.height) continue;
 			if (child.matches(BOXES)) {
-				if (!child.parentElement?.closest(BOXES)) push(box, true);
+				if (!child.parentElement?.closest(BOXES)) push(box);
 				continue;
 			}
-			// A card or panel (its own background, border or shadow) is content too.
-			const style = getComputedStyle(child);
-			const filled = style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent';
-			if (filled || style.borderTopWidth !== '0px' || style.boxShadow !== 'none' || style.backgroundImage !== 'none') push(box, true);
+			const s = getComputedStyle(child);
+			const filled = s.backgroundColor !== 'rgba(0, 0, 0, 0)' && s.backgroundColor !== 'transparent';
+			if (filled || s.borderTopWidth !== '0px' || s.boxShadow !== 'none') push(box);
 		}
 		return holes;
 	}
 
-	function diamond(size) {
-		const cells = [];
-		for (let dy = -size; dy <= size; dy++) for (let dx = -size; dx <= size; dx++) if (Math.abs(dx) + Math.abs(dy) <= size) cells.push([dx, dy]);
-		return cells;
-	}
-
-	function layout(width, height, holes, tone) {
-		const mobile = window.innerWidth < 640;
-		const pitch = mobile ? 12 : 16;
-		const cols = fitAxis(width, pitch);
-		const rows = fitAxis(height, pitch);
-		const visible = new Uint8Array(cols.count * rows.count);
-		for (let row = 0; row < rows.count; row++) {
-			for (let col = 0; col < cols.count; col++) {
-				const x = cols.at(col);
-				const y = rows.at(row);
-				visible[row * cols.count + col] = holes.some((h) => {
-					const c = pitch * (h.snug ? 0.75 : tone.clear);
-					return x > h.l - c && x < h.r + c && y > h.t - c && y < h.b + c;
-				})
-					? 0
-					: 1;
-			}
-		}
-		const free = (col, row) => col >= 0 && row >= 0 && col < cols.count && row < rows.count && visible[row * cols.count + col] === 1;
-		const solid = new Set();
-		if (tone.clusters) {
-			const shape = diamond(mobile ? 2 : 3);
-			for (const target of CLUSTERS) {
-				const tx = target.x * (cols.count - 1);
-				const ty = target.y * (rows.count - 1);
-				let best = null;
-				for (let row = 0; row < rows.count; row++) {
-					for (let col = 0; col < cols.count; col++) {
-						const d = (col - tx) ** 2 + (row - ty) ** 2;
-						if (best && d >= best.d) continue;
-						if (shape.every(([dx, dy]) => free(col + dx, row + dy) && !solid.has(`${col + dx}:${row + dy}`))) best = { col, row, d };
+	function layout(width, height, holes) {
+		const cols = Math.floor(width / PITCH);
+		const rows = Math.floor(height / PITCH);
+		const clear = PITCH * CLEARANCE_RATIO;
+		const curves = width < 640 ? [...CURVES, ...PHONE_CURVES] : CURVES;
+		// Each stream claims the cells within its width as it runs; a cell two streams cross keeps the first.
+		const cells = new Map();
+		curves.forEach((curve, stream) => {
+			for (let s = 0; s <= SAMPLES; s++) {
+				const t = s / SAMPLES;
+				const [x, y] = pointOn(curve, t, width, height);
+				const half = (ENTRY_HALF_WIDTH + (TAIL_HALF_WIDTH - ENTRY_HALF_WIDTH) * t) * PITCH;
+				const reach = Math.ceil(half / PITCH);
+				const cc = Math.floor(x / PITCH);
+				const cr = Math.floor(y / PITCH);
+				for (let r = cr - reach; r <= cr + reach; r++) {
+					for (let c = cc - reach; c <= cc + reach; c++) {
+						if (c < 0 || r < 0 || c >= cols || r >= rows) continue;
+						const d = Math.hypot(c * PITCH + PITCH / 2 - x, r * PITCH + PITCH / 2 - y);
+						if (d > half) continue;
+						const key = `${c}:${r}`;
+						const had = cells.get(key);
+						if (had && (had.stream !== stream || had.d <= d)) continue;
+						cells.set(key, { stream, t, d });
 					}
 				}
-				if (best) for (const [dx, dy] of shape) solid.add(`${best.col + dx}:${best.row + dy}`);
 			}
+		});
+		const dots = [];
+		for (const [key, { t }] of cells) {
+			const [c, r] = key.split(':').map(Number);
+			const x = c * PITCH + PITCH / 2;
+			const y = r * PITCH + PITCH / 2;
+			if (holes.some(([l, tp, rt, b]) => x > l - clear && x < rt + clear && y > tp - clear && y < b + clear)) continue;
+			// The stream breaks up toward its tail, fraying into the open middle.
+			if (hash(c + 71, r + 37) < t ** 2 * 0.7) continue;
+			const roll = hash(c + 101, r + 211);
+			dots.push({ x, y, kind: roll < RING_SHARE ? 'ring' : roll > 1 - LIT_SHARE ? 'lit' : 'dim', opacity: 1 - (1 - TAIL_OPACITY) * t });
 		}
-		const hollow = [];
-		const filled = [];
-		for (let row = 0; row < rows.count; row++) {
-			for (let col = 0; col < cols.count; col++) {
-				if (!free(col, row)) continue;
-				(solid.has(`${col}:${row}`) ? filled : hollow).push([cols.at(col), rows.at(row)]);
-			}
-		}
-		return { radius: pitch * DOT_RADIUS_RATIO, hollow, filled };
-	}
-
-	// Many dots as one path (two arcs each), so a field of a thousand dots is three DOM nodes.
-	function dotsPath(dots, radius) {
-		const r = +radius.toFixed(2);
-		const d = +(radius * 2).toFixed(2);
-		let path = '';
-		for (const [x, y] of dots) path += `M${+(x - radius).toFixed(2)} ${+y.toFixed(2)}a${r} ${r} 0 1 0 ${d} 0a${r} ${r} 0 1 0 ${-d} 0`;
-		return path;
+		return dots;
 	}
 
 	function node(name, attrs) {
@@ -149,34 +133,18 @@
 		return n;
 	}
 
-	let uid = 0;
 	function mount(el) {
-		const tone = TONES[el.getAttribute('data-ds-dots')] ?? TONES.field;
 		const layer = node('svg', { 'aria-hidden': 'true', 'data-ds-dots-layer': '', focusable: 'false' });
 		el.prepend(layer);
-		const id = `ds-dots-${++uid}`;
-		let spot = null;
-		let lit = null;
+		const radius = PITCH * DOT_RADIUS_RATIO - 0.5;
 		let frame = 0;
 		const draw = () => {
 			frame = 0;
-			if (!tone.clusters) for (const child of el.children) if (child.matches('img,video,picture,iframe,canvas') && /^(absolute|fixed)$/.test(getComputedStyle(child).position)) child.setAttribute('data-ds-dots-fill', '');
-			const { radius, hollow, filled } = layout(el.clientWidth, el.clientHeight, measureHoles(el, layer, !tone.clusters), tone);
-			layer.replaceChildren();
-			layer.append(node('path', { fill: 'none', stroke: tone.color, 'stroke-width': 1, opacity: tone.hollow, d: dotsPath(hollow, radius - 0.5) }));
-			if (filled.length) layer.append(node('path', { fill: tone.color, opacity: tone.solid, d: dotsPath(filled, radius) }));
-			if (tone.spotlight) {
-				const defs = node('defs', {});
-				const falloff = node('radialGradient', { id: `${id}-falloff` });
-				falloff.append(node('stop', { offset: '0%', 'stop-color': 'white' }), node('stop', { offset: '100%', 'stop-color': 'black' }));
-				const mask = node('mask', { id: `${id}-mask` });
-				spot = node('circle', { cx: -9999, cy: -9999, r: (radius / DOT_RADIUS_RATIO) * 6, fill: `url(#${id}-falloff)` });
-				mask.append(spot);
-				defs.append(falloff, mask);
-				lit = node('path', { mask: `url(#${id}-mask)`, fill: tone.color, 'data-ds-dots-lit': '', d: dotsPath([...hollow, ...filled], radius - 0.5) });
-				lit.style.setProperty('--ds-dots-lit', tone.spotlight);
-				layer.append(defs, lit);
+			const g = node('g', { fill: 'currentColor', stroke: 'currentColor', 'stroke-width': 1 });
+			for (const d of layout(el.clientWidth, el.clientHeight, measureHoles(el, layer))) {
+				g.append(node('circle', { cx: d.x, cy: d.y, r: radius, opacity: +d.opacity.toFixed(2), 'fill-opacity': d.kind === 'ring' ? 0 : d.kind === 'lit' ? 1 : DIM_OPACITY, 'stroke-opacity': d.kind === 'ring' ? RING_OPACITY : 0 }));
 			}
+			layer.replaceChildren(g);
 			layer.setAttribute('data-ready', '');
 		};
 		const relayout = () => {
@@ -185,29 +153,6 @@
 		new ResizeObserver(relayout).observe(el);
 		document.fonts?.ready.then(relayout);
 		for (const img of el.querySelectorAll('img')) if (!img.complete) img.addEventListener('load', relayout, { once: true });
-		// The rings near a mouse pointer fill in: a decorative trace on marketing pages only, never on touch or with
-		// reduced motion. Only the mask's circle moves, two attribute writes a frame.
-		if (tone.spotlight && finePointer() && !reduced()) {
-			let point = null;
-			let raf = 0;
-			el.addEventListener(
-				'pointermove',
-				(e) => {
-					if (e.pointerType !== 'mouse' || !spot) return;
-					const o = el.getBoundingClientRect();
-					point = [e.clientX - o.left, e.clientY - o.top];
-					lit?.setAttribute('data-on', '');
-					if (!raf)
-						raf = requestAnimationFrame(() => {
-							raf = 0;
-							spot.setAttribute('cx', point[0]);
-							spot.setAttribute('cy', point[1]);
-						});
-				},
-				{ passive: true },
-			);
-			el.addEventListener('pointerleave', () => lit?.removeAttribute('data-on'));
-		}
 	}
 
 	const seen = new WeakSet();
@@ -218,7 +163,7 @@
 			mount(el);
 		}
 	};
-	// Pages that change without a reload (client routing) get their new sections drawn too.
+	// Pages that change without a reload (client routing) get their new hero drawn too.
 	let pending = 0;
 	const start = () => {
 		scan();

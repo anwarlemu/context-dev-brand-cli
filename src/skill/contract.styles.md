@@ -1,6 +1,6 @@
 # {{brand}} design system (styling only)
 - This project keeps its own content and elements. The design system changes how everything looks: color, type, spacing, widths, alignment, borders, radius, shadow, motion, and the frame: the ruled page frame on a site, the product theme in an app or dashboard.
-- Never change copy, text, links, images or markup, or which elements and sections exist and in what order. Never add {{brand}} pages, templates, sections, components or copy. The one markup you add is the brand marks `{{bin}} apply` lists: `data-ds-dots` attributes, `ds-accent` spans around existing words, `ds-figure` classes.
+- Never change copy, text, links, images or markup, or which elements and sections exist and in what order. Never add {{brand}} pages, templates, sections, components or copy. The one markup you add is the brand marks `{{bin}} apply` lists: `data-ds-dots` on the hero, `ds-accent` spans around existing words, `ds-figure` classes.
 - Each kind of element has a recipe for how the brand styles it per situation (primary button, button on blue, clickable card, input, nav link, table row...). `{{bin}} style` lists them, `{{bin}} style <id>` prints one, `{{bin}} style --detect <file>` matches a file's elements. Style every element by its recipe.
 - Brand values are CSS variables, `var(--ds-*)` (native code uses their literal values). Find one with `{{bin}} tokens --search <term>` or `{{bin}} tokens <path>`.
 - No raw color, spacing, radius, font, or motion values in new or changed styles. Use the tokens.

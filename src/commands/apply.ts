@@ -286,16 +286,15 @@ export function registerApply(program: Command) {
 						: [`   none recognized automatically. Match each element to a recipe yourself: \`${cli} style${surface === 'product' ? ' --surface product' : ''}\` lists them${kinds.native ? ', and translate its CSS into the platform\'s styling (SwiftUI modifiers, Compose modifiers, Flutter widgets)' : ''}.`]),
 					'',
 					color.bold('Styling only.') + ` Keep every word, link, image and element where it is; do not add templates, sections or components, and do not rewrite copy. Visual layout is styling: spacing, widths, alignment, borders and backgrounds follow the recipes (${surface === 'product' ? 'app-shell, app-sidebar, app-page-header, app-page-column, app-card, app-table' : 'page-column, section, header, the cards and buttons'}).`,
-					color.bold(`7. Brand moments: what makes it read as the brand at a glance${moments.length ? ` (${moments.length} missing)` : ''}:`),
+					color.bold(`7. Signature touches${moments.length ? ` (${moments.length} missing)` : ''}: few and quiet, as on the brand's site:`),
 					`   ${dotsIn.length ? `The dot script loads in ${dotsIn.join(', ')}` : publicDir ? `No base layout found: load ${dotsUrl} with a script tag in the base layout` : `No public folder: serve ${bin}/dots.js (from the package's styles/) as a static file and load it in the base layout`}; its styles are ${main ? `${dirname(main)}/${bin}/dots.css` : 'dots.css'}. Mark elements the markup already has; add no sections and change no words:`,
 					...(surface === 'product'
-						? ['   - class="ds-figure" on headline metrics and counts (figures only, never words); data-ds-dots="frame" on an empty state\'s illustration area.']
+						? ['   - class="ds-figure" on headline metrics and counts (figures only, never words).']
 						: [
-								'   - data-ds-dots on the hero section: the dot field, cleared around its text, buttons and images.',
-								'   - data-ds-dots="panel" on the element wrapping the hero\'s screenshot, video or demo: the hero\'s one block of blue.',
-								'   - data-ds-dots="frame" on the element wrapping each standalone screenshot or illustration (not logos or avatars).',
-								'   - <span class="ds-accent"> around the key phrase of the hero headline and of each section heading: the same words, in blue.',
-								'   - class="ds-figure" on stats, step numbers and counts (figures only, never words).',
+								'   - data-ds-dots on the home page\'s hero section only: thin streams of dots run in from its edges and leave the middle bare.',
+								'   - <span class="ds-accent"> around the key phrase of the hero headline and of section headings (the last few words, often a second line): the same words, in blue.',
+								'   - class="ds-figure" on a large stat or step number, if the page has one (figures only, never words).',
+								'   Nothing else: no dots around screenshots or behind sections; screenshots and code sit in the media frame (white card, pale ring).',
 								...moments.map((m) => `   Missing: ${m.what.replace(/:.*$/, '')} (${m.where.slice(0, 3).join(', ')})`),
 							]),
 					'',

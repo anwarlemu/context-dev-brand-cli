@@ -23,10 +23,10 @@ ruled frame; a product shows the canvas page with white cards.
 At a glance it reads as Context.dev: white page (or the product canvas), black text, brand blue only
 for accents and links, black pill primary buttons, Rethink Sans, Doto only for figures, hairline
 rings instead of heavy borders and shadows, no gradients or glows from the old theme.
-A site also needs the brand's moments, or it is a generic black and white page (5 at most): the
-hero's field of hollow blue rings with solid diamonds, the hero visual on the blue dot panel,
-screenshots and illustrations on white frames of faint rings, and the key phrase of the hero
-headline and section headings in blue. Flag each one missing, and dots that cross text or crowd it.
+A site also has the brand's two signature touches, used sparingly: thin streams of small blue dots
+running in from the hero's edges with the middle bare, and the key phrase of headlines in blue.
+Missing both reads as a generic black and white page. Too much is as wrong: dots across whole
+sections, behind text, around screenshots, or large blue panels the site did not have.
 
 ## Detail quality (common UX errors)
 
