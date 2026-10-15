@@ -56,10 +56,11 @@ Set up the Context.dev design system in this project: run
 To install it and restyle the site with the brand:
 
 ```text
-Apply the Context.dev design system to this site: run
-`npx -y github:anwarlemu/context-dev-brand-cli init`, then `npx context-ds apply`, then change the
-style values it lists until `npx context-ds apply --list` is empty. Styling only: do not change any
-copy, content, layout or structure. Show me the result before committing.
+Apply the Context.dev design system to this project: run
+`npx -y github:anwarlemu/context-dev-brand-cli init`, then `npx context-ds apply`. Restyle every
+component it lists with its recipe (`npx context-ds style <recipe>` shows the exact styling) and
+fix what `npx context-ds apply --list` shows until it is empty. Change how things look, not what
+they say: keep all copy and every element. Show me the result before committing.
 ```
 
 `init` adds the package to the project (from the `main` branch) and writes the tokens, the rules,
