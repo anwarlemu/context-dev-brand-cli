@@ -87,6 +87,25 @@ function mergeClaudeHooks(existing: any, cmd: string, bin: string, harness: 'cla
 	return settings;
 }
 
+/**
+ * Writes the check into .git/hooks/pre-commit. Git does not commit that folder, so a fresh clone has no hook; the
+ * session start hook calls this too, which puts it back for whoever opens the project with an agent.
+ */
+export function installPreCommit(root: string) {
+	if (!existsSync(join(root, '.git'))) return undefined;
+	const config = loadConfig();
+	const hookPath = join(root, '.git', 'hooks', 'pre-commit');
+	const existing = existsSync(hookPath) ? readFileSync(hookPath, 'utf8') : '#!/bin/sh\n';
+	const block = `${binCommand(root, 'other')} check --changed || { echo "${config.cli} check failed. Fix the errors above before committing."; exit 1; }`;
+	const next = upsertBlock(existing.startsWith('#!') ? existing : `#!/bin/sh\n${existing}`, block, '# ds:pre-commit:start', '# ds:pre-commit:end');
+	if (next === existing) return undefined;
+	if (dryRun) return 'would write';
+	mkdirSync(dirname(hookPath), { recursive: true });
+	writeFileSync(hookPath, next);
+	chmodSync(hookPath, 0o755);
+	return existing.includes('ds:pre-commit') ? 'patched' : 'wrote';
+}
+
 function readJson(path: string) {
 	try {
 		return existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : undefined;
@@ -270,19 +289,8 @@ export function registerInit(program: Command) {
 
 			writeIfChanged(root, `.github/workflows/${config.bin}.yml`, readFileSync(pkgPath('src', 'ci', 'consumer-workflow.yml'), 'utf8').replaceAll('{{name}}', config.bin).replaceAll('{{cli}}', config.cli), changes);
 
-			if (existsSync(join(root, '.git'))) {
-				const hookPath = join(root, '.git', 'hooks', 'pre-commit');
-				const existing = existsSync(hookPath) ? readFileSync(hookPath, 'utf8') : '#!/bin/sh\n';
-				const block = `${binCommand(root, 'other')} check --changed || { echo "${config.cli} check failed. Fix the errors above before committing."; exit 1; }`;
-				const next = upsertBlock(existing.startsWith('#!') ? existing : `#!/bin/sh\n${existing}`, block, '# ds:pre-commit:start', '# ds:pre-commit:end');
-				if (next !== existing && dryRun) changes.push({ file: '.git/hooks/pre-commit', action: 'would write' });
-				else if (next !== existing) {
-					mkdirSync(dirname(hookPath), { recursive: true });
-					writeFileSync(hookPath, next);
-					chmodSync(hookPath, 0o755);
-					changes.push({ file: '.git/hooks/pre-commit', action: existing.includes('ds:pre-commit') ? 'patched' : 'wrote' });
-				}
-			}
+			const preCommit = installPreCommit(root);
+			if (preCommit) changes.push({ file: '.git/hooks/pre-commit', action: preCommit });
 
 			const gitignore = existsSync(join(root, '.gitignore')) ? readFileSync(join(root, '.gitignore'), 'utf8') : '';
 			// Local run state stays out of git; .ds/baseline.json and .ds/approved-overrides.json are committed.

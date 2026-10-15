@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { checkText, findingKey, formatFinding, isInScope, newFindings, runCheck } from '../check/engine.js';
 import { loadSource } from '../check/source.js';
 import { gatherInfo } from '../commands/info.js';
+import { installPreCommit } from '../commands/init.js';
 import { resolveTask, templateIndex } from '../commands/resolve.js';
 import { loadCheckConfig, loadConfig } from '../lib/config.js';
 import { changedFiles } from '../lib/git.js';
@@ -36,6 +37,7 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 	let update: ReturnType<typeof updateAvailable>;
 	try {
 		update = updateAvailable(root);
+		installPreCommit(root);
 	} catch {}
 	const lines = [
 		`${info.brand} design system ${info.version} is active in this project (${bin}).`,

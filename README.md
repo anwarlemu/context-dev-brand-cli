@@ -22,7 +22,9 @@ branch), writes the tokens, the contract in `AGENTS.md` / `CLAUDE.md`, the hooks
 Codex and Cursor, the pre-commit hook and the CI workflow. From then on the hooks and checks hold
 every agent to the system; nothing depends on the agent reading instructions. Use
 `init --dry-run` first to see what it will change. Codex runs project hooks once you trust them
-with `/hooks`. `npx playwright install chromium` is needed only for `review`.
+with `/hooks`. Git does not share `.git/hooks`, so teammates who clone the project get the
+pre-commit hook back the first time they open it with an agent (CI checks either way).
+`npx playwright install chromium` is needed only for `review`.
 
 ### Updates
 
