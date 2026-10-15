@@ -11,20 +11,30 @@ a template, not a model decision. Copy is the only thing left to the agent.
 ## What it does
 
 It puts the Context.dev brand's styling (color, type, spacing, radius, shadow, motion) onto any web
-project and keeps coding agents on it. On an existing site it changes how things look and nothing
-else: copy, content, markup, layout and page structure stay exactly as they are.
+project and keeps coding agents on it. On an existing site or app it changes how things look and
+nothing else: copy, content, elements and what each screen is for stay as they are.
 
 - `init` installs it: the brand tokens (colors, type, spacing, radius, motion as CSS variables),
   short rules in `AGENTS.md` / `CLAUDE.md`, and hooks that check every file an agent writes. Nothing
   on the site changes yet.
-- `apply` restyles the site that is already there. It converts the site's own styling, declaration
-  by declaration, keeping every selector and element: each color is mapped by the role it plays
-  (a dark site becomes the brand's light one: near-black surfaces turn white, white text turns
-  black, white hairlines turn black hairlines, accents turn brand blue, greens and reds become the
-  status colors), font stacks become Rethink Sans, sizes, weights, radii, spacing, shadows and
-  motion move to the nearest brand token, and one-color marks drawn for a dark page are redrawn.
-  It adds the brand's page frame (ruled column edges, section rules and nodes), loads the
-  typefaces, then lists every component with the recipe to finish it with.
+- `apply` restyles what is already there, in any stack. It first reads what the interface is: a
+  product people work in (a dashboard, an admin, a native app) or a marketing site, with the
+  evidence, and tells the agent to keep each screen's main action and key information the most
+  prominent. Then it converts every style value, keeping every selector and element: each color is
+  mapped by the role it plays, read from how the site uses it (a dark interface becomes the brand's
+  light one, accents turn brand blue, greens and reds become the status colors, chart series get
+  the brand's series colors, a site's own dark mode follows the brand's), font stacks become
+  Rethink Sans, sizes, weights, radii, spacing, shadows and motion move to the nearest brand token
+  (including sizes kept in the site's own variables), and one-color marks drawn for a dark page
+  are redrawn. A site gets the brand's page frame; a product gets the product theme (the
+  dashboard's type scale, hairlines, card shadows, 15px root). Then it lists every component with
+  the recipe to finish it with.
+- It reads every kind of file: stylesheets (CSS, Sass, Less, Stylus), templates (Astro, Vue,
+  Svelte, HTML, ERB, PHP, Blade, Liquid, Jinja, Twig, Razor...), scripts (inline style objects,
+  CSS-in-JS, Tailwind color classes, chart colors in code), and native or other code (SwiftUI,
+  UIKit, Compose, Flutter, Android XML, XAML, Python, Go...), where colors become the brand's
+  values in the language's own form. Next apps get the typefaces through next/font, others through
+  the stylesheet; native apps are told to add them as app fonts.
 - `style` knows how the brand styles each kind of element in each situation: 155 recipes learned
   from the brand's own site and dashboard (primary button, button on blue, clickable card, pricing
   card, input, nav link, footer, table row, sidebar item, menu, dialog...). `apply` lists every
@@ -187,7 +197,7 @@ All commands take `--json` and `--help`.
 |---|---|
 | `init [--mode new\|scoped] [--harness ...]` | Install into a project |
 | `style [recipe] [--detect <files>] [--for <selector>] [--surface marketing\|product]` | How the brand styles a kind of element per situation; `--detect` matches a file's elements to recipes |
-| `apply [--dry-run] [--list [paths]]` | Restyle the existing site with the brand (styling only), then list the style values left |
+| `apply [--dry-run] [--list [paths]] [--surface product\|marketing] [--theme light\|dark]` | Restyle the existing site or app with the brand (styling only): reads what it is, converts every style value, then lists each component with its recipe and the values left |
 | `info` | Framework, tokens, installed items and drift, hooks, baseline |
 | `resolve "<task>"` | Task to template, by lookup against `intents.json` |
 | `scaffold <template> [--slot s=block] [--out path] [--force] [--local]` | Page from a locked template |

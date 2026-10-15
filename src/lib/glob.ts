@@ -29,7 +29,7 @@ export function globToRegExp(glob: string): RegExp {
 
 export const matchesAny = (path: string, globs: string[]) => globs.some((g) => globToRegExp(g).test(path));
 
-const ALWAYS_SKIP = new Set(['node_modules', '.git', '.next', 'dist', 'build', 'out', '.turbo', '.vercel', 'coverage', '.ds']);
+const ALWAYS_SKIP = new Set(['node_modules', '.git', '.next', 'dist', 'build', 'out', '.turbo', '.vercel', 'coverage', '.ds', 'Pods', 'DerivedData', 'vendor', 'target', 'venv', '__pycache__', 'bin', 'obj', 'Carthage']);
 
 export function walkFiles(root: string, include: string[], exclude: string[]): string[] {
 	const results: string[] = [];

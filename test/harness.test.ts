@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -12,9 +12,9 @@ import { isProductTarget } from '../src/review/critique.js';
 import { checkChanged } from '../src/commands/watch.js';
 import { overrideKey, writeApprovals } from '../src/lib/state.js';
 import { gitRemote, installedCommit } from '../src/lib/source.js';
-import { colorRole, remapVariables } from '../src/commands/apply.js';
 import { detectComponents, findRecipe, loadRecipes, recipeCss } from '../src/lib/recipes.js';
-import { rebrandCss, rebrandSvgAsset, sitePalette } from '../src/lib/rebrand.js';
+import { brandLiteral, classPalette, rebrandClasses, rebrandCss, rebrandNative, rebrandScript, rebrandSvgAsset, sitePalette } from '../src/lib/rebrand.js';
+import { profileInterface } from '../src/lib/surface.js';
 import { runningHarness } from '../src/commands/init.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
@@ -263,23 +263,67 @@ describe('init on other stacks', () => {
 });
 
 describe('apply', () => {
-	it('re-points site variables at brand tokens by name, then by value', () => {
-		const css = ':root {\n  --accent: #e4572e;\n  --ink: #1b1b1b;\n  --paper: #fdfbf7;\n  --c7: #f0c419;\n  --space: 4px;\n  --font-body: Georgia, serif;\n  --ds-color-brand: #000;\n}\n.a { color: #fff; }';
-		const out = remapVariables(css, 'g.css');
-		expect(out.css).toContain('--accent: var(--ds-color-brand);');
-		expect(out.css).toContain('--ink: var(--ds-color-text-default);');
-		expect(out.css).toContain('--paper: var(--ds-color-bg-default);');
-		expect(out.css).toContain('--font-body: var(--ds-font-sans);');
-		expect(out.css).toContain('--space: 4px;');
-		expect(out.css).toContain('--ds-color-brand: #000;');
-		expect(out.css).toContain('.a { color: #fff; }');
-		expect(out.mappings.find((m) => m.name === '--c7')?.how).toBe('value');
+	const stats = () => ({ colors: 0, fonts: 0, type: 0, radius: 0, spacing: 0, motion: 0, shadows: 0 });
+	it('reads what an interface is before restyling it', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-profile-'));
+		const write = (rel: string, text: string) => {
+			mkdirSync(join(dir, rel, '..'), { recursive: true });
+			writeFileSync(join(dir, rel), text);
+		};
+		write('app/(dash)/page.jsx', "import { LineChart } from 'recharts';\nexport default () => <table><tr><td>MRR</td></tr></table>;");
+		write('app/login/page.jsx', 'export default () => <form />;');
+		write('app/settings/page.jsx', '<div className="sidebar" />');
+		expect(profileInterface(dir, ['app/(dash)/page.jsx', 'app/login/page.jsx', 'app/settings/page.jsx']).surface).toBe('product');
+		write('src/pages/index.astro', '<section class="hero"><a>Get started</a></section><section class="pricing" /><footer />');
+		write('src/pages/blog/a.astro', '<article />');
+		const site = profileInterface(dir, ['src/pages/index.astro', 'src/pages/blog/a.astro']);
+		expect(site.surface).toBe('marketing');
+		expect(site.reasons.join(' ')).toContain('hero');
+		rmSync(dir, { recursive: true });
 	});
-	it('reads roles from common names', () => {
-		expect(colorRole('--text-muted', '#666')?.to).toBe('--ds-color-text-muted');
-		expect(colorRole('--border', '#ddd')?.to).toBe('--ds-color-border-default');
-		expect(colorRole('--on-primary', '#fff')?.to).toBe('--ds-color-text-on-brand');
-		expect(colorRole('--x', '#fefefe')?.to).toBe('--ds-color-bg-default');
+	it('maps a variable by what it is used for and in which theme', () => {
+		const css = ':root { --15-light: #070707; --ea-light: #eaeaea; --dk-text-1: #ffffff; }\n.a { color: var(--15-light); border: 1px solid var(--ea-light); }\n[data-theme="dark"] { --15-light: var(--dk-text-1); }';
+		const out = rebrandCss(css, sitePalette(css), stats());
+		expect(out).toContain('--15-light: var(--ds-color-text-default)');
+		expect(out).toContain('--ea-light: var(--ds-color-border-subtle)');
+		expect(out).toContain('--dk-text-1: var(--ds-color-text-default)');
+	});
+	it('reads sizes kept in site variables through to the brand scale', () => {
+		const css = ':root { --fs-main: 15px; --radius-md: 12px; }\n.a { font-size: var(--fs-main); border-radius: var(--radius-md); animation-delay: .4s; }\n.b { border-radius: 50%; }';
+		const out = rebrandCss(css, sitePalette(css), stats());
+		expect(out).toMatch(/font-size: var\(--ds-text-[a-z-]+\)/);
+		expect(out).toMatch(/\.a \{[^}]*border-radius: var\(--ds-radius-[a-z-]+\)/);
+		expect(out).toMatch(/animation-delay: var\(--ds-duration-[a-z]+\)/);
+		expect(out).toContain('border-radius: var(--ds-radius-pill)');
+		expect(rebrandCss("@font-face { font-family: 'Feature'; font-weight: 600; }", sitePalette(''), stats())).toBe("@font-face { font-family: 'Feature'; font-weight: 600; }");
+	});
+	it('gives each chart series its own brand series color', () => {
+		const css = '.chart-revenue { stroke: #3b82f6; } .chart-cost { stroke: #ef4444; }';
+		const out = rebrandCss(css, sitePalette(''), stats());
+		expect(out).toContain('var(--ds-color-chart-series-1)');
+		expect(out).toContain('var(--ds-color-chart-series-2)');
+	});
+	it('converts Tailwind color classes, style objects and code colors in scripts', () => {
+		const dark = sitePalette('body { background: #0b0b0c; color: #fafafa; }');
+		expect(rebrandClasses('bg-gray-900 text-white hover:bg-blue-600 md:text-emerald-500/80 p-4', dark, stats(), true)).toBe('bg-surface-subtle text-fg hover:bg-brand md:text-success/80 p-4');
+		expect(rebrandClasses('bg-white', sitePalette(''), stats(), false)).toBe('bg-[var(--ds-color-bg-default)]');
+		expect(rebrandClasses('bg-indigo-600 text-white', sitePalette(''), stats(), true)).toBe('bg-brand text-on-brand');
+		expect(rebrandCss('.b { background: #4f46e5; color: #fff; }', sitePalette(''), stats())).toBe('.b { background: var(--ds-color-bg-brand); color: var(--ds-color-text-on-brand); }');
+		expect(rebrandCss('.tip { background: #111; color: #fff; }', sitePalette(''), stats())).toBe('.tip { background: var(--ds-color-action-primary); color: var(--ds-color-text-inverse); }');
+		// A page drawn dark with its own classes is read as dark even when the stylesheet is light.
+		const page = classPalette('<div className="bg-zinc-950 text-zinc-100"><a className="text-zinc-400" /></div>', sitePalette(''));
+		expect(rebrandClasses('bg-zinc-950 text-zinc-100', page, stats(), true)).toBe('bg-surface text-fg');
+		const out = rebrandScript("const c = ['#3b82f6', '#10b981'];\n<div style={{ color: '#111', marginTop: 16 }} />", sitePalette(''), stats(), { hex: (t) => brandLiteral(t) });
+		expect(out).toContain("color: 'var(--ds-color-text-default)'");
+		expect(out).toMatch(/marginTop: 'var\(--ds-space-[\d-]+\)'/);
+		expect(out).not.toContain('#10b981');
+	});
+	it('converts native and other languages in their own color form', () => {
+		const dark = sitePalette('body { background: #0b0b0c; color: #fafafa; }');
+		expect(rebrandNative('val Background = Color(0xFF0B0B0C)', dark, stats(), 'root')).toBe('val Background = Color(0xFFFFFFFF)');
+		expect(rebrandNative('Text("Hi").foregroundColor(Color(red: 1, green: 1, blue: 1))', dark, stats(), 'root')).toContain('Color(red: 0, green: 0, blue: 0)');
+		expect(rebrandNative('<color name="divider">#1FFFFFFF</color>', dark, stats(), 'root', true)).toBe('<color name="divider">#1F000000</color>');
+		expect(rebrandNative('THEME = {"bg": "#0b0b0c"}\nanchor = "#add"', dark, stats(), 'root')).toBe('THEME = {"bg": "#FFFFFF"}\nanchor = "#add"');
 	});
 });
 

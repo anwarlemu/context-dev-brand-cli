@@ -164,7 +164,7 @@ function nextSteps(harnesses: string[], dry: boolean, full: boolean) {
 	else if (!current && harnesses.includes('codex')) lines.push('  Codex users trust the hooks once with /hooks in Codex.');
 	if (full) lines.push(`  From now on: \`${cli} resolve "<task>"\` before UI work; \`${cli} update\` for design system changes.`);
 	else {
-		lines.push(`  Styling only: the design system changes how this site looks, never its copy or which elements it has.`);
+		lines.push(`  Styling only: the design system changes how this project looks (a site or a product), never its copy or which elements it has.`);
 		lines.push(`  The brand is installed, not applied: pages look the same until \`${cli} apply\` runs. It restyles every page, so run it only when the user asks to apply the brand.`);
 		lines.push(`  From now on: no raw values in styles (\`${cli} tokens --search <term>\` finds the token); \`${cli} update\` for design system changes.`);
 	}
@@ -284,17 +284,17 @@ export function registerInit(program: Command) {
 					writeIfChanged(root, cssRel, `${lead}${lead ? '\n' : ''}${line}\n${css.slice(lead.length).replace(/^\n/, '')}`, changes, 'patched');
 				}
 				notes.push(`${project.tailwindMajor ? `Tailwind ${project.tailwindMajor}` : 'No Tailwind'}, so only the tokens were installed: CSS variables (var(--ds-*)) imported into ${cssRel}. They change nothing until styles use them.${project.tailwindMajor === 3 ? ` Tailwind 3 classes for them: the preset in node_modules/${config.bin}/build/tailwind.preset.ts.` : ''}`);
-			} else notes.push(`No global CSS found. The tokens are in ${dsCssDir}/tokens.css for the site's main stylesheet to import.`);
+			} else notes.push(project.native ? `${project.native} app: \`${config.cli} apply\` converts its colors to the brand in its own code; \`${config.cli} tokens\` lists every value (sizes, radii, type) to use in it.` : `No global CSS found. The tokens are in ${dsCssDir}/tokens.css for the site's main stylesheet to import.`);
 
 			const loadsBrandFonts = (() => {
-				const hits = spawnSync('grep', ['-rlE', '--include=*.ts', '--include=*.tsx', 'Rethink_Sans|--font-rethink-sans', 'src', 'app', 'lib'], { cwd: root, encoding: 'utf8' });
-				return !!hits.stdout?.trim() && !hits.stdout.includes('ds-fonts.ts');
+				const hits = spawnSync('grep', ['-rlE', '--include=*.ts', '--include=*.tsx', '--include=*.js', '--include=*.jsx', 'Rethink_Sans|--font-rethink-sans', 'src', 'app', 'lib'], { cwd: root, encoding: 'utf8' });
+				return !!hits.stdout?.trim() && !/ds-fonts\.[jt]s/.test(hits.stdout);
 			})();
 			if (loadsBrandFonts) notes.push('The app already loads Rethink Sans (--font-rethink-sans), so no font loader was added.');
 			if (project.framework === 'next' && !loadsBrandFonts) {
 				const libDir = project.srcDir ? 'src/lib' : 'lib';
 				const fonts = `import { Doto, IBM_Plex_Mono, Rethink_Sans } from 'next/font/google';\n\nconst rethinkSans = Rethink_Sans({ subsets: ['latin'], variable: '--font-rethink-sans' });\nconst doto = Doto({ subsets: ['latin'], weight: ['800'], variable: '--font-doto' });\nconst ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400'], variable: '--font-ibm-plex-mono' });\n\nexport const dsFontVariables = \`\${rethinkSans.variable} \${doto.variable} \${ibmPlexMono.variable}\`;\n`;
-				writeIfChanged(root, `${libDir}/ds-fonts.ts`, fonts, changes);
+				writeIfChanged(root, `${libDir}/ds-fonts.${project.typescript ? 'ts' : 'js'}`, fonts, changes);
 				const layoutRel = project.appDir ? `${project.appDir}/layout.tsx` : undefined;
 				if (layoutRel && existsSync(join(root, layoutRel))) {
 					const layout = readFileSync(join(root, layoutRel), 'utf8');
@@ -311,7 +311,8 @@ export function registerInit(program: Command) {
 			}
 
 			const pkgJson = existsSync(join(root, 'package.json')) ? JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) : undefined;
-			if (!project.framework.startsWith('next') && !loadsBrandFonts) notes.push('Brand typefaces (Rethink Sans, Doto, IBM Plex Mono) are not loaded. The site needs them from Google Fonts once its styles use var(--ds-font-sans).');
+			if (project.native) notes.push('Brand typefaces: add Rethink Sans (text), IBM Plex Mono (code) and Doto (figures) to the app as fonts and set them on its text styles.');
+			else if (!project.framework.startsWith('next') && !loadsBrandFonts) notes.push('Brand typefaces (Rethink Sans, Doto, IBM Plex Mono) are not loaded. The site needs them from Google Fonts once its styles use var(--ds-font-sans).');
 			if (componentKit && rules === 'all' && pkgJson && !{ ...pkgJson.dependencies, ...pkgJson.devDependencies }['tailwind-merge']) {
 				const install = project.packageManager === 'npm' ? ['install', 'tailwind-merge@^3'] : ['add', 'tailwind-merge@^3'];
 				const run = dryRun ? { status: 0 } : spawnSync(project.packageManager, install, { cwd: root, stdio: 'pipe', encoding: 'utf8' });

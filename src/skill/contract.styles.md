@@ -1,10 +1,11 @@
 # {{brand}} design system (styling only)
-- This project keeps its own content and elements. The design system changes how everything looks: color, type, spacing, widths, alignment, borders, radius, shadow, motion, and the brand's ruled page frame.
+- This project keeps its own content and elements. The design system changes how everything looks: color, type, spacing, widths, alignment, borders, radius, shadow, motion, and the frame: the ruled page frame on a site, the product theme in an app or dashboard.
 - Never change copy, text, links, images or markup, or which elements and sections exist and in what order. Never add {{brand}} pages, templates, sections, components or copy.
 - Each kind of element has a recipe for how the brand styles it per situation (primary button, button on blue, clickable card, input, nav link, table row...). `{{bin}} style` lists them, `{{bin}} style <id>` prints one, `{{bin}} style --detect <file>` matches a file's elements. Style every element by its recipe.
-- Brand values are CSS variables, `var(--ds-*)`. Find one with `{{bin}} tokens --search <term>` or `{{bin}} tokens <path>`.
+- Brand values are CSS variables, `var(--ds-*)` (native code uses their literal values). Find one with `{{bin}} tokens --search <term>` or `{{bin}} tokens <path>`.
 - No raw color, spacing, radius, font, or motion values in new or changed styles. Use the tokens.
 - Rethink Sans is the typeface (`var(--ds-font-sans)`). Doto (`var(--ds-font-data)`) is only for figures, never for words.
-- To apply the brand to the existing site (only when the user asks): run `{{bin}} apply`. It converts the site's styling to the brand; then restyle each component it lists with its recipe and fix what `{{bin}} apply --list` shows.
+- To apply the brand (only when the user asks): run `{{bin}} apply`. It reads whether this is a product or a site, converts every style value to the brand, then lists each component with its recipe; restyle them and fix what `{{bin}} apply --list` shows.
+- Before restyling a screen, say in one line what it is for. Keep that: its main action and key information stay the most prominent.
 - `{{bin}} check` runs automatically and will block you. Fix each error by changing a style value, never by changing content or structure.
 - A `ds-override: <reason>` comment only counts once the user approves it with `{{bin}} approve` in their terminal. You cannot approve it; prefer fixing the finding.

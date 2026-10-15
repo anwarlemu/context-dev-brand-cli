@@ -76,7 +76,7 @@ export function userPromptSubmit(root: string, input: HookInput): HookResult {
 	if (!prompt.trim()) return {};
 	const bin = loadConfig().cli;
 	// Applying the brand restyles what exists. It never means building the brand's own pages, so no template is offered.
-	if (APPLY_BRAND.test(prompt)) return { stdout: `${bin}: to apply the brand, run \`${bin} apply\`, then replace the style values it lists with tokens. Change styling only: keep every word, link, image, element, section and layout exactly as it is. Do not add templates, sections or components.` };
+	if (APPLY_BRAND.test(prompt)) return { stdout: `${bin}: to apply the brand, run \`${bin} apply\`, then replace the style values it lists with tokens. Change styling only: keep every word, link, image, element and section. Read what each screen is for first and keep its main action and key information the most prominent. Do not add templates, sections or components.` };
 	if (brandRules(root) === 'styles' || !supportsComponents(detectProject(root))) return {};
 	const result = resolveTask(prompt);
 	if (result.kind === 'match') {

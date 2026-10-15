@@ -1,7 +1,7 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-export type ProjectInfo = { framework: string; frameworkVersion?: string; tailwind?: string; tailwindMajor?: number; react: boolean; packageManager: string; appDir?: string; srcDir: boolean; hasAlias: boolean };
+export type ProjectInfo = { framework: string; frameworkVersion?: string; typescript: boolean; native?: string; tailwind?: string; tailwindMajor?: number; react: boolean; packageManager: string; appDir?: string; srcDir: boolean; hasAlias: boolean };
 
 export function detectProject(root: string): ProjectInfo {
 	const pkg = existsSync(join(root, 'package.json')) ? JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) : {};
@@ -15,7 +15,7 @@ export function detectProject(root: string): ProjectInfo {
 	const tailwind = deps.tailwindcss ?? deps['@tailwindcss/postcss'] ?? deps['@tailwindcss/vite'];
 	// Registry items, blocks and templates are React components; other stacks get the tokens and the checks only.
 	const react = !!(deps.react || deps.next);
-	return { framework, frameworkVersion: deps.next ?? deps.astro ?? deps.vite, tailwind, tailwindMajor: tailwindMajor(tailwind), react, packageManager, appDir, srcDir, hasAlias };
+	return { framework, frameworkVersion: deps.next ?? deps.astro ?? deps.vite, typescript: existsSync(join(root, 'tsconfig.json')), native: nativePlatform(root), tailwind, tailwindMajor: tailwindMajor(tailwind), react, packageManager, appDir, srcDir, hasAlias };
 }
 
 function tailwindMajor(range?: string) {
@@ -35,4 +35,13 @@ export function requireComponents(root: string, cli: string) {
 
 export function componentsRoot(root: string) {
 	return existsSync(join(root, 'src')) ? 'src/components/ds' : 'components/ds';
+}
+
+/** A native app's platform, from its build files: its colors are converted in its own code, with no stylesheet. */
+export function nativePlatform(root: string) {
+	if (existsSync(join(root, 'pubspec.yaml'))) return 'Flutter';
+	if (existsSync(join(root, 'Package.swift')) || readdirSync(root).some((f) => f.endsWith('.xcodeproj'))) return 'iOS (Swift)';
+	if (['build.gradle', 'build.gradle.kts', 'settings.gradle', 'settings.gradle.kts'].some((f) => existsSync(join(root, f)))) return 'Android';
+	if (readdirSync(root).some((f) => /\.(csproj|sln)$/.test(f))) return '.NET';
+	return undefined;
 }

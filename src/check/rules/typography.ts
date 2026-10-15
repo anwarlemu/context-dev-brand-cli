@@ -67,7 +67,7 @@ export const fontFamilyFromTokens: Rule = {
 				out.push({ rule: 'font-family-from-tokens', message: `Raw \`letter-spacing: ${m[1].trim()}\``, hint: 'The brand uses no tracking: remove it (letter-spacing: normal)', offset: m.index ?? 0 });
 			}
 			for (const m of file.text.matchAll(/(font-family|font-size|font-weight|font)\s*:\s*([^;{}]+);/g)) {
-				if (/var\(--ds-|inherit|^\s*(var\(--font|--text)/.test(m[2])) continue;
+				if (/var\(--ds-|inherit|^\s*(var\(--font|--text)|^\s*0(px)?\s*$/.test(m[2])) continue;
 				out.push({ rule: 'font-family-from-tokens', message: `Raw \`${m[1]}: ${m[2].trim()}\``, hint: cssFontHint(m[1], m[2].trim()), offset: m.index ?? 0 });
 			}
 		}

@@ -97,7 +97,7 @@ export const noOffScaleRadius: Rule = {
 		}
 		if (file.kind === 'css') {
 			for (const m of file.text.matchAll(/(border(?:-[a-z]+)*-radius)\s*:\s*([^;{}]+);/g)) {
-				if (/var\(--ds-radius/.test(m[2]) || /^\s*0(px)?\s*$/.test(m[2])) continue;
+				if (/var\(--ds-radius/.test(m[2]) || /^\s*(0(px)?|inherit|initial|unset)\s*$/.test(m[2])) continue;
 				out.push({ rule: 'no-off-scale-radius', message: `Raw radius \`${m[1]}: ${m[2].trim()}\``, hint: 'Use var(--ds-radius-*)', offset: m.index ?? 0 });
 			}
 		}
