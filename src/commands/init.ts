@@ -219,17 +219,24 @@ export function registerInit(program: Command) {
 					const found = spawnSync('grep', ['-rlE', '--include=layout.tsx', '--include=layout.jsx', `\\b${config.scopeClass}\\b`, 'src', 'app'], { cwd: root, encoding: 'utf8' });
 					for (const file of found.stdout?.split('\n').filter(Boolean) ?? []) scope.add(`${dirname(file)}/**`);
 				}
-				scope.add(`${project.srcDir ? 'src/' : ''}components/ds/**`);
 				const localCheck = join(root, '.ds', 'check.config.json');
 				const current = existsSync(localCheck) ? JSON.parse(readFileSync(localCheck, 'utf8')) : {};
-				if (!current.include) {
-					const include = [...scope].map((g) => (g.endsWith('/**') ? `${g}/*.{tsx,jsx,ts,js,css,md,mdx,astro,vue,svelte,html}` : g));
+				const dsGlob = `${project.srcDir ? 'src/' : ''}components/ds/**`;
+				const toGlob = (g: string) => (g.endsWith('/**') ? `${g}/*.{tsx,jsx,ts,js,css,md,mdx,astro,vue,svelte,html}` : g);
+				// Narrow the checks only to parts the project marked as on the brand (layouts with the scope class) or that
+				// --scope names. A site with neither is restyled as a whole; a scope of components/ds alone would check nothing.
+				if (scope.size && !current.include) {
+					scope.add(dsGlob);
+					const include = [...scope].map(toGlob);
 					scopedInclude = include;
 					writeIfChanged(root, '.ds/check.config.json', `${JSON.stringify({ ...current, include }, null, 2)}\n`, changes);
 					notes.push(`Checks and hooks cover only: ${include.join(', ')}. Everything else (the dashboard, auth) keeps its own system. Widen it in .ds/check.config.json.`);
+				} else if (!scope.size && Array.isArray(current.include) && current.include.length === 1 && current.include[0] === toGlob(dsGlob)) {
+					// Earlier versions wrote that empty scope; widen it to the whole project.
+					const { include: _drop, ...rest } = current;
+					writeIfChanged(root, '.ds/check.config.json', `${JSON.stringify(rest, null, 2)}\n`, changes, 'widened');
 				}
 			}
-
 			const cssRel = findGlobalCss(root);
 			const stylesDir = cssRel ? dirname(cssRel) : project.srcDir ? 'src/styles' : 'styles';
 			const dsCssDir = `${stylesDir}/${config.bin}`;
@@ -286,7 +293,7 @@ export function registerInit(program: Command) {
 			if (loadsBrandFonts) notes.push('The app already loads Rethink Sans (--font-rethink-sans), so no font loader was added.');
 			if (project.framework === 'next' && !loadsBrandFonts) {
 				const libDir = project.srcDir ? 'src/lib' : 'lib';
-				const fonts = `import { Doto, IBM_Plex_Mono, Rethink_Sans } from 'next/font/google';\n\nconst rethinkSans = Rethink_Sans({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-rethink-sans' });\nconst doto = Doto({ subsets: ['latin'], weight: ['800'], variable: '--font-doto' });\nconst ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400'], variable: '--font-ibm-plex-mono' });\n\nexport const dsFontVariables = \`\${rethinkSans.variable} \${doto.variable} \${ibmPlexMono.variable}\`;\n`;
+				const fonts = `import { Doto, IBM_Plex_Mono, Rethink_Sans } from 'next/font/google';\n\nconst rethinkSans = Rethink_Sans({ subsets: ['latin'], variable: '--font-rethink-sans' });\nconst doto = Doto({ subsets: ['latin'], weight: ['800'], variable: '--font-doto' });\nconst ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400'], variable: '--font-ibm-plex-mono' });\n\nexport const dsFontVariables = \`\${rethinkSans.variable} \${doto.variable} \${ibmPlexMono.variable}\`;\n`;
 				writeIfChanged(root, `${libDir}/ds-fonts.ts`, fonts, changes);
 				const layoutRel = project.appDir ? `${project.appDir}/layout.tsx` : undefined;
 				if (layoutRel && existsSync(join(root, layoutRel))) {

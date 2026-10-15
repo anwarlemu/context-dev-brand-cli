@@ -319,6 +319,7 @@ describe('recipes', () => {
 	it('match marketing elements by what they are, not by utility classes', () => {
 		const page = '<section className="hero"><h1 className="text-[52px] font-bold">Hi</h1><p className="text-lg">Sub</p><a href="/x" className="rounded bg-orange-600 px-5 py-3">Go</a><a href="/y" className="rounded border px-5 py-3">More</a></section><nav><a href="/a">A</a></nav><footer><a href="/b">B</a></footer><div className="pricing-card featured">P</div>';
 		const kinds = detectComponents('app/page.tsx', page, 'marketing').map((h) => h.recipe);
+		expect(detectComponents('c.tsx', '<div className="rounded-xl bg-white p-6 shadow-sm">x</div>', 'marketing')[0]?.recipe).toBe('card');
 		expect(kinds).toEqual(['section', 'text-display', 'text-lede', 'button-primary', 'button-secondary', 'header', 'link-nav', 'footer', 'link-footer', 'card-pricing-featured']);
 	});
 	it('match product elements to the dashboard recipes, and CSS selectors too', () => {

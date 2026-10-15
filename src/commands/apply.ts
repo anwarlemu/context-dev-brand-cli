@@ -165,7 +165,8 @@ export function registerApply(program: Command) {
 			const fixed = opts.dryRun ? { fixed: 0 } : runCheck({ projectRoot: root, useBaseline: false, fix: true, styleOnly: true });
 			const left = runCheck({ projectRoot: root, useBaseline: false, styleOnly: true });
 			// Every element with a recipe, so each button, card, field and nav gets the brand's styling for its situation.
-			const components = collectFiles(root, loadCheckConfig(root)).flatMap((rel) => {
+			const own = new RegExp(`(^|/)(${loadConfig().bin}|components/ds)/`);
+			const components = collectFiles(root, loadCheckConfig(root)).filter((rel) => !own.test(rel)).flatMap((rel) => {
 				const surface = surfaceFor(root, rel);
 				return detectComponents(rel, readFileSync(join(root, rel), 'utf8'), surface).map((c) => ({ file: rel, ...c }));
 			});

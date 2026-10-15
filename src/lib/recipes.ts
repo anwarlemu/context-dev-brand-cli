@@ -233,6 +233,9 @@ export function kindOf(el: Element): string | undefined {
 	if (has(/\b(screenshot|frame|media)\b/) && ['img', 'figure', 'video', 'picture'].includes(el.tag)) return 'media';
 	if (el.tag === 'section') return has(/\b(blue|brand)\b/) ? 'section-blue' : has(/\b(dark|inverse|black)\b/) ? 'section-dark' : 'section';
 	if ((el.tag === 'ul' || el.tag === 'ol') && has(/\b(list|features|checklist|bullets)\b/)) return 'list';
+	// A box drawn as a card: a fill plus a radius, shadow or border, plus padding.
+	const u = el.utilities;
+	if (['div', 'article', 'li'].includes(el.tag) && /(^|\s)bg-(?!transparent)/.test(u) && /(^|\s)(rounded|shadow|border)/.test(u) && /(^|\s)p[xy]?-/.test(u)) return 'card';
 	return undefined;
 }
 
