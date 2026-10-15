@@ -13,7 +13,7 @@ for (const item of loadRegistry()) {
 	if (n > config.docsMaxLines) problems.push(`${item.id}: docs injection is ${n} lines, cap ${config.docsMaxLines}`);
 }
 const contract = renderTemplate('contract');
-for (const [label, text] of [['contract', contract], ['tokens-only contract', renderTemplate('contract', { react: false })]]) if (lineCount(text) > config.contractMaxLines) problems.push(`${label} is ${lineCount(text)} lines, cap ${config.contractMaxLines}`);
+for (const [label, text] of [['contract', contract], ['styling-only contract', renderTemplate('contract', { full: false })]]) if (lineCount(text) > config.contractMaxLines) problems.push(`${label} is ${lineCount(text)} lines, cap ${config.contractMaxLines}`);
 
 const walk = (dir: string): string[] => readdirSync(dir).flatMap((f) => (statSync(join(dir, f)).isDirectory() ? walk(join(dir, f)) : [join(dir, f)]));
 const brandPattern = new RegExp(`${config.brand.replace('.', '\\.')}|${config.bin}`, 'i');

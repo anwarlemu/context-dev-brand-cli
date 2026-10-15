@@ -5,7 +5,7 @@ import { loadSource } from '../check/source.js';
 import { gatherInfo } from '../commands/info.js';
 import { installPreCommit } from '../commands/init.js';
 import { resolveTask, templateIndex } from '../commands/resolve.js';
-import { loadCheckConfig, loadConfig } from '../lib/config.js';
+import { brandRules, loadCheckConfig, loadConfig } from '../lib/config.js';
 import { changedFiles } from '../lib/git.js';
 import { matchesAny } from '../lib/glob.js';
 import { detectProject, supportsComponents } from '../lib/project.js';
@@ -46,17 +46,22 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 		`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id.split('/').pop()}@${i.installed}${i.drift === 'behind' ? '*' : ''}`).join(', ') : 'none yet'}.`,
 		info.installed.some((i) => i.drift === 'behind') ? `* behind the registry. Run \`${bin} diff\`.` : '',
 		update ? `A newer design system is on ${update.ref} (${update.installed.slice(0, 7)} -> ${update.latest.slice(0, 7)}). Run \`${bin} update\` first and commit what it changes.` : '',
-		supportsComponents(info.project) ? `Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.` : `Components and templates need React with Tailwind 4, which this project does not use: style with var(--ds-*) tokens (\`${bin} tokens --search <term>\`).`,
+		brandRules(root) === 'styles' ? `Styling only: this site keeps its own copy, content and structure. Change only style values, using var(--ds-*) tokens (\`${bin} tokens --search <term>\`). To apply the brand when asked: \`${bin} apply\`.` : supportsComponents(info.project) ? `Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.` : `Components and templates need React with Tailwind 4, which this project does not use: style with var(--ds-*) tokens (\`${bin} tokens --search <term>\`).`,
 		`Writes are checked before they reach disk. \`${bin} check\` must pass before you finish.`,
 	].filter(Boolean);
 	return { stdout: lines.slice(0, 15).join('\n') };
 }
 
+const APPLY_BRAND = /\b(apply|applying|restyle|rebrand|re-brand|reskin|re-skin|theme)\b[\s\S]{0,80}\b(brand|design system|styl\w*|look|tokens?)\b|\b(brand|design system)\b[\s\S]{0,40}\b(onto|to (this|my|the|our))\b/i;
+
 export function userPromptSubmit(root: string, input: HookInput): HookResult {
 	const prompt = promptOf(input);
-	if (!prompt.trim() || !supportsComponents(detectProject(root))) return {};
-	const result = resolveTask(prompt);
+	if (!prompt.trim()) return {};
 	const bin = loadConfig().cli;
+	// Applying the brand restyles what exists. It never means building the brand's own pages, so no template is offered.
+	if (APPLY_BRAND.test(prompt)) return { stdout: `${bin}: to apply the brand, run \`${bin} apply\`, then replace the style values it lists with tokens. Change styling only: keep every word, link, image, element, section and layout exactly as it is. Do not add templates, sections or components.` };
+	if (brandRules(root) === 'styles' || !supportsComponents(detectProject(root))) return {};
+	const result = resolveTask(prompt);
 	if (result.kind === 'match') {
 		const item = result.item ? findItem(result.item) : undefined;
 		const docs = item ? injectDocs(root, sessionIdOf(input), [item], `task matched "${result.matched}"`) : '';

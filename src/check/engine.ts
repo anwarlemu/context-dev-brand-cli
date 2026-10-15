@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { isAbsolute, join, relative, resolve, sep } from 'node:path';
-import { loadCheckConfig, loadConfig } from '../lib/config.js';
+import { loadCheckConfig, loadConfig, STYLE_RULES } from '../lib/config.js';
 import { matchesAny, walkFiles } from '../lib/glob.js';
 import { PKG_ROOT } from '../lib/paths.js';
 import { overrideKey, readApprovals, readBaseline, readInstalled } from '../lib/state.js';
@@ -12,7 +12,7 @@ import { lineOf, loadSource } from './source.js';
 import type { Finding, Fix, Severity } from './types.js';
 import { loadVocab } from './vocab.js';
 
-export type CheckOptions = { projectRoot: string; paths?: string[]; fast?: boolean; fix?: boolean; useBaseline?: boolean; include?: string[] };
+export type CheckOptions = { projectRoot: string; paths?: string[]; fast?: boolean; fix?: boolean; useBaseline?: boolean; include?: string[]; styleOnly?: boolean };
 export type CheckResult = { files: number; findings: Finding[]; overrides: Finding[]; baselined: number; errors: number; warnings: number; fixed: number; ms: number };
 
 export const findingKey = (f: Finding) => `${f.file}::${f.rule}::${f.snippet.trim() || f.message}`;
@@ -102,6 +102,7 @@ export function runCheck(opts: CheckOptions): CheckResult {
 	const started = performance.now();
 	const config = loadCheckConfig(opts.projectRoot);
 	if (opts.include) config.include = opts.include;
+	if (opts.styleOnly) for (const rule of Object.keys(config.rules)) if (!STYLE_RULES.has(rule)) config.rules[rule] = 'off';
 	const files = collectFiles(opts.projectRoot, config, opts.paths);
 	let findings: Finding[] = [];
 	const overrides: Finding[] = [];

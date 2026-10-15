@@ -254,7 +254,8 @@ describe('init on other stacks', () => {
 		expect(files).not.toContain('components.json');
 		expect(files.some((f: string) => f.endsWith('theme.css') || f.includes('SKILL.md'))).toBe(false);
 		expect(readFileSync(join(dir, 'public', 'global.css'), 'utf8').split('\n').slice(0, 2)).toEqual(['@charset "utf-8";', `@import "./${files.find((f: string) => f.endsWith('tokens.css')).split('/')[1]}/tokens.css";`]);
-		expect(readFileSync(join(dir, 'CLAUDE.md'), 'utf8')).toContain('components and templates do not apply');
+		expect(readFileSync(join(dir, 'CLAUDE.md'), 'utf8')).toContain('Never change copy');
+		expect(JSON.parse(readFileSync(join(dir, '.ds', 'config.json'), 'utf8')).rules).toBe('styles');
 		rmSync(dir, { recursive: true });
 	});
 });
@@ -277,6 +278,31 @@ describe('apply', () => {
 		expect(colorRole('--border', '#ddd')?.to).toBe('--ds-color-border-default');
 		expect(colorRole('--on-primary', '#fff')?.to).toBe('--ds-color-text-on-brand');
 		expect(colorRole('--x', '#fefefe')?.to).toBe('--ds-color-bg-default');
+	});
+});
+
+describe('styling only', () => {
+	it('an existing site runs only the style rules', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-styles-'));
+		writeFileSync(join(dir, 'package.json'), JSON.stringify({ dependencies: { next: '16.0.0', react: '19.0.0' }, devDependencies: { tailwindcss: '^4' } }));
+		execFileSync('mkdir', ['-p', join(dir, '.ds'), join(dir, 'app')]);
+		writeFileSync(join(dir, '.ds', 'config.json'), JSON.stringify({ mode: 'scoped', rules: 'styles' }));
+		const page = 'export default function P() { return <section><h1>We Build Amazing Things For Everyone Who Visits This Site</h1><p style={{ color: "#ff0000" }}>Hi</p></section>; }';
+		writeFileSync(join(dir, 'app', 'page.tsx'), page);
+		const rules = new Set(runCheck({ projectRoot: dir, useBaseline: false }).findings.map((f) => f.rule));
+		expect(rules.has('no-raw-color')).toBe(true);
+		for (const r of ['copy-rules', 'template-structure', 'no-unregistered-section']) expect(rules.has(r)).toBe(false);
+		rmSync(dir, { recursive: true });
+	});
+	it('a request to apply the brand points to apply, never to a template', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-apply-'));
+		writeFileSync(join(dir, 'package.json'), JSON.stringify({ dependencies: { next: '16.0.0', react: '19.0.0' }, devDependencies: { tailwindcss: '^4' } }));
+		for (const prompt of ['Apply the brand design and CLI system to this website', 'apply the Context.dev design system to my site', 'restyle the site with the brand']) {
+			const out = userPromptSubmit(dir, { session_id: 'a', prompt }).stdout ?? '';
+			expect(out).toContain('apply');
+			expect(out).not.toContain('templates/');
+		}
+		rmSync(dir, { recursive: true });
 	});
 });
 

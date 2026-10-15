@@ -10,18 +10,23 @@ a template, not a model decision. Copy is the only thing left to the agent.
 
 ## What it does
 
-It puts the Context.dev brand into any web project and keeps coding agents on it.
+It puts the Context.dev brand's styling (color, type, spacing, radius, shadow, motion) onto any web
+project and keeps coding agents on it. On an existing site it changes how things look and nothing
+else: copy, content, markup, layout and page structure stay exactly as they are.
 
 - `init` installs it: the brand tokens (colors, type, spacing, radius, motion as CSS variables),
   short rules in `AGENTS.md` / `CLAUDE.md`, and hooks that check every file an agent writes. Nothing
   on the site changes yet.
-- `apply` applies the brand to the site that is already there. The site's own color and font
+- `apply` restyles the site that is already there. The site's own color and font
   variables are re-pointed at the brand tokens, so every page changes at once; the brand typefaces
   are loaded; values with an exact token are replaced; and every value left is listed by file, with
   the token to use, for the agent to finish.
 - From then on, writes with raw values (a hex color, a 13px gap, a stray font) are blocked by the
   hooks, the pre-commit hook and CI, and the agent is told which token to use instead.
-- React + Tailwind 4 projects also get the components and page templates (`resolve`, `scaffold`,
+- Existing sites run only the style rules (`rules: styles` in `.ds/config.json`). The copy, section
+  and template rules, and the templates themselves, are for new apps built from the design system:
+  a fresh React + Tailwind 4 app gets them (`rules: all`), or `init --rules all` turns them on.
+- New React + Tailwind 4 apps also get the components and page templates (`resolve`, `scaffold`,
   `add`). Other stacks (Astro, Vue, Svelte, plain HTML and CSS) get the tokens and the checks; their
   `<style>` blocks and style attributes are checked too.
 
@@ -42,8 +47,9 @@ To install it and restyle the site with the brand:
 
 ```text
 Apply the Context.dev design system to this site: run
-`npx -y github:anwarlemu/context-dev-brand-cli init`, then `npx context-ds apply`, then fix every
-file it lists until `npx context-ds check --no-baseline` passes. Show me the result before committing.
+`npx -y github:anwarlemu/context-dev-brand-cli init`, then `npx context-ds apply`, then change the
+style values it lists until `npx context-ds apply --list` is empty. Styling only: do not change any
+copy, content, layout or structure. Show me the result before committing.
 ```
 
 `init` adds the package to the project (from the `main` branch) and writes the tokens, the rules,
@@ -169,7 +175,7 @@ All commands take `--json` and `--help`.
 | Command | |
 |---|---|
 | `init [--mode new\|scoped] [--harness ...]` | Install into a project |
-| `apply [--dry-run]` | Apply the brand to the existing site styles, then list what is left |
+| `apply [--dry-run] [--list [paths]]` | Restyle the existing site with the brand (styling only), then list the style values left |
 | `info` | Framework, tokens, installed items and drift, hooks, baseline |
 | `resolve "<task>"` | Task to template, by lookup against `intents.json` |
 | `scaffold <template> [--slot s=block] [--out path] [--force] [--local]` | Page from a locked template |

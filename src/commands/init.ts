@@ -14,10 +14,10 @@ import { gatherInfo } from './info.js';
 const START = '<!-- ds:contract:start -->';
 const END = '<!-- ds:contract:end -->';
 
-/** `react: false` renders the contract for stacks the components do not support: tokens and checks only. */
-export function renderTemplate(name: string, { react = true } = {}) {
+/** `full: false` renders the styling-only contract for existing sites: restyle what is there, never content or structure. */
+export function renderTemplate(name: string, { full = true } = {}) {
 	const config = loadConfig();
-	const contract = readFileSync(pkgPath('src', 'skill', react ? 'contract.md' : 'contract.tokens.md'), 'utf8').replaceAll('{{bin}}', config.cli).replaceAll('{{brand}}', config.brand).trim();
+	const contract = readFileSync(pkgPath('src', 'skill', full ? 'contract.md' : 'contract.styles.md'), 'utf8').replaceAll('{{bin}}', config.cli).replaceAll('{{brand}}', config.brand).trim();
 	if (name === 'contract') return contract;
 	return readFileSync(pkgPath('src', 'skill', name), 'utf8').replaceAll('{{contract}}', contract).replaceAll('{{name}}', config.bin).replaceAll('{{bin}}', config.cli).replaceAll('{{brand}}', config.brand);
 }
@@ -150,7 +150,7 @@ const THEME_NAMES = /--(text-(display-xl|display|h[1-5]|body-lg|body|body-sm|cap
 
 // What to do after init, addressed to whoever ran it. An agent acts on everything it reads here, so setup for the
 // other agents' files stays out of its instructions: those files are inert until a teammate uses that agent.
-function nextSteps(harnesses: string[], dry: boolean, componentKit: boolean) {
+function nextSteps(harnesses: string[], dry: boolean, full: boolean) {
 	const cli = loadConfig().cli;
 	const current = runningHarness();
 	const others = harnesses.filter((h) => h !== current).map((h) => HARNESS_NAMES[h as keyof typeof HARNESS_NAMES]);
@@ -162,8 +162,9 @@ function nextSteps(harnesses: string[], dry: boolean, componentKit: boolean) {
 	if (others.length) lines.push(`  ${others.join(' and ')} files were written for teammates who use ${others.length > 1 ? 'them' : 'it'}. ${current ? `Do not open, install or configure ${others.join(' or ')} yourself.` : ''}`.trimEnd());
 	if (current === 'codex') lines.push('  Tell the user: Codex runs these hooks once they trust them with /hooks in Codex. You cannot do this for them.');
 	else if (!current && harnesses.includes('codex')) lines.push('  Codex users trust the hooks once with /hooks in Codex.');
-	if (componentKit) lines.push(`  From now on: \`${cli} resolve "<task>"\` before UI work; \`${cli} update\` for design system changes.`);
+	if (full) lines.push(`  From now on: \`${cli} resolve "<task>"\` before UI work; \`${cli} update\` for design system changes.`);
 	else {
+		lines.push(`  Styling only: the design system changes how this site looks, never its copy, content or structure.`);
 		lines.push(`  The brand is installed, not applied: pages look the same until \`${cli} apply\` runs. It restyles every page, so run it only when the user asks to apply the brand.`);
 		lines.push(`  From now on: no raw values in styles (\`${cli} tokens --search <term>\` finds the token); \`${cli} update\` for design system changes.`);
 	}
@@ -178,6 +179,7 @@ export function registerInit(program: Command) {
 		.option('--no-baseline', 'do not accept existing findings as legacy')
 		.option('--harness <names...>', 'limit to claude-code, cursor, codex')
 		.option('--scope <globs...>', 'limit checks and hooks to these paths (scoped mode detects layouts using the brand scope class)')
+		.option('--rules <rules>', 'styles (an existing site: restyle only, never copy or structure) | all (a new app built from the templates). Default: all only for a fresh React + Tailwind 4 app')
 		.option('--no-install', 'when run through npx, do not add the package to the project first')
 		.option('--dry-run', 'show what would change, write nothing')
 		.option('--json', 'JSON output')
@@ -205,7 +207,10 @@ export function registerInit(program: Command) {
 			const statePath = join(root, '.ds', 'config.json');
 			const saved = existsSync(statePath) ? (JSON.parse(readFileSync(statePath, 'utf8')) as { mode?: string }).mode : undefined;
 			const mode = opts.mode !== 'auto' ? opts.mode : saved ?? (appFiles <= 5 && !existsSync(join(root, 'components.json')) ? 'new' : 'scoped');
-			writeIfChanged(root, '.ds/config.json', `${JSON.stringify({ mode }, null, 2)}\n`, changes);
+			const savedRules = existsSync(statePath) ? (JSON.parse(readFileSync(statePath, 'utf8')) as { rules?: string }).rules : undefined;
+			if (opts.rules && !['styles', 'all'].includes(opts.rules)) throw new Error('--rules is styles or all');
+			const rules: 'styles' | 'all' = opts.rules ?? savedRules ?? (mode === 'new' && supportsComponents(project) ? 'all' : 'styles');
+			writeIfChanged(root, '.ds/config.json', `${JSON.stringify({ mode, rules }, null, 2)}\n`, changes);
 
 			let scopedInclude: string[] | undefined;
 			if (mode === 'scoped' || opts.scope) {
@@ -300,19 +305,19 @@ export function registerInit(program: Command) {
 
 			const pkgJson = existsSync(join(root, 'package.json')) ? JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) : undefined;
 			if (!project.framework.startsWith('next') && !loadsBrandFonts) notes.push('Brand typefaces (Rethink Sans, Doto, IBM Plex Mono) are not loaded. The site needs them from Google Fonts once its styles use var(--ds-font-sans).');
-			if (componentKit && pkgJson && !{ ...pkgJson.dependencies, ...pkgJson.devDependencies }['tailwind-merge']) {
+			if (componentKit && rules === 'all' && pkgJson && !{ ...pkgJson.dependencies, ...pkgJson.devDependencies }['tailwind-merge']) {
 				const install = project.packageManager === 'npm' ? ['install', 'tailwind-merge@^3'] : ['add', 'tailwind-merge@^3'];
 				const run = dryRun ? { status: 0 } : spawnSync(project.packageManager, install, { cwd: root, stdio: 'pipe', encoding: 'utf8' });
 				if (run.status === 0) changes.push({ file: 'package.json', action: dryRun ? 'would add tailwind-merge' : 'added tailwind-merge' });
 				else notes.push(`Could not install tailwind-merge (${project.packageManager} ${install.join(' ')}). Install it before adding registry items.`);
 			}
 
-			if (componentKit && !existsSync(join(root, 'components.json'))) {
+			if (componentKit && rules === 'all' && !existsSync(join(root, 'components.json'))) {
 				const components = { $schema: 'https://ui.shadcn.com/schema.json', style: 'new-york', rsc: true, tsx: true, tailwind: { config: '', css: cssRel ?? 'app/globals.css', baseColor: 'neutral', cssVariables: true, prefix: '' }, aliases: { components: '@/components', utils: '@/lib/utils', ui: '@/components/ui', lib: '@/lib', hooks: '@/hooks' }, iconLibrary: 'lucide', registries: { [`@${config.presetId}`]: `${config.registryUrl}/r/{name}.json` } };
 				writeIfChanged(root, 'components.json', `${JSON.stringify(components, null, 2)}\n`, changes);
 			}
 
-			const contract = renderTemplate('contract', { react: componentKit });
+			const contract = renderTemplate('contract', { full: rules === 'all' });
 			if (!existsSync(join(root, 'CLAUDE.md')) && existsSync(join(root, 'AGENTS.md'))) writeIfChanged(root, 'CLAUDE.md', '@AGENTS.md\n', changes);
 			const claudeImportsAgents = dryRun && !existsSync(join(root, 'CLAUDE.md')) && existsSync(join(root, 'AGENTS.md')) ? true : existsSync(join(root, 'CLAUDE.md')) && /^@AGENTS\.md\s*$/m.test(readFileSync(join(root, 'CLAUDE.md'), 'utf8'));
 			for (const rel of claudeImportsAgents ? ['AGENTS.md'] : ['CLAUDE.md', 'AGENTS.md']) {
@@ -320,7 +325,7 @@ export function registerInit(program: Command) {
 				writeIfChanged(root, rel, upsertBlock(existing, contract), changes, existing ? 'patched' : 'wrote');
 			}
 			// The skill teaches resolve, scaffold and add, which only work where the components do.
-			const skill = componentKit ? renderTemplate('SKILL.md') : undefined;
+			const skill = componentKit && rules === 'all' ? renderTemplate('SKILL.md') : undefined;
 			if (skill && harnesses.includes('claude-code')) writeIfChanged(root, `.claude/skills/${config.bin}/SKILL.md`, skill, changes);
 			if (harnesses.includes('cursor')) {
 				writeIfChanged(root, '.cursor/rules/ds.mdc', `---\ndescription: ${config.brand} design system contract\nalwaysApply: true\n---\n\n${START}\n${contract}\n${END}\n`, changes);
@@ -372,14 +377,14 @@ export function registerInit(program: Command) {
 			}
 
 			const info = gatherInfo(root);
-			emit(opts, { mode, changes, notes, next: nextSteps(harnesses, dryRun, componentKit), info }, () =>
+			emit(opts, { mode, changes, notes, next: nextSteps(harnesses, dryRun, rules === 'all'), info }, () =>
 				[
 					changes.length ? `${config.bin} init (${mode} mode)${dryRun ? ', dry run, nothing written' : ''}: ${changes.length} change${changes.length > 1 ? 's' : ''}` : `${config.bin} init: already up to date, nothing changed.`,
 					...changes.map((c) => `  ${c.action.padEnd(8)} ${c.file}`),
 					...notes.map((n) => color.yellow(`  note: ${n}`)),
 					'',
 					`Hooks: claude-code [${info.hooks['claude-code'].join(', ')}], cursor [${info.hooks.cursor.join(', ') || 'none'}], codex [${info.hooks.codex.join(', ') || 'none'}], pre-commit [${info.hooks['pre-commit'].join(', ') || 'none'}]`,
-					...nextSteps(harnesses, dryRun, componentKit).map((l) => (l.startsWith('  ') ? l : color.bold(l))),
+					...nextSteps(harnesses, dryRun, rules === 'all').map((l) => (l.startsWith('  ') ? l : color.bold(l))),
 				].join('\n'),
 			);
 		});

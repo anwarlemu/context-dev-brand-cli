@@ -1,16 +1,17 @@
 import type { Command } from 'commander';
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { runCheck } from '../check/engine.js';
+import { formatFinding, runCheck } from '../check/engine.js';
 import { loadConfig } from '../lib/config.js';
 import { color, emit } from '../lib/output.js';
 import { findProjectRoot } from '../lib/paths.js';
-import { detectProject, supportsComponents } from '../lib/project.js';
+import { detectProject } from '../lib/project.js';
 import { findGlobalCss } from './init.js';
 
 // Applies the brand to a site that already has its own styles: the site's variables are re-pointed at the brand
 // tokens (so every rule using them changes at once), the brand typefaces are loaded, raw values with an exact token
-// are replaced, and whatever is left is listed file by file for the agent to finish.
+// are replaced, and whatever is left is listed file by file for the agent to finish. Styling only: copy, markup and
+// structure are never touched, and only the style rules run (no copy or section rules, whose fixes change content).
 
 const FONTS_URL = 'https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono&family=Rethink+Sans:wght@400;500&display=swap';
 const COLOR_VALUE = /^(#[0-9a-f]{3,8}|rgba?\(|hsla?\(|oklch\(|oklab\(|lab\(|lch\(|color\(|[a-z]+$)/i;
@@ -125,12 +126,20 @@ export function registerApply(program: Command) {
 		.command('apply')
 		.description("Apply the brand to the site's existing styles: re-point its variables at the brand tokens, load the typefaces, fix exact matches, then list what is left to change by hand")
 		.option('--dry-run', 'show what would change, write nothing')
+		.option('--list [paths...]', 'only list the style values still off-brand (all files, or these), with the token for each')
 		.option('--json', 'JSON output')
 		.action((opts) => {
 			const root = findProjectRoot();
 			const cli = loadConfig().cli;
 			const project = detectProject(root);
 			if (!existsSync(join(root, '.ds', 'config.json'))) throw new Error(`Run \`${cli} init\` first.`);
+			if (opts.list) {
+				const paths = Array.isArray(opts.list) ? opts.list.map((p: string) => join(process.cwd(), p)) : undefined;
+				const result = runCheck({ projectRoot: root, paths, useBaseline: false, styleOnly: true });
+				emit(opts, result, () => (result.errors ? [...result.findings.filter((f) => f.severity === 'error').map(formatFinding), '', `${result.errors} style values to change. Change the value only; keep the content and structure.`].join('\n') : 'Every style uses the brand tokens.'));
+				process.exitCode = result.errors ? 1 : 0;
+				return;
+			}
 			const sheets = siteStylesheets(root);
 			const main = findGlobalCss(root);
 			const mappings: Mapping[] = [];
@@ -151,12 +160,11 @@ export function registerApply(program: Command) {
 					if (!opts.dryRun) writeFileSync(join(root, rel), after);
 				}
 			}
-			const fixed = opts.dryRun ? { fixed: 0 } : runCheck({ projectRoot: root, useBaseline: false, fix: true });
-			const left = runCheck({ projectRoot: root, useBaseline: false });
+			const fixed = opts.dryRun ? { fixed: 0 } : runCheck({ projectRoot: root, useBaseline: false, fix: true, styleOnly: true });
+			const left = runCheck({ projectRoot: root, useBaseline: false, styleOnly: true });
 			const byFile = new Map<string, number>();
 			for (const f of left.findings) if (f.severity === 'error') byFile.set(f.file, (byFile.get(f.file) ?? 0) + 1);
 			const files = [...byFile].sort((a, b) => b[1] - a[1]);
-			const components = supportsComponents(project);
 			emit(opts, { stylesheets: sheets, written, mappings, skipped, fontFamilies, fixed: fixed.fixed, remaining: Object.fromEntries(files) }, () =>
 				[
 					opts.dryRun ? 'Dry run, nothing written.' : 'Applied the brand to the site styles.',
@@ -172,11 +180,11 @@ export function registerApply(program: Command) {
 					'',
 					color.bold(`4. Left for you (${files.reduce((a, [, n]) => a + n, 0)} errors in ${files.length} files):`),
 					...(files.length
-						? [...files.slice(0, 25).map(([f, n]) => `   ${String(n).padStart(4)}  ${f}`), files.length > 25 ? `   ... and ${files.length - 25} more` : '', `   Work through them: \`${cli} check --no-baseline <file>\` shows each value and the token to use (\`${cli} tokens --search <term>\` to look one up). Replace values with var(--ds-*); do not add overrides.`].filter(Boolean)
+						? [...files.slice(0, 25).map(([f, n]) => `   ${String(n).padStart(4)}  ${f}`), files.length > 25 ? `   ... and ${files.length - 25} more` : '', `   Work through them: \`${cli} apply --list <file>\` shows each value and the token to use (\`${cli} tokens --search <term>\` to look one up). Replace the value with var(--ds-*); do not add overrides.`].filter(Boolean)
 						: ['   nothing; every style uses the tokens.']),
-					...(components ? ['', color.bold('5. Pages:'), `   This project can use the components. Rebuild a page from its template with \`${cli} resolve "<what the page is>"\`, then \`${cli} scaffold\`.`] : []),
 					'',
-					`Then: open the site and look at it, run \`${cli} check\`, and commit.`,
+					color.bold('Change style values only.') + ' Keep every word, heading, link, image, element, section and layout exactly as it is. Do not add templates, sections or components, and do not rewrite copy.',
+					`Then: open the site and compare it with before (same content, new look), run \`${cli} apply --list\` until it is empty, and commit.`,
 				].join('\n'),
 			);
 		});

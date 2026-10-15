@@ -52,7 +52,7 @@ export const fontFamilyFromTokens: Rule = {
 			}
 			const large = tokens.some((t) => LARGE.has(t.replace(/^text-/, '')) && t.startsWith('text-'));
 			if (!hasDoto && large && FIGURE.test(text) && text.length <= 14) {
-				out.push({ rule: 'font-family-from-tokens', message: `Large figure "${text}" is not in Doto`, hint: 'Figures shown large use Doto: <Stat value=... label=... />, <CreditsDotNumber value=... />, or font-data.', offset: el.start });
+				out.push({ rule: 'font-family-from-tokens', message: `Large figure "${text}" is not in Doto`, hint: 'Figures shown large use Doto: give the element font-data (var(--ds-font-data)). Registry pages can use <Stat> or <CreditsDotNumber>.', offset: el.start });
 			}
 		}
 		for (const s of file.strings) {
