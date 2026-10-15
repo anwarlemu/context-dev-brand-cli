@@ -296,6 +296,12 @@ describe('apply', () => {
 		expect(out).toMatch(/animation-delay: var\(--ds-duration-[a-z]+\)/);
 		expect(out).toContain('border-radius: var(--ds-radius-pill)');
 		expect(rebrandCss("@font-face { font-family: 'Feature'; font-weight: 600; }", sitePalette(''), stats())).toBe("@font-face { font-family: 'Feature'; font-weight: 600; }");
+		// Fluid headlines stay fluid, so they still shrink on phones.
+		expect(rebrandCss('h1 { font-size: clamp(40px, 6vw, 72px); }', sitePalette(''), stats())).toMatch(/font-size: clamp\(var\(--ds-text-[a-z0-9-]+\), 6vw, var\(--ds-text-[a-z0-9-]+\)\)/);
+		// On a dark site a glass header tinted with the page stays the page color; a modal backdrop becomes the scrim.
+		const dark = sitePalette('body { background: #0b0b0c; color: #fafafa; }');
+		expect(rebrandCss('.nav { background: rgba(11, 11, 12, 0.7); }', dark, stats())).toContain('color-mix(in srgb, var(--ds-color-bg-default) 70%, transparent)');
+		expect(rebrandCss('.modal-backdrop { background: rgba(0, 0, 0, 0.6); }', dark, stats())).toContain('var(--ds-color-bg-scrim)');
 	});
 	it('gives each chart series its own brand series color', () => {
 		const css = '.chart-revenue { stroke: #3b82f6; } .chart-cost { stroke: #ef4444; }';

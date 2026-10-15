@@ -5,8 +5,18 @@
 	--ds-frame-column: min(calc(100% - 2 * var(--ds-space-6)), var(--ds-layout-content-width));
 }
 
+/* On phones the rulers sit at the screen edges, as on the brand's site, so content keeps its own inset from them. */
+@media (max-width: 640px) {
+	:root {
+		--ds-frame-column: calc(100% - 2px);
+	}
+}
+
+/* The rulers sit behind the content (an isolated stacking context keeps them above the page background), so a
+   line never crosses text or a card. */
 body {
 	position: relative;
+	isolation: isolate;
 }
 
 body::after {
@@ -14,7 +24,7 @@ body::after {
 	position: absolute;
 	inset-block: 0;
 	left: 50%;
-	z-index: 40;
+	z-index: -1;
 	width: var(--ds-frame-column);
 	transform: translateX(-50%);
 	border-inline: 1px solid var(--ds-color-border-default);

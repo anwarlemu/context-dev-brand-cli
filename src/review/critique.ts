@@ -64,7 +64,10 @@ export function isProductTarget(target: string, diff = '', source = '') {
 
 function guides(target: string, diff: string, source = '') {
 	const read = (p: string) => readFileSync(pkgPath(p), 'utf8');
-	const files = isProductTarget(target, diff, source) ? ['product.md', 'principles.md', 'voice.md', 'review/rubric.product.md'] : ['principles.md', 'voice.md', 'review/rubric.md'];
+	// A restyled project keeps its own copy and sections: it is judged on its look and usability only.
+	const restyle = process.env.DS_REVIEW_MODE === 'restyle';
+	const product = isProductTarget(target, diff, source);
+	const files = restyle ? [...(product ? ['product.md'] : []), 'principles.md', 'review/rubric.restyle.md'] : product ? ['product.md', 'principles.md', 'voice.md', 'review/rubric.product.md'] : ['principles.md', 'voice.md', 'review/rubric.md'];
 	return files.map((f) => `# ${f}\n${read(f)}`).join('\n\n');
 }
 

@@ -7,6 +7,7 @@ import { gitDiff } from '../lib/git.js';
 import { color, emit } from '../lib/output.js';
 import { dsDir, findProjectRoot } from '../lib/paths.js';
 import { detectProject } from '../lib/project.js';
+import { savedSurface } from '../lib/surface.js';
 import { capture, type ViewportName } from '../review/capture.js';
 import { critique } from '../review/critique.js';
 
@@ -55,11 +56,12 @@ export function registerReview(program: Command) {
 		.action(async (target: string | undefined, opts) => {
 			const root = findProjectRoot();
 			const config = loadConfig();
-			// The rubric judges layout, sections and copy against the brand's own pages. A restyled site keeps its own, so
-			// there is nothing for review to judge; `check` covers its styling.
+			// A restyled project keeps its own copy and sections, so it is judged on its look and usability only.
 			if (brandRules(root) === 'styles') {
-				emit(opts, { skipped: true, reason: 'styling-only project' }, () => `review is for pages built from the ${config.brand} templates. This project is styling only (its own copy and structure stay), so \`${config.cli} check\` covers it.`);
-				return;
+				process.env.DS_REVIEW_MODE = 'restyle';
+				const saved = savedSurface(root);
+				if (saved) process.env.DS_REVIEW_SURFACE ??= saved;
+				if (!(target && /^https?:\/\//.test(target)) && detectProject(root).framework !== 'next') throw new Error(`Start the site and pass its URL: \`${config.cli} review http://localhost:<port>/<page>\`.`);
 			}
 			const threshold = Number(opts.threshold ?? config.review.threshold);
 			const viewports = (opts.viewports ? String(opts.viewports).split(',') : config.review.viewports) as ViewportName[];

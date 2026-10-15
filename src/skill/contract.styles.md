@@ -7,5 +7,6 @@
 - Rethink Sans is the typeface (`var(--ds-font-sans)`). Doto (`var(--ds-font-data)`) is only for figures, never for words.
 - To apply the brand (only when the user asks): run `{{bin}} apply`. It reads whether this is a product or a site, converts every style value to the brand, then lists each component with its recipe; restyle them and fix what `{{bin}} apply --list` shows.
 - Before restyling a screen, say in one line what it is for. Keep that: its main action and key information stay the most prominent.
+- After restyling, open every screen at desktop and phone width and run `{{bin}} review <url>` on each main one; fix its punch list until every score is 7 or more.
 - `{{bin}} check` runs automatically and will block you. Fix each error by changing a style value, never by changing content or structure.
 - A `ds-override: <reason>` comment only counts once the user approves it with `{{bin}} approve` in their terminal. You cannot approve it; prefer fixing the finding.

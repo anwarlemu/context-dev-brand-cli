@@ -95,6 +95,7 @@ export function familyOf(prop: string): Family {
 		if (/(ink|text|fg|foreground|copy|heading|title|muted|subtle|faint|label)/.test(p)) return 'text';
 		return 'surface';
 	}
+	if (/shadow|^filter$|^backdrop-filter$/.test(p)) return 'border';
 	if (/^(color|fill|stroke|caret-color|text-decoration-color|-webkit-text-fill-color|column-rule-color)$/.test(p) || p.startsWith('text-')) return p === 'fill' || p === 'stroke' ? 'text' : 'text';
 	if (/^(border|outline)/.test(p)) return 'border';
 	return 'surface';
@@ -134,7 +135,9 @@ export function colorToken(rgba: RGBA, family: Family, palette: SitePalette, ser
 	}
 	// How far this neutral sits from the site's background toward its text: 0 is the page, 1 is the main text.
 	const t = Math.max(0, Math.min(1, (l - palette.bg) / (palette.fg - palette.bg || 1)));
-	if (a < 0.995) return t > 0.5 ? { name: 'text-default', alpha: a } : { name: 'black', alpha: a };
+	// Translucent: a tint of the text color stays one; a tint of the page (a glass header, a fade into the page) stays
+	// the page color, so it does not turn into a gray smudge. Shadows and lines are drawn in black.
+	if (a < 0.995) return t > 0.5 ? { name: 'text-default', alpha: a } : { name: family === 'surface' ? 'bg-default' : 'black', alpha: a };
 	const pick = (name: string) => ({ name, alpha: 1 });
 	if (family === 'text') return pick(t > 0.82 ? 'text-default' : t > 0.55 ? 'text-muted' : t > 0.25 ? 'text-subtle' : 'text-inverse');
 	if (family === 'border') return pick(t < 0.12 ? 'border-subtle' : t < 0.32 ? 'border-default' : t < 0.6 ? 'border-strong' : 'text-default');
@@ -227,6 +230,8 @@ function resolveSiteVars(value: string, vars: Map<string, string>, depth = 0): s
 const DARK_CONTEXT = /\.dark\b|\.theme-dark\b|\[data-(?:theme|mode|color-scheme|bs-theme)\s*=\s*["']?dark|prefers-color-scheme\s*:\s*dark/i;
 const LIGHT_CONTEXT = /\.light\b|\.theme-light\b|\[data-(?:theme|mode|color-scheme|bs-theme)\s*=\s*["']?light|prefers-color-scheme\s*:\s*light/i;
 // A chart's colors, declared as variables (--series-2, --chart-revenue) or set on series classes.
+// The dimmed layer behind a dialog or menu.
+const SCRIM = /(backdrop|overlay|scrim|modal|lightbox|dimmer|mask)/i;
 const SERIES_NAME = /(series|chart|graph|plot|dataset|legend|swatch)/i;
 
 /**
@@ -344,6 +349,7 @@ function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, se
 				if (!rgba) return c;
 				stats.colors++;
 				const family = (isVar && palette.usage?.get(p)) || familyOf(prop);
+				if (family === 'surface' && rgba[3] >= 0.3 && rgba[3] < 0.995 && hsl(rgba).l < 0.2 && SCRIM.test(selector)) return 'var(--ds-color-bg-scrim)';
 				const on = isVar ? undefined : onColor(rgba, family, background, pal);
 				return on ? cssColor(on) : mapColor(rgba, family, pal, series);
 			});
@@ -368,9 +374,9 @@ function rebrandDecls(css: string, palette: SitePalette, stats: RebrandStats, se
 			next = 'normal';
 		} else if (p === 'font-size' && /\d(px|rem)/.test(next)) {
 			stats.type++;
-			// A fluid size settles on the brand step nearest its largest value.
-			const sizes = [...next.matchAll(/(\d*\.?\d+)(px|rem)/g)].map((m) => toPx(m[1], m[2]));
-			next = `var(${nearest(scales().text, Math.max(...sizes))})`;
+			// A fluid size (clamp, min, max, vw) stays fluid with each end on the brand scale, so headlines still shrink
+			// on phones; a fixed size takes the nearest step.
+			next = /clamp\(|min\(|max\(|v[wh]\b|calc\(/.test(next) ? next.replace(/(\d*\.?\d+)(px|rem)\b/g, (all, n: string, unit: string) => `var(${nearest(scales().text, toPx(n, unit))})`) : `var(${nearest(scales().text, Math.max(...[...next.matchAll(/(\d*\.?\d+)(px|rem)/g)].map((m) => toPx(m[1], m[2]))))})`;
 		} else if (/^border(-[a-z]+)*-radius$/.test(p) && /\d(px|rem)/.test(next)) {
 			stats.radius++;
 			next = mapLengths(next, scales().radius, { pill: true });
