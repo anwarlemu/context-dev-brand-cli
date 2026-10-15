@@ -39,6 +39,7 @@ node bin.js check registry   # registry must stay at 0 errors
 - Doto (`font-data`) is only for figures. The check fails Doto on words and large figures not in Doto.
 - A new rule needs a fixture in `test/fixtures/violations` and a line in `expected.json`.
 - Agents are told to run `npx context-ds`, never bare `context-ds` (it is not on the shell PATH in apps).
+- Apps install from `main` (`source` in `ds.config.json`), and every push to it is a release that apps are prompted to take. Push only with `npm run ci` green. No version tags.
 
 ## Verifying in a real app
 

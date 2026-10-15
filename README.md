@@ -8,22 +8,37 @@ off-brand code: a hook checks every write before it reaches disk, and they canno
 Three people typing the same prompt get the same page structure, because structure is a lookup and
 a template, not a model decision. Copy is the only thing left to the agent.
 
-## For teammates
+## Set it up in any project
 
-You need read access to `anwarlemu/context-dev-brand-cli` on GitHub. In your app:
+Give your coding agent (Claude Code, Codex, Cursor or any other) this prompt:
 
-```sh
-npm i -D github:anwarlemu/context-dev-brand-cli#v0.2.0
-npx context-ds init --dry-run     # preview
-npx context-ds init
-npx playwright install chromium    # only for review
+```text
+Set up the Context.dev design system in this project: run
+`npx -y github:anwarlemu/context-dev-brand-cli init`, then do what it prints and commit the result.
 ```
 
-Then use Claude Code as usual. `review` uses your `ANTHROPIC_API_KEY`, or your Claude Code login if
-no key is set. To update, change the tag in `package.json` (for example `#v0.1.2`) and run `npm install`.
+Or run it yourself. That one command adds the package to the project (it installs from the `main`
+branch), writes the tokens, the contract in `AGENTS.md` / `CLAUDE.md`, the hooks for Claude Code,
+Codex and Cursor, the pre-commit hook and the CI workflow. From then on the hooks and checks hold
+every agent to the system; nothing depends on the agent reading instructions. Use
+`init --dry-run` first to see what it will change. Codex runs project hooks once you trust them
+with `/hooks`. `npx playwright install chromium` is needed only for `review`.
 
-Releasing a new version (maintainers): commit, run `npm run ci`, bump `version` in `package.json`,
-then `git tag -a vX.Y.Z -m "context-ds X.Y.Z" && git push origin main vX.Y.Z`.
+### Updates
+
+There are no versions to bump. Projects track the `main` branch, so whatever is pushed to `main` is
+the release. Each project's lockfile pins the commit it has, so builds and CI stay reproducible
+until the project updates:
+
+- At the start of each agent session the hook asks GitHub (at most once a day) whether `main` has
+  moved. If it has, the agent is told to run `npx context-ds update` before any UI work.
+- `npx context-ds update` installs the newest `main`, refreshes the tokens, contract and hooks, and
+  lists installed components that have newer versions. Commit what it changes.
+- `npx context-ds update --check` only reports whether a newer commit exists.
+
+Maintainers: push to `main` after `npm run ci` passes. That is the whole release. A commit that
+breaks `main` reaches every project that updates, so keep CI green. To pin a project to a commit,
+use `github:anwarlemu/context-dev-brand-cli#<sha>` in its `package.json`.
 
 ## Use it locally
 
@@ -134,6 +149,7 @@ All commands take `--json` and `--help`.
 | `review [url\|path] [--viewports] [--threshold 7]` | Needs `ANTHROPIC_API_KEY`; model from `DS_REVIEW_MODEL` or ds.config.json |
 | `diff` | Items behind the registry or edited by hand |
 | `watch` | Check every file the moment it is saved. For agents and editors without hooks |
+| `update [--check]` | Install the newest design system from its source branch and refresh what `init` wrote |
 | `approve [--list]` | A person reviews and approves `ds-override` exceptions. Refuses to run without an interactive terminal, so agents cannot approve their own |
 
 ## Check rules

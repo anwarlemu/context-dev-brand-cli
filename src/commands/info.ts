@@ -6,6 +6,7 @@ import { emit } from '../lib/output.js';
 import { PKG_ROOT, findProjectRoot } from '../lib/paths.js';
 import { detectProject } from '../lib/project.js';
 import { findItem } from '../lib/registry.js';
+import { installedCommit, sourceSpec } from '../lib/source.js';
 import { readBaseline, readInstalled } from '../lib/state.js';
 
 export function hookStatus(root: string) {
@@ -50,6 +51,8 @@ export function gatherInfo(root: string) {
 		brand: config.brand,
 		bin: config.bin,
 		version: JSON.parse(readFileSync(join(PKG_ROOT, 'package.json'), 'utf8')).version,
+		source: sourceSpec(root),
+		commit: installedCommit(root),
 		tokenVersion: JSON.parse(readFileSync(join(PKG_ROOT, 'package.json'), 'utf8')).version,
 		registryUrl: config.registryMode === 'local' && !process.env.DS_REGISTRY_URL ? 'bundled with the package (registryMode local)' : process.env.DS_REGISTRY_URL ?? config.registryUrl,
 		project,
@@ -70,7 +73,7 @@ export function registerInfo(program: Command) {
 			emit(opts, info, () => {
 				const h = info.hooks;
 				return [
-					`${info.brand} design system ${info.version} (${info.bin})`,
+					`${info.brand} design system ${info.version} (${info.bin})  Source: ${info.source}${info.commit ? ` at ${info.commit.slice(0, 7)}` : ''}`,
 					`Framework: ${info.project.framework} ${info.project.frameworkVersion ?? ''}  Tailwind: ${info.project.tailwind ?? 'not found'}  PM: ${info.project.packageManager}`,
 					`Tokens: ${info.tokenVersion}  Registry: ${info.registryUrl}`,
 					`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id}@${i.installed}${i.drift === 'behind' ? ` (latest ${i.latest})` : ''}`).join(', ') : 'none'}`,

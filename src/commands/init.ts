@@ -7,6 +7,7 @@ import { loadConfig } from '../lib/config.js';
 import { color, emit } from '../lib/output.js';
 import { PKG_ROOT, findProjectRoot, pkgPath } from '../lib/paths.js';
 import { detectProject } from '../lib/project.js';
+import { installArgs } from '../lib/source.js';
 import { readBaseline, writeBaseline } from '../lib/state.js';
 import { gatherInfo } from './info.js';
 
@@ -109,12 +110,25 @@ export function registerInit(program: Command) {
 		.option('--no-baseline', 'do not accept existing findings as legacy')
 		.option('--harness <names...>', 'limit to claude-code, cursor, codex')
 		.option('--scope <globs...>', 'limit checks and hooks to these paths (scoped mode detects layouts using the brand scope class)')
+		.option('--no-install', 'when run through npx, do not add the package to the project first')
 		.option('--dry-run', 'show what would change, write nothing')
 		.option('--json', 'JSON output')
 		.action((opts) => {
 			dryRun = !!opts.dryRun;
 			const root = findProjectRoot();
 			const config = loadConfig();
+			// Run as `npx <source> init`, this copy lives in npx's cache. Hooks need a copy inside the project, so install
+			// the package from its source branch and hand over to that copy, which does the rest.
+			if (opts.install && !dryRun && /[\\/]_npx[\\/]/.test(PKG_ROOT) && existsSync(join(root, 'package.json'))) {
+				const pm = detectProject(root).packageManager;
+				const args = installArgs(pm, config.source);
+				process.stderr.write(`Adding ${config.source} to this project (${pm} ${args.join(' ')})...\n`);
+				const install = spawnSync(pm, args, { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
+				const local = join(root, 'node_modules', config.bin, 'bin.js');
+				if (install.status !== 0 || !existsSync(local)) throw new Error(`Could not install ${config.source}. Run \`${pm} ${args.join(' ')}\` and then \`${config.cli} init\`.`);
+				const handOff = spawnSync(process.execPath, [local, ...process.argv.slice(process.argv.indexOf('init')), '--no-install'], { cwd: process.cwd(), stdio: 'inherit' });
+				process.exit(handOff.status ?? 1);
+			}
 			const project = detectProject(root);
 			const changes: Change[] = [];
 			const notes: string[] = [];
@@ -272,7 +286,7 @@ export function registerInit(program: Command) {
 
 			const gitignore = existsSync(join(root, '.gitignore')) ? readFileSync(join(root, '.gitignore'), 'utf8') : '';
 			// Local run state stays out of git; .ds/baseline.json and .ds/approved-overrides.json are committed.
-			const ignoreLines = ['.ds/session-cache.json', '.ds/review/', '.ds/hooks.log', '.ds/watch.json'].filter((l) => !gitignore.split('\n').includes(l));
+			const ignoreLines = ['.ds/session-cache.json', '.ds/review/', '.ds/hooks.log', '.ds/watch.json', '.ds/update-check.json'].filter((l) => !gitignore.split('\n').includes(l));
 			if (ignoreLines.length) writeIfChanged(root, '.gitignore', `${gitignore.trimEnd()}\n${ignoreLines.join('\n')}\n`.replace(/^\n/, ''), changes, 'patched');
 
 			if (opts.baseline && !readBaseline(root)) {
@@ -293,7 +307,8 @@ export function registerInit(program: Command) {
 					...notes.map((n) => color.yellow(`  note: ${n}`)),
 					'',
 					`Hooks: claude-code [${info.hooks['claude-code'].join(', ')}], cursor [${info.hooks.cursor.join(', ') || 'none'}], codex [${info.hooks.codex.join(', ') || 'none'}], pre-commit [${info.hooks['pre-commit'].join(', ') || 'none'}]`,
-					`Next: ${config.cli} resolve "<task>"`,
+					dryRun ? '' : 'Next: commit what init wrote (it is how teammates and CI get the same setup).',
+					`Before any UI work: ${config.cli} resolve "<task>". To get design system changes later: ${config.cli} update.`,
 				].join('\n'),
 			);
 		});

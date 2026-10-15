@@ -9,6 +9,7 @@ import { changedFiles } from '../lib/git.js';
 import { matchesAny } from '../lib/glob.js';
 import { dsDir } from '../lib/paths.js';
 import { findItem, itemByImport, type RegistryItem, renderDocs } from '../lib/registry.js';
+import { updateAvailable } from '../lib/source.js';
 import { readInstalled, sessionState } from '../lib/state.js';
 import { type HookInput, promptOf, proposedWrites, sessionIdOf } from './payload.js';
 
@@ -32,11 +33,16 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 	state.save();
 	const info = gatherInfo(root);
 	const bin = loadConfig().cli;
+	let update: ReturnType<typeof updateAvailable>;
+	try {
+		update = updateAvailable(root);
+	} catch {}
 	const lines = [
 		`${info.brand} design system ${info.version} is active in this project (${bin}).`,
 		`Framework: ${info.project.framework} ${info.project.frameworkVersion ?? ''}. Tailwind: ${info.project.tailwind ?? 'none'}. Tokens: ${info.tokenVersion}.`,
 		`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id.split('/').pop()}@${i.installed}${i.drift === 'behind' ? '*' : ''}`).join(', ') : 'none yet'}.`,
 		info.installed.some((i) => i.drift === 'behind') ? `* behind the registry. Run \`${bin} diff\`.` : '',
+		update ? `A newer design system is on ${update.ref} (${update.installed.slice(0, 7)} -> ${update.latest.slice(0, 7)}). Run \`${bin} update\` first and commit what it changes.` : '',
 		`Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.`,
 		`Writes are checked before they reach disk. \`${bin} check\` must pass before you finish.`,
 	].filter(Boolean);

@@ -12,6 +12,7 @@ import { registerResolve } from './commands/resolve.js';
 import { registerReview } from './commands/review.js';
 import { registerScaffold } from './commands/scaffold.js';
 import { registerTokens } from './commands/tokens.js';
+import { registerUpdate } from './commands/update.js';
 import { registerWatch } from './commands/watch.js';
 import { PKG_ROOT } from './lib/paths.js';
 import { readFileSync } from 'node:fs';
@@ -39,6 +40,7 @@ registerDiff(program);
 registerHook(program);
 registerWatch(program);
 registerApprove(program);
+registerUpdate(program);
 
 program.parseAsync(process.argv).catch((error) => {
 	process.stderr.write(`${config.bin}: ${(error as Error).message}\n`);

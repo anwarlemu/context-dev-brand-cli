@@ -3,6 +3,8 @@ import { z } from 'zod';
 export const dsConfigSchema = z.object({
 	brand: z.string(),
 	bin: z.string(),
+	/** Where apps install the package from. A git branch, so every push to it is the release. */
+	source: z.string(),
 	registryUrl: z.string().url(),
 	registryMode: z.enum(['local', 'remote']).default('local'),
 	siteUrl: z.string().url().optional(),

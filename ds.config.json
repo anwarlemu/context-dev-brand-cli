@@ -2,6 +2,7 @@
   "$schema": "./src/schema/ds-config.schema.json",
   "brand": "Context.dev",
   "bin": "context-ds",
+  "source": "github:anwarlemu/context-dev-brand-cli#main",
   "registryUrl": "https://context-ds.vercel.app",
   "registryMode": "local",
   "siteUrl": "https://www.context.dev",

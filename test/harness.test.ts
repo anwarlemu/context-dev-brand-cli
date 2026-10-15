@@ -11,6 +11,7 @@ import { resolveIntent } from '../src/lib/intents.js';
 import { isProductTarget } from '../src/review/critique.js';
 import { checkChanged } from '../src/commands/watch.js';
 import { overrideKey, writeApprovals } from '../src/lib/state.js';
+import { gitRemote, installedCommit } from '../src/lib/source.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
 const expected: Record<string, string> = JSON.parse(readFileSync(join(__dirname, 'fixtures', 'expected.json'), 'utf8'));
@@ -225,9 +226,27 @@ describe('init', () => {
 	});
 });
 
+describe('source', () => {
+	it('reads git specs as a clone URL and ref', () => {
+		expect(gitRemote('github:acme/ds-cli#main')).toEqual({ url: 'https://github.com/acme/ds-cli.git', ref: 'main' });
+		expect(gitRemote('acme/ds-cli')).toEqual({ url: 'https://github.com/acme/ds-cli.git', ref: 'HEAD' });
+		expect(gitRemote('git+ssh://git@github.com/acme/ds-cli.git#main')).toEqual({ url: 'ssh://git@github.com/acme/ds-cli.git', ref: 'main' });
+		expect(gitRemote('^0.2.0')).toBeUndefined();
+		expect(gitRemote('file:../ds')).toBeUndefined();
+	});
+	it('finds the commit the lockfile pins', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-src-'));
+		const sha = 'a'.repeat(40);
+		const bin = JSON.parse(readFileSync(join(__dirname, '..', 'ds.config.json'), 'utf8')).bin;
+		writeFileSync(join(dir, 'package-lock.json'), JSON.stringify({ packages: { [`node_modules/${bin}`]: { resolved: `git+ssh://git@github.com/acme/ds-cli.git#${sha}` } } }));
+		expect(installedCommit(dir)).toBe(sha);
+		rmSync(dir, { recursive: true });
+	});
+});
+
 describe('cli', () => {
 	it('every command supports --help', () => {
-		for (const c of ['init', 'info', 'resolve', 'scaffold', 'docs', 'add', 'tokens', 'check', 'review', 'diff', 'hook']) {
+		for (const c of ['init', 'info', 'resolve', 'scaffold', 'docs', 'add', 'tokens', 'check', 'review', 'diff', 'hook', 'watch', 'approve', 'update']) {
 			expect(spawnSync(process.execPath, [join(__dirname, '..', 'bin.js'), c, '--help'], { encoding: 'utf8' }).status).toBe(0);
 		}
 	});
