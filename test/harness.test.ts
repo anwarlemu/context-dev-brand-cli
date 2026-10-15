@@ -239,6 +239,7 @@ describe('markup files', () => {
 		const text = '---\nconst c = "#ff0000";\n---\n<div class="card" style="color: #00ff00">Hi</div>\n<style>\n.card { background: #123456; }\n</style>\n';
 		const errors = checkText(FIXTURES, 'src/pages/a.astro', text).findings.filter((f) => f.rule === 'no-raw-color');
 		expect(errors.map((f) => f.line).sort()).toEqual([4, 6]);
+		expect(checkText(FIXTURES, 'a.css', '.t { letter-spacing: -0.02em; }\n.u { letter-spacing: normal; }').findings.filter((f) => f.rule === 'font-family-from-tokens').length).toBe(1);
 	});
 });
 
