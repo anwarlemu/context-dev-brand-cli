@@ -12,6 +12,7 @@ import { findGlobalCss } from './init.js';
 import { type RebrandStats, brandLiteral, classPalette, nativePalette, rebrandClasses, rebrandCss, rebrandMarkup, rebrandNative, rebrandScript, rebrandSvgAsset, sitePalette } from '../lib/rebrand.js';
 import { walkFiles } from '../lib/glob.js';
 import { type InterfaceProfile, profileInterface, savedSurface } from '../lib/surface.js';
+import { missingMoments, wireDots } from '../lib/moments.js';
 import type { Surface } from '../lib/recipes.js';
 
 // Applies the brand to an interface that already has its own styles, in any stack: it first reads what the interface
@@ -119,8 +120,15 @@ export function registerApply(program: Command) {
 			if (opts.list) {
 				const paths = Array.isArray(opts.list) ? opts.list.map((p: string) => join(process.cwd(), p)) : undefined;
 				const result = runCheck({ projectRoot: root, paths, useBaseline: false, styleOnly: true });
-				emit(opts, result, () => (result.errors ? [...result.findings.filter((f) => f.severity === 'error').map(formatFinding), '', `${result.errors} style values to change. Change the value only; keep the content and structure.`].join('\n') : 'Every style uses the brand tokens.'));
-				process.exitCode = result.errors ? 1 : 0;
+				// A site also lists the brand moments it still lacks; they are the part people recognize first.
+				const moments = !paths && savedSurface(root) !== 'product' ? missingMoments(root, collectFiles(root, loadCheckConfig(root)).filter((rel) => MARKUP.test(rel) || SCRIPT.test(rel))) : [];
+				emit(opts, { ...result, moments }, () =>
+					[
+						...(result.errors ? [...result.findings.filter((f) => f.severity === 'error').map(formatFinding), '', `${result.errors} style values to change. Change the value only; keep the content and structure.`] : ['Every style uses the brand tokens.']),
+						...(moments.length ? ['', `${moments.length} brand moments missing (\`${cli} apply\` step 7 says how):`, ...moments.map((m) => `  ${m.what}\n    ${m.where.join(', ')}`)] : []),
+					].join('\n'),
+				);
+				process.exitCode = result.errors || moments.length ? 1 : 0;
 				return;
 			}
 			if (opts.surface && !['product', 'marketing'].includes(opts.surface)) throw new Error('--surface is product or marketing.');
@@ -171,8 +179,8 @@ export function registerApply(program: Command) {
 					// Next apps load the typefaces through next/font (init wrote lib/ds-fonts.ts); everything else gets the stylesheet.
 					if (project.framework !== 'next') after = loadFonts(after);
 					const layer = surface === 'product' ? 'product' : 'frame';
-					const importLine = `@import "./${bin}/${layer}.css";`;
-					after = after.replace(new RegExp(`@import\\s+["']\\./${bin}/(frame|product)\\.css["'];\\n?`, 'g'), '');
+					const importLine = `@import "./${bin}/${layer}.css";\n@import "./${bin}/dots.css";`;
+					after = after.replace(new RegExp(`@import\\s+["']\\./${bin}/(frame|product|dots)\\.css["'];\\n?`, 'g'), '');
 					const tokensImport = after.match(new RegExp(`@import\\s+["']\\./${bin}/(tokens|theme)\\.css["'];`))?.[0];
 					after = tokensImport ? after.replace(tokensImport, `${tokensImport}\n${importLine}`) : `${importLine}\n${after}`;
 				}
@@ -202,7 +210,18 @@ export function registerApply(program: Command) {
 				mkdirSync(layerDir, { recursive: true });
 				if (surface === 'product') writeFileSync(join(layerDir, 'product.css'), productCss(theme, switches));
 				else writeFileSync(join(layerDir, 'frame.css'), readFileSync(pkgPath('styles', 'frame.css'), 'utf8'));
+				writeFileSync(join(layerDir, 'dots.css'), readFileSync(pkgPath('styles', 'dots.css'), 'utf8'));
 			}
+			// The dot script is served as a static file and loaded by every base layout, in any stack.
+			const publicDir = ['public', 'static'].find((d) => existsSync(join(root, d))) ?? (existsSync(join(root, 'index.html')) ? '.' : undefined);
+			const dotsUrl = publicDir === '.' ? `./${bin}/dots.js` : `/${bin}/dots.js`;
+			if (publicDir && !opts.dryRun) {
+				mkdirSync(join(root, publicDir, bin), { recursive: true });
+				writeFileSync(join(root, publicDir, bin, 'dots.js'), readFileSync(pkgPath('styles', 'dots.js'), 'utf8'));
+			}
+			const shells = [...(layoutFile ? [layoutFile] : []), ...files.filter((rel) => MARKUP.test(rel) && !rel.startsWith(`${publicDir}/`) && /<\/head>/i.test(readFileSync(join(root, rel), 'utf8')))];
+			const dotsIn = publicDir ? wireDots(root, shells, dotsUrl, !!opts.dryRun, (rel, text) => writeFileSync(join(root, rel), text)) : [];
+			const moments = surface === 'marketing' || mixed ? missingMoments(root, files.filter((rel) => MARKUP.test(rel) || SCRIPT.test(rel))) : [];
 			const scoped = surface === 'product' && tailwind === 'theme' ? addProductScope(root, !!opts.dryRun) : undefined;
 			const fontsIn = project.framework === 'next' ? wireNextFonts(root, project, !!opts.dryRun) : undefined;
 			const fixed = opts.dryRun ? { fixed: 0 } : runCheck({ projectRoot: root, useBaseline: false, fix: true, styleOnly: true });
@@ -267,7 +286,20 @@ export function registerApply(program: Command) {
 						: [`   none recognized automatically. Match each element to a recipe yourself: \`${cli} style${surface === 'product' ? ' --surface product' : ''}\` lists them${kinds.native ? ', and translate its CSS into the platform\'s styling (SwiftUI modifiers, Compose modifiers, Flutter widgets)' : ''}.`]),
 					'',
 					color.bold('Styling only.') + ` Keep every word, link, image and element where it is; do not add templates, sections or components, and do not rewrite copy. Visual layout is styling: spacing, widths, alignment, borders and backgrounds follow the recipes (${surface === 'product' ? 'app-shell, app-sidebar, app-page-header, app-page-column, app-card, app-table' : 'page-column, section, header, the cards and buttons'}).`,
-					color.bold('7. Look at it, then review it.') + ` Run the ${project.framework === 'next' ? 'app' : 'site'} and open every screen at desktop and phone width next to the brand (${surface === 'product' ? 'the dashboard: canvas page, white cards with hairline rings, compact type, black pill actions, blue accents' : 'white page, black text, blue accents, black pill buttons, ruled column'}). Then run \`${cli} review ${project.framework === 'next' ? '<route>' : 'http://localhost:<port>/<page>'}\` on each main screen and fix its punch list until every score is 7 or more.`,
+					color.bold(`7. Brand moments: what makes it read as the brand at a glance${moments.length ? ` (${moments.length} missing)` : ''}:`),
+					`   ${dotsIn.length ? `The dot script loads in ${dotsIn.join(', ')}` : publicDir ? `No base layout found: load ${dotsUrl} with a script tag in the base layout` : `No public folder: serve ${bin}/dots.js (from the package's styles/) as a static file and load it in the base layout`}; its styles are ${main ? `${dirname(main)}/${bin}/dots.css` : 'dots.css'}. Mark elements the markup already has; add no sections and change no words:`,
+					...(surface === 'product'
+						? ['   - class="ds-figure" on headline metrics and counts (figures only, never words); data-ds-dots="frame" on an empty state\'s illustration area.']
+						: [
+								'   - data-ds-dots on the hero section: the dot field, cleared around its text, buttons and images.',
+								'   - data-ds-dots="panel" on the element wrapping the hero\'s screenshot, video or demo: the hero\'s one block of blue.',
+								'   - data-ds-dots="frame" on the element wrapping each standalone screenshot or illustration (not logos or avatars).',
+								'   - <span class="ds-accent"> around the key phrase of the hero headline and of each section heading: the same words, in blue.',
+								'   - class="ds-figure" on stats, step numbers and counts (figures only, never words).',
+								...moments.map((m) => `   Missing: ${m.what.replace(/:.*$/, '')} (${m.where.slice(0, 3).join(', ')})`),
+							]),
+					'',
+					color.bold('8. Look at it, then review it.') + ` Run the ${project.framework === 'next' ? 'app' : 'site'} and open every screen at desktop and phone width next to the brand (${surface === 'product' ? 'the dashboard: canvas page, white cards with hairline rings, compact type, black pill actions, blue accents' : 'white page, black text, blue accents, black pill buttons, ruled column'}). Then run \`${cli} review ${project.framework === 'next' ? '<route>' : 'http://localhost:<port>/<page>'}\` on each main screen and fix its punch list until every score is 7 or more.`,
 					'   Common misses after a restyle: headlines too big on phones; text touching an edge or ruler; dark screenshots or videos left as black holes or fading into the white page (frame them instead); unreadable translucent headers; huge gaps or jammed sections; contrast on colored buttons and over images; touch targets under 44px.',
 					`Then run \`${cli} apply --list\` until it is empty, and show the person the result before committing.`,
 				].join('\n'),

@@ -29,6 +29,12 @@ nothing else: copy, content, elements and what each screen is for stay as they a
   are redrawn. A site gets the brand's page frame; a product gets the product theme (the
   dashboard's type scale, hairlines, card shadows, 15px root). Then it lists every component with
   the recipe to finish it with.
+- It also installs the brand's moments, in any stack: `dots.js` (no framework) draws the site's
+  circle grid behind any element marked `data-ds-dots`, cleared around its text and images (the
+  hero field with its solid diamonds, `="panel"` for the blue panel the hero visual sits on,
+  `="frame"` for framed screenshots), and `dots.css` adds `ds-accent` (the key phrase of a headline
+  in blue) and `ds-figure` (figures in Doto). The agent marks existing elements; `apply --list`
+  keeps listing a site's missing moments until they are there.
 - It reads every kind of file: stylesheets (CSS, Sass, Less, Stylus), templates (Astro, Vue,
   Svelte, HTML, ERB, PHP, Blade, Liquid, Jinja, Twig, Razor...), scripts (inline style objects,
   CSS-in-JS, Tailwind color classes, chart colors in code), and native or other code (SwiftUI,

@@ -14,6 +14,7 @@ import { overrideKey, writeApprovals } from '../src/lib/state.js';
 import { gitRemote, installedCommit } from '../src/lib/source.js';
 import { detectComponents, findRecipe, loadRecipes, recipeCss } from '../src/lib/recipes.js';
 import { brandLiteral, classPalette, rebrandClasses, rebrandCss, rebrandMarkup, rebrandNative, rebrandScript, rebrandSvgAsset, sitePalette } from '../src/lib/rebrand.js';
+import { missingMoments, wireDots } from '../src/lib/moments.js';
 import { profileInterface } from '../src/lib/surface.js';
 import { runningHarness } from '../src/commands/init.js';
 
@@ -279,6 +280,34 @@ describe('apply', () => {
 		const site = profileInterface(dir, ['src/pages/index.astro', 'src/pages/blog/a.astro']);
 		expect(site.surface).toBe('marketing');
 		expect(site.reasons.join(' ')).toContain('hero');
+		rmSync(dir, { recursive: true });
+	});
+	it('lists the brand moments a site lacks and loads the dots in its base layout', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-moments-'));
+		const write = (rel: string, text: string) => {
+			mkdirSync(join(dir, rel, '..'), { recursive: true });
+			writeFileSync(join(dir, rel), text);
+		};
+		write('src/layouts/Base.astro', '<html><head><title>x</title></head><body><slot /></body></html>');
+		write('src/components/Nav.astro', '<nav><img src="/logo.svg" /></nav>');
+		write('src/pages/index.astro', '<section class="hero"><h1>All your work in one place</h1><div class="shot"><img src="/app.png" /></div></section>');
+		const files = ['src/components/Nav.astro', 'src/pages/index.astro'];
+		const missing = missingMoments(dir, files);
+		expect(missing.map((m) => m.id)).toEqual(['field', 'panel', 'accent', 'frame']);
+		expect(missing[0].where[0]).toBe('src/pages/index.astro:1');
+		expect(missing.find((m) => m.id === 'frame')?.where.join()).not.toContain('Nav');
+		write('src/pages/index.astro', '<section class="hero" data-ds-dots><h1>All your work <span class="ds-accent">in one place</span></h1><div class="shot" data-ds-dots="panel"><img src="/app.png" /></div><figure data-ds-dots="frame"><img src="/b.png" /></figure></section>');
+		expect(missingMoments(dir, files)).toEqual([]);
+		const writes: Record<string, string> = {};
+		expect(wireDots(dir, ['src/layouts/Base.astro'], '/ds/dots.js', false, (rel, text) => (writes[rel] = text))).toEqual(['src/layouts/Base.astro']);
+		expect(writes['src/layouts/Base.astro']).toContain('<script is:inline src="/ds/dots.js" defer></script>\n</head>');
+		write('app/layout.tsx', 'export default function L({ children }) { return <html><body>{children}</body></html>; }');
+		wireDots(dir, ['app/layout.tsx'], '/ds/dots.js', false, (rel, text) => (writes[rel] = text));
+		expect(writes['app/layout.tsx']).toContain('<script src="/ds/dots.js" async />\n</body>');
+		// The script is plain browser JavaScript with no imports, so any stack can serve it as is.
+		const script = readFileSync(join(process.cwd(), 'styles', 'dots.js'), 'utf8');
+		expect(script).not.toMatch(/^\s*(import|export)\b/m);
+		expect(() => new Function(script)).not.toThrow();
 		rmSync(dir, { recursive: true });
 	});
 	it('maps a variable by what it is used for and in which theme', () => {
