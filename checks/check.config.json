@@ -1,6 +1,6 @@
 {
   "include": [
-    "**/*.{tsx,jsx,ts,js,css,md,mdx}"
+    "**/*.{tsx,jsx,ts,js,css,md,mdx,astro,vue,svelte,html}"
   ],
   "exclude": [
     "**/*.d.ts",
@@ -8,7 +8,10 @@
     "**/*.spec.{ts,tsx}",
     "tokens/**",
     "build/**",
-    "public/**",
+    "public/**/*.{js,mjs,cjs,html}",
+    "public/r/**",
+    "public/r-local/**",
+    "**/dist/**",
     "**/next.config.*",
     "**/tailwind.config.*",
     "**/postcss.config.*",

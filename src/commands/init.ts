@@ -6,7 +6,7 @@ import { runCheck, findingKey } from '../check/engine.js';
 import { loadConfig } from '../lib/config.js';
 import { color, emit } from '../lib/output.js';
 import { PKG_ROOT, findProjectRoot, pkgPath } from '../lib/paths.js';
-import { detectProject } from '../lib/project.js';
+import { detectProject, supportsComponents } from '../lib/project.js';
 import { installArgs } from '../lib/source.js';
 import { readBaseline, writeBaseline } from '../lib/state.js';
 import { gatherInfo } from './info.js';
@@ -14,9 +14,10 @@ import { gatherInfo } from './info.js';
 const START = '<!-- ds:contract:start -->';
 const END = '<!-- ds:contract:end -->';
 
-export function renderTemplate(name: string) {
+/** `react: false` renders the contract for stacks the components do not support: tokens and checks only. */
+export function renderTemplate(name: string, { react = true } = {}) {
 	const config = loadConfig();
-	const contract = readFileSync(pkgPath('src', 'skill', 'contract.md'), 'utf8').replaceAll('{{bin}}', config.cli).replaceAll('{{brand}}', config.brand).trim();
+	const contract = readFileSync(pkgPath('src', 'skill', react ? 'contract.md' : 'contract.tokens.md'), 'utf8').replaceAll('{{bin}}', config.cli).replaceAll('{{brand}}', config.brand).trim();
 	if (name === 'contract') return contract;
 	return readFileSync(pkgPath('src', 'skill', name), 'utf8').replaceAll('{{contract}}', contract).replaceAll('{{name}}', config.bin).replaceAll('{{bin}}', config.cli).replaceAll('{{brand}}', config.brand);
 }
@@ -114,12 +115,60 @@ function readJson(path: string) {
 	}
 }
 
-function findGlobalCss(root: string) {
-	for (const p of ['src/app/globals.css', 'app/globals.css', 'src/styles/globals.css', 'styles/globals.css', 'src/index.css', 'src/styles.css']) if (existsSync(join(root, p))) return p;
+export function findGlobalCss(root: string) {
+	for (const p of ['src/app/globals.css', 'app/globals.css', 'src/styles/globals.css', 'src/styles/global.css', 'styles/globals.css', 'styles/global.css', 'src/index.css', 'src/styles.css']) if (existsSync(join(root, p))) return p;
+	// Otherwise the stylesheet holding the site's own variables: the .css file with the most custom properties in :root.
+	let best: { rel: string; vars: number } | undefined;
+	const visit = (dir: string, depth: number) => {
+		if (depth > 4 || !existsSync(join(root, dir))) return;
+		for (const entry of readdirSync(join(root, dir), { withFileTypes: true })) {
+			const rel = dir ? `${dir}/${entry.name}` : entry.name;
+			if (entry.isDirectory() && !['node_modules', 'dist', 'build', '.next', '.astro', loadConfig().bin].includes(entry.name)) visit(rel, depth + 1);
+			else if (entry.name.endsWith('.css')) {
+				const css = readFileSync(join(root, rel), 'utf8');
+				const vars = css.includes(':root') ? (css.match(/--[\w-]+\s*:/g) ?? []).length : 0;
+				if (vars && (!best || vars > best.vars)) best = { rel, vars };
+			}
+		}
+	};
+	for (const dir of ['src', 'styles', 'public', 'app']) visit(dir, 0);
+	return best?.rel;
+}
+
+/** The agent running this command, from the variables each one sets in its shell tool. Codex is checked first because
+ * a Codex started from a Claude Code terminal inherits CLAUDECODE. */
+export function runningHarness(env = process.env): 'claude-code' | 'codex' | 'cursor' | undefined {
+	if (env.CODEX_THREAD_ID || env.CODEX_SESSION_ID) return 'codex';
+	if (env.CLAUDECODE) return 'claude-code';
+	if (env.CURSOR_AGENT || env.CURSOR_TRACE_ID) return 'cursor';
 	return undefined;
 }
 
+const HARNESS_NAMES = { 'claude-code': 'Claude Code', codex: 'Codex', cursor: 'Cursor' } as const;
+
 const THEME_NAMES = /--(text-(display-xl|display|h[1-5]|body-lg|body|body-sm|caption)|color-(brand|surface|fg|fg-muted|tint|line|action)|radius-(card|pill|window))\s*:/;
+
+// What to do after init, addressed to whoever ran it. An agent acts on everything it reads here, so setup for the
+// other agents' files stays out of its instructions: those files are inert until a teammate uses that agent.
+function nextSteps(harnesses: string[], dry: boolean, componentKit: boolean) {
+	const cli = loadConfig().cli;
+	const current = runningHarness();
+	const others = harnesses.filter((h) => h !== current).map((h) => HARNESS_NAMES[h as keyof typeof HARNESS_NAMES]);
+	if (dry) return [`Dry run. Run \`${cli} init\` to apply.`];
+	const lines = [
+		current ? `Set up for ${HARNESS_NAMES[current]}, the agent running this.` : 'Set up.',
+		`Next: commit the files above. That is the whole setup; nothing else to install or run.`,
+	];
+	if (others.length) lines.push(`  ${others.join(' and ')} files were written for teammates who use ${others.length > 1 ? 'them' : 'it'}. ${current ? `Do not open, install or configure ${others.join(' or ')} yourself.` : ''}`.trimEnd());
+	if (current === 'codex') lines.push('  Tell the user: Codex runs these hooks once they trust them with /hooks in Codex. You cannot do this for them.');
+	else if (!current && harnesses.includes('codex')) lines.push('  Codex users trust the hooks once with /hooks in Codex.');
+	if (componentKit) lines.push(`  From now on: \`${cli} resolve "<task>"\` before UI work; \`${cli} update\` for design system changes.`);
+	else {
+		lines.push(`  The brand is installed, not applied: pages look the same until \`${cli} apply\` runs. It restyles every page, so run it only when the user asks to apply the brand.`);
+		lines.push(`  From now on: no raw values in styles (\`${cli} tokens --search <term>\` finds the token); \`${cli} update\` for design system changes.`);
+	}
+	return lines;
+}
 
 export function registerInit(program: Command) {
 	program
@@ -169,7 +218,7 @@ export function registerInit(program: Command) {
 				const localCheck = join(root, '.ds', 'check.config.json');
 				const current = existsSync(localCheck) ? JSON.parse(readFileSync(localCheck, 'utf8')) : {};
 				if (!current.include) {
-					const include = [...scope].map((g) => (g.endsWith('/**') ? `${g}/*.{tsx,jsx,ts,js,css,md,mdx}` : g));
+					const include = [...scope].map((g) => (g.endsWith('/**') ? `${g}/*.{tsx,jsx,ts,js,css,md,mdx,astro,vue,svelte,html}` : g));
 					scopedInclude = include;
 					writeIfChanged(root, '.ds/check.config.json', `${JSON.stringify({ ...current, include }, null, 2)}\n`, changes);
 					notes.push(`Checks and hooks cover only: ${include.join(', ')}. Everything else (the dashboard, auth) keeps its own system. Widen it in .ds/check.config.json.`);
@@ -180,6 +229,10 @@ export function registerInit(program: Command) {
 			const stylesDir = cssRel ? dirname(cssRel) : project.srcDir ? 'src/styles' : 'styles';
 			const dsCssDir = `${stylesDir}/${config.bin}`;
 			writeIfChanged(root, `${dsCssDir}/tokens.css`, readFileSync(pkgPath('build', 'tokens.css'), 'utf8'), changes);
+			// theme.css is Tailwind 4 (@theme) and the components need React, so other stacks get the tokens alone.
+			const tailwindTheme = (project.tailwindMajor ?? 0) >= 4;
+			const componentKit = supportsComponents(project);
+			if (tailwindTheme) {
 			let themeCss = readFileSync(pkgPath('build', mode === 'new' ? 'theme.css' : 'theme.scoped.css'), 'utf8');
 			if (mode === 'scoped') {
 				const existing = appThemeNames(root);
@@ -210,6 +263,16 @@ export function registerInit(program: Command) {
 					writeIfChanged(root, cssRel, next, changes, 'patched');
 				}
 			} else notes.push(`No global CSS found. Import ${dsCssDir}/theme.css after tailwindcss yourself.`);
+			} else if (cssRel) {
+				const css = readFileSync(join(root, cssRel), 'utf8');
+				const line = `@import "./${config.bin}/tokens.css";`;
+				if (!css.includes(line)) {
+					// An @import has to come before every rule: after a @charset, leading comments and the file's own imports.
+					const lead = css.match(/^(?:\s*(?:@charset[^;]*;|@import[^;]*;|\/\*[\s\S]*?\*\/))*/)?.[0] ?? '';
+					writeIfChanged(root, cssRel, `${lead}${lead ? '\n' : ''}${line}\n${css.slice(lead.length).replace(/^\n/, '')}`, changes, 'patched');
+				}
+				notes.push(`${project.tailwindMajor ? `Tailwind ${project.tailwindMajor}` : 'No Tailwind'}, so only the tokens were installed: CSS variables (var(--ds-*)) imported into ${cssRel}. They change nothing until styles use them.${project.tailwindMajor === 3 ? ` Tailwind 3 classes for them: the preset in node_modules/${config.bin}/build/tailwind.preset.ts.` : ''}`);
+			} else notes.push(`No global CSS found. The tokens are in ${dsCssDir}/tokens.css for the site's main stylesheet to import.`);
 
 			const loadsBrandFonts = (() => {
 				const hits = spawnSync('grep', ['-rlE', '--include=*.ts', '--include=*.tsx', 'Rethink_Sans|--font-rethink-sans', 'src', 'app', 'lib'], { cwd: root, encoding: 'utf8' });
@@ -236,32 +299,34 @@ export function registerInit(program: Command) {
 			}
 
 			const pkgJson = existsSync(join(root, 'package.json')) ? JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) : undefined;
-			if (pkgJson && !{ ...pkgJson.dependencies, ...pkgJson.devDependencies }['tailwind-merge']) {
+			if (!project.framework.startsWith('next') && !loadsBrandFonts) notes.push('Brand typefaces (Rethink Sans, Doto, IBM Plex Mono) are not loaded. The site needs them from Google Fonts once its styles use var(--ds-font-sans).');
+			if (componentKit && pkgJson && !{ ...pkgJson.dependencies, ...pkgJson.devDependencies }['tailwind-merge']) {
 				const install = project.packageManager === 'npm' ? ['install', 'tailwind-merge@^3'] : ['add', 'tailwind-merge@^3'];
 				const run = dryRun ? { status: 0 } : spawnSync(project.packageManager, install, { cwd: root, stdio: 'pipe', encoding: 'utf8' });
 				if (run.status === 0) changes.push({ file: 'package.json', action: dryRun ? 'would add tailwind-merge' : 'added tailwind-merge' });
 				else notes.push(`Could not install tailwind-merge (${project.packageManager} ${install.join(' ')}). Install it before adding registry items.`);
 			}
 
-			if (!existsSync(join(root, 'components.json'))) {
+			if (componentKit && !existsSync(join(root, 'components.json'))) {
 				const components = { $schema: 'https://ui.shadcn.com/schema.json', style: 'new-york', rsc: true, tsx: true, tailwind: { config: '', css: cssRel ?? 'app/globals.css', baseColor: 'neutral', cssVariables: true, prefix: '' }, aliases: { components: '@/components', utils: '@/lib/utils', ui: '@/components/ui', lib: '@/lib', hooks: '@/hooks' }, iconLibrary: 'lucide', registries: { [`@${config.presetId}`]: `${config.registryUrl}/r/{name}.json` } };
 				writeIfChanged(root, 'components.json', `${JSON.stringify(components, null, 2)}\n`, changes);
 			}
 
-			const contract = renderTemplate('contract');
+			const contract = renderTemplate('contract', { react: componentKit });
 			if (!existsSync(join(root, 'CLAUDE.md')) && existsSync(join(root, 'AGENTS.md'))) writeIfChanged(root, 'CLAUDE.md', '@AGENTS.md\n', changes);
 			const claudeImportsAgents = dryRun && !existsSync(join(root, 'CLAUDE.md')) && existsSync(join(root, 'AGENTS.md')) ? true : existsSync(join(root, 'CLAUDE.md')) && /^@AGENTS\.md\s*$/m.test(readFileSync(join(root, 'CLAUDE.md'), 'utf8'));
 			for (const rel of claudeImportsAgents ? ['AGENTS.md'] : ['CLAUDE.md', 'AGENTS.md']) {
 				const existing = existsSync(join(root, rel)) ? readFileSync(join(root, rel), 'utf8') : '';
 				writeIfChanged(root, rel, upsertBlock(existing, contract), changes, existing ? 'patched' : 'wrote');
 			}
-			const skill = renderTemplate('SKILL.md');
-			if (harnesses.includes('claude-code')) writeIfChanged(root, `.claude/skills/${config.bin}/SKILL.md`, skill, changes);
+			// The skill teaches resolve, scaffold and add, which only work where the components do.
+			const skill = componentKit ? renderTemplate('SKILL.md') : undefined;
+			if (skill && harnesses.includes('claude-code')) writeIfChanged(root, `.claude/skills/${config.bin}/SKILL.md`, skill, changes);
 			if (harnesses.includes('cursor')) {
 				writeIfChanged(root, '.cursor/rules/ds.mdc', `---\ndescription: ${config.brand} design system contract\nalwaysApply: true\n---\n\n${START}\n${contract}\n${END}\n`, changes);
-				writeIfChanged(root, `.cursor/skills/${config.bin}/SKILL.md`, skill, changes);
+				if (skill) writeIfChanged(root, `.cursor/skills/${config.bin}/SKILL.md`, skill, changes);
 			}
-			if (harnesses.includes('codex')) writeIfChanged(root, `.agents/skills/${config.bin}/SKILL.md`, skill, changes);
+			if (skill && harnesses.includes('codex')) writeIfChanged(root, `.agents/skills/${config.bin}/SKILL.md`, skill, changes);
 
 			const claudeCmd = binCommand(root, 'claude-code');
 			const codexCmd = binCommand(root, 'codex');
@@ -273,7 +338,6 @@ export function registerInit(program: Command) {
 			if (harnesses.includes('codex')) {
 				const settings = mergeClaudeHooks(readJson(join(root, '.codex', 'hooks.json')), codexCmd, config.bin, 'codex');
 				writeIfChanged(root, '.codex/hooks.json', `${JSON.stringify(settings, null, 2)}\n`, changes);
-				notes.push(`Codex runs project hooks only once they are trusted: open codex here and run /hooks to trust them (automation: codex exec --dangerously-bypass-hook-trust).`);
 			}
 			if (harnesses.includes('cursor')) {
 				const existing = readJson(join(root, '.cursor', 'hooks.json')) ?? { version: 1, hooks: {} };
@@ -308,15 +372,14 @@ export function registerInit(program: Command) {
 			}
 
 			const info = gatherInfo(root);
-			emit(opts, { mode, changes, notes, info }, () =>
+			emit(opts, { mode, changes, notes, next: nextSteps(harnesses, dryRun, componentKit), info }, () =>
 				[
 					changes.length ? `${config.bin} init (${mode} mode)${dryRun ? ', dry run, nothing written' : ''}: ${changes.length} change${changes.length > 1 ? 's' : ''}` : `${config.bin} init: already up to date, nothing changed.`,
 					...changes.map((c) => `  ${c.action.padEnd(8)} ${c.file}`),
 					...notes.map((n) => color.yellow(`  note: ${n}`)),
 					'',
 					`Hooks: claude-code [${info.hooks['claude-code'].join(', ')}], cursor [${info.hooks.cursor.join(', ') || 'none'}], codex [${info.hooks.codex.join(', ') || 'none'}], pre-commit [${info.hooks['pre-commit'].join(', ') || 'none'}]`,
-					dryRun ? '' : 'Next: commit what init wrote (it is how teammates and CI get the same setup).',
-					`Before any UI work: ${config.cli} resolve "<task>". To get design system changes later: ${config.cli} update.`,
+					...nextSteps(harnesses, dryRun, componentKit).map((l) => (l.startsWith('  ') ? l : color.bold(l))),
 				].join('\n'),
 			);
 		});

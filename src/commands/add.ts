@@ -3,6 +3,7 @@ import type { Command } from 'commander';
 import { addItems } from '../lib/install.js';
 import { emit } from '../lib/output.js';
 import { findProjectRoot } from '../lib/paths.js';
+import { requireComponents } from '../lib/project.js';
 import { findItem, renderDocs } from '../lib/registry.js';
 
 export function registerAdd(program: Command) {
@@ -16,6 +17,7 @@ export function registerAdd(program: Command) {
 		.option('--json', 'JSON output')
 		.action((names: string[], opts) => {
 			const root = findProjectRoot();
+			if (!opts.dryRun) requireComponents(root, loadConfig().cli);
 			const items = names.map((n) => {
 				const item = findItem(n);
 				if (!item) throw new Error(`No registry item "${n}"`);

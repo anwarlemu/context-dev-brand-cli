@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { pkgPath } from '../../lib/paths.js';
 import type { Rule } from '../context.js';
 import { elementText } from '../jsx.js';
 import { elementName } from '../source.js';
@@ -61,9 +63,31 @@ export const fontFamilyFromTokens: Rule = {
 		if (file.kind === 'css') {
 			for (const m of file.text.matchAll(/(font-family|font-size|font-weight|font)\s*:\s*([^;{}]+);/g)) {
 				if (/var\(--ds-|inherit|^\s*(var\(--font|--text)/.test(m[2])) continue;
-				out.push({ rule: 'font-family-from-tokens', message: `Raw \`${m[1]}: ${m[2].trim()}\``, hint: 'Use var(--ds-font-*) or the text-* utilities', offset: m.index ?? 0 });
+				out.push({ rule: 'font-family-from-tokens', message: `Raw \`${m[1]}: ${m[2].trim()}\``, hint: cssFontHint(m[1], m[2].trim()), offset: m.index ?? 0 });
 			}
 		}
 		return out;
 	},
 };
+
+let textSizes: [string, number][] | undefined;
+/** The brand's type sizes in rem, read from the built tokens: [var name, rem]. */
+function brandTextSizes() {
+	if (!textSizes) {
+		const css = readFileSync(pkgPath('build', 'tokens.css'), 'utf8').split(/\n\}/)[0];
+		textSizes = [...css.matchAll(/(--ds-text-[a-z0-9-]+):\s*([\d.]+)rem;/g)].map((m) => [m[1], Number(m[2])]);
+	}
+	return textSizes;
+}
+
+/** Names the one token to use for a raw font value, so the fix needs no lookup. */
+export function cssFontHint(prop: string, value: string) {
+	if (prop === 'font-size') {
+		const px = value.match(/^([\d.]+)(px|rem|em)$/);
+		const rem = px ? Number(px[1]) / (px[2] === 'px' ? 16 : 1) : undefined;
+		const nearest = rem === undefined ? undefined : brandTextSizes().reduce((a, b) => (Math.abs(b[1] - rem) < Math.abs(a[1] - rem) ? b : a));
+		return nearest ? `Use \`font-size: var(${nearest[0]})\` (${nearest[1]}rem), the nearest brand size, with \`line-height: var(${nearest[0]}-line-height)\`` : 'Use a brand size: font-size: var(--ds-text-<h1|h2|h3|h4|h5|body-lg|body|body-sm>)';
+	}
+	if (prop === 'font-weight') return Number(value) >= 500 || value === 'bold' ? 'Use `font-weight: var(--ds-font-weight-medium)` (500; the brand has no bold)' : 'Use `font-weight: var(--ds-font-weight-regular)`';
+	return /mono|code/i.test(value) ? 'Use `font-family: var(--ds-font-mono)`' : 'Use `font-family: var(--ds-font-sans)` (Rethink Sans)';
+}

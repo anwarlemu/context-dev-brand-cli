@@ -1,6 +1,7 @@
 # {{brand}} design system
 - Start every UI task with `{{bin}} resolve "<task>"`. Use the template or flow it returns.
 - Build pages with `{{bin}} scaffold <template>`. Never write page structure by hand.
+- To restyle existing pages with the brand (only when the user asks), run `{{bin}} apply` and fix every file it lists.
 - Before using any item, its docs will be shown to you. Follow them. If not shown, run `{{bin}} docs <name>`.
 - Add items with `{{bin}} add <name>`. Do not hand-write anything that exists in the registry.
 - Product screens (dashboard, settings, playground) use only `app-*` items and templates; marketing pages never do.

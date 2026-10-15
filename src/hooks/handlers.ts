@@ -8,6 +8,7 @@ import { resolveTask, templateIndex } from '../commands/resolve.js';
 import { loadCheckConfig, loadConfig } from '../lib/config.js';
 import { changedFiles } from '../lib/git.js';
 import { matchesAny } from '../lib/glob.js';
+import { detectProject, supportsComponents } from '../lib/project.js';
 import { dsDir } from '../lib/paths.js';
 import { findItem, itemByImport, type RegistryItem, renderDocs } from '../lib/registry.js';
 import { updateAvailable } from '../lib/source.js';
@@ -45,7 +46,7 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 		`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id.split('/').pop()}@${i.installed}${i.drift === 'behind' ? '*' : ''}`).join(', ') : 'none yet'}.`,
 		info.installed.some((i) => i.drift === 'behind') ? `* behind the registry. Run \`${bin} diff\`.` : '',
 		update ? `A newer design system is on ${update.ref} (${update.installed.slice(0, 7)} -> ${update.latest.slice(0, 7)}). Run \`${bin} update\` first and commit what it changes.` : '',
-		`Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.`,
+		supportsComponents(info.project) ? `Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.` : `Components and templates need React with Tailwind 4, which this project does not use: style with var(--ds-*) tokens (\`${bin} tokens --search <term>\`).`,
 		`Writes are checked before they reach disk. \`${bin} check\` must pass before you finish.`,
 	].filter(Boolean);
 	return { stdout: lines.slice(0, 15).join('\n') };
@@ -53,7 +54,7 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 
 export function userPromptSubmit(root: string, input: HookInput): HookResult {
 	const prompt = promptOf(input);
-	if (!prompt.trim()) return {};
+	if (!prompt.trim() || !supportsComponents(detectProject(root))) return {};
 	const result = resolveTask(prompt);
 	const bin = loadConfig().cli;
 	if (result.kind === 'match') {

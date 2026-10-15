@@ -25,6 +25,8 @@ export type SourceFile = {
 const SCRIPT = new Set(['.tsx', '.jsx', '.ts', '.js', '.mjs', '.cjs']);
 const CSS = new Set(['.css', '.scss']);
 const MARKDOWN = new Set(['.md', '.mdx']);
+// Component and page files of other frameworks: their <style> blocks and style attributes are checked as CSS.
+const MARKUP = new Set(['.astro', '.vue', '.svelte', '.html']);
 const CLASS_HELPERS = new Set(['cn', 'clsx', 'cva', 'twMerge', 'classNames', 'cx', 'tv']);
 
 export function lineOf(file: SourceFile, offset: number) {
@@ -75,6 +77,7 @@ export function loadSource(path: string, text: string): SourceFile {
 		lineStarts,
 		overrides: collectOverrides(text),
 	};
+	if (MARKUP.has(ext)) return loadMarkup(file);
 	if (file.kind !== 'script') return file;
 	try {
 		file.ast = parse(text, { sourceType: 'module', errorRecovery: true, plugins: ['jsx', 'typescript'] }) as unknown as Node;
@@ -84,6 +87,27 @@ export function loadSource(path: string, text: string): SourceFile {
 	}
 	walk(file, file.ast, undefined, { inClassName: false, element: undefined });
 	return file;
+}
+
+/**
+ * Keeps only the styles of a markup file, blanking everything else (newlines stay, so offsets and lines still point
+ * into the real file), and reads its class attributes as class tokens.
+ */
+function loadMarkup(file: SourceFile): SourceFile {
+	const keep = new Uint8Array(file.text.length);
+	const mark = (start: number, end: number) => keep.fill(1, start, end);
+	for (const m of file.text.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)) mark(m.index + m[0].indexOf('>') + 1, m.index + m[0].length - '</style>'.length);
+	// A style attribute's closing quote becomes `;`, so its last declaration ends like one in a stylesheet.
+	const semicolons = new Set<number>();
+	for (const m of file.text.matchAll(/\sstyle\s*=\s*(["'])([\s\S]*?)\1/gi)) {
+		const start = m.index + m[0].length - m[2].length - 1;
+		mark(start, start + m[2].length);
+		semicolons.add(start + m[2].length);
+	}
+	for (const m of file.text.matchAll(/\sclass\s*=\s*(["'])([^"']*)\1/gi)) file.classTokens.push(...splitClasses(m[2], m.index + m[0].length - m[2].length - 1));
+	let styles = '';
+	for (let i = 0; i < file.text.length; i++) styles += semicolons.has(i) ? ';' : keep[i] || file.text[i] === '\n' ? file.text[i] : ' ';
+	return { ...file, kind: 'css', text: styles };
 }
 
 type WalkState = { inClassName: boolean; element?: Node; attr?: string; styleKey?: string };

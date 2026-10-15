@@ -12,6 +12,8 @@ import { isProductTarget } from '../src/review/critique.js';
 import { checkChanged } from '../src/commands/watch.js';
 import { overrideKey, writeApprovals } from '../src/lib/state.js';
 import { gitRemote, installedCommit } from '../src/lib/source.js';
+import { colorRole, remapVariables } from '../src/commands/apply.js';
+import { runningHarness } from '../src/commands/init.js';
 
 const FIXTURES = join(__dirname, 'fixtures', 'violations');
 const expected: Record<string, string> = JSON.parse(readFileSync(join(__dirname, 'fixtures', 'expected.json'), 'utf8'));
@@ -207,10 +209,16 @@ describe('hooks (M5 logic)', () => {
 	});
 	it('prompt hook injects the matched template docs only', () => {
 		const dir = mkdtempSync(join(tmpdir(), 'ds-prompt-'));
-		writeFileSync(join(dir, 'package.json'), '{}');
+		writeFileSync(join(dir, 'package.json'), JSON.stringify({ dependencies: { next: '16.0.0', react: '19.0.0' }, devDependencies: { tailwindcss: '^4' } }));
 		const out = userPromptSubmit(dir, { session_id: 'p', prompt: 'build the pricing page' }).stdout ?? '';
 		expect(out).toContain('templates/pricing');
 		expect(out).not.toContain('templates/landing');
+		rmSync(dir, { recursive: true });
+	});
+	it('prompt hook offers no templates where the components cannot run', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-prompt-'));
+		writeFileSync(join(dir, 'package.json'), JSON.stringify({ dependencies: { astro: '^5.0.0' } }));
+		expect(userPromptSubmit(dir, { session_id: 'p', prompt: 'build the pricing page' })).toEqual({});
 		rmSync(dir, { recursive: true });
 	});
 });
@@ -223,6 +231,59 @@ describe('init', () => {
 		expect(JSON.parse(out).changes.length).toBeGreaterThan(5);
 		expect(readdirSync(dir)).toEqual(['package.json']);
 		rmSync(dir, { recursive: true });
+	});
+});
+
+describe('markup files', () => {
+	it('checks the styles of an .astro file and nothing else', () => {
+		const text = '---\nconst c = "#ff0000";\n---\n<div class="card" style="color: #00ff00">Hi</div>\n<style>\n.card { background: #123456; }\n</style>\n';
+		const errors = checkText(FIXTURES, 'src/pages/a.astro', text).findings.filter((f) => f.rule === 'no-raw-color');
+		expect(errors.map((f) => f.line).sort()).toEqual([4, 6]);
+	});
+});
+
+describe('init on other stacks', () => {
+	it('installs only the tokens in an Astro site with plain CSS', () => {
+		const dir = mkdtempSync(join(tmpdir(), 'ds-astro-'));
+		writeFileSync(join(dir, 'package.json'), JSON.stringify({ name: 'x', dependencies: { astro: '^5.0.0' } }));
+		execFileSync('mkdir', ['-p', join(dir, 'public'), join(dir, 'src', 'pages')]);
+		writeFileSync(join(dir, 'public', 'global.css'), '@charset "utf-8";\n:root { --accent: #2563eb; --bg: #fff; }\nbody { color: var(--accent); }\n');
+		const out = JSON.parse(execFileSync(process.execPath, [join(__dirname, '..', 'bin.js'), 'init', '--json', '--no-baseline', '--harness', 'claude-code'], { cwd: dir, encoding: 'utf8' }));
+		const files = out.changes.map((c: { file: string }) => c.file);
+		expect(files).not.toContain('components.json');
+		expect(files.some((f: string) => f.endsWith('theme.css') || f.includes('SKILL.md'))).toBe(false);
+		expect(readFileSync(join(dir, 'public', 'global.css'), 'utf8').split('\n').slice(0, 2)).toEqual(['@charset "utf-8";', `@import "./${files.find((f: string) => f.endsWith('tokens.css')).split('/')[1]}/tokens.css";`]);
+		expect(readFileSync(join(dir, 'CLAUDE.md'), 'utf8')).toContain('components and templates do not apply');
+		rmSync(dir, { recursive: true });
+	});
+});
+
+describe('apply', () => {
+	it('re-points site variables at brand tokens by name, then by value', () => {
+		const css = ':root {\n  --accent: #e4572e;\n  --ink: #1b1b1b;\n  --paper: #fdfbf7;\n  --c7: #f0c419;\n  --space: 4px;\n  --font-body: Georgia, serif;\n  --ds-color-brand: #000;\n}\n.a { color: #fff; }';
+		const out = remapVariables(css, 'g.css');
+		expect(out.css).toContain('--accent: var(--ds-color-brand);');
+		expect(out.css).toContain('--ink: var(--ds-color-text-default);');
+		expect(out.css).toContain('--paper: var(--ds-color-bg-default);');
+		expect(out.css).toContain('--font-body: var(--ds-font-sans);');
+		expect(out.css).toContain('--space: 4px;');
+		expect(out.css).toContain('--ds-color-brand: #000;');
+		expect(out.css).toContain('.a { color: #fff; }');
+		expect(out.mappings.find((m) => m.name === '--c7')?.how).toBe('value');
+	});
+	it('reads roles from common names', () => {
+		expect(colorRole('--text-muted', '#666')?.to).toBe('--ds-color-text-muted');
+		expect(colorRole('--border', '#ddd')?.to).toBe('--ds-color-border-default');
+		expect(colorRole('--on-primary', '#fff')?.to).toBe('--ds-color-text-on-brand');
+		expect(colorRole('--x', '#fefefe')?.to).toBe('--ds-color-bg-default');
+	});
+});
+
+describe('running harness', () => {
+	it('tells the agents apart, Codex first', () => {
+		expect(runningHarness({ CLAUDECODE: '1' })).toBe('claude-code');
+		expect(runningHarness({ CLAUDECODE: '1', CODEX_THREAD_ID: 't' })).toBe('codex');
+		expect(runningHarness({})).toBeUndefined();
 	});
 });
 
@@ -246,7 +307,7 @@ describe('source', () => {
 
 describe('cli', () => {
 	it('every command supports --help', () => {
-		for (const c of ['init', 'info', 'resolve', 'scaffold', 'docs', 'add', 'tokens', 'check', 'review', 'diff', 'hook', 'watch', 'approve', 'update']) {
+		for (const c of ['init', 'info', 'resolve', 'scaffold', 'docs', 'add', 'tokens', 'check', 'review', 'diff', 'hook', 'watch', 'approve', 'update', 'apply']) {
 			expect(spawnSync(process.execPath, [join(__dirname, '..', 'bin.js'), c, '--help'], { encoding: 'utf8' }).status).toBe(0);
 		}
 	});

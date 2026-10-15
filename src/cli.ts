@@ -1,6 +1,7 @@
 import { Command } from 'commander';
 import { loadConfig } from './lib/config.js';
 import { registerAdd } from './commands/add.js';
+import { registerApply } from './commands/apply.js';
 import { registerApprove } from './commands/approve.js';
 import { registerCheck } from './commands/check.js';
 import { registerDiff } from './commands/diff.js';
@@ -28,6 +29,7 @@ const program = new Command()
 	.showHelpAfterError();
 
 registerInit(program);
+registerApply(program);
 registerInfo(program);
 registerResolve(program);
 registerScaffold(program);
@@ -41,6 +43,30 @@ registerHook(program);
 registerWatch(program);
 registerApprove(program);
 registerUpdate(program);
+
+// Bare `<bin>`: say what this is and the few commands that matter, for a person or an agent seeing it for the first time.
+if (process.argv.length <= 2) {
+	const c = config.cli;
+	process.stdout.write(
+		[
+			`${config.brand} design system (${config.bin} ${version})`,
+			'',
+			`Puts the ${config.brand} brand into a project and keeps coding agents on it. Hooks check every file an agent writes`,
+			'and block off-brand values (raw colors, spacing, fonts, motion); the pre-commit hook and CI do the same.',
+			'',
+			`  ${c} init              install into this project (tokens, agent rules, hooks). Changes nothing visible.`,
+			`  ${c} apply             apply the brand to the existing site: its colors and fonts become the brand's,`,
+			'                                  then it lists every value left to change by hand.',
+			`  ${c} check             what is off-brand right now (--no-baseline includes code from before init)`,
+			`  ${c} tokens --search   find the token for a value: tokens --search blue`,
+			`  ${c} resolve "<task>"  React + Tailwind 4 projects: which page template to start from`,
+			`  ${c} update            get the latest design system`,
+			'',
+			`Everything: ${c} --help`,
+		].join('\n') + '\n',
+	);
+	process.exit(0);
+}
 
 program.parseAsync(process.argv).catch((error) => {
 	process.stderr.write(`${config.bin}: ${(error as Error).message}\n`);

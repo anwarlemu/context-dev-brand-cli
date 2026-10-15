@@ -1,4 +1,5 @@
 import type { Command } from 'commander';
+import { requireComponents } from '../lib/project.js';
 import { parse } from '@babel/parser';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -124,6 +125,7 @@ export function registerScaffold(program: Command) {
 		.option('--json', 'JSON output')
 		.action((templateName: string, opts) => {
 			const root = findProjectRoot();
+			if (!opts.dryRun) requireComponents(root, loadConfig().cli);
 			const overrides: Record<string, string> = {};
 			for (const pair of opts.slot ?? []) {
 				const [k, v] = String(pair).split('=');

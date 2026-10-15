@@ -8,22 +8,50 @@ off-brand code: a hook checks every write before it reaches disk, and they canno
 Three people typing the same prompt get the same page structure, because structure is a lookup and
 a template, not a model decision. Copy is the only thing left to the agent.
 
+## What it does
+
+It puts the Context.dev brand into any web project and keeps coding agents on it.
+
+- `init` installs it: the brand tokens (colors, type, spacing, radius, motion as CSS variables),
+  short rules in `AGENTS.md` / `CLAUDE.md`, and hooks that check every file an agent writes. Nothing
+  on the site changes yet.
+- `apply` applies the brand to the site that is already there. The site's own color and font
+  variables are re-pointed at the brand tokens, so every page changes at once; the brand typefaces
+  are loaded; values with an exact token are replaced; and every value left is listed by file, with
+  the token to use, for the agent to finish.
+- From then on, writes with raw values (a hex color, a 13px gap, a stray font) are blocked by the
+  hooks, the pre-commit hook and CI, and the agent is told which token to use instead.
+- React + Tailwind 4 projects also get the components and page templates (`resolve`, `scaffold`,
+  `add`). Other stacks (Astro, Vue, Svelte, plain HTML and CSS) get the tokens and the checks; their
+  `<style>` blocks and style attributes are checked too.
+
+Run `npx context-ds` with no arguments for the short version.
+
 ## Set it up in any project
 
-Give your coding agent (Claude Code, Codex, Cursor or any other) this prompt:
+Give your coding agent (Claude Code, Codex, Cursor or any other) one of these prompts.
+
+To install it without changing how the site looks:
 
 ```text
 Set up the Context.dev design system in this project: run
-`npx -y github:anwarlemu/context-dev-brand-cli init`, then do what it prints and commit the result.
+`npx -y github:anwarlemu/context-dev-brand-cli init` and commit the result.
 ```
 
-Or run it yourself. That one command adds the package to the project (it installs from the `main`
-branch), writes the tokens, the contract in `AGENTS.md` / `CLAUDE.md`, the hooks for Claude Code,
-Codex and Cursor, the pre-commit hook and the CI workflow. From then on the hooks and checks hold
-every agent to the system; nothing depends on the agent reading instructions. Use
-`init --dry-run` first to see what it will change. Codex runs project hooks once you trust them
-with `/hooks`. Git does not share `.git/hooks`, so teammates who clone the project get the
-pre-commit hook back the first time they open it with an agent (CI checks either way).
+To install it and restyle the site with the brand:
+
+```text
+Apply the Context.dev design system to this site: run
+`npx -y github:anwarlemu/context-dev-brand-cli init`, then `npx context-ds apply`, then fix every
+file it lists until `npx context-ds check --no-baseline` passes. Show me the result before committing.
+```
+
+`init` adds the package to the project (from the `main` branch) and writes the tokens, the rules,
+the hooks for Claude Code, Codex and Cursor, the pre-commit hook and the CI workflow. The agent that
+runs it is told only about its own setup; the other agents' files are for teammates who use them.
+Use `init --dry-run` or `apply --dry-run` first to see what would change. Git does not share
+`.git/hooks`, so teammates who clone the project get the pre-commit hook back the first time they
+open it with an agent (CI checks either way). Codex users trust the hooks once with `/hooks`.
 `npx playwright install chromium` is needed only for `review`.
 
 ### Updates
@@ -141,6 +169,7 @@ All commands take `--json` and `--help`.
 | Command | |
 |---|---|
 | `init [--mode new\|scoped] [--harness ...]` | Install into a project |
+| `apply [--dry-run]` | Apply the brand to the existing site styles, then list what is left |
 | `info` | Framework, tokens, installed items and drift, hooks, baseline |
 | `resolve "<task>"` | Task to template, by lookup against `intents.json` |
 | `scaffold <template> [--slot s=block] [--out path] [--force] [--local]` | Page from a locked template |
