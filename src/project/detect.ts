@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { brand } from '../lib/brand.js';
+import { isOwnFile } from '../lib/brand.js';
 import { walkFiles } from '../lib/glob.js';
 
 // What kind of project this is, read from its files: stack, styling, where its main stylesheet and base layouts are.
@@ -70,10 +70,9 @@ export function detectProject(root: string): Project {
 /** The project's global stylesheet: the usual names, else the one holding its variables, else the one its pages link. */
 export function findMainStylesheet(root: string): string | undefined {
 	for (const p of ['src/app/globals.css', 'app/globals.css', 'src/styles/globals.css', 'src/styles/global.css', 'styles/globals.css', 'styles/global.css', 'src/index.css', 'src/styles.css', 'src/assets/main.css', 'src/app.css', 'assets/css/main.css']) if (existsSync(join(root, p))) return p;
-	const own = brand().bin;
 	let best: { rel: string; vars: number } | undefined;
-	for (const rel of walkFiles(root, ['**/*.{css,scss}'], [`**/${own}/**`])) {
-		if (rel.split('/').length > 5) continue;
+	for (const rel of walkFiles(root, ['**/*.{css,scss}'], ['**/node_modules/**'])) {
+		if (rel.split('/').length > 5 || isOwnFile(rel)) continue;
 		const css = readFileSync(join(root, rel), 'utf8');
 		const vars = css.includes(':root') ? (css.match(/--[\w-]+\s*:/g) ?? []).length : 0;
 		if (vars && (!best || vars > best.vars)) best = { rel, vars };
@@ -106,8 +105,7 @@ function findLayouts(root: string, project: Project): string[] {
 
 /** Every file whose styling the engine converts, in any language; the CLI's own files and tooling are left out. */
 export function styledFiles(root: string): string[] {
-	const own = new RegExp(`(^|/)${brand().bin}/`);
 	return walkFiles(root, ['**/*'], ['**/node_modules/**'])
 		.filter((rel) => STYLES.test(rel) || MARKUP.test(rel) || SCRIPT.test(rel) || NATIVE.test(rel) || ANDROID_XML.test(rel) || THEME_DATA.test(rel))
-		.filter((rel) => !own.test(rel) && !SKIP.test(rel) && !/(^|\/)(scripts|tests?|__tests__|e2e|cypress|playwright|docs?\/ops|migrations?|seeds?)\//.test(rel));
+		.filter((rel) => !isOwnFile(rel) && !SKIP.test(rel) && !/(^|\/)(scripts|tests?|__tests__|e2e|cypress|playwright|docs?\/ops|migrations?|seeds?)\//.test(rel));
 }

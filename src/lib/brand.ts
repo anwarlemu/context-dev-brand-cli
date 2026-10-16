@@ -15,6 +15,9 @@ export function brand(): BrandConfig {
 /** The command agents run. Always through npx, since the binary is not on the shell's PATH in apps. */
 export const cli = () => `npx ${brand().bin}`;
 
+/** The files the CLI writes into a project (its folder may share a name with a project's own route, so match files). */
+export const isOwnFile = (rel: string) => new RegExp(`(^|/)${brand().bin}/(brand\\.css|theme\\.css|dots\\.js)$|(^|/)ds-fonts\\.[jt]s$`).test(rel);
+
 type TokenFile = { site: Record<string, string>; product: Record<string, string>; dark: Record<string, string>; theme: Record<string, string> };
 let tokenFile: TokenFile | undefined;
 export function tokens(): TokenFile {

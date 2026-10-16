@@ -122,6 +122,10 @@ describe('project', () => {
 		const found = profile(s, styledFiles(s));
 		expect(found.surface).toBe('site');
 		expect(listScreens(detectProject(s), styledFiles(s), found).map((x) => x.url)).toEqual(['/', '/about.html', '/pricing.html', '/404.html']);
+		// A project route that shares the CLI's name is still the project's; only the files the CLI writes are skipped.
+		const n = project({ 'src/app/context-ds/page.tsx': '<div style={{ color: "#ff0000" }} />', 'src/app/context-ds/brand.css': ':root{}' });
+		expect(styledFiles(n)).toEqual(['src/app/context-ds/page.tsx']);
+		rmSync(n, { recursive: true });
 		for (const d of [p, s]) rmSync(d, { recursive: true });
 	});
 });

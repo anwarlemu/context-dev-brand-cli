@@ -1,7 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { brand, cli } from '../lib/brand.js';
+import { brand, cli, isOwnFile } from '../lib/brand.js';
 import { MARKUP, SCRIPT, STYLES, styledFiles } from '../project/detect.js';
 import { type RawFinding, runRules } from './rules.js';
 import { lineOf, loadSource } from './source.js';
@@ -58,9 +58,8 @@ export function changedFiles(root: string) {
 
 export function runCheck(root: string, opts: { paths?: string[]; fix?: boolean; changed?: boolean } = {}): CheckResult {
 	const started = performance.now();
-	const own = new RegExp(`(^|/)${brand().bin}/`);
 	const all = opts.paths?.length ? opts.paths : opts.changed ? changedFiles(root) : styledFiles(root);
-	const files = all.filter((rel) => checkable(rel) && !own.test(rel) && existsSync(join(root, rel)));
+	const files = all.filter((rel) => checkable(rel) && !isOwnFile(rel) && existsSync(join(root, rel)));
 	const findings: Finding[] = [];
 	const overrides: Finding[] = [];
 	let fixed = 0;

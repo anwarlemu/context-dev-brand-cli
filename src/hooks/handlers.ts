@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { changedFiles, checkable, checkText, formatFinding, newFindings, runCheck } from '../check/engine.js';
 import { installPreCommit } from '../install/agents.js';
 import { Writer } from '../install/files.js';
-import { brand, cli } from '../lib/brand.js';
+import { brand, cli, isOwnFile } from '../lib/brand.js';
 import { elementsIn, renderElement } from '../plan/elements.js';
 import { readState } from '../plan/state.js';
 import { mainScreens, taskStatus } from '../plan/tasks.js';
@@ -61,8 +61,7 @@ export function userPromptSubmit(root: string, input: HookInput): HookResult {
 }
 
 export function preToolUse(root: string, input: HookInput): HookResult {
-	const own = new RegExp(`(^|/)${brand().bin}/`);
-	const writes = proposedWrites(input, root).filter((w) => checkable(w.relPath) && !own.test(w.relPath));
+	const writes = proposedWrites(input, root).filter((w) => checkable(w.relPath) && !isOwnFile(w.relPath));
 	if (!writes.length) return {};
 	const blocked: string[] = [];
 	const notes: string[] = [];
