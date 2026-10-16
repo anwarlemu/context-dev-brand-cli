@@ -1,38 +1,117 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { createHash } from 'node:crypto';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
 import { brand, cli } from '../lib/brand.js';
 import { color, emit } from '../lib/output.js';
 import { findProjectRoot } from '../lib/paths.js';
-import { readState, writeState } from '../plan/state.js';
+import { type State, readState, writeState } from '../plan/state.js';
+import { mainScreens } from '../plan/tasks.js';
+import { findMainStylesheet } from '../project/detect.js';
+import type { Screen } from '../project/screens.js';
 import { capture } from '../review/capture.js';
-import { critique } from '../review/critique.js';
+import { type Scorecard, brief, critique, pickEngine, scorecardSchema } from '../review/critique.js';
 
 // `review <url>`: screenshots at desktop and phone width, critiqued against the brand's own pages. The result is
-// recorded for the screen it belongs to, which is how a task is checked off.
+// recorded for the screen it belongs to, which is how a task is checked off. Only task screens are reviewed, and a
+// screen that failed is reviewed again only once its files changed, so agents fix the punch list instead of re-rolling.
 
-export async function review(target: string | undefined, opts: { json?: boolean; threshold?: string }) {
+type Opts = { json?: boolean; threshold?: string; any?: boolean; submit?: string };
+
+/** A fingerprint of what a screen is drawn from (its files and the main stylesheet). */
+function filesHash(root: string, screen: Screen) {
+	const h = createHash('sha1');
+	const main = findMainStylesheet(root);
+	for (const rel of [...screen.files, ...(main ? [main] : [])].sort()) {
+		try {
+			h.update(rel).update(readFileSync(join(root, rel)));
+		} catch {}
+	}
+	return h.digest('hex').slice(0, 16);
+}
+
+function screenFor(state: State | undefined, target: string) {
+	const path = new URL(target).pathname.replace(/\/index\.html?$/, '/').replace(/(.)\/$/, '$1') || '/';
+	// Its route, or a dynamic route with the same shape (/blog/[slug] for /blog/hello).
+	return state?.screens.find((s) => s.url === path || s.url === `${path}.html`) ?? state?.screens.find((s) => s.url && new RegExp(`^${s.url.replace(/\[[^\]]+\]/g, '[^/]+')}$`).test(path));
+}
+
+export async function review(target: string | undefined, opts: Opts) {
 	const root = findProjectRoot();
 	const state = readState(root);
+	if (opts.submit) return submit(root, state, opts);
 	if (!target || !/^https?:\/\//.test(target)) {
 		const hint = state?.baseUrl ? `${state.baseUrl}${target ?? '/'}` : 'http://localhost:<port>/<page>';
 		throw new Error(`Start the app and pass the page's URL: \`${cli()} review ${hint}\`.`);
 	}
-	const url = new URL(target);
-	const path = url.pathname.replace(/\/index\.html?$/, '/').replace(/(.)\/$/, '$1') || '/';
-	// Match the URL to a screen: its route, or a dynamic route with the same shape (/blog/[slug] for /blog/hello).
-	const screen = state?.screens.find((s) => s.url === path || s.url === `${path}.html`) ?? state?.screens.find((s) => s.url && new RegExp(`^${s.url.replace(/\[[^\]]+\]/g, '[^/]+')}$`).test(path));
+	const screen = screenFor(state, target);
+	if (state && !opts.any) {
+		const tasks = mainScreens(state);
+		if (!screen || !tasks.some((s) => s.id === screen.id)) {
+			console.log(`${new URL(target).pathname} is not one of the tasks (${tasks.map((s) => s.id).join(', ')}). Review the screen of the current task; run \`${cli()}\` to see it.`);
+			process.exitCode = 1;
+			return;
+		}
+		const last = state.reviews[screen.id];
+		if (last && !last.passed && last.files && last.files === filesHash(root, screen)) {
+			console.log(`Nothing ${screen.id} is drawn from changed since its last review. Fix its punch list first:\n${last.punch.slice(0, 5).map((p, i) => `  ${i + 1}. ${p.where}: ${p.issue}\n     Fix: ${p.fix}`).join('\n')}`);
+			process.exitCode = 1;
+			return;
+		}
+	}
 	const surface = screen?.surface ?? state?.surface ?? 'site';
-	const threshold = Number(opts.threshold ?? brand().reviewThreshold);
 	const outDir = join(root, '.ds', 'review', new Date().toISOString().replace(/[:.]/g, '-'));
 	const shots = await capture(target, ['desktop', 'mobile'], outDir);
 	const previous = screen ? state?.reviews[screen.id] : undefined;
+	if (pickEngine() === 'self') {
+		const dir = brief(shots, target, surface, previous);
+		writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url: target, screen: screen?.id })}\n`);
+		const rel = relative(root, dir);
+		console.log(
+			[
+				`Screenshots of ${target} are saved; there is no separate reviewer here, so you score it.`,
+				`  1. Read ${rel}/brief.md and open every image it lists (the brand's pages first, then this screen).`,
+				`  2. Score it honestly against the rubric and write ${rel}/scorecard.json in the shape shown there.`,
+				`  3. Run \`${cli()} review --submit ${rel}\`.`,
+				color.dim('  The person sees which screens were scored by the agent itself.'),
+			].join('\n'),
+		);
+		return;
+	}
 	const { card, model } = await critique(shots, target, surface, previous);
+	record(root, state, screen, target, card, model, outDir, opts);
+}
+
+function submit(root: string, state: State | undefined, opts: Opts) {
+	const dir = join(root, opts.submit!);
+	const metaPath = join(dir, 'meta.json');
+	if (!existsSync(metaPath)) throw new Error(`${opts.submit} is not a review folder (no meta.json). Run \`${cli()} review <url>\` first.`);
+	if (!existsSync(join(dir, 'scorecard.json'))) throw new Error(`Write ${opts.submit}/scorecard.json first (the shape is in brief.md).`);
+	const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as { url: string; screen?: string };
+	const parsed = scorecardSchema.safeParse(JSON.parse(readFileSync(join(dir, 'scorecard.json'), 'utf8')));
+	if (!parsed.success) throw new Error(`scorecard.json does not match the shape in brief.md: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
+	const screen = state?.screens.find((s) => s.id === meta.screen);
+	record(root, state, screen, meta.url, parsed.data, 'self', dir, opts);
+}
+
+function record(root: string, state: State | undefined, screen: Screen | undefined, target: string, card: Scorecard, model: string, outDir: string, opts: Opts) {
+	const threshold = Number(opts.threshold ?? brand().reviewThreshold);
 	const failing = Object.entries(card.scores).filter(([, v]) => v < threshold);
 	mkdirSync(outDir, { recursive: true });
 	writeFileSync(join(outDir, 'scorecard.json'), `${JSON.stringify({ url: target, model, ...card }, null, 2)}\n`);
 	if (state) {
-		state.baseUrl = url.origin;
-		if (screen) state.reviews[screen.id] = { at: new Date().toISOString(), url: target, scores: card.scores, passed: failing.length === 0, punch: card.punch_list.map((p) => ({ severity: p.severity, where: `${p.viewport} / ${p.region}`, issue: p.issue, fix: p.fix })), verdict: card.verdict };
+		state.baseUrl = new URL(target).origin;
+		if (screen) {
+			state.reviews[screen.id] = {
+				at: new Date().toISOString(),
+				url: target,
+				scores: card.scores,
+				passed: failing.length === 0,
+				punch: card.punch_list.map((p) => ({ severity: p.severity, where: `${p.viewport} / ${p.region}`, issue: p.issue, fix: p.fix })),
+				verdict: card.verdict,
+				by: model,
+				files: filesHash(root, screen),
+			};
+		}
 		writeState(root, state);
 	}
 	emit(opts, { url: target, screen: screen?.id, model, threshold, pass: failing.length === 0, ...card, screenshots: outDir }, () =>

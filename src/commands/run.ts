@@ -105,10 +105,12 @@ function nextText(root: string, state: State) {
 			...all.findings.slice(0, 3).map((f) => color.dim(`  e.g. ${formatFinding(f)}`)),
 		].join('\n');
 	}
+	const selfScored = screens.filter((s) => state.reviews[s.id]?.by === 'self').map((s) => s.id);
 	const skipped = Object.entries(state.skipped ?? {}).filter(([id]) => screens.some((s) => s.id === id));
 	return [
 		color.bold(skipped.length ? `Done: every main screen passed its review or was skipped, and the whole project passes the check.` : `Done: every main screen passed its review and the whole project passes the check.`),
 		...(skipped.length ? [color.yellow(`  Skipped (tell the person each one and why):`), ...skipped.map(([id, why]) => color.yellow(`    ${id}: ${why}`))] : []),
+		...(selfScored.length ? [color.yellow(`  Scored by the agent itself, with no separate reviewer (tell the person): ${selfScored.join(', ')}`)] : []),
 		`  Show the person the result (desktop and phone) before committing. From now on the hooks keep new work on the brand.`,
 	].join('\n');
 }

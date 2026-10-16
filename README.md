@@ -8,7 +8,7 @@ changes how things look and never what they say: every word, element and screen'
 
 ## Use it
 
-Give your coding agent (Claude Code, Codex, Cursor or any other) this prompt:
+Give your coding agent (Claude Code, Codex, Cursor, Hermes or any other) this prompt:
 
 ```text
 Apply the Context.dev design system to this project: run
@@ -39,7 +39,9 @@ value, so new work stays on the brand.
 | `npx context-ds done <screen>` | Marks a native screen restyled (web screens are checked by `review`). |
 | `npx context-ds skip <screen> --reason "..."` | Leaves a screen as it is when it cannot pass without changing words or elements; the final summary lists each skip and why. |
 
-`review` runs through the Anthropic API when a key is set, or through a logged-in Claude Code (`claude -p`), and needs
+`review` runs on the agent's own subscription: through Codex (`codex exec`) or Claude Code (`claude -p`), whichever is
+running, or the Anthropic API when a key is set. In any other agent (Cursor, Hermes and the rest) it saves the screenshots
+and the agent scores them itself; the final summary says which screens were scored that way. It needs
 `playwright-core` with Chromium (`npx playwright install chromium`).
 
 ## What it brings

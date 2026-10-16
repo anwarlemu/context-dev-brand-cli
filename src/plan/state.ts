@@ -6,7 +6,7 @@ import type { Surface } from '../project/surface.js';
 // The project's progress, in .ds/state.json (committed, so a teammate or a new session picks up where it stopped).
 
 export type Scores = { hierarchy: number; coherence: number; brand_voice: number; detail_quality: number; accessibility: number };
-export type Review = { at: string; url: string; scores: Scores; passed: boolean; punch: { severity: string; where: string; issue: string; fix: string }[]; verdict: string };
+export type Review = { at: string; url: string; scores: Scores; passed: boolean; punch: { severity: string; where: string; issue: string; fix: string }[]; verdict: string; by?: string; files?: string };
 
 export type State = {
 	version: 2;

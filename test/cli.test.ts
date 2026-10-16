@@ -19,6 +19,7 @@ import { readState } from '../src/plan/state.js';
 import { detectProject, styledFiles } from '../src/project/detect.js';
 import { listScreens } from '../src/project/screens.js';
 import { profile } from '../src/project/surface.js';
+import { pickEngine, scorecardJsonSchema } from '../src/review/critique.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const BIN = join(ROOT, 'bin.js');
@@ -184,6 +185,25 @@ describe('hooks', () => {
 	});
 });
 
+describe('review', () => {
+	it('runs on whatever agent is at hand, or lets the agent score it itself', () => {
+		const keep = { ...process.env };
+		for (const k of ['ANTHROPIC_API_KEY', 'ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_PROFILE', 'CODEX_THREAD_ID', 'CLAUDECODE']) delete process.env[k];
+		process.env.PATH = '/nonexistent';
+		process.env.HOME = '/nonexistent';
+		try {
+			expect(pickEngine()).toBe('self');
+			process.env.DS_REVIEW_ENGINE = 'codex';
+			expect(pickEngine()).toBe('codex');
+		} finally {
+			process.env = keep;
+		}
+		const schema = scorecardJsonSchema();
+		expect(schema.additionalProperties).toBe(false);
+		expect(schema.properties.punch_list.items.required).toEqual(['viewport', 'region', 'issue', 'fix', 'severity']);
+	});
+});
+
 describe('the one command', () => {
 	it('installs, converts and prints the first task on a plain HTML site; runs again with the next task', () => {
 		const p = project({
@@ -212,6 +232,21 @@ describe('the one command', () => {
 		expect(skipped).toMatch(/1 of 2 screens done/);
 		expect(skipped).toMatch(/Task 2 of 3: \/about\.html/);
 		expect(readState(p)?.skipped).toEqual({ '/': 'needs a database' });
+		const refused = (() => {
+			try {
+				return run(p, 'review', 'http://localhost:9/missing.html');
+			} catch (e) {
+				return String((e as { stdout?: string }).stdout);
+			}
+		})();
+		expect(refused).toMatch(/not one of the tasks/);
+		// An agent with no separate reviewer scores the screen itself and submits it; the person is told.
+		const dir = '.ds/review/manual';
+		mkdirSync(join(p, dir), { recursive: true });
+		writeFileSync(join(p, dir, 'meta.json'), JSON.stringify({ url: 'http://localhost:9/about.html', screen: '/about.html' }));
+		writeFileSync(join(p, dir, 'scorecard.json'), JSON.stringify({ purpose: 'About', scores: { hierarchy: 8, coherence: 8, brand_voice: 8, detail_quality: 8, accessibility: 8 }, punch_list: [], verdict: 'ok' }));
+		expect(run(p, 'review', '--submit', dir)).toMatch(/Passed/);
+		expect(readState(p)?.reviews['/about.html']).toMatchObject({ passed: true, by: 'self' });
 		rmSync(p, { recursive: true });
 	});
 	it('every command answers --help', () => {
