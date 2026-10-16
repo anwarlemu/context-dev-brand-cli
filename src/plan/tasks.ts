@@ -67,7 +67,7 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
 		...[...kinds].slice(0, 8).map(([rel, counts]) => `    ${rel}: ${[...counts].map(([k, n]) => (n > 1 ? `${k} x${n}` : k)).join(', ')}`),
 		...(kinds.size > 8 ? [`    ...and ${kinds.size - 8} more files`] : []),
 		...(status.touches.includes('dots') ? ['  Add data-ds-dots to the hero section (thin dot streams at its edges; nothing else gets dots).'] : []),
-		...(status.touches.includes('accent') ? ['  Wrap the closing words of the hero headline and of each section heading in <span class="ds-accent"> (same words, in blue).'] : []),
+		...(status.touches.includes('accent') ? ['  Wrap the closing words of the hero headline and of each section heading in <span class="ds-accent"> (same words, in blue; never a whole heading).'] : []),
 		...(status.errors ? [`  ${status.errors} values here are not brand tokens yet: \`${cli()} check ${s.files.slice(0, 3).join(' ')}${s.files.length > 3 ? ' ...' : ''}\` lists each with the token to use.`] : []),
 		url
 			? `  Then run the app and \`${cli()} review ${url}\`. Done when every score is ${threshold} or more and the check is clean; fix its punch list until then.`

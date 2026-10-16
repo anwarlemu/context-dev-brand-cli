@@ -82,8 +82,12 @@ export function convertScript(text: string, palette: Palette, stats: Stats, opts
 		return `${key}${sep}'var(${nearest(scales().space, Number(n))})'`;
 	});
 	if (opts.tailwind) next = next.replace(/(["'`])((?:(?!\1)[^\n\\])*)\1/g, (all, q: string, body: string) => (/(?:^|\s|:)(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|placeholder|caret|accent)-/.test(body) ? `${q}${convertClasses(body, palette, stats, opts.tailwind === 'theme')}${q}` : all));
+	// A 3D or drawn scene's colors (terrain, materials, shaders, particles) are what it shows, not its styling.
+	if (SCENE.test(text)) return next;
 	return convertLiterals(next, palette, stats, (t) => brandLiteral(t, opts.theme ?? 'site'));
 }
+
+const SCENE = /from\s+["'](?:three|@react-three\/[\w-]+|pixi\.js|@babylonjs\/[\w-]+|postprocessing|ogl|regl|p5)["']|\bTHREE\.\w+|\bgetContext\(\s*["'](?:webgl2?|2d)["']|\bgl_FragColor\b|\bvec[34]\(/;
 
 const LITERAL = /(["'`])(#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?|#[0-9a-fA-F]{3,4}|(?:rgba?|hsla?)\([^()"'`]*\))\1/g;
 const COLORISH_LINE = /(colou?r|bg|background|fill|stroke|border|fg|foreground|tint|accent|palette|theme|series|stops?)/i;

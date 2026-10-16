@@ -106,6 +106,11 @@ describe('convert', () => {
 		expect(convertScript("const s = { color: '#ff0000', marginTop: 16 }; const series = ['#22c55e', '#f59e0b', '#8b5cf6'];", pal, stats(), {})).toMatch(/marginTop: 'var\(--ds-space-4\)'.*#3B82F6.*#14B8A6/s);
 		expect(convertNative('val bg = Color(0xFF0B0B0C)\nText(color = Color(0xFFF5F5F5))', sitePalette('body{background:#0b0b0c;color:#f5f5f5}'), stats(), 'site')).toContain('Color(0xFFFFFFFF)');
 	});
+	it('leaves the colors of a 3D or canvas scene alone', () => {
+		const scene = "import * as THREE from 'three';\nconst sea = new THREE.Color('#1a4fd0');\nconst style = { color: '#ff6600' };";
+		const out = convertScript(scene, sitePalette(''), stats(), {});
+		expect(out).toContain("'#1a4fd0'");
+	});
 	it('keeps style guide swatches and redraws only light one-color marks for a dark site', () => {
 		expect(convertMarkup('<div style="background:#ff6600"></div><span>#ff6600</span>', sitePalette(''), stats())).toContain('background:#ff6600');
 		const dark = sitePalette('body{background:#000;color:#fff}');
