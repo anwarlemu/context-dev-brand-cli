@@ -16,6 +16,8 @@ import { type Scorecard, beforeShots, brief, critique, pickEngine, scorecardSche
 // recorded for the screen it belongs to, which is how a task is checked off. Only task screens are reviewed, and a
 // screen that failed is reviewed again only once its files changed, so agents fix the punch list instead of re-rolling.
 
+const MAX_ROUNDS = 3;
+
 type Opts = { json?: boolean; threshold?: string; any?: boolean; submit?: string; all?: boolean; brief?: boolean };
 
 /** A fingerprint of what a screen is drawn from (its files and the main stylesheet). */
@@ -62,6 +64,12 @@ export async function review(target: string | undefined, opts: Opts) {
 		const tasks = mainScreens(state);
 		if (!screen || !tasks.some((s) => s.id === screen.id)) {
 			console.log(`${new URL(target).pathname} is not one of the tasks (${tasks.map((s) => s.id).join(', ')}). Review the screen of the current task; run \`${cli()}\` to see it.`);
+			process.exitCode = 1;
+			return;
+		}
+		const first = tasks[0];
+		if (screen.id !== first.id && state.reviews[first.id]?.passed) {
+			console.log(`The other screens are reviewed together: \`${cli()} review --all ${new URL(target).origin}\` (in parallel, only the ones that changed).`);
 			process.exitCode = 1;
 			return;
 		}
@@ -183,7 +191,11 @@ function withOutside(card: Scorecard, outside: string[]): Scorecard {
 
 function record(root: string, state: State | undefined, screen: Screen | undefined, target: string, card: Scorecard, model: string, outDir: string, opts: Opts): boolean {
 	const threshold = Number(opts.threshold ?? brand().reviewThreshold);
-	const failing = Object.entries(card.scores).filter(([, v]) => v < threshold);
+	// At most three rounds: by the third, a screen with no blocker left passes and its remaining issues go to the person.
+	const rounds = (screen && state?.reviews[screen.id]?.rounds ? state.reviews[screen.id].rounds! : 0) + 1;
+	const blocker = card.punch_list.some((p) => p.severity === 'blocker');
+	const failing = rounds >= MAX_ROUNDS && !blocker ? [] : Object.entries(card.scores).filter(([, v]) => v < threshold);
+	if (blocker && !failing.length) failing.push(['blocker', 0]);
 	mkdirSync(outDir, { recursive: true });
 	writeFileSync(join(outDir, 'scorecard.json'), `${JSON.stringify({ url: target, model, ...card }, null, 2)}\n`);
 	if (state) {
@@ -198,6 +210,7 @@ function record(root: string, state: State | undefined, screen: Screen | undefin
 				verdict: card.verdict,
 				by: model,
 				files: filesHash(root, screen),
+				rounds,
 			};
 		}
 		writeState(root, state);

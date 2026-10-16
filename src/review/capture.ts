@@ -116,8 +116,8 @@ export async function capture(url: string, viewports: ViewportName[], outDir: st
 			const slices = Math.min(MAX_SLICES_PER_VIEWPORT, Math.ceil(height / SLICE));
 			for (let i = 0; i < slices; i++) {
 				const top = i * SLICE;
-				const path = join(outDir, `${viewport}-${String(i).padStart(2, '0')}.png`);
-				await page.screenshot({ path, fullPage: true, clip: { x: 0, y: top, width: VIEWPORTS[viewport].width, height: Math.min(SLICE, height - top) } });
+				const path = join(outDir, `${viewport}-${String(i).padStart(2, '0')}.jpg`);
+				await page.screenshot({ path, type: 'jpeg', quality: 80, fullPage: true, clip: { x: 0, y: top, width: VIEWPORTS[viewport].width, height: Math.min(SLICE, height - top) } });
 				shots.push({ viewport, index: i, path, top, height: Math.min(SLICE, height - top) });
 			}
 			await page.close();

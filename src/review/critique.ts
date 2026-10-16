@@ -28,7 +28,9 @@ words, elements and purpose; only its look changed. The first images are the bra
 rest are the restyled screen, top to bottom, at desktop and phone width. Compare them closely: does the screen read as
 the same brand, with the same quality? Judge against the principles and the rubric, not general taste. Name exact
 regions and give fixes that change styling only (never copy or which elements exist). Be consistent: the same problems
-get the same scores.`;
+get the same scores. A first review lists every issue you see, complete and ordered by severity, so it can all be fixed
+in one pass. A later review checks each earlier item and adds a new one only when it is a blocker or major; minor
+issues never hold a score below 7.`;
 
 function hasApiCredentials() {
 	return !!(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_AUTH_TOKEN || process.env.ANTHROPIC_PROFILE || existsSync(join(homedir(), '.config', 'anthropic')));
@@ -89,10 +91,12 @@ function strict(schema: any): any {
 }
 export const scorecardJsonSchema = () => strict(z.toJSONSchema(scorecardSchema));
 
+const media = (path: string) => (/\.png$/.test(path) ? 'image/png' : 'image/jpeg') as 'image/png' | 'image/jpeg';
+
 /** The screen as it was before any hand edits (`snapshot`), desktop slices, when it was taken. */
 export function beforeShots(root: string, screenId: string) {
 	const dir = join(root, '.ds', 'before', screenId.replace(/[^\w-]+/g, '_') || 'home');
-	return existsSync(dir) ? readdirSync(dir).filter((f) => /^desktop-\d+\.png$/.test(f)).sort().slice(0, 3).map((f) => join(dir, f)) : [];
+	return existsSync(dir) ? readdirSync(dir).filter((f) => /^desktop-\d+\.(jpg|png)$/.test(f)).sort().slice(0, 2).map((f) => join(dir, f)) : [];
 }
 
 /** The brand pages to compare against: the site's home and a use-case page, or the product's overview and a table. */
@@ -140,14 +144,14 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		const content = [
 			{ type: 'text', text: `${guide(surface, previous)}\n\n# Screen\n${url}\n\nReference: the brand's own pages.` },
 			...refs.map((r) => block(r, 'image/jpeg')),
-			...(before.length ? [{ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' }, ...before.map((b) => block(b, 'image/png'))] : []),
+			...(before.length ? [{ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' }, ...before.map((b) => block(b, media(b)))] : []),
 			{ type: 'text', text: `Restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}, in that order.` },
-			...shots.map((s) => block(s.path, 'image/png')),
+			...shots.map((s) => block(s.path, media(s.path))),
 			{ type: 'text', text: 'Return the scorecard and the punch list.' },
 		];
 		const input = `${JSON.stringify({ type: 'user', message: { role: 'user', content } })}\n`;
 		const schema = (({ $schema, ...rest }) => rest)(z.toJSONSchema(scorecardSchema) as Record<string, unknown>);
-		const args = ['-p', '--input-format', 'stream-json', '--output-format', 'stream-json', '--verbose', '--json-schema', JSON.stringify(schema), '--tools', '', '--append-system-prompt', system];
+		const args = ['-p', '--input-format', 'stream-json', '--output-format', 'stream-json', '--verbose', '--json-schema', JSON.stringify(schema), '--tools', '', '--effort', process.env.DS_REVIEW_EFFORT ?? 'medium', '--append-system-prompt', system];
 		if (process.env.DS_REVIEW_MODEL) args.push('--model', process.env.DS_REVIEW_MODEL);
 		const env = { ...process.env };
 		delete env.CLAUDECODE;
@@ -165,12 +169,12 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 	for (const r of refs) content.push(image(r, 'image/jpeg'));
 	if (before.length) {
 		content.push({ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' });
-		for (const b of before) content.push(image(b, 'image/png'));
+		for (const b of before) content.push(image(b, media(b)));
 	}
 	content.push({ type: 'text', text: `Restyled screen: ${url}` });
 	for (const shot of shots) {
 		content.push({ type: 'text', text: `${shot.viewport}, slice ${shot.index + 1}` });
-		content.push(image(shot.path, 'image/png'));
+		content.push(image(shot.path, media(shot.path)));
 	}
 	content.push({ type: 'text', text: 'Return the scorecard and the punch list.' });
 	const response = await client.beta.messages.parse({
