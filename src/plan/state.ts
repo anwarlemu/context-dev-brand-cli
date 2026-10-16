@@ -19,6 +19,8 @@ export type State = {
 	screens: Screen[];
 	/** Screens the agent marked done where no review is possible (native apps). */
 	marked: string[];
+	/** Screens left as they are, with the reason; listed for the person in the final summary. */
+	skipped: Record<string, string>;
 	reviews: Record<string, Review>;
 };
 
@@ -28,7 +30,7 @@ export function readState(root: string): State | undefined {
 	if (!existsSync(path(root))) return undefined;
 	try {
 		const s = JSON.parse(readFileSync(path(root), 'utf8'));
-		return s.version === 2 ? { marked: [], reviews: {}, ...s } : undefined;
+		return s.version === 2 ? { marked: [], skipped: {}, reviews: {}, ...s } : undefined;
 	} catch {
 		return undefined;
 	}

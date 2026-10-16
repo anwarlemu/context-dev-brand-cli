@@ -12,7 +12,7 @@ import type { State } from './state.js';
 
 export const MAX_SCREENS = 8;
 
-export type TaskStatus = { screen: Screen; errors: number; reviewed: boolean; passed: boolean; touches: string[]; done: boolean };
+export type TaskStatus = { screen: Screen; errors: number; reviewed: boolean; passed: boolean; touches: string[]; skipped: boolean; done: boolean };
 
 /** What a site's home needs beyond styles: the hero's dot streams and the key phrase of headings in blue. */
 export function missingTouches(root: string, screen: Screen, isHome: boolean): string[] {
@@ -31,12 +31,13 @@ export function missingTouches(root: string, screen: Screen, isHome: boolean): s
 }
 
 export function taskStatus(root: string, state: State, screen: Screen, index: number): TaskStatus {
+	if (state.skipped?.[screen.id]) return { screen, errors: 0, reviewed: false, passed: false, touches: [], skipped: true, done: true };
 	const check = runCheck(root, { paths: screen.files });
 	const review = state.reviews[screen.id];
 	const touches = missingTouches(root, screen, index === 0);
 	const native = !screen.url;
 	const passed = native ? state.marked.includes(screen.id) : !!review?.passed;
-	return { screen, errors: check.findings.length, reviewed: !!review, passed, touches, done: check.findings.length === 0 && passed && touches.length === 0 };
+	return { screen, errors: check.findings.length, reviewed: !!review, passed, touches, skipped: false, done: check.findings.length === 0 && passed && touches.length === 0 };
 }
 
 export const mainScreens = (state: State) => state.screens.slice(0, MAX_SCREENS);
@@ -71,6 +72,7 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
 		url
 			? `  Then run the app and \`${cli()} review ${url}\`. Done when every score is ${threshold} or more and the check is clean; fix its punch list until then.`
 			: `  Native screen: build and look at it, then \`${cli()} done ${s.id}\`.`,
+		`  If it cannot pass without changing words or elements (or cannot run here), \`${cli()} skip ${s.id} --reason "<why>"\`; the person sees every skip.`,
 		...(status.reviewed && !status.passed ? [color.yellow(`  Last review did not pass: ${(state.reviews[s.id]?.punch ?? []).slice(0, 3).map((p) => p.issue).join('; ')}`)] : []),
 		`  Then run \`${cli()}\` for the next task.`,
 	];

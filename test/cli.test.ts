@@ -117,10 +117,10 @@ describe('project', () => {
 	it('tells a product from a site, and lists screens home first', () => {
 		const p = project({ 'package.json': '{"name":"acme-admin","dependencies":{"next":"15"}}', 'app/(dashboard)/page.tsx': "import { LineChart } from 'recharts'; export default () => <table/>", 'app/settings/page.tsx': '<div/>', 'app/login/page.tsx': '<form/>' });
 		expect(profile(p, styledFiles(p)).surface).toBe('product');
-		const s = project({ 'index.html': '<section class="hero"><h1>Hi</h1></section><footer></footer>', 'about.html': '<h1>About</h1>', 'pricing.html': '<p>pricing</p>', 'styles.css': 'body{}' });
+		const s = project({ 'index.html': '<section class="hero"><h1>Hi</h1></section><footer></footer>', 'about.html': '<h1>About</h1>', 'pricing.html': '<p>pricing</p>', '404.html': '<h1>Lost</h1>', 'styles.css': 'body{}' });
 		const found = profile(s, styledFiles(s));
 		expect(found.surface).toBe('site');
-		expect(listScreens(detectProject(s), styledFiles(s), found).map((x) => x.url)).toEqual(['/', '/about.html', '/pricing.html']);
+		expect(listScreens(detectProject(s), styledFiles(s), found).map((x) => x.url)).toEqual(['/', '/about.html', '/pricing.html', '/404.html']);
 		for (const d of [p, s]) rmSync(d, { recursive: true });
 	});
 });
@@ -207,9 +207,14 @@ describe('the one command', () => {
 		const again = run(p);
 		expect(again).toMatch(/0 of 2 screens done/);
 		expect(again).toMatch(/Add data-ds-dots to the hero section/);
+		run(p, 'skip', '/', '--reason', 'needs a database');
+		const skipped = run(p);
+		expect(skipped).toMatch(/1 of 2 screens done/);
+		expect(skipped).toMatch(/Task 2 of 3: \/about\.html/);
+		expect(readState(p)?.skipped).toEqual({ '/': 'needs a database' });
 		rmSync(p, { recursive: true });
 	});
 	it('every command answers --help', () => {
-		for (const c of ['review', 'look', 'check', 'tokens', 'approve', 'done', 'hook']) expect(execFileSync(process.execPath, [BIN, c, '--help'], { encoding: 'utf8' })).toMatch(/Usage/);
+		for (const c of ['review', 'look', 'check', 'tokens', 'approve', 'done', 'skip', 'hook']) expect(execFileSync(process.execPath, [BIN, c, '--help'], { encoding: 'utf8' })).toMatch(/Usage/);
 	});
 });

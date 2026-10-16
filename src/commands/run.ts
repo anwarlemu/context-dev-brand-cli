@@ -63,7 +63,7 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const screens = listScreens(detectProject(root), styledFiles(root), { ...found, surface, mixed });
 	const shell = shellFiles(project, files);
 	if (screens[0]) screens[0].files = [...new Set([...screens[0].files, ...shell])];
-	const state: State = { version: 2, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, marked: previous?.marked ?? [], reviews: previous?.reviews ?? {} };
+	const state: State = { version: 2, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, marked: previous?.marked ?? [], skipped: previous?.skipped ?? {}, reviews: previous?.reviews ?? {} };
 	if (!opts.dryRun) writeState(root, state);
 	const left = opts.dryRun ? undefined : runCheck(root);
 	const s = converted.stats;
@@ -105,7 +105,12 @@ function nextText(root: string, state: State) {
 			...all.findings.slice(0, 3).map((f) => color.dim(`  e.g. ${formatFinding(f)}`)),
 		].join('\n');
 	}
-	return [color.bold(`Done: every main screen passed its review and the whole project passes the check.`), `  Show the person the result (desktop and phone) before committing. From now on the hooks keep new work on the brand.`].join('\n');
+	const skipped = Object.entries(state.skipped ?? {}).filter(([id]) => screens.some((s) => s.id === id));
+	return [
+		color.bold(skipped.length ? `Done: every main screen passed its review or was skipped, and the whole project passes the check.` : `Done: every main screen passed its review and the whole project passes the check.`),
+		...(skipped.length ? [color.yellow(`  Skipped (tell the person each one and why):`), ...skipped.map(([id, why]) => color.yellow(`    ${id}: ${why}`))] : []),
+		`  Show the person the result (desktop and phone) before committing. From now on the hooks keep new work on the brand.`,
+	].join('\n');
 }
 
 function next(root: string, state: State, opts: RunOptions) {

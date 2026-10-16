@@ -66,7 +66,9 @@ export function convertProject(project: Project, files: string[], surface: Surfa
 		const drawn = files.filter((rel) => MARKUP.test(rel) || SCRIPT.test(rel) || STYLES.test(rel)).map(read).join('\n');
 		const isDrawn = (name: string) => new RegExp(`(src(set)?\\s*=\\s*["'{][^"'}]*|url\\(\\s*["']?[^)]*|import[^;]*|:\\s*["'][^"']*)${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(drawn);
 		for (const rel of walkFiles(root, ['**/*.svg'], ['**/node_modules/**', `**/${brand().bin}/**`])) {
-			if (!isDrawn(rel.split('/').pop()!)) continue;
+			const name = rel.split('/').pop()!;
+			// A file named for its color (logo-white.svg) is a variant someone chose, often offered for download.
+			if (!isDrawn(name) || /[-_.](white|black|light|dark|inverse|inverted|mono|reversed)\b/i.test(name)) continue;
 			const before = read(rel);
 			const after = convertSvgMark(before, base);
 			if (after === before) continue;

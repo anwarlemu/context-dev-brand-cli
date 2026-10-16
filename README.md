@@ -37,6 +37,7 @@ value, so new work stays on the brand.
 | `npx context-ds tokens [term]` | Find a token. |
 | `npx context-ds approve` | A person approves `ds-override` comments in a terminal. Agents cannot. |
 | `npx context-ds done <screen>` | Marks a native screen restyled (web screens are checked by `review`). |
+| `npx context-ds skip <screen> --reason "..."` | Leaves a screen as it is when it cannot pass without changing words or elements; the final summary lists each skip and why. |
 
 `review` runs through the Anthropic API when a key is set, or through a logged-in Claude Code (`claude -p`), and needs
 `playwright-core` with Chromium (`npx playwright install chromium`).

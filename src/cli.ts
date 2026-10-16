@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import { Command } from 'commander';
 import { review } from './commands/review.js';
 import { run } from './commands/run.js';
-import { approve, check, done, look, tokensCommand } from './commands/small.js';
+import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
 import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
 import { readHookInput } from './hooks/payload.js';
 import { brand, cli } from './lib/brand.js';
@@ -28,6 +28,7 @@ program.command('look [target]').description('The brand styling (CSS, Tailwind, 
 program.command('check [files...]').description('Check that every style value is a brand token (used by hooks, pre-commit and CI)').option('--fix', 'replace exact matches with their token').option('--changed', 'only files changed in git').option('--json', 'JSON output').action((files, opts) => check(files ?? [], opts));
 program.command('tokens [term]').description('Find a brand token by name or value').option('--json', 'JSON output').action((term, opts) => tokensCommand(term, opts));
 program.command('approve').description('Approve ds-override comments (a person, in a terminal)').option('--all', 'approve every pending override').action((opts) => approve(opts));
+program.command('skip <screen>').description('Leave a screen as it is when it cannot pass without changing words or elements; the person sees the reason').requiredOption('--reason <text>', 'why').action((id, opts) => skip(id, opts.reason));
 program.command('done <screen>').description('Mark a native screen restyled (web screens are done when their review passes)').action((id) => done(id));
 
 program

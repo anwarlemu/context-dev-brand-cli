@@ -93,6 +93,17 @@ export async function approve(opts: { all?: boolean }) {
 	console.log(`${approvals.length} overrides approved in total (.ds/approved-overrides.json; commit it).`);
 }
 
+/** `skip <screen> --reason`: leaves a screen as it is; the reason is shown to the person in the final summary. */
+export function skip(id: string, reason: string) {
+	const root = findProjectRoot();
+	const state = readState(root);
+	if (!state || !state.screens.some((s) => s.id === id)) throw new Error(`No screen ${id}. Run \`${cli()}\` to see the tasks.`);
+	if (!reason?.trim()) throw new Error('Give the reason: --reason "<why>".');
+	state.skipped = { ...state.skipped, [id]: reason.trim() };
+	writeState(root, state);
+	console.log(`Skipped ${id}. Run \`${cli()}\` for the next task.`);
+}
+
 /** `done <screen>`: marks a native screen restyled, where no browser review is possible. */
 export function done(id: string) {
 	const root = findProjectRoot();
