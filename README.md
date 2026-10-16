@@ -12,7 +12,7 @@ Give your coding agent (Claude Code, Codex, Cursor or any other) this prompt:
 
 ```text
 Apply the Context.dev design system to this project: run
-`npx -y github:anwarlemu/context-dev-brand-cli` and do what it says until it says you are done.
+`npx -y github:anwarlemu/context-dev-brand-cli#release` and do what it says until it says you are done.
 Change how things look, never what they say.
 ```
 

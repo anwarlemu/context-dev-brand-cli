@@ -19,7 +19,8 @@
     "build": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
     "test": "vitest run",
     "ci": "npm run build && node scripts/ci-limits.mjs && vitest run",
-    "prepare": "tsc -p tsconfig.json && node scripts/build-brand.mjs"
+    "prepare": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
+    "release": "sh scripts/release.sh"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",

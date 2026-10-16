@@ -35,7 +35,9 @@ npm run ci           # build, limits, tests; must pass before you push
   the tests check every value.
 - Restyle only: nothing the CLI writes may change a project's copy, elements or structure. The only markup it asks for
   is `data-ds-dots` on the home hero and `ds-accent` spans around existing words.
-- Apps install from `main`, and every push to it is a release. Push only with `npm run ci` green.
+- Apps install the `release` branch: a compiled tree (no source, intake or dev dependencies) so installs take
+  seconds. `npm run release` runs the checks, builds it and pushes it; nothing reaches apps until then. To automate it,
+  copy `scripts/release.workflow.yml` to `.github/workflows/` (needs a token with the workflow scope).
 - Test changes on real projects (copies in a scratch folder, never the originals): a site, a product, a plain HTML site,
   a dark site, a Tailwind app and a native sample.
 

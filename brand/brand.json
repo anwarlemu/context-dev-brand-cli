@@ -1,7 +1,7 @@
 {
   "name": "Context.dev",
   "bin": "context-ds",
-  "source": "github:anwarlemu/context-dev-brand-cli#main",
+  "source": "github:anwarlemu/context-dev-brand-cli#release",
   "reviewModel": "claude-opus-5-5",
   "reviewThreshold": 7
 }
