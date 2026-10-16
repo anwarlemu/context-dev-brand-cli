@@ -1,0 +1,144 @@
+/* The site layer: what every Context.dev marketing page has before any component is styled, measured from the
+   redesign branch. Defaults use :where() so the site's own rules still win; only the frame lines and the touches are
+   added. */
+
+/* The site renders its rem scale at 90% from 43.2rem up (a 14px token reads 12.6px); phones keep the full size. */
+@media (min-width: 43.2rem) {
+	html {
+		font-size: 90%;
+	}
+}
+
+html,
+body {
+	background-color: var(--ds-color-bg-default);
+	color: var(--ds-color-text-default);
+}
+
+body {
+	font-family: var(--ds-font-sans);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+	font-family: var(--ds-font-sans);
+	font-weight: var(--ds-font-weight-regular);
+	color: var(--ds-color-text-default);
+	text-wrap: balance;
+}
+
+:where(h1, h2, h3) {
+	letter-spacing: var(--ds-tracking-tight);
+	line-height: var(--ds-leading-heading);
+}
+
+:where(p, li, blockquote, figcaption, dd, td) {
+	text-wrap: pretty;
+}
+
+:where(code, kbd, pre, samp) {
+	font-family: var(--ds-font-mono);
+}
+
+::selection {
+	background-color: var(--ds-color-blue-60);
+	color: var(--ds-color-white);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+	outline: 2px solid var(--ds-color-focus-ring);
+	outline-offset: 2px;
+}
+
+/* The ruled column: hairlines down both edges of the content column for the whole page, a full-bleed rule between
+   top-level sections, and a solid node where a rule meets a column edge. Lines sit behind the content. */
+:root {
+	--ds-frame-column: calc(100% - 2px);
+}
+
+@media (min-width: 43.2rem) {
+	:root {
+		--ds-frame-column: 90vw;
+	}
+}
+
+@media (min-width: 57.6rem) {
+	:root {
+		--ds-frame-column: min(85vw, var(--ds-layout-column-wide));
+	}
+}
+
+body {
+	position: relative;
+	isolation: isolate;
+}
+
+body::after {
+	content: "";
+	position: absolute;
+	inset-block: 0;
+	left: 50%;
+	z-index: -1;
+	width: var(--ds-frame-column);
+	transform: translateX(-50%);
+	border-inline: 1px solid var(--ds-color-border-rule);
+	pointer-events: none;
+}
+
+:where(body, main) > :where(section) + :where(section, footer) {
+	position: relative;
+	border-top: 1px solid var(--ds-color-border-rule);
+}
+
+:where(body, main) > :where(section) + :where(section, footer)::before {
+	content: "";
+	position: absolute;
+	top: calc(-1 * var(--ds-space-1) - 0.5px);
+	left: calc(50% - var(--ds-frame-column) / 2 - var(--ds-space-1));
+	z-index: 1;
+	width: calc(var(--ds-frame-column) + var(--ds-space-2));
+	height: var(--ds-space-2);
+	background:
+		radial-gradient(circle closest-side, var(--ds-color-border-node) 92%, transparent) left center / var(--ds-space-2) var(--ds-space-2) no-repeat,
+		radial-gradient(circle closest-side, var(--ds-color-border-node) 92%, transparent) right center / var(--ds-space-2) var(--ds-space-2) no-repeat;
+	pointer-events: none;
+}
+
+/* Touches. Few and quiet, as on the brand's site. */
+
+/* The key phrase of a headline (its last few words) in blue, same weight. */
+.ds-accent {
+	color: var(--ds-color-text-brand);
+	font-weight: inherit;
+}
+
+/* A large figure (a stat, a step number) in Doto. Never words. */
+.ds-figure {
+	font-family: var(--ds-font-data);
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0;
+}
+
+/* The hero's dot streams (dots.js): small dots running in from the hero's edges, the middle bare. */
+[data-ds-dots] {
+	position: relative;
+	isolation: isolate;
+}
+
+[data-ds-dots] > [data-ds-dots-layer] {
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	color: color-mix(in srgb, var(--ds-color-brand) 60%, transparent);
+	pointer-events: none;
+	opacity: 0;
+	/* Fades in once measured, so the dots never pop in around the text. */
+	transition: opacity var(--ds-duration-base) var(--ds-easing-out);
+}
+
+[data-ds-dots] > [data-ds-dots-layer][data-ready] {
+	opacity: 1;
+}

@@ -23,10 +23,10 @@ export type SourceFile = {
 };
 
 const SCRIPT = new Set(['.tsx', '.jsx', '.ts', '.js', '.mjs', '.cjs']);
-const CSS = new Set(['.css', '.scss']);
+const CSS = new Set(['.css', '.scss', '.sass', '.less', '.styl', '.pcss']);
 const MARKDOWN = new Set(['.md', '.mdx']);
 // Component and page files of other frameworks: their <style> blocks and style attributes are checked as CSS.
-const MARKUP = new Set(['.astro', '.vue', '.svelte', '.html']);
+const MARKUP = new Set(['.astro', '.vue', '.svelte', '.html', '.htm', '.erb', '.php', '.hbs', '.handlebars', '.mustache', '.liquid', '.njk', '.jinja', '.jinja2', '.j2', '.twig', '.ejs', '.cshtml', '.razor', '.heex', '.eex', '.gohtml', '.tmpl', '.jsp']);
 const CLASS_HELPERS = new Set(['cn', 'clsx', 'cva', 'twMerge', 'classNames', 'cx', 'tv']);
 
 export function lineOf(file: SourceFile, offset: number) {

@@ -1,0 +1,528 @@
+{
+	"site": {
+		"page": {
+			"name": "Page",
+			"match": { "tags": ["html", "body"] },
+			"css": { "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-default)", "font-family": "var(--ds-font-sans)" },
+			"tailwind": "bg-surface text-fg font-sans antialiased",
+			"rules": ["A white page. Never a gray, cream or tinted page background.", "The ruled column (site layer) runs the full height; nothing else decorates the page."],
+			"source": "src/app/(marketing)/layout.tsx:43"
+		},
+		"column": {
+			"name": "Content column",
+			"match": { "words": ["container", "wrapper", "wrap", "inner", "content", "max"] },
+			"css": { "width": "100%", "max-width": "var(--ds-layout-column-wide)", "margin-inline": "auto", "padding-inline": "var(--ds-space-6)" },
+			"states": { "@media (min-width: 43.2rem)": { "padding-inline": "var(--ds-space-10)" }, "@media (min-width: 57.6rem)": { "padding-inline": "var(--ds-space-12)" } },
+			"tailwind": "mx-auto w-full max-w-(--ds-layout-column-wide) px-6 md:px-10 lg:px-12",
+			"rules": ["Content keeps its inset from the column lines on every width; text never touches a line."],
+			"source": "src/components/sections/products/product-landing-page.tsx:23"
+		},
+		"section": {
+			"name": "Section",
+			"match": { "tags": ["section"], "words": ["section", "block", "band"] },
+			"css": { "padding-block": "var(--ds-space-10) var(--ds-space-16)" },
+			"states": { "@media (min-width: 43.2rem)": { "padding-block": "var(--ds-space-12) var(--ds-space-20)" } },
+			"tailwind": "pt-10 pb-16 md:pt-12 md:pb-20",
+			"rules": ["White background; sections are divided by the full-bleed rule and its two nodes (site layer), not by colored bands or shadows.", "One dark section at most (black, never gray), for code or a story strip."],
+			"source": "src/components/sections/products/product-landing-page.tsx:23"
+		},
+		"section-heading": {
+			"name": "Section heading",
+			"match": { "tags": ["h2"], "words": ["title", "heading", "headline"], "context": ["section"] },
+			"css": { "max-width": "var(--ds-layout-heading)", "font-size": "var(--ds-text-h3)", "line-height": "1.12", "letter-spacing": "var(--ds-tracking-tight)", "font-weight": "var(--ds-font-weight-regular)", "color": "var(--ds-color-text-default)", "text-align": "left", "text-wrap": "balance" },
+			"states": { "@media (min-width: 43.2rem)": { "font-size": "var(--ds-text-h2)" } },
+			"tailwind": "max-w-(--ds-layout-heading) text-h3 md:text-h2 leading-[1.12] tracking-tight font-normal text-fg text-left text-balance",
+			"rules": ["Left aligned, weight 400. The closing phrase (the existing words) wrapped in <span class=\"ds-accent\"> is blue.", "Description below it, then a full-bleed rule, then the content."],
+			"source": "src/components/sections/home/home-design.ts:1"
+		},
+		"section-description": {
+			"name": "Section description",
+			"match": { "tags": ["p"], "words": ["subtitle", "sub", "lead", "description", "intro", "desc", "lede"], "context": ["section"] },
+			"css": { "max-width": "var(--ds-layout-text)", "font-size": "var(--ds-text-body)", "line-height": "var(--ds-leading-relaxed)", "color": "var(--ds-color-text-muted)" },
+			"states": { "@media (min-width: 43.2rem)": { "font-size": "var(--ds-text-body-lg)" } },
+			"tailwind": "max-w-(--ds-layout-text) text-body md:text-body-lg leading-relaxed text-fg-muted",
+			"rules": ["One or two lines under the heading, black at 60 percent."],
+			"source": "src/components/sections/home/home-design.ts:2"
+		},
+		"hero": {
+			"name": "Hero",
+			"match": { "words": ["hero", "masthead", "jumbotron", "banner-hero", "splash"] },
+			"css": { "padding-block": "var(--ds-space-20) var(--ds-space-16)", "text-align": "center" },
+			"tailwind": "pt-20 pb-16 text-center",
+			"rules": ["Centered: eyebrow, title, one line of subtitle, then a black primary pill and one outline pill.", "Add data-ds-dots to the hero section: thin dot streams run in from its edges, the middle stays bare.", "Its visual sits below in a media frame; a small interactive demo may sit in the demo panel."],
+			"source": "src/components/sections/shared/hero.tsx:269"
+		},
+		"hero-title": {
+			"name": "Hero title",
+			"match": { "tags": ["h1"], "words": ["hero-title", "headline", "display"] },
+			"css": { "font-size": "var(--ds-text-hero)", "line-height": "var(--ds-leading-tight)", "letter-spacing": "var(--ds-tracking-tight)", "font-weight": "var(--ds-font-weight-regular)", "color": "var(--ds-color-text-default)", "text-wrap": "balance" },
+			"tailwind": "text-hero leading-tight tracking-tight font-normal text-fg text-balance",
+			"rules": ["Weight 400, never bold. The key phrase (existing words) in <span class=\"ds-accent\">.", "At most four lines on a phone."],
+			"source": "src/components/sections/shared/hero.tsx:148"
+		},
+		"hero-subtitle": {
+			"name": "Hero subtitle",
+			"match": { "tags": ["p"], "words": ["hero-sub", "subtitle", "tagline", "lead"], "context": ["hero"] },
+			"css": { "max-width": "var(--ds-layout-heading)", "margin-inline": "auto", "font-size": "var(--ds-text-h5)", "line-height": "var(--ds-leading-snug)", "color": "var(--ds-color-text-muted)", "text-wrap": "balance" },
+			"tailwind": "mx-auto max-w-(--ds-layout-heading) text-h5 leading-snug text-fg-muted text-balance",
+			"rules": ["Black at 60 percent, one or two lines."],
+			"source": "src/components/sections/shared/hero.tsx:158"
+		},
+		"eyebrow": {
+			"name": "Eyebrow and small label",
+			"match": { "words": ["eyebrow", "kicker", "overline", "label", "tag", "pretitle", "badge"] },
+			"css": { "font-size": "var(--ds-text-body-sm)", "line-height": "var(--ds-leading-snug)", "letter-spacing": "var(--ds-tracking-normal)", "text-transform": "none", "font-weight": "var(--ds-font-weight-regular)", "color": "var(--ds-color-text-muted)" },
+			"tailwind": "text-body-sm leading-snug tracking-normal normal-case font-normal text-fg-muted",
+			"rules": ["Sentence case, no letter spacing, no uppercase. A small mono label is fine for technical meta (IBM Plex Mono, caption size)."],
+			"source": "src/components/sections/shared/hero.tsx:290"
+		},
+		"card": {
+			"name": "Card",
+			"match": { "tags": ["article"], "words": ["card", "tile", "panel", "box", "feature", "item", "plan"] },
+			"css": { "display": "flex", "flex-direction": "column", "gap": "var(--ds-space-4)", "padding": "var(--ds-space-6)", "border": "0", "border-radius": "var(--ds-radius-card)", "background-color": "var(--ds-color-bg-default)", "box-shadow": "0 0 0 1px var(--ds-color-border-hairline), 0 0 0 var(--ds-space-2) var(--ds-color-ring-tint)" },
+			"states": { "@media (min-width: 43.2rem)": { "padding": "var(--ds-space-8)" } },
+			"tailwind": "flex flex-col gap-4 p-6 md:p-8 rounded-card bg-surface shadow-[0_0_0_1px_var(--ds-color-border-hairline),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
+			"rules": ["A white card with a hairline inside a soft 8px blue ring. If the card has a wrapper element, put the ring on the wrapper instead (card-ring) and keep only the hairline here.", "No drop shadows, no gray card fills, no colored borders. Grids of two or three, gap 1.5rem."],
+			"source": "src/styles/globals.css:807"
+		},
+		"card-ring": {
+			"name": "Card ring (wrapper)",
+			"match": { "words": ["ring", "frame", "shell", "outer"] },
+			"css": { "padding": "var(--ds-space-2)", "border-radius": "var(--ds-radius-card)", "background-color": "var(--ds-color-ring-tint)" },
+			"tailwind": "p-2 rounded-card bg-ring-tint",
+			"rules": ["Same radius as the card inside it, so the ring's outer curve matches the card's. On a blue surface use ring-on-brand."],
+			"source": "src/styles/globals.css:807"
+		},
+		"card-title": {
+			"name": "Card title",
+			"match": { "tags": ["h3", "h4"], "words": ["card-title", "title", "name", "heading"], "context": ["card"] },
+			"css": { "font-size": "var(--ds-text-h4)", "line-height": "var(--ds-leading-snug)", "font-weight": "var(--ds-font-weight-regular)", "color": "var(--ds-color-text-default)" },
+			"tailwind": "text-h4 leading-snug font-normal text-fg",
+			"rules": ["Weight 400. Large product cards may use h3 size."],
+			"source": "src/components/sections/home/scrape-reliability.tsx:86"
+		},
+		"body-text": {
+			"name": "Body text",
+			"match": { "tags": ["p", "li"], "words": ["text", "body", "copy", "desc", "description", "summary", "excerpt"] },
+			"css": { "font-size": "var(--ds-text-body)", "line-height": "1.5", "color": "var(--ds-color-text-secondary)" },
+			"tailwind": "text-body leading-normal text-fg-secondary",
+			"rules": ["Black at 65 percent in cards, 60 percent under headings. Lines no wider than about 75 characters."],
+			"source": "src/components/sections/home/product-grid.tsx:107"
+		},
+		"caption": {
+			"name": "Caption and meta",
+			"match": { "tags": ["small", "figcaption", "time"], "words": ["caption", "meta", "note", "date", "small", "fine", "hint"] },
+			"css": { "font-size": "var(--ds-text-body-sm)", "line-height": "var(--ds-leading-snug)", "color": "var(--ds-color-text-subtle)" },
+			"tailwind": "text-body-sm leading-snug text-fg-subtle",
+			"rules": ["Black at 55 percent. Technical meta (versions, timestamps) may be IBM Plex Mono at caption size."],
+			"source": "src/components/sections/use-cases/use-case-sections.tsx:70"
+		},
+		"link": {
+			"name": "Text link",
+			"match": { "tags": ["a"], "words": ["link", "more", "arrow", "readmore"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-2)", "color": "var(--ds-color-text-brand)", "text-decoration": "none", "font-size": "var(--ds-text-body)", "transition": "color var(--ds-duration-base) var(--ds-easing-out)" },
+			"tailwind": "inline-flex items-center gap-2 text-body text-fg-brand no-underline transition-colors duration-200",
+			"rules": ["Blue, no underline; a trailing arrow nudges 2px right on hover."],
+			"source": "src/components/sections/use-cases/use-case-sections.tsx:18"
+		},
+		"button-primary": {
+			"name": "Primary button",
+			"match": { "tags": ["button", "a"], "words": ["btn-primary", "primary", "cta", "get-started", "signup", "start", "solid", "filled", "main"] },
+			"css": { "display": "inline-flex", "align-items": "center", "justify-content": "center", "gap": "var(--ds-space-1-5)", "padding": "var(--ds-space-3) var(--ds-space-5)", "border": "1px solid var(--ds-color-action-primary)", "border-radius": "var(--ds-radius-pill)", "background-color": "var(--ds-color-action-primary)", "color": "var(--ds-color-action-primary-fg)", "font-size": "var(--ds-text-body)", "line-height": "var(--ds-leading-snug)", "font-weight": "var(--ds-font-weight-regular)", "white-space": "nowrap", "text-decoration": "none", "transition": "background-color var(--ds-duration-base) var(--ds-easing-out), border-color var(--ds-duration-base) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-action-primary-hover)", "border-color": "var(--ds-color-action-primary-hover)" } },
+			"tailwind": "inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-pill border border-primary bg-primary text-white text-body leading-snug font-normal whitespace-nowrap transition-colors duration-200 hover:bg-primary-hover hover:border-primary-hover",
+			"rules": ["The filled black pill. One per screen: the main action.", "Weight 400; 1px border; about 42px tall."],
+			"source": "src/components/sections/shared/brand-outline-pill.ts:13"
+		},
+		"button-secondary": {
+			"name": "Secondary button",
+			"match": { "tags": ["button", "a"], "words": ["btn-secondary", "secondary", "outline", "ghost", "btn-ghost", "learn", "demo", "explore", "btn"] },
+			"css": { "display": "inline-flex", "align-items": "center", "justify-content": "center", "gap": "var(--ds-space-1-5)", "padding": "var(--ds-space-3) var(--ds-space-5)", "border": "1px solid var(--ds-color-border-brand)", "border-radius": "var(--ds-radius-pill)", "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-brand)", "font-size": "var(--ds-text-body)", "line-height": "var(--ds-leading-snug)", "font-weight": "var(--ds-font-weight-regular)", "white-space": "nowrap", "text-decoration": "none", "transition": "background-color var(--ds-duration-base) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-bg-tint)" } },
+			"tailwind": "inline-flex items-center justify-center gap-1.5 px-5 py-3 rounded-pill border border-brand bg-surface text-fg-brand text-body leading-snug font-normal whitespace-nowrap transition-colors duration-200 hover:bg-tint",
+			"rules": ["The outline blue pill: every action that is not the main one.", "On a blue surface: white border and label (button-on-brand)."],
+			"source": "src/components/sections/shared/brand-outline-pill.ts:7"
+		},
+		"button-on-brand": {
+			"name": "Button on blue",
+			"match": { "tags": ["button", "a"], "words": ["btn"], "context": ["section-blue", "on-brand"] },
+			"css": { "display": "inline-flex", "align-items": "center", "padding": "var(--ds-space-3) var(--ds-space-5)", "border": "1px solid var(--ds-color-border-on-brand)", "border-radius": "var(--ds-radius-pill)", "background-color": "transparent", "color": "var(--ds-color-text-on-brand)", "font-size": "var(--ds-text-body)", "transition": "background-color var(--ds-duration-base) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-ring-on-brand)" } },
+			"tailwind": "inline-flex items-center px-5 py-3 rounded-pill border border-white bg-transparent text-white text-body transition-colors duration-200 hover:bg-ring-on-brand",
+			"rules": ["Only on a brand blue surface."],
+			"source": "src/components/sections/shared/brand-outline-pill.ts:10"
+		},
+		"header": {
+			"name": "Header",
+			"match": { "tags": ["header"], "words": ["header", "nav", "navbar", "topbar", "site-header", "masthead"], "roles": ["banner"] },
+			"css": { "position": "sticky", "top": "0", "z-index": "1000", "display": "flex", "align-items": "center", "justify-content": "space-between", "min-height": "calc(var(--ds-space-16) + var(--ds-space-2))", "background-color": "transparent" },
+			"tailwind": "sticky top-0 z-1000 flex items-center justify-between min-h-18 bg-transparent",
+			"rules": ["At the top it runs edge to edge with no fill. Logo left, links centered, two actions right (tertiary, then the black primary).", "Once scrolled it gathers into the floating pill (header-scrolled)."],
+			"source": "src/components/sections/shared/marketing-header-frame.module.css:1"
+		},
+		"header-scrolled": {
+			"name": "Header (scrolled pill)",
+			"match": { "words": ["scrolled", "is-scrolled", "sticky", "is-sticky", "fixed", "header--scrolled", "stuck"] },
+			"css": { "top": "var(--ds-space-2)", "box-sizing": "border-box", "width": "min(100% - var(--ds-space-6), var(--ds-layout-column-wide))", "min-height": "calc(var(--ds-space-16) + var(--ds-space-1))", "margin-inline": "auto", "padding-inline": "var(--ds-space-4)", "border": "var(--ds-space-1-5) solid var(--ds-color-ring-tint)", "border-radius": "var(--ds-radius-pill)", "background-color": "var(--ds-color-bg-default)", "background-clip": "padding-box", "box-shadow": "var(--ds-shadow-floating)", "backdrop-filter": "blur(var(--ds-space-4))", "transition": "border-radius var(--ds-duration-moderate) var(--ds-easing-out), background-color var(--ds-duration-moderate) var(--ds-easing-out), box-shadow var(--ds-duration-base) var(--ds-easing-out)" },
+			"tailwind": "top-2 box-border mx-auto w-[min(100%-var(--ds-space-6),var(--ds-layout-column-wide))] min-h-17 px-4 rounded-pill border-6 border-ring-tint bg-surface bg-clip-padding shadow-floating backdrop-blur-[var(--ds-space-4)] transition-[border-radius,background-color,box-shadow] duration-250",
+			"rules": ["A white pill 68px tall, 8px from the top of the window, in a see-through 6px ring of brand blue at 10 percent (background clipped to the padding box, so the frosted blur shows through the ring). Never an opaque pale outline.", "Items keep their size and place while the bar changes; no transition with reduced motion."],
+			"source": "src/components/sections/shared/marketing-header-frame.module.css:44"
+		},
+		"header-action": {
+			"name": "Header button",
+			"match": { "tags": ["a", "button"], "words": ["btn", "cta", "login", "signin", "sign-in", "demo", "get-started", "signup"], "context": ["header"] },
+			"css": { "display": "inline-flex", "align-items": "center", "min-height": "calc(var(--ds-space-10) + var(--ds-space-0-5))", "padding": "0 var(--ds-space-5)", "border-radius": "var(--ds-radius-pill)", "font-size": "var(--ds-text-body-sm)", "font-weight": "var(--ds-font-weight-regular)", "white-space": "nowrap", "border": "1px solid var(--ds-color-border-hairline)", "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-default)", "box-shadow": "var(--ds-shadow-key)", "transition": "background-color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-bg-subtle)" } },
+			"tailwind": "inline-flex items-center min-h-10.5 px-5 rounded-pill text-body-sm font-normal whitespace-nowrap border border-hairline bg-surface text-fg shadow-key transition-colors duration-150 hover:bg-subtle",
+			"rules": ["Two actions: a light pill (as here) then the black primary pill at the same height (button-primary sizes in the header: 38px, body-sm)."],
+			"source": "src/components/sections/shared/header.tsx:171"
+		},
+		"nav-link": {
+			"name": "Navigation link",
+			"match": { "tags": ["a", "button"], "words": ["nav-link", "menu-link", "nav-item", "link", "menu-item"], "context": ["header", "nav"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-1)", "padding": "var(--ds-space-2) var(--ds-space-3-5)", "border-radius": "var(--ds-radius-pill)", "font-size": "var(--ds-text-body-sm)", "font-weight": "var(--ds-font-weight-medium)", "color": "var(--ds-color-text-nav)", "text-decoration": "none", "text-transform": "none", "letter-spacing": "var(--ds-tracking-normal)", "transition": "color var(--ds-duration-fast) var(--ds-easing-out), background-color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "color": "var(--ds-color-text-brand)", "background-color": "var(--ds-color-bg-subtle)" }, "[aria-current=page]": { "color": "var(--ds-color-text-default)" } },
+			"tailwind": "inline-flex items-center gap-1 px-3.5 py-2 rounded-pill text-body-sm font-medium text-fg-nav no-underline normal-case tracking-normal transition-colors duration-150 hover:text-fg-brand hover:bg-subtle aria-[current=page]:text-fg",
+			"rules": ["Sentence case, no uppercase or letter spacing."],
+			"source": "src/components/sections/shared/header.tsx:103"
+		},
+		"announcement": {
+			"name": "Announcement bar",
+			"match": { "words": ["announcement", "promo", "topbar", "notice", "ribbon", "alert-bar"] },
+			"css": { "display": "flex", "align-items": "center", "justify-content": "center", "min-height": "calc(var(--ds-space-10) + var(--ds-space-1))", "padding-inline": "var(--ds-space-4)", "border-bottom": "1px solid var(--ds-color-border-hairline)", "background-color": "var(--ds-color-bg-announcement)", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-body-sm)" },
+			"tailwind": "flex items-center justify-center min-h-11 px-4 border-b border-hairline bg-announcement text-fg text-body-sm",
+			"rules": ["A quiet strip above the header, centered text, no color fill."],
+			"source": "src/components/sections/shared/header.tsx:432"
+		},
+		"chip": {
+			"name": "Chip",
+			"match": { "words": ["chip", "pill", "tag", "badge", "token", "label"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-1-5)", "padding": "var(--ds-space-1) var(--ds-space-3)", "border-radius": "var(--ds-radius-pill)", "font-size": "var(--ds-text-body-sm)", "color": "var(--ds-color-text-nav)", "background-color": "transparent", "box-shadow": "inset 0 0 0 1px var(--ds-color-border-hairline)" },
+			"tailwind": "inline-flex items-center gap-1.5 px-3 py-1 rounded-pill text-body-sm text-fg-nav bg-transparent ring-1 ring-inset ring-hairline",
+			"rules": ["Outlined, never filled. A status pill is blue at 10 percent with blue mono text."],
+			"source": "src/components/sections/home/product-grid.tsx:110"
+		},
+		"stat": {
+			"name": "Big number",
+			"match": { "words": ["stat", "metric", "number", "figure", "kpi", "count", "value"] },
+			"css": { "font-size": "var(--ds-text-h1)", "line-height": "1", "letter-spacing": "var(--ds-tracking-tight)", "font-weight": "var(--ds-font-weight-regular)", "color": "var(--ds-color-text-brand)", "font-variant-numeric": "tabular-nums" },
+			"tailwind": "text-h1 leading-none tracking-tight font-normal text-fg-brand tabular-nums",
+			"rules": ["Large marketing numbers are Rethink Sans in blue; the words next to them stay body text. Doto (ds-figure) only for a counter or step number."],
+			"source": "src/components/sections/home/scrape-reliability.tsx:75"
+		},
+		"code-window": {
+			"name": "Code window",
+			"match": { "tags": ["pre"], "words": ["code", "terminal", "snippet", "codeblock", "console", "editor", "window"] },
+			"css": { "overflow": "hidden", "border-radius": "var(--ds-radius-card)", "background-color": "var(--ds-color-bg-code)", "color": "var(--ds-color-text-inverse)", "font-family": "var(--ds-font-mono)", "font-size": "var(--ds-text-body-sm)", "line-height": "1.7", "box-shadow": "0 0 0 var(--ds-space-2) var(--ds-color-ring-tint)" },
+			"tailwind": "overflow-hidden rounded-card bg-code text-white font-mono text-body-sm leading-[1.7] shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
+			"rules": ["Near-black window in the soft blue ring; a 40px chrome bar with three 12px dots; one accent color for strings and numbers."],
+			"source": "src/components/sections/shared/code-frame.tsx:4"
+		},
+		"media-frame": {
+			"name": "Screenshot, image or video frame",
+			"match": { "tags": ["img", "video", "picture", "figure", "iframe"], "words": ["screenshot", "image", "media", "preview", "shot", "visual", "frame", "mockup"] },
+			"css": { "display": "block", "max-width": "100%", "height": "auto", "border-radius": "var(--ds-radius-card)", "box-shadow": "0 0 0 1px var(--ds-color-border-hairline), 0 0 0 var(--ds-space-2) var(--ds-color-ring-tint)" },
+			"tailwind": "block max-w-full h-auto rounded-card shadow-[0_0_0_1px_var(--ds-color-border-hairline),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
+			"rules": ["Product shots and images sit in the same soft blue ring as cards. A dark screenshot keeps its own colors inside the ring; never fade it into the page.", "Not for logos or avatars."],
+			"source": "src/components/sections/home/workflow-grid.tsx:17"
+		},
+		"demo-panel": {
+			"name": "Blue demo panel",
+			"match": { "words": ["demo", "playground", "try", "showcase"], "context": ["hero"] },
+			"css": { "padding": "var(--ds-space-3)", "border-radius": "var(--ds-radius-panel)", "background-color": "var(--ds-color-bg-brand)", "box-shadow": "0 0 0 var(--ds-space-2) var(--ds-color-ring-tint)" },
+			"states": { "@media (min-width: 43.2rem)": { "padding": "var(--ds-space-10) var(--ds-space-12)" } },
+			"tailwind": "p-3 md:px-12 md:py-10 rounded-panel bg-brand shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
+			"rules": ["The hero's one block of color, around a small interactive demo or a compact visual on a white card. Never around a large full-width screenshot (use media-frame)."],
+			"source": "src/components/sections/shared/hero.tsx:353"
+		},
+		"table": {
+			"name": "Table",
+			"match": { "tags": ["table"], "words": ["table", "comparison", "compare", "pricing-table", "grid"] },
+			"css": { "width": "100%", "border-collapse": "collapse", "font-size": "var(--ds-text-body)", "color": "var(--ds-color-text-default)" },
+			"tailwind": "w-full border-collapse text-body text-fg",
+			"rules": ["Inside a card. Rows divided by a hairline (border-top), cells padded 16px by 20px (32px wide on desktop), header cells at h5 size, weight 400.", "The brand's own column tinted blue at 4 percent with a blue header."],
+			"source": "src/components/sections/use-cases/use-case-sections.tsx:173"
+		},
+		"faq": {
+			"name": "FAQ item",
+			"match": { "tags": ["details"], "words": ["faq", "accordion", "question", "qa"] },
+			"css": { "border-radius": "var(--ds-radius-card)", "background-color": "var(--ds-color-bg-default)", "box-shadow": "var(--ds-shadow-raised), 0 0 0 var(--ds-space-2) var(--ds-color-ring-tint)", "transition": "background-color var(--ds-duration-base) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-bg-subtle)" } },
+			"tailwind": "rounded-card bg-surface shadow-raised transition-colors duration-200 hover:bg-subtle",
+			"rules": ["Question 17px medium, padded 16px by 20px, a round gray toggle at the right; answer body-sm at 60 percent."],
+			"source": "src/components/faq/faq-card.tsx:7"
+		},
+		"tabs": {
+			"name": "Tabs",
+			"match": { "roles": ["tab", "tablist"], "words": ["tab", "tabs", "segment", "toggle", "switcher"] },
+			"css": { "padding": "var(--ds-space-2-5) var(--ds-space-5)", "border": "1px solid transparent", "border-radius": "var(--ds-radius-pill)", "font-size": "var(--ds-text-body)", "color": "var(--ds-color-text-muted)", "background-color": "transparent", "transition": "background-color var(--ds-duration-base) var(--ds-easing-out), color var(--ds-duration-base) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-bg-tint)" }, "[aria-selected=true]": { "color": "var(--ds-color-text-brand)", "border-color": "var(--ds-color-border-brand)", "background-color": "var(--ds-color-bg-default)" } },
+			"tailwind": "px-5 py-2.5 rounded-pill border border-transparent text-body text-fg-muted bg-transparent transition-colors duration-200 hover:bg-tint aria-selected:text-fg-brand aria-selected:border-brand aria-selected:bg-surface",
+			"rules": ["Pill tabs; the selected one is an outline blue pill."],
+			"source": "src/components/sections/faq.tsx:167"
+		},
+		"input": {
+			"name": "Input",
+			"match": { "tags": ["input", "textarea", "select"], "words": ["input", "field", "search", "email"] },
+			"css": { "min-height": "var(--ds-space-10)", "padding": "0 var(--ds-space-3-5)", "border": "1px solid var(--ds-color-border-default)", "border-radius": "var(--ds-radius-control)", "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-body)", "transition": "border-color var(--ds-duration-fast) var(--ds-easing-out), box-shadow var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "border-color": "var(--ds-color-border-strong)" }, ":focus": { "border-color": "var(--ds-color-border-brand)", "box-shadow": "var(--ds-shadow-ring-hover)", "outline": "none" } },
+			"tailwind": "min-h-10 px-3.5 border border-line rounded-control bg-surface text-fg text-body transition-[border-color,box-shadow] duration-150 hover:border-line-strong focus:border-brand focus:shadow-ring-hover focus:outline-none",
+			"rules": ["White, hairline border, blue border and soft blue ring on focus."],
+			"source": "context-dashboard src/components/ui/form.tsx:8"
+		},
+		"logo-strip": {
+			"name": "Logo strip",
+			"match": { "words": ["logos", "logo-strip", "clients", "customers", "trusted", "marquee", "partners", "brands"] },
+			"css": { "display": "flex", "align-items": "center", "border": "1px solid var(--ds-color-border-rule)", "border-radius": "var(--ds-radius-card)" },
+			"tailwind": "flex items-center border border-rule rounded-card",
+			"rules": ["Logos in gray (grayscale, black at 55 percent) in cells divided by rules; full color on hover. A label cell at the left with its key phrase in blue."],
+			"source": "src/components/sections/home/featured-logos.tsx:357"
+		},
+		"footer": {
+			"name": "Footer",
+			"match": { "tags": ["footer"], "words": ["footer", "site-footer"], "roles": ["contentinfo"] },
+			"css": { "padding-block": "var(--ds-space-14)", "background-color": "var(--ds-color-bg-dark)", "color": "var(--ds-color-text-inverse)" },
+			"states": { "@media (min-width: 43.2rem)": { "padding-block": "var(--ds-space-20)" } },
+			"tailwind": "py-14 md:py-20 bg-dark text-white",
+			"rules": ["Near black. Link groups in four columns: titles body-sm white, links body-sm white at 60 percent, white on hover. A rule (white at 15 percent) above the copyright row."],
+			"source": "src/components/sections/shared/footer.tsx:78"
+		}
+	},
+	"product": {
+		"app-page": {
+			"name": "App page",
+			"match": { "tags": ["html", "body"] },
+			"css": { "background-color": "var(--ds-color-bg-canvas)", "color": "var(--ds-color-text-default)", "font-family": "var(--ds-font-sans)", "font-size": "var(--ds-text-body-sm)" },
+			"tailwind": "bg-canvas text-fg font-sans text-body-sm antialiased",
+			"rules": ["The canvas (#fafafa) behind everything, white cards on it. The shell is edge to edge, no frame."],
+			"source": "context-dashboard src/app/(dashboard)/layout.tsx:15"
+		},
+		"app-sidebar": {
+			"name": "Sidebar",
+			"match": { "tags": ["aside"], "words": ["sidebar", "sidenav", "side-nav", "drawer", "rail", "menu"] },
+			"css": { "width": "calc(var(--ds-space-32) + var(--ds-space-20) + var(--ds-space-1))", "padding-inline": "var(--ds-space-7)", "background-color": "var(--ds-color-bg-canvas)", "border": "0" },
+			"tailwind": "w-53 px-7 bg-canvas border-0",
+			"rules": ["Same canvas as the page, no border or separate fill. Items vertically centered; Help, Docs and the user menu at the bottom.", "Below 768px it becomes a white drawer with the floating shadow."],
+			"source": "context-dashboard src/components/shell/sidebar.tsx:74"
+		},
+		"app-nav-item": {
+			"name": "Sidebar item",
+			"match": { "tags": ["a", "button"], "words": ["nav-item", "nav-link", "menu-item", "item", "link"], "context": ["sidebar"] },
+			"css": { "display": "flex", "align-items": "center", "gap": "var(--ds-space-2-5)", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-2) 0 var(--ds-space-3)", "border-radius": "var(--ds-radius-control)", "font-size": "var(--ds-text-body-sm)", "color": "var(--ds-color-text-muted)", "text-decoration": "none", "transition": "background-color var(--ds-duration-fast) var(--ds-easing-out), color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-wash-hover)", "color": "var(--ds-color-text-default)" }, "[aria-current=page]": { "background-color": "var(--ds-color-wash-selected)", "color": "var(--ds-color-neutral-80)", "font-weight": "var(--ds-font-weight-medium)" } },
+			"tailwind": "flex items-center gap-2.5 h-8 pl-3 pr-2 rounded-control text-body-sm text-fg-muted no-underline transition-colors duration-150 hover:bg-wash-hover hover:text-fg aria-[current=page]:bg-wash-selected aria-[current=page]:text-neutral-80 aria-[current=page]:font-medium",
+			"rules": ["Selected is a neutral gray wash, never blue, and changes instantly (no sliding highlight). Icons 16px at stroke 1.75."],
+			"source": "context-dashboard src/components/shell/sidebar.tsx:208"
+		},
+		"app-nav-label": {
+			"name": "Sidebar section label",
+			"match": { "words": ["section-label", "group-label", "heading", "label", "title"], "context": ["sidebar"] },
+			"css": { "width": "fit-content", "margin": "var(--ds-space-3) 0 var(--ds-space-1) var(--ds-space-3)", "padding": "1px var(--ds-space-1-5)", "border": "1px solid var(--ds-color-border-default)", "border-radius": "var(--ds-radius-sm)", "font-size": "var(--ds-text-caption)", "text-transform": "none", "letter-spacing": "var(--ds-tracking-normal)", "color": "var(--ds-color-text-muted)" },
+			"tailwind": "w-fit mt-3 mb-1 ml-3 px-1.5 py-px border border-line rounded-sm text-caption normal-case tracking-normal text-fg-muted",
+			"rules": ["A small outlined tag, sentence case, not uppercase."],
+			"source": "context-dashboard src/components/shell/sidebar.tsx:171"
+		},
+		"app-topbar": {
+			"name": "Top bar",
+			"match": { "tags": ["header"], "words": ["topbar", "top-bar", "header", "toolbar", "appbar"], "roles": ["banner"] },
+			"css": { "display": "flex", "align-items": "center", "justify-content": "flex-end", "height": "var(--ds-space-20)", "padding-inline": "var(--ds-space-5)", "background-color": "transparent", "border": "0" },
+			"tailwind": "flex items-center justify-end h-20 px-5 bg-transparent border-0",
+			"rules": ["No title and no bar fill: it holds the menu button (mobile) and the account or credits control at the right."],
+			"source": "context-dashboard src/components/shell/top-bar.tsx:30"
+		},
+		"app-page-column": {
+			"name": "Page column",
+			"match": { "tags": ["main"], "words": ["content", "page", "main", "container", "column"] },
+			"css": { "display": "flex", "flex-direction": "column", "gap": "var(--ds-space-6)", "width": "100%", "max-width": "calc(var(--ds-layout-text) + var(--ds-space-32) + var(--ds-space-16) + var(--ds-space-10))", "margin-inline": "auto", "padding": "var(--ds-space-8) var(--ds-space-8) var(--ds-space-10)" },
+			"tailwind": "flex flex-col gap-6 w-full max-w-220 mx-auto px-8 pt-8 pb-10",
+			"rules": ["One centered column about 880px wide."],
+			"source": "context-dashboard src/app/globals.css:17"
+		},
+		"app-page-header": {
+			"name": "Page header",
+			"match": { "words": ["page-header", "header", "title-bar", "heading"], "context": ["main"] },
+			"css": { "display": "flex", "flex-direction": "column", "align-items": "center", "gap": "var(--ds-space-1)", "text-align": "center" },
+			"tailwind": "flex flex-col items-center gap-1 text-center",
+			"rules": ["Centered: title at h4 (21px, weight 450), one line of body-sm muted text, then the page's main action (brand button) centered below."],
+			"source": "context-dashboard src/components/api-keys/api-keys-page.tsx:59"
+		},
+		"app-page-title": {
+			"name": "Page title",
+			"match": { "tags": ["h1", "h2"], "words": ["title", "page-title", "heading"] },
+			"css": { "font-size": "var(--ds-text-h4)", "line-height": "1.4", "font-weight": "450", "letter-spacing": "var(--ds-tracking-normal)", "color": "var(--ds-color-text-default)" },
+			"tailwind": "text-h4 leading-[1.4] font-[450] tracking-normal text-fg",
+			"rules": ["Quiet: 21px at weight 450. Nothing in the product is bold."],
+			"source": "context-dashboard src/app/globals.css:116"
+		},
+		"app-card": {
+			"name": "Card",
+			"match": { "tags": ["article"], "words": ["card", "panel", "tile", "box", "widget", "module", "pane"] },
+			"css": { "padding": "var(--ds-space-4) var(--ds-space-5)", "border": "0", "border-radius": "var(--ds-radius-card)", "background-color": "var(--ds-color-bg-default)", "box-shadow": "var(--ds-shadow-card)", "transition": "box-shadow var(--ds-duration-fast) var(--ds-easing-out)" },
+			"tailwind": "px-5 py-4 border-0 rounded-card bg-surface shadow-card transition-shadow duration-150",
+			"rules": ["White on the canvas, no border: the hairline is part of the shadow. A clickable card adds the 4px translucent blue ring on hover (shadow-card plus ring-hover).", "Card titles body-sm at weight 400."],
+			"source": "context-dashboard src/app/globals.css:295"
+		},
+		"app-stat": {
+			"name": "Metric",
+			"match": { "words": ["stat", "metric", "kpi", "figure", "value", "number", "count", "total"] },
+			"css": { "font-size": "calc(var(--ds-text-h5) + var(--ds-space-1))", "line-height": "1", "letter-spacing": "var(--ds-tracking-tight)", "font-weight": "var(--ds-font-weight-medium)", "font-variant-numeric": "tabular-nums", "color": "var(--ds-color-text-default)" },
+			"tailwind": "text-[calc(var(--ds-text-h5)+var(--ds-space-1))] leading-none tracking-tight font-medium tabular-nums text-fg",
+			"rules": ["22px medium Rethink Sans with tabular numbers; label above in caption muted (Title Case), unit after it in caption subtle on the same baseline. Not Doto."],
+			"source": "context-dashboard src/components/overview/stat-cards.tsx:63"
+		},
+		"app-table": {
+			"name": "Table",
+			"match": { "tags": ["table"], "words": ["table", "datagrid", "data-table", "grid", "list"] },
+			"css": { "width": "100%", "border-collapse": "collapse", "text-align": "left", "font-size": "var(--ds-text-body-sm)", "background-color": "var(--ds-color-bg-default)", "border-radius": "var(--ds-radius-card)", "box-shadow": "var(--ds-shadow-card)" },
+			"tailwind": "w-full border-collapse text-left text-body-sm bg-surface rounded-card shadow-card",
+			"rules": ["Sits on a card with no outer border and no vertical rules; rows divided by a light line.", "Numbers in tabular figures; two-line cells put the secondary line in caption subtle."],
+			"source": "context-dashboard src/components/api-keys/api-keys-page.tsx:115"
+		},
+		"app-th": {
+			"name": "Table header cell",
+			"match": { "tags": ["th"], "context": ["table"] },
+			"css": { "padding": "var(--ds-space-2-5) var(--ds-space-4)", "font-size": "var(--ds-text-caption)", "font-weight": "var(--ds-font-weight-regular)", "text-transform": "none", "letter-spacing": "var(--ds-tracking-normal)", "color": "var(--ds-color-text-subtle)", "background-color": "color-mix(in srgb, var(--ds-color-neutral-10) 40%, transparent)" },
+			"tailwind": "px-4 py-2.5 text-caption font-normal normal-case tracking-normal text-fg-subtle bg-neutral-10/40",
+			"rules": ["A faint gray band, sentence case, weight 400, not uppercase."],
+			"source": "context-dashboard src/components/api-keys/api-keys-page.tsx:117"
+		},
+		"app-td": {
+			"name": "Table cell and row",
+			"match": { "tags": ["td", "tr"], "context": ["table"] },
+			"css": { "padding": "var(--ds-space-3)", "border-top": "1px solid var(--ds-color-border-subtle)", "font-size": "var(--ds-text-body-sm)", "color": "var(--ds-color-text-default)", "transition": "background-color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "color-mix(in srgb, var(--ds-color-neutral-5) 60%, transparent)" } },
+			"tailwind": "p-3 border-t border-line-subtle text-body-sm text-fg transition-colors duration-150 hover:bg-neutral-5/60",
+			"rules": ["Row hover is a faint wash; clickable rows show a pointer."],
+			"source": "context-dashboard src/components/batches/batches-home.tsx:228"
+		},
+		"app-button-brand": {
+			"name": "Main action button",
+			"match": { "tags": ["button", "a"], "words": ["primary", "btn-primary", "cta", "create", "submit", "save", "new", "add"] },
+			"css": { "display": "inline-flex", "align-items": "center", "justify-content": "center", "gap": "var(--ds-space-1-5)", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-3-5)", "border": "0", "border-radius": "var(--ds-radius-control)", "background-color": "var(--ds-color-bg-brand)", "color": "var(--ds-color-text-on-brand)", "font-size": "var(--ds-text-body-sm)", "white-space": "nowrap", "transition": "background-color var(--ds-duration-fast) var(--ds-easing-out), scale var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-blue-90)" }, ":active": { "scale": "0.97" }, ":disabled": { "opacity": "0.5", "pointer-events": "none" } },
+			"tailwind": "inline-flex items-center justify-center gap-1.5 h-8 px-3.5 border-0 rounded-control bg-brand text-white text-body-sm whitespace-nowrap transition-[background-color,scale] duration-150 hover:bg-blue-90 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none",
+			"rules": ["One blue button per page or form: the main action. Filled black (app-button-black) inside a card where blue would compete; everything else outline or ghost."],
+			"source": "context-dashboard src/components/ui/button.tsx:7"
+		},
+		"app-button-black": {
+			"name": "Neutral filled button",
+			"match": { "tags": ["button", "a"], "words": ["dark", "black", "solid"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-1-5)", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-3-5)", "border": "0", "border-radius": "var(--ds-radius-control)", "background-color": "var(--ds-color-action-primary)", "color": "var(--ds-color-action-primary-fg)", "font-size": "var(--ds-text-body-sm)", "transition": "background-color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-neutral-90)" } },
+			"tailwind": "inline-flex items-center gap-1.5 h-8 px-3.5 border-0 rounded-control bg-primary text-white text-body-sm transition-colors duration-150 hover:bg-neutral-90",
+			"rules": ["For a strong action inside a card next to blue content."],
+			"source": "context-dashboard src/components/ui/button.tsx:10"
+		},
+		"app-button-outline": {
+			"name": "Secondary button",
+			"match": { "tags": ["button", "a"], "words": ["secondary", "outline", "btn-secondary", "default", "btn", "button", "cancel", "back"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-1-5)", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-3-5)", "border": "1px solid var(--ds-color-border-strong)", "border-radius": "var(--ds-radius-control)", "background-color": "transparent", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-body-sm)", "transition": "border-color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "border-color": "var(--ds-color-text-default)" } },
+			"tailwind": "inline-flex items-center gap-1.5 h-8 px-3.5 border border-line-strong rounded-control bg-transparent text-fg text-body-sm transition-colors duration-150 hover:border-fg",
+			"rules": ["Most buttons are this or ghost."],
+			"source": "context-dashboard src/components/ui/button.tsx:12"
+		},
+		"app-button-ghost": {
+			"name": "Ghost and icon button",
+			"match": { "tags": ["button"], "words": ["ghost", "icon", "icon-button", "close", "more", "menu-button", "toggle", "action"] },
+			"css": { "display": "inline-grid", "place-items": "center", "min-width": "var(--ds-space-8)", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-2)", "border": "0", "border-radius": "var(--ds-radius-control)", "background-color": "transparent", "color": "var(--ds-color-text-subtle)", "transition": "background-color var(--ds-duration-fast) var(--ds-easing-out), color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "background-color": "var(--ds-color-wash-hover)", "color": "var(--ds-color-text-default)" } },
+			"tailwind": "inline-grid place-items-center min-w-8 h-8 px-2 border-0 rounded-control bg-transparent text-fg-subtle transition-colors duration-150 hover:bg-wash-hover hover:text-fg",
+			"rules": ["Hover is a wash, not a lift."],
+			"source": "context-dashboard src/components/ui/menu.tsx:173"
+		},
+		"app-button-danger": {
+			"name": "Destructive button",
+			"match": { "tags": ["button"], "words": ["danger", "destructive", "delete", "remove", "revoke", "destroy"] },
+			"css": { "display": "inline-flex", "align-items": "center", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-3-5)", "border": "1px solid var(--ds-color-status-danger)", "border-radius": "var(--ds-radius-control)", "background-color": "transparent", "color": "var(--ds-color-status-danger)", "font-size": "var(--ds-text-body-sm)" },
+			"tailwind": "inline-flex items-center h-8 px-3.5 border border-danger rounded-control bg-transparent text-danger text-body-sm",
+			"rules": ["Outlined red, never filled at rest. Red appears only for destructive actions and errors."],
+			"source": "context-dashboard src/components/ui/hold-button.tsx:6"
+		},
+		"app-input": {
+			"name": "Input",
+			"match": { "tags": ["input", "textarea"], "words": ["input", "field", "search", "textarea"] },
+			"css": { "width": "100%", "height": "var(--ds-space-10)", "padding": "0 var(--ds-space-3-5)", "border": "1px solid var(--ds-color-border-default)", "border-radius": "var(--ds-radius-control)", "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-body-sm)", "transition": "border-color var(--ds-duration-fast) var(--ds-easing-out), box-shadow var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "border-color": "var(--ds-color-border-strong)" }, ":focus": { "border-color": "var(--ds-color-border-brand)", "outline": "none" } },
+			"tailwind": "w-full h-10 px-3.5 border border-line rounded-control bg-surface text-fg text-body-sm transition-[border-color,box-shadow] duration-150 hover:border-line-strong focus:border-brand focus:outline-none",
+			"rules": ["Label above in body-sm (not muted), help and errors below in caption. A search field is 36px tall with a 14px icon."],
+			"source": "context-dashboard src/components/ui/form.tsx:8"
+		},
+		"app-select": {
+			"name": "Select and dropdown trigger",
+			"match": { "tags": ["select"], "words": ["select", "dropdown", "combobox", "picker", "filter"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-1-5)", "height": "var(--ds-space-8)", "padding": "0 var(--ds-space-3)", "border": "1px solid var(--ds-color-border-default)", "border-radius": "var(--ds-radius-control)", "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-muted)", "font-size": "var(--ds-text-body-sm)" },
+			"states": { ":hover": { "border-color": "var(--ds-color-border-strong)" } },
+			"tailwind": "inline-flex items-center gap-1.5 h-8 px-3 border border-line rounded-control bg-surface text-fg-muted text-body-sm hover:border-line-strong",
+			"rules": ["A trailing up-down chevron at 14px; open state border blue."],
+			"source": "context-dashboard src/components/ui/menu.tsx:76"
+		},
+		"app-tabs": {
+			"name": "Tabs and segmented control",
+			"match": { "roles": ["tab", "tablist"], "words": ["tab", "tabs", "segment", "segmented", "range", "period"] },
+			"css": { "height": "var(--ds-space-9)", "padding": "0 var(--ds-space-4)", "border": "0", "border-radius": "var(--ds-radius-control)", "background-color": "transparent", "color": "var(--ds-color-text-subtle)", "font-size": "var(--ds-text-body-sm)", "transition": "color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "color": "var(--ds-color-text-default)" }, "[aria-selected=true]": { "background-color": "var(--ds-color-wash-pill)", "color": "var(--ds-color-text-default)" } },
+			"tailwind": "h-9 px-4 border-0 rounded-control bg-transparent text-fg-subtle text-body-sm transition-colors duration-150 hover:text-fg aria-selected:bg-wash-pill aria-selected:text-fg",
+			"rules": ["No border or container fill; the selected tab is a gray pill."],
+			"source": "context-dashboard src/components/ui/tabs.tsx:20"
+		},
+		"app-badge": {
+			"name": "Status pill",
+			"match": { "words": ["badge", "status", "pill", "tag", "chip", "state", "label"] },
+			"css": { "display": "inline-flex", "align-items": "center", "gap": "var(--ds-space-1-5)", "height": "var(--ds-space-5)", "padding": "0 var(--ds-space-2)", "border": "1px solid var(--ds-color-border-default)", "border-radius": "var(--ds-radius-sm)", "background-color": "transparent", "color": "var(--ds-color-text-muted)", "font-size": "var(--ds-text-caption)" },
+			"tailwind": "inline-flex items-center gap-1.5 h-5 px-2 border border-line rounded-sm bg-transparent text-fg-muted text-caption",
+			"rules": ["Outlined gray; the color comes only from a 6px dot or the status word (success green, warning amber, danger red, running blue)."],
+			"source": "context-dashboard src/components/overview/overview-cards.tsx:129"
+		},
+		"app-tooltip": {
+			"name": "Tooltip",
+			"match": { "roles": ["tooltip"], "words": ["tooltip", "tip", "hint", "popover"] },
+			"css": { "padding": "var(--ds-space-1) var(--ds-space-2)", "border-radius": "var(--ds-radius-control)", "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-caption)", "box-shadow": "var(--ds-shadow-tooltip)" },
+			"tailwind": "px-2 py-1 rounded-control bg-surface text-fg text-caption shadow-tooltip",
+			"rules": ["Light, never dark. Appears after a delay; instantly while another is open."],
+			"source": "context-dashboard src/components/ui/tooltip.tsx:105"
+		},
+		"app-menu": {
+			"name": "Menu, popover and dropdown",
+			"match": { "roles": ["menu", "listbox", "dialog"], "words": ["menu", "dropdown-menu", "popover", "listbox", "options"] },
+			"css": { "padding": "var(--ds-space-1-5)", "border-radius": "var(--ds-radius-shell)", "background-color": "var(--ds-color-bg-default)", "box-shadow": "var(--ds-shadow-floating)" },
+			"tailwind": "p-1.5 rounded-shell bg-surface shadow-floating",
+			"rules": ["Rows: body-sm muted, padded 10px by 6px, hover wash; the selected row black with a blue check. Opens from its trigger (scale 0.97 and fade, 150ms)."],
+			"source": "context-dashboard src/components/ui/menu.tsx:13"
+		},
+		"app-dialog": {
+			"name": "Dialog",
+			"match": { "tags": ["dialog"], "roles": ["dialog", "alertdialog"], "words": ["modal", "dialog", "sheet"] },
+			"css": { "padding": "var(--ds-space-1-5)", "border": "0", "border-radius": "var(--ds-radius-shell)", "background-color": "var(--ds-color-bg-default)", "box-shadow": "var(--ds-shadow-floating)" },
+			"states": { "::backdrop": { "background-color": "var(--ds-color-bg-scrim)" } },
+			"tailwind": "p-1.5 border-0 rounded-shell bg-surface shadow-floating backdrop:bg-scrim",
+			"rules": ["Title at h5, description body-sm muted, body padded 20px, footer actions right-aligned over a light line. Top-aligned at 12vh, not centered."],
+			"source": "context-dashboard src/components/ui/dialog.tsx:19"
+		},
+		"app-empty-state": {
+			"name": "Empty state",
+			"match": { "words": ["empty", "empty-state", "placeholder", "zero", "no-data", "blank"] },
+			"css": { "display": "flex", "flex-direction": "column", "align-items": "center", "padding": "var(--ds-space-16) var(--ds-space-8)", "text-align": "center" },
+			"tailwind": "flex flex-col items-center px-8 py-16 text-center",
+			"rules": ["Title h4, one line body-sm muted (max 480px), then the one next action. Never a blank panel."],
+			"source": "context-dashboard src/components/batches/batches-home.tsx:88"
+		},
+		"app-link": {
+			"name": "Link",
+			"match": { "tags": ["a"], "words": ["link", "more", "view", "manage"] },
+			"css": { "color": "var(--ds-color-text-muted)", "font-size": "var(--ds-text-caption)", "text-decoration": "none", "text-underline-offset": "4px", "transition": "color var(--ds-duration-fast) var(--ds-easing-out)" },
+			"states": { ":hover": { "color": "var(--ds-color-text-default)", "text-decoration": "underline" } },
+			"tailwind": "text-fg-muted text-caption no-underline underline-offset-4 transition-colors duration-150 hover:text-fg hover:underline",
+			"rules": ["Links in the product are neutral, not blue."],
+			"source": "context-dashboard src/components/overview/overview-cards.tsx:103"
+		},
+		"app-chart": {
+			"name": "Chart",
+			"match": { "tags": ["svg", "canvas"], "words": ["chart", "graph", "plot", "sparkline", "series"] },
+			"css": { "font-size": "var(--ds-text-caption)", "color": "var(--ds-color-text-subtle)", "font-variant-numeric": "tabular-nums" },
+			"tailwind": "text-caption text-fg-subtle tabular-nums",
+			"rules": ["Series in order: chart-series-1 to 4; a total line in brand blue, 2px, round caps.", "Horizontal gridlines only (border-subtle), axis labels 11px subtle. Red only for errors."],
+			"source": "context-dashboard src/lib/chart-colors.ts:7"
+		}
+	}
+}

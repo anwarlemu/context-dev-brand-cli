@@ -1,108 +1,52 @@
-import type { Command } from 'commander';
-import { spawn, type ChildProcess } from 'node:child_process';
-import { existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { brandRules, loadConfig } from '../lib/config.js';
-import { gitDiff } from '../lib/git.js';
+import { brand, cli } from '../lib/brand.js';
 import { color, emit } from '../lib/output.js';
-import { dsDir, findProjectRoot } from '../lib/paths.js';
-import { detectProject } from '../lib/project.js';
-import { savedSurface } from '../lib/surface.js';
-import { capture, type ViewportName } from '../review/capture.js';
+import { findProjectRoot } from '../lib/paths.js';
+import { readState, writeState } from '../plan/state.js';
+import { capture } from '../review/capture.js';
 import { critique } from '../review/critique.js';
 
-export function routeFromPath(path: string) {
-	const m = path.replace(/\\/g, '/').match(/(?:^|\/)app\/(.*)page\.[tj]sx?$/);
-	if (!m) return undefined;
-	const route = m[1].split('/').filter((s) => s && !/^\(.*\)$/.test(s)).join('/');
-	return `/${route.replace(/\/$/, '')}`;
-}
+// `review <url>`: screenshots at desktop and phone width, critiqued against the brand's own pages. The result is
+// recorded for the screen it belongs to, which is how a task is checked off.
 
-async function reachable(url: string) {
-	try {
-		const r = await fetch(url, { method: 'GET', signal: AbortSignal.timeout(4000) });
-		return r.status < 500;
-	} catch {
-		return false;
+export async function review(target: string | undefined, opts: { json?: boolean; threshold?: string }) {
+	const root = findProjectRoot();
+	const state = readState(root);
+	if (!target || !/^https?:\/\//.test(target)) {
+		const hint = state?.baseUrl ? `${state.baseUrl}${target ?? '/'}` : 'http://localhost:<port>/<page>';
+		throw new Error(`Start the app and pass the page's URL: \`${cli()} review ${hint}\`.`);
 	}
-}
-
-// A server already on a common port may belong to another app, so a path is always served from this project unless a base URL is given.
-async function ensureServer(root: string): Promise<{ base: string; child?: ChildProcess }> {
-	const base = process.env.DS_REVIEW_BASE_URL;
-	if (base) {
-		if (await reachable(base)) return { base };
-		throw new Error(`DS_REVIEW_BASE_URL ${base} is not reachable.`);
+	const url = new URL(target);
+	const path = url.pathname.replace(/\/index\.html?$/, '/').replace(/(.)\/$/, '$1') || '/';
+	// Match the URL to a screen: its route, or a dynamic route with the same shape (/blog/[slug] for /blog/hello).
+	const screen = state?.screens.find((s) => s.url === path || s.url === `${path}.html`) ?? state?.screens.find((s) => s.url && new RegExp(`^${s.url.replace(/\[[^\]]+\]/g, '[^/]+')}$`).test(path));
+	const surface = screen?.surface ?? state?.surface ?? 'site';
+	const threshold = Number(opts.threshold ?? brand().reviewThreshold);
+	const outDir = join(root, '.ds', 'review', new Date().toISOString().replace(/[:.]/g, '-'));
+	const shots = await capture(target, ['desktop', 'mobile'], outDir);
+	const previous = screen ? state?.reviews[screen.id] : undefined;
+	const { card, model } = await critique(shots, target, surface, previous);
+	const failing = Object.entries(card.scores).filter(([, v]) => v < threshold);
+	mkdirSync(outDir, { recursive: true });
+	writeFileSync(join(outDir, 'scorecard.json'), `${JSON.stringify({ url: target, model, ...card }, null, 2)}\n`);
+	if (state) {
+		state.baseUrl = url.origin;
+		if (screen) state.reviews[screen.id] = { at: new Date().toISOString(), url: target, scores: card.scores, passed: failing.length === 0, punch: card.punch_list.map((p) => ({ severity: p.severity, where: `${p.viewport} / ${p.region}`, issue: p.issue, fix: p.fix })), verdict: card.verdict };
+		writeState(root, state);
 	}
-	if (detectProject(root).framework !== 'next') throw new Error(`Nothing is serving ${base}. Start the dev server or pass a URL.`);
-	const port = 3900 + Math.floor(Math.random() * 90);
-	const child = spawn('npx', ['next', 'dev', '-p', String(port)], { cwd: root, stdio: 'ignore', env: { ...process.env, NEXT_TELEMETRY_DISABLED: '1' } });
-	const url = `http://localhost:${port}`;
-	for (let i = 0; i < 120; i++) {
-		if (await reachable(url)) return { base: url, child };
-		await new Promise((r) => setTimeout(r, 1000));
-	}
-	child.kill();
-	throw new Error('next dev did not start within 120s');
-}
-
-export function registerReview(program: Command) {
-	program
-		.command('review [target]')
-		.description('Screenshot a page and have the editor model critique it against principles.md. Exits non-zero under threshold')
-		.option('--viewports <list>', 'desktop,tablet,mobile')
-		.option('--threshold <n>', 'minimum score for every dimension')
-		.option('--json', 'JSON output')
-		.action(async (target: string | undefined, opts) => {
-			const root = findProjectRoot();
-			const config = loadConfig();
-			// A restyled project keeps its own copy and sections, so it is judged on its look and usability only.
-			if (brandRules(root) === 'styles') {
-				process.env.DS_REVIEW_MODE = 'restyle';
-				const saved = savedSurface(root);
-				if (saved) process.env.DS_REVIEW_SURFACE ??= saved;
-				if (!(target && /^https?:\/\//.test(target)) && detectProject(root).framework !== 'next') throw new Error(`Start the site and pass its URL: \`${config.cli} review http://localhost:<port>/<page>\`.`);
-			}
-			const threshold = Number(opts.threshold ?? config.review.threshold);
-			const viewports = (opts.viewports ? String(opts.viewports).split(',') : config.review.viewports) as ViewportName[];
-			let url: string;
-			let child: ChildProcess | undefined;
-			let diffPaths: string[] = [];
-			if (target && /^https?:\/\//.test(target)) url = target;
-			else {
-				const route = target ? routeFromPath(target) ?? (target.startsWith('/') ? target : undefined) : '/';
-				if (!route) throw new Error(`Cannot map ${target} to a route. Pass a URL or an app/**/page.tsx path.`);
-				if (target && existsSync(join(root, target))) diffPaths = [target];
-				const server = await ensureServer(root);
-				child = server.child;
-				url = `${server.base}${route}`;
-			}
-			const outDir = join(dsDir(root), 'review', new Date().toISOString().replace(/[:.]/g, '-'));
-			try {
-				const shots = await capture(url, viewports, outDir);
-				const source = diffPaths.map((p) => readFileSync(join(root, p), 'utf8')).join('\n');
-				const { card, model } = await critique(shots, gitDiff(root, diffPaths), url, source);
-				const failing = Object.entries(card.scores).filter(([, v]) => v < threshold);
-				const report = { url, model, threshold, pass: failing.length === 0, ...card, screenshots: shots.map((s) => s.path) };
-				mkdirSync(join(dsDir(root), 'review'), { recursive: true });
-				writeFileSync(join(outDir, 'scorecard.json'), `${JSON.stringify(report, null, 2)}\n`);
-				writeFileSync(join(dsDir(root), 'review', 'last.json'), `${JSON.stringify(report, null, 2)}\n`);
-				emit(opts, report, () =>
-					[
-						`Review of ${url} (${model}), threshold ${threshold}`,
-						...Object.entries(card.scores).map(([k, v]) => `  ${k.padEnd(15)} ${v < threshold ? color.red(String(v)) : color.green(String(v))}`),
-						'',
-						'Punch list:',
-						...card.punch_list.map((p, i) => `  ${i + 1}. [${p.severity}] ${p.viewport} / ${p.region}: "${p.quote}"\n     ${p.issue}\n     Fix: ${p.fix}`),
-						'',
-						card.verdict,
-						failing.length ? color.red(`Below threshold: ${failing.map(([k]) => k).join(', ')}`) : color.green('All scores at or above threshold. A person still signs off.'),
-						`Screenshots: ${outDir}`,
-					].join('\n'),
-				);
-				process.exitCode = failing.length ? 1 : 0;
-			} finally {
-				child?.kill();
-			}
-		});
+	emit(opts, { url: target, screen: screen?.id, model, threshold, pass: failing.length === 0, ...card, screenshots: outDir }, () =>
+		[
+			`Review of ${target}${screen ? ` (screen ${screen.id})` : ''}, threshold ${threshold}`,
+			`  For: ${card.purpose}`,
+			...Object.entries(card.scores).map(([k, v]) => `  ${k.padEnd(15)} ${v < threshold ? color.red(String(v)) : color.green(String(v))}`),
+			'',
+			...card.punch_list.map((p, i) => `  ${i + 1}. [${p.severity}] ${p.viewport} / ${p.region}: ${p.issue}\n     Fix: ${p.fix}`),
+			'',
+			card.verdict,
+			failing.length ? color.red(`Below ${threshold}: ${failing.map(([k]) => k).join(', ')}. Fix the punch list (styling only) and review again.`) : color.green(`Passed. Run \`${cli()}\` for the next task.`),
+			color.dim(`Screenshots: ${outDir}`),
+		].join('\n'),
+	);
+	process.exitCode = failing.length ? 1 : 0;
 }

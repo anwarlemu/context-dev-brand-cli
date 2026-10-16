@@ -1,51 +1,31 @@
 {
   "name": "context-ds",
-  "version": "0.2.0",
-  "description": "Design system harness for AI coding agents: templates, docs at the right time, and checks that block off-brand code.",
+  "version": "2.0.0",
+  "description": "Make any website or app look like Context.dev, and keep coding agents on it.",
   "type": "module",
   "bin": {
     "context-ds": "./bin.js"
   },
   "files": [
     "bin.js",
-    "src/skill",
     "dist",
-    "ds.config.json",
-    "principles.md",
-    "voice.md",
-    "product.md",
-    "intents.json",
-    "tokens",
-    "build",
-    "registry.json",
-    "registry",
-    "checks",
-    "styles",
-    "review",
-    "public/r",
-    "public/r-local",
-    "src/ci"
+    "brand",
+    "build"
   ],
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.json",
-    "tokens": "tsx scripts/build-tokens.ts",
-    "registry:build": "tsx scripts/build-registry.ts && shadcn build registry.json --output public/r && tsx scripts/post-registry.ts",
+    "build": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
     "test": "vitest run",
-    "ci": "npm run build && npm run tokens && tsx scripts/ci-limits.ts && vitest run",
-    "setup": "npm install && npm run build && npm run tokens && npm run registry:build && npm test",
-    "prepare": "tsc -p tsconfig.json",
-    "port": "node scripts/port-dots.mjs \"${DS_SITE:-$HOME/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp}\" && node scripts/port-benchmark.mjs \"${DS_SITE:-$HOME/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp}\" && node scripts/port-demo.mjs \"${DS_SITE:-$HOME/Desktop/TRIAGE/Work/Agencidev/brand-dev-webapp}\""
+    "ci": "npm run build && node scripts/ci-limits.mjs && vitest run",
+    "prepare": "tsc -p tsconfig.json && node scripts/build-brand.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
     "@babel/parser": "^7.29.9",
     "commander": "^15.0.0",
     "picocolors": "^1.1.1",
-    "shadcn": "^4.21.0",
-    "yaml": "^2.9.1",
     "zod": "^4.6.5"
   },
   "optionalDependencies": {
@@ -53,14 +33,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.4",
-    "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
-    "lucide-react": "^1.57.0",
-    "motion": "^12.43.0",
-    "react": "^19.3.0",
-    "style-dictionary": "^5.5.5",
-    "tailwind-merge": "^3.7.0",
-    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vitest": "^5.0.3"
   }

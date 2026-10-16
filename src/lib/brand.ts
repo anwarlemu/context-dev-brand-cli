@@ -1,0 +1,73 @@
+import { readFileSync } from 'node:fs';
+import { pkgPath } from './paths.js';
+
+// Everything the engine knows about the brand comes from the package's brand/ folder (built to build/): names,
+// tokens, element styles. No brand value is written in src/.
+
+export type BrandConfig = { name: string; bin: string; source: string; reviewModel: string; reviewThreshold: number };
+
+let config: BrandConfig | undefined;
+export function brand(): BrandConfig {
+	config ??= JSON.parse(readFileSync(pkgPath('brand', 'brand.json'), 'utf8'));
+	return config!;
+}
+
+/** The command agents run. Always through npx, since the binary is not on the shell's PATH in apps. */
+export const cli = () => `npx ${brand().bin}`;
+
+type TokenFile = { site: Record<string, string>; product: Record<string, string>; dark: Record<string, string>; theme: Record<string, string> };
+let tokenFile: TokenFile | undefined;
+export function tokens(): TokenFile {
+	tokenFile ??= JSON.parse(readFileSync(pkgPath('build', 'tokens.json'), 'utf8'));
+	return tokenFile!;
+}
+
+export const isToken = (name: string) => name in tokens().site || name in tokens().product;
+
+/** Sizes in px at a 16px root, for snapping a site's own values to the nearest brand step. */
+export type Scale = [name: string, px: number][];
+let scaleCache: { text: Scale; space: Scale; radius: Scale; duration: Scale } | undefined;
+export function scales() {
+	if (scaleCache) return scaleCache;
+	const t = tokens().site;
+	const px = (v: string) => (v.endsWith('rem') ? Number.parseFloat(v) * 16 : v.endsWith('px') ? Number.parseFloat(v) : Number.NaN);
+	const pick = (re: RegExp, read: (v: string) => number) => Object.entries(t).filter(([k]) => re.test(k)).map(([k, v]) => [k, read(v)] as [string, number]).filter(([, v]) => Number.isFinite(v) && v > 0);
+	scaleCache = {
+		text: pick(/^--ds-text-(h[1-5]|body-lg|body|body-sm|caption)$/, px),
+		space: pick(/^--ds-space-[\d-]+$/, px),
+		radius: pick(/^--ds-radius-(sm|control|card|shell)$/, px),
+		duration: pick(/^--ds-duration-/, (v) => Number.parseFloat(v)),
+	};
+	return scaleCache;
+}
+
+export const nearest = (list: Scale, value: number) => list.reduce((a, b) => (Math.abs(b[1] - value) < Math.abs(a[1] - value) ? b : a))[0];
+
+export type BrandTheme = 'site' | 'product' | 'product-dark';
+
+/** A brand color's literal hex in a theme, for code that cannot read CSS variables (native apps, chart configs, SVG files). */
+export function colorHex(name: string, theme: BrandTheme = 'site'): string | undefined {
+	const t = tokens();
+	const table = theme === 'site' ? t.site : theme === 'product' ? t.product : { ...t.product, ...t.dark };
+	const raw = table[`--ds-color-${name}`];
+	if (!raw) return undefined;
+	if (raw.startsWith('#')) return raw.toUpperCase();
+	const rgb = raw.match(/rgba?\(\s*(\d+)[\s,]+(\d+)[\s,]+(\d+)(?:\s*[/,]\s*([\d.]+))?/);
+	if (!rgb) return undefined;
+	const hex = [rgb[1], rgb[2], rgb[3]].map((n) => Number(n).toString(16).padStart(2, '0')).join('').toUpperCase();
+	return rgb[4] === undefined ? `#${hex}` : `#${hex}${Math.round(Number(rgb[4]) * 255).toString(16).padStart(2, '0').toUpperCase()}`;
+}
+
+let themeNames: Map<string, string> | undefined;
+/** The Tailwind theme's class name for a brand color token (bg-default is `surface`, text-muted is `fg-muted`). */
+export function themeClass(tokenName: string) {
+	themeNames ??= new Map(Object.entries(tokens().theme).map(([cls, name]) => [name, cls]));
+	return themeNames.get(tokenName) ?? themeNames.get(tokenName.replace(/^(bg|border)-/, ''));
+}
+
+export type Element = { name: string; match: { tags?: string[]; words?: string[]; roles?: string[]; context?: string[] }; css: Record<string, string>; states?: Record<string, Record<string, string>>; tailwind: string; rules: string[]; source: string };
+let elementFile: { site: Record<string, Element>; product: Record<string, Element> } | undefined;
+export function elements() {
+	elementFile ??= JSON.parse(readFileSync(pkgPath('brand', 'elements.json'), 'utf8'));
+	return elementFile!;
+}

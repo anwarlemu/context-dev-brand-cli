@@ -1,8 +1,5 @@
-node_modules
-dist
-**/.ds/session-cache.json
-**/.ds/review
-*.log
-.DS_Store
-.stage
-.stage2
+build/
+dist/
+node_modules/
+.stage/
+.stage2/

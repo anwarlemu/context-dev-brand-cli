@@ -1,202 +1,134 @@
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { checkText, findingKey, formatFinding, isInScope, newFindings, runCheck } from '../check/engine.js';
-import { loadSource } from '../check/source.js';
-import { gatherInfo } from '../commands/info.js';
-import { installPreCommit } from '../commands/init.js';
-import { resolveTask, templateIndex } from '../commands/resolve.js';
-import { brandRules, loadCheckConfig, loadConfig } from '../lib/config.js';
-import { changedFiles } from '../lib/git.js';
-import { matchesAny } from '../lib/glob.js';
-import { detectProject, supportsComponents } from '../lib/project.js';
-import { dsDir } from '../lib/paths.js';
-import { findItem, itemByImport, type RegistryItem, renderDocs } from '../lib/registry.js';
-import { detectComponents, findRecipe, renderRecipe, surfaceFor } from '../lib/recipes.js';
-import { updateAvailable } from '../lib/source.js';
-import { readInstalled, sessionState } from '../lib/state.js';
+import { changedFiles, checkable, checkText, formatFinding, newFindings, runCheck } from '../check/engine.js';
+import { installPreCommit } from '../install/agents.js';
+import { Writer } from '../install/files.js';
+import { brand, cli } from '../lib/brand.js';
+import { elementsIn, renderElement } from '../plan/elements.js';
+import { readState } from '../plan/state.js';
+import { mainScreens, taskStatus } from '../plan/tasks.js';
+import { surfaceOf } from '../project/surface.js';
 import { type HookInput, promptOf, proposedWrites, sessionIdOf } from './payload.js';
+
+// The hooks agents run on their own events. Writes that add off-brand values are blocked before they reach disk; the
+// agent cannot finish while the files it changed fail the check; the brand styling for the elements it edits is shown
+// once per session.
 
 export type HookResult = { stdout?: string; stderr?: string; exitCode?: number; json?: Record<string, unknown> };
 
-const MAX_DOCS_PER_INJECTION = 3;
-
-function injectDocs(root: string, sessionId: string, items: RegistryItem[], reason: string) {
-	const state = sessionState(root, sessionId);
-	const installed = readInstalled(root);
-	const fresh = items.filter((i, idx) => items.findIndex((x) => x.id === i.id) === idx && !state.entry.injected.includes(i.id)).slice(0, MAX_DOCS_PER_INJECTION);
-	if (!fresh.length) return '';
-	state.entry.injected.push(...fresh.map((i) => i.id));
-	state.save();
-	return [`${loadConfig().brand} design system: docs for ${fresh.map((i) => i.id).join(', ')} (${reason}). Follow them.`, ...fresh.map((i) => `\n--- ${i.id} ---\n${renderDocs(i, installed[i.id]?.version)}`)].join('\n');
-}
-
-const MAX_RECIPES_PER_INJECTION = 3;
-
-/** The recipes for the elements a write touches (its buttons, cards, fields...), each shown once per session. */
-function injectRecipes(root: string, sessionId: string, rel: string, text: string) {
-	const ids = [...new Set(detectComponents(rel, text, surfaceFor(root, rel)).map((c) => c.recipe))];
-	if (!ids.length) return '';
-	const state = sessionState(root, sessionId);
-	const fresh = ids.filter((id) => !state.entry.injected.includes(`recipe:${id}`)).slice(0, MAX_RECIPES_PER_INJECTION);
-	if (!fresh.length) return '';
-	state.entry.injected.push(...fresh.map((id) => `recipe:${id}`));
-	state.save();
-	const recipes = fresh.map((id) => findRecipe(id)).filter((r) => !!r);
-	const format = /\.(tsx|jsx)$/.test(rel) && (detectProject(root).tailwindMajor ?? 0) >= 4 ? 'tailwind' : 'css';
-	return [`${loadConfig().brand} styling for the elements in ${rel}. Style each one this way; keep its content and the elements as they are. (\`${loadConfig().cli} style <id>\` for any other element.)`, ...recipes.map((r) => `\n--- ${r.id} ---\n${renderRecipe(r, { format })}`)].join('\n');
+type Session = { startedAt: number; shown: string[]; stopBlocks: number; queueNudged?: boolean; updatedAt: number };
+const sessionFile = (root: string) => join(root, '.ds', 'session.json');
+function session(root: string, id: string) {
+	let all: Record<string, Session> = {};
+	try {
+		all = JSON.parse(readFileSync(sessionFile(root), 'utf8'));
+	} catch {}
+	// A session the start hook never saw counts every change still uncommitted.
+	const entry = all[id] ?? { startedAt: 0, shown: [], stopBlocks: 0, updatedAt: Date.now() };
+	return {
+		entry,
+		save() {
+			entry.updatedAt = Date.now();
+			for (const [k, v] of Object.entries(all)) if (v.updatedAt < Date.now() - 7 * 86400000) delete all[k];
+			all[id] = entry;
+			mkdirSync(join(root, '.ds'), { recursive: true });
+			writeFileSync(sessionFile(root), JSON.stringify(all));
+		},
+	};
 }
 
 export function sessionStart(root: string, input: HookInput = {}): HookResult {
-	const state = sessionState(root, sessionIdOf(input));
-	state.entry.startedAt ??= Date.now();
-	state.save();
-	const info = gatherInfo(root);
-	const bin = loadConfig().cli;
-	let update: ReturnType<typeof updateAvailable>;
+	const s = session(root, sessionIdOf(input));
+	s.entry.startedAt = Date.now();
+	s.save();
 	try {
-		update = updateAvailable(root);
-		installPreCommit(root);
+		installPreCommit(new Writer(root));
 	} catch {}
-	const lines = [
-		`${info.brand} design system ${info.version} is active in this project (${bin}).`,
-		`Framework: ${info.project.framework} ${info.project.frameworkVersion ?? ''}. Tailwind: ${info.project.tailwind ?? 'none'}. Tokens: ${info.tokenVersion}.`,
-		`Installed: ${info.installed.length ? info.installed.map((i) => `${i.id.split('/').pop()}@${i.installed}${i.drift === 'behind' ? '*' : ''}`).join(', ') : 'none yet'}.`,
-		info.installed.some((i) => i.drift === 'behind') ? `* behind the registry. Run \`${bin} diff\`.` : '',
-		update ? `A newer design system is on ${update.ref} (${update.installed.slice(0, 7)} -> ${update.latest.slice(0, 7)}). Run \`${bin} update\` first and commit what it changes.` : '',
-		brandRules(root) === 'styles' ? `Styling only: this site keeps its own copy and elements; how they look follows the brand (var(--ds-*) tokens, \`${bin} style <component>\` recipes). To apply the brand when asked: \`${bin} apply\`.` : supportsComponents(info.project) ? `Before any UI work run \`${bin} resolve "<task>"\` and start from the template it returns.` : `Components and templates need React with Tailwind 4, which this project does not use: style with var(--ds-*) tokens (\`${bin} tokens --search <term>\`).`,
-		`Writes are checked before they reach disk. \`${bin} check\` must pass before you finish.`,
-	].filter(Boolean);
-	return { stdout: lines.slice(0, 15).join('\n') };
+	const state = readState(root);
+	const b = brand();
+	if (!state) return { stdout: `${b.name} design system is installed here. To apply it, run \`${cli()}\` and do the task it prints.` };
+	const screens = mainScreens(state);
+	const done = screens.filter((sc, i) => taskStatus(root, state, sc, i).done).length;
+	return { stdout: [`${b.name} design system is active (${state.surface}): ${done} of ${screens.length} screens done.`, done < screens.length ? `Continue with \`${cli()}\`: it prints the next task.` : 'Keep new work on the brand: style values are brand tokens; `look <file>` shows how each element is styled.', 'Writes with off-brand values are blocked; you cannot finish while the check fails.'].join('\n') };
 }
 
 const APPLY_BRAND = /\b(apply|applying|restyle|rebrand|re-brand|reskin|re-skin|theme)\b[\s\S]{0,80}\b(brand|design system|styl\w*|look|tokens?)\b|\b(brand|design system)\b[\s\S]{0,40}\b(onto|to (this|my|the|our))\b/i;
 
 export function userPromptSubmit(root: string, input: HookInput): HookResult {
 	const prompt = promptOf(input);
-	if (!prompt.trim()) return {};
-	const bin = loadConfig().cli;
-	// Applying the brand restyles what exists. It never means building the brand's own pages, so no template is offered.
-	if (APPLY_BRAND.test(prompt)) return { stdout: `${bin}: to apply the brand, run \`${bin} apply\`, then replace the style values it lists with tokens. Change styling only: keep every word, link, image, element and section. Read what each screen is for first and keep its main action and key information the most prominent. Do not add templates, sections or components.` };
-	if (brandRules(root) === 'styles' || !supportsComponents(detectProject(root))) return {};
-	const result = resolveTask(prompt);
-	if (result.kind === 'match') {
-		const item = result.item ? findItem(result.item) : undefined;
-		const docs = item ? injectDocs(root, sessionIdOf(input), [item], `task matched "${result.matched}"`) : '';
-		return { stdout: [`${bin} resolve: "${result.matched}" -> ${result.target}. ${result.instruction}`, docs].filter(Boolean).join('\n\n') };
-	}
-	if (result.kind === 'out_of_scope') return { stdout: `${bin} resolve: "${result.matched}" is outside the brand system. ${result.instruction}` };
-	if (!result.ui) return {};
-	return { stdout: [`${bin} resolve: no template matched this task. Pick one explicitly with \`${bin} scaffold <template>\` or ask the user:`, ...templateIndex().map((l) => `  ${l}`)].join('\n') };
+	if (!APPLY_BRAND.test(prompt)) return {};
+	return { stdout: `${cli()}: to apply the brand, run \`${cli()}\` and do the task it prints; run it again after each task until it says the project is done. Styling only: keep every word, element and each screen's purpose.` };
 }
 
 export function preToolUse(root: string, input: HookInput): HookResult {
-	const config = loadCheckConfig(root);
-	const writes = proposedWrites(input, root).filter((w) => isInScope(w.relPath, config));
+	const own = new RegExp(`(^|/)${brand().bin}/`);
+	const writes = proposedWrites(input, root).filter((w) => checkable(w.relPath) && !own.test(w.relPath));
 	if (!writes.length) return {};
-	const bin = loadConfig().cli;
 	const blocked: string[] = [];
 	const notes: string[] = [];
+	const state = readState(root);
+	const s = session(root, sessionIdOf(input));
 	for (const write of writes) {
-		const after = checkText(root, write.relPath, write.after, { fast: true, config });
-		const before = write.before ? checkText(root, write.relPath, write.before, { fast: true, config }) : { findings: [], overrides: [] };
-		const introduced = newFindings(before.findings, after.findings).filter((f) => f.severity === 'error');
+		const after = checkText(write.relPath, write.after);
+		const before = write.before ? checkText(write.relPath, write.before) : { findings: [], overrides: [] };
+		const introduced = newFindings(before.findings, after.findings);
 		if (introduced.length) {
-			blocked.push(`${write.relPath}: ${introduced.length} brand error${introduced.length > 1 ? 's' : ''}`, ...introduced.slice(0, 25).map(formatFinding), introduced.length > 25 ? `...and ${introduced.length - 25} more` : '');
+			blocked.push(`${write.relPath}: ${introduced.length} off-brand value${introduced.length > 1 ? 's' : ''}`, ...introduced.slice(0, 25).map(formatFinding));
 			continue;
 		}
-		const file = loadSource(write.relPath, write.after);
-		const items = file.imports.map((i) => itemByImport(i.source)).filter((i): i is RegistryItem => !!i);
-		const ordered = [...items.filter((i) => i.type === 'template'), ...items.filter((i) => i.type === 'block'), ...items.filter((i) => i.type === 'ui')];
-		const docs = injectDocs(root, sessionIdOf(input), ordered, `imported in ${write.relPath}`);
-		notes.push(injectRecipes(root, sessionIdOf(input), write.relPath, write.after));
-		const newOverrides = newFindings(before.overrides, after.overrides);
-		notes.push(docs, newOverrides.length ? `ds-override recorded in ${write.relPath}: ${newOverrides.map((o) => `${o.rule} (${o.overridden})`).join('; ')}. Report it in your summary.` : '');
+		// The brand styling for the elements this write touches, each kind once per session.
+		if (state) {
+			const surface = surfaceOf(write.relPath, { surface: state.surface, mixed: state.mixed, product: 0, site: 0, reasons: [] });
+			const kinds = [...new Set(elementsIn(write.relPath, write.after, surface).map((h) => h.kind))].filter((k) => !s.entry.shown.includes(`${surface}:${k}`)).slice(0, 3);
+			if (kinds.length) {
+				s.entry.shown.push(...kinds.map((k) => `${surface}:${k}`));
+				notes.push(`${brand().name} styling for elements in ${write.relPath} (\`${cli()} look ${write.relPath}\` for all):\n${kinds.map((k) => renderElement(k, surface, { tailwind: /\.(tsx|jsx)$/.test(write.relPath) })).join('\n\n')}`);
+			}
+		}
+		const added = newFindings(before.overrides, after.overrides);
+		if (added.length) notes.push(`ds-override added in ${write.relPath}: ${added.map((o) => `${o.rule} (${o.overridden})`).join('; ')}. It needs the user's approval (\`${cli()} approve\`); report it.`);
 	}
-	if (blocked.length) {
-		return {
-			exitCode: 2,
-			stderr: [`${bin} blocked this write. Nothing was written.`, ...blocked, `Fix them and write again. Only if a deviation is genuinely required, add \`// ds-override: <reason>\` above the line and report it in your summary.`].filter(Boolean).join('\n'),
-		};
-	}
-	const context = notes.filter(Boolean).join('\n\n');
-	if (!context) return {};
-	return { json: { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'allow', additionalContext: context } } };
-}
-
-export function postToolUse(root: string, input: HookInput): HookResult {
-	const bin = loadConfig().cli;
-	const command = String(input.tool_input?.command ?? input.command ?? '');
-	const m = command.match(new RegExp(`${loadConfig().bin}(?:/bin\\.js)?\\s+(add|scaffold)\\s+([^;&|]+)`));
-	if (!m) return {};
-	const names = m[2].split(/\s+/).filter((w) => w && !w.startsWith('-') && !w.includes('='));
-	const items = names.map((n) => findItem(n)).filter((i): i is RegistryItem => !!i);
-	const docs = injectDocs(root, sessionIdOf(input), items, `just ran ${bin} ${m[1]}`);
-	return docs ? { json: { hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext: docs } } } : {};
-}
-
-function reviewedSince(root: string, files: string[]) {
-	const marker = join(dsDir(root), 'review', 'last.json');
-	if (!existsSync(marker)) return false;
-	const reviewedAt = statSync(marker).mtimeMs;
-	return files.every((f) => !existsSync(join(root, f)) || statSync(join(root, f)).mtimeMs <= reviewedAt);
+	s.save();
+	if (blocked.length) return { exitCode: 2, stderr: [`${cli()} blocked this write; nothing was written.`, ...blocked, 'Use the brand token each line names, and write again.'].join('\n') };
+	return notes.length ? { json: { hookSpecificOutput: { hookEventName: 'PreToolUse', permissionDecision: 'allow', additionalContext: notes.join('\n\n') } } } : {};
 }
 
 export function stop(root: string, input: HookInput): HookResult {
-	const bin = loadConfig().cli;
-	const state = sessionState(root, sessionIdOf(input));
-	const config = loadCheckConfig(root);
-	const since = state.entry.startedAt ?? 0;
-	const changed = changedFiles(root).filter((f) => isInScope(f, config) && existsSync(join(root, f)) && statSync(join(root, f)).mtimeMs >= since);
-	if (!changed.length) return {};
-	const result = runCheck({ projectRoot: root, paths: changed.map((f) => join(root, f)) });
-	const errors = result.findings.filter((f) => f.severity === 'error');
-	if (errors.length && errors.every((f) => f.rule === 'override-approval')) {
-		// The agent cannot fix this itself: only a person can approve. Say so once, then let it finish and report.
-		if (state.entry.injected.includes('approval-asked')) return { stdout: `${bin}: ${errors.length} ds-override(s) still wait for the user's approval.` };
-		state.entry.injected.push('approval-asked');
-		state.save();
-		return { json: { decision: 'block', reason: [`${bin}: ${errors.length} ds-override(s) you added need a person's approval. You cannot approve them.`, ...errors.map((f) => `${f.file}:${f.line}  ${f.overrideOf} (${f.overridden})`), `Either remove each override and fix the finding properly, or end your turn by listing them and asking the user to run \`${bin} approve\` in their terminal. Until then the commit hook and CI will fail.`].join('\n') } };
+	const s = session(root, sessionIdOf(input));
+	const changed = changedFiles(root).filter((f) => checkable(f) && existsSync(join(root, f)) && statSync(join(root, f)).mtimeMs >= s.entry.startedAt);
+	if (changed.length) {
+		const result = runCheck(root, { paths: changed });
+		const own = result.findings.filter((f) => f.rule !== 'override-approval');
+		if (own.length) {
+			s.entry.stopBlocks++;
+			s.save();
+			if (s.entry.stopBlocks > 5) return { stderr: `${cli()}: ${own.length} off-brand values remain after 5 tries. Stopping so a person can look; tell the user.` };
+			return { json: { decision: 'block', reason: [`${cli()} check: ${own.length} values in files you changed are not brand tokens. You are not done.`, ...own.slice(0, 30).map(formatFinding), `Fix each (\`${cli()} check --fix\` applies exact matches), then finish.`].join('\n') } };
+		}
+		const approvals = result.findings.filter((f) => f.rule === 'override-approval');
+		if (approvals.length) return { stdout: `${cli()}: ${approvals.length} ds-override(s) wait for the user's approval (\`${cli()} approve\`). List them in your summary.` };
 	}
-	if (result.errors) {
-		state.entry.stopBlocks++;
-		state.save();
-		if (state.entry.stopBlocks > 5) return { stderr: `${bin}: ${result.errors} errors remain after 5 attempts. Stopping so a person can look. Tell the user.` };
-		const lines = result.findings.filter((f) => f.severity === 'error').slice(0, 30).map(formatFinding);
-		return { json: { decision: 'block', reason: [`${bin} check: ${result.errors} brand errors in files you changed. You are not done.`, ...lines, `Fix every error (safe fixes: \`${bin} check --fix\`), then finish.`].join('\n') } };
+	// While applying the brand, finishing early is a miss: point at the next task once per session.
+	const state = readState(root);
+	if (state && !s.entry.queueNudged) {
+		const screens = mainScreens(state);
+		const open = screens.findIndex((sc, i) => !taskStatus(root, state, sc, i).done);
+		if (open >= 0 && changed.length) {
+			s.entry.queueNudged = true;
+			s.save();
+			return { json: { decision: 'block', reason: `${cli()}: the brand is not fully applied yet (${screens.length - open} screens left). Run \`${cli()}\` and do the next task, or, if the user asked you to stop here, say which screens are left.` } };
+		}
 	}
-	const touchesTemplates = changed.filter((f) => matchesAny(f, config.pageGlobs));
-	const reviewNudged = state.entry.injected.includes('review-nudge');
-	// Review scores pages against the brand's own page rubric, so it is for apps built from the templates, not restyled sites.
-	if (brandRules(root) === 'all' && touchesTemplates.length && !reviewedSince(root, touchesTemplates) && !reviewNudged) {
-		state.entry.injected.push('review-nudge');
-		state.save();
-		return { json: { decision: 'block', reason: `${bin} check passed. Done is not good: you changed ${touchesTemplates.join(', ')}. Run \`${bin} review ${touchesTemplates[0]}\` and address the punch list before handing over. If review cannot run (no ANTHROPIC_API_KEY or no dev server), say so in your summary.` } };
-	}
-	if (result.overrides.length) return { stdout: `${bin}: ${result.overrides.length} ds-override(s) in changed files. List them in your summary: ${result.overrides.map((o) => `${o.file}:${o.line} ${o.overridden}`).join('; ')}` };
 	return {};
 }
 
-export function cursorAfterEdit(root: string, input: HookInput): HookResult {
-	const path = input.file_path ?? input.filePath;
-	if (!path) return {};
-	const rel = String(path).startsWith(root) ? String(path).slice(root.length + 1) : String(path);
-	const config = loadCheckConfig(root);
-	if (!isInScope(rel, config) || !existsSync(join(root, rel))) return {};
-	const { findings } = checkText(root, rel, readFileSync(join(root, rel), 'utf8'), { config });
-	return findings.length ? { stderr: findings.map(formatFinding).join('\n') } : {};
-}
-
-// Cursor's preToolUse answers with permission and an agent_message, which Cursor feeds back to the agent on a deny.
 export function cursorPreToolUse(root: string, input: HookInput): HookResult {
 	const r = preToolUse(root, input);
-	if (r.exitCode === 2) return { json: { permission: 'deny', agent_message: r.stderr, user_message: `${loadConfig().cli} blocked a write with brand errors.` } };
+	if (r.exitCode === 2) return { json: { permission: 'deny', agent_message: r.stderr, user_message: `${cli()} blocked a write with off-brand values.` } };
 	return { json: { permission: 'allow' } };
 }
 
 export function cursorStop(root: string, input: HookInput): HookResult {
-	const r = stop(root, input);
-	const reason = (r.json as { reason?: string } | undefined)?.reason;
+	const reason = (stop(root, input).json as { reason?: string } | undefined)?.reason;
 	return reason ? { json: { followup_message: reason } } : {};
 }
-
-export { findingKey };

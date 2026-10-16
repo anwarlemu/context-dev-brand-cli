@@ -3,7 +3,9 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const PKG_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
+export const pkgPath = (...parts: string[]) => join(PKG_ROOT, ...parts);
 
+/** The project the command runs in: the nearest folder up with a package.json, a .git or a plain index.html. */
 export function findProjectRoot(start = process.cwd()): string {
 	let dir = resolve(start);
 	while (true) {
@@ -13,6 +15,3 @@ export function findProjectRoot(start = process.cwd()): string {
 		dir = parent;
 	}
 }
-
-export const pkgPath = (...parts: string[]) => join(PKG_ROOT, ...parts);
-export const dsDir = (projectRoot: string) => join(projectRoot, '.ds');

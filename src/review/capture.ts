@@ -2,12 +2,12 @@ import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
-export const VIEWPORTS = { desktop: { width: 1440, height: 900 }, tablet: { width: 834, height: 1112 }, mobile: { width: 390, height: 844 } } as const;
+export const VIEWPORTS = { desktop: { width: 1440, height: 900 }, mobile: { width: 390, height: 844 } } as const;
 export type ViewportName = keyof typeof VIEWPORTS;
 export type Shot = { viewport: ViewportName; index: number; path: string; top: number; height: number };
 
 const SLICE = 1800;
-const MAX_SLICES_PER_VIEWPORT = 8;
+const MAX_SLICES_PER_VIEWPORT = 6;
 
 function cachedChromium(): string | undefined {
 	const roots = [process.env.PLAYWRIGHT_BROWSERS_PATH, join(homedir(), 'Library', 'Caches', 'ms-playwright'), join(homedir(), '.cache', 'ms-playwright')].filter((r): r is string => !!r && existsSync(r));

@@ -1,0 +1,10 @@
+# {{brand}} design system
+- This project uses the {{brand}} design system for how it looks. It never changes what the project says or does.
+- To apply it or continue applying it: run `{{cli}}` and do the task it prints; run it again after each task until it says the project is done.
+- Restyle only: keep every word, link, image and element, their order and each screen's purpose. Never add sections, components or copy.
+- The only markup you may add: `data-ds-dots` on the home hero and `<span class="ds-accent">` around the closing words of a heading.
+- Style each element the way `{{cli}} look <file>` shows (exact CSS and Tailwind, with states).
+- Style values are brand tokens, `var(--ds-*)`; `{{cli}} tokens <term>` finds one. No raw colors, sizes, fonts or timings.
+- Writes that add off-brand values are blocked, and you cannot finish while `{{cli}} check` has errors.
+- A screen is done when `{{cli}} review <url>` scores it 7 or more. Fix its punch list, do not argue with it.
+- A `ds-override: <reason>` comment only counts after the user approves it with `{{cli}} approve`.

@@ -1,3 +1,7 @@
+> **2026-10-16, v2:** the CLI was rebuilt around one job: apply the brand to any existing or new interface and keep
+> agents on it (see `README.md`). The template, registry and intent half of this brief (B3, M4, M8) was dropped by the
+> brand owner's decision; the outcomes on obedience, right docs at the right time and stressed outputs still stand.
+
 # Build brief: `context-ds`, a design system harness for AI coding agents
 
 Brand: Context.dev. Binary and package: `context-ds`. Repo: `context-dev-brand-cli`.

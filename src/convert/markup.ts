@@ -1,0 +1,29 @@
+import { parseColor } from './color.js';
+import { type Stats, convertCss } from './css.js';
+import type { Palette } from './palette.js';
+import { mapColor } from './roles.js';
+
+/**
+ * A swatch or a type specimen (a brand page, a style guide): the color or font it sets is printed right after it, so it
+ * is content and keeps its own value.
+ */
+function specimen(css: string, after: string) {
+	const text = after.replace(/<[^>]*>/g, ' ');
+	const hexes = css.match(/#[0-9a-fA-F]{3,8}\b/g) ?? [];
+	if (hexes.some((h) => text.toLowerCase().includes(h.toLowerCase()))) return true;
+	const font = css.match(/font-family\s*:\s*["']?([^,"';]+)/i)?.[1]?.trim();
+	return !!font && !/^(inherit|var\()/.test(font) && text.includes(font);
+}
+
+/** The CSS inside a template in any language: <style> blocks, style attributes and color attributes. */
+export function convertMarkup(text: string, palette: Palette, stats: Stats) {
+	return text
+		.replace(/(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi, (all, open: string, css: string, close: string) => `${open}${convertCss(css, palette, stats)}${close}`)
+		.replace(/(\sstyle\s*=\s*)(["'])([^"']*)\2/gi, (all, head: string, q: string, css: string, offset: number, whole: string) => (specimen(css, whole.slice(offset, offset + 600)) ? all : `${head}${q}${convertCss(css, palette, stats)}${q}`))
+		.replace(/(\s(?:fill|stroke|stop-color|color)\s*=\s*)(["'])([^"']+)\2/gi, (all, head: string, q: string, value: string) => {
+			const rgba = parseColor(value);
+			if (!rgba) return all;
+			stats.colors++;
+			return `${head}${q}${mapColor(rgba, 'text', palette)}${q}`;
+		});
+}

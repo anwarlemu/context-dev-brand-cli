@@ -1,0 +1,55 @@
+// Composes what the CLI installs from brand/: one stylesheet for a site, one for a product, the Tailwind 4 theme,
+// the font import, and a flat token index the engine reads. brand/tokens.css stays the single source.
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+
+const read = (p) => readFileSync(new URL(`../brand/${p}`, import.meta.url), 'utf8');
+const tokens = read('tokens.css');
+const blocks = [...tokens.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => ({ selector: m[1].replace(/\/\*[\s\S]*?\*\//g, '').trim(), body: m[2] }));
+const root = blocks.find((b) => b.selector === ':root');
+const product = blocks.find((b) => b.selector === '.ds-product');
+const dark = blocks.find((b) => b.selector.includes('dark'));
+if (!root || !product || !dark) throw new Error('brand/tokens.css needs :root, .ds-product and a dark block');
+const vars = (body) => Object.fromEntries([...body.matchAll(/(--ds-[\w-]+)\s*:\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
+
+const header = '/* Written by context-ds from its brand files. Do not edit; run the CLI again to update. */\n';
+// A site may also hold product screens (an app behind the marketing pages): they opt in with the ds-product class.
+const site = `${header}:root {${root.body}}\n\n.ds-product {${product.body}}\n\n.dark .ds-product,\n[data-theme="dark"] .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n\n${read('site.css')}`;
+// A product project is a product everywhere, so its values apply at the root; its dark theme follows the app's own switch.
+const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n:root:is(.dark, [data-theme="dark"]),\n.dark .ds-product,\n[data-theme="dark"] .ds-product {${dark.body}}\n\n${read('product.css')}`;
+
+// Tailwind 4: theme names that read the brand variables, so classes like bg-surface or text-fg-muted work.
+const t = vars(root.body);
+const color = {
+	brand: 'brand', black: 'black', white: 'white', primary: 'action-primary', 'primary-hover': 'action-primary-hover',
+	surface: 'bg-default', subtle: 'bg-subtle', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement',
+	fg: 'text-default', 'fg-secondary': 'text-secondary', 'fg-muted': 'text-muted', 'fg-subtle': 'text-subtle', 'fg-faint': 'text-faint', 'fg-nav': 'text-nav', 'fg-inverse': 'text-inverse', 'fg-brand': 'text-brand', 'on-brand': 'text-on-brand',
+	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',
+	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
+	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
+};
+for (const name of Object.keys(t)) {
+	const m = name.match(/^--ds-color-((?:blue|navy|neutral)-\d+|chart-series-\d)$/);
+	if (m) color[m[1].replace('chart-', '')] = m[1];
+}
+const theme = [
+	...Object.entries(color).map(([k, v]) => `\t--color-${k}: var(--ds-color-${v});`),
+	...['sans', 'data', 'mono'].map((k) => `\t--font-${k}: var(--ds-font-${k});`),
+	...Object.keys(t).filter((k) => k.startsWith('--ds-text-')).map((k) => `\t--text-${k.slice(10)}: var(${k});`),
+	...Object.keys(t).filter((k) => k.startsWith('--ds-leading-')).map((k) => `\t--leading-${k.slice(13)}: var(${k});`),
+	...Object.keys(t).filter((k) => k.startsWith('--ds-tracking-')).map((k) => `\t--tracking-${k.slice(14)}: var(${k});`),
+	...Object.keys(t).filter((k) => k.startsWith('--ds-radius-')).map((k) => `\t--radius-${k.slice(12)}: var(${k});`),
+	...Object.keys(t).filter((k) => k.startsWith('--ds-shadow-')).map((k) => `\t--shadow-${k.slice(12)}: var(${k});`),
+	'\t--ease-out: var(--ds-easing-out);',
+	'\t--ease-in-out: var(--ds-easing-in-out);',
+];
+const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n`;
+const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400;500&display=swap");\n`;
+
+mkdirSync(new URL('../build', import.meta.url), { recursive: true });
+const write = (p, s) => writeFileSync(new URL(`../build/${p}`, import.meta.url), s);
+write('site.css', site);
+write('product.css', productCss);
+write('theme.css', themeCss);
+write('fonts.css', fonts);
+write('tokens.json', `${JSON.stringify({ site: t, product: { ...t, ...vars(product.body) }, dark: vars(dark.body), theme: color }, null, 1)}\n`);
+console.log(`brand: ${Object.keys(t).length} tokens, site.css, product.css, theme.css, fonts.css, tokens.json`);

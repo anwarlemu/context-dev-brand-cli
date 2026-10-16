@@ -1,79 +1,66 @@
-import { Command } from 'commander';
-import { loadConfig } from './lib/config.js';
-import { registerAdd } from './commands/add.js';
-import { registerApply } from './commands/apply.js';
-import { registerApprove } from './commands/approve.js';
-import { registerCheck } from './commands/check.js';
-import { registerDiff } from './commands/diff.js';
-import { registerDocs } from './commands/docs.js';
-import { registerHook } from './commands/hook.js';
-import { registerInfo } from './commands/info.js';
-import { registerInit } from './commands/init.js';
-import { registerResolve } from './commands/resolve.js';
-import { registerReview } from './commands/review.js';
-import { registerScaffold } from './commands/scaffold.js';
-import { registerStyle } from './commands/style.js';
-import { registerTokens } from './commands/tokens.js';
-import { registerUpdate } from './commands/update.js';
-import { registerWatch } from './commands/watch.js';
-import { PKG_ROOT } from './lib/paths.js';
-import { readFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { Command } from 'commander';
+import { review } from './commands/review.js';
+import { run } from './commands/run.js';
+import { approve, check, done, look, tokensCommand } from './commands/small.js';
+import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
+import { readHookInput } from './hooks/payload.js';
+import { brand, cli } from './lib/brand.js';
+import { findProjectRoot } from './lib/paths.js';
 
-const config = loadConfig();
-const version = JSON.parse(readFileSync(join(PKG_ROOT, 'package.json'), 'utf8')).version as string;
+const program = new Command();
+const b = brand();
 
-const program = new Command()
-	.name(config.bin)
-	.description(`${config.brand} design system harness. Templates, docs at the right time, and checks that block off-brand code.`)
-	.version(version)
-	.showHelpAfterError();
+program
+	.name(b.bin)
+	.description(`Make any website or app look like ${b.name}, and keep coding agents on it. Run it with no command and do what it says.`)
+	.option('--surface <surface>', 'site (pages people read) or product (an app people work in); default: read from the project')
+	.option('--theme <theme>', 'product only: light (default) or dark')
+	.option('--redo', 'convert the project again (after an update, or after reverting)')
+	.option('--dry-run', 'show what would change, write nothing')
+	.option('--no-install', 'do not add the package to the project when run through npx')
+	.option('--json', 'JSON output')
+	.action((opts) => run(opts));
 
-registerInit(program);
-registerApply(program);
-registerStyle(program);
-registerInfo(program);
-registerResolve(program);
-registerScaffold(program);
-registerDocs(program);
-registerAdd(program);
-registerTokens(program);
-registerCheck(program);
-registerReview(program);
-registerDiff(program);
-registerHook(program);
-registerWatch(program);
-registerApprove(program);
-registerUpdate(program);
+program.command('review [url]').description('Screenshot a page at desktop and phone width and score it against the brand; a task is done when it passes').option('--threshold <n>', 'minimum score').option('--json', 'JSON output').action((url, opts) => review(url, opts));
+program.command('look [target]').description('The brand styling (CSS, Tailwind, states) for every element in a file, or for one element kind').option('--surface <surface>', 'site or product').option('--json', 'JSON output').action((target, opts) => look(target, opts));
+program.command('check [files...]').description('Check that every style value is a brand token (used by hooks, pre-commit and CI)').option('--fix', 'replace exact matches with their token').option('--changed', 'only files changed in git').option('--json', 'JSON output').action((files, opts) => check(files ?? [], opts));
+program.command('tokens [term]').description('Find a brand token by name or value').option('--json', 'JSON output').action((term, opts) => tokensCommand(term, opts));
+program.command('approve').description('Approve ds-override comments (a person, in a terminal)').option('--all', 'approve every pending override').action((opts) => approve(opts));
+program.command('done <screen>').description('Mark a native screen restyled (web screens are done when their review passes)').action((id) => done(id));
 
-// Bare `<bin>`: say what this is and the few commands that matter, for a person or an agent seeing it for the first time.
-if (process.argv.length <= 2) {
-	const c = config.cli;
-	process.stdout.write(
-		[
-			`${config.brand} design system (${config.bin} ${version})`,
-			'',
-			`Puts the ${config.brand} brand's styling onto a project and keeps coding agents on it. Hooks check every file an agent writes`,
-			'and block off-brand values (raw colors, spacing, fonts, motion); the pre-commit hook and CI do the same.',
-			'',
-			`  ${c} init              install into this project (tokens, agent rules, hooks). An existing site looks the same.`,
-			`  ${c} apply             restyle the existing site with the brand: colors, type, spacing and so on.`,
-			'                                  Styling only; copy, content and structure stay as they are.',
-			`  ${c} apply --list      the style values still off-brand, with the token for each`,
-			`  ${c} style <element>   how the brand styles a kind of element: button-primary, card-clickable,`,
-			'                                  app-table-row... (`style` alone lists them; --detect <file> matches a file)',
-			`  ${c} check             what is off-brand right now (--no-baseline includes code from before init)`,
-			`  ${c} tokens --search   find the token for a value: tokens --search blue`,
-			`  ${c} resolve "<task>"  new React + Tailwind 4 apps: which page template to start from`,
-			`  ${c} update            get the latest design system`,
-			'',
-			`Everything: ${c} --help`,
-		].join('\n') + '\n',
-	);
-	process.exit(0);
-}
+program
+	.command('hook <event>')
+	.description('Agent hook entry point (session-start, user-prompt-submit, pre-tool-use, stop); reads the event JSON on stdin')
+	.option('--harness <name>', 'claude-code | cursor | codex', 'claude-code')
+	.action((event: string, opts) => {
+		const input = readHookInput();
+		const root = findProjectRoot(input.cwd ?? process.env.CLAUDE_PROJECT_DIR ?? process.env.CURSOR_PROJECT_DIR ?? process.cwd());
+		let result: HookResult = {};
+		try {
+			if (opts.harness === 'cursor') result = event === 'pre-tool-use' ? cursorPreToolUse(root, input) : event === 'stop' ? cursorStop(root, input) : {};
+			else if (event === 'session-start') result = sessionStart(root, input);
+			else if (event === 'user-prompt-submit') result = userPromptSubmit(root, input);
+			else if (event === 'pre-tool-use') result = preToolUse(root, input);
+			else if (event === 'stop') result = stop(root, input);
+		} catch (error) {
+			// Hooks fail open: a bug in the checker must never stop someone's work.
+			process.stderr.write(`${b.bin} hook ${event} failed open: ${(error as Error).message}\n`);
+			process.exit(0);
+		}
+		try {
+			mkdirSync(join(root, '.ds'), { recursive: true });
+			appendFileSync(join(root, '.ds', 'hooks.log'), `${JSON.stringify({ at: new Date().toISOString(), harness: opts.harness, event, blocked: result.exitCode === 2 || !!(result.json as any)?.decision || (result.json as any)?.permission === 'deny' })}\n`);
+		} catch {}
+		if (result.json) process.stdout.write(`${JSON.stringify(result.json)}\n`);
+		else if (result.stdout) process.stdout.write(`${result.stdout}\n`);
+		if (result.stderr) process.stderr.write(`${result.stderr}\n`);
+		process.exit(result.exitCode ?? 0);
+	});
 
-program.parseAsync(process.argv).catch((error) => {
-	process.stderr.write(`${config.bin}: ${(error as Error).message}\n`);
+program.parseAsync().catch((error: Error) => {
+	process.stderr.write(`${error.message}\n`);
 	process.exit(1);
 });
+void cli;

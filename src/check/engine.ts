@@ -1,82 +1,43 @@
-import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join, relative, resolve, sep } from 'node:path';
-import { loadCheckConfig, loadConfig, STYLE_RULES } from '../lib/config.js';
-import { matchesAny, walkFiles } from '../lib/glob.js';
-import { PKG_ROOT } from '../lib/paths.js';
-import { overrideKey, readApprovals, readBaseline, readInstalled } from '../lib/state.js';
-import { loadVoice } from '../lib/voice.js';
-import type { CheckConfig } from '../schema/index.js';
-import type { RuleContext } from './context.js';
-import { RULES } from './rules/index.js';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { brand, cli } from '../lib/brand.js';
+import { MARKUP, SCRIPT, STYLES, styledFiles } from '../project/detect.js';
+import { type RawFinding, runRules } from './rules.js';
 import { lineOf, loadSource } from './source.js';
-import type { Finding, Fix, Severity } from './types.js';
-import { loadVocab } from './vocab.js';
 
-export type CheckOptions = { projectRoot: string; paths?: string[]; fast?: boolean; fix?: boolean; useBaseline?: boolean; include?: string[]; styleOnly?: boolean };
-export type CheckResult = { files: number; findings: Finding[]; overrides: Finding[]; baselined: number; errors: number; warnings: number; fixed: number; ms: number };
+export type Finding = { file: string; line: number; column: number; rule: string; message: string; hint: string; snippet: string; fix?: { start: number; end: number; text: string }; overridden?: string };
+export type CheckResult = { files: number; findings: Finding[]; overrides: Finding[]; fixed: number; ms: number };
 
-export const findingKey = (f: Finding) => `${f.file}::${f.rule}::${f.snippet.trim() || f.message}`;
+/** Files the check reads: styles, templates and scripts. Native code is converted to brand literals and not checked. */
+export const checkable = (rel: string) => STYLES.test(rel) || MARKUP.test(rel) || SCRIPT.test(rel);
 
-export function isInScope(relPath: string, config: CheckConfig) {
-	return matchesAny(relPath, config.include) && !matchesAny(relPath, config.exclude);
-}
-
-export function checkText(projectRoot: string, relPath: string, text: string, opts: { fast?: boolean; config?: CheckConfig } = {}): { findings: Finding[]; overrides: Finding[] } {
-	const config = opts.config ?? loadCheckConfig(projectRoot);
+export function checkText(relPath: string, text: string): { findings: Finding[]; overrides: Finding[] } {
 	const file = loadSource(relPath, text);
-	const ctx: RuleContext = {
-		file,
-		relPath,
-		isPage: matchesAny(relPath, config.pageGlobs),
-		vocab: loadVocab(),
-		voice: loadVoice(),
-		config,
-		installed: readInstalled(projectRoot),
-		projectRoot,
-	};
 	const findings: Finding[] = [];
 	const overrides: Finding[] = [];
-	const rawAllowed = matchesAny(relPath, config.allowRawValues);
-	for (const rule of RULES) {
-		const level = config.rules[rule.id] ?? 'error';
-		if (level === 'off') continue;
-		if (opts.fast && !config.fast.includes(rule.id)) continue;
-		if (rawAllowed && rule.id !== 'copy-rules') continue;
-		let raw;
-		try {
-			raw = rule.run(ctx);
-		} catch (error) {
-			raw = [{ rule: rule.id, message: `rule crashed: ${(error as Error).message}`, hint: 'Report this to the design system owners', offset: 0 }];
-		}
-		for (const r of raw) {
-			const { line, column } = lineOf(file, r.offset);
-			const finding: Finding = { file: relPath, line, column, rule: r.rule, severity: level, message: r.message, hint: r.hint, snippet: text.slice(r.offset, r.offset + Math.min(r.length ?? 40, 80)).split('\n')[0], fix: r.fix };
-			const reason = file.overrides.fileReason ?? file.overrides.lines.get(line) ?? file.overrides.lines.get(line - 1);
-			if (reason) overrides.push({ ...finding, overridden: reason });
-			else findings.push(finding);
-		}
+	let raw: RawFinding[] = [];
+	try {
+		raw = runRules(file);
+	} catch (error) {
+		raw = [{ rule: 'crash', message: `check crashed: ${(error as Error).message}`, hint: 'Report this to the design system owners.', offset: 0 }];
 	}
-	if (file.parseError) findings.push({ file: relPath, line: 1, column: 1, rule: 'parse', severity: 'warn', message: `Could not parse: ${file.parseError}`, hint: '', snippet: '' });
+	for (const r of raw) {
+		const { line, column } = lineOf(file, r.offset);
+		const finding: Finding = { file: relPath, line, column, rule: r.rule, message: r.message, hint: r.hint, snippet: text.slice(r.offset, r.offset + Math.min(r.length ?? 40, 80)).split('\n')[0], fix: r.fix };
+		const reason = file.overrides.fileReason ?? file.overrides.lines.get(line) ?? file.overrides.lines.get(line - 1);
+		if (reason) overrides.push({ ...finding, overridden: reason });
+		else findings.push(finding);
+	}
 	findings.sort((a, b) => a.line - b.line || a.column - b.column);
-	return { findings, overrides: dedupeOverrides(overrides, file.overrides.fileReason) };
+	return { findings, overrides };
 }
 
-function dedupeOverrides(overrides: Finding[], fileReason?: string) {
-	const seen = new Set<string>();
-	return overrides.filter((o) => {
-		const key = `${o.file}:${fileReason ? 'file' : o.line}:${o.overridden}`;
-		if (seen.has(key)) return false;
-		seen.add(key);
-		return true;
-	});
-}
-
-export function applyFixes(text: string, fixes: Fix[]) {
-	const sorted = [...fixes].sort((a, b) => b.start - a.start);
+export function applyFixes(text: string, fixes: NonNullable<Finding['fix']>[]) {
 	let out = text;
-	let lastStart = Infinity;
+	let lastStart = Number.POSITIVE_INFINITY;
 	let applied = 0;
-	for (const f of sorted) {
+	for (const f of [...fixes].sort((a, b) => b.start - a.start)) {
 		if (f.end > lastStart) continue;
 		out = out.slice(0, f.start) + f.text + out.slice(f.end);
 		lastStart = f.start;
@@ -85,102 +46,80 @@ export function applyFixes(text: string, fixes: Fix[]) {
 	return { text: out, applied };
 }
 
-export function collectFiles(projectRoot: string, config: CheckConfig, paths?: string[]) {
-	if (!paths?.length) return walkFiles(projectRoot, config.include, config.exclude);
-	const out = new Set<string>();
-	for (const p of paths) {
-		const abs = isAbsolute(p) ? p : join(process.cwd(), p);
-		if (!existsSync(abs)) continue;
-		const rel = relative(projectRoot, abs).split(sep).join('/');
-		if (statSync(abs).isDirectory()) for (const f of walkFiles(projectRoot, config.include.map((g) => g), config.exclude)) { if (f.startsWith(rel === '' ? '' : `${rel}/`)) out.add(f); }
-		else out.add(rel);
+/** Files changed in git (staged, unstaged, untracked), for pre-commit and the stop hook. */
+export function changedFiles(root: string) {
+	try {
+		const out = execFileSync('git', ['status', '--porcelain', '--untracked-files=all'], { cwd: root, encoding: 'utf8' });
+		return out.split('\n').filter(Boolean).map((l) => l.slice(3).replace(/^.* -> /, '').replace(/^"|"$/g, ''));
+	} catch {
+		return [];
 	}
-	return [...out].sort();
 }
 
-export function runCheck(opts: CheckOptions): CheckResult {
+export function runCheck(root: string, opts: { paths?: string[]; fix?: boolean; changed?: boolean } = {}): CheckResult {
 	const started = performance.now();
-	const config = loadCheckConfig(opts.projectRoot);
-	if (opts.include) config.include = opts.include;
-	if (opts.styleOnly) for (const rule of Object.keys(config.rules)) if (!STYLE_RULES.has(rule)) config.rules[rule] = 'off';
-	const files = collectFiles(opts.projectRoot, config, opts.paths);
-	let findings: Finding[] = [];
+	const own = new RegExp(`(^|/)${brand().bin}/`);
+	const all = opts.paths?.length ? opts.paths : opts.changed ? changedFiles(root) : styledFiles(root);
+	const files = all.filter((rel) => checkable(rel) && !own.test(rel) && existsSync(join(root, rel)));
+	const findings: Finding[] = [];
 	const overrides: Finding[] = [];
 	let fixed = 0;
 	for (const rel of files) {
-		const abs = join(opts.projectRoot, rel);
-		let text = readFileSync(abs, 'utf8');
-		let result = checkText(opts.projectRoot, rel, text, { fast: opts.fast, config });
+		let text = readFileSync(join(root, rel), 'utf8');
+		let result = checkText(rel, text);
 		if (opts.fix) {
-			const fixes = result.findings.map((f) => f.fix).filter((f): f is Fix => !!f);
+			const fixes = result.findings.map((f) => f.fix).filter((f): f is NonNullable<Finding['fix']> => !!f);
 			if (fixes.length) {
 				const applied = applyFixes(text, fixes);
 				text = applied.text;
 				fixed += applied.applied;
-				writeFileSync(abs, text);
-				result = checkText(opts.projectRoot, rel, text, { fast: opts.fast, config });
+				writeFileSync(join(root, rel), text);
+				result = checkText(rel, text);
 			}
 		}
 		findings.push(...result.findings);
 		overrides.push(...result.overrides);
 	}
-	// A ds-override is an exception a person must sign off. Until `approve` records it, it counts as an error (not in the
-	// fast pre-write check, so the write lands and the agent is stopped at finish and at commit instead).
-	// The design system's own registry carries reviewed overrides (ported code), so they need no approval here.
-	if (!opts.fast && (config.rules['override-approval'] ?? 'off') !== 'off' && resolve(opts.projectRoot) !== resolve(PKG_ROOT)) {
-		const approved = new Set(readApprovals(opts.projectRoot).approvals.map((a) => a.key));
-		const registryFiles = new Set(Object.values(readInstalled(opts.projectRoot)).flatMap((e) => e.files));
-		const seen = new Set<string>();
-		for (const o of overrides) {
-			const key = overrideKey(o);
-			if (approved.has(key) || registryFiles.has(o.file) || seen.has(key)) continue;
-			seen.add(key);
-			findings.push({ ...o, overrideOf: o.rule, rule: 'override-approval', severity: config.rules['override-approval'] as Severity, message: `ds-override not approved: ${o.rule} (${o.overridden})`, hint: `A person approves it in a terminal with \`${loadConfig().cli} approve\`. Agents cannot approve; ask the user, or remove the override and fix the finding.`, fix: undefined });
-		}
+	// A ds-override is an exception a person signs off. Until `approve` records it, it counts as an error.
+	const approved = new Set(readApprovals(root).map((a) => a.key));
+	const seen = new Set<string>();
+	for (const o of overrides) {
+		const key = overrideKey(o);
+		if (approved.has(key) || seen.has(key)) continue;
+		seen.add(key);
+		findings.push({ ...o, rule: 'override-approval', message: `ds-override not approved: ${o.rule} (${o.overridden})`, hint: `A person approves it in a terminal with \`${cli()} approve\`. Agents cannot; remove the override and fix the value instead.`, fix: undefined });
 	}
-	let baselined = 0;
-	if (opts.useBaseline !== false) {
-		const baseline = readBaseline(opts.projectRoot);
-		if (baseline) {
-			const budget = new Map(Object.entries(baseline.findings));
-			findings = findings.filter((f) => {
-				const key = findingKey(f);
-				const left = budget.get(key) ?? 0;
-				if (left > 0) {
-					budget.set(key, left - 1);
-					baselined++;
-					return false;
-				}
-				return true;
-			});
-		}
-	}
-	return {
-		files: files.length,
-		findings,
-		overrides,
-		baselined,
-		errors: findings.filter((f) => f.severity === 'error').length,
-		warnings: findings.filter((f) => f.severity === 'warn').length,
-		fixed,
-		ms: Math.round(performance.now() - started),
-	};
+	return { files: files.length, findings, overrides, fixed, ms: Math.round(performance.now() - started) };
 }
 
-export function formatFinding(f: Finding) {
-	return `${f.file}:${f.line}  ${f.rule}  ${f.message}  ${f.hint}`;
-}
+export const formatFinding = (f: Finding) => `${f.file}:${f.line}  ${f.rule}  ${f.message}. ${f.hint}`;
+export const findingKey = (f: Finding) => `${f.file}::${f.rule}::${f.snippet.trim() || f.message}`;
 
+/** Findings in `after` that `before` did not have (by key and count), so a hook blocks only what a write adds. */
 export function newFindings(before: Finding[], after: Finding[]) {
 	const budget = new Map<string, number>();
 	for (const f of before) budget.set(findingKey(f), (budget.get(findingKey(f)) ?? 0) + 1);
 	return after.filter((f) => {
-		const key = findingKey(f);
-		const left = budget.get(key) ?? 0;
+		const left = budget.get(findingKey(f)) ?? 0;
 		if (left > 0) {
-			budget.set(key, left - 1);
+			budget.set(findingKey(f), left - 1);
 			return false;
 		}
 		return true;
 	});
+}
+
+export type Approval = { key: string; file: string; rule: string; reason: string; at: string };
+export const overrideKey = (o: { file: string; rule: string; overridden?: string }) => `${o.file}|${o.rule}|${o.overridden ?? ''}`;
+const approvalsPath = (root: string) => join(root, '.ds', 'approved-overrides.json');
+export function readApprovals(root: string): Approval[] {
+	try {
+		return JSON.parse(readFileSync(approvalsPath(root), 'utf8')).approvals ?? [];
+	} catch {
+		return [];
+	}
+}
+export function writeApprovals(root: string, approvals: Approval[]) {
+	mkdirSync(join(root, '.ds'), { recursive: true });
+	writeFileSync(approvalsPath(root), `${JSON.stringify({ approvals }, null, 2)}\n`);
 }
