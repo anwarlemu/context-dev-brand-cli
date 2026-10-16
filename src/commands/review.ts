@@ -6,6 +6,7 @@ import { color, emit } from '../lib/output.js';
 import { findProjectRoot } from '../lib/paths.js';
 import { type State, readState, writeState } from '../plan/state.js';
 import { mainScreens } from '../plan/tasks.js';
+import { runCheck } from '../check/engine.js';
 import { findMainStylesheet } from '../project/detect.js';
 import type { Screen } from '../project/screens.js';
 import { capture } from '../review/capture.js';
@@ -27,6 +28,18 @@ function filesHash(root: string, screen: Screen) {
 		} catch {}
 	}
 	return h.digest('hex').slice(0, 16);
+}
+
+/**
+ * What can be measured is checked before the model looks: values that are not brand tokens, and anything crossing the
+ * column lines. Either fails at once, so no review is spent on a screen that cannot pass yet.
+ */
+function blockers(root: string, screen: Screen | undefined, outside: string[]) {
+	const errors = screen ? runCheck(root, { paths: screen.files }).findings.length : 0;
+	const out: string[] = [];
+	if (errors) out.push(`${errors} values in this screen's files are not brand tokens: \`${cli()} check ${screen!.files.slice(0, 3).join(' ')}${screen!.files.length > 3 ? ' ...' : ''}\` lists each with its token.`);
+	if (outside.length) out.push(`Content crosses the column lines (measured):\n${outside.map((o) => `    ${o}`).join('\n')}\n  Keep everything between the lines: containers use max-width var(--ds-frame-column) with padding inside (\`${cli()} look column\`); pull offset or absolute pieces in; a wide table scrolls inside its card.`);
+	return out;
 }
 
 function screenFor(state: State | undefined, target: string) {
@@ -63,6 +76,12 @@ export async function review(target: string | undefined, opts: Opts) {
 	const outDir = join(root, '.ds', 'review', new Date().toISOString().replace(/[:.]/g, '-'));
 	const { shots, outside } = await capture(target, ['desktop', 'mobile'], outDir);
 	const previous = screen ? state?.reviews[screen.id] : undefined;
+	const stop = blockers(root, screen, outside);
+	if (stop.length) {
+		console.log([color.red(`${screen?.id ?? target} is not ready for its review (nothing was scored):`), ...stop.map((b) => `  ${b}`), `  Fix these, then review again.`].join('\n'));
+		process.exitCode = 1;
+		return;
+	}
 	if (pickEngine() === 'self') {
 		const dir = brief(shots, target, surface, previous);
 		writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url: target, screen: screen?.id, outside })}\n`);
@@ -111,6 +130,11 @@ async function reviewAll(root: string, state: State | undefined, target: string 
 			const outDir = join(root, '.ds', 'review', `${stamp}${s.id.replace(/[^\w-]+/g, '_')}`);
 			try {
 				const { shots, outside } = await capture(url, ['desktop', 'mobile'], outDir);
+				const stop = blockers(root, s, outside);
+				if (stop.length) {
+					results.push({ id: s.id, pass: false, line: [color.red(`Not ready ${s.id} (not scored):`), ...stop.map((b) => `  ${b}`)].join('\n') });
+					continue;
+				}
 				if (self) {
 					const dir = brief(shots, url, s.surface, state.reviews[s.id]);
 					writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url, screen: s.id, outside })}\n`);

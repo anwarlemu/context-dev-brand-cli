@@ -265,7 +265,9 @@ describe('the one command', () => {
 		run(p, 'skip', '/', '--reason', 'needs a database');
 		const skipped = run(p);
 		expect(skipped).toMatch(/1 of 2 screens done/);
-		expect(skipped).toMatch(/Task 2 of 3: \/about\.html/);
+		expect(skipped).toMatch(/Task 2 of 3: the other main screen/);
+		expect(skipped).toMatch(/\/about\.html \(about\.html\)/);
+		expect(skipped).toMatch(/review --all/);
 		expect(readState(p)?.skipped).toEqual({ '/': 'needs a database' });
 		const refused = (() => {
 			try {

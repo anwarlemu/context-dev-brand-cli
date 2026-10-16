@@ -70,11 +70,47 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
 		...(status.touches.includes('accent') ? ['  Wrap the closing words of the hero headline and of each section heading in <span class="ds-accent"> (same words, in blue; never a whole heading).'] : []),
 		...(status.errors ? [`  ${status.errors} values here are not brand tokens yet: \`${cli()} check ${s.files.slice(0, 3).join(' ')}${s.files.length > 3 ? ' ...' : ''}\` lists each with the token to use.`] : []),
 		url
-			? `  Then run the app and \`${cli()} review ${url}\`. Done when every score is ${threshold} or more and the check is clean; fix its punch list until then. Faster: restyle several screens, then \`${cli()} review --all ${state.baseUrl ?? 'http://localhost:<port>'}\` scores them together.`
+			? `  Then run the app and \`${cli()} review ${url}\`. Done when every score is ${threshold} or more and the check is clean; fix its punch list until then.`
 			: `  Native screen: build and look at it, then \`${cli()} done ${s.id}\`.`,
 		`  If it cannot pass without changing words or elements (or cannot run here), \`${cli()} skip ${s.id} --reason "<why>"\`; the person sees every skip.`,
 		...(status.reviewed && !status.passed ? [color.yellow(`  Last review did not pass: ${(state.reviews[s.id]?.punch ?? []).slice(0, 3).map((p) => p.issue).join('; ')}`)] : []),
 		`  Then run \`${cli()}\` for the next task.`,
 	];
+	return lines.join('\n');
+}
+
+/**
+ * Once the shell and home are done, the remaining screens are one task: restyle them all (they share the shell, so
+ * most of the look is already there), then score them together with `review --all`.
+ */
+export function renderBatch(root: string, state: State, statuses: TaskStatus[], done: number, total: number): string {
+	const threshold = brand().reviewThreshold;
+	const base = state.baseUrl ?? 'http://localhost:<port>';
+	const lines = [
+		color.bold(`Task 2 of 3: the other ${statuses.length === 1 ? 'main screen' : `${statuses.length} main screens`} (${done} of ${total} screens done).`),
+		`  For each: say in one line what it is for and keep that; no words or elements change. Restyle its elements the way \`${cli()} look <file>\` shows.`,
+	];
+	for (const st of statuses) {
+		const s = st.screen;
+		const kinds = new Map<string, number>();
+		for (const rel of s.files) {
+			let text = '';
+			try {
+				text = readFileSync(join(root, rel), 'utf8');
+			} catch {
+				continue;
+			}
+			for (const h of elementsIn(rel, text, s.surface)) kinds.set(h.kind, (kinds.get(h.kind) ?? 0) + 1);
+		}
+		const last = state.reviews[s.id];
+		const status = last && !last.passed ? color.yellow(` last review: ${last.punch.slice(0, 2).map((p) => p.issue).join('; ').slice(0, 160)}`) : '';
+		const errors = st.errors ? ` ${st.errors} values to change (\`${cli()} check ${s.files[0]}\`).` : '';
+		lines.push(`    ${s.url ?? s.id} (${s.file}): ${[...kinds].slice(0, 6).map(([k, n]) => (n > 1 ? `${k} x${n}` : k)).join(', ') || 'shell only'}.${errors}${status}`);
+	}
+	lines.push(
+		`  Then run the app and \`${cli()} review --all ${base}\`: it checks values and the column lines first, then scores every changed screen at once. Each is done at ${threshold} or more; fix the punch lists and run it again.`,
+		`  A screen that cannot pass without changing words or elements: \`${cli()} skip <screen> --reason "<why>"\`.`,
+		`  Then run \`${cli()}\`.`,
+	);
 	return lines.join('\n');
 }

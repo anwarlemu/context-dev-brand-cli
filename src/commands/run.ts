@@ -14,7 +14,7 @@ import { MARKUP, STYLES, detectProject, styledFiles } from '../project/detect.js
 import { listScreens, shellFiles } from '../project/screens.js';
 import { type Surface, profile, surfaceOf } from '../project/surface.js';
 import { type State, readState, writeState } from '../plan/state.js';
-import { MAX_SCREENS, mainScreens, renderTask, taskStatus } from '../plan/tasks.js';
+import { MAX_SCREENS, mainScreens, renderBatch, renderTask, taskStatus } from '../plan/tasks.js';
 
 // The one command: the first run installs the brand and converts every style value; every run after that prints the
 // next task, until each main screen passes its review and the whole project passes the check.
@@ -92,11 +92,16 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 
 function nextText(root: string, state: State) {
 	const screens = mainScreens(state);
-	const total = screens.length + 1;
-	for (const [i, screen] of screens.entries()) {
-		const status = taskStatus(root, state, screen, i);
-		if (!status.done) return renderTask(root, state, status, i, total);
+	const statuses = screens.map((s, i) => taskStatus(root, state, s, i));
+	// Task 1: the shared shell and the home, which set the look of every page. Native screens stay one at a time.
+	if (statuses[0] && !statuses[0].done) return renderTask(root, state, statuses[0], 0, 3);
+	const open = statuses.filter((s) => !s.done);
+	if (open.some((s) => !s.screen.url)) {
+		const i = statuses.indexOf(open.find((s) => !s.screen.url)!);
+		return renderTask(root, state, statuses[i], i, screens.length + 1);
 	}
+	if (open.length) return renderBatch(root, state, open, statuses.length - open.length, statuses.length);
+	const total = 3;
 	// The final sweep: every file in the project passes the check.
 	const all = runCheck(root);
 	if (all.findings.length) {
