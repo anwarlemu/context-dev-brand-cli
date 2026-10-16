@@ -90,11 +90,28 @@ function outsideLines(): string[] {
 	return [...found.values()];
 }
 
-export async function capture(url: string, viewports: ViewportName[], outDir: string): Promise<{ shots: Shot[]; outside: string[] }> {
+/** What the page actually uses, measured, so the reviewer does not guess fonts or sizes from pixels. */
+function measuredFacts(): string[] {
+	const facts: string[] = [];
+	const first = (stack: string) => stack.split(',')[0].replace(/["']/g, '').trim();
+	const loaded = (family: string) => (document.fonts.check(`16px "${family}"`) ? 'loaded' : 'not loaded');
+	for (const [label, sel] of [['h1', 'h1'], ['section headings', 'h2'], ['body text', 'p'], ['buttons', 'button, a[class*="btn"]'], ['navigation', 'nav a, header a']] as const) {
+		const el = document.querySelector<HTMLElement>(sel);
+		if (!el) continue;
+		const cs = getComputedStyle(el);
+		const fam = first(cs.fontFamily);
+		facts.push(`${label}: ${fam} (${loaded(fam)}), ${Math.round(Number.parseFloat(cs.fontSize))}px, weight ${cs.fontWeight}, color ${cs.color}`);
+	}
+	facts.push(`page background: ${getComputedStyle(document.body).backgroundColor}`);
+	return facts;
+}
+
+export async function capture(url: string, viewports: ViewportName[], outDir: string): Promise<{ shots: Shot[]; outside: string[]; facts: string[] }> {
 	mkdirSync(outDir, { recursive: true });
 	const browser = await launch();
 	const shots: Shot[] = [];
 	const outside: string[] = [];
+	let facts: string[] = [];
 	try {
 		// A narrower desktop too: fixed widths that fit at 1440 cross the lines on a laptop.
 		const narrow = await browser.newPage({ viewport: { width: 1100, height: 800 }, deviceScaleFactor: 1 });
@@ -113,6 +130,7 @@ export async function capture(url: string, viewports: ViewportName[], outDir: st
 			await page.evaluate(() => window.scrollTo(0, 0));
 			await page.waitForTimeout(400);
 			for (const item of await page.evaluate(outsideLines)) outside.push(`at ${VIEWPORTS[viewport].width}px: ${item}`);
+			if (viewport === 'desktop') facts = await page.evaluate(measuredFacts);
 			const slices = Math.min(MAX_SLICES_PER_VIEWPORT, Math.ceil(height / SLICE));
 			for (let i = 0; i < slices; i++) {
 				const top = i * SLICE;
@@ -125,5 +143,5 @@ export async function capture(url: string, viewports: ViewportName[], outDir: st
 	} finally {
 		await browser.close();
 	}
-	return { shots, outside: outside.slice(0, 12) };
+	return { shots, outside: outside.slice(0, 12), facts };
 }

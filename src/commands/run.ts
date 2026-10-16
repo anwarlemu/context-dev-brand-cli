@@ -131,8 +131,8 @@ function nextText(root: string, state: State) {
 		...(skipped.length ? [color.yellow(`  Skipped (tell the person each one and why):`), ...skipped.map(([id, why]) => color.yellow(`    ${id}: ${why}`))] : []),
 		...screens.flatMap((s) => {
 			const r = state.reviews[s.id];
-			const left = r?.passed && (r.rounds ?? 0) >= 3 ? r.punch.filter((p) => p.severity === 'major') : [];
-			return left.length ? [color.yellow(`  ${s.id} passed at the third review with these left (tell the person): ${left.map((p) => p.issue).join('; ').slice(0, 300)}`)] : [];
+			const left = r?.passed && (r.rounds ?? 0) >= 2 ? r.punch.filter((p) => p.severity === 'major') : [];
+			return left.length ? [color.yellow(`  ${s.id} passed at its second review with these left (tell the person): ${left.map((p) => p.issue).join('; ').slice(0, 300)}`)] : [];
 		}),
 		...(selfScored.length ? [color.yellow(`  Scored by the agent itself, with no separate reviewer (tell the person): ${selfScored.join(', ')}`)] : []),
 		`  Show the person the result (desktop and phone) before committing. From now on the hooks keep new work on the brand.`,

@@ -26,7 +26,10 @@ const SURE: Record<string, RegExp> = {
 	'nav-link': /(^|[-_])nav[-_]?(link|item)s?$/,
 	'section-heading': /(^|[-_])section[-_]?(title|heading)$/,
 	'hero-title': /(^|[-_])hero[-_]?(title|heading|headline)$/,
+	column: /^(nav|header|navbar|topbar|site-header)[-_]?(inner|container|wrap|wrapper|content)$/,
 };
+// The header's inner row sits on the column like the brand's: width only, its own layout stays.
+const COLUMN_PLACE: [string, string][] = [['box-sizing', 'border-box'], ['width', '100%'], ['max-width', 'var(--ds-frame-column)'], ['margin-inline', 'auto']];
 /** The class of a selector's last compound (.plan-card in .pricing .plan-card), or the parent's for `.nav-links > a`. */
 const lastClasses = (sel: string) => {
 	const parts = sel.split(/\s*[>+~]\s*|\s+/).filter(Boolean);
@@ -63,7 +66,7 @@ export function elementLayer(rel: string, text: string, surface: Surface): { blo
 	for (const [kind, selectors] of byKind) {
 		const def = (elements()[surface][kind] ?? elements()[surface === 'site' ? 'product' : 'site'][kind]) as Def | undefined;
 		if (!def) continue;
-		const base = skin(kind, def.css);
+		const base = kind === 'column' ? COLUMN_PLACE : skin(kind, def.css);
 		if (!base.length) continue;
 		rules.push(`${selectors.join(',\n')} {\n${decls(base, '\t')}\n}`);
 		if (base.some(([k]) => k === 'transition')) moving.push(...selectors);

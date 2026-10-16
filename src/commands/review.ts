@@ -16,7 +16,7 @@ import { type Scorecard, beforeShots, brief, critique, pickEngine, scorecardSche
 // recorded for the screen it belongs to, which is how a task is checked off. Only task screens are reviewed, and a
 // screen that failed is reviewed again only once its files changed, so agents fix the punch list instead of re-rolling.
 
-const MAX_ROUNDS = 3;
+const MAX_ROUNDS = 2;
 
 type Opts = { json?: boolean; threshold?: string; any?: boolean; submit?: string; all?: boolean; brief?: boolean };
 
@@ -82,7 +82,7 @@ export async function review(target: string | undefined, opts: Opts) {
 	}
 	const surface = screen?.surface ?? state?.surface ?? 'site';
 	const outDir = join(root, '.ds', 'review', new Date().toISOString().replace(/[:.]/g, '-'));
-	const { shots, outside } = await capture(target, ['desktop', 'mobile'], outDir);
+	const { shots, outside, facts } = await capture(target, ['desktop', 'mobile'], outDir);
 	const previous = screen ? state?.reviews[screen.id] : undefined;
 	const stop = blockers(root, screen, outside);
 	if (stop.length) {
@@ -91,7 +91,7 @@ export async function review(target: string | undefined, opts: Opts) {
 		return;
 	}
 	if (pickEngine() === 'self') {
-		const dir = brief(shots, target, surface, previous, screen ? beforeShots(root, screen.id) : []);
+		const dir = brief(shots, target, surface, previous, screen ? beforeShots(root, screen.id) : [], facts);
 		writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url: target, screen: screen?.id, outside })}\n`);
 		const rel = relative(root, dir);
 		console.log(
@@ -105,7 +105,7 @@ export async function review(target: string | undefined, opts: Opts) {
 		);
 		return;
 	}
-	const { card, model } = await critique(shots, target, surface, previous, screen ? beforeShots(root, screen.id) : []);
+	const { card, model } = await critique(shots, target, surface, previous, screen ? beforeShots(root, screen.id) : [], facts);
 	record(root, state, screen, target, withOutside(card, outside), model, outDir, opts);
 }
 
@@ -137,19 +137,19 @@ async function reviewAll(root: string, state: State | undefined, target: string 
 			const url = `${base}${s.url}`;
 			const outDir = join(root, '.ds', 'review', `${stamp}${s.id.replace(/[^\w-]+/g, '_')}`);
 			try {
-				const { shots, outside } = await capture(url, ['desktop', 'mobile'], outDir);
+				const { shots, outside, facts } = await capture(url, ['desktop', 'mobile'], outDir);
 				const stop = blockers(root, s, outside);
 				if (stop.length) {
 					results.push({ id: s.id, pass: false, line: [color.red(`Not ready ${s.id} (not scored):`), ...stop.map((b) => `  ${b}`)].join('\n') });
 					continue;
 				}
 				if (self) {
-					const dir = brief(shots, url, s.surface, state.reviews[s.id], beforeShots(root, s.id));
+					const dir = brief(shots, url, s.surface, state.reviews[s.id], beforeShots(root, s.id), facts);
 					writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url, screen: s.id, outside })}\n`);
 					results.push({ id: s.id, pass: false, line: `  ${s.id}: score it from ${relative(root, dir)}/brief.md, then \`${cli()} review --submit ${relative(root, dir)}\`` });
 					continue;
 				}
-				const { card, model } = await critique(shots, url, s.surface, state.reviews[s.id], beforeShots(root, s.id));
+				const { card, model } = await critique(shots, url, s.surface, state.reviews[s.id], beforeShots(root, s.id), facts);
 				const pass = record(root, state, s, url, withOutside(card, outside), model, outDir, { ...opts, brief: true });
 				results.push({ id: s.id, pass, line: '' });
 			} catch (e) {
@@ -191,7 +191,7 @@ function withOutside(card: Scorecard, outside: string[]): Scorecard {
 
 function record(root: string, state: State | undefined, screen: Screen | undefined, target: string, card: Scorecard, model: string, outDir: string, opts: Opts): boolean {
 	const threshold = Number(opts.threshold ?? brand().reviewThreshold);
-	// At most three rounds: by the third, a screen with no blocker left passes and its remaining issues go to the person.
+	// At most two rounds: by the second, a screen with no blocker left passes and its remaining issues go to the person.
 	const rounds = (screen && state?.reviews[screen.id]?.rounds ? state.reviews[screen.id].rounds! : 0) + 1;
 	const blocker = card.punch_list.some((p) => p.severity === 'blocker');
 	const failing = rounds >= MAX_ROUNDS && !blocker ? [] : Object.entries(card.scores).filter(([, v]) => v < threshold);

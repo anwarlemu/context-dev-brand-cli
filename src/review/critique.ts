@@ -108,13 +108,19 @@ export function references(surface: Surface) {
 		.map((f) => join(dir, f));
 }
 
+/** Measured facts the reviewer must take as given (fonts, sizes, the column check). */
+export const factsText = (facts: string[]): string =>
+	facts.length
+		? `\n\n# Measured on the page (true; do not contradict from the pixels)\n${facts.map((f) => `- ${f}`).join('\n')}\n- Nothing crosses the column lines (measured). The header, its logo and its buttons sit inside the lines on purpose.\n- The before images are taken after the automatic conversion: fonts and colors are already the brand's there, so the same letter shapes in both are expected. Containers and the header moving onto the column lines is intended, not a composition break.`
+		: '';
+
 function guide(surface: Surface, previous?: Review) {
 	const read = (f: string) => readFileSync(pkgPath('brand', f), 'utf8');
 	const prior = previous ? `\n\n# Previous review of this screen (scores ${JSON.stringify(previous.scores)})\nCheck each item first and say if it is fixed:\n${previous.punch.map((p) => `- [${p.severity}] ${p.where}: ${p.issue}`).join('\n')}` : '';
 	return `# principles.md\n${read('principles.md')}\n\n# rubric.md\n${read('rubric.md')}\n\nThis screen is a ${surface === 'product' ? 'product screen: compare with the product reference' : 'site page: compare with the site reference'}.${prior}`;
 }
 
-export async function critique(shots: Shot[], url: string, surface: Surface, previous?: Review, before: string[] = []): Promise<{ card: Scorecard; model: string }> {
+export async function critique(shots: Shot[], url: string, surface: Surface, previous?: Review, before: string[] = [], facts: string[] = []): Promise<{ card: Scorecard; model: string }> {
 	const system = SYSTEM.replaceAll('{{brand}}', brand().name);
 	const refs = references(surface);
 	const engine = pickEngine();
@@ -126,7 +132,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		const prompt = [
 			system,
 			'',
-			guide(surface, previous),
+			guide(surface, previous) + factsText(facts),
 			`\n# Screen\n${url}\n`,
 			`The first ${refs.length} attached images are the reference (the brand's own pages);${before.length ? ` the next ${before.length} are this screen before hand edits (desktop, top down);` : ''} the rest are the restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}.`,
 			'Do not run commands or edit files. Return the scorecard and the punch list.',
@@ -142,7 +148,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		// Every image goes in the one message (no tool calls to open them one by one): a single turn, about a minute.
 		const block = (path: string, media: 'image/png' | 'image/jpeg') => ({ type: 'image', source: { type: 'base64', media_type: media, data: readFileSync(path).toString('base64') } });
 		const content = [
-			{ type: 'text', text: `${guide(surface, previous)}\n\n# Screen\n${url}\n\nReference: the brand's own pages.` },
+			{ type: 'text', text: `${guide(surface, previous) + factsText(facts)}\n\n# Screen\n${url}\n\nReference: the brand's own pages.` },
 			...refs.map((r) => block(r, 'image/jpeg')),
 			...(before.length ? [{ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' }, ...before.map((b) => block(b, media(b)))] : []),
 			{ type: 'text', text: `Restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}, in that order.` },
@@ -165,7 +171,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 	}
 	const client = new Anthropic();
 	const image = (path: string, type: 'image/png' | 'image/jpeg'): Anthropic.Beta.BetaContentBlockParam => ({ type: 'image', source: { type: 'base64', media_type: type, data: readFileSync(path).toString('base64') } });
-	const content: Anthropic.Beta.BetaContentBlockParam[] = [{ type: 'text', text: guide(surface, previous) }, { type: 'text', text: 'Reference: the brand\'s own pages.' }];
+	const content: Anthropic.Beta.BetaContentBlockParam[] = [{ type: 'text', text: guide(surface, previous) + factsText(facts) }, { type: 'text', text: 'Reference: the brand\'s own pages.' }];
 	for (const r of refs) content.push(image(r, 'image/jpeg'));
 	if (before.length) {
 		content.push({ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' });
@@ -193,14 +199,14 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
  * For an agent with no separate reviewer (Cursor, Hermes, any other): everything needed to score the screen itself,
  * written next to the screenshots. The agent opens every image, fills scorecard.json and submits it.
  */
-export function brief(shots: Shot[], url: string, surface: Surface, previous?: Review, before: string[] = []): string {
+export function brief(shots: Shot[], url: string, surface: Surface, previous?: Review, before: string[] = [], facts: string[] = []): string {
 	const dir = dirname(shots[0].path);
 	const text = [
 		`# Review of ${url}`,
 		'',
 		SYSTEM.replaceAll('{{brand}}', brand().name),
 		'',
-		guide(surface, previous),
+		guide(surface, previous) + factsText(facts),
 		'',
 		'# Images (open every one before scoring)',
 		"Reference (the brand's own pages):",
