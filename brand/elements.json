@@ -11,10 +11,10 @@
 		"column": {
 			"name": "Content column",
 			"match": { "words": ["container", "wrapper", "wrap", "inner", "content", "max"] },
-			"css": { "width": "100%", "max-width": "var(--ds-layout-column-wide)", "margin-inline": "auto", "padding-inline": "var(--ds-space-6)" },
+			"css": { "box-sizing": "border-box", "width": "100%", "max-width": "var(--ds-frame-column)", "margin-inline": "auto", "padding-inline": "var(--ds-space-6)" },
 			"states": { "@media (min-width: 43.2rem)": { "padding-inline": "var(--ds-space-10)" }, "@media (min-width: 57.6rem)": { "padding-inline": "var(--ds-space-12)" } },
-			"tailwind": "mx-auto w-full max-w-(--ds-layout-column-wide) px-6 md:px-10 lg:px-12",
-			"rules": ["Content keeps its inset from the column lines on every width; text never touches a line."],
+			"tailwind": "box-border mx-auto w-full max-w-(--ds-frame-column) px-6 md:px-10 lg:px-12",
+			"rules": ["Exactly as wide as the ruled column lines (var(--ds-frame-column)): every section's content sits between them, inset by the padding.", "Nothing crosses a line except the full-bleed section rules."],
 			"source": "src/components/sections/products/product-landing-page.tsx:23"
 		},
 		"section": {
@@ -163,8 +163,8 @@
 		"header-scrolled": {
 			"name": "Header (scrolled pill)",
 			"match": { "words": ["scrolled", "is-scrolled", "sticky", "is-sticky", "fixed", "header--scrolled", "stuck"] },
-			"css": { "top": "var(--ds-space-2)", "box-sizing": "border-box", "width": "min(100% - var(--ds-space-6), var(--ds-layout-column-wide))", "min-height": "calc(var(--ds-space-16) + var(--ds-space-1))", "margin-inline": "auto", "padding-inline": "var(--ds-space-4)", "border": "var(--ds-space-1-5) solid var(--ds-color-ring-tint)", "border-radius": "var(--ds-radius-pill)", "background-color": "var(--ds-color-bg-default)", "background-clip": "padding-box", "box-shadow": "var(--ds-shadow-floating)", "backdrop-filter": "blur(var(--ds-space-4))", "transition": "border-radius var(--ds-duration-moderate) var(--ds-easing-out), background-color var(--ds-duration-moderate) var(--ds-easing-out), box-shadow var(--ds-duration-base) var(--ds-easing-out)" },
-			"tailwind": "top-2 box-border mx-auto w-[min(100%-var(--ds-space-6),var(--ds-layout-column-wide))] min-h-17 px-4 rounded-pill border-6 border-ring-tint bg-surface bg-clip-padding shadow-floating backdrop-blur-[var(--ds-space-4)] transition-[border-radius,background-color,box-shadow] duration-250",
+			"css": { "top": "var(--ds-space-2)", "box-sizing": "border-box", "width": "min(100% - var(--ds-space-6), var(--ds-frame-column))", "min-height": "calc(var(--ds-space-16) + var(--ds-space-1))", "margin-inline": "auto", "padding-inline": "var(--ds-space-4)", "border": "var(--ds-space-1-5) solid var(--ds-color-ring-tint)", "border-radius": "var(--ds-radius-pill)", "background-color": "var(--ds-color-bg-default)", "background-clip": "padding-box", "box-shadow": "var(--ds-shadow-floating)", "backdrop-filter": "blur(var(--ds-space-4))", "transition": "border-radius var(--ds-duration-moderate) var(--ds-easing-out), background-color var(--ds-duration-moderate) var(--ds-easing-out), box-shadow var(--ds-duration-base) var(--ds-easing-out)" },
+			"tailwind": "top-2 box-border mx-auto w-[min(100%-var(--ds-space-6),var(--ds-frame-column))] min-h-17 px-4 rounded-pill border-6 border-ring-tint bg-surface bg-clip-padding shadow-floating backdrop-blur-[var(--ds-space-4)] transition-[border-radius,background-color,box-shadow] duration-250",
 			"rules": ["A white pill 68px tall, 8px from the top of the window, in a see-through 6px ring of brand blue at 10 percent (background clipped to the padding box, so the frosted blur shows through the ring). Never an opaque pale outline.", "Items keep their size and place while the bar changes; no transition with reduced motion."],
 			"source": "src/components/sections/shared/marketing-header-frame.module.css:44"
 		},

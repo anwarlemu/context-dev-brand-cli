@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { betaZodOutputFormat } from '@anthropic-ai/sdk/helpers/beta/zod';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -54,6 +54,27 @@ export function pickEngine(): Engine {
 	return 'self';
 }
 
+/** A reviewer CLI run without blocking, so several screens can be scored at once. */
+function runCli(cmd: string, args: string[], input: string, env: NodeJS.ProcessEnv = process.env): Promise<{ status: number | null; stdout: string; stderr: string }> {
+	return new Promise((resolve) => {
+		const child = spawn(cmd, args, { env, stdio: ['pipe', 'pipe', 'pipe'] });
+		let stdout = '';
+		let stderr = '';
+		const timer = setTimeout(() => child.kill(), 15 * 60 * 1000);
+		child.stdout.on('data', (d) => (stdout += d));
+		child.stderr.on('data', (d) => (stderr += d));
+		child.on('error', (e) => {
+			clearTimeout(timer);
+			resolve({ status: 1, stdout, stderr: String(e) });
+		});
+		child.on('close', (status) => {
+			clearTimeout(timer);
+			resolve({ status, stdout, stderr });
+		});
+		child.stdin.end(input);
+	});
+}
+
 /** OpenAI structured outputs need every property required and no extra properties. */
 function strict(schema: any): any {
 	if (Array.isArray(schema)) return schema.map(strict);
@@ -102,7 +123,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		].join('\n');
 		const args = ['exec', '--ephemeral', '--skip-git-repo-check', '-s', 'read-only', '-C', work, '--output-schema', join(work, 'schema.json'), '-o', join(work, 'out.json'), ...[...refs, ...shots.map((s) => s.path)].map((f) => `--image=${f}`)];
 		if (process.env.DS_REVIEW_MODEL) args.push('-m', process.env.DS_REVIEW_MODEL);
-		const run = spawnSync('codex', args, { input: prompt, encoding: 'utf8', maxBuffer: 50 * 1024 * 1024, timeout: 15 * 60 * 1000 });
+		const run = await runCli('codex', args, prompt);
 		if (run.status !== 0 || !existsSync(join(work, 'out.json'))) throw new Error(`codex exec failed (exit ${run.status}): ${(run.stderr || run.stdout).slice(-400)}`);
 		const text = readFileSync(join(work, 'out.json'), 'utf8');
 		return { card: scorecardSchema.parse(JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1))), model: 'codex' };
@@ -125,7 +146,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		const env = { ...process.env };
 		delete env.CLAUDECODE;
 		delete env.CLAUDE_CODE_ENTRYPOINT;
-		const run = spawnSync('claude', args, { input: prompt, encoding: 'utf8', env, maxBuffer: 50 * 1024 * 1024, timeout: 15 * 60 * 1000 });
+		const run = await runCli('claude', args, prompt, env);
 		if (run.status !== 0) throw new Error(`claude -p failed (exit ${run.status}): ${(run.stderr || run.stdout).slice(0, 400)}`);
 		const out = JSON.parse(run.stdout) as { structured_output?: unknown; result?: string; is_error?: boolean; modelUsage?: Record<string, unknown> };
 		if (out.is_error) throw new Error(`claude -p returned an error: ${out.result?.slice(0, 400)}`);

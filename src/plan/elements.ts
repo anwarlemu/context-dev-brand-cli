@@ -4,7 +4,7 @@ import type { Surface } from '../project/surface.js';
 // Finds the elements of a file (markup tags and components, or CSS selectors) and the brand element each one is, from
 // the match data in brand/elements.json: its tag, role, class or component words, and the context it sits in.
 
-export type Hit = { line: number; label: string; kind: string };
+export type Hit = { line: number; label: string; kind: string; selector?: string };
 type El = { tag: string; words: string; heads: string; utilities: string; attrs: string; context: string[] };
 
 const UTILITY = /[:[\]/]|^-?(text|bg|border|rounded|p[xytrbl]?|m[xytrbl]?|flex|grid|gap|font|tracking|leading|w|h|size|max|min|shadow|items|justify|self|space|inset|top|left|right|bottom|z|opacity|transition|duration|ease|overflow|block|inline|hidden|relative|absolute|fixed|sticky|col|row|order|ring|outline|underline|no-underline|truncate|whitespace|break|cursor|select|pointer|object|aspect|fill|stroke|translate|scale|rotate|animate|sr|not|group|peer|container|mx|my|uppercase|lowercase|capitalize|italic|antialiased|shrink|grow|basis|place|content|list|divide|backdrop|blur|filter)(-|$)/;
@@ -106,9 +106,9 @@ const VOID = new Set(['input', 'img', 'br', 'hr', 'meta', 'link', 'source', 'are
 export function elementsIn(rel: string, text: string, surface: Surface): Hit[] {
 	const lineAt = (offset: number) => text.slice(0, offset).split('\n').length;
 	const hits: Hit[] = [];
-	const push = (offset: number, label: string, el: El) => {
+	const push = (offset: number, label: string, el: El, selector?: string) => {
 		const kind = kindOf(el, surface);
-		if (kind) hits.push({ line: lineAt(offset), label: label.replace(/\s+/g, ' '), kind });
+		if (kind) hits.push({ line: lineAt(offset), label: label.replace(/\s+/g, ' '), kind, ...(selector ? { selector } : {}) });
 	};
 	if (/\.(css|scss|sass|less|styl)$/.test(rel)) {
 		const css = text.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, ' '));
@@ -120,7 +120,7 @@ export function elementsIn(rel: string, text: string, surface: Surface): Hit[] {
 			const tag = (last.match(/^[a-z][a-z0-9]*/i)?.[0] ?? 'div').toLowerCase();
 			const split = splitClasses([...last.matchAll(/\.([\w-]+)/g)].map((c) => c[1]));
 			const context = parts.flatMap((c) => contextLabels((c.match(/^[a-z][a-z0-9]*/i)?.[0] ?? '').toLowerCase(), splitClasses([...c.matchAll(/\.([\w-]+)/g)].map((x) => x[1])).words));
-			push(m.index + m[1].length, selector.length > 60 ? `${selector.slice(0, 57)}...` : selector, { tag, ...split, attrs: last.match(/\[[^\]]*\]/g)?.join(' ') ?? '', context });
+			push(m.index + m[1].length, selector.length > 60 ? `${selector.slice(0, 57)}...` : selector, { tag, ...split, attrs: last.match(/\[[^\]]*\]/g)?.join(' ') ?? '', context }, selector);
 		}
 		return hits;
 	}

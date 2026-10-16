@@ -44,11 +44,63 @@ async function launch() {
 	throw new Error('No Chromium found. Run: npx playwright install chromium');
 }
 
-export async function capture(url: string, viewports: ViewportName[], outDir: string): Promise<Shot[]> {
+/**
+ * What sits outside the ruled column lines (a site's frame): visible text, images and controls whose visible box
+ * crosses a line, grouped by their nearest named container. Empty when the page has no frame.
+ */
+function outsideLines(): string[] {
+	const frame = getComputedStyle(document.body, '::after');
+	if (!frame.borderLeftWidth || frame.borderLeftStyle === 'none' || !Number.parseFloat(frame.width)) return [];
+	const vw = document.documentElement.clientWidth;
+	const left = (vw - Number.parseFloat(frame.width)) / 2;
+	const right = left + Number.parseFloat(frame.width);
+	const found = new Map<string, string>();
+	for (const el of Array.from(document.querySelectorAll<HTMLElement>('body *'))) {
+		if (el.closest('[data-ds-dots-layer], script, style, noscript, template')) continue;
+		const own = el.matches('img, svg, video, canvas, picture, button, input, select, textarea, iframe') || Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent?.trim());
+		if (!own || el.parentElement?.closest('svg, button')) continue;
+		const style = getComputedStyle(el);
+		if (style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
+		let { left: l, right: r, top, bottom } = el.getBoundingClientRect();
+		// Only the part a clipping ancestor (a marquee, a scroller) leaves visible counts.
+		for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
+			const ps = getComputedStyle(p);
+			if (ps.overflowX !== 'visible' || ps.clipPath !== 'none') {
+				const pr = p.getBoundingClientRect();
+				l = Math.max(l, pr.left);
+				r = Math.min(r, pr.right);
+				top = Math.max(top, pr.top);
+				bottom = Math.min(bottom, pr.bottom);
+			}
+		}
+		// Off-screen helpers (a skip link) and full-width backdrops (a hero's glow) are not content.
+		if (r - l < 2 || bottom - top < 2 || r < 0 || l > vw || r - l >= vw * 0.9) continue;
+		if (l >= left - 1 && r <= right + 1) continue;
+		// Name the outermost box that crosses too (the floating window, not each line of text in it).
+		const crosses = (n: HTMLElement) => {
+			const b = n.getBoundingClientRect();
+			return b.width < vw * 0.9 && (b.left < left - 1 || b.right > right + 1);
+		};
+		let top_ = el;
+		while (top_.parentElement && top_.parentElement !== document.body && crosses(top_.parentElement)) top_ = top_.parentElement;
+		const named = top_.closest<HTMLElement>('[class]:not(svg *), [id]') ?? top_;
+		const name = named.id ? `#${named.id}` : `.${String(named.className).trim().split(/\s+/)[0]}`;
+		if (!found.has(name)) found.set(name, `${name} (${Math.round(l)} to ${Math.round(r)}px; lines at ${Math.round(left)} and ${Math.round(right)})`);
+	}
+	return [...found.values()];
+}
+
+export async function capture(url: string, viewports: ViewportName[], outDir: string): Promise<{ shots: Shot[]; outside: string[] }> {
 	mkdirSync(outDir, { recursive: true });
 	const browser = await launch();
 	const shots: Shot[] = [];
+	const outside: string[] = [];
 	try {
+		// A narrower desktop too: fixed widths that fit at 1440 cross the lines on a laptop.
+		const narrow = await browser.newPage({ viewport: { width: 1100, height: 800 }, deviceScaleFactor: 1 });
+		await narrow.goto(url, { waitUntil: 'networkidle', timeout: 120_000 });
+		for (const item of await narrow.evaluate(outsideLines)) outside.push(`at 1100px: ${item}`);
+		await narrow.close();
 		for (const viewport of viewports) {
 			const page = await browser.newPage({ viewport: VIEWPORTS[viewport], deviceScaleFactor: 1, extraHTTPHeaders: { Accept: 'text/html' } });
 			await page.goto(url, { waitUntil: 'networkidle', timeout: 120_000 });
@@ -60,6 +112,7 @@ export async function capture(url: string, viewports: ViewportName[], outDir: st
 			}
 			await page.evaluate(() => window.scrollTo(0, 0));
 			await page.waitForTimeout(400);
+			for (const item of await page.evaluate(outsideLines)) outside.push(`at ${VIEWPORTS[viewport].width}px: ${item}`);
 			const slices = Math.min(MAX_SLICES_PER_VIEWPORT, Math.ceil(height / SLICE));
 			for (let i = 0; i < slices; i++) {
 				const top = i * SLICE;
@@ -72,5 +125,5 @@ export async function capture(url: string, viewports: ViewportName[], outDir: st
 	} finally {
 		await browser.close();
 	}
-	return shots;
+	return { shots, outside: outside.slice(0, 12) };
 }

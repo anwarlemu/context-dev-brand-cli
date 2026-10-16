@@ -20,6 +20,7 @@ import { detectProject, styledFiles } from '../src/project/detect.js';
 import { listScreens } from '../src/project/screens.js';
 import { profile } from '../src/project/surface.js';
 import { pickEngine, scorecardJsonSchema } from '../src/review/critique.js';
+import { elementLayer } from '../src/install/layer.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const BIN = join(ROOT, 'bin.js');
@@ -106,6 +107,16 @@ describe('convert', () => {
 		expect(convertScript("const s = { color: '#ff0000', marginTop: 16 }; const series = ['#22c55e', '#f59e0b', '#8b5cf6'];", pal, stats(), {})).toMatch(/marginTop: 'var\(--ds-space-4\)'.*#3B82F6.*#14B8A6/s);
 		expect(convertNative('val bg = Color(0xFF0B0B0C)\nText(color = Color(0xFFF5F5F5))', sitePalette('body{background:#0b0b0c;color:#f5f5f5}'), stats(), 'site')).toContain('Color(0xFFFFFFFF)');
 	});
+	it('puts wide containers on the ruled column, on a site only', () => {
+		const css = ':root { --max-w: 1200px; --measure: 640px } .wrap { max-width: 1280px } .form { max-width: 480px }';
+		const out = convertCss(css, { ...sitePalette(''), column: true }, stats());
+		expect(out).toContain('--max-w: var(--ds-frame-column)');
+		expect(out).toContain('.wrap { max-width: var(--ds-frame-column) }');
+		expect(out).toContain('--measure: 640px');
+		expect(out).toContain('max-width: 480px');
+		expect(convertCss(css, sitePalette(''), stats())).not.toContain('frame-column');
+		expect(convertClasses('mx-auto max-w-7xl px-6', { ...sitePalette(''), column: true }, stats(), true)).toBe('mx-auto max-w-(--ds-frame-column) px-6');
+	});
 	it('leaves the colors of a 3D or canvas scene alone', () => {
 		const scene = "import * as THREE from 'three';\nconst sea = new THREE.Color('#1a4fd0');\nconst style = { color: '#ff6600' };";
 		const out = convertScript(scene, sitePalette(''), stats(), {});
@@ -157,6 +168,21 @@ describe('check', () => {
 		const r = runCheck(p);
 		expect(r.findings.map((f) => f.rule)).toEqual(['override-approval']);
 		rmSync(p, { recursive: true });
+	});
+});
+
+describe('element layer', () => {
+	it('styles only elements whose class says what they are, skin only, with gated hover and reduced motion', () => {
+		const css = '.btn-primary { padding: 10px; display: grid } .hw-msg-main { color: red } .plan-card { width: 300px } button { color: red } .nav-links > a { color: red }';
+		const { block, count } = elementLayer('styles.css', css, 'site');
+		expect(block).toMatch(/\.btn-primary \{[^}]*background-color: var\(--ds-color-action-primary\)/);
+		expect(block).not.toContain('.hw-msg-main');
+		expect(block).toMatch(/\.plan-card \{/);
+		expect(block).not.toMatch(/^button/m);
+		expect(block).not.toMatch(/display:|width:/);
+		expect(block).toContain('@media (hover: hover) and (pointer: fine)');
+		expect(block).toContain('prefers-reduced-motion: reduce');
+		expect(count).toBeGreaterThanOrEqual(2);
 	});
 });
 

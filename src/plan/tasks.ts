@@ -70,7 +70,7 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
 		...(status.touches.includes('accent') ? ['  Wrap the closing words of the hero headline and of each section heading in <span class="ds-accent"> (same words, in blue; never a whole heading).'] : []),
 		...(status.errors ? [`  ${status.errors} values here are not brand tokens yet: \`${cli()} check ${s.files.slice(0, 3).join(' ')}${s.files.length > 3 ? ' ...' : ''}\` lists each with the token to use.`] : []),
 		url
-			? `  Then run the app and \`${cli()} review ${url}\`. Done when every score is ${threshold} or more and the check is clean; fix its punch list until then.`
+			? `  Then run the app and \`${cli()} review ${url}\`. Done when every score is ${threshold} or more and the check is clean; fix its punch list until then. Faster: restyle several screens, then \`${cli()} review --all ${state.baseUrl ?? 'http://localhost:<port>'}\` scores them together.`
 			: `  Native screen: build and look at it, then \`${cli()} done ${s.id}\`.`,
 		`  If it cannot pass without changing words or elements (or cannot run here), \`${cli()} skip ${s.id} --reason "<why>"\`; the person sees every skip.`,
 		...(status.reviewed && !status.passed ? [color.yellow(`  Last review did not pass: ${(state.reviews[s.id]?.punch ?? []).slice(0, 3).map((p) => p.issue).join('; ')}`)] : []),

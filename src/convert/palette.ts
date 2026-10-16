@@ -21,6 +21,8 @@ export type Palette = {
 	lines?: boolean;
 	/** The theme the brand is applied in (a product may keep its dark theme). */
 	target?: Mode;
+	/** A site: its wide content containers take the width of the ruled column, so content sits between the lines. */
+	column?: boolean;
 };
 
 const fromLightness = (bg: RGBA | undefined, fg: RGBA | undefined): Pick<Palette, 'mode' | 'bg' | 'fg' | 'found'> => {

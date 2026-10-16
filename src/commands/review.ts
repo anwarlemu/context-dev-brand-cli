@@ -15,7 +15,7 @@ import { type Scorecard, brief, critique, pickEngine, scorecardSchema } from '..
 // recorded for the screen it belongs to, which is how a task is checked off. Only task screens are reviewed, and a
 // screen that failed is reviewed again only once its files changed, so agents fix the punch list instead of re-rolling.
 
-type Opts = { json?: boolean; threshold?: string; any?: boolean; submit?: string };
+type Opts = { json?: boolean; threshold?: string; any?: boolean; submit?: string; all?: boolean; brief?: boolean };
 
 /** A fingerprint of what a screen is drawn from (its files and the main stylesheet). */
 function filesHash(root: string, screen: Screen) {
@@ -39,6 +39,7 @@ export async function review(target: string | undefined, opts: Opts) {
 	const root = findProjectRoot();
 	const state = readState(root);
 	if (opts.submit) return submit(root, state, opts);
+	if (opts.all) return reviewAll(root, state, target, opts);
 	if (!target || !/^https?:\/\//.test(target)) {
 		const hint = state?.baseUrl ? `${state.baseUrl}${target ?? '/'}` : 'http://localhost:<port>/<page>';
 		throw new Error(`Start the app and pass the page's URL: \`${cli()} review ${hint}\`.`);
@@ -60,11 +61,11 @@ export async function review(target: string | undefined, opts: Opts) {
 	}
 	const surface = screen?.surface ?? state?.surface ?? 'site';
 	const outDir = join(root, '.ds', 'review', new Date().toISOString().replace(/[:.]/g, '-'));
-	const shots = await capture(target, ['desktop', 'mobile'], outDir);
+	const { shots, outside } = await capture(target, ['desktop', 'mobile'], outDir);
 	const previous = screen ? state?.reviews[screen.id] : undefined;
 	if (pickEngine() === 'self') {
 		const dir = brief(shots, target, surface, previous);
-		writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url: target, screen: screen?.id })}\n`);
+		writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url: target, screen: screen?.id, outside })}\n`);
 		const rel = relative(root, dir);
 		console.log(
 			[
@@ -78,7 +79,57 @@ export async function review(target: string | undefined, opts: Opts) {
 		return;
 	}
 	const { card, model } = await critique(shots, target, surface, previous);
-	record(root, state, screen, target, card, model, outDir, opts);
+	record(root, state, screen, target, withOutside(card, outside), model, outDir, opts);
+}
+
+/**
+ * `review --all [base url]`: every task screen not passed yet (and changed since a failed review), scored at once.
+ * Restyle several screens, then run this once instead of waiting on one review per screen.
+ */
+async function reviewAll(root: string, state: State | undefined, target: string | undefined, opts: Opts) {
+	if (!state) throw new Error(`Run \`${cli()}\` first.`);
+	const base = (target && /^https?:\/\//.test(target) ? new URL(target).origin : state.baseUrl)?.replace(/\/$/, '');
+	if (!base) throw new Error(`Start the app and pass its address: \`${cli()} review --all http://localhost:<port>\`.`);
+	state.baseUrl = base;
+	const due = mainScreens(state).filter((s) => {
+		if (!s.url || s.url.includes('[') || state.skipped?.[s.id]) return false;
+		const last = state.reviews[s.id];
+		return !last?.passed && !(last?.files && last.files === filesHash(root, s));
+	});
+	if (!due.length) {
+		console.log(`No task screen needs a review: each passed, was skipped, or has not changed since its last review. Run \`${cli()}\`.`);
+		return;
+	}
+	const self = pickEngine() === 'self';
+	console.log(`Reviewing ${due.length} screens at once: ${due.map((s) => s.id).join(', ')}`);
+	const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+	const results: { id: string; pass: boolean; line: string }[] = [];
+	const queue = [...due];
+	const worker = async () => {
+		for (let s = queue.shift(); s; s = queue.shift()) {
+			const url = `${base}${s.url}`;
+			const outDir = join(root, '.ds', 'review', `${stamp}${s.id.replace(/[^\w-]+/g, '_')}`);
+			try {
+				const { shots, outside } = await capture(url, ['desktop', 'mobile'], outDir);
+				if (self) {
+					const dir = brief(shots, url, s.surface, state.reviews[s.id]);
+					writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url, screen: s.id, outside })}\n`);
+					results.push({ id: s.id, pass: false, line: `  ${s.id}: score it from ${relative(root, dir)}/brief.md, then \`${cli()} review --submit ${relative(root, dir)}\`` });
+					continue;
+				}
+				const { card, model } = await critique(shots, url, s.surface, state.reviews[s.id]);
+				const pass = record(root, state, s, url, withOutside(card, outside), model, outDir, { ...opts, brief: true });
+				results.push({ id: s.id, pass, line: '' });
+			} catch (e) {
+				results.push({ id: s.id, pass: false, line: `  ${s.id}: could not review (${(e as Error).message.split('\n')[0]})` });
+			}
+		}
+	};
+	await Promise.all(Array.from({ length: Math.min(4, due.length) }, worker));
+	for (const r of results.filter((x) => x.line)) console.log(r.line);
+	const passed = results.filter((r) => r.pass).length;
+	console.log(self ? '' : `${passed} of ${due.length} passed. Fix the punch lists (styling only), then \`${cli()} review --all\` again; \`${cli()}\` shows the next task.`);
+	process.exitCode = passed === due.length ? 0 : 1;
 }
 
 function submit(root: string, state: State | undefined, opts: Opts) {
@@ -86,14 +137,27 @@ function submit(root: string, state: State | undefined, opts: Opts) {
 	const metaPath = join(dir, 'meta.json');
 	if (!existsSync(metaPath)) throw new Error(`${opts.submit} is not a review folder (no meta.json). Run \`${cli()} review <url>\` first.`);
 	if (!existsSync(join(dir, 'scorecard.json'))) throw new Error(`Write ${opts.submit}/scorecard.json first (the shape is in brief.md).`);
-	const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as { url: string; screen?: string };
+	const meta = JSON.parse(readFileSync(metaPath, 'utf8')) as { url: string; screen?: string; outside?: string[] };
 	const parsed = scorecardSchema.safeParse(JSON.parse(readFileSync(join(dir, 'scorecard.json'), 'utf8')));
 	if (!parsed.success) throw new Error(`scorecard.json does not match the shape in brief.md: ${parsed.error.issues.slice(0, 3).map((i) => `${i.path.join('.')}: ${i.message}`).join('; ')}`);
 	const screen = state?.screens.find((s) => s.id === meta.screen);
-	record(root, state, screen, meta.url, parsed.data, 'self', dir, opts);
+	record(root, state, screen, meta.url, withOutside(parsed.data, meta.outside ?? []), 'self', dir, opts);
 }
 
-function record(root: string, state: State | undefined, screen: Screen | undefined, target: string, card: Scorecard, model: string, outDir: string, opts: Opts) {
+/**
+ * Content outside the column lines is measured, not judged: any of it is a blocker and caps the coherence score, so
+ * the screen cannot pass until everything sits between the lines.
+ */
+function withOutside(card: Scorecard, outside: string[]): Scorecard {
+	if (!outside.length) return card;
+	return {
+		...card,
+		scores: { ...card.scores, coherence: Math.min(card.scores.coherence, 5) },
+		punch_list: [{ viewport: 'desktop + mobile', region: 'column lines', issue: `Content crosses the ruled column lines (measured): ${outside.join('; ')}.`, fix: 'Keep every element between the lines: containers use max-width var(--ds-frame-column) with their padding inside (`look column`); pull offset or absolutely placed pieces in; a wide table or code block scrolls inside its card.', severity: 'blocker' }, ...card.punch_list],
+	};
+}
+
+function record(root: string, state: State | undefined, screen: Screen | undefined, target: string, card: Scorecard, model: string, outDir: string, opts: Opts): boolean {
 	const threshold = Number(opts.threshold ?? brand().reviewThreshold);
 	const failing = Object.entries(card.scores).filter(([, v]) => v < threshold);
 	mkdirSync(outDir, { recursive: true });
@@ -114,6 +178,11 @@ function record(root: string, state: State | undefined, screen: Screen | undefin
 		}
 		writeState(root, state);
 	}
+	if (opts.brief) {
+		const scores = Object.entries(card.scores).map(([k, v]) => `${k} ${v < threshold ? color.red(String(v)) : color.green(String(v))}`).join(', ');
+		console.log([`${failing.length ? color.red('Not yet') : color.green('Passed')} ${screen?.id ?? target}: ${scores}`, ...card.punch_list.slice(0, 4).map((p, i) => `  ${i + 1}. [${p.severity}] ${p.viewport} / ${p.region}: ${p.issue}\n     Fix: ${p.fix}`)].join('\n'));
+		return failing.length === 0;
+	}
 	emit(opts, { url: target, screen: screen?.id, model, threshold, pass: failing.length === 0, ...card, screenshots: outDir }, () =>
 		[
 			`Review of ${target}${screen ? ` (screen ${screen.id})` : ''}, threshold ${threshold}`,
@@ -128,4 +197,5 @@ function record(root: string, state: State | undefined, screen: Screen | undefin
 		].join('\n'),
 	);
 	process.exitCode = failing.length ? 1 : 0;
+	return failing.length === 0;
 }

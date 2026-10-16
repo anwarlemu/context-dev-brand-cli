@@ -22,7 +22,7 @@ export function convertProject(project: Project, files: string[], surface: Surfa
 	const styleText = [project.mainStylesheet && existsSync(join(root, project.mainStylesheet)) ? read(project.mainStylesheet) : '', ...styleFiles.map(read)].join('\n');
 	const nativeFiles = files.filter((rel) => NATIVE.test(rel) || ANDROID_XML.test(rel));
 	const css = sitePalette(styleText);
-	const base: Palette = { ...(css.found || !nativeFiles.length ? css : nativePalette(nativeFiles.map(read), readNativeColor)), target: surface === 'product' && theme === 'dark' ? 'dark' : 'light' };
+	const base: Palette = { ...(css.found || !nativeFiles.length ? css : nativePalette(nativeFiles.map(read), readNativeColor)), target: surface === 'product' && theme === 'dark' ? 'dark' : 'light', column: surface !== 'product' };
 	const brandTheme: BrandTheme = surface === 'product' ? (theme === 'dark' ? 'product-dark' : 'product') : 'site';
 
 	// A page that styles itself apart from the rest (a dark case study inside a light site) is read against its own

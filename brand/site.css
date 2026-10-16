@@ -52,11 +52,8 @@ body {
 }
 
 /* The ruled column: hairlines down both edges of the content column for the whole page, a full-bleed rule between
-   top-level sections, and a solid node where a rule meets a column edge. Lines sit behind the content. */
-:root {
-	--ds-frame-column: calc(100% - 2px);
-}
-
+   top-level sections, and a solid node where a rule meets a column edge. The lines sit above section backgrounds (a
+   hero's own fill would hide them) and under anything positioned above them; content keeps inside them. */
 @media (min-width: 43.2rem) {
 	:root {
 		--ds-frame-column: 90vw;
@@ -79,7 +76,7 @@ body::after {
 	position: absolute;
 	inset-block: 0;
 	left: 50%;
-	z-index: -1;
+	z-index: 0;
 	width: var(--ds-frame-column);
 	transform: translateX(-50%);
 	border-inline: 1px solid var(--ds-color-border-rule);
@@ -89,6 +86,11 @@ body::after {
 :where(body, main) > :where(section) + :where(section, footer) {
 	position: relative;
 	border-top: 1px solid var(--ds-color-border-rule);
+}
+
+:where(body, body > div, main) > :where(footer) {
+	position: relative;
+	z-index: 1;
 }
 
 :where(body, main) > :where(section) + :where(section, footer)::before {

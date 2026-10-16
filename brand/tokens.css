@@ -126,6 +126,8 @@
 	/* Layout */
 	--ds-layout-column: 68.75rem;
 	--ds-layout-column-wide: 81.25rem;
+	/* The ruled column's width: full width on phones, 90vw, then min(85vw, column-wide) (site.css). Content containers use it. */
+	--ds-frame-column: calc(100% - 2px);
 	--ds-layout-text: 36rem;
 	--ds-layout-heading: 42rem;
 

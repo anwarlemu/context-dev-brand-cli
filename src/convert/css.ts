@@ -51,6 +51,13 @@ function resolveSiteVars(value: string, vars: Map<string, string>, depth = 0): s
 }
 
 /** Rebrands a stylesheet or a style attribute. Rules for the project's other theme are read against that theme. */
+// A container is a width of 900px or more; narrower widths are measures (a text column, a form) and stay.
+const CONTAINER_VAR = /(max-?w|container|content-?w|wrap|site-?w|page-?w|layout-?w|column-?w|max-?width)/;
+const isWide = (value: string) => {
+	const m = value.trim().match(/^(\d*\.?\d+)(px|rem)$/);
+	return !!m && toPx(m[1], m[2]) >= 900;
+};
+
 export function convertCss(css: string, palette: Palette, stats: Stats) {
 	palette.series ??= new Map();
 	return walkCss(css, (decls, ctx) => (ctx.fontFace ? decls : convertDecls(decls, themed(palette, ctx.mode), stats, ctx.selector)));
@@ -117,6 +124,9 @@ function convertDecls(css: string, palette: Palette, stats: Stats, selector: str
 		} else if (/^border(-[a-z]+)*-radius$/.test(p) && /^\s*50%\s*$/.test(next)) {
 			stats.radius++;
 			next = 'var(--ds-radius-pill)';
+		} else if (palette.column && (p === 'max-width' || (isVar && CONTAINER_VAR.test(p))) && isWide(next)) {
+			stats.spacing++;
+			next = 'var(--ds-frame-column)';
 		} else if (/^(padding|margin|gap|row-gap|column-gap)(-[a-z]+)*$/.test(p) && /\d(px|rem)/.test(next) && !/calc|clamp|min\(|max\(/.test(next)) {
 			stats.spacing++;
 			next = mapLengths(next, scales().space);

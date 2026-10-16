@@ -34,7 +34,15 @@ const TW_FAMILY: [RegExp, Family][] = [
  * Tailwind color classes (palette, white, black, arbitrary hex) as brand classes: the theme's names when the brand
  * theme is loaded, else arbitrary values that read the brand variables. Variants and opacity modifiers are kept.
  */
+const WIDE_TW = /(?<![\w-])((?:[\w-]+:)*)max-w-(5xl|6xl|7xl|screen-lg|screen-xl|screen-2xl|\[(\d{3,4})px\])(?![\w-])/g;
+
 export function convertClasses(value: string, palette: Palette, stats: Stats, theme: boolean) {
+	if (palette.column)
+		value = value.replace(WIDE_TW, (all, variants: string, size: string, px?: string) => {
+			if (px && Number(px) < 900) return all;
+			stats.spacing++;
+			return `${variants}${theme ? 'max-w-(--ds-frame-column)' : 'max-w-[var(--ds-frame-column)]'}`;
+		});
 	const bgClass = value.match(/(?:^|\s)bg-((?:[a-z]+-(?:50|[1-9]00|950))|\[#[0-9a-fA-F]{3,8}\])(?![\w-])/)?.[1];
 	const background = bgClass ? (bgClass.startsWith('[') ? parseColor(bgClass.slice(1, -1)) : tailwindColor(bgClass)) : undefined;
 	return value.replace(/(?<![\w-])((?:[\w-]+:|\[[^\]\s]+\]:)*)(!?)(-?)(bg|text|border(?:-[xytrblse])?|ring(?:-offset)?|outline|divide|fill|stroke|from|via|to|decoration|placeholder|caret|accent)-((?:[a-z]+-(?:50|[1-9]00|950))|white|black|\[#[0-9a-fA-F]{3,8}\])(?:\/(\d{1,3}|\[[\d.]+%?\]))?(?![\w-])/g, (all, variants: string, bang: string, neg: string, prefix: string, color: string, opacity?: string) => {
