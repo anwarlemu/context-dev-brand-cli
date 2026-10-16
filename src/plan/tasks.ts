@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { brand, cli } from '../lib/brand.js';
 import { runCheck } from '../check/engine.js';
@@ -60,7 +60,9 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
 		if (counts.size) kinds.set(rel, counts);
 	}
 	const url = s.url && state.baseUrl ? `${state.baseUrl.replace(/\/$/, '')}${s.url}` : s.url ? `http://localhost:<port>${s.url}` : undefined;
+	const snapped = existsSync(join(root, '.ds', 'before'));
 	const lines = [
+		...(index === 0 && !snapped && s.url ? [color.bold(`Before any edit: run the app and \`${cli()} snapshot ${state.baseUrl ?? 'http://localhost:<port>'}\` (saves how each screen looks now; reviews check sizes, places and effects stay the same).`)] : []),
 		color.bold(`Task ${index + 1} of ${total}: ${where}${index === 0 ? (s.surface === 'product' ? ' and the app shell (sidebar, top bar, page)' : ' and the shared shell (header, footer, page)') : ''} (${s.surface === 'product' ? 'product screen' : 'site page'}).`),
 		`  First say in one line what this screen is for. Keep that: its main action stays the most prominent thing; no words or elements change.`,
 		`  Restyle each element the way \`${cli()} look <file>\` shows (exact CSS and Tailwind, with states):`,

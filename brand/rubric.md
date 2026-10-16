@@ -5,6 +5,13 @@ The screen keeps its own copy, elements and purpose; judge only how it looks and
 7 is shippable, 9 matches the reference in quality, 5 is generic. Be consistent: the same screen with the same
 problems gets the same scores. When a previous punch list is given, check each item first and say whether it is fixed.
 
+## Same composition (blocker when broken)
+When "before" images are given (the screen right after the automatic conversion, before any hand edits), compare
+the layout: every element is still there, at the same size relative to its neighbors, in the same place in the
+arrangement. Nothing enlarged to fill space or shrunk, no floating piece moved over the content it used to frame, no
+image or effect lost (a background drawing, a trail, a glow that is now invisible). Colors and type are expected to
+change; sizes, proportions and overlaps are not. Report any break as a blocker naming the element.
+
 ## Purpose (score: hierarchy)
 Say in one line what the screen is for. Its main action is the most prominent thing (one filled primary), its key
 information is easy to find and scan, and the restyle did not bury, flatten or reorder anything.

@@ -89,6 +89,12 @@ function strict(schema: any): any {
 }
 export const scorecardJsonSchema = () => strict(z.toJSONSchema(scorecardSchema));
 
+/** The screen as it was before any hand edits (`snapshot`), desktop slices, when it was taken. */
+export function beforeShots(root: string, screenId: string) {
+	const dir = join(root, '.ds', 'before', screenId.replace(/[^\w-]+/g, '_') || 'home');
+	return existsSync(dir) ? readdirSync(dir).filter((f) => /^desktop-\d+\.png$/.test(f)).sort().slice(0, 3).map((f) => join(dir, f)) : [];
+}
+
 /** The brand pages to compare against: the site's home and a use-case page, or the product's overview and a table. */
 export function references(surface: Surface) {
 	const dir = pkgPath('brand', 'reference');
@@ -104,7 +110,7 @@ function guide(surface: Surface, previous?: Review) {
 	return `# principles.md\n${read('principles.md')}\n\n# rubric.md\n${read('rubric.md')}\n\nThis screen is a ${surface === 'product' ? 'product screen: compare with the product reference' : 'site page: compare with the site reference'}.${prior}`;
 }
 
-export async function critique(shots: Shot[], url: string, surface: Surface, previous?: Review): Promise<{ card: Scorecard; model: string }> {
+export async function critique(shots: Shot[], url: string, surface: Surface, previous?: Review, before: string[] = []): Promise<{ card: Scorecard; model: string }> {
 	const system = SYSTEM.replaceAll('{{brand}}', brand().name);
 	const refs = references(surface);
 	const engine = pickEngine();
@@ -118,10 +124,10 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 			'',
 			guide(surface, previous),
 			`\n# Screen\n${url}\n`,
-			`The first ${refs.length} attached images are the reference (the brand's own pages); the rest are the restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}.`,
+			`The first ${refs.length} attached images are the reference (the brand's own pages);${before.length ? ` the next ${before.length} are this screen before hand edits (desktop, top down);` : ''} the rest are the restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}.`,
 			'Do not run commands or edit files. Return the scorecard and the punch list.',
 		].join('\n');
-		const args = ['exec', '--ephemeral', '--skip-git-repo-check', '-s', 'read-only', '-C', work, '--output-schema', join(work, 'schema.json'), '-o', join(work, 'out.json'), ...[...refs, ...shots.map((s) => s.path)].map((f) => `--image=${f}`)];
+		const args = ['exec', '--ephemeral', '--skip-git-repo-check', '-s', 'read-only', '-C', work, '--output-schema', join(work, 'schema.json'), '-o', join(work, 'out.json'), ...[...refs, ...before, ...shots.map((s) => s.path)].map((f) => `--image=${f}`)];
 		if (process.env.DS_REVIEW_MODEL) args.push('-m', process.env.DS_REVIEW_MODEL);
 		const run = await runCli('codex', args, prompt);
 		if (run.status !== 0 || !existsSync(join(work, 'out.json'))) throw new Error(`codex exec failed (exit ${run.status}): ${(run.stderr || run.stdout).slice(-400)}`);
@@ -134,6 +140,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		const content = [
 			{ type: 'text', text: `${guide(surface, previous)}\n\n# Screen\n${url}\n\nReference: the brand's own pages.` },
 			...refs.map((r) => block(r, 'image/jpeg')),
+			...(before.length ? [{ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' }, ...before.map((b) => block(b, 'image/png'))] : []),
 			{ type: 'text', text: `Restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}, in that order.` },
 			...shots.map((s) => block(s.path, 'image/png')),
 			{ type: 'text', text: 'Return the scorecard and the punch list.' },
@@ -156,6 +163,10 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 	const image = (path: string, type: 'image/png' | 'image/jpeg'): Anthropic.Beta.BetaContentBlockParam => ({ type: 'image', source: { type: 'base64', media_type: type, data: readFileSync(path).toString('base64') } });
 	const content: Anthropic.Beta.BetaContentBlockParam[] = [{ type: 'text', text: guide(surface, previous) }, { type: 'text', text: 'Reference: the brand\'s own pages.' }];
 	for (const r of refs) content.push(image(r, 'image/jpeg'));
+	if (before.length) {
+		content.push({ type: 'text', text: 'Before: this screen right after the automatic conversion, before any hand edits (desktop, top down). Compare the composition.' });
+		for (const b of before) content.push(image(b, 'image/png'));
+	}
 	content.push({ type: 'text', text: `Restyled screen: ${url}` });
 	for (const shot of shots) {
 		content.push({ type: 'text', text: `${shot.viewport}, slice ${shot.index + 1}` });
@@ -178,7 +189,7 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
  * For an agent with no separate reviewer (Cursor, Hermes, any other): everything needed to score the screen itself,
  * written next to the screenshots. The agent opens every image, fills scorecard.json and submits it.
  */
-export function brief(shots: Shot[], url: string, surface: Surface, previous?: Review): string {
+export function brief(shots: Shot[], url: string, surface: Surface, previous?: Review, before: string[] = []): string {
 	const dir = dirname(shots[0].path);
 	const text = [
 		`# Review of ${url}`,
@@ -190,6 +201,7 @@ export function brief(shots: Shot[], url: string, surface: Surface, previous?: R
 		'# Images (open every one before scoring)',
 		"Reference (the brand's own pages):",
 		...references(surface).map((r) => `- ${r}`),
+		...(before.length ? ['Before (this screen right after the automatic conversion, before hand edits; compare the composition):', ...before.map((b) => `- ${b}`)] : []),
 		'Restyled screen:',
 		...shots.map((s) => `- ${s.path} (${s.viewport}, slice ${s.index + 1})`),
 		'',

@@ -117,6 +117,16 @@ describe('convert', () => {
 		expect(convertCss(css, sitePalette(''), stats())).not.toContain('frame-column');
 		expect(convertClasses('mx-auto max-w-7xl px-6', { ...sitePalette(''), column: true }, stats(), true)).toBe('mx-auto max-w-(--ds-frame-column) px-6');
 	});
+	it('flips plain white drawn in code for a dark page, keeps real colors, and converts inline scripts', () => {
+		const dark = sitePalette('body{background:#08090a;color:#fff}');
+		const trail = "const ctx = c.getContext('2d');\nctx.fillStyle = 'rgba(255,255,255,' + a + ')';\nconst glow = 'rgba(255, 255, 255, 0.2)';\nconst sea = '#1a4fd0';";
+		const out = convertScript(trail, dark, stats(), {});
+		expect(out).toContain("'rgba(0,0,0,' + a");
+		expect(out).toContain("'rgba(0, 0, 0, 0.2)'");
+		expect(out).toContain("'#1a4fd0'");
+		expect(convertMarkup('<script>const s = { color: "#ffffff" };</script>', dark, stats())).not.toContain('#ffffff');
+		expect(convertMarkup('<script type="application/ld+json">{"color":"#ffffff"}</script>', dark, stats())).toContain('#ffffff');
+	});
 	it('leaves the colors of a 3D or canvas scene alone', () => {
 		const scene = "import * as THREE from 'three';\nconst sea = new THREE.Color('#1a4fd0');\nconst style = { color: '#ff6600' };";
 		const out = convertScript(scene, sitePalette(''), stats(), {});
@@ -287,6 +297,6 @@ describe('the one command', () => {
 		rmSync(p, { recursive: true });
 	});
 	it('every command answers --help', () => {
-		for (const c of ['review', 'look', 'check', 'tokens', 'approve', 'done', 'skip', 'hook']) expect(execFileSync(process.execPath, [BIN, c, '--help'], { encoding: 'utf8' })).toMatch(/Usage/);
+		for (const c of ['review', 'look', 'check', 'tokens', 'approve', 'done', 'skip', 'snapshot', 'hook']) expect(execFileSync(process.execPath, [BIN, c, '--help'], { encoding: 'utf8' })).toMatch(/Usage/);
 	});
 });

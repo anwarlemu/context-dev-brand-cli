@@ -2,6 +2,7 @@
 - This project uses the {{brand}} design system for how it looks. It never changes what the project says or does.
 - To apply it or continue applying it: run `{{cli}}` and do the task it prints; run it again after each task until it says the project is done.
 - Restyle only: keep every word, link, image and element, their order and each screen's purpose. Never add sections, components or copy.
+- Keep each element's size, place and effects relative to the rest. An arrangement wider than the column is scaled as a whole, never by enlarging one part or moving pieces over others.
 - The only markup you may add: `data-ds-dots` on the home hero and `<span class="ds-accent">` around the closing words of a heading (never the whole heading).
 - Style each element the way `{{cli}} look <file>` shows (exact CSS and Tailwind, with states).
 - Style values are brand tokens, `var(--ds-*)`; `{{cli}} tokens <term>` finds one. No raw colors, sizes, fonts or timings.

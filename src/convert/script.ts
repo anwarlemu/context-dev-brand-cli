@@ -90,12 +90,41 @@ export function convertScript(text: string, palette: Palette, stats: Stats, opts
 		return `${key}${sep}'var(${nearest(scales().space, Number(n))})'`;
 	});
 	if (opts.tailwind) next = next.replace(/(["'`])((?:(?!\1)[^\n\\])*)\1/g, (all, q: string, body: string) => (/(?:^|\s|:)(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|placeholder|caret|accent)-/.test(body) ? `${q}${convertClasses(body, palette, stats, opts.tailwind === 'theme')}${q}` : all));
-	// A 3D or drawn scene's colors (terrain, materials, shaders, particles) are what it shows, not its styling.
-	if (SCENE.test(text)) return next;
+	// A 3D or drawn scene's colors (terrain, materials, shaders, particles) are what it shows, not its styling; only
+	// the plain white or black it draws for a dark page flips with the page.
+	if (SCENE.test(text)) return flipNeutrals(next, palette, opts.theme ?? 'site');
 	return convertLiterals(next, palette, stats, (t) => brandLiteral(t, opts.theme ?? 'site'));
 }
 
 const SCENE = /from\s+["'](?:three|@react-three\/[\w-]+|pixi\.js|@babylonjs\/[\w-]+|postprocessing|ogl|regl|p5)["']|\bTHREE\.\w+|\bgetContext\(\s*["'](?:webgl2?|2d)["']|\bgl_FragColor\b|\bvec[34]\(/;
+
+/**
+ * White or black drawn in code for a dark page (a glow, a cursor trail, grid pixels) would vanish on the light one:
+ * it becomes the brand's ink or paper at the same strength. Colored values stay. Also catches the partial form
+ * 'rgba(255,255,255,' + alpha + ')'.
+ */
+export function flipNeutrals(text: string, palette: Palette, theme: BrandTheme = 'site') {
+	if (palette.mode !== 'dark' || palette.target === 'dark') return text;
+	const channels = (name: string) => {
+		const hex = brandLiteral({ name, alpha: 1 }, theme).replace('#', '');
+		return [0, 2, 4].map((i) => Number.parseInt(hex.slice(i, i + 2), 16));
+	};
+	const swap = (r: number, g: number, b: number) => {
+		const { s, l } = hsl([r, g, b, 1]);
+		return s > 0.1 ? undefined : l > 0.85 ? channels('text-default') : l < 0.15 ? channels('bg-default') : undefined;
+	};
+	return text
+		.replace(/(["'`])(rgba?\()\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(?=\1)/g, (all, q: string, fn: string, r: string, g: string, b: string) => {
+			const to = swap(+r, +g, +b);
+			return to ? `${q}${fn}${to.join(',')},` : all;
+		})
+		.replace(LITERAL, (all, q: string, value: string) => {
+			const c = parseColor(value);
+			const to = c && swap(c[0], c[1], c[2]);
+			if (!c || !to) return all;
+			return `${q}${c[3] < 0.995 || /^rgba?\(/.test(value) ? `rgba(${to.join(', ')}, ${Math.round(c[3] * 1000) / 1000})` : `#${to.map((x) => x.toString(16).padStart(2, '0')).join('').toUpperCase()}`}${q}`;
+		});
+}
 
 const LITERAL = /(["'`])(#[0-9a-fA-F]{6}(?:[0-9a-fA-F]{2})?|#[0-9a-fA-F]{3,4}|(?:rgba?|hsla?)\([^()"'`]*\))\1/g;
 const COLORISH_LINE = /(colou?r|bg|background|fill|stroke|border|fg|foreground|tint|accent|palette|theme|series|stops?)/i;

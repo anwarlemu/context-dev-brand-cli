@@ -1,3 +1,4 @@
+import { convertScript } from './script.js';
 import { parseColor } from './color.js';
 import { type Stats, convertCss } from './css.js';
 import type { Palette } from './palette.js';
@@ -19,6 +20,8 @@ function specimen(css: string, after: string) {
 export function convertMarkup(text: string, palette: Palette, stats: Stats) {
 	return text
 		.replace(/(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi, (all, open: string, css: string, close: string) => `${open}${convertCss(css, palette, stats)}${close}`)
+		// Inline scripts are code like any other: the same conversion as a .js file (data blocks stay as they are).
+		.replace(/(<script\b(?![^>]*\bsrc=)(?![^>]*type=["'](?:application\/(?:ld\+)?json|text\/template)["'])[^>]*>)([\s\S]*?)(<\/script>)/gi, (all, open: string, js: string, close: string) => `${open}${convertScript(js, palette, stats, {})}${close}`)
 		.replace(/(\sstyle\s*=\s*)(["'])([^"']*)\2/gi, (all, head: string, q: string, css: string, offset: number, whole: string) => (specimen(css, whole.slice(offset, offset + 600)) ? all : `${head}${q}${convertCss(css, palette, stats)}${q}`))
 		.replace(/(\s(?:fill|stroke|stop-color|color)\s*=\s*)(["'])([^"']+)\2/gi, (all, head: string, q: string, value: string) => {
 			const rgba = parseColor(value);

@@ -10,7 +10,7 @@ import { runCheck } from '../check/engine.js';
 import { findMainStylesheet } from '../project/detect.js';
 import type { Screen } from '../project/screens.js';
 import { capture } from '../review/capture.js';
-import { type Scorecard, brief, critique, pickEngine, scorecardSchema } from '../review/critique.js';
+import { type Scorecard, beforeShots, brief, critique, pickEngine, scorecardSchema } from '../review/critique.js';
 
 // `review <url>`: screenshots at desktop and phone width, critiqued against the brand's own pages. The result is
 // recorded for the screen it belongs to, which is how a task is checked off. Only task screens are reviewed, and a
@@ -38,7 +38,7 @@ function blockers(root: string, screen: Screen | undefined, outside: string[]) {
 	const errors = screen ? runCheck(root, { paths: screen.files }).findings.length : 0;
 	const out: string[] = [];
 	if (errors) out.push(`${errors} values in this screen's files are not brand tokens: \`${cli()} check ${screen!.files.slice(0, 3).join(' ')}${screen!.files.length > 3 ? ' ...' : ''}\` lists each with its token.`);
-	if (outside.length) out.push(`Content crosses the column lines (measured):\n${outside.map((o) => `    ${o}`).join('\n')}\n  Keep everything between the lines: containers use max-width var(--ds-frame-column) with padding inside (\`${cli()} look column\`); pull offset or absolute pieces in; a wide table scrolls inside its card.`);
+	if (outside.length) out.push(`Content crosses the column lines (measured):\n${outside.map((o) => `    ${o}`).join('\n')}\n  Keep everything between the lines: containers use max-width var(--ds-frame-column) with padding inside (\`${cli()} look column\`); an arrangement wider than the column (a product shot with floating windows) is scaled as a whole so every piece keeps its size and place relative to the others, never by enlarging one part or moving pieces over each other; a wide table scrolls inside its card.`);
 	return out;
 }
 
@@ -83,7 +83,7 @@ export async function review(target: string | undefined, opts: Opts) {
 		return;
 	}
 	if (pickEngine() === 'self') {
-		const dir = brief(shots, target, surface, previous);
+		const dir = brief(shots, target, surface, previous, screen ? beforeShots(root, screen.id) : []);
 		writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url: target, screen: screen?.id, outside })}\n`);
 		const rel = relative(root, dir);
 		console.log(
@@ -97,7 +97,7 @@ export async function review(target: string | undefined, opts: Opts) {
 		);
 		return;
 	}
-	const { card, model } = await critique(shots, target, surface, previous);
+	const { card, model } = await critique(shots, target, surface, previous, screen ? beforeShots(root, screen.id) : []);
 	record(root, state, screen, target, withOutside(card, outside), model, outDir, opts);
 }
 
@@ -136,12 +136,12 @@ async function reviewAll(root: string, state: State | undefined, target: string 
 					continue;
 				}
 				if (self) {
-					const dir = brief(shots, url, s.surface, state.reviews[s.id]);
+					const dir = brief(shots, url, s.surface, state.reviews[s.id], beforeShots(root, s.id));
 					writeFileSync(join(dir, 'meta.json'), `${JSON.stringify({ url, screen: s.id, outside })}\n`);
 					results.push({ id: s.id, pass: false, line: `  ${s.id}: score it from ${relative(root, dir)}/brief.md, then \`${cli()} review --submit ${relative(root, dir)}\`` });
 					continue;
 				}
-				const { card, model } = await critique(shots, url, s.surface, state.reviews[s.id]);
+				const { card, model } = await critique(shots, url, s.surface, state.reviews[s.id], beforeShots(root, s.id));
 				const pass = record(root, state, s, url, withOutside(card, outside), model, outDir, { ...opts, brief: true });
 				results.push({ id: s.id, pass, line: '' });
 			} catch (e) {
@@ -222,4 +222,33 @@ function record(root: string, state: State | undefined, screen: Screen | undefin
 	);
 	process.exitCode = failing.length ? 1 : 0;
 	return failing.length === 0;
+}
+
+/**
+ * `snapshot [base url]`: each main screen as it is now, before hand edits, so every review can check the composition
+ * (sizes, proportions, overlaps, effects) stayed the same.
+ */
+export async function snapshot(target: string | undefined) {
+	const root = findProjectRoot();
+	const state = readState(root);
+	if (!state) throw new Error(`Run \`${cli()}\` first.`);
+	const base = (target && /^https?:\/\//.test(target) ? new URL(target).origin : state.baseUrl)?.replace(/\/$/, '');
+	if (!base) throw new Error(`Start the app and pass its address: \`${cli()} snapshot http://localhost:<port>\`.`);
+	state.baseUrl = base;
+	writeState(root, state);
+	const queue = mainScreens(state).filter((s) => s.url && !s.url.includes('['));
+	const done: string[] = [];
+	const worker = async () => {
+		for (let s = queue.shift(); s; s = queue.shift()) {
+			const dir = join(root, '.ds', 'before', s.id.replace(/[^\w-]+/g, '_') || 'home');
+			try {
+				await capture(`${base}${s.url}`, ['desktop'], dir);
+				done.push(s.id);
+			} catch (e) {
+				console.log(`  ${s.id}: could not capture (${(e as Error).message.split('\n')[0]})`);
+			}
+		}
+	};
+	await Promise.all(Array.from({ length: 4 }, worker));
+	console.log(`Saved how ${done.length} screens look before hand edits (.ds/before). Reviews compare against them: keep every element's size, place and effect. Now do the task.`);
 }
