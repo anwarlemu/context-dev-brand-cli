@@ -1,6 +1,6 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { formatFinding, runCheck } from '../check/engine.js';
 import { convertProject } from '../convert/project.js';
 import { installAgents, runningHarness } from '../install/agents.js';
@@ -29,18 +29,28 @@ export function run(opts: RunOptions) {
 	return next(root, existing, opts);
 }
 
-/** Run through npx, this copy lives in npx's cache; hooks need a copy in the project, so install it there and hand over. */
+/**
+ * Run through npx, this copy lives in npx's cache; hooks need a copy in the project. The release is self-contained (its
+ * code is one bundle), so it is copied into node_modules and recorded in package.json, with no install of the whole
+ * project's dependencies; a teammate's next install fetches the same source.
+ */
 function selfInstall(root: string, opts: RunOptions) {
 	if (opts.install === false || opts.dryRun || !/[\\/]_npx[\\/]/.test(PKG_ROOT)) return;
 	const b = { ...brand(), source: process.env.DS_SOURCE ?? brand().source };
+	const pkgPath = join(root, 'package.json');
 	// A plain site with no package.json gets a minimal private one, so the tool and its hooks have a home.
-	if (!existsSync(join(root, 'package.json'))) writeFileSync(join(root, 'package.json'), `${JSON.stringify({ name: root.split('/').pop()?.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'site', private: true }, null, 2)}\n`);
-	const pm = detectProject(root).packageManager;
-	const args = pm === 'npm' ? ['install', '--save-dev', b.source] : ['add', pm === 'bun' ? '-d' : '-D', b.source];
-	process.stderr.write(`Adding ${b.name}'s design system to this project (${pm} ${args.join(' ')})...\n`);
-	const install = spawnSync(pm, args, { cwd: root, stdio: ['ignore', 'ignore', 'inherit'] });
-	const local = join(root, 'node_modules', b.bin, 'bin.js');
-	if (install.status !== 0 || !existsSync(local)) throw new Error(`Could not install ${b.source}. Run \`${pm} ${args.join(' ')}\`, then \`${cli()}\`.`);
+	const pkg = existsSync(pkgPath) ? JSON.parse(readFileSync(pkgPath, 'utf8')) : { name: root.split('/').pop()?.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'site', private: true };
+	pkg.devDependencies = { ...(pkg.devDependencies ?? {}), [b.bin]: b.source };
+	writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
+	const target = join(root, 'node_modules', b.bin);
+	rmSync(target, { recursive: true, force: true });
+	mkdirSync(dirname(target), { recursive: true });
+	cpSync(PKG_ROOT, target, { recursive: true, filter: (src) => !src.slice(PKG_ROOT.length).includes('node_modules') });
+	// Screenshots for review need playwright-core; npx fetched it beside this package.
+	const pw = join(dirname(PKG_ROOT), 'playwright-core');
+	if (existsSync(pw) && !existsSync(join(root, 'node_modules', 'playwright-core'))) cpSync(pw, join(root, 'node_modules', 'playwright-core'), { recursive: true });
+	const local = join(target, 'bin.js');
+	process.stderr.write(`Added ${b.name}'s design system to this project (node_modules/${b.bin}, recorded in package.json).\n`);
 	const handOff = spawnSync(process.execPath, [local, ...process.argv.slice(2), '--no-install'], { cwd: process.cwd(), stdio: 'inherit' });
 	process.exit(handOff.status ?? 1);
 }

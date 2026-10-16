@@ -129,26 +129,26 @@ export async function critique(shots: Shot[], url: string, surface: Surface, pre
 		return { card: scorecardSchema.parse(JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1))), model: 'codex' };
 	}
 	if (engine === 'claude-code') {
-		const prompt = [
-			guide(surface, previous),
-			`\n# Screen\n${url}\n`,
-			'Read every image file below with the Read tool before scoring.',
-			'Reference (the brand\'s own pages):',
-			...refs.map((r) => `- ${r}`),
-			'Restyled screen:',
-			...shots.map((s) => `- ${s.path} (${s.viewport}, slice ${s.index + 1})`),
-			'',
-			'Return the scorecard and the punch list.',
-		].join('\n');
+		// Every image goes in the one message (no tool calls to open them one by one): a single turn, about a minute.
+		const block = (path: string, media: 'image/png' | 'image/jpeg') => ({ type: 'image', source: { type: 'base64', media_type: media, data: readFileSync(path).toString('base64') } });
+		const content = [
+			{ type: 'text', text: `${guide(surface, previous)}\n\n# Screen\n${url}\n\nReference: the brand's own pages.` },
+			...refs.map((r) => block(r, 'image/jpeg')),
+			{ type: 'text', text: `Restyled screen: ${shots.map((s) => `${s.viewport} slice ${s.index + 1}`).join(', ')}, in that order.` },
+			...shots.map((s) => block(s.path, 'image/png')),
+			{ type: 'text', text: 'Return the scorecard and the punch list.' },
+		];
+		const input = `${JSON.stringify({ type: 'user', message: { role: 'user', content } })}\n`;
 		const schema = (({ $schema, ...rest }) => rest)(z.toJSONSchema(scorecardSchema) as Record<string, unknown>);
-		const args = ['-p', '--output-format', 'json', '--json-schema', JSON.stringify(schema), '--allowedTools', 'Read', '--add-dir', dirname(shots[0].path), '--add-dir', pkgPath('brand', 'reference'), '--append-system-prompt', system];
+		const args = ['-p', '--input-format', 'stream-json', '--output-format', 'stream-json', '--verbose', '--json-schema', JSON.stringify(schema), '--tools', '', '--append-system-prompt', system];
 		if (process.env.DS_REVIEW_MODEL) args.push('--model', process.env.DS_REVIEW_MODEL);
 		const env = { ...process.env };
 		delete env.CLAUDECODE;
 		delete env.CLAUDE_CODE_ENTRYPOINT;
-		const run = await runCli('claude', args, prompt, env);
-		if (run.status !== 0) throw new Error(`claude -p failed (exit ${run.status}): ${(run.stderr || run.stdout).slice(0, 400)}`);
-		const out = JSON.parse(run.stdout) as { structured_output?: unknown; result?: string; is_error?: boolean; modelUsage?: Record<string, unknown> };
+		const run = await runCli('claude', args, input, env);
+		const last = run.stdout.trim().split('\n').reverse().find((l) => l.includes('"type":"result"'));
+		if (run.status !== 0 || !last) throw new Error(`claude -p failed (exit ${run.status}): ${(run.stderr || run.stdout).slice(-400)}`);
+		const out = JSON.parse(last) as { structured_output?: unknown; result?: string; is_error?: boolean; modelUsage?: Record<string, unknown> };
 		if (out.is_error) throw new Error(`claude -p returned an error: ${out.result?.slice(0, 400)}`);
 		return { card: scorecardSchema.parse(out.structured_output ?? JSON.parse(out.result ?? '{}')), model: `claude-code (${Object.keys(out.modelUsage ?? {}).join(', ') || 'default'})` };
 	}
