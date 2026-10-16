@@ -37,7 +37,10 @@ export function listScreens(project: Project, files: string[], profileResult: Pr
 		}
 		if (/(Screen|View|Page)\.(swift|kt|dart)$/.test(rel)) out.push({ id: rel.split('/').pop()!.replace(/\.\w+$/, ''), file: rel, surface: surfaceOf(rel, profileResult), files: [] });
 	}
-	const depth = (s: Screen) => (s.url === '/' ? -1 : (s.url ?? s.id).split('/').length + ((s.url ?? '').includes('[') ? 2 : 0));
+	// A Next app whose home is a rewrite (source '/' to destination '/x') starts from that page.
+	const config = ['next.config.ts', 'next.config.js', 'next.config.mjs'].map((f) => join(project.root, f)).find(existsSync);
+	const home = config ? readFileSync(config, 'utf8').match(/source:\s*["']\/["'][^}]*?destination:\s*["'](\/[^"']*)["']/)?.[1] : undefined;
+	const depth = (s: Screen) => (s.url === '/' || (home && s.url === home) ? -1 : (s.url ?? s.id).split('/').length + ((s.url ?? '').includes('[') ? 2 : 0));
 	out.sort((a, b) => depth(a) - depth(b) || a.id.localeCompare(b.id));
 	const own = new RegExp(`(^|/)${brand().bin}/`);
 	for (const s of out) s.files = drawnFrom(project, s.file, files).filter((f) => !own.test(f));

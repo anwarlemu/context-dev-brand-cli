@@ -60,7 +60,7 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
 	}
 	const url = s.url && state.baseUrl ? `${state.baseUrl.replace(/\/$/, '')}${s.url}` : s.url ? `http://localhost:<port>${s.url}` : undefined;
 	const lines = [
-		color.bold(`Task ${index + 1} of ${total}: ${where}${index === 0 ? ' and the shared shell (header, footer, navigation, page)' : ''} (${s.surface === 'product' ? 'product screen' : 'site page'}).`),
+		color.bold(`Task ${index + 1} of ${total}: ${where}${index === 0 ? (s.surface === 'product' ? ' and the app shell (sidebar, top bar, page)' : ' and the shared shell (header, footer, page)') : ''} (${s.surface === 'product' ? 'product screen' : 'site page'}).`),
 		`  First say in one line what this screen is for. Keep that: its main action stays the most prominent thing; no words or elements change.`,
 		`  Restyle each element the way \`${cli()} look <file>\` shows (exact CSS and Tailwind, with states):`,
 		...[...kinds].slice(0, 8).map(([rel, counts]) => `    ${rel}: ${[...counts].map(([k, n]) => (n > 1 ? `${k} x${n}` : k)).join(', ')}`),

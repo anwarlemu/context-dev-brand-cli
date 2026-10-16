@@ -31,7 +31,7 @@ export function run(opts: RunOptions) {
 /** Run through npx, this copy lives in npx's cache; hooks need a copy in the project, so install it there and hand over. */
 function selfInstall(root: string, opts: RunOptions) {
 	if (opts.install === false || opts.dryRun || !/[\\/]_npx[\\/]/.test(PKG_ROOT)) return;
-	const b = brand();
+	const b = { ...brand(), source: process.env.DS_SOURCE ?? brand().source };
 	// A plain site with no package.json gets a minimal private one, so the tool and its hooks have a home.
 	if (!existsSync(join(root, 'package.json'))) writeFileSync(join(root, 'package.json'), `${JSON.stringify({ name: root.split('/').pop()?.toLowerCase().replace(/[^a-z0-9-]/g, '-') || 'site', private: true }, null, 2)}\n`);
 	const pm = detectProject(root).packageManager;
@@ -55,8 +55,9 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const converted = convertProject(project, files, mixed ? 'site' : surface, { dryRun: opts.dryRun, theme });
 	const w = new Writer(root, opts.dryRun);
 	const styleText = files.filter((f) => STYLES.test(f) || MARKUP.test(f)).map((f) => readFileSync(join(root, f), 'utf8')).join('\n');
-	const styles = installStyles(w, project, mixed ? 'site' : surface, styleText);
-	const dots = surface === 'site' || mixed ? installDots(w, project) : [];
+	// Native apps have no stylesheet: their colors were converted in their own code; fonts are added as app fonts.
+	const styles = project.framework === 'native' ? { stylesDir: '', brandCss: '', imported: undefined, linked: [], fonts: 'app fonts', notes: ['Add Rethink Sans (text), IBM Plex Mono (code) and Doto (figures) to the app as fonts and set them on its text styles; sizes, radii and spacing are in `tokens`.'] } : installStyles(w, project, mixed ? 'site' : surface, styleText);
+	const dots = project.framework !== 'native' && (surface === 'site' || mixed) ? installDots(w, project) : [];
 	installAgents(w);
 	const fixed = opts.dryRun ? 0 : runCheck(root, { fix: true }).fixed;
 	const screens = listScreens(detectProject(root), styledFiles(root), { ...found, surface, mixed });
@@ -73,7 +74,7 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 			color.bold(`${brand().name} design system ${opts.dryRun ? 'dry run (nothing written)' : previous ? 'applied again' : 'installed and applied'}.`),
 			`  This is ${mixed ? 'a site with product screens (each route gets its own look)' : surface === 'product' ? 'a product: an app people work in' : 'a site: pages people read and act on'}. Evidence: ${found.reasons.slice(0, 4).join('; ') || 'none, so it is treated as a site'}.${opts.surface ? '' : ` Wrong? \`${cli()} --surface ${surface === 'site' ? 'product' : 'site'}\`.`}`,
 			`  Converted ${values} style values in ${converted.written.length} files to brand tokens${converted.palette.mode === 'dark' && theme !== 'dark' ? ' (the dark interface becomes the brand\'s light one)' : ''}; ${fixed} more matched exactly.${left ? ` ${left.findings.length} left to change by hand, listed in the tasks.` : ''}`,
-			`  Brand stylesheet: ${styles.brandCss}${styles.imported ? `, imported by ${styles.imported}` : styles.linked.length ? `, linked from ${styles.linked.length} pages` : ''}; fonts load ${styles.fonts === 'brand.css' ? 'with it' : `through ${styles.fonts}`}.${dots.length ? ` Hero dots script loads in ${dots.length} layout${dots.length > 1 ? 's' : ''}.` : ''}`,
+			styles.brandCss ? `  Brand stylesheet: ${styles.brandCss}${styles.imported ? `, imported by ${styles.imported}` : styles.linked.length ? `, linked from ${styles.linked.length} pages` : ''}; fonts load ${styles.fonts === 'brand.css' ? 'with it' : `through ${styles.fonts}`}.${dots.length ? ` Hero dots script loads in ${dots.length} layout${dots.length > 1 ? 's' : ''}.` : ''}` : '  Native app: colors now use the brand values in its own code.',
 			...(converted.marks.length ? [`  Redrew ${converted.marks.length} light one-color marks (logos, icons) for the white page: ${converted.marks.slice(0, 3).join(', ')}${converted.marks.length > 3 ? ', ...' : ''}`] : []),
 			...(converted.rasterLogos.length ? [`  Logo images drawn for the dark site (not recolored): ${converted.rasterLogos.join(', ')}. Check each on white; a white one-color mark needs filter: brightness(0).`] : []),
 			...styles.notes.map((n) => color.yellow(`  Note: ${n}`)),
