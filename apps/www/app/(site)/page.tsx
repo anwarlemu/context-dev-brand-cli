@@ -10,10 +10,7 @@ import { ComponentsShowcase } from "@www/components/components-showcase";
 import { DocsHeading, DocsSection } from "@www/components/docs-section";
 import { Thumb } from "@www/components/thumb";
 import { examples } from "@www/lib/examples.generated";
-import { GROUPS, counts, registryName } from "@www/lib/registry";
-
-const ADD_COMMANDS = `npx context-ds add page card button
-npx context-ds add app-sidebar app-top-bar`;
+import { APPLY_COMMAND, GROUPS, counts, registryName } from "@www/lib/registry";
 
 const AGENT_COMMANDS = `npx context-ds list
 npx context-ds look src/app/new-page/page.tsx
@@ -63,8 +60,8 @@ export default function Home() {
         media={
           <HeroMedia size="small">
             <HeroMediaCard cardClassName="bg-code">
-              <TerminalWindow label="terminal" actions={<WindowCopyButton value={ADD_COMMANDS} />} className="rounded-none">
-                <CodeBlock code={ADD_COMMANDS} className="overflow-x-auto" />
+              <TerminalWindow label="Install" actions={<WindowCopyButton value={APPLY_COMMAND} label="Copy install command" />} className="rounded-none">
+                <CodeBlock code={`# Run from your project root\n${APPLY_COMMAND}`} className="[overflow-wrap:anywhere] [&>code>span]:whitespace-pre-wrap" />
               </TerminalWindow>
             </HeroMediaCard>
           </HeroMedia>
