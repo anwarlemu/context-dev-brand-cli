@@ -5,3 +5,5 @@ node_modules/
 .stage2/
 apps/www/.next/
 registry.json
+.vercel
+.env*
