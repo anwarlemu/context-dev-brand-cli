@@ -1,3 +1,4 @@
+import { specimen } from '../convert/markup.js';
 import { parse } from '@babel/parser';
 import { extname } from 'node:path';
 
@@ -100,6 +101,8 @@ function loadMarkup(file: SourceFile): SourceFile {
 	// A style attribute's closing quote becomes `;`, so its last declaration ends like one in a stylesheet.
 	const semicolons = new Set<number>();
 	for (const m of file.text.matchAll(/\sstyle\s*=\s*(["'])([\s\S]*?)\1/gi)) {
+		// A swatch or type specimen shows its own value, printed beside it: content, as the converter treats it.
+		if (specimen(m[2], file.text.slice(m.index + m[0].length, m.index + m[0].length + 600), file.text)) continue;
 		const start = m.index + m[0].length - m[2].length - 1;
 		mark(start, start + m[2].length);
 		semicolons.add(start + m[2].length);

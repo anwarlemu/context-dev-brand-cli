@@ -174,6 +174,10 @@ describe('check', () => {
 		expect(checkText('a.tsx', 'export const A = () => <p className="bg-surface text-fg-muted p-4 rounded-card" style={{ color: "var(--ds-color-brand)" }}>x</p>;').findings).toEqual([]);
 		expect(checkText('a.css', '.a { color: var(--ds-color-nope); }').findings[0].rule).toBe('unknown-token');
 	});
+	it('accepts a swatch that prints its own value', () => {
+		expect(checkText('brand.html', '<div style="background:#08090A"></div><code>#08090A</code>').findings).toHaveLength(0);
+		expect(checkText('page.html', '<div style="background:#08090A"></div><p>Hello</p>').findings.length).toBeGreaterThan(0);
+	});
 	it('a ds-override counts only once a person approves it', () => {
 		const p = project({ 'a.css': '.a { color: #ff0000; } /* ds-override: partner logo color */' });
 		const r = runCheck(p);
@@ -273,7 +277,7 @@ describe('the one command', () => {
 		});
 		const first = run(p);
 		expect(first).toMatch(/installed and applied/);
-		expect(first).toMatch(/Task 1 of 3: the home page/);
+		expect(first).toMatch(/Task 1 of 2: 2 main screens and the shared shell/);
 		const css = readFileSync(join(p, 'styles.css'), 'utf8');
 		expect(css.startsWith('/* site */\n@import "./context-ds/brand.css";')).toBe(true);
 		expect(css).toContain("@font-face { font-family: 'Brand'; src: url(b.woff2); }");
@@ -292,7 +296,7 @@ describe('the one command', () => {
 		run(p, 'skip', '/', '--reason', 'needs a database');
 		const skipped = run(p);
 		expect(skipped).toMatch(/1 of 2 screens done/);
-		expect(skipped).toMatch(/Task 2 of 3: the other main screen/);
+		expect(skipped).toMatch(/Task 1 of 2: the main screen \(1 of 2 done\)/);
 		expect(skipped).toMatch(/\/about\.html \(about\.html\)/);
 		expect(skipped).toMatch(/review --all/);
 		expect(readState(p)?.skipped).toEqual({ '/': 'needs a database' });

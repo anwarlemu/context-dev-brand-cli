@@ -108,15 +108,15 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 function nextText(root: string, state: State) {
 	const screens = mainScreens(state);
 	const statuses = screens.map((s, i) => taskStatus(root, state, s, i));
-	// Task 1: the shared shell and the home, which set the look of every page. Native screens stay one at a time.
-	if (statuses[0] && !statuses[0].done) return renderTask(root, state, statuses[0], 0, 3);
 	const open = statuses.filter((s) => !s.done);
+	// Native screens cannot be reviewed in a browser: one at a time, marked by hand.
 	if (open.some((s) => !s.screen.url)) {
 		const i = statuses.indexOf(open.find((s) => !s.screen.url)!);
 		return renderTask(root, state, statuses[i], i, screens.length + 1);
 	}
+	// Task 1: the shared shell and every chosen screen at once, scored together by one parallel review.
 	if (open.length) return renderBatch(root, state, open, statuses.length - open.length, statuses.length);
-	const total = 3;
+	const total = 2;
 	// The final sweep: every file in the project passes the check.
 	const all = runCheck(root);
 	if (all.findings.length) {

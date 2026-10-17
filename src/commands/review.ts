@@ -67,9 +67,9 @@ export async function review(target: string | undefined, opts: Opts) {
 			process.exitCode = 1;
 			return;
 		}
-		const first = tasks[0];
-		if (screen.id !== first.id && state.reviews[first.id]?.passed) {
-			console.log(`The other screens are reviewed together: \`${cli()} review --all ${new URL(target).origin}\` (in parallel, only the ones that changed).`);
+		const openCount = tasks.filter((t) => !state.reviews[t.id]?.passed && !state.skipped?.[t.id]).length;
+		if (openCount > 1) {
+			console.log(`The task screens are reviewed together: \`${cli()} review --all ${new URL(target).origin}\` (in parallel, only the ones that changed).`);
 			process.exitCode = 1;
 			return;
 		}
