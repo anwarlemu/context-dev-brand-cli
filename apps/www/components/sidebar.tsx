@@ -83,7 +83,7 @@ export function LibraryNav({ groups }: { groups: Group[] }) {
       </div>
       <div
         ref={listRef}
-        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain pr-4 pb-10 [mask-image:linear-gradient(to_bottom,transparent,var(--ds-color-black)_var(--ds-space-3),var(--ds-color-black)_calc(100%-var(--ds-space-8)),transparent)] [scrollbar-width:thin] [scrollbar-color:var(--ds-color-neutral-20)_transparent]"
+        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain pr-4 pb-10 [mask-image:linear-gradient(to_bottom,var(--ds-color-black)_calc(100%-var(--ds-space-8)),transparent)] [scrollbar-width:thin] [scrollbar-color:var(--ds-color-neutral-20)_transparent]"
       >
         <div className="pt-3">
           <Groups groups={groups} current={current} query={query} />

@@ -4,6 +4,19 @@
 
 @source "../../../registry";
 
+/* The brand's ruled column, as the site layer sets it: the header, the sections and the docs pages share it. Outside
+   a layer, after the tokens, so it replaces their full-width default. */
+@media (min-width: 43.2rem) {
+  :root {
+    --ds-frame-column: 90vw;
+  }
+}
+@media (min-width: 57.6rem) {
+  :root {
+    --ds-frame-column: min(85vw, var(--ds-layout-column-wide));
+  }
+}
+
 /* In the base layer, so the library's utilities (text-white on a dark band's heading) win over these defaults. */
 @layer base {
   /* The brand site renders its rem scale at 90% from 43.2rem up; the docs are a brand site, so examples show at the
