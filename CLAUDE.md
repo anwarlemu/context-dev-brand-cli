@@ -20,7 +20,10 @@ npm run ci           # build, limits, tests; must pass before you push
   item (its files' content, what it requires, its packages) and an index into `apps/www/public/r`, type-checks the library and runs the value check over it.
 - `apps/www/`: the docs site (Next.js), deployed to the Vercel project `context-ds` (Agencidev team) with
   `vercel deploy --prod --scope agencidev-dev` from the repo root; it renders every item from source.
-- `src/library/`: loading registry items (`registry.ts`) and swap mode (`swap.ts`); `src/commands/add.ts` (add, list).
+- `src/library/`: loading registry items (`registry.ts`); the component pass: `components.ts` finds and identifies an
+  app's components, `adapt.ts` writes adapters (the app's component renders the library's, props mapped) and root
+  restyles, `swap.ts` decides per component (swap, style or refine), type-checks and records `.ds/components.json`;
+  `src/commands/add.ts` (add, list).
 
 - `brand/`: the only brand-specific content. `tokens.css` is the single source of values (site at `:root`, product
   under `.ds-product`, product dark). `site.css` and `product.css` are the base layers. `elements.json` holds how each

@@ -4,7 +4,7 @@ import { pkgPath } from './paths.js';
 // Everything the engine knows about the brand comes from the package's brand/ folder (built to build/): names,
 // tokens, element styles. No brand value is written in src/.
 
-export type BrandConfig = { name: string; bin: string; source: string; reviewModel: string; reviewThreshold: number };
+export type BrandConfig = { name: string; bin: string; source: string; reviewModel: string; reviewThreshold: number; registryUrl?: string };
 
 let config: BrandConfig | undefined;
 export function brand(): BrandConfig {

@@ -11,6 +11,15 @@ import { type Surface, surfaceOf } from '../project/surface.js';
 
 const relTo = (root: string, p: string) => relative(root, isAbsolute(p) ? p : join(process.cwd(), p)).split('\\').join('/');
 
+/** What the component pass decided for the components of one file (.ds/components.json). */
+function componentDecisions(root: string, rel: string): { name: string; item?: string; signals: string[]; action: string; reason: string }[] {
+	try {
+		return (JSON.parse(readFileSync(join(root, '.ds', 'components.json'), 'utf8')).components ?? []).filter((d: { file: string }) => d.file === rel);
+	} catch {
+		return [];
+	}
+}
+
 /** `look <file|element>`: the brand styling for every element found in a file, or for one element kind. */
 export function look(target: string | undefined, opts: { surface?: string; json?: boolean }) {
 	const root = findProjectRoot();
@@ -26,9 +35,12 @@ export function look(target: string | undefined, opts: { surface?: string; json?
 		const surface: Surface = (opts.surface as Surface) ?? (state ? surfaceOf(rel, { surface: state.surface, mixed: state.mixed, product: 0, site: 0, reasons: [] }) : 'site');
 		const hits = elementsIn(rel, readFileSync(join(root, rel), 'utf8'), surface);
 		const kinds = [...new Set(hits.map((h) => h.kind))];
-		emit(opts, { file: rel, surface, elements: hits }, () =>
-			hits.length
+		const components = componentDecisions(root, rel);
+		const componentLines = components.map((d) => `  ${d.name}: ${d.item ? `a ${d.item} (${d.signals.join(', ')}); ${d.reason}` : d.reason}.${d.item && d.action === 'refine' ? ` Restyle it as the library's ${d.item}${brand().registryUrl ? `: ${brand().registryUrl}/components/${d.item}` : ""}` : ''}`);
+		emit(opts, { file: rel, surface, elements: hits, components }, () =>
+			hits.length || components.length
 				? [
+						...(components.length ? [color.bold(`${rel}: components`), ...componentLines, ''] : []),
 						color.bold(`${rel}: ${hits.length} elements, ${kinds.length} kinds (${surface}). Give each its styling; keep the element, its words and its place.`),
 						...kinds.map((k) => [`\n${hits.filter((h) => h.kind === k).slice(0, 6).map((h) => `  line ${h.line}: ${h.label}`).join('\n')}`, renderElement(k, surface)].join('\n')),
 					].join('\n')

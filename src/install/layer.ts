@@ -53,7 +53,7 @@ const decls = (list: [string, string][], pad: string) => list.map(([k, v]) => `$
 const withState = (selectors: string[], state: string) => selectors.map((x) => `${x}${state}`).join(',\n');
 
 /** The block for one stylesheet, or '' when it names no element it is safe to style. */
-export function elementLayer(rel: string, text: string, surface: Surface): { block: string; count: number } {
+export function elementLayer(rel: string, text: string, surface: Surface): { block: string; count: number; styled: { selector: string; kind: string }[] } {
 	const bySelector = new Map<string, string>();
 	for (const hit of elementsIn(rel, text.replace(BLOCK, ''), surface)) {
 		const sel = hit.selector;
@@ -81,27 +81,30 @@ export function elementLayer(rel: string, text: string, surface: Surface): { blo
 			else rules.push(`${withState(selectors, state)} {\n${decls(list, '\t')}\n}`);
 		}
 	}
-	if (!rules.length) return { block: '', count: 0 };
+	if (!rules.length) return { block: '', count: 0, styled: [] };
 	if (moving.length) rules.push(`@media (prefers-reduced-motion: reduce) {\n\t${moving.join(',\n\t')} {\n\t\ttransition: none;\n\t}\n}`);
-	return { block: rules.join('\n\n'), count: [...byKind.values()].flat().length };
+	const styled = [...byKind].flatMap(([kind, selectors]) => selectors.map((selector) => ({ selector, kind })));
+	return { block: rules.join('\n\n'), count: styled.length, styled };
 }
 
-/** Writes the element layer into every stylesheet that names brand elements; returns how many elements and files. */
+/** Writes the element layer into every stylesheet that names brand elements; returns how many, the files, and each selector styled as which kind. */
 export function installElementLayer(w: Writer, files: string[], surfaceOf: (rel: string) => Surface) {
 	let count = 0;
 	const written: string[] = [];
+	const styled: { file: string; selector: string; kind: string }[] = [];
 	for (const rel of files) {
 		if (!/\.(css|scss|less)$/.test(rel) || isOwnFile(rel)) continue;
 		const text = readFileSync(join(w.root, rel), 'utf8');
-		const { block, count: n } = elementLayer(rel, text, surfaceOf(rel));
+		const { block, count: n, styled: s } = elementLayer(rel, text, surfaceOf(rel));
 		const without = text.replace(BLOCK, '');
 		if (!block) {
 			if (without !== text) w.write(rel, without);
 			continue;
 		}
 		count += n;
+		styled.push(...s.map((x) => ({ file: rel, ...x })));
 		w.write(rel, upsertBlock(text, block, START, END));
 		written.push(rel);
 	}
-	return { count, files: written };
+	return { count, files: written, styled };
 }

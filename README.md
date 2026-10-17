@@ -18,9 +18,12 @@ Apply the Context.dev design system to this project: run
 Change how things look, never what they say.
 ```
 
-That is all. In a React + Tailwind app it first swaps in the library's components where the app's own match (its
-components/ui folder, or its simple Button, Badge, Card and the like), type-checking the app and putting back any swap
-that would break it. The first run also adds the package to the project, reads whether it is a site or a product, converts every
+That is all. It first identifies the app's components: what each one is, from its name, what it renders, its props
+and how it is used. In a React + Tailwind app, a component the library covers either renders the library's (its props
+mapped, its name and every use unchanged), or, where that would lose something, takes the library item's look on the
+element it renders; in any stack, stylesheet classes it recognizes get that element's brand styling. Anything nothing
+covers keeps its own design with brand values. The app is type-checked before and after, and a swap that would break
+it goes back. Every decision and its reason is in `.ds/components.json`. The first run also adds the package to the project, reads whether it is a site or a product, converts every
 style value to the brand (colors by the role they play, type, spacing, radius, shadows, motion), installs the brand
 stylesheet and fonts, and writes short rules and hooks for the agents. Then each run prints one task: one screen,
 with the elements to restyle and how. A task is done when the screen passes `review` (screenshots at desktop and

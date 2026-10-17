@@ -1,17 +1,26 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import type { Project } from '../project/detect.js';
+import { brand } from '../lib/brand.js';
+import { styledFiles, type Project } from '../project/detect.js';
+import type { Surface } from '../project/surface.js';
+import { adaptable, adaptComponent, libraryClasses, lookOf, restyleRoot } from './adapt.js';
+import { type Identified, componentsIn, identify, usesIn } from './components.js';
 import { itemName, loadIndexSync, loadItemSync, type RegistryItem } from './registry.js';
 
-// Swap where it matches: an app's components that the library also has (a components/ui folder of the same names, or
-// its own simple Button, Badge, Card and the like) are replaced by the library's, so the app's code stays as it is and
-// takes the brand's look. Its cn helper learns the brand's scales (so text-body-sm and a text color both survive a
-// merge). The app is type-checked before and after; a swap that introduces errors is put back, and that component is
-// restyled like any other instead.
+// Identify, then apply. Every component the app defines is identified (what it is, from its name, what it renders,
+// its props and how it is used; see components.ts) and gets one of three outcomes:
+//   swap: a library item covers it and its props map onto the library's, so its body renders the library component
+//         (an adapter: the name, props type and every use stay as they are);
+//   style: an item covers it but a swap would lose something, so the element it renders takes the item's look;
+//   refine: nothing covers it, so its values are only converted to the brand's (the converter, after this).
+// The library's files go into components/ds, apart from the app's own. The app is type-checked before and after; an
+// adapter that introduces errors is put back and that component is styled instead. The decisions, with what each was
+// based on, are written to .ds/components.json for the agent and `look`.
 
 type Aliases = { components: string; ui: string; utils: string; lib: string; hooks: string };
-export type SwapResult = { swapped: string[]; reverted: string[]; added: string[]; packages: string[]; utils?: string; checked: boolean };
+export type Decision = { file: string; name: string; item?: string; confidence: number; signals: string[]; uses: number; action: 'swap' | 'style' | 'refine'; reason: string };
+export type SwapResult = { swapped: string[]; styled: string[]; reverted: string[]; added: string[]; packages: string[]; utils?: string; checked: boolean; decisions: Decision[] };
 
 function readJson(path: string) {
 	try {
@@ -21,11 +30,11 @@ function readJson(path: string) {
 	}
 }
 
-/** Where the app keeps its interface components (components/ui), and the import aliases the library's files use. */
+/** Where the library's interface components go (components/ds, apart from the app's own), and the aliases they use. */
 export function componentLayout(project: Project): { uiDir: string; aliases: Aliases } | undefined {
 	if (!project.hasAlias) return undefined;
 	const base = project.srcDir ? 'src/' : '';
-	return { uiDir: `${base}components/ui`, aliases: { components: '@/components', ui: '@/components/ui', utils: '@/lib/utils', lib: '@/lib', hooks: '@/hooks' } };
+	return { uiDir: `${base}components/ds`, aliases: { components: '@/components', ui: '@/components/ds', utils: '@/lib/utils', lib: '@/lib', hooks: '@/hooks' } };
 }
 
 /** The library's file, with its imports rewritten to the app's aliases. */
@@ -73,79 +82,68 @@ function typeErrors(root: string): Set<string> | undefined {
 
 const pascal = (name: string) => name.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase());
 
-/**
- * An app's own simple components named like a library component (components/Button.tsx, badge.tsx): a TypeScript file
- * under 150 lines that exports only that component. Each becomes a re-export of the library's, so every use takes the
- * brand; the type check puts back any whose uses need props the library's does not have.
- */
-function customCandidates(project: Project, library: Set<string>, skipDir?: string) {
-	const root = project.root;
-	if (!project.typescript || !project.hasAlias) return [];
-	const out: { rel: string; name: string; exportName: string }[] = [];
-	const walk = (dir: string, depth: number) => {
-		if (depth > 4 || !existsSync(join(root, dir))) return;
-		for (const entry of readdirSync(join(root, dir), { withFileTypes: true })) {
-			const rel = `${dir}/${entry.name}`;
-			if (entry.isDirectory()) {
-				if (!/^(node_modules|\.|_)/.test(entry.name) && rel !== skipDir) walk(rel, depth + 1);
-				continue;
-			}
-			const m = entry.name.match(/^([A-Za-z][\w-]*)\.tsx$/);
-			if (!m) continue;
-			const name = m[1].replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-			if (!library.has(name)) continue;
-			const text = readFileSync(join(root, rel), 'utf8');
-			const exportName = pascal(name);
-			const exports = [...text.matchAll(/export\s+(?:default\s+)?(?:function|const|class)\s+(\w+)|export\s*\{([^}]*)\}/g)].flatMap((x) => (x[1] ? [x[1]] : x[2].split(',').map((p) => p.trim().split(/\s+as\s+/).pop()!)));
-			if (text.split('\n').length > 150 || /export\s+default/.test(text) || exports.some((e) => e && e !== exportName) || !exports.includes(exportName)) continue;
-			out.push({ rel, name, exportName });
-		}
-	};
-	for (const dir of [project.srcDir ? 'src/components' : 'components']) walk(dir, 0);
-	return out;
-}
+const SWAP_FLOOR = 0.55;
+// Items whose look is one element's classes; larger items (a hero, a sidebar) are left to the element layer and the agent.
+const ROOT_STYLED = new Set(['button', 'badge', 'card', 'input', 'textarea', 'label', 'kbd', 'separator', 'skeleton']);
+// Framework route files: their component is the page itself, never a library item.
+const ROUTE_FILE = /(^|\/)(page|layout|template|loading|error|not-found|default|_app|_document|root)\.(tsx|jsx)$/;
+const LIBRARY_DIR = /(^|\/)components\/ds\//;
 
-export function swapMatching(project: Project, { dryRun = false } = {}): SwapResult | undefined {
+export function applyComponents(project: Project, surfaceOf: (rel: string) => Surface, { dryRun = false } = {}): SwapResult | undefined {
 	const root = project.root;
-	// Only where the type check can catch a swap that does not fit.
-	if (!project.typescript) return undefined;
-	const library = new Set(loadIndexSync().filter((i) => i.type === 'ui').map((i) => i.name));
-	if (!library.size) return undefined;
 	const layout = componentLayout(project);
-	if (!layout) return undefined;
-	const appUi = existsSync(join(root, layout.uiDir)) ? readdirSync(join(root, layout.uiDir)).filter((f) => f.endsWith('.tsx')).map((f) => f.replace(/\.tsx$/, '')) : [];
-	const matches = appUi.filter((n) => library.has(n));
-	const custom = customCandidates(project, library, layout.uiDir);
-	if (!matches.length && !custom.length) return undefined;
+	const index = loadIndexSync();
+	if (!index.length) return undefined;
+	const kindsOf = (item: string) => index.find((i) => i.name === item)?.kinds ?? [];
+	const files = styledFiles(root).filter((f) => /\.(tsx|jsx)$/.test(f) && !LIBRARY_DIR.test(f) && !ROUTE_FILE.test(f));
+	const texts = new Map(files.map((f) => [f, readFileSync(join(root, f), 'utf8')]));
 
-	const before = dryRun ? undefined : typeErrors(root);
+	// Find and identify every component, and how the app uses each.
+	const found = files.flatMap((f) => componentsIn(f, texts.get(f)!));
+	const names = new Set(found.filter((c) => c.exported).map((c) => c.name));
+	const uses = new Map<string, { count: number; values: Record<string, string[]> }>();
+	for (const f of files) {
+		for (const [name, u] of usesIn(texts.get(f)!, names)) {
+			const prev = uses.get(name) ?? { count: 0, values: {} };
+			prev.count += u.count;
+			for (const [k, v] of Object.entries(u.values)) prev.values[k] = [...new Set([...(prev.values[k] ?? []), ...v])];
+			uses.set(name, prev);
+		}
+	}
+	const identified: Identified[] = found.map((c) => {
+		const u = uses.get(c.name) ?? { count: 0, values: {} };
+		return { ...c, ...identify(c, surfaceOf(c.file), kindsOf), uses: u.count, useValues: u.values };
+	});
+
+	const result: SwapResult = { swapped: [], styled: [], reverted: [], added: [], packages: [], checked: false, decisions: [] };
+	const canAdapt = !!layout && project.typescript;
 	const backups = new Map<string, string | undefined>();
+	const current = new Map(texts);
 	const write = (rel: string, content: string) => {
 		if (!backups.has(rel)) backups.set(rel, existsSync(join(root, rel)) ? readFileSync(join(root, rel), 'utf8') : undefined);
+		current.set(rel, content);
 		if (dryRun) return;
 		mkdirSync(dirname(join(root, rel)), { recursive: true });
 		writeFileSync(join(root, rel), content);
 	};
-	const result: SwapResult = { swapped: [], reverted: [], added: [], packages: [], checked: !!before };
 	const pkg = readJson(join(root, 'package.json')) ?? {};
 	const installed = { ...pkg.dependencies, ...pkg.devDependencies } as Record<string, string>;
 	const packages = new Set<string>();
 	const seen = new Set<string>();
 	const base = project.srcDir ? 'src/' : '';
-
-	const visit = (item: RegistryItem, swapping: boolean) => {
-		if (seen.has(item.name)) return;
+	// The library item and what it needs, into components/ds (the app's lib/utils is patched, never replaced).
+	const install = (item: RegistryItem) => {
+		if (!layout || seen.has(item.name)) return;
 		seen.add(item.name);
 		for (const d of item.packages ?? []) if (!installed[d]) packages.add(d);
 		for (const dep of item.requires ?? []) {
 			const d = loadItemSync(itemName(dep));
-			if (d && d.type !== 'theme') visit(d, false);
+			if (d && d.type !== 'theme') install(d);
 		}
 		for (const f of item.files ?? []) {
-			const target = f.path;
-			const rel = target.startsWith('components/ui/') ? `${layout.uiDir}/${target.slice('components/ui/'.length)}` : `${base}${target}`;
+			const rel = f.path.startsWith('components/ui/') ? `${layout.uiDir}/${f.path.slice('components/ui/'.length)}` : `${base}${f.path}`;
 			const exists = existsSync(join(root, rel));
-			if (target === 'lib/utils.ts' && exists) {
+			if (f.path === 'lib/utils.ts' && exists) {
 				const patched = patchUtils(readFileSync(join(root, rel), 'utf8'));
 				if (patched) {
 					write(rel, patched);
@@ -154,37 +152,73 @@ export function swapMatching(project: Project, { dryRun = false } = {}): SwapRes
 				}
 				continue;
 			}
-			if (swapping || !exists) {
+			if (!exists) {
 				write(rel, retarget(f.content ?? '', layout.aliases));
-				(swapping ? result.swapped : result.added).push(rel);
+				result.added.push(rel);
 			}
 		}
 	};
-	for (const name of matches) {
-		const item = loadItemSync(name);
-		if (item) visit(item, true);
-	}
-	// The app's own components: the library's file goes in alongside (unless the app has it), and the app's file
-	// re-exports it, so imports across the app keep working.
-	for (const c of custom) {
-		const item = loadItemSync(c.name);
-		if (!item) continue;
-		visit(item, false);
-		write(c.rel, `// The ${c.exportName} from the design system library: same name, the brand's look.\nexport { ${c.exportName} } from "${layout.aliases.ui}/${c.name}";\n`);
-		result.swapped.push(c.rel);
+	const exportNameOf = new Map<string, string>();
+	const decide = (c: Identified): Decision => {
+		const d = { file: c.file, name: c.name, item: c.item, confidence: Math.round(c.confidence * 100) / 100, signals: c.signals, uses: c.uses };
+		if (!c.item) return { ...d, action: 'refine', reason: 'no library item covers it' };
+		const item = loadItemSync(c.item);
+		const surface = surfaceOf(c.file);
+		const values = { ...c.values };
+		for (const [k, v] of Object.entries(c.useValues)) values[k] = [...new Set([...(values[k] ?? []), ...v])];
+		if (canAdapt && item && c.confidence >= SWAP_FLOOR && c.exported && adaptable(c.item)) {
+			const adapted = adaptComponent(current.get(c.file)!, c, c.item, surface, `${layout!.aliases.ui}/${c.item}`, values);
+			if (adapted) {
+				install(item);
+				write(c.file, adapted);
+				exportNameOf.set(c.file, c.name);
+				result.swapped.push(c.file);
+				return { ...d, action: 'swap', reason: `renders the library's ${c.item}, its props mapped` };
+			}
+		}
+		const content = item?.files?.[0]?.content;
+		if (item && content && ROOT_STYLED.has(c.item) && c.root?.literals.length) {
+			const look = lookOf(c.root.classes);
+			const pick = (vs: string[]) => {
+				const want = c.item === 'button' ? (surface === 'site' ? { filled: 'pill', outlined: 'pill-outline', quiet: 'pill-outline' }[look] : { filled: 'brand', outlined: 'outline', quiet: 'ghost' }[look]) : c.item === 'card' && surface === 'site' ? 'ring' : 'default';
+				return vs.includes(want) ? want : vs[0];
+			};
+			const classes = libraryClasses(content, c.name, pick);
+			const restyled = classes ? restyleRoot(current.get(c.file)!, c, c.item, classes) : undefined;
+			if (restyled) {
+				write(c.file, restyled);
+				result.styled.push(c.file);
+				return { ...d, action: 'style', reason: `its element takes the library's ${c.item} look${canAdapt && adaptable(c.item) ? ' (a swap would drop some of its props)' : ''}` };
+			}
+		}
+		return { ...d, action: 'refine', reason: `a ${c.item}, styled by the element layer and the converter` };
+	};
+	// One decision per component, most confident first; a file is changed by one decision at a time (components are
+	// re-read from the file as it now stands, so offsets stay right).
+	const byFile = new Map<string, Identified[]>();
+	for (const c of identified) byFile.set(c.file, [...(byFile.get(c.file) ?? []), c]);
+	for (const [file, list] of byFile) {
+		for (const first of [...list].sort((a, b) => b.confidence - a.confidence)) {
+			const fresh = componentsIn(file, current.get(file)!).find((x) => x.name === first.name);
+			if (!fresh) continue;
+			result.decisions.push(decide({ ...first, ...fresh }));
+		}
 	}
 	result.packages = [...packages];
 	if (dryRun) return result;
+	writeInventory(root, result.decisions);
+	if (!result.swapped.length && !result.styled.length) return result;
 	if (packages.size) {
 		const pm = project.packageManager;
 		spawnSync(pm, pm === 'npm' ? ['install', ...packages] : ['add', ...packages], { cwd: root, stdio: 'ignore' });
 	}
-	// A swap that introduces type errors goes back: the app's own component stays and is restyled instead.
+	// An adapter that introduces type errors goes back: that component is restyled instead.
+	const before = typeErrorsOf(root, backups);
 	if (before) {
+		result.checked = true;
 		const after = typeErrors(root) ?? new Set<string>();
 		const fresh = [...after].filter((l) => !before.has(l));
 		if (fresh.length) {
-			// An error usually shows in the file that uses a component, so a swap is implicated by the files it is imported in.
 			const textOf = (f: string) => {
 				try {
 					return readFileSync(join(root, f), 'utf8');
@@ -192,27 +226,63 @@ export function swapMatching(project: Project, { dryRun = false } = {}): SwapRes
 					return '';
 				}
 			};
-			// The line each error points at usually names the component (<Badge variant="primary">); only when none is
-			// named does every swap the file imports count.
 			const errorLines = fresh.map((l) => {
 				const m = l.match(/^(.*?)\((\d+),\d+\)/);
 				return m ? { file: m[1].trim(), text: textOf(m[1].trim()).split('\n')[Number(m[2]) - 1] ?? '' } : { file: l, text: '' };
 			});
-			const named = (text: string, exportName: string) => new RegExp(`\\b${exportName}\\b`).test(text);
-			const exportNames = result.swapped.map((rel) => pascal(rel.split('/').pop()!.replace(/\.tsx$/, '').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()));
+			const named = (text: string, name: string) => new RegExp(`\\b${name}\\b`).test(text);
 			for (const rel of result.swapped) {
-				const name = rel.split('/').pop()!.replace(/\.tsx$/, '');
-				const exportName = pascal(name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
-				const implicated = errorLines.some(
-					(e) => e.file === rel || (new RegExp(`/${name}["']`).test(textOf(e.file)) && (named(e.text, exportName) || !exportNames.some((n) => named(e.text, n)))),
-				);
+				const name = exportNameOf.get(rel)!;
+				const stem = rel.split('/').pop()!.replace(/\.(tsx|jsx)$/, '');
+				const implicated = errorLines.some((e) => e.file === rel || (new RegExp(`/${stem}["']`).test(textOf(e.file)) && named(e.text, name)));
 				if (!implicated) continue;
 				const original = backups.get(rel);
 				if (original !== undefined) writeFileSync(join(root, rel), original);
 				result.reverted.push(rel);
+				const decision = result.decisions.find((x) => x.file === rel && x.name === name);
+				if (decision) Object.assign(decision, { action: 'refine', reason: `the library's ${decision.item} did not type-check where it is used, so it is kept and restyled` });
 			}
 			result.swapped = result.swapped.filter((r) => !result.reverted.includes(r));
+			writeInventory(root, result.decisions);
 		}
 	}
 	return result;
+}
+
+/**
+ * The type errors the app had before any change: the files are put back for a moment, checked, and rewritten. Cheaper
+ * than checking twice only when nothing changed, so it runs only when something did.
+ */
+function typeErrorsOf(root: string, backups: Map<string, string | undefined>): Set<string> | undefined {
+	if (!existsSync(join(root, 'tsconfig.json'))) return undefined;
+	const changed = new Map<string, string>();
+	for (const [rel, original] of backups) {
+		changed.set(rel, readFileSync(join(root, rel), 'utf8'));
+		if (original === undefined) writeFileSync(join(root, rel), '');
+		else writeFileSync(join(root, rel), original);
+	}
+	const errors = typeErrors(root);
+	for (const [rel, text] of changed) writeFileSync(join(root, rel), text);
+	return errors;
+}
+
+/**
+ * Adds the element layer's work to the inventory: each stylesheet selector it recognized (in any stack) and styled as
+ * a brand element, so the agent and `look` see every decision in one place.
+ */
+export function recordStyledSelectors(root: string, styled: { file: string; selector: string; kind: string }[]) {
+	let decisions: Decision[] = [];
+	try {
+		decisions = JSON.parse(readFileSync(join(root, '.ds', 'components.json'), 'utf8')).components ?? [];
+	} catch {}
+	const kept = decisions.filter((d) => !d.file.match(/\.(css|scss|less)$/));
+	const added = styled.map((x): Decision => ({ file: x.file, name: x.selector, item: x.kind, confidence: 1, signals: [`class names a ${x.kind}`], uses: 0, action: 'style', reason: `its CSS takes the brand's ${x.kind} styling (the element layer)` }));
+	if (kept.length || added.length) writeInventory(root, [...kept, ...added]);
+}
+
+/** The decisions, for the agent's tasks and `look`: what each component is, what was done, and why. */
+function writeInventory(root: string, decisions: Decision[]) {
+	const dir = join(root, '.ds');
+	mkdirSync(dir, { recursive: true });
+	writeFileSync(join(dir, 'components.json'), `${JSON.stringify({ tool: brand().bin, components: decisions }, null, 2)}\n`);
 }

@@ -15,6 +15,10 @@ import { patchWrites } from '../src/hooks/payload.js';
 import { runningHarness } from '../src/install/agents.js';
 import { elements, tokens } from '../src/lib/brand.js';
 import { elementsIn } from '../src/plan/elements.js';
+import { adaptComponent, restyleRoot } from '../src/library/adapt.js';
+import { componentsIn, identify } from '../src/library/components.js';
+import { applyComponents } from '../src/library/swap.js';
+import { parse as parseTs } from '@babel/parser';
 import { readState } from '../src/plan/state.js';
 import { detectProject, styledFiles } from '../src/project/detect.js';
 import { listScreens } from '../src/project/screens.js';
@@ -344,5 +348,64 @@ describe('the one command', () => {
 	});
 	it('every command answers --help', () => {
 		for (const c of ['review', 'look', 'check', 'tokens', 'approve', 'done', 'skip', 'snapshot', 'hook']) expect(execFileSync(process.execPath, [BIN, c, '--help'], { encoding: 'utf8' })).toMatch(/Usage/);
+	});
+});
+
+describe('component pass', () => {
+	const BUTTON = `import * as React from "react";
+
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "danger"; size?: "small" | "large"; loading?: boolean };
+
+export function Button({ variant = "primary", size, loading, className, children, ...rest }: ButtonProps) {
+  return <button className={"rounded-lg px-4 py-2 bg-indigo-600 text-white font-semibold " + (className ?? "")} disabled={loading} {...rest}>{children}</button>;
+}
+`;
+	it('identifies components by name, structure and props', () => {
+		const [button] = componentsIn('components/Button.tsx', BUTTON);
+		expect(identify(button, 'product')).toMatchObject({ item: 'button' });
+		expect(button.values.variant).toEqual(['primary', 'secondary', 'danger']);
+		const toggle = componentsIn('Toggle.tsx', 'export const Toggle = ({ checked }: { checked: boolean }) => <button role="switch" aria-checked={checked} />;')[0];
+		expect(identify(toggle, 'product').item).toBe('switch');
+		const pill = componentsIn('StatusPill.tsx', 'export function StatusPill({ tone }: { tone: "ok" | "bad" }) { return <span className="rounded-full px-2 text-xs">{tone}</span>; }')[0];
+		expect(identify(pill, 'product').item).toBe('badge');
+		const nav = componentsIn('Navbar.tsx', 'export function Navbar() { return <header className="site-nav"><nav /></header>; }')[0];
+		expect(identify(nav, 'site').item).toBe('site-header');
+		const odd = componentsIn('Weather.tsx', 'export function WeatherWidget() { return <div>sunny</div>; }')[0];
+		expect(identify(odd, 'site').item).toBeUndefined();
+	});
+	it('adapts a component to the library one, mapping its props, and refuses when a prop would be lost', () => {
+		const [button] = componentsIn('components/Button.tsx', BUTTON);
+		const out = adaptComponent(BUTTON, button, 'button', 'product', '@/components/ds/button', button.values)!;
+		expect(out).toContain('import { Button as DsButton } from "@/components/ds/button";');
+		expect(out).toContain('"primary": "brand"');
+		expect(out).toContain('"danger": "outline"');
+		expect(out).toContain('"small": "sm"');
+		expect(out).toContain('type ButtonProps');
+		expect(out).toContain('disabled={!!rest.disabled || !!loading}');
+		expect(() => parseTs(out, { sourceType: 'module', plugins: ['jsx', 'typescript'] })).not.toThrow();
+		const withTooltip = BUTTON.replace('loading, className', 'loading, tooltip, className').replace('loading?: boolean', 'loading?: boolean; tooltip?: string');
+		const [b2] = componentsIn('components/Button.tsx', withTooltip);
+		expect(adaptComponent(withTooltip, b2, 'button', 'product', '@/components/ds/button', b2.values)).toBeUndefined();
+	});
+	it('restyles a root element: the look becomes the library item, the layout stays', () => {
+		const text = 'export function Tag({ children }: { children: React.ReactNode }) { return <span className="inline-flex ml-2 rounded-full bg-green-100 px-2 text-xs font-bold text-green-800 hover:bg-green-200">{children}</span>; }';
+		const [tag] = componentsIn('Tag.tsx', text);
+		const out = restyleRoot(text, tag, 'badge', 'rounded-control border border-line text-fg-subtle')!;
+		expect(out).toContain('className="inline-flex ml-2 rounded-control border border-line text-fg-subtle"');
+	});
+	it('decides for every component and records why, without touching files on a dry run', () => {
+		const dir = project({
+			'package.json': JSON.stringify({ dependencies: { react: '19.0.0', tailwindcss: '4.1.0' } }),
+			'tsconfig.json': JSON.stringify({ compilerOptions: { paths: { '@/*': ['./*'] } } }),
+			'components/Button.tsx': BUTTON,
+			'components/Weather.tsx': 'export function WeatherWidget() { return <div className="p-4">sunny</div>; }',
+		});
+		const result = applyComponents(detectProject(dir), () => 'product', { dryRun: true })!;
+		expect(result.decisions.map((d) => [d.name, d.action])).toEqual([
+			['Button', 'swap'],
+			['WeatherWidget', 'refine'],
+		]);
+		expect(readFileSync(join(dir, 'components/Button.tsx'), 'utf8')).toBe(BUTTON);
+		rmSync(dir, { recursive: true });
 	});
 });

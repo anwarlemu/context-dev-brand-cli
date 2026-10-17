@@ -7,7 +7,7 @@ import { installAgents, runningHarness } from '../install/agents.js';
 import { Writer } from '../install/files.js';
 import { installElementLayer } from '../install/layer.js';
 import { installTouches } from '../install/touches.js';
-import { swapMatching } from '../library/swap.js';
+import { applyComponents, recordStyledSelectors } from '../library/swap.js';
 import { installDots, installStyles } from '../install/styles.js';
 import { brand, cli } from '../lib/brand.js';
 import { color, emit } from '../lib/output.js';
@@ -65,8 +65,8 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const surface: Surface = (opts.surface as Surface | undefined) ?? previous?.surface ?? found.surface;
 	const theme = opts.theme === 'dark' ? 'dark' : previous?.theme ?? 'light';
 	const mixed = !opts.surface && found.mixed;
-	// A React + Tailwind app gets the library's components in place of its own where they match, first, so the type
-	// check before and after sees only the swap.
+	// A React + Tailwind app's components are identified first and each swapped for the library's, styled as it, or left
+	// to the converter (see library/swap.ts), so the type check before and after sees only those changes.
 	const pkgJson = (() => {
 		try {
 			return JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as { dependencies?: Record<string, string>; devDependencies?: Record<string, string> };
@@ -74,14 +74,15 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 			return {};
 		}
 	})();
-	const swap = (pkgJson.dependencies?.react || pkgJson.devDependencies?.react) && (project.tailwindMajor ?? 0) >= 4 ? swapMatching(project, { dryRun: opts.dryRun }) : undefined;
+	const swap = (pkgJson.dependencies?.react || pkgJson.devDependencies?.react) && (project.tailwindMajor ?? 0) >= 4 ? applyComponents(project, (rel) => (mixed ? surfaceOf(rel, found) : surface), { dryRun: opts.dryRun }) : undefined;
 	const converted = convertProject(project, files, mixed ? 'site' : surface, { dryRun: opts.dryRun, theme });
 	const w = new Writer(root, opts.dryRun);
 	const styleText = files.filter((f) => STYLES.test(f) || MARKUP.test(f)).map((f) => readFileSync(join(root, f), 'utf8')).join('\n');
 	// Native apps have no stylesheet: their colors were converted in their own code; fonts are added as app fonts.
 	const styles = project.framework === 'native' ? { stylesDir: '', brandCss: '', imported: undefined, linked: [], fonts: 'app fonts', notes: ['Add Rethink Sans (text), IBM Plex Mono (code) and Doto (figures) to the app as fonts and set them on its text styles; sizes, radii and spacing are in `tokens`.'] } : installStyles(w, project, mixed ? 'site' : surface, styleText);
 	// Every element the stylesheets name gets the brand's styling at once; the tasks refine from there.
-	const layer = project.framework === 'native' ? { count: 0, files: [] as string[] } : installElementLayer(w, styledFiles(root), (rel) => (mixed ? surfaceOf(rel, found) : surface));
+	const layer = project.framework === 'native' ? { count: 0, files: [] as string[], styled: [] } : installElementLayer(w, styledFiles(root), (rel) => (mixed ? surfaceOf(rel, found) : surface));
+	if (!opts.dryRun) recordStyledSelectors(root, layer.styled);
 	const dots = project.framework !== 'native' && (surface === 'site' || mixed) ? installDots(w, project) : [];
 	installAgents(w);
 	const fixed = opts.dryRun ? 0 : runCheck(root, { fix: true }).fixed;
@@ -103,8 +104,8 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 			`  This is ${mixed ? 'a site with product screens (each route gets its own look)' : surface === 'product' ? 'a product: an app people work in' : 'a site: pages people read and act on'}. Evidence: ${found.reasons.slice(0, 4).join('; ') || 'none, so it is treated as a site'}.${opts.surface ? '' : ` Wrong? \`${cli()} --surface ${surface === 'site' ? 'product' : 'site'}\`.`}`,
 			`  Converted ${values} style values in ${converted.written.length} files to brand tokens${converted.palette.mode === 'dark' && theme !== 'dark' ? ' (the dark interface becomes the brand\'s light one)' : ''}; ${fixed} more matched exactly.${left ? ` ${left.findings.length} left to change by hand, listed in the tasks.` : ''}`,
 			styles.brandCss ? `  Brand stylesheet: ${styles.brandCss}${styles.imported ? `, imported by ${styles.imported}` : styles.linked.length ? `, linked from ${styles.linked.length} pages` : ''}; fonts load ${styles.fonts === 'brand.css' ? 'with it' : `through ${styles.fonts}`}.${dots.length ? ` Hero dots script loads in ${dots.length} layout${dots.length > 1 ? 's' : ''}.` : ''}` : '  Native app: colors now use the brand values in its own code.',
-			...(swap?.swapped.length ? [`  Swapped ${swap.swapped.length} of the app's components for the library's (same names and props): ${swap.swapped.map((f) => f.split('/').pop()!.replace(/\.tsx$/, '')).join(', ')}.${swap.utils ? ` ${swap.utils} now merges the brand's classes.` : ''}${swap.checked ? ' The app type-checks as before.' : ''}`] : []),
-			...(swap?.reverted.length ? [color.yellow(`  Kept the app's own ${swap.reverted.map((f) => f.split('/').pop()!.replace(/\.tsx$/, '')).join(', ')}: the brand's version did not type-check where it is used, so it is restyled instead.`)] : []),
+			...(swap?.decisions.length ? [`  Identified ${swap.decisions.length} components: ${swap.swapped.length} now render the library's (same names and props), ${swap.styled.length} take a library item's look, ${swap.decisions.filter((d) => d.action === 'refine').length} keep their own with brand values. Each decision and why: .ds/components.json.${swap.utils ? ` ${swap.utils} now merges the brand's classes.` : ''}${swap.checked ? ' The app type-checks as before.' : ''}`] : []),
+			...(swap?.reverted.length ? [color.yellow(`  Kept the app's own ${swap.reverted.map((f: string) => f.split('/').pop()!.replace(/\.(tsx|jsx)$/, '')).join(', ')}: the library's version did not type-check where it is used, so it is restyled instead.`)] : []),
 			...(touched.length ? [`  Added the hero dots and the blue closing words of the home headings in ${touched.join(', ')}; check them on the page.`] : []),
 			...(layer.count ? [`  Styled ${layer.count} elements (buttons, cards, inputs, links, headings) the brand's way, in a ds:elements block at the end of ${layer.files.length} stylesheet${layer.files.length > 1 ? 's' : ''}; adjust them inside that block.`] : []),
 			...(converted.marks.length ? [`  Redrew ${converted.marks.length} light one-color marks (logos, icons) for the white page: ${converted.marks.slice(0, 3).join(', ')}${converted.marks.length > 3 ? ', ...' : ''}`] : []),

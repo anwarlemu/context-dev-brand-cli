@@ -143,6 +143,27 @@ export function renderTask(root: string, state: State, status: TaskStatus, index
  * Once the shell and home are done, the remaining screens are one task: restyle them all (they share the shell, so
  * most of the look is already there), then score them together with `review --all`.
  */
+/**
+ * What the component pass decided that the agent finishes: components identified as a library item the CLI could not
+ * apply on its own (a header, a pricing table), to restyle as that item, and the least certain identifications, to
+ * confirm. Read from .ds/components.json.
+ */
+function componentNotes(root: string): string[] {
+	let decisions: { file: string; name: string; item?: string; confidence: number; action: string }[] = [];
+	try {
+		decisions = JSON.parse(readFileSync(join(root, '.ds', 'components.json'), 'utf8')).components ?? [];
+	} catch {
+		return [];
+	}
+	const finish = decisions.filter((d) => d.item && d.action === 'refine');
+	const unsure = decisions.filter((d) => d.item && d.action !== 'refine' && d.confidence < 0.7);
+	const list = (ds: typeof decisions) => ds.slice(0, 8).map((d) => `${d.name} (${d.item}, ${d.file})`).join('; ');
+	return [
+		...(finish.length ? [`  These components are library items the CLI left to you: restyle each as its item (\`${cli()} look <file>\` shows the item and its component): ${list(finish)}${finish.length > 8 ? `, and ${finish.length - 8} more in .ds/components.json` : ''}.`] : []),
+		...(unsure.length ? [`  Check these identifications (the CLI was least sure); if one is wrong, put the component back from git and restyle it as what it is: ${list(unsure)}.`] : []),
+	];
+}
+
 export function renderBatch(root: string, state: State, statuses: TaskStatus[], done: number, total: number): string {
 	const threshold = brand().reviewThreshold;
 	const base = state.baseUrl ?? 'http://localhost:<port>';
@@ -154,6 +175,7 @@ export function renderBatch(root: string, state: State, statuses: TaskStatus[], 
 		`  For each: say in one line what it is for and keep that; no words or elements change. Restyle its elements the way \`${cli()} look <file>\` shows.`,
 		...(home ? [`  The shell (${home.screen.surface === 'product' ? 'sidebar, top bar, page' : 'header, footer, page frame'}) shows on every page: start there.${home.screen.surface === 'site' ? ' Hero dots and the blue closing words of the home headings are already in place; check them.' : ''}`] : []),
 		...(home?.touches.includes('accent') ? ['  Wrap the closing words of the hero headline and of each section heading in <span class="ds-accent"> where they are not yet (same words; never a whole heading).'] : []),
+		...componentNotes(root),
 	];
 	for (const st of statuses) {
 		const s = st.screen;
