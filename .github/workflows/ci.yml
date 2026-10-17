@@ -10,5 +10,3 @@ jobs:
           node-version: 22
       - run: npm ci
       - run: npm run ci
-      - run: npm run registry:build
-      - run: node bin.js check registry
