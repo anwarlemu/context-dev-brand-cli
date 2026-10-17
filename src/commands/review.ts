@@ -6,7 +6,7 @@ import { color, emit } from '../lib/output.js';
 import { findProjectRoot } from '../lib/paths.js';
 import { type State, readState, writeState } from '../plan/state.js';
 import { mainScreens } from '../plan/tasks.js';
-import { runCheck } from '../check/engine.js';
+import { ownFindings, runCheck } from '../check/engine.js';
 import { findMainStylesheet } from '../project/detect.js';
 import type { Screen } from '../project/screens.js';
 import { capture } from '../review/capture.js';
@@ -37,7 +37,7 @@ function filesHash(root: string, screen: Screen) {
  * column lines. Either fails at once, so no review is spent on a screen that cannot pass yet.
  */
 function blockers(root: string, screen: Screen | undefined, outside: string[]) {
-	const errors = screen ? runCheck(root, { paths: screen.files }).findings.length : 0;
+	const errors = screen ? ownFindings(runCheck(root, { paths: screen.files }).findings).length : 0;
 	const out: string[] = [];
 	if (errors) out.push(`${errors} values in this screen's files are not brand tokens: \`${cli()} check ${screen!.files.slice(0, 3).join(' ')}${screen!.files.length > 3 ? ' ...' : ''}\` lists each with its token.`);
 	if (outside.length) out.push(`Content crosses the column lines (measured):\n${outside.map((o) => `    ${o}`).join('\n')}\n  Keep everything between the lines: containers use max-width var(--ds-frame-column) with padding inside (\`${cli()} look column\`); an arrangement wider than the column (a product shot with floating windows) is scaled as a whole so every piece keeps its size and place relative to the others, never by enlarging one part or moving pieces over each other; a wide table scrolls inside its card.`);

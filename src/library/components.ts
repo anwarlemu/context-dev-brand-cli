@@ -286,14 +286,14 @@ export function usesIn(text: string, names: Set<string>): Map<string, { count: n
 type Signature = { item: string; surface?: Surface; names: RegExp; not?: RegExp; tags?: string[]; roles?: string[]; inputs?: string[]; props?: string[]; contains?: string[] };
 
 const SIGNATURES: Signature[] = [
-	{ item: 'button', names: /^(button|btn|cta|action|submit)$/, not: /group|bar|list|toolbar/, tags: ['button'], props: ['variant', 'size', 'asChild', 'loading', 'onClick', 'disabled', 'leftIcon', 'rightIcon'] },
+	{ item: 'button', names: /^(button|btn|submit)$/, not: /group|bar|list|toolbar/, tags: ['button'], props: ['variant', 'size', 'asChild', 'loading', 'onClick', 'disabled', 'leftIcon', 'rightIcon'] },
 	{ item: 'badge', names: /^(badge|tag|pill|chip|status|label)$/, not: /input|filter|list/, tags: ['span'], props: ['variant', 'tone', 'color'] },
 	{ item: 'card', names: /^(card|panel|tile|box)$/, not: /stat|metric|pricing|plan|price/, tags: ['div', 'article', 'section'], props: ['title', 'description', 'footer', 'header'] },
 	{ item: 'input', names: /^(input|textfield|textbox|field)$/, not: /area|select|tag|search|group/, tags: ['input'], inputs: ['text', 'email', 'password', 'url', 'number', 'search', 'tel'] },
 	{ item: 'textarea', names: /^(textarea|multiline)$/, tags: ['textarea'] },
 	{ item: 'label', names: /^(label|fieldlabel|formlabel)$/, tags: ['label'], props: ['htmlFor', 'required'] },
 	{ item: 'select', names: /^(select|dropdown|picker|combobox)$/, not: /menu/, tags: ['select'], contains: ['option'], props: ['options', 'onValueChange'] },
-	{ item: 'checkbox', names: /^(checkbox|check)$/, inputs: ['checkbox'], roles: ['checkbox'], props: ['checked', 'onCheckedChange'] },
+	{ item: 'checkbox', names: /^(checkbox|checkboxfield)$/, inputs: ['checkbox'], roles: ['checkbox'], props: ['checked', 'onCheckedChange'] },
 	{ item: 'switch', names: /^(switch|toggle)$/, not: /theme|group/, roles: ['switch'], props: ['checked', 'onCheckedChange', 'onToggle'] },
 	{ item: 'tabs', names: /^(tabs?|tablist|tabbar)$/, roles: ['tablist'], contains: ['role:tab'] },
 	{ item: 'segmented-control', names: /^(segmented|segment|segmentedcontrol|togglegroup)$/, roles: ['radiogroup'] },
@@ -302,12 +302,12 @@ const SIGNATURES: Signature[] = [
 	{ item: 'tooltip', names: /^(tooltip|hint)$/, roles: ['tooltip'], props: ['content', 'label', 'side'] },
 	{ item: 'popover', names: /^(popover|popup|flyout)$/, props: ['open', 'trigger', 'content'] },
 	{ item: 'dropdown-menu', names: /^(dropdownmenu|menu|contextmenu|actionmenu|kebab|overflowmenu)$/, roles: ['menu'], contains: ['role:menuitem'] },
-	{ item: 'accordion', names: /^(accordion|collapsible|disclosure|faq|expander)$/, tags: ['details'], contains: ['summary'] },
+	{ item: 'accordion', names: /^(accordion|collapsible|disclosure|expander)$/, tags: ['details'], contains: ['summary'] },
 	{ item: 'avatar', names: /^(avatar|userimage|profileimage|initials)$/, props: ['src', 'name', 'initials', 'fallback'] },
 	{ item: 'skeleton', names: /^(skeleton|shimmer|placeholder|loadingblock)$/ },
 	{ item: 'spinner', names: /^(spinner|loader|loading|loadingspinner)$/, contains: ['svg'] },
 	{ item: 'progress', names: /^(progress|progressbar|meter)$/, roles: ['progressbar'], tags: ['progress'], props: ['value', 'max'] },
-	{ item: 'table', names: /^(table|datatable|grid)$/, tags: ['table'], contains: ['thead', 'tbody', 'th'] },
+	{ item: 'table', names: /^(table|datatable|datagrid)$/, tags: ['table'], contains: ['thead', 'tbody', 'th'] },
 	{ item: 'separator', names: /^(separator|divider|rule|hr)$/, tags: ['hr'] },
 	{ item: 'kbd', names: /^(kbd|key|shortcut|hotkey|keycap)$/, tags: ['kbd'] },
 	{ item: 'copy-button', names: /^(copybutton|copy|clipboard|copytoclipboard)$/, props: ['value', 'text', 'onCopy'] },
@@ -346,7 +346,7 @@ export function identify(c: AppComponent, surface: Surface, kindsOf: (item: stri
 		let score = 0;
 		if (sig.not?.test(whole)) continue;
 		if (sig.names.test(whole)) {
-			score += 7;
+			score += 9;
 			signals.push(`named ${c.name}`);
 		} else if (sig.names.test(head)) {
 			score += 5;
@@ -360,16 +360,23 @@ export function identify(c: AppComponent, surface: Surface, kindsOf: (item: stri
 			score += 3;
 			signals.push(`renders <${tag}>`);
 		}
-		const roles = [c.root?.role, ...c.inner.filter((t) => t.startsWith('role:')).map((t) => t.slice(5))].filter(Boolean) as string[];
-		const role = roles.find((r) => sig.roles?.includes(r));
-		if (role) {
+		// The element a component renders says what it is; the same role or input deep inside it says much less.
+		const innerRoles = c.inner.filter((t) => t.startsWith('role:')).map((t) => t.slice(5));
+		if (c.root?.role && sig.roles?.includes(c.root.role)) {
 			score += 5;
-			signals.push(`role ${role}`);
+			signals.push(`role ${c.root.role}`);
+		} else if (innerRoles.some((r) => sig.roles?.includes(r))) {
+			score += 2;
+			signals.push(`contains role ${innerRoles.find((r) => sig.roles?.includes(r))}`);
 		}
-		const input = [c.root?.tag === 'input' ? c.root.type ?? 'text' : undefined, ...c.inner.filter((t) => t.startsWith('input:')).map((t) => t.slice(6))].find((t) => t && sig.inputs?.includes(t));
-		if (input) {
+		const rootInput = c.root?.tag === 'input' ? c.root.type ?? 'text' : undefined;
+		const innerInput = c.inner.filter((t) => t.startsWith('input:')).map((t) => t.slice(6)).find((t) => sig.inputs?.includes(t));
+		if (rootInput && sig.inputs?.includes(rootInput)) {
 			score += 4;
-			signals.push(`input type ${input}`);
+			signals.push(`input type ${rootInput}`);
+		} else if (innerInput) {
+			score += 2;
+			signals.push(`contains input type ${innerInput}`);
 		}
 		const contains = (sig.contains ?? []).filter((t) => c.inner.includes(t));
 		if (contains.length) {
@@ -389,8 +396,8 @@ export function identify(c: AppComponent, surface: Surface, kindsOf: (item: stri
 		if (sig.surface && sig.surface !== surface) score -= 2;
 		if (score > 0 && (!best || score > best.score)) best = { item: sig.item, score, signals };
 	}
-	// A floor: a name alone is enough (7); structure alone needs two signals that agree.
-	if (!best || best.score < 5) return { confidence: 0, signals: best?.signals ?? [] };
+	// A floor: a whole name is enough (9); anything else needs signals that agree.
+	if (!best || best.score < 6) return { confidence: 0, signals: best?.signals ?? [] };
 	const kinds = kindsOf(best.item);
 	return { item: best.item, kind: kinds[0], confidence: Math.min(1, best.score / 12), signals: best.signals };
 }

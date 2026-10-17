@@ -1,4 +1,5 @@
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { brand, cli, isOwnFile } from '../lib/brand.js';
@@ -56,6 +57,40 @@ export function changedFiles(root: string) {
 	}
 }
 
+const AUTO = (root: string) => join(root, '.ds', 'auto.json');
+const digest = (text: string) => createHash('sha1').update(text).digest('hex');
+
+/**
+ * Records every file the CLI's automatic pass changed, as it left them. What remains in those files is left for the
+ * task whose screen they belong to, so the stop hook holds the agent only to files it changed itself.
+ */
+export function recordAutoPass(root: string) {
+	const files: Record<string, string> = {};
+	for (const rel of changedFiles(root)) {
+		try {
+			files[rel] = digest(readFileSync(join(root, rel), 'utf8'));
+		} catch {}
+	}
+	mkdirSync(join(root, '.ds'), { recursive: true });
+	writeFileSync(AUTO(root), `${JSON.stringify(files)}\n`);
+}
+
+/** Whether a file is still exactly as the automatic pass left it. */
+export function asAutoPassLeft(root: string): (rel: string) => boolean {
+	let files: Record<string, string> = {};
+	try {
+		files = JSON.parse(readFileSync(AUTO(root), 'utf8'));
+	} catch {}
+	return (rel) => {
+		if (!files[rel]) return false;
+		try {
+			return digest(readFileSync(join(root, rel), 'utf8')) === files[rel];
+		} catch {
+			return false;
+		}
+	};
+}
+
 /** A folder stands for the styled files inside it; a file stands for itself. */
 function expandPath(root: string, rel: string): string[] {
 	const abs = join(root, rel);
@@ -97,6 +132,9 @@ export function runCheck(root: string, opts: { paths?: string[]; fix?: boolean; 
 	}
 	return { files: files.length, findings, overrides, fixed, ms: Math.round(performance.now() - started) };
 }
+
+/** Findings an agent must fix: everything but overrides waiting for a person's approval (those are reported, not blocking). */
+export const ownFindings = (findings: Finding[]) => findings.filter((f) => f.rule !== 'override-approval');
 
 export const formatFinding = (f: Finding) => `${f.file}:${f.line}  ${f.rule}  ${f.message}. ${f.hint}`;
 export const findingKey = (f: Finding) => `${f.file}::${f.rule}::${f.snippet.trim() || f.message}`;

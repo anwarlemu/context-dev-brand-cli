@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { changedFiles, checkable, checkText, formatFinding, newFindings, runCheck } from '../check/engine.js';
+import { asAutoPassLeft, changedFiles, checkable, checkText, formatFinding, newFindings, runCheck } from '../check/engine.js';
 import { installPreCommit } from '../install/agents.js';
 import { Writer } from '../install/files.js';
 import { brand, cli, isOwnFile } from '../lib/brand.js';
@@ -94,7 +94,9 @@ export function preToolUse(root: string, input: HookInput): HookResult {
 
 export function stop(root: string, input: HookInput): HookResult {
 	const s = session(root, sessionIdOf(input));
-	const changed = changedFiles(root).filter((f) => checkable(f) && existsSync(join(root, f)) && statSync(join(root, f)).mtimeMs >= s.entry.startedAt);
+	// Files the agent changed: files still as the CLI's automatic pass left them wait for their own task.
+	const untouched = asAutoPassLeft(root);
+	const changed = changedFiles(root).filter((f) => checkable(f) && existsSync(join(root, f)) && statSync(join(root, f)).mtimeMs >= s.entry.startedAt && !untouched(f));
 	if (changed.length) {
 		const result = runCheck(root, { paths: changed });
 		const own = result.findings.filter((f) => f.rule !== 'override-approval');

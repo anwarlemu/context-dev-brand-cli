@@ -118,7 +118,7 @@ export function references(surface: Surface) {
 /** Measured facts the reviewer must take as given (fonts, sizes, the column check). */
 export const factsText = (facts: string[]): string =>
 	facts.length
-		? `\n\n# Measured on the page (true; do not contradict from the pixels)\n${facts.map((f) => `- ${f}`).join('\n')}\n- Nothing crosses the column lines (measured). The header, its logo and its buttons sit inside the lines on purpose.\n- The before images are taken after the automatic conversion: fonts and colors are already the brand's there, so the same letter shapes in both are expected. Containers and the header moving onto the column lines is intended, not a composition break.`
+		? `\n\n# Measured on the page (true; do not contradict from the pixels)\n${facts.map((f) => `- ${f}`).join('\n')}\n- Nothing outside the hero crosses the column lines (measured). The hero has no lines at its sides, so its visual may run wider and keeps its original composition and size. The header, its logo and its buttons sit inside the lines on purpose.\n- The before images are taken after the automatic conversion: fonts and colors are already the brand's there, so the same letter shapes in both are expected. Containers and the header moving onto the column lines is intended, not a composition break.`
 		: '';
 
 function guide(surface: Surface, previous?: Review) {

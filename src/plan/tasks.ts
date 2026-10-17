@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { brand, cli } from '../lib/brand.js';
-import { runCheck } from '../check/engine.js';
+import { ownFindings, runCheck } from '../check/engine.js';
 import { color } from '../lib/output.js';
 import type { Screen } from '../project/screens.js';
 import { elementsIn } from './elements.js';
@@ -32,12 +32,13 @@ export function missingTouches(root: string, screen: Screen, isHome: boolean): s
 
 export function taskStatus(root: string, state: State, screen: Screen, index: number): TaskStatus {
 	if (state.skipped?.[screen.id]) return { screen, errors: 0, reviewed: false, passed: false, touches: [], skipped: true, done: true };
-	const check = runCheck(root, { paths: screen.files });
+	// Overrides waiting for a person's approval are reported at the end, not counted against the task.
+	const errors = ownFindings(runCheck(root, { paths: screen.files }).findings).length;
 	const review = state.reviews[screen.id];
 	const touches = missingTouches(root, screen, index === 0);
 	const native = !screen.url;
 	const passed = native ? state.marked.includes(screen.id) : !!review?.passed;
-	return { screen, errors: check.findings.length, reviewed: !!review, passed, touches, skipped: false, done: check.findings.length === 0 && passed && touches.length === 0 };
+	return { screen, errors, reviewed: !!review, passed, touches, skipped: false, done: errors === 0 && passed && touches.length === 0 };
 }
 
 /** The screens that are tasks: those chosen by layout at setup (`state.main`), else the first few. */

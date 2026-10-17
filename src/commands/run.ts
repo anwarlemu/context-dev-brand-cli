@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { formatFinding, runCheck } from '../check/engine.js';
+import { formatFinding, ownFindings, recordAutoPass, runCheck } from '../check/engine.js';
 import { convertProject } from '../convert/project.js';
 import { installAgents, runningHarness } from '../install/agents.js';
 import { Writer } from '../install/files.js';
@@ -94,6 +94,7 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	if (screens[0]) screens[0].files = [...new Set([...screens[0].files, ...shell])];
 	const state: State = { version: 2, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, main, marked: previous?.marked ?? [], skipped: previous?.skipped ?? {}, reviews: previous?.reviews ?? {} };
 	if (!opts.dryRun) writeState(root, state);
+	if (!opts.dryRun) recordAutoPass(root);
 	const left = opts.dryRun ? undefined : runCheck(root);
 	const s = converted.stats;
 	const values = s.colors + s.fonts + s.type + s.radius + s.spacing + s.motion + s.shadows;
@@ -132,15 +133,17 @@ function nextText(root: string, state: State) {
 	if (open.length) return renderBatch(root, state, open, statuses.length - open.length, statuses.length);
 	const total = 2;
 	// The final sweep: every file in the project passes the check.
-	const all = runCheck(root);
-	if (all.findings.length) {
+	const checked = runCheck(root);
+	const own = ownFindings(checked.findings);
+	const pending = checked.findings.filter((f) => !own.includes(f));
+	if (own.length) {
 		const byFile = new Map<string, number>();
-		for (const f of all.findings) byFile.set(f.file, (byFile.get(f.file) ?? 0) + 1);
+		for (const f of own) byFile.set(f.file, (byFile.get(f.file) ?? 0) + 1);
 		return [
-			color.bold(`Task ${total} of ${total}: the rest of the project (${all.findings.length} values in ${byFile.size} files are not brand tokens yet).`),
+			color.bold(`Task ${total} of ${total}: the rest of the project (${own.length} values in ${byFile.size} files are not brand tokens yet).`),
 			...[...byFile].sort((a, b) => b[1] - a[1]).slice(0, 10).map(([f, n]) => `    ${String(n).padStart(4)}  ${f}`),
 			`  \`${cli()} check <file>\` lists each value with the token to use. Then run \`${cli()}\` again.`,
-			...all.findings.slice(0, 3).map((f) => color.dim(`  e.g. ${formatFinding(f)}`)),
+			...own.slice(0, 3).map((f) => color.dim(`  e.g. ${formatFinding(f)}`)),
 		].join('\n');
 	}
 	const selfScored = screens.filter((s) => state.reviews[s.id]?.by === 'self').map((s) => s.id);
@@ -154,6 +157,7 @@ function nextText(root: string, state: State) {
 			return left.length ? [color.yellow(`  ${s.id} passed at its second review with these left (tell the person): ${left.map((p) => p.issue).join('; ').slice(0, 300)}`)] : [];
 		}),
 		...(selfScored.length ? [color.yellow(`  Scored by the agent itself, with no separate reviewer (tell the person): ${selfScored.join(', ')}`)] : []),
+		...(pending.length ? [color.yellow(`  ${pending.length} ds-override(s) wait for the person's approval (\`${cli()} approve\` in a terminal; commits are blocked until then). Tell the person each one and why: ${pending.slice(0, 5).map((f) => `${f.file}:${f.line}`).join(', ')}`)] : []),
 		`  Show the person the result (desktop and phone) before committing. From now on the hooks keep new work on the brand.`,
 	].join('\n');
 }

@@ -56,7 +56,8 @@ function outsideLines(): string[] {
 	const right = left + Number.parseFloat(frame.width);
 	const found = new Map<string, string>();
 	for (const el of Array.from(document.querySelectorAll<HTMLElement>('body *'))) {
-		if (el.closest('[data-ds-dots-layer], script, style, noscript, template')) continue;
+		// The hero sits above the lines (the brand's has none at its sides), so its content may run past them.
+		if (el.closest('[data-ds-dots-layer], script, style, noscript, template, [data-ds-dots], .hero, main > section:first-child, body > section:first-of-type')) continue;
 		const own = el.matches('img, svg, video, canvas, picture, button, input, select, textarea, iframe') || Array.from(el.childNodes).some((n) => n.nodeType === 3 && n.textContent?.trim());
 		if (!own || el.parentElement?.closest('svg, button')) continue;
 		const style = getComputedStyle(el);
