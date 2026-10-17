@@ -2,6 +2,7 @@
 
 import * as React from "react";
 
+import { RingBackdrop } from "@/components/visuals/ring-backdrop";
 import { cn } from "@/lib/utils";
 
 type HeroSurface = "white" | "blue";
@@ -236,8 +237,9 @@ function Hero({
 /**
  * The hero's visual frame: a brand blue panel set in a soft blue ring (the ring wraps the panel, so its outer edge
  * keeps the panel's radius), the one block of color on the page. `size` narrows it (`small` for a lighter first
- * screen, `compact` to the product monitors' width on phones). `backdrop` is a layer of rings inset in the panel;
- * `footer` hangs a HeroMediaTab off its bottom edge.
+ * screen, `compact` to the product monitors' width on phones). `backdrop` is the layer inset in the panel, the site's
+ * faint white rings unless you pass another (or `null` for none); `footer` hangs a HeroMediaTab off its bottom edge.
+ * Put the demo in a HeroMediaCard, so its corners nest inside the panel's.
  */
 function HeroMedia({
   size = "default",
@@ -272,15 +274,28 @@ function HeroMedia({
           )}
           {...props}
         >
-          {backdrop && (
-            <div aria-hidden="true" className="pointer-events-none absolute inset-2 overflow-hidden rounded-[calc(var(--spacing)*4.5)] text-blue-40 sm:rounded-[calc(var(--ds-radius-panel)-var(--ds-space-2))] md:inset-3">
-              {backdrop}
+          {backdrop !== null && (
+            <div aria-hidden="true" className="pointer-events-none absolute inset-2 overflow-hidden rounded-[calc(var(--spacing)*4.5)] text-white sm:rounded-[calc(var(--ds-radius-panel)-var(--ds-space-2))] md:inset-3">
+              {backdrop ?? <RingBackdrop className="inset-0 rounded-[inherit]" />}
             </div>
           )}
           <div className="relative flex w-full justify-center">{children}</div>
         </div>
       </div>
       {footer}
+    </div>
+  );
+}
+
+/**
+ * The demo inside a HeroMedia panel: a white card in a solid blue-80 ring, each corner a step inside the one around it
+ * (panel 36px, ring 28px, card 20px), as the site's quick demo sits in its panel. The ring overhangs by its own width,
+ * so the card keeps the full content width.
+ */
+function HeroMediaCard({ className, cardClassName, children }: { className?: string; cardClassName?: string; children: React.ReactNode }) {
+  return (
+    <div data-slot="hero-media-card" className={cn("-m-2 w-[calc(100%+var(--ds-space-4))] max-w-212 rounded-[calc(var(--ds-radius-panel)-var(--ds-space-3))] bg-blue-80 p-2", className)}>
+      <div className={cn("relative flex w-full flex-col overflow-hidden rounded-[calc(var(--ds-radius-panel)-var(--ds-space-5))] bg-surface", cardClassName)}>{children}</div>
     </div>
   );
 }
@@ -326,4 +341,4 @@ function HeroFrame({ surface = "white", className }: { surface?: HeroSurface; cl
   );
 }
 
-export { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaTab, HeroPill };
+export { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill };

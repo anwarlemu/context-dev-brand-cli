@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaTab, HeroPill } from "@/components/site/hero";
+import { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill } from "@/components/site/hero";
 
 export function Site() {
   return (
@@ -34,7 +34,9 @@ export function Site() {
             </HeroMediaTab>
           }
         >
-          <div className="flex h-56 w-full items-end justify-center rounded-card bg-surface p-4 font-mono text-caption text-fg-muted">POST /v1/batch/submit</div>
+          <HeroMediaCard>
+            <div className="flex h-56 w-full items-end justify-center p-4 font-mono text-caption text-fg-muted">POST /v1/batch/submit</div>
+          </HeroMediaCard>
         </HeroMedia>
       }
     />

@@ -1,4 +1,4 @@
-import { Hero, HeroMedia, HeroPill } from "@/components/site/hero";
+import { Hero, HeroMedia, HeroMediaCard, HeroPill } from "@/components/site/hero";
 import { Button } from "@/components/ui/button";
 import { HeroDotField } from "@/components/visuals/hero-dot-field";
 
@@ -22,7 +22,9 @@ export function Site() {
       }
       media={
         <HeroMedia className="max-w-160">
-          <div className="flex h-56 w-full items-end justify-center rounded-card bg-surface p-4 font-mono text-caption text-fg-muted">POST /v1/scrape</div>
+          <HeroMediaCard>
+            <div className="flex h-56 w-full items-end justify-center p-4 font-mono text-caption text-fg-muted">POST /v1/scrape</div>
+          </HeroMediaCard>
         </HeroMedia>
       }
     />

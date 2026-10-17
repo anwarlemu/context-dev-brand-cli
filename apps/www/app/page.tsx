@@ -2,9 +2,9 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { CodeBlock, CodeWindow, WindowCopyButton } from "@/components/site/code-window";
+import { CodeBlock, CodeWindow, TerminalWindow, WindowCopyButton } from "@/components/site/code-window";
 import { Cta, CtaButton } from "@/components/site/cta";
-import { Hero, HeroMedia, HeroMediaTab, HeroPill } from "@/components/site/hero";
+import { Hero, HeroMedia, HeroMediaCard, HeroPill } from "@/components/site/hero";
 import { SectionHeading, SiteSection } from "@/components/site/section";
 import { Button } from "@/components/ui/button";
 import { HeroDotField } from "@/components/visuals/hero-dot-field";
@@ -70,19 +70,12 @@ export default function Home() {
           </>
         }
         media={
-          <HeroMedia
-            size="small"
-            footer={
-              <HeroMediaTab className="justify-center gap-4 text-caption text-on-brand">
-                <span>Components</span>
-                <span>Blocks</span>
-                <span>Visuals</span>
-              </HeroMediaTab>
-            }
-          >
-            <CodeWindow label="terminal" actions={<WindowCopyButton value="npx context-ds add button stat-card hero" />} className="w-full bg-transparent p-0">
-              <CodeBlock code={ADD_OUTPUT} className="overflow-x-auto" />
-            </CodeWindow>
+          <HeroMedia size="small">
+            <HeroMediaCard cardClassName="bg-code">
+              <TerminalWindow label="terminal" actions={<WindowCopyButton value="npx context-ds add button stat-card hero" />} className="rounded-none">
+                <CodeBlock code={ADD_OUTPUT} className="overflow-x-auto" />
+              </TerminalWindow>
+            </HeroMediaCard>
           </HeroMedia>
         }
       />
