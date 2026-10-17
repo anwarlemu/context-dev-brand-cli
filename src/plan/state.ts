@@ -17,6 +17,8 @@ export type State = {
 	/** Where the running app was last reviewed (http://localhost:4321), so later tasks can name full URLs. */
 	baseUrl?: string;
 	screens: Screen[];
+	/** The screens that are tasks, one per distinct layout (see pickMain). */
+	main?: string[];
 	/** Screens the agent marked done where no review is possible (native apps). */
 	marked: string[];
 	/** Screens left as they are, with the reason; listed for the person in the final summary. */

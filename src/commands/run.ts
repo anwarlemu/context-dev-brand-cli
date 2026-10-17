@@ -6,6 +6,7 @@ import { convertProject } from '../convert/project.js';
 import { installAgents, runningHarness } from '../install/agents.js';
 import { Writer } from '../install/files.js';
 import { installElementLayer } from '../install/layer.js';
+import { installTouches } from '../install/touches.js';
 import { installDots, installStyles } from '../install/styles.js';
 import { brand, cli } from '../lib/brand.js';
 import { color, emit } from '../lib/output.js';
@@ -14,7 +15,7 @@ import { MARKUP, STYLES, detectProject, styledFiles } from '../project/detect.js
 import { listScreens, shellFiles } from '../project/screens.js';
 import { type Surface, profile, surfaceOf } from '../project/surface.js';
 import { type State, readState, writeState } from '../plan/state.js';
-import { MAX_SCREENS, mainScreens, renderBatch, renderTask, taskStatus } from '../plan/tasks.js';
+import { mainScreens, pickMain, renderBatch, renderTask, taskStatus } from '../plan/tasks.js';
 
 // The one command: the first run installs the brand and converts every style value; every run after that prints the
 // next task, until each main screen passes its review and the whole project passes the check.
@@ -75,8 +76,11 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const fixed = opts.dryRun ? 0 : runCheck(root, { fix: true }).fixed;
 	const screens = listScreens(detectProject(root), styledFiles(root), { ...found, surface, mixed });
 	const shell = shellFiles(project, files);
+	const main = pickMain(root, screens, shell);
+	// A site's home gets its hero dots and blue closing words now; the agent only checks them.
+	const touched = !opts.dryRun && screens[0] && (surface === 'site' || mixed) && project.framework !== 'native' ? installTouches(new Writer(root), screens[0].files.filter((f) => !shell.includes(f) || /home|index/i.test(f))) : [];
 	if (screens[0]) screens[0].files = [...new Set([...screens[0].files, ...shell])];
-	const state: State = { version: 2, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, marked: previous?.marked ?? [], skipped: previous?.skipped ?? {}, reviews: previous?.reviews ?? {} };
+	const state: State = { version: 2, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, main, marked: previous?.marked ?? [], skipped: previous?.skipped ?? {}, reviews: previous?.reviews ?? {} };
 	if (!opts.dryRun) writeState(root, state);
 	const left = opts.dryRun ? undefined : runCheck(root);
 	const s = converted.stats;
@@ -88,12 +92,13 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 			`  This is ${mixed ? 'a site with product screens (each route gets its own look)' : surface === 'product' ? 'a product: an app people work in' : 'a site: pages people read and act on'}. Evidence: ${found.reasons.slice(0, 4).join('; ') || 'none, so it is treated as a site'}.${opts.surface ? '' : ` Wrong? \`${cli()} --surface ${surface === 'site' ? 'product' : 'site'}\`.`}`,
 			`  Converted ${values} style values in ${converted.written.length} files to brand tokens${converted.palette.mode === 'dark' && theme !== 'dark' ? ' (the dark interface becomes the brand\'s light one)' : ''}; ${fixed} more matched exactly.${left ? ` ${left.findings.length} left to change by hand, listed in the tasks.` : ''}`,
 			styles.brandCss ? `  Brand stylesheet: ${styles.brandCss}${styles.imported ? `, imported by ${styles.imported}` : styles.linked.length ? `, linked from ${styles.linked.length} pages` : ''}; fonts load ${styles.fonts === 'brand.css' ? 'with it' : `through ${styles.fonts}`}.${dots.length ? ` Hero dots script loads in ${dots.length} layout${dots.length > 1 ? 's' : ''}.` : ''}` : '  Native app: colors now use the brand values in its own code.',
+			...(touched.length ? [`  Added the hero dots and the blue closing words of the home headings in ${touched.join(', ')}; check them on the page.`] : []),
 			...(layer.count ? [`  Styled ${layer.count} elements (buttons, cards, inputs, links, headings) the brand's way, in a ds:elements block at the end of ${layer.files.length} stylesheet${layer.files.length > 1 ? 's' : ''}; adjust them inside that block.`] : []),
 			...(converted.marks.length ? [`  Redrew ${converted.marks.length} light one-color marks (logos, icons) for the white page: ${converted.marks.slice(0, 3).join(', ')}${converted.marks.length > 3 ? ', ...' : ''}`] : []),
 			...(converted.rasterLogos.length ? [`  Logo images drawn for the dark site (not recolored): ${converted.rasterLogos.join(', ')}. Check each on white; a white one-color mark needs filter: brightness(0).`] : []),
 			...styles.notes.map((n) => color.yellow(`  Note: ${n}`)),
 			`  Agents are kept on it: the rules are in AGENTS.md and CLAUDE.md, and hooks check every write in Claude Code, Codex and Cursor, plus a git pre-commit check.${harness === 'codex' ? ' Tell the user: Codex runs the hooks once they trust them with /hooks.' : ''}`,
-			`  ${screens.length} screens found; the ${Math.min(screens.length, MAX_SCREENS)} main ones are tasks.`,
+			`  ${screens.length} screens found; ${main.length} of them, chosen to cover every distinct layout and kind of element, are reviewed: ${main.join(', ')}. The rest share their styles and are covered by the check.`,
 			'',
 			...(opts.dryRun ? [] : [nextText(root, state)]),
 		].join('\n'),

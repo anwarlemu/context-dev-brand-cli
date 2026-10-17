@@ -21,6 +21,7 @@ import { listScreens } from '../src/project/screens.js';
 import { profile } from '../src/project/surface.js';
 import { pickEngine, scorecardJsonSchema } from '../src/review/critique.js';
 import { elementLayer } from '../src/install/layer.js';
+import { addTouches } from '../src/install/touches.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const BIN = join(ROOT, 'bin.js');
@@ -196,6 +197,20 @@ describe('element layer', () => {
 	});
 });
 
+describe('touches', () => {
+	it('adds hero dots and wraps the closing words of plain headings, without changing them', () => {
+		const html = '<section class="hero"><h1>All your tasks, sales and clients \u2014 in one workspace</h1></section><h2>Built for agencies of every size</h2><h2>FAQ</h2><h2>Our <b>team</b> today</h2>';
+		const out = addTouches(html, false);
+		expect(out).toContain('<section class="hero" data-ds-dots>');
+		expect(out).toContain('<h1>All your tasks, sales and clients \u2014 <span class="ds-accent">in one workspace</span></h1>');
+		expect(out).toContain('<span class="ds-accent">every size</span>');
+		expect(out).toContain('<h2>FAQ</h2>');
+		expect(out).toContain('<h2>Our <b>team</b> today</h2>');
+		expect(out.replace(/<[^>]+>/g, '')).toBe(html.replace(/<[^>]+>/g, ''));
+		expect(addTouches('<h2>One two three</h2>', true)).toContain('className="ds-accent"');
+	});
+});
+
 describe('elements', () => {
 	it('recognizes buttons, headings, cards and nav links', () => {
 		const html = '<header><nav><a href="/">Docs</a><a class="btn btn-primary">Start</a></nav></header><section class="hero"><h1>Title</h1></section><section><h2 class="title">Features</h2><div class="feature-card"><h3>One</h3></div><a class="btn-outline">More</a></section>';
@@ -271,7 +286,9 @@ describe('the one command', () => {
 		expect(readState(p)?.screens.map((s) => s.url)).toEqual(['/', '/about.html']);
 		const again = run(p);
 		expect(again).toMatch(/0 of 2 screens done/);
-		expect(again).toMatch(/Add data-ds-dots to the hero section/);
+		expect(readFileSync(join(p, 'index.html'), 'utf8')).toContain('<section class="hero" data-ds-dots>');
+		expect(again).not.toMatch(/Add data-ds-dots/);
+		expect(again).toMatch(/Wrap the closing words/);
 		run(p, 'skip', '/', '--reason', 'needs a database');
 		const skipped = run(p);
 		expect(skipped).toMatch(/1 of 2 screens done/);

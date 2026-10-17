@@ -10,7 +10,7 @@ import type { State } from './state.js';
 // The queue: one task per main screen (the first also covers the shared shell), then a final sweep. A task is done
 // when its files pass the check and its review scored at least the threshold; nothing is self-reported.
 
-export const MAX_SCREENS = 8;
+export const MAX_SCREENS = 4;
 
 export type TaskStatus = { screen: Screen; errors: number; reviewed: boolean; passed: boolean; touches: string[]; skipped: boolean; done: boolean };
 
@@ -40,7 +40,65 @@ export function taskStatus(root: string, state: State, screen: Screen, index: nu
 	return { screen, errors: check.findings.length, reviewed: !!review, passed, touches, skipped: false, done: check.findings.length === 0 && passed && touches.length === 0 };
 }
 
-export const mainScreens = (state: State) => state.screens.slice(0, MAX_SCREENS);
+/** The screens that are tasks: those chosen by layout at setup (`state.main`), else the first few. */
+export const mainScreens = (state: State) => {
+	const chosen = state.main?.map((id) => state.screens.find((s) => s.id === id)).filter((s): s is Screen => !!s);
+	return chosen?.length ? chosen : state.screens.slice(0, MAX_SCREENS);
+};
+
+/**
+ * The screens to review, home first: each next one is the screen that adds the most the others do not cover, its own
+ * layout or stylesheet (which counts most) and element kinds not seen yet (a pricing table, a form). Screens that
+ * add nothing share their look with one already chosen, so its review covers them. At most MAX_SCREENS.
+ */
+export function pickMain(root: string, screens: Screen[], shell: string[]): string[] {
+	if (!screens.length) return [];
+	// A small site is reviewed in full; the choosing is for sites with more screens than slots.
+	const isError = (s: Screen) => /(^|\/)(404|500|_?error|not-found)(\.html?)?$/i.test(s.url ?? s.id);
+	if (screens.filter((s) => !isError(s)).length <= MAX_SCREENS) return screens.filter((s) => !isError(s)).map((s) => s.id);
+	const shared = new Set(shell);
+	const own = (s: Screen) => s.files.filter((f) => !shared.has(f));
+	const signature = (s: Screen) => own(s).filter((f) => /\.(css|scss|sass|less|styl)$/.test(f) || /(^|\/)(layouts?|templates?)\//i.test(f));
+	const kinds = new Map<string, Set<string>>();
+	for (const s of screens) {
+		const set = new Set<string>();
+		for (const rel of own(s)) {
+			try {
+				for (const h of elementsIn(rel, readFileSync(join(root, rel), 'utf8'), s.surface)) set.add(h.kind);
+			} catch {}
+		}
+		kinds.set(s.id, set);
+	}
+	// The pages the header links to are the ones people see most.
+	const headerFiles = shell.filter((rel) => /(^|\/)[^/]*(header|nav|navbar|topbar|menu)[^/]*\.\w+$/i.test(rel) && !/footer/i.test(rel));
+	const navText = (headerFiles.length ? headerFiles : shell).map((rel) => {
+		try {
+			return readFileSync(join(root, rel), 'utf8');
+		} catch {
+			return '';
+		}
+	}).join('\n');
+	const navBlocks = headerFiles.length ? navText : [...navText.replace(/<footer\b[\s\S]*?<\/footer>/gi, '').matchAll(/<(nav|header)\b[\s\S]*?<\/\1>/gi)].map((m) => m[0]).join('\n');
+	const linked = new Set([...navBlocks.matchAll(/href=["'{`]+(\/[\w\-/]*)/g)].map((m) => m[1].replace(/(.)\/$/, '$1').replace(/\.html$/, '')).flatMap((u) => [u, `${u}.html`]));
+	const picked = [screens[0]];
+	const seenKinds = new Set(kinds.get(screens[0].id));
+	const seenFiles = new Set(signature(screens[0]));
+	while (picked.length < Math.min(MAX_SCREENS, screens.length)) {
+		let best: Screen | undefined;
+		let bestScore = -1;
+		for (const s of screens) {
+			if (picked.includes(s) || isError(s)) continue;
+			const k = kinds.get(s.id) ?? new Set();
+			const score = (linked.has(s.url ?? '') ? 4 : 0) + signature(s).filter((f) => !seenFiles.has(f)).length * 3 + [...k].filter((x) => !seenKinds.has(x)).length - (k.size < 3 ? 3 : 0);
+			if (score > bestScore) [best, bestScore] = [s, score];
+		}
+		if (!best || bestScore <= 0) break;
+		picked.push(best);
+		for (const k of kinds.get(best.id) ?? []) seenKinds.add(k);
+		for (const f of signature(best)) seenFiles.add(f);
+	}
+	return picked.map((s) => s.id);
+}
 
 /** The text of one task: short, concrete, with the elements to restyle and how the task is checked. */
 export function renderTask(root: string, state: State, status: TaskStatus, index: number, total: number): string {
