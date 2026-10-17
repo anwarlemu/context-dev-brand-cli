@@ -4,27 +4,20 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-// Usage over time: one smooth line over a soft fill, in brand blue for the total (or the series it follows). The last
-// stretch is dotted: that bucket (today) is still filling. Horizontal gridlines only, 11px subtle labels, a hover
-// marker and a breakdown tooltip. The line draws itself in from the left on mount.
+import { type ChartBucket, type ChartCursor, type ChartSeries, ChartTooltip, niceMax, useChartSize, Y_INTERVALS } from "@/components/product/bar-chart";
 
-export type ChartBucket<K extends string> = { label: string; total: number; values: Partial<Record<K, number>> };
-export type ChartSeries<K extends string> = { key: K; label: string; color: string };
+// Usage over time as one smooth line over a soft fill, in brand blue for the total (or the series it follows). The last
+// stretch is dotted: that bucket (today) is still filling. Horizontal gridlines only, 11px subtle labels, a hover
+// marker and the shared chart tooltip. The line draws itself in from the left on mount (900ms, as the redesign's
+// chart-line-in), the fill fades in after it and the markers pop in along it. The redesigned dashboard charts usage
+// as stacked bars (bar-chart); use this where one trend over time is the whole story.
+
+export type { ChartBucket, ChartSeries };
 
 const PAD = { top: 10, right: 12, bottom: 30, left: 40 };
-export const Y_INTERVALS = 4;
 const X_LABELS = 7;
 const X_LABEL_PX = 64;
 const X_LABEL_CLEARANCE = 44;
-
-/** The axis top: a round step (1, 2, 2.5 or 5 times a power of ten, at least 1) times the number of intervals. */
-export function niceMax(peak: number) {
-  const raw = peak / Y_INTERVALS;
-  if (raw <= 1) return Y_INTERVALS;
-  const magnitude = 10 ** Math.floor(Math.log10(raw));
-  const step = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((c) => c >= raw) ?? raw;
-  return step * Y_INTERVALS;
-}
 
 /** Which buckets get a label under the axis: up to seven, as many as fit, always the first and last. */
 export function axisLabelIndexes(count: number, plotWidth = Infinity) {
@@ -40,21 +33,6 @@ function smoothSegments(points: Array<[number, number]>, floorY: number) {
     const [x3, y3] = points[Math.min(points.length - 1, i + 2)];
     return `C${x1 + (x2 - x0) / 6},${Math.min(floorY, y1 + (y2 - y0) / 6)} ${x2 - (x3 - x1) / 6},${Math.min(floorY, y2 - (y3 - y1) / 6)} ${x2},${y2}`;
   });
-}
-
-export function useChartSize() {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [size, setSize] = React.useState({ width: 0, height: 0 });
-  React.useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const measure = () => setSize({ width: el.clientWidth, height: el.clientHeight });
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return { ref, size };
 }
 
 export function LineChart<K extends string>({
@@ -77,6 +55,7 @@ export function LineChart<K extends string>({
   const gradientId = React.useId();
   const { ref, size } = useChartSize();
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const [cursor, setCursor] = React.useState<ChartCursor>();
 
   const plotWidth = Math.max(0, size.width - PAD.left - PAD.right);
   const plotHeight = Math.max(0, size.height - PAD.top - PAD.bottom);
@@ -97,8 +76,6 @@ export function LineChart<K extends string>({
 
   const active = activeIndex === null ? null : buckets[activeIndex];
   const activeX = activeIndex === null ? 0 : xAt(activeIndex);
-  const tooltipLeft = activeX > PAD.left + plotWidth / 2;
-  const tooltipLow = activeIndex !== null && points[activeIndex][1] < PAD.top + plotHeight / 2;
   const ready = size.width > 0 && size.height > 0;
 
   return (
@@ -110,6 +87,7 @@ export function LineChart<K extends string>({
       onMouseMove={(e) => {
         if (!plotWidth) return;
         const x = e.clientX - e.currentTarget.getBoundingClientRect().left - PAD.left;
+        setCursor({ x: e.clientX, y: e.clientY });
         setActiveIndex(Math.min(buckets.length - 1, Math.max(0, Math.round((x / plotWidth) * (buckets.length - 1)))));
       }}
       onMouseLeave={() => setActiveIndex(null)}
@@ -180,54 +158,17 @@ export function LineChart<K extends string>({
           <span className="pointer-events-none absolute bottom-[3px] flex h-5 -translate-x-1/2 items-center rounded-control bg-brand px-2 text-caption whitespace-nowrap text-on-brand" style={{ left: activeX }}>
             {active.label}
           </span>
-          <ChartTooltip
-            className={cn(tooltipLeft && "-translate-x-full")}
-            style={{ left: activeX + (tooltipLeft ? -16 : 16), ...(tooltipLow ? { bottom: PAD.bottom } : { top: PAD.top }) }}
-            title={active.label}
-            total={active.total}
-            unit={unit}
-            rows={series.map((s) => ({ label: s.label, color: s.color, value: active.values[s.key] ?? 0 }))}
-          />
+          {cursor && (
+            <ChartTooltip
+              cursor={cursor}
+              title={active.label}
+              total={active.total}
+              unit={unit}
+              rows={series.map((s) => ({ key: s.key, label: s.label, color: s.color, value: active.values[s.key] ?? 0 }))}
+            />
+          )}
         </>
       )}
-    </div>
-  );
-}
-
-/** The breakdown shown on hover: the date, the total in brand blue, then each series with its dot. */
-export function ChartTooltip({
-  title,
-  total,
-  unit,
-  rows,
-  className,
-  style,
-}: {
-  title: React.ReactNode;
-  total: number;
-  unit: string;
-  rows: { label: string; color: string; value: number }[];
-  className?: string;
-  style?: React.CSSProperties;
-}) {
-  return (
-    <div className={cn("pointer-events-none absolute z-10 w-max min-w-52 rounded-shell bg-surface p-1.5 shadow-floating", className)} style={style}>
-      <div className="rounded-card bg-surface p-3 text-caption">
-        <p className="text-fg-subtle">{title}</p>
-        <p className="mt-1.5 flex items-baseline gap-1.5">
-          <span className="text-h4 leading-none font-medium tracking-tight text-fg-brand tabular-nums">{total.toLocaleString("en-US")}</span>
-          <span className="text-fg-muted">{total === 1 ? unit.replace(/s$/, "") : unit}</span>
-        </p>
-        <ul className="mt-3 flex flex-col gap-1.5 border-t border-line-subtle pt-2.5">
-          {rows.map((r) => (
-            <li key={r.label} className={cn("flex items-center gap-2", r.value === 0 && "text-fg-subtle")}>
-              <span className={cn("size-2 rounded-pill", r.value === 0 && "opacity-30")} style={{ background: r.color }} aria-hidden />
-              <span className={cn("flex-1", r.value > 0 && "text-fg-muted")}>{r.label}</span>
-              <span className="tabular-nums">{r.value.toLocaleString("en-US")}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 export function Product() {
   return (
     <div className="grid w-full max-w-sm gap-5">
-      <Field label="Webhook URL" htmlFor="hook" help="We POST every change here.">
+      <Field label="Webhook URL" htmlFor="hook" help="We POST every change here." required>
         <Input id="hook" placeholder="https://acme.com/hooks/context" />
       </Field>
       <Field label="Email" htmlFor="email" error="Enter a valid email.">

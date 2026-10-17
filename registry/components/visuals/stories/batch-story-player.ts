@@ -29,7 +29,7 @@ const WHOLE_GRID = { left: 0, top: 0, cellsPerSide: Math.max(columns, rows) };
 const FARTHEST_FROM_RIM = Math.max(BOX_RIM_ROW, rows - 1 - BOX_RIM_ROW);
 
 const easeInOut = (t: number) => t * t * (3 - 2 * t);
-// Slows only a little towards the end, so the count is still visibly counting when it lands on the total.
+// Slows only a little toward the end, so the count is still visibly counting when it lands on the total.
 const settle = (t: number) => 1 - (1 - t) ** 1.6;
 const between = (from: number, to: number, share: number) => from + (to - from) * share;
 const melt = (from: GlyphCell[], into: GlyphCell[]) => createGlyphShader({ grid: BATCH_STORY_GRID, box: WHOLE_GRID, cells: from, drawTarget: (target) => drawGlyphCells(target, into, pitch) });

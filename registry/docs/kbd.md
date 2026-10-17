@@ -7,5 +7,5 @@ description: A keyboard key.
 kinds: []
 use_for: Shortcuts in menus and the command palette.
 never: []
-source: dashboard command palette
+source: src/components/dashboard/shell/ShellCommandPalette.tsx (Kbd)
 ---

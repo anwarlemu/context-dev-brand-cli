@@ -3,9 +3,9 @@ name: accordion
 title: Accordion
 type: ui
 surface: site
-description: Questions on hairline rules with a plus that turns to a cross.
+description: Questions in medium weight on light rules, with a chevron that turns over when open.
 kinds: [faq]
 use_for: FAQs.
 never: [Hiding essential content]
-source: site src/components/sections/faq.tsx
+source: src/components/ui/accordion.tsx; src/components/sections/faq.tsx (quick view)
 ---

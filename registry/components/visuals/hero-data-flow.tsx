@@ -230,21 +230,21 @@ function drawStrandDots(context: CanvasRenderingContext2D, strand: Strand, spaci
   const stepU = 1 / ARC_STEPS;
   const firstId = -Math.floor(strand.flow / spacing);
   let previous = pointAt(0);
-  let travelled = 0;
+  let traveled = 0;
   let nextAt = strand.flow % spacing;
   let index = 0;
   for (let step = 1; step <= ARC_STEPS; step++) {
     const u = step * stepU;
     const point = pointAt(u);
     const segment = Math.hypot(point.x - previous.x, point.y - previous.y);
-    while (segment > 0 && travelled + segment >= nextAt) {
-      const t = (nextAt - travelled) / segment;
+    while (segment > 0 && traveled + segment >= nextAt) {
+      const t = (nextAt - traveled) / segment;
       const hollow = (((firstId + index) % HOLLOW_EVERY) + HOLLOW_EVERY) % HOLLOW_EVERY === 0;
       drawDot(context, { x: lerp(previous.x, point.x, t), y: lerp(previous.y, point.y, t) }, DOT_RADIUS * strand.size, opacityAt(u - stepU + stepU * t), hollow);
       index++;
       nextAt += spacing;
     }
-    travelled += segment;
+    traveled += segment;
     previous = point;
   }
 }

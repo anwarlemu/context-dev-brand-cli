@@ -84,7 +84,7 @@ export function paintGlobe(states: Uint8Array, turned: number) {
 		const across = (column - GLOBE.center.column) / (GLOBE.radius * Math.sqrt(1 - up * up));
 		const longitude = Math.asin(Math.max(-1, Math.min(1, across))) + turned;
 		const fromMeridian = Math.abs(longitude / GLOBE_TURN - Math.round(longitude / GLOBE_TURN)) * GLOBE_TURN;
-		// A meridian is one dot wide wherever it is on the face, so its width in longitude grows towards the limb.
+		// A meridian is one dot wide wherever it is on the face, so its width in longitude grows toward the limb.
 		const dotInLongitude = 1 / (GLOBE.radius * Math.sqrt(1 - up * up) * Math.sqrt(Math.max(0.02, 1 - across * across)));
 		return fromMeridian < GLOBE.lineWidth * dotInLongitude ? DOT_FILLED : DOT_HOLLOW;
 	});

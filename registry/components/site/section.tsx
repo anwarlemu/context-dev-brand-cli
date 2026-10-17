@@ -56,18 +56,18 @@ function SectionHeaderRule({ tone = "light", standalone = false, className }: { 
   const rule = (
     <div aria-hidden="true" data-slot="section-header-rule" className={cn("pointer-events-none relative z-20 mt-10 mb-8 h-px md:mt-12", className)}>
       <div className={cn("absolute top-0 left-1/2 h-px w-screen -translate-x-1/2", colors.line)} />
-      <span className={cn(NODE, colors.node, "top-1/2 -left-6 -translate-x-1/2 -translate-y-1/2 md:-left-10 lg:-left-12")} />
-      <span className={cn(NODE, colors.node, "top-1/2 -right-6 translate-x-1/2 -translate-y-1/2 md:-right-10 lg:-right-12")} />
+      <span className={cn(NODE, colors.node, "top-1/2 -left-6 -translate-x-1/2 -translate-y-1/2 sm:-left-8 md:-left-10 lg:-left-12")} />
+      <span className={cn(NODE, colors.node, "top-1/2 -right-6 translate-x-1/2 -translate-y-1/2 sm:-right-8 md:-right-10 lg:-right-12")} />
     </div>
   );
   if (!standalone) return rule;
-  return <div className={cn(COLUMN, "px-6 md:px-10 lg:px-12")}>{rule}</div>;
+  return <div className={cn(COLUMN, "px-6 sm:px-8 md:px-10 lg:px-12")}>{rule}</div>;
 }
 
 /**
  * A full-bleed band with the content in the ruled column. The site's base layer already draws the page's column lines
  * and the rule between top-level sections; `lines` draws them on the section itself (a dark band, or a page without the
- * base layer).
+ * base layer). It clips sideways, so the nodes on a full-width column never widen the page.
  */
 function SiteSection({
   tone = "light",
@@ -81,11 +81,11 @@ function SiteSection({
   return (
     <section
       data-slot="site-section"
-      className={cn("relative w-full pt-10 pb-16 md:pt-12 md:pb-20", tone === "dark" ? "bg-inverse text-white" : "bg-surface text-fg", className)}
+      className={cn("relative w-full overflow-x-clip pt-10 pb-16 md:pt-12 md:pb-20", tone === "dark" ? "bg-inverse text-white" : "bg-surface text-fg", className)}
       {...props}
     >
       {lines && <SectionEdgeLines tone={tone} header={header} />}
-      <div data-slot="site-section-column" className={cn("relative", COLUMN, "px-6 md:px-10 lg:px-12", columnClassName)}>
+      <div data-slot="site-section-column" className={cn("relative", COLUMN, "px-6 sm:px-8 md:px-10 lg:px-12", columnClassName)}>
         {children}
       </div>
     </section>
@@ -112,7 +112,7 @@ function SectionHeading({
   children?: React.ReactNode;
 }) {
   return (
-    <div data-slot="section-heading" className={cn("flex flex-col items-start gap-5", className)}>
+    <div data-slot="section-heading" className={cn("flex flex-col items-start gap-6", className)}>
       <Heading className="max-w-(--ds-layout-heading) text-left text-h3 font-normal tracking-tight text-balance text-fg leading-display md:text-h2">
         {title}
         {accent && (
@@ -128,4 +128,9 @@ function SectionHeading({
   );
 }
 
-export { SiteSection, SectionEdgeLines, SectionHeaderRule, SectionHeading };
+/** A plain full-bleed rule between two blocks that are not sections of their own (no nodes). */
+function SectionDivider({ className }: { className?: string }) {
+  return <div aria-hidden="true" data-slot="section-divider" className={cn("relative left-1/2 h-px w-screen -translate-x-1/2 bg-rule", className)} />;
+}
+
+export { SiteSection, SectionDivider, SectionEdgeLines, SectionHeaderRule, SectionHeading };

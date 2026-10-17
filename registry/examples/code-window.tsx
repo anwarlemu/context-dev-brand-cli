@@ -1,4 +1,8 @@
-import { CodeTabs, CodeWindow, CodeBlock, WindowCopyButton } from "@/components/site/code-window";
+"use client";
+
+import * as React from "react";
+
+import { CodeTabs, CodeWindow, CodeBlock, InstallCommand, WindowCopyButton } from "@/components/site/code-window";
 
 const SCRAPE = `import ContextDev from 'context.dev';
 
@@ -27,7 +31,15 @@ curl https://api.context.dev/v1/web/scrape \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -d '{"url": "https://linear.app", "formats": {"markdown": true}}'`;
 
+const SAMPLES = [
+  { language: "typescript", label: "TypeScript", filename: "scrape.ts", code: SCRAPE, install: "npm install context.dev" },
+  { language: "python", label: "Python", filename: "scrape.py", code: PYTHON, install: "pip install context.dev" },
+  { language: "curl", label: "cURL", filename: "terminal", code: CURL, install: null },
+];
+
 export function Site() {
+  const [language, setLanguage] = React.useState("typescript");
+  const install = SAMPLES.find((sample) => sample.language === language)?.install;
   return (
     <div className="grid w-full max-w-3xl gap-10">
       <CodeWindow label="scrape.ts" actions={<WindowCopyButton value={SCRAPE} />}>
@@ -35,13 +47,10 @@ export function Site() {
           <CodeBlock code={SCRAPE} />
         </div>
       </CodeWindow>
-      <CodeTabs
-        samples={[
-          { language: "typescript", label: "TypeScript", filename: "scrape.ts", code: SCRAPE },
-          { language: "python", label: "Python", filename: "scrape.py", code: PYTHON },
-          { language: "curl", label: "cURL", filename: "terminal", code: CURL },
-        ]}
-      />
+      <div className="flex flex-col gap-4">
+        <InstallCommand command={install} />
+        <CodeTabs samples={SAMPLES} language={language} onLanguageChange={setLanguage} />
+      </div>
     </div>
   );
 }

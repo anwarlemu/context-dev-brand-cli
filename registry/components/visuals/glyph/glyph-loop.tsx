@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { DotStory, type LoadDotStory } from "@/components/visuals/glyph/dot-story";
+import { DotStory, type LoadDotStory } from "@/components/visuals/dot-engine/dot-story";
 import { GLYPH_GRID, glyphSubject, type GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 
 type GlyphLoopProps = {

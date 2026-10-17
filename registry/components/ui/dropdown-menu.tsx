@@ -43,26 +43,35 @@ function DropdownMenuItem({ className, variant = "default", ...props }: React.Co
   return (
     <DropdownMenuPrimitive.Item
       data-slot="dropdown-menu-item"
-      className={cn(ROW, variant === "destructive" && "text-danger data-[highlighted]:bg-danger/5 data-[highlighted]:text-danger", className)}
+      className={cn(ROW, variant === "destructive" && "text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger", className)}
       {...props}
     />
   );
 }
 
-/** A destructive row that fires only after being held, its fill running across as the hint. */
-function DropdownMenuHoldItem({ holdMs = 1500, onConfirm, children, className, ...props }: Omit<React.ComponentProps<typeof DropdownMenuPrimitive.Item>, "onSelect"> & { holdMs?: number; onConfirm: () => void }) {
+/** A row that fires only after being held (destructive by default), its fill running across as the hint. The fill runs
+ * at a constant rate while held and snaps back in 150ms ease-out on release. */
+function DropdownMenuHoldItem({
+  holdMs = 1500,
+  onConfirm,
+  variant = "destructive",
+  children,
+  className,
+  ...props
+}: Omit<React.ComponentProps<typeof DropdownMenuPrimitive.Item>, "onSelect"> & { holdMs?: number; onConfirm: () => void; variant?: "default" | "destructive" }) {
   const { isHolding, handlers } = useHold(holdMs, onConfirm);
+  const danger = variant === "destructive";
   return (
     <DropdownMenuPrimitive.Item
       data-slot="dropdown-menu-hold-item"
       onSelect={(event) => event.preventDefault()}
       {...handlers}
-      className={cn(ROW, "overflow-hidden text-danger data-[highlighted]:bg-danger/5 data-[highlighted]:text-danger", className)}
+      className={cn(ROW, "overflow-hidden", danger && "text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger", className)}
       {...props}
     >
       <span
         aria-hidden
-        className={cn("absolute inset-0 origin-left bg-danger/10 transition-transform ease-linear motion-reduce:transition-none", isHolding ? "scale-x-100" : "scale-x-0 duration-150")}
+        className={cn("absolute inset-0 origin-left transition-transform motion-reduce:transition-none", danger ? "bg-danger/12" : "bg-wash-pill", isHolding ? "scale-x-100 ease-linear" : "scale-x-0 duration-150 ease-out")}
         style={isHolding ? { transitionDuration: `${holdMs}ms` } : undefined}
       />
       <span className="relative flex flex-1 items-center gap-2">{isHolding ? "Keep holding…" : children}</span>

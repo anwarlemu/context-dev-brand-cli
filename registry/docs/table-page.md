@@ -3,9 +3,9 @@ name: table-page
 title: Table page
 type: block
 surface: product
-description: A list page with a toolbar, a table with row menus and an empty state.
+description: The API keys page; a centered header, the plan's key allowance, search and status filter, the keys table with hold-to-confirm row menus, and the empty page.
 kinds: []
 use_for: API keys, members, records.
 never: []
-source: dashboard src/components/api-keys/api-keys-page.tsx
+source: brand-dev-webapp src/components/dashboard/ApiKeysList.tsx
 ---

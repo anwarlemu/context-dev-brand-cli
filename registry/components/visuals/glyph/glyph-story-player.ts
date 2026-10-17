@@ -1,6 +1,6 @@
-import { createBeatStoryPlayer, type StoryPicture } from "@/components/visuals/glyph/dot-story-beats";
-import { cellStates, cellsOfStates } from "@/components/visuals/glyph/dot-story-cells";
-import type { DotStoryPlayer, DotStoryStage } from "@/components/visuals/glyph/dot-story-player";
+import { createBeatStoryPlayer, type StoryPicture } from "@/components/visuals/dot-engine/dot-story-beats";
+import { cellStates, cellsOfStates } from "@/components/visuals/dot-engine/dot-story-cells";
+import type { DotStoryPlayer, DotStoryStage } from "@/components/visuals/dot-engine/dot-story-player";
 import { GLYPH_GRID, glyphOutcome, glyphSubject, type GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 import { FINE_GRID, fineStates } from "@/components/visuals/glyph/upgrade-story-fine";
 

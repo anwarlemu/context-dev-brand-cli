@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { DotStory, type LoadDotStory } from "@/components/visuals/glyph/dot-story";
-import { cellStates } from "@/components/visuals/glyph/dot-story-cells";
+import { DotStory, type LoadDotStory } from "@/components/visuals/dot-engine/dot-story";
+import { cellStates } from "@/components/visuals/dot-engine/dot-story-cells";
 import { GLYPH_GRID, glyphSubject, type GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 import { FINE_GRID, fineCellsOf } from "@/components/visuals/glyph/upgrade-story-fine";
 

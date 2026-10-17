@@ -8,5 +8,5 @@ kinds: []
 use_for: "The datasets page hero on the site. Plays only on screen; shows the finished dataset with reduced motion."
 never: [Stories as the main content of a page]
 source: site src/components/sections/page-heroes/datasets-hero-story.tsx
-files: [components/visuals/stories/datasets-hero-story.tsx, components/visuals/stories/datasets-hero-story-player.ts, components/visuals/stories/datasets-hero-story-scenes.ts, components/visuals/stories/hero-story-kit.ts]
+files: [components/visuals/stories/datasets-hero-story.tsx, components/visuals/stories/datasets-hero-story-player.ts, components/visuals/stories/datasets-hero-story-scenes.ts]
 ---

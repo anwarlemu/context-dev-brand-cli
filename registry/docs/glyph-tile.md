@@ -7,6 +7,6 @@ description: A page's dot glyph in a small bordered tile that loops between its 
 kinds: []
 use_for: Card and list icons for product pages and APIs. `ringed` for the large featured glyph.
 never: [Glyph tiles as body illustrations, Several looping tiles starting in step (stagger startsAtSeconds)]
-source: dashboard src/components/dots/glyph-tile.tsx
+source: src/components/dashboard-ui/dots/glyph-tile.tsx
 files: [components/visuals/glyph/glyph-tile.tsx]
 ---

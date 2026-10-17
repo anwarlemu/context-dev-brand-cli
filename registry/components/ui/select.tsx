@@ -8,20 +8,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { usePortalContainer } from "@/lib/surface";
 import { cn } from "@/lib/utils";
 
-// The dashboard's single-choice dropdown: a quiet bordered button in toolbars (`ghost`), a full field beside inputs
-// (`field`), or a small gray chip in a card's footer (`chip`); the list is the same menu panel, the selected row
-// black with a blue check.
+// The dashboard's single-choice dropdown (SelectMenu): a quiet bordered button in toolbars (`ghost`), a full field beside
+// inputs (`field`, `compact` for dense panels), or a small gray chip in a card's footer (`chip`); the list is the same
+// menu panel growing from its trigger's corner, the selected row black with a blue check.
 const triggerVariants = cva(
-  "flex items-center gap-1.5 whitespace-nowrap outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-fg-subtle",
+  "flex items-center gap-1.5 whitespace-nowrap outline-none transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-fg-subtle",
   {
     variants: {
       appearance: {
         ghost: "h-8 rounded-control border border-line px-3 text-body-sm text-fg-muted hover:border-line-strong hover:text-fg data-[state=open]:border-line-strong data-[state=open]:text-fg",
-        field: "h-10 w-full rounded-control border border-line bg-surface px-3.5 text-body-sm text-fg hover:border-line-strong data-[state=open]:border-brand data-placeholder:text-fg-faint [&>span]:flex-1 [&>span]:text-left",
-        chip: "h-7 rounded-control bg-wash-hover px-2.5 text-caption text-fg-muted hover:bg-wash-pill hover:text-fg data-[state=open]:bg-wash-pill data-[state=open]:text-fg",
+        field: "w-full rounded-control border border-line bg-surface text-fg hover:border-line-strong data-[state=open]:border-brand data-placeholder:text-fg-subtle [&>span]:flex-1 [&>span]:text-left",
+        chip: "h-7 rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-wash-hover px-2.5 text-caption text-fg-muted hover:bg-wash-pill hover:text-fg data-[state=open]:bg-wash-pill data-[state=open]:text-fg",
       },
+      // A shorter field, for dense panels.
+      compact: { true: "", false: "" },
     },
-    defaultVariants: { appearance: "ghost" },
+    compoundVariants: [
+      { appearance: "field", compact: false, className: "h-10 px-3.5 text-body-sm" },
+      { appearance: "field", compact: true, className: "h-7 px-2.5 text-caption" },
+    ],
+    defaultVariants: { appearance: "ghost", compact: false },
   },
 );
 
@@ -37,9 +43,9 @@ function SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>) 
   return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 }
 
-function SelectTrigger({ className, appearance, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Trigger> & VariantProps<typeof triggerVariants>) {
+function SelectTrigger({ className, appearance, compact, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Trigger> & VariantProps<typeof triggerVariants>) {
   return (
-    <SelectPrimitive.Trigger data-slot="select-trigger" className={cn(triggerVariants({ appearance }), className)} {...props}>
+    <SelectPrimitive.Trigger data-slot="select-trigger" className={cn(triggerVariants({ appearance, compact }), className)} {...props}>
       {children}
       <SelectPrimitive.Icon asChild>
         <ChevronsUpDown strokeWidth={1.5} />

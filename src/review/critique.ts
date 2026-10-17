@@ -99,11 +99,18 @@ export function beforeShots(root: string, screenId: string) {
 	return existsSync(dir) ? readdirSync(dir).filter((f) => /^desktop-\d+\.(jpg|png)$/.test(f)).sort().slice(0, 2).map((f) => join(dir, f)) : [];
 }
 
-/** The brand pages to compare against: the site's home and a use-case page, or the product's overview and a table. */
+const MAIN_REFERENCES = ['home', 'overview', 'usage'];
+const rank = (f: string) => {
+	const i = MAIN_REFERENCES.findIndex((n) => f.includes(`-${n}-`));
+	return i < 0 ? MAIN_REFERENCES.length : i;
+};
+
+/** The brand pages to compare against: the site's home and a use-case page, or the product's overview and usage pages. */
 export function references(surface: Surface) {
 	const dir = pkgPath('brand', 'reference');
 	return readdirSync(dir)
 		.filter((f) => f.startsWith(surface === 'product' ? 'product-' : 'site-') && /desktop\.jpg$/.test(f))
+		.sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
 		.slice(0, 2)
 		.map((f) => join(dir, f));
 }

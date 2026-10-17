@@ -3,14 +3,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
 
-// The product's card: white, its hairline drawn into the shadow. The site's card sits in a soft blue ring (the ring is
+// The product's card (.glass-card): white, its hairline drawn into the shadow. The site's card sits in a soft blue ring (the ring is
 // a spread shadow, so it adds no layout size).
 const cardVariants = cva("flex flex-col bg-surface text-fg", {
   variants: {
     variant: {
       default: "gap-4 rounded-card px-5 py-4 shadow-card",
       ring: "gap-4 rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] md:p-8",
-      flat: "gap-4 rounded-card border border-line px-5 py-4",
     },
   },
   defaultVariants: { variant: "default" },

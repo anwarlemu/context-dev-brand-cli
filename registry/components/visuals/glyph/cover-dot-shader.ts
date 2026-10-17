@@ -1,7 +1,7 @@
 import type { CoverScene } from "@/components/visuals/glyph/cover-scenes";
-import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from "@/components/visuals/glyph/dot-morph-dots";
-import { clearGooField, createGooField, fuseGooField, readGooField } from "@/components/visuals/glyph/dot-morph-goo";
-import type { DotMorphFrame } from "@/components/visuals/glyph/dot-morph-player";
+import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from "@/components/visuals/dot-engine/dot-morph-dots";
+import { clearGooField, createGooField, fuseGooField, readGooField } from "@/components/visuals/dot-engine/dot-morph-goo";
+import type { DotMorphFrame } from "@/components/visuals/dot-engine/dot-morph-player";
 
 /**
  * Ported from context-website (agencidev/landing-page): src/components/sections/home/blog-cover-dot-shader.ts.

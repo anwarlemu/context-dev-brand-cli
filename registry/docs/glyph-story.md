@@ -7,6 +7,6 @@ description: A glyph pair in the fine dot pattern of the blog covers, the subjec
 kinds: []
 use_for: Large featured glyphs, like the Browse APIs and Upgrade plan cards. `still` beside a story already playing.
 never: [More than one or two stories on a screen]
-source: dashboard src/components/dots/glyph-story.tsx
+source: src/components/dashboard-ui/dots/glyph-story.tsx
 files: [components/visuals/glyph/glyph-story.tsx]
 ---

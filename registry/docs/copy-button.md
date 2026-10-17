@@ -7,5 +7,5 @@ description: An icon button that turns into a green check once copied.
 kinds: []
 use_for: Keys, snippets, IDs.
 never: []
-source: dashboard src/components/ui/copy-button.tsx
+source: src/components/dashboard-ui/copy-button.tsx
 ---

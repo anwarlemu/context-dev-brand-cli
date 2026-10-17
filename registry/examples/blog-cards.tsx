@@ -1,4 +1,4 @@
-import { BlogCards, type BlogPost } from "@/components/site/blog-cards";
+import { BlogCards, BlogSection, type BlogPost } from "@/components/site/blog-cards";
 
 // Recent posts from the blog; the covers fall back to the ring-and-dots placeholder until the cover art is ported.
 const posts: BlogPost[] = [
@@ -30,4 +30,8 @@ const posts: BlogPost[] = [
 
 export function Site() {
   return <BlogCards posts={posts} className="w-full" />;
+}
+
+export function Band() {
+  return <BlogSection posts={posts} />;
 }

@@ -7,5 +7,5 @@ description: Row menus with labels, separators, checks and hold-to-confirm destr
 kinds: [app-menu]
 use_for: Overflow actions at the end of a row, account menus.
 never: [Destructive actions without a hold or a confirm]
-source: dashboard src/components/ui/menu.tsx (ActionMenu)
+source: src/components/dashboard-ui/menu.tsx (ActionMenu, HoldMenuItem, MENU_* classes)
 ---

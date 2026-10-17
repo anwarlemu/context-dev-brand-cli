@@ -3,7 +3,7 @@
 import { useCallback, useRef } from "react";
 import { PAGES_COVER_MASK } from "@/components/visuals/glyph/pages-cover-art";
 import { resolveColor, SURFACE_COLOR } from "@/components/visuals/glyph/surface-color";
-import { type LoadDotMorph, useHoverDotMorph } from "@/components/visuals/glyph/use-hover-dot-morph";
+import { type LoadDotMorph, useHoverDotMorph } from "@/components/visuals/use-hover-dot-morph";
 import { useResolvedTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 

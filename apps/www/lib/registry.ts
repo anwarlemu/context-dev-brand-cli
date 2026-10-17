@@ -22,16 +22,20 @@ export type Item = {
 
 export const registryName = index.name;
 export const registryUrl = index.url;
+export const REPO = "https://github.com/anwarlemu/context-dev-brand-cli";
+export const BRAND_SITE = "https://context.dev";
+export const APPLY_COMMAND = "npx -y github:anwarlemu/context-dev-brand-cli#release";
 export const items = (index.items as Item[]).filter((i) => i.type !== "lib" && i.type !== "hook");
 
-export const GROUPS: { type: Item["type"]; label: string }[] = [
-  { type: "ui", label: "Components" },
-  { type: "product", label: "Product" },
-  { type: "site", label: "Site" },
-  { type: "block", label: "Blocks" },
-  { type: "visual", label: "Visuals" },
+export const GROUPS: { type: Item["type"]; id: string; label: string; blurb: string }[] = [
+  { type: "ui", id: "components", label: "Components", blurb: "The primitives, with the site's and the product's variants in one component." },
+  { type: "product", id: "product", label: "Product", blurb: "The dashboard's shell, cards, charts and panels, at the product's compact scale." },
+  { type: "site", id: "site", label: "Site", blurb: "The marketing site's header, hero, sections and footer." },
+  { type: "block", id: "blocks", label: "Blocks", blurb: "Whole pages, composed from the pieces above, to start from." },
+  { type: "visual", id: "visuals", label: "Visuals", blurb: "The dot fields, glyphs and stories that carry the brand's motion." },
 ];
 
+export const counts = Object.fromEntries(GROUPS.map((g) => [g.type, items.filter((i) => i.type === g.type).length]));
 export const findItem = (name: string) => items.find((i) => i.name === name);
 
 const root = path.join(process.cwd(), "../../registry");

@@ -1,4 +1,4 @@
-import { glyphCellsFromRows } from "@/components/visuals/glyph/dot-glyph-cells";
+import { glyphCellsFromRows } from "@/components/visuals/dot-engine/dot-glyph-cells";
 
 /** The upgrade story's pictures: a gift, then the rocket it takes off as. */
 

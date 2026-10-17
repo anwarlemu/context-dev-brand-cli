@@ -1,4 +1,4 @@
-import { FaqSection, type FaqCategory } from "@/components/site/faq";
+import { FaqList, FaqPlainList, FaqSection, type FaqCategory } from "@/components/site/faq";
 import { Button } from "@/components/ui/button";
 
 // The quick-view questions from the site's FAQ data, by category.
@@ -79,4 +79,15 @@ export function Site() {
       }
     />
   );
+}
+
+// The scrolling list: fixed at its closed height, an opened answer scrolls inside it and the edges fade where more
+// cards continue, so nothing below the list moves.
+export function Scrolling() {
+  return <FaqList className="w-full max-w-(--ds-layout-heading)" sizing="closed" items={[...categories[0].items, ...categories[1].items]} toggle="dots" />;
+}
+
+// A product page's FAQ: hairline rows in one ringed card, the first answer open.
+export function Plain() {
+  return <FaqPlainList className="w-full" items={categories[2].items} />;
 }

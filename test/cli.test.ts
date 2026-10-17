@@ -184,6 +184,13 @@ describe('check', () => {
 		expect(checkText('brand.html', '<div style="background:#08090A"></div><code>#08090A</code>').findings).toHaveLength(0);
 		expect(checkText('page.html', '<div style="background:#08090A"></div><p>Hello</p>').findings.length).toBeGreaterThan(0);
 	});
+	it('a folder stands for the styled files inside it', () => {
+		const p = project({ 'ui/a.css': '.a { color: #ff0000; }', 'ui/b.tsx': 'export const B = () => <p className="text-fg">x</p>;', 'other/c.css': '.c { color: #00ff00; }' });
+		const r = runCheck(p, { paths: ['ui'] });
+		expect(r.files).toBe(2);
+		expect(r.findings.map((f) => f.file)).toEqual(['ui/a.css']);
+		rmSync(p, { recursive: true });
+	});
 	it('a ds-override counts only once a person approves it', () => {
 		const p = project({ 'a.css': '.a { color: #ff0000; } /* ds-override: partner logo color */' });
 		const r = runCheck(p);

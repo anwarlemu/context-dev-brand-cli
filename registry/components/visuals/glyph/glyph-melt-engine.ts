@@ -1,6 +1,6 @@
-import { createGlyphShader, drawGlyphCells, glyphRestingDots, type GlyphMorph } from "@/components/visuals/glyph/dot-glyph-morph";
-import type { DotPalette } from "@/components/visuals/glyph/dot-morph-dots";
-import { createDotMorphPlayer, type DotMorphPlayer } from "@/components/visuals/glyph/dot-morph-player";
+import { createGlyphShader, drawGlyphCells, glyphRestingDots, type GlyphMorph } from "@/components/visuals/dot-engine/dot-glyph-morph";
+import type { DotPalette } from "@/components/visuals/dot-engine/dot-morph-dots";
+import { createDotMorphPlayer, type DotMorphPlayer } from "@/components/visuals/dot-engine/dot-morph-player";
 import { GLYPH_GRID, GLYPH_MELT_MARGIN, glyphOutcome, glyphSubject, type GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 import { GLYPH_HOLDS } from "@/components/visuals/glyph/glyph-melt-holds";
 

@@ -3,9 +3,9 @@ name: textarea
 title: Textarea
 type: ui
 surface: both
-description: Multi-line text entry that grows with its content.
+description: Multi-line text entry with the input's border and states.
 kinds: []
 use_for: Notes, prompts, messages.
 never: [Fixed tiny heights]
-source: dashboard src/components/ui/form.tsx (TEXTAREA_CLASS)
+source: src/components/dashboard-ui/form.tsx (TEXTAREA_CLASS)
 ---

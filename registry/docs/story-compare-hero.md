@@ -8,5 +8,5 @@ kinds: []
 use_for: "A comparison page hero on the site. Plays only on screen; shows the finished feature table with reduced motion."
 never: [Stories as the main content of a page]
 source: site src/components/sections/page-heroes/compare-hero-story.tsx
-files: [components/visuals/stories/compare-hero-story.tsx, components/visuals/stories/compare-hero-story-player.ts, components/visuals/stories/compare-hero-story-scenes.ts, components/visuals/stories/hero-story-kit.ts]
+files: [components/visuals/stories/compare-hero-story.tsx, components/visuals/stories/compare-hero-story-player.ts, components/visuals/stories/compare-hero-story-scenes.ts]
 ---

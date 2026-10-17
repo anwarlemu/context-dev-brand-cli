@@ -1,16 +1,27 @@
-import { BookOpen, Clock, Globe, Layers, Map as MapIcon } from "lucide-react";
+import { BookOpen, Bot, Clock, Globe, Layers, Map as MapIcon, Terminal } from "lucide-react";
 
 import { windowButtonClass } from "@/components/site/code-window";
-import { UseCases } from "@/components/site/use-cases";
+import { UseCases, UseCaseTryIn } from "@/components/site/use-cases";
 
 const CLIENT = `import ContextDev from 'context.dev';
 
 const client = new ContextDev({ apiKey: 'YOUR_API_KEY' });`;
 
+// The agents' own logos go in the "Try in" chip; these icons stand in for them.
 const docs = (href: string) => (
-  <a href={href} aria-label="View documentation" className={windowButtonClass}>
-    <BookOpen />
-  </a>
+  <>
+    <UseCaseTryIn>
+      <button type="button" aria-label="Try in Claude" className={windowButtonClass}>
+        <Bot />
+      </button>
+      <button type="button" aria-label="Try in Codex" className={windowButtonClass}>
+        <Terminal />
+      </button>
+    </UseCaseTryIn>
+    <a href={href} aria-label="View documentation" className={windowButtonClass}>
+      <BookOpen />
+    </a>
+  </>
 );
 
 export function Site() {

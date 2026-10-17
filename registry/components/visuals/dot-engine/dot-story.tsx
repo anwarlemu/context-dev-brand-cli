@@ -1,11 +1,13 @@
+"use client";
+
 'use client';
 
 import { DotStoryRestingPicture } from '@/components/visuals/dot-engine/dot-story-resting-picture';
 import type { GlyphCell } from '@/components/visuals/dot-engine/dot-glyph-cells';
 import type { DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';
-import { DOT_STORY_MUTED_TEXT_COLOR, DOT_STORY_TEXT_COLOR, canvasColor, type DotStoryPlayer, type DotStoryStage, type DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';
+import { DOT_STORY_MUTED_TEXT_COLOR, DOT_STORY_TEXT_COLOR, canvasColor, forgetCanvasColors, type DotStoryPlayer, type DotStoryStage, type DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';
 import { cn } from '@/lib/utils';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type RefObject } from 'react';
 
 export type LoadDotStory = (stage: DotStoryStage) => Promise<DotStoryPlayer>;
 
@@ -39,6 +41,36 @@ function usePrefersReducedMotion() {
 	return isReduced;
 }
 
+// The colors a theme switch re-points: the dots (the frame's text color), the type and the surface around the dots.
+function readThemeColors(canvas: HTMLCanvasElement, surfaceColor: string) {
+	const style = getComputedStyle(canvas);
+	const tokenValue = (color: string) => {
+		const token = /^var\((--[\w-]+)\)$/.exec(color.trim())?.[1];
+		return token ? style.getPropertyValue(token).trim() : color;
+	};
+	return [style.color, tokenValue(DOT_STORY_TEXT_COLOR), tokenValue(DOT_STORY_MUTED_TEXT_COLOR), tokenValue(surfaceColor)].join('|');
+}
+
+// Counts theme switches (a class or data-theme change on <html> that re-points the story's colors), so the canvas
+// reloads and repaints its dots, type and halos in the new colors. Other attribute changes leave a playing story alone.
+function useThemeVersion(canvasRef: RefObject<HTMLCanvasElement | null>, surfaceColor: string) {
+	const [version, setVersion] = useState(0);
+	useEffect(() => {
+		const canvas = canvasRef.current;
+		if (!canvas) return;
+		let colors = readThemeColors(canvas, surfaceColor);
+		const observer = new MutationObserver(() => {
+			const next = readThemeColors(canvas, surfaceColor);
+			if (next === colors) return;
+			colors = next;
+			setVersion((current) => current + 1);
+		});
+		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'data-theme'] });
+		return () => observer.disconnect();
+	}, [canvasRef, surfaceColor]);
+	return version;
+}
+
 /**
  * A looping picture in the brand dot grid. It plays only while on screen, and its code only downloads once it first
  * scrolls into view. The picture repaints the surface's color around its dots (the grid's halo), and reaches that far
@@ -49,6 +81,7 @@ export function DotStory({ grid, resting, load, surfaceColor = 'var(--ds-color-b
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [hasTakenOver, setHasTakenOver] = useState(false);
 	const isReducedMotion = usePrefersReducedMotion();
+	const themeVersion = useThemeVersion(canvasRef, surfaceColor);
 
 	const { columns, rows, pitch, haloRadius } = grid;
 	const width = columns * pitch;
@@ -73,6 +106,7 @@ export function DotStory({ grid, resting, load, surfaceColor = 'var(--ds-color-b
 		const start = async () => {
 			isLoading = true;
 			try {
+				forgetCanvasColors(canvas);
 				const style = getComputedStyle(canvas);
 				const loaded = await load({ canvas, dotColor: style.color, surfaceColor: canvasColor(canvas, surfaceColor), fontFamily: style.fontFamily, onFirstFrame: () => setHasTakenOver(true) });
 				if (isDisposed) {
@@ -106,7 +140,7 @@ export function DotStory({ grid, resting, load, surfaceColor = 'var(--ds-color-b
 			player?.destroy();
 			setHasTakenOver(false);
 		};
-	}, [load, surfaceColor, still, isReducedMotion]);
+	}, [load, surfaceColor, still, isReducedMotion, themeVersion]);
 
 	return (
 		<div ref={frameRef} aria-hidden="true" className={cn('relative text-brand', className)} style={{ aspectRatio: `${width} / ${height}` }}>

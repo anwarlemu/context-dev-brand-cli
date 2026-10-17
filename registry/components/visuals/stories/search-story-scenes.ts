@@ -66,7 +66,7 @@ const stand = stack(
 	)
 );
 
-// Seen from the front and a little above, so it widens towards the typist; its keys are rings with gaps between them.
+// Seen from the front and a little above, so it widens toward the typist; its keys are rings with gaps between them.
 const keyboardDeck = polygon(
 	[
 		{ column: KEYBOARD.left, row: KEYBOARD.top },

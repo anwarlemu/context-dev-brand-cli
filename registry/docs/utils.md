@@ -7,5 +7,5 @@ description: Merges class names, aware of the brand's scales (text-body-sm, roun
 kinds: []
 use_for: Every component's className.
 never: []
-source: site src/lib/utils.ts
+source: src/lib/utils.ts
 ---

@@ -6,6 +6,8 @@
 
 html {
   color-scheme: light;
+  overflow-x: clip;
+  scroll-padding-top: calc(var(--spacing) * 24);
 }
 
 body {
@@ -26,14 +28,4 @@ body {
 ::selection {
   background-color: var(--ds-color-blue-60);
   color: var(--ds-color-white);
-}
-
-/* Shiki's code blocks: the brand's code surface. */
-.code-block pre {
-  overflow-x: auto;
-  padding: var(--ds-space-4) var(--ds-space-5);
-  font-family: var(--ds-font-mono);
-  font-size: var(--ds-text-caption);
-  line-height: var(--ds-leading-relaxed);
-  background: transparent !important;
 }

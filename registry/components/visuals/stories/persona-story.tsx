@@ -1,3 +1,5 @@
+"use client";
+
 'use client';
 
 import { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';

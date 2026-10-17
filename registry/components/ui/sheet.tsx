@@ -7,8 +7,9 @@ import { X } from "lucide-react";
 import { usePortalContainer } from "@/lib/surface";
 import { cn } from "@/lib/utils";
 
-// A side panel (the dashboard's monitor detail): the same white frame as a dialog, docked to an edge, sliding in a
-// short distance as it fades.
+// A side panel (the dashboard's monitor detail panel): a white panel in a 6px frame floating over the page's edge, no
+// scrim, so opening it never reflows or dims what is behind. It slides 8px in as it fades (200ms, ease-out); reduced
+// motion keeps the fade. Pass `modal={false}` to Sheet to keep the page behind it usable, as the dashboard's list is.
 function Sheet(props: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />;
 }
@@ -22,25 +23,28 @@ function SheetClose(props: React.ComponentProps<typeof SheetPrimitive.Close>) {
 }
 
 const SIDES = {
-  right: "inset-y-2 right-2 w-[min(28rem,calc(100%-1rem))] data-[state=open]:animate-[ds-sheet-right_var(--ds-duration-moderate)_var(--ds-easing-out)]",
-  left: "inset-y-2 left-2 w-[min(28rem,calc(100%-1rem))] data-[state=open]:animate-[ds-sheet-left_var(--ds-duration-moderate)_var(--ds-easing-out)]",
-  bottom: "inset-x-2 bottom-2 max-h-[85vh] data-[state=open]:animate-content-in",
+  right: "inset-y-2 right-2 w-[min(440px,calc(100vw-1rem))] starting:translate-x-2",
+  left: "inset-y-2 left-2 w-[min(440px,calc(100vw-1rem))] starting:-translate-x-2",
+  bottom: "inset-x-2 bottom-2 max-h-[85vh] starting:translate-y-2",
 } as const;
 
 function SheetContent({ className, children, side = "right", ...props }: React.ComponentProps<typeof SheetPrimitive.Content> & { side?: keyof typeof SIDES }) {
   const container = usePortalContainer();
   return (
     <SheetPrimitive.Portal container={container}>
-      <SheetPrimitive.Overlay className="fixed inset-0 z-50 animate-fade-in bg-scrim" />
       <SheetPrimitive.Content
         data-slot="sheet-content"
-        className={cn("fixed z-50 flex flex-col overflow-y-auto rounded-shell bg-surface shadow-floating outline-none", SIDES[side], className)}
+        className={cn(
+          "fixed z-50 flex flex-col rounded-shell bg-surface p-1.5 shadow-floating outline-none transition-[opacity,translate] duration-200 ease-out starting:opacity-0 motion-reduce:starting:translate-x-0 motion-reduce:starting:translate-y-0",
+          SIDES[side],
+          className,
+        )}
         {...props}
       >
-        {children}
+        <div className="relative flex min-h-0 flex-1 flex-col rounded-card bg-surface">{children}</div>
         <SheetPrimitive.Close
           aria-label="Close"
-          className="absolute top-4 right-4 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:outline-none [&_svg]:size-4"
+          className="absolute top-5.5 right-5 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 ease-out outline-none hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-4"
         >
           <X strokeWidth={1.5} />
         </SheetPrimitive.Close>
@@ -50,15 +54,19 @@ function SheetContent({ className, children, side = "right", ...props }: React.C
 }
 
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="sheet-header" className={cn("flex flex-col gap-1.5 border-b border-line-subtle px-5 py-4 pr-14", className)} {...props} />;
+  return <div data-slot="sheet-header" className={cn("flex flex-col gap-1.5 px-5 pt-5 pr-14", className)} {...props} />;
+}
+
+function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
+  return <div data-slot="sheet-body" className={cn("min-h-0 flex-1 overflow-y-auto px-5 pt-2.5 pb-5 text-body-sm text-fg", className)} {...props} />;
 }
 
 function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {
-  return <SheetPrimitive.Title data-slot="sheet-title" className={cn("text-h5 font-normal text-fg", className)} {...props} />;
+  return <SheetPrimitive.Title data-slot="sheet-title" className={cn("truncate text-h5 font-normal text-fg", className)} {...props} />;
 }
 
 function SheetDescription({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Description>) {
   return <SheetPrimitive.Description data-slot="sheet-description" className={cn("text-body-sm text-fg-muted", className)} {...props} />;
 }
 
-export { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger };
+export { Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger };

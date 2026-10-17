@@ -1,3 +1,5 @@
+"use client";
+
 import type { DotMorphPlayer } from "@/components/visuals/dot-engine/dot-morph-player";
 import { useEffect, useState, type RefObject } from "react";
 
@@ -11,7 +13,7 @@ const VIEW_REST_MS = 1400;
 /**
  * Plays a dot morph on the canvas while the card around it is hovered or holds keyboard focus, and, with
  * `playOnView`, on a loop while the card is in view, so it also plays where there is no hover. The card is the
- * nearest link, or the nearest element marked `data-hover-morph` when the card isn't itself a link.
+ * nearest link or button, or the nearest element marked `data-hover-morph` when the card is neither.
  * Returns whether the canvas is currently standing in for the static art.
  */
 export function useHoverDotMorph(canvasRef: RefObject<HTMLCanvasElement | null>, load: LoadDotMorph, { playOnView = false }: { playOnView?: boolean } = {}) {
@@ -19,7 +21,7 @@ export function useHoverDotMorph(canvasRef: RefObject<HTMLCanvasElement | null>,
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const card = canvas?.closest<HTMLElement>("[data-hover-morph], a");
+    const card = canvas?.closest<HTMLElement>("[data-hover-morph], a, button");
     if (!canvas || !card) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 

@@ -4,7 +4,7 @@ import { BenchmarkPanel, type BenchmarkData, type BenchmarkProvider } from "@/co
 
 // Each provider's own logo goes here (an <img> or an svg); these icons stand in for them.
 const PROVIDERS: BenchmarkProvider[] = [
-  { key: "context", name: "Context", logo: <Hexagon />, highlight: true },
+  { key: "context", name: "Context.dev", logo: <Hexagon />, highlight: true },
   { key: "firecrawl", name: "Firecrawl", logo: <Flame /> },
   { key: "exa", name: "Exa", logo: <Search /> },
   { key: "parallel", name: "Parallel", logo: <Layers /> },
@@ -32,7 +32,7 @@ export function Site() {
       providers={PROVIDERS}
       data={BENCHMARKS}
       link={
-        <a href="/compare/the-top-firecrawl-alternative" className="group/compare inline-flex items-center gap-1 py-2 text-body-sm font-medium text-fg-brand">
+        <a href="/compare/the-top-firecrawl-alternative" className="group/compare inline-flex shrink-0 items-center gap-1 rounded-card py-2 text-body-sm font-medium text-fg-brand/85 transition-[color] duration-150 ease-out hover:text-fg-brand focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-focus-ring motion-reduce:transition-none">
           See full comparisons
           <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 ease-out group-hover/compare:translate-x-0.5 motion-reduce:transition-none" />
         </a>

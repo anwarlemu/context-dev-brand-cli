@@ -57,7 +57,7 @@ export const SHADOWS = [
 	{ offset: 6, name: 'lg', css: '0 12px 32px' },
 ];
 
-/** A card and the shadow it throws `offset` dots down and to the right: rings, thinning towards the shadow's edge. */
+/** A card and the shadow it throws `offset` dots down and to the right: rings, thinning toward the shadow's edge. */
 export function paintDepth(states: Uint8Array, offset: number) {
 	const shadow = roundedBox({ left: CARD.left + offset, right: CARD.right + offset, top: CARD.top + offset, bottom: CARD.bottom + offset }, CARD_RADIUS + 1);
 	for (let row = 0; row < ROWS; row++) {

@@ -1,4 +1,4 @@
-import type { DotMorphFrame } from "@/components/visuals/glyph/dot-morph-player";
+import type { DotMorphFrame } from "@/components/visuals/dot-engine/dot-morph-player";
 
 /**
  * The "pages" blog cover's hover choreography, ported from context-website (agencidev/landing-page):

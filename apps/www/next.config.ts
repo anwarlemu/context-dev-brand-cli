@@ -7,6 +7,8 @@ const root = path.join(import.meta.dirname, "../..");
 const config: NextConfig = {
   turbopack: { root },
   outputFileTracingRoot: root,
+  // The repo has its own agent instructions; dev must not write AGENTS.md and CLAUDE.md here.
+  agentRules: false,
 };
 
 export default config;

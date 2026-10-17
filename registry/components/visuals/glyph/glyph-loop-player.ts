@@ -1,7 +1,7 @@
-import type { GlyphCell } from "@/components/visuals/glyph/dot-glyph-cells";
-import { createBeatStoryPlayer, type StoryPicture } from "@/components/visuals/glyph/dot-story-beats";
-import { cellStates, cellsOfStates } from "@/components/visuals/glyph/dot-story-cells";
-import type { DotStoryPlayer, DotStoryStage } from "@/components/visuals/glyph/dot-story-player";
+import type { GlyphCell } from "@/components/visuals/dot-engine/dot-glyph-cells";
+import { createBeatStoryPlayer, type StoryPicture } from "@/components/visuals/dot-engine/dot-story-beats";
+import { cellStates, cellsOfStates } from "@/components/visuals/dot-engine/dot-story-cells";
+import type { DotStoryPlayer, DotStoryStage } from "@/components/visuals/dot-engine/dot-story-player";
 import { GLYPH_GRID, glyphOutcome, glyphSubject, type GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 
 // A glyph this small is mostly one-dot lines, which a melt thins to nothing halfway through; a wave from the

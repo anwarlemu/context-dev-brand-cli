@@ -44,7 +44,7 @@ export function createSearchStoryPlayer(stage: DotStoryStage): DotStoryPlayer {
 			{ picture: RESULTS_FILLED, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 0.2 },
 			{
 				picture: RESULTS_READ,
-				// Top result first, each one clearing from its rank towards its end.
+				// Top result first, each one clearing from its rank toward its end.
 				arrival: { kind: 'builds', seconds: READ.seconds, order: (column, row) => (resultAt(row) + column / columns) / RESULT_TEXTS.length },
 				holdSeconds: 3.6,
 				write(pen, heldSeconds) {

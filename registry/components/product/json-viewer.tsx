@@ -3,11 +3,13 @@
 import * as React from "react";
 import { Check, ChevronDown, ChevronRight, Copy, Download, Search, X } from "lucide-react";
 
+import { useCopy } from "@/components/ui/copy-button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 // A response as a code viewer: numbered, wrapped lines (never sideways scrolling), folding objects and arrays,
-// search with highlighted matches, copy and download.
+// search with highlighted matches, copy and download. Keys in navy, strings in brand blue, numbers and booleans a
+// lighter blue, null gray. `bare` drops the toolbar, for a viewer that sits inside a card that has its own.
 
 type Json = string | number | boolean | null | Json[] | { [key: string]: Json };
 type Line =
@@ -44,7 +46,7 @@ function containerPaths(value: Json, path = ROOT, paths: string[] = []) {
   return paths;
 }
 
-const valueClass = (v: Json) => (typeof v === "string" ? "text-fg-brand" : v === null ? "text-fg-subtle" : "text-blue-80");
+const valueClass = (v: Json) => (typeof v === "string" ? "text-fg-brand" : v === null ? "text-fg-subtle" : "text-blue-70");
 
 function Highlighted({ text, query }: { text: string; query: string }) {
   if (!query) return <>{text}</>;
@@ -70,7 +72,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
   const [folded, setFolded] = React.useState<Set<string>>(() => new Set());
   const [searching, setSearching] = React.useState(false);
   const [query, setQuery] = React.useState("");
-  const [copied, setCopied] = React.useState(false);
+  const { hasCopied: copied, copy } = useCopy();
   const text = React.useMemo(() => JSON.stringify(value, null, 2), [value]);
   const lines = React.useMemo(() => linesOf(json, folded), [json, folded]);
   const all = React.useMemo(() => containerPaths(json), [json]);
@@ -91,22 +93,32 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
       {!bare && (
         <div className="flex h-12 shrink-0 items-center gap-2 border-b border-line-subtle px-4">
           {searching ? (
-            <label className="flex h-8 min-w-0 flex-1 items-center gap-2 rounded-control border border-brand px-2.5 shadow-ring-hover">
-              <Search className="size-3.5 shrink-0 text-fg-subtle" strokeWidth={1.5} />
-              <input
-                autoFocus
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyDown={(e) => e.key === "Escape" && setSearching(false)}
-                placeholder="Search the response"
-                aria-label="Search the response"
-                className="min-w-0 flex-1 bg-transparent text-body-sm outline-none placeholder:text-fg-faint"
-              />
-              {q && <span className="shrink-0 text-caption text-fg-subtle tabular-nums">{matches} found</span>}
-              <button type="button" aria-label="Close search" onClick={() => (setSearching(false), setQuery(""))} className="grid size-5 shrink-0 place-items-center rounded-sm text-fg-subtle hover:text-fg">
+            <div className="flex h-8 min-w-0 flex-1 items-center gap-2 rounded-control border border-brand px-2.5 shadow-[0_0_0_3px_var(--ds-color-blue-10)]">
+              <label className="flex min-w-0 flex-1 items-center gap-2 self-stretch">
+                <Search className="size-3.5 shrink-0 text-fg-subtle" strokeWidth={1.5} />
+                <input
+                  autoFocus
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Escape" && setSearching(false)}
+                  placeholder="Search the response"
+                  aria-label="Search the response"
+                  className="min-w-0 flex-1 bg-transparent text-body-sm outline-none placeholder:text-fg-subtle"
+                />
+                {q && <span className="shrink-0 text-caption text-fg-subtle tabular-nums">{matches} found</span>}
+              </label>
+              <button
+                type="button"
+                aria-label="Close search"
+                onClick={() => {
+                  setSearching(false);
+                  setQuery("");
+                }}
+                className="grid size-5 shrink-0 place-items-center rounded-sm text-fg-subtle transition-colors duration-150 hover:text-fg"
+              >
                 <X className="size-3.5" strokeWidth={1.5} />
               </button>
-            </label>
+            </div>
           ) : (
             <>
               <span className="text-caption text-fg-subtle tabular-nums">{lines.length} lines</span>
@@ -114,7 +126,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
                 type="button"
                 onClick={() => setFolded(allFolded ? new Set() : new Set(all))}
                 disabled={all.length === 0}
-                className="ml-auto h-8 shrink-0 rounded-control border border-line px-3 text-body-sm text-fg-muted transition-colors duration-150 hover:border-line-strong hover:text-fg disabled:opacity-40"
+                className="ml-auto h-8 shrink-0 rounded-control border border-line px-3 text-body-sm text-fg-muted outline-none transition-colors duration-150 hover:border-line-strong hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring disabled:opacity-40"
               >
                 {allFolded ? "Expand all" : "Collapse all"}
               </button>
@@ -125,11 +137,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
           )}
           <ToolButton
             label={copied ? "Copied" : "Copy JSON"}
-            onClick={async () => {
-              await navigator.clipboard.writeText(text);
-              setCopied(true);
-              setTimeout(() => setCopied(false), 1500);
-            }}
+            onClick={() => copy(text)}
           >
             {copied ? <Check strokeWidth={1.5} /> : <Copy strokeWidth={1.5} />}
           </ToolButton>
@@ -155,7 +163,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
             const label =
               "label" in line && line.label !== undefined ? (
                 <>
-                  <span className="text-fg-secondary">
+                  <span className="text-navy-60">
                     <Highlighted text={`"${line.label}"`} query={q} />
                   </span>
                   :{" "}
@@ -169,7 +177,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
                 <>
                   {label}
                   {line.bracket}
-                  <button type="button" onClick={() => toggle(line.path)} className="mx-1 rounded-sm bg-neutral-5 px-1.5 text-fg-subtle hover:text-fg">
+                  <button type="button" onClick={() => toggle(line.path)} className="mx-1 rounded-sm bg-neutral-5 px-1.5 text-fg-subtle transition-colors duration-150 hover:text-fg">
                     {line.size} {line.bracket === "[" ? (line.size === 1 ? "item" : "items") : line.size === 1 ? "key" : "keys"}
                   </button>
                   {line.bracket === "[" ? "]" : "}"}
@@ -191,7 +199,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
                 <span className="w-10 shrink-0 pr-2 text-right text-fg-subtle tabular-nums select-none">{i + 1}</span>
                 <span className="w-4 shrink-0">
                   {canFold && (
-                    <button type="button" aria-label={line.kind === "open" ? "Collapse" : "Expand"} onClick={() => toggle(line.path)} className="grid h-[1.65em] w-4 place-items-center text-fg-subtle hover:text-fg">
+                    <button type="button" aria-label={line.kind === "open" ? "Collapse" : "Expand"} onClick={() => toggle(line.path)} className="grid h-[1.65em] w-4 place-items-center text-fg-subtle transition-colors duration-150 hover:text-fg">
                       {line.kind === "open" ? <ChevronDown className="size-3" strokeWidth={2} /> : <ChevronRight className="size-3" strokeWidth={2} />}
                     </button>
                   )}

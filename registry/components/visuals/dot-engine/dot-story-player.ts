@@ -88,6 +88,11 @@ export function canvasColor(canvas: HTMLCanvasElement, color: string) {
 	return value;
 }
 
+/** Drops a canvas's resolved tokens, so the next `canvasColor` reads them again: after a theme switch re-points them. */
+export function forgetCanvasColors(canvas: HTMLCanvasElement) {
+	resolvedColors.delete(canvas);
+}
+
 export const dotStoryFont = ({ size, weight }: Pick<DotStoryText, 'size' | 'weight'>, fontFamily: string) => `${weight} ${size}px ${fontFamily}`;
 
 export function paintDotStoryText(context: CanvasRenderingContext2D, fontFamily: string, { text, x, y, size, weight, muted = false, color, anchor = 'start' }: DotStoryText, presence = 1) {

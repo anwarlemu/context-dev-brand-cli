@@ -1,12 +1,13 @@
 import * as React from "react";
 
+import { SectionEdgeLines, SectionHeaderRule } from "@/components/site/section";
 import { Badge } from "@/components/ui/badge";
 import { DotGlyph } from "@/components/ui/dot-glyph";
 import { cn } from "@/lib/utils";
 
 // The home page's "Latest updates": tall cards in the soft blue ring, cover art on top and the date, title and summary
-// below. The grid alternates white and brand-blue cards, so three columns read as a checkerboard. On hover a translucent
-// white layer lifts the ring (the brand's dark Latest updates section); nothing moves.
+// below. The grid alternates white and brand-blue cards, so three columns read as a checkerboard. The ring is clear
+// until hover, when a translucent white ring frames the card on the dark Latest updates band; nothing moves.
 
 type BlogCardSurface = "paper" | "blue";
 
@@ -53,11 +54,12 @@ function BlogCoverPlaceholder({ surface = "paper", className }: { surface?: Blog
 function BlogCard({ post, surface = "paper", className }: { post: BlogPost; surface?: BlogCardSurface; className?: string }) {
   const text = TEXT[surface];
   return (
+    // The ring wraps the card (its outer edge keeps the card's radius); the negative margin keeps it out of the layout.
     <a
       href={post.href}
       data-slot="blog-card"
       className={cn(
-        "group block rounded-card shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] outline-none transition-[box-shadow] duration-300 ease-out hover:shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-on-brand),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-4 motion-reduce:transition-none",
+        "group -m-2 block rounded-card bg-transparent p-2 outline-none transition-colors duration-300 ease-out hover:bg-white/30 focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-dark motion-reduce:transition-none",
         className,
       )}
     >
@@ -95,4 +97,37 @@ function BlogCards({ posts, className, ...props }: React.ComponentProps<"div"> &
   );
 }
 
-export { BlogCards, BlogCard, BlogCoverPlaceholder, type BlogPost, type BlogCardSurface };
+// The band's inner rails: dashed hairlines down the content box's edges, beside the column's solid edge lines.
+const DASH_Y =
+  "bg-[repeating-linear-gradient(to_bottom,color-mix(in_srgb,var(--ds-color-white)_15%,transparent)_0_var(--ds-space-1),transparent_var(--ds-space-1)_var(--ds-space-2))]";
+
+/**
+ * The home page's "Latest updates" band: near-black, full bleed, the column's edge lines and header rule in their dark
+ * tone, dashed rails down the content edges, a white heading and the cards (six at most) inset from the rails.
+ */
+function BlogSection({ title = "Latest updates.", posts, className, ...props }: Omit<React.ComponentProps<"section">, "title"> & { title?: React.ReactNode; posts: BlogPost[] }) {
+  return (
+    <section id="blog" data-slot="blog-section" className={cn("relative w-full overflow-x-clip bg-dark", className)} {...props}>
+      <SectionEdgeLines tone="dark" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
+        <div className="mx-auto h-full w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12">
+          <div className="relative h-full">
+            <div className={cn("absolute inset-y-0 left-0 w-px", DASH_Y)} />
+            <div className={cn("absolute inset-y-0 right-0 w-px", DASH_Y)} />
+          </div>
+        </div>
+      </div>
+      <div className="relative z-10 mx-auto w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12">
+        <div className="relative pt-10 pb-20 md:pt-12">
+          <div className="relative z-10 px-3 sm:px-4 md:px-5 lg:px-6">
+            <h2 className="max-w-(--ds-layout-heading) text-h3 leading-display font-normal tracking-tight text-balance text-white md:text-h2">{title}</h2>
+          </div>
+          <SectionHeaderRule tone="dark" />
+          <BlogCards posts={posts.slice(0, 6)} className="relative z-10 px-3 sm:px-4 md:px-5 lg:px-6" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export { BlogCards, BlogCard, BlogSection, BlogCoverPlaceholder, type BlogPost, type BlogCardSurface };

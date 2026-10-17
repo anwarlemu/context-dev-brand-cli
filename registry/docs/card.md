@@ -7,5 +7,5 @@ description: The product's white card with its hairline in the shadow, and the s
 kinds: [card, app-card]
 use_for: Grouping related content. `default` in the product, `ring` on the site.
 never: [Gray card backgrounds, Heavy drop shadows, Cards inside cards]
-source: dashboard .glass-card; site .brand-glass-ring + HOME_WATER_CARD
+source: src/styles/dashboard-system.css (.glass-card); src/styles/globals.css (.brand-glass-ring); src/components/sections/home/product-grid.tsx
 ---

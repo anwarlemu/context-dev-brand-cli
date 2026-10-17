@@ -7,7 +7,7 @@ export function Product() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create key</Button>
+        <Button variant="brand">Create key</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -23,7 +23,7 @@ export function Product() {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <Button>Create</Button>
+          <Button variant="brand">Create</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

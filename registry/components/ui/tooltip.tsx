@@ -24,15 +24,19 @@ function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trig
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
 
-// Grows from its trigger (Radix's transform origin) in a short ease-out pop; reduced motion keeps only the fade.
-function TooltipContent({ className, sideOffset = 6, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
+// The dashboard's label: white, control corners, 11px on a hairline and a soft shadow, on one line unless `wrap`, 6px
+// above (or 8px beside) its trigger. The first one hovered grows from its trigger in a short ease-out pop; the next ones
+// in the warm window (Radix's instant open) appear at once. Reduced motion keeps only the fade.
+function TooltipContent({ className, side, sideOffset, wrap = false, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content> & { wrap?: boolean }) {
   return (
     <TooltipPrimitive.Portal container={usePortalContainer()}>
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
-        sideOffset={sideOffset}
+        side={side}
+        sideOffset={sideOffset ?? (side === "left" || side === "right" ? 8 : 6)}
         className={cn(
-          "z-50 w-fit max-w-64 origin-(--radix-tooltip-content-transform-origin) animate-pop-in rounded-control bg-surface px-2 py-1 text-caption text-balance text-fg shadow-tooltip",
+          "z-50 origin-(--radix-tooltip-content-transform-origin) rounded-control bg-surface px-2 py-1 text-axis leading-4 text-fg shadow-tooltip data-[state=delayed-open]:animate-pop-in",
+          wrap ? "w-max max-w-64 text-pretty" : "whitespace-nowrap",
           className,
         )}
         {...props}

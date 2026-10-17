@@ -7,6 +7,6 @@ description: Every API as a small dot tile in one grid, with a highlight that ho
 kinds: []
 use_for: A card that browses many APIs. Pass the list as `apis` (title and glyph); the dashboard's Data APIs are the default.
 never: [More than about sixteen tiles, Tiles without a glyph]
-source: dashboard src/components/dots/api-grid-glyph.tsx
+source: src/components/dashboard-ui/dots/api-grid-glyph.tsx
 files: [components/visuals/glyph/api-grid-glyph.tsx]
 ---

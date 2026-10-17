@@ -4,9 +4,9 @@ import { Spinner } from "@/components/ui/spinner";
 export function Product() {
   return (
     <div className="flex items-center gap-4">
-      <Spinner />
-      <Button disabled>
-        <Spinner className="text-current" /> Running
+      <Spinner className="text-fg-subtle" />
+      <Button variant="brand" disabled>
+        <Spinner className="size-3.5" /> Running
       </Button>
     </div>
   );

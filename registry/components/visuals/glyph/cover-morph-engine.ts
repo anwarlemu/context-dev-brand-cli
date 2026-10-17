@@ -1,7 +1,7 @@
 import { COVER_GRID, createCoverShader, parseCoverDots } from "@/components/visuals/glyph/cover-dot-shader";
 import { pagesScene } from "@/components/visuals/glyph/cover-scenes";
-import type { DotPalette } from "@/components/visuals/glyph/dot-morph-dots";
-import { createDotMorphPlayer, type DotMorphFrame, type DotMorphPlayer } from "@/components/visuals/glyph/dot-morph-player";
+import type { DotPalette } from "@/components/visuals/dot-engine/dot-morph-dots";
+import { createDotMorphPlayer, type DotMorphFrame, type DotMorphPlayer } from "@/components/visuals/dot-engine/dot-morph-player";
 import { PAGES_COVER_SVG } from "@/components/visuals/glyph/pages-cover-art";
 
 // Bolder dots than the website's covers (radius 3.4, ring 1.6), so the art reads as solid brand blue at card size like the

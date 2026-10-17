@@ -1,5 +1,5 @@
-import { glyphCellsFromRows, type GlyphCell } from "@/components/visuals/glyph/dot-glyph-cells";
-import type { DotGrid } from "@/components/visuals/glyph/dot-morph-dots";
+import { glyphCellsFromRows, type GlyphCell } from "@/components/visuals/dot-engine/dot-glyph-cells";
+import type { DotGrid } from "@/components/visuals/dot-engine/dot-morph-dots";
 
 /** Small pictures in the brand dot grid, played in pairs: a page's subject melts into what it gives you and back. */
 

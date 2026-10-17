@@ -27,6 +27,16 @@ export function Product() {
           </SelectContent>
         </Select>
       </div>
+      <Select defaultValue="all">
+        <SelectTrigger appearance="chip" aria-label="Status">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent className="min-w-40">
+          <SelectItem value="all">All statuses</SelectItem>
+          <SelectItem value="active">Active</SelectItem>
+          <SelectItem value="paused">Paused</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }

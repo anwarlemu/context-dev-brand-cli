@@ -41,7 +41,7 @@ function TestimonialCard({ testimonial, active = false, className, ...props }: R
     <figure
       data-slot="testimonial-card"
       data-active={active || undefined}
-      className={cn("group relative flex flex-col rounded-card p-6 shadow-card transition-[background-color] duration-300 ease-out hover:bg-subtle motion-reduce:transition-none", className)}
+      className={cn("group relative flex flex-col rounded-card p-6 shadow-card transition-[background-color] duration-300 ease-out hover:bg-subtle/60 motion-reduce:transition-none", className)}
       {...props}
     >
       {href && (

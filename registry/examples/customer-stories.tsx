@@ -22,7 +22,7 @@ export function Site() {
         </Button>
       </div>
 
-      <CustomerStoriesCarousel tone="light">
+      <CustomerStoriesCarousel tone="light" showRules>
         <CustomerStoryCard
           key="mastra"
           company="Mastra"
@@ -48,10 +48,6 @@ export function Site() {
           date="August 24, 2026"
           dateTime="2026-08-24"
           description="Instant uses Context.dev to give its AI Shopify builder brand kits, URL-based inspiration, and reliable page context."
-          stats={[
-            { value: "1 hour", label: "to a running integration" },
-            { value: "< 1 day", label: "to production" },
-          ]}
           href="/blog/instant-switches-from-firecrawl-to-context-dev-in-under-a-day"
         />
         <CustomerStoryCard
@@ -69,9 +65,7 @@ export function Site() {
           logo={<Mark />}
           date="March 4, 2026"
           dateTime="2026-03-04"
-          quote="Onboarding couldn't be simpler. Self-serve sign-up gives you an API key immediately, the documentation is thorough, and we were integrating within 10 minutes."
-          person="Nick Khami"
-          role="Engineering Manager"
+          description="Mintlify turns GitHub repos into branded docs sites, pulling each company's logo and colors from Context.dev at sign-up."
           href="/blog/mintlify-turns-github-repos-into-branded-docs-sites-with-brand-dev"
         />
       </CustomerStoriesCarousel>

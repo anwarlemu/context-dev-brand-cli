@@ -8,5 +8,5 @@ kinds: []
 use_for: "Generative AI use on a site card or page hero. Plays only on screen; shows what it made with reduced motion."
 never: [Stories as the main content of a page]
 source: site src/components/sections/products/generate-story.tsx
-files: [components/visuals/stories/generate-story.tsx, components/visuals/stories/generate-story-player.ts, components/visuals/stories/generate-story-scenes.ts, components/visuals/stories/prompt-field.ts]
+files: [components/visuals/stories/generate-story.tsx, components/visuals/stories/generate-story-player.ts, components/visuals/stories/generate-story-scenes.ts]
 ---

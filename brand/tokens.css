@@ -79,6 +79,30 @@
 	--ds-color-window-close: #FF5F56;
 	--ds-color-window-minimize: #FFBD2E;
 	--ds-color-window-zoom: #27C93F;
+	/* From the dashboard redesign (brand-dev-webapp PR 1045, dashboard-system.css): the full ramps, alerts, the
+	   HTTP status chart colors and the skeleton sheen. */
+	--ds-color-blue-30: #BED0F9;
+	--ds-color-blue-50: #92B1F5;
+	--ds-color-blue-70: #6692F1;
+	--ds-color-navy-20: #07142F;
+	--ds-color-navy-60: #163B8D;
+	--ds-color-neutral-30: #B2B2B2;
+	--ds-color-neutral-50: #808080;
+	--ds-color-alert-strong: #E5484D;
+	--ds-color-alert: #F0868A;
+	--ds-color-alert-soft: #F7C0C2;
+	--ds-color-chart-ok: #22C55E;
+	--ds-color-chart-client-error: #F59E0B;
+	--ds-color-chart-server-error: #F97316;
+	--ds-color-chart-200: #22C55E;
+	--ds-color-chart-202: #10B981;
+	--ds-color-chart-400: #F59E0B;
+	--ds-color-chart-401: #EF4444;
+	--ds-color-chart-402: #EC4899;
+	--ds-color-chart-404: #F97316;
+	--ds-color-chart-409: #EAB308;
+	--ds-color-chart-rate-limited: #9A7FE0;
+	--ds-color-skeleton-shine: #EDEDED;
 
 	/* Type */
 	--ds-font-sans: var(--font-rethink-sans, "Rethink Sans"), system-ui, sans-serif;
@@ -169,8 +193,11 @@
 	--ds-color-text-muted: #4D4D4D;
 	--ds-color-text-subtle: #707070;
 	--ds-color-border-hairline: rgb(0 0 0 / 0.06);
+	--ds-text-display: 56px;
+	--ds-text-h3: 28px;
 	--ds-text-h4: 21px;
 	--ds-text-h5: 18px;
+	--ds-text-body-lg: 16px;
 	--ds-text-body: 15px;
 	--ds-text-body-sm: 12.6px;
 	--ds-text-caption: 12px;
@@ -214,4 +241,23 @@
 	--ds-color-status-warning: #FBBF24;
 	--ds-color-status-danger: #F87171;
 	--ds-color-focus-ring: #7CA1F3;
+	--ds-color-blue-10: #172340;
+	--ds-color-blue-20: #1C2D55;
+	--ds-color-blue-30: #233A6D;
+	--ds-color-blue-40: #2C4A8A;
+	--ds-color-neutral-5: #1C1C1E;
+	--ds-color-neutral-10: #2A2A2D;
+	--ds-color-neutral-20: #3A3A3E;
+	--ds-color-neutral-30: #4D4D52;
+	--ds-color-neutral-40: #66666B;
+	--ds-color-neutral-50: #808085;
+	--ds-color-neutral-60: #9C9CA1;
+	--ds-color-neutral-70: #B8B8BD;
+	--ds-color-neutral-80: #D4D4D8;
+	--ds-color-neutral-90: #ECECEF;
+	--ds-color-alert-strong: #F0646A;
+	--ds-color-alert: #C9565B;
+	--ds-color-alert-soft: #7A3A3E;
+	--ds-color-chart-rate-limited: #8A70D6;
+	--ds-color-skeleton-shine: #262629;
 }

@@ -1,5 +1,5 @@
-import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from "@/components/visuals/glyph/dot-morph-dots";
-import { cellsOfStates } from "@/components/visuals/glyph/dot-story-cells";
+import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from "@/components/visuals/dot-engine/dot-morph-dots";
+import { cellsOfStates } from "@/components/visuals/dot-engine/dot-story-cells";
 import { GLYPH_GRID } from "@/components/visuals/glyph/glyph-art";
 
 /**

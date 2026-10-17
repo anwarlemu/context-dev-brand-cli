@@ -1,5 +1,5 @@
-import { glyphCellsFromRows } from "@/components/visuals/glyph/dot-glyph-cells";
-import { drawGlyphCells } from "@/components/visuals/glyph/dot-glyph-morph";
+import { glyphCellsFromRows } from "@/components/visuals/dot-engine/dot-glyph-cells";
+import { drawGlyphCells } from "@/components/visuals/dot-engine/dot-glyph-morph";
 import { GLYPH_GRID, type GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 
 /**

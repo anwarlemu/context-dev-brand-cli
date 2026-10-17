@@ -5,12 +5,12 @@ import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-eng
 
 /**
  * One extraction, played as a loop: a scan runs down a live website twice, and the site melts into its design
- * system, a board whose quarters, type, color, buttons and spacing, are labelled one after another.
+ * system, a board whose quarters, type, color, buttons and spacing, are labeled one after another.
  */
 
 const MELT_SECONDS = 1.1;
 const SCAN = { startsAt: 0.4, seconds: 1.1, times: 2 };
-const LABELLING = { startsAt: 0.2, everySeconds: 0.35, seconds: 0.3 };
+const LABELING = { startsAt: 0.2, everySeconds: 0.35, seconds: 0.3 };
 
 export function createDesignSystemStoryPlayer(stage: DotStoryStage): DotStoryPlayer {
 	return createBeatStoryPlayer(stage, {
@@ -31,7 +31,7 @@ export function createDesignSystemStoryPlayer(stage: DotStoryStage): DotStoryPla
 				picture: STYLE_BOARD,
 				arrival: { kind: 'melts', seconds: MELT_SECONDS },
 				holdSeconds: 4,
-				write: (pen, heldSeconds) => BOARD_LABELS.forEach((text, index) => pen.text(text, clamp01((heldSeconds - LABELLING.startsAt - index * LABELLING.everySeconds) / LABELLING.seconds))),
+				write: (pen, heldSeconds) => BOARD_LABELS.forEach((text, index) => pen.text(text, clamp01((heldSeconds - LABELING.startsAt - index * LABELING.everySeconds) / LABELING.seconds))),
 			},
 		],
 	});

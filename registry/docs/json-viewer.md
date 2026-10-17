@@ -7,5 +7,5 @@ description: A response as numbered, wrapped, foldable lines with search, copy a
 kinds: []
 use_for: API responses in the playground.
 never: [Sideways scrolling code]
-source: dashboard src/components/playground/json-viewer.tsx
+source: brand-dev-webapp src/components/dashboard-ui/json-viewer.tsx
 ---

@@ -3,16 +3,26 @@ import type { ComponentType } from "react";
 import { Surface } from "@/lib/surface";
 import { cn } from "@/lib/utils";
 
-// Product examples render inside a product Surface (compact text, product radius and shadows, overlays kept inside
-// it) on the canvas; site examples on the white page.
+// Each example sits in the site's soft blue ring. Product examples render inside a product Surface (compact type,
+// product radius and shadows, overlays kept inside it) on the canvas; site examples on the white page.
 export function Preview({ example: Example, surface, label, block = false }: { example: ComponentType; surface: "site" | "product"; label: string; block?: boolean }) {
   return (
-    <figure className="overflow-hidden rounded-card border border-line">
-      <figcaption className="flex items-center justify-between border-b border-line-subtle bg-surface px-4 py-2 text-caption text-fg-subtle">
+    <figure className="min-w-0 rounded-card bg-ring-tint p-2">
+      <figcaption className="flex items-center gap-2 px-2 pt-0.5 pb-2 text-caption text-fg-muted">
+        <span aria-hidden className={cn("size-1.5 rounded-pill", surface === "product" ? "bg-neutral-50" : "bg-brand")} />
         {label}
       </figcaption>
-      <Surface kind={surface} className={cn(block ? "h-180 overflow-hidden" : "flex min-h-48 items-center justify-center p-10", surface === "product" ? "bg-canvas" : "bg-surface")}>
-        <Example />
+      <Surface
+        kind={surface}
+        className={cn(
+          "relative overflow-hidden rounded-card shadow-[0_0_0_1px_var(--ds-color-border-hairline)]",
+          block ? "h-180" : "flex min-h-56 items-center justify-center p-6 sm:p-10",
+          surface === "product" ? "bg-canvas" : "bg-surface",
+        )}
+      >
+        <div className={cn(block ? "h-full w-full" : "w-full max-w-full")}>
+          <Example />
+        </div>
       </Surface>
     </figure>
   );

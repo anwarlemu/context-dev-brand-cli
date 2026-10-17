@@ -49,13 +49,15 @@ interface DotMorphPlayerOptions {
 	palette: DotPalette;
 	source: DotMorphSource;
 	onPlayingChange: (isPlaying: boolean) => void;
+	/** Told every frame's morph and spin, so things drawn beside the canvas can move with it. */
+	onFrame?: (frame: DotMorphFrame) => void;
 }
 
 export function nearestRestingSpin(spin: number, period: number) {
 	return Math.round(spin / period) * period;
 }
 
-export function createDotMorphPlayer({ canvas, palette, source, onPlayingChange }: DotMorphPlayerOptions): DotMorphPlayer {
+export function createDotMorphPlayer({ canvas, palette, source, onPlayingChange, onFrame }: DotMorphPlayerOptions): DotMorphPlayer {
 	const context = canvas.getContext('2d');
 	if (!context) throw new Error('2D canvas is unavailable');
 	const { grid, restingDots } = source;
@@ -121,6 +123,7 @@ export function createDotMorphPlayer({ canvas, palette, source, onPlayingChange 
 			spinVelocity += (-REWIND_STIFFNESS * (spin - restingSpin) - REWIND_DAMPING * spinVelocity) * seconds;
 		}
 		spin += spinVelocity * seconds;
+		onFrame?.({ morph, spin });
 
 		const isHome = !isHovering && morph === 0 && Math.abs(spin - restingSpin) < RESTING_SPIN_DISTANCE && Math.abs(spinVelocity) < RESTING_SPIN_VELOCITY;
 		const isSettled = dots.advance(isHome ? restingDots : source.sample({ morph, spin }), seconds);

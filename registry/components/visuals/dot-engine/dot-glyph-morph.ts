@@ -21,6 +21,10 @@ export interface GlyphMorph {
 	 * handover's opacity and may set its own.
 	 */
 	drawTarget: (context: CanvasRenderingContext2D, frame: DotMorphFrame) => void;
+	/** How far the melt blurs, in cells. A glyph of one-dot lines needs less, or it thins to nothing mid-melt. */
+	gooSigmaInCells?: number;
+	/** How much of a cell the melt must cover to keep its dot. */
+	presentAt?: number;
 }
 
 // The melt spills a little past the glyph's own box on its way to the new shape.
@@ -51,7 +55,7 @@ export function glyphRestingDots({ grid, box, cells }: GlyphMorph) {
 	return states;
 }
 
-export function createGlyphShader({ grid, box, cells, drawGlyph, drawTarget }: GlyphMorph) {
+export function createGlyphShader({ grid, box, cells, drawGlyph, drawTarget, gooSigmaInCells = GOO_SIGMA_IN_CELLS, presentAt = PRESENT_AT }: GlyphMorph) {
 	const { pitch } = grid;
 	const fieldCells = box.cellsPerSide + MARGIN_CELLS * 2;
 	const fieldSize = fieldCells * SAMPLES_PER_CELL;
@@ -83,7 +87,7 @@ export function createGlyphShader({ grid, box, cells, drawGlyph, drawTarget }: G
 		drawTarget(field.context, frame);
 		field.context.restore();
 		readGooField(field);
-		const sigma = GOO_SIGMA_IN_CELLS * SAMPLES_PER_CELL * Math.sin(Math.PI * phase(frame.morph, 0.05, 0.95));
+		const sigma = gooSigmaInCells * SAMPLES_PER_CELL * Math.sin(Math.PI * phase(frame.morph, 0.05, 0.95));
 		if (sigma > 0.002) fuseGooField(field, scratch, sigma);
 
 		states.fill(DOT_ABSENT);
@@ -102,7 +106,7 @@ export function createGlyphShader({ grid, box, cells, drawGlyph, drawTarget }: G
 						darkness += field.darkness[rowStart + sampleX];
 					}
 				}
-				if (coverage / samples < PRESENT_AT) continue;
+				if (coverage / samples < presentAt) continue;
 				states[row * grid.columns + column] = darkness / coverage >= FILLED_AT ? DOT_FILLED : DOT_HOLLOW;
 			}
 		}

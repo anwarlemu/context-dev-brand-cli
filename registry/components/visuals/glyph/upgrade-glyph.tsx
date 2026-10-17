@@ -1,7 +1,7 @@
 "use client";
 
-import { DotStory, type LoadDotStory } from "@/components/visuals/glyph/dot-story";
-import { cellStates } from "@/components/visuals/glyph/dot-story-cells";
+import { DotStory, type LoadDotStory } from "@/components/visuals/dot-engine/dot-story";
+import { cellStates } from "@/components/visuals/dot-engine/dot-story-cells";
 import { GLYPH_GRID } from "@/components/visuals/glyph/glyph-art";
 import { GIFT_CELLS } from "@/components/visuals/glyph/upgrade-story-art";
 import { FINE_GRID, fineCellsOf } from "@/components/visuals/glyph/upgrade-story-fine";

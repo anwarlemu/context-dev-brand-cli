@@ -1,30 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { BarChart, type ChartBucket, useSeriesSelection } from "@/components/product/bar-chart";
 
-import { BarChart } from "@/components/product/bar-chart";
-import type { ChartBucket } from "@/components/product/line-chart";
-import { Card, CardTitle } from "@/components/ui/card";
-
-type K = "scrape" | "search" | "crawl";
+type K = "200" | "404" | "429";
 const SERIES = [
-  { key: "scrape" as const, label: "Scrape", color: "var(--ds-color-chart-series-1)" },
-  { key: "search" as const, label: "Search", color: "var(--ds-color-chart-series-2)" },
-  { key: "crawl" as const, label: "Crawl", color: "var(--ds-color-chart-series-3)" },
+  { key: "200" as const, label: "200 OK", color: "var(--ds-color-chart-200)" },
+  { key: "404" as const, label: "404 Not found", color: "var(--ds-color-chart-404)" },
+  { key: "429" as const, label: "429 Rate limited", color: "var(--ds-color-chart-rate-limited)" },
 ];
-const BUCKETS: ChartBucket<K>[] = Array.from({ length: 21 }, (_, i) => {
-  const scrape = Math.round(600 + Math.sin(i / 2) * 250 + i * 30);
-  const search = Math.round(300 + Math.cos(i / 3) * 120);
-  const crawl = Math.round(90 + (i % 5) * 25);
-  return { label: `Oct ${i + 1}`, total: scrape + search + crawl, values: { scrape, search, crawl } };
+const BUCKETS: ChartBucket<K>[] = Array.from({ length: 30 }, (_, i) => {
+  const ok = Math.round(600 + Math.sin(i / 2) * 250 + i * 30);
+  const missing = Math.round(40 + Math.cos(i / 3) * 20);
+  const limited = i % 6 === 0 ? 35 : 0;
+  return { label: new Date(2026, 8, 18 + i).toLocaleDateString("en-US", { month: "short", day: "numeric" }), total: ok + missing + limited, values: { "200": ok, "404": missing, "429": limited } };
 });
 
 export function Product() {
-  const [focus, setFocus] = useState<K | undefined>();
+  const { fadedKeys, selectSeries } = useSeriesSelection(SERIES);
   return (
-    <Card className="h-72 w-full max-w-2xl">
-      <CardTitle className="text-body-sm">Requests by kind</CardTitle>
-      <BarChart buckets={BUCKETS} series={SERIES} unit="requests" label="Requests by kind over 21 days" focusKey={focus} onFocusChange={setFocus} />
-    </Card>
+    <section className="flex h-64 w-full max-w-2xl flex-col rounded-card bg-surface p-2 shadow-card">
+      <BarChart buckets={BUCKETS} series={SERIES} unit="calls" label="API calls by status, last 30 days" fadedKeys={fadedKeys} onSeriesSelect={selectSeries} />
+    </section>
   );
 }

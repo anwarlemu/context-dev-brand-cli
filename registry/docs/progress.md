@@ -7,5 +7,5 @@ description: A thin pill track with a brand-blue fill.
 kinds: []
 use_for: Credits used, a batch running.
 never: []
-source: dashboard top bar credits
+source: src/app/(dashboard)/o/[org_id]/(main)/batches/components/BatchStatus.tsx (BatchProgressBar)
 ---

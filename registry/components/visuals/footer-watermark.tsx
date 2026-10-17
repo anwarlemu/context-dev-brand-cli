@@ -20,9 +20,9 @@ const DOT_PITCH_STEPS_PER_UNIT = 20;
 const RING_OPACITY = 0.55;
 const CURSOR_SIZE = 9;
 const RESTING_CURSOR: Point = { x: 110, y: 5.5 };
-// Where the pointer's tip lands inside the icon box, in viewBox units: the icon's default -90 degree turn points it down
-// and to the left.
-const CURSOR_TIP: Point = { x: CURSOR_SIZE * (38 / 79), y: CURSOR_SIZE * (66 / 79) };
+// Where the pointer's tip lands inside the icon box, in viewBox units, with the icon's upright turn (its left edge
+// vertical, like a system cursor).
+const CURSOR_TIP: Point = { x: CURSOR_SIZE * (42 / 79), y: CURSOR_SIZE * (28 / 79) };
 // In viewBox units: wide enough that the patch covers the letters from ascender to baseline, not just their tops.
 const PATCH_RADIUS = 15;
 // The patch swaps the paints fully out to this fraction of its radius, then feathers to nothing at the edge: a clean
@@ -72,7 +72,7 @@ function CursorIcon({ id, ...props }: React.SVGProps<SVGSVGElement> & { id: stri
   return (
     <svg viewBox="0 0 79 79" fill="none" aria-hidden="true" {...props}>
       <g filter={`url(#${id})`}>
-        <g transform="rotate(-90 50 48)">
+        <g transform="rotate(34 50 48)">
           <path d={CURSOR_PATH} style={{ fill: "var(--ds-color-bg-code)" }} />
           <path d={CURSOR_PATH} fill={`url(#${dotsId})`} />
           <path d={CURSOR_OUTLINE} strokeWidth="3" style={{ stroke: "var(--ds-color-bg-code)" }} />

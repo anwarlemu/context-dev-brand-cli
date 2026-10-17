@@ -29,8 +29,8 @@ const color = {
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
 for (const name of Object.keys(t)) {
-	const m = name.match(/^--ds-color-((?:blue|navy|neutral)-\d+|chart-series-\d)$/);
-	if (m) color[m[1].replace('chart-', '')] = m[1];
+	const m = name.match(/^--ds-color-((?:blue|navy|neutral)-\d+|chart-series-\d|chart-[\w-]+|alert(?:-\w+)?|skeleton-shine)$/);
+	if (m) color[m[1].replace(/^chart-(series-\d)$/, '$1')] = m[1];
 }
 const theme = [
 	...Object.entries(color).map(([k, v]) => `\t--color-${k}: var(--ds-color-${v});`),

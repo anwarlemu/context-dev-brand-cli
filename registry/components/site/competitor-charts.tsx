@@ -8,8 +8,9 @@ import { cn } from "@/lib/utils";
 // The home page's benchmark card, airy in the manner of parallel.ai: small mono folder tabs (Success rate, Latency,
 // Cost vs success) over one chart drawn in the brand's dots, every axis named. The highlighted provider (the brand)
 // is the brand blue; everyone else a quiet neutral, each named by its own logo and label, never by color alone. The
-// tabs cycle while the card is on screen, a small ring filling as each one runs; hovering or focusing a mark pauses
-// it so its tooltip can be read. Marks fill in once the chart is seen. None of it moves under reduced motion.
+// tabs cycle while the card is on screen, a small ring filling as each one runs, and the open tab's white folder glides
+// to whichever is picked; hovering or focusing a mark pauses the cycle so its tooltip can be read. Marks fill in once
+// the chart is seen, over the brand's faint ring pattern. None of it moves under reduced motion.
 
 export type BenchmarkProvider = { key: string; name: string; logo?: React.ReactNode; highlight?: boolean };
 export type BenchmarkData = {
@@ -25,6 +26,24 @@ const MONO = "font-mono uppercase tracking-wide";
 const AXIS = cn(MONO, "text-axis tabular-nums text-fg-faint");
 const AXIS_TITLE = cn(MONO, "text-axis text-fg-subtle");
 const DOT_STAGGER_MS = 14;
+
+/**
+ * The brand's hollow rings behind a plot, faint enough that the dots and labels stay on top. Parts of the plot that
+ * should sit clear of it (dot columns, values, labels) carry a white background.
+ */
+function ChartRings({ className }: { className?: string }) {
+  const id = React.useId();
+  return (
+    <svg aria-hidden="true" className={cn("pointer-events-none absolute inset-0 size-full text-brand opacity-14", className)}>
+      <defs>
+        <pattern id={id} width={12} height={12} patternUnits="userSpaceOnUse">
+          <circle cx={6} cy={6} r={3} fill="none" stroke="currentColor" strokeWidth={1} />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
+}
 
 function useReducedMotion() {
   const [reduced, setReduced] = React.useState(false);
@@ -92,7 +111,7 @@ function MarkTip({ children, className }: { children: React.ReactNode; className
     <span
       role="tooltip"
       className={cn(
-        "pointer-events-none absolute z-20 w-max max-w-56 rounded-card bg-inverse px-2 py-1 text-left font-mono text-axis leading-snug text-fg-inverse opacity-0 shadow-tooltip transition-opacity duration-150 ease-out group-hover/mark:opacity-100 group-focus-visible/mark:opacity-100 motion-reduce:transition-none",
+        "pointer-events-none absolute z-20 w-max max-w-[min(--spacing(56),calc(100vw-var(--ds-space-20)))] rounded-card bg-inverse px-2 py-1 text-left font-mono text-axis leading-snug text-fg-inverse opacity-0 transition-opacity duration-150 ease-out group-hover/mark:opacity-100 group-focus-visible/mark:opacity-100 motion-reduce:transition-none",
         className,
       )}
     >
@@ -101,9 +120,9 @@ function MarkTip({ children, className }: { children: React.ReactNode; className
   );
 }
 
-function Logo({ provider }: { provider: BenchmarkProvider }) {
+function Logo({ provider, className = "size-3.5" }: { provider: BenchmarkProvider; className?: string }) {
   if (!provider.logo) return null;
-  return <span className={cn("inline-flex size-3.5 shrink-0 items-center justify-center [&_img]:size-full [&_svg]:size-full", provider.highlight ? "text-fg-brand" : "text-fg-subtle")}>{provider.logo}</span>;
+  return <span className={cn("inline-flex shrink-0 items-center justify-center [&_img]:size-full [&_svg]:size-full", provider.highlight ? "text-fg-brand" : "text-fg-subtle", className)}>{provider.logo}</span>;
 }
 
 // Names both axes: the y title runs up the left side, the x title sits under the tick labels, centered on the plot.
@@ -125,9 +144,11 @@ const SUCCESS_STEPS = 20;
 function SuccessChart({ providers, data }: { providers: BenchmarkProvider[]; data: BenchmarkData["successRate"] }) {
   const { ref, shown } = useGrowIn();
   return (
-    <AxisFrame y="Success rate (%)" x="Kind of page" xInset="ml-9">
+    <AxisFrame y="Success rate (%)" x="Page type" xInset="ml-9">
       <div ref={ref} className="flex flex-col gap-3">
         <div className="relative mt-10 ml-9 h-60 sm:mt-12 sm:h-72">
+          {/* On a phone the meters are narrower than a ring, so the rings would only show as halves between them. */}
+          <ChartRings className="hidden sm:block" />
           {[0, 25, 50, 75, 100].map((tick) => (
             <span key={tick} className={cn("absolute -left-9 translate-y-1/2", AXIS)} style={{ bottom: `${tick}%` }}>
               {tick}%
@@ -145,18 +166,19 @@ function SuccessChart({ providers, data }: { providers: BenchmarkProvider[]; dat
                   return (
                     <div key={provider.key} tabIndex={0} aria-label={`${provider.name}, ${group}: ${value}%`} data-chart-mark className="group/mark relative h-full w-full max-w-7 outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
                       <div className="absolute bottom-full left-1/2 mb-1.5 flex -translate-x-1/2 flex-col items-center gap-1">
-                        <Logo provider={provider} />
+                        {/* A phone's columns are barely wider than a logo, so it is drawn a size down there. */}
+                        <Logo provider={provider} className="size-3 sm:size-3.5" />
                         {/* Four values side by side run together on a phone, so there only the highlighted one is written. */}
-                        <span className={cn("font-data text-body leading-none font-medium tabular-nums", tone.label, !provider.highlight && "hidden sm:inline")}>{value}</span>
+                        <span className={cn("bg-surface px-0.5 font-data text-body-sm leading-none font-medium tabular-nums sm:text-body", tone.label, !provider.highlight && "hidden sm:inline")}>{value}</span>
                       </div>
-                      <div className="grid h-full grid-cols-2 gap-x-0.5 px-0.5" style={{ gridTemplateRows: `repeat(${SUCCESS_STEPS}, minmax(0, 1fr))` }}>
+                      <div className="grid h-full grid-cols-2 gap-x-0.5 bg-surface px-0.5" style={{ gridTemplateRows: `repeat(${SUCCESS_STEPS}, minmax(0, 1fr))` }}>
                         {Array.from({ length: SUCCESS_STEPS * 2 }, (_, cell) => {
                           const step = SUCCESS_STEPS - 1 - Math.floor(cell / 2);
                           return <MeterDot key={cell} solid={shown && step < filled} tone={tone} delay={baseDelay + step * DOT_STAGGER_MS} />;
                         })}
                       </div>
                       <MarkTip className="bottom-1/2 left-1/2 -translate-x-1/2">
-                        {provider.name}, {group}: {value}%
+                        {provider.name} · {group}: {value}%
                       </MarkTip>
                     </div>
                   );
@@ -167,7 +189,7 @@ function SuccessChart({ providers, data }: { providers: BenchmarkProvider[]; dat
         </div>
         <div className="ml-9 flex justify-around gap-3 px-3 sm:gap-10">
           {data.groups.map((group) => (
-            <span key={group} className={cn("w-full max-w-48 text-center text-axis text-fg-subtle", MONO)}>
+            <span key={group} className={cn("w-full max-w-48 text-center text-axis text-fg-subtle sm:text-caption", MONO)}>
               {group}
             </span>
           ))}
@@ -177,11 +199,31 @@ function SuccessChart({ providers, data }: { providers: BenchmarkProvider[]; dat
   );
 }
 
-const LATENCY_STEPS = 30;
+const LATENCY_DOT_ROWS = 2;
+// A full-size dot plus its gap, so the meters are packed as tightly as the success chart's dot pairs at any width.
+const LATENCY_STEP_PITCH_PX = 12;
+const LATENCY_FALLBACK_STEPS = 30;
+// Below 1, so each dot follows the last a little sooner and the long bars don't trail on.
+const latencyFillDelay = (step: number) => Math.round(DOT_STAGGER_MS * step ** 0.7);
+
+/** As many meter steps as fit the plot's width at the dot pitch. */
+function useStepsThatFit<T extends HTMLElement>(pitch: number) {
+  const ref = React.useRef<T>(null);
+  const [steps, setSteps] = React.useState(LATENCY_FALLBACK_STEPS);
+  React.useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => setSteps(Math.max(1, Math.floor(entry.contentRect.width / pitch))));
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [pitch]);
+  return { ref, steps };
+}
 
 /** Dot meters, fastest first. Provider labels get their own column, so they never run into the axis. */
 function LatencyChart({ providers, data }: { providers: BenchmarkProvider[]; data: BenchmarkData["latency"] }) {
   const { ref, shown } = useGrowIn();
+  const { ref: plotRef, steps } = useStepsThatFit<HTMLDivElement>(LATENCY_STEP_PITCH_PX);
   const rows = providers.map((p) => ({ provider: p, seconds: data[p.key] ?? 0 })).sort((a, b) => a.seconds - b.seconds);
   const max = Math.max(1, Math.ceil(Math.max(...rows.map((row) => row.seconds))));
   const ticks = Array.from({ length: max + 1 }, (_, i) => i);
@@ -192,24 +234,29 @@ function LatencyChart({ providers, data }: { providers: BenchmarkProvider[]; dat
         <div className="mt-4 grid h-64 grid-cols-[6.5rem_minmax(0,1fr)] sm:h-80 sm:grid-cols-[8.5rem_minmax(0,1fr)]">
           <div className="flex flex-col justify-around pr-3 sm:pr-4">
             {rows.map(({ provider }) => (
-              <span key={provider.key} className={cn("flex h-9 items-center justify-end gap-2 text-axis", MONO, provider.highlight ? "text-fg-brand" : "text-fg")}>
-                <Logo provider={provider} />
+              <span key={provider.key} className={cn("flex h-9 items-center justify-end gap-2 text-axis sm:text-caption", MONO, provider.highlight ? "text-fg-brand" : "text-fg")}>
+                <Logo provider={provider} className="size-4" />
                 {provider.name}
               </span>
             ))}
           </div>
-          <div className="relative flex flex-col justify-around border-l border-node pr-14">
+          <div ref={plotRef} className="relative flex flex-col justify-around border-l border-node pr-14">
+            <ChartRings />
             {rows.map(({ provider, seconds }, index) => {
               const tone = toneFor(provider);
-              const filled = Math.round((seconds / max) * LATENCY_STEPS);
+              const filled = Math.round((seconds / max) * steps);
               return (
                 <div key={provider.key} tabIndex={0} aria-label={`${provider.name}: ${seconds} seconds`} data-chart-mark className="group/mark relative flex h-9 items-center outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
-                  <div className="relative grid w-full gap-x-0.5 py-1" style={{ gridTemplateColumns: `repeat(${LATENCY_STEPS}, minmax(0, 1fr))` }}>
-                    {Array.from({ length: LATENCY_STEPS }, (_, step) => (
-                      <MeterDot key={step} solid={shown && step < filled} tone={tone} delay={index * 90 + step * DOT_STAGGER_MS} />
-                    ))}
+                  <div
+                    className="relative grid w-full grid-flow-col gap-0.5 bg-surface py-0.5"
+                    style={{ gridTemplateColumns: `repeat(${steps}, minmax(0, 1fr))`, gridTemplateRows: `repeat(${LATENCY_DOT_ROWS}, auto)` }}
+                  >
+                    {Array.from({ length: steps * LATENCY_DOT_ROWS }, (_, cell) => {
+                      const step = Math.floor(cell / LATENCY_DOT_ROWS);
+                      return <MeterDot key={cell} solid={shown && step < filled} tone={tone} delay={index * 90 + latencyFillDelay(step)} />;
+                    })}
                   </div>
-                  <span className={cn("absolute left-full ml-2 px-1 font-data text-body leading-none font-medium tabular-nums", tone.label)}>{seconds.toFixed(1)}s</span>
+                  <span className={cn("absolute left-full ml-2 bg-surface px-1 font-data text-body-sm leading-none font-medium tabular-nums sm:text-body", tone.label)}>{seconds.toFixed(1)}s</span>
                   <MarkTip className="bottom-full left-0 mb-1">
                     {provider.name}: {seconds.toFixed(1)}s median
                   </MarkTip>
@@ -242,6 +289,7 @@ function CostChart({ providers, data }: { providers: BenchmarkProvider[]; data: 
     <AxisFrame y="Success rate (%)" x="Cost per 1,000 pages (USD, log scale)" xInset="ml-8">
       <div ref={ref} className="flex flex-col gap-2">
         <div className="relative mt-4 ml-8 h-64 sm:h-80">
+          <ChartRings />
           {[50, 60, 70, 80, 90, 100].map((tick) => (
             <span key={tick} className={cn("absolute -left-8 translate-y-1/2", AXIS)} style={{ bottom: `${successToY(tick)}%` }}>
               {tick}%
@@ -260,11 +308,11 @@ function CostChart({ providers, data }: { providers: BenchmarkProvider[]; data: 
                 tabIndex={0}
                 aria-label={`${provider.name}: ${point.success}% success at $${point.cost.toFixed(2)} per 1,000 pages`}
                 data-chart-mark
-                className="group/mark absolute flex -translate-x-1/2 translate-y-1/2 items-center outline-none transition-[opacity,scale] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none"
+                className="group/mark absolute flex -translate-x-1/2 translate-y-1/2 items-center outline-none transition-[opacity,scale] duration-300 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none"
                 style={{ left: `${x}%`, bottom: `${successToY(point.success)}%`, opacity: shown ? 1 : 0, scale: shown ? "1" : "0.9", transitionDelay: `${index * 90}ms` }}
               >
-                <span className={cn("flex size-8 items-center justify-center rounded-card bg-surface shadow-key [&>span]:size-4.5", provider.highlight ? "ring-2 ring-brand" : "ring-1 ring-hairline")}>
-                  <Logo provider={provider} />
+                <span className={cn("flex size-8 items-center justify-center rounded-card bg-surface shadow-key", provider.highlight ? "ring-2 ring-brand" : "ring-1 ring-hairline")}>
+                  <Logo provider={provider} className="size-4.5" />
                 </span>
                 <span className={cn("absolute top-1/2 flex -translate-y-1/2 flex-col bg-surface/85 px-1 text-axis leading-tight whitespace-nowrap", MONO, labelLeft ? "right-full mr-2 items-end" : "left-full ml-2 items-start", provider.highlight ? "text-fg-brand" : "text-fg")}>
                   <span>{provider.name}</span>
@@ -312,7 +360,7 @@ type TabId = (typeof TABS)[number]["id"];
 function CycleRing({ active, running, cycleMs, restartKey }: { active: boolean; running: boolean; cycleMs: number; restartKey: string }) {
   return (
     <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3.5 shrink-0 -rotate-90 motion-reduce:hidden">
-      <circle cx="8" cy="8" r="6" fill="none" strokeWidth="2.5" className="stroke-wash-pill" />
+      <circle cx="8" cy="8" r="6" fill="none" strokeWidth="2.5" className="stroke-wash-pill transition-[stroke] duration-150 ease-out group-hover/tab:stroke-brand/40 motion-reduce:transition-none" />
       {active && (
         // The chart line's draw-in, retimed to the cycle and linear, as progress is: it fills at the pace the timer runs
         // and pauses along with it.
@@ -384,18 +432,28 @@ function BenchmarkPanel({ providers, data, link, cycleMs = 6000, className }: { 
         }}
         className="gap-0"
       >
-        <div className="flex items-end gap-4 border-b border-line px-2 pt-2.5 sm:px-4">
+        <div className="flex items-end gap-4 rounded-t-card border-b border-line bg-subtle px-2 sm:px-4">
           <div aria-hidden="true" className="hidden shrink-0 items-center gap-1.5 self-center sm:flex">
             <span className="size-2.5 rounded-pill border border-line-strong" />
             <span className="size-2.5 rounded-pill border border-line-strong" />
             <span className="size-2.5 rounded-pill border border-line-strong" />
           </div>
-          <TabsList aria-label="Benchmark" className="-mb-px min-w-0 flex-1 gap-0 overflow-x-auto [scrollbar-width:none]">
+          {/* The open tab is one white folder (a hairline on three sides, open into the card) that glides to the picked tab
+              on the tabs' spring. On phones the tabs scroll sideways, the last one fading out to say so. */}
+          <TabsList
+            aria-label="Benchmark"
+            pillClassName="rounded-none rounded-t-card border border-b-0 border-line bg-surface"
+            className="-mb-px min-w-0 flex-1 gap-0 overflow-x-auto [mask-image:linear-gradient(to_right,var(--ds-color-black)_calc(100%-var(--ds-space-10)),transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden"
+          >
             {TABS.map((t) => (
               <TabsTrigger
                 key={t.id}
                 value={t.id}
-                className="h-auto gap-2 rounded-none rounded-t-card border border-b-0 border-transparent px-2.5 py-2.5 font-mono text-caption text-fg-subtle hover:text-fg-brand focus-visible:ring-inset data-[state=active]:border-line data-[state=active]:bg-surface data-[state=active]:text-fg sm:px-4"
+                className={cn(
+                  "group/tab relative h-auto shrink-0 gap-2 overflow-hidden rounded-none rounded-t-card border border-b-0 border-transparent px-2.5 py-2.5 font-mono text-axis text-fg-subtle transition-[color] duration-150 ease-out hover:text-fg-brand focus-visible:outline-offset-[calc(var(--ds-space-0-5)*-1)] data-[state=active]:bg-transparent data-[state=active]:text-fg data-[state=active]:hover:text-fg sm:px-4 sm:text-caption",
+                  // Inactive tabs answer a hover with a soft blue wash inside the tab.
+                  "before:absolute before:inset-1 before:-z-10 before:rounded-control before:bg-brand/10 before:opacity-0 before:transition-opacity before:duration-150 before:ease-out hover:before:opacity-100 data-[state=active]:before:hidden motion-reduce:before:transition-none",
+                )}
               >
                 {cycles && <CycleRing active={t.id === tab} running={running} cycleMs={cycleMs} restartKey={`${tab}-${pick}`} />}
                 {t.label}
@@ -405,7 +463,8 @@ function BenchmarkPanel({ providers, data, link, cycleMs = 6000, className }: { 
           {link && <div className="hidden shrink-0 self-center md:block">{link}</div>}
         </div>
         <div className="p-3 sm:p-6">
-          <div className="rounded-card bg-ring-tint p-2">
+          {/* The glass ring: a wrapper 8px wider than the card, so its outer edge shares the card's radius. */}
+          <div className="-m-2 rounded-card bg-ring-tint p-2">
             <div className="flex min-w-0 flex-col gap-5 rounded-card bg-surface p-4 ring-1 ring-hairline sm:gap-6 sm:p-8">
               {/* A fixed height, so switching charts never shifts the tabs, legend, or anything below the card. */}
               <div className="h-88 sm:h-104">
@@ -419,7 +478,9 @@ function BenchmarkPanel({ providers, data, link, cycleMs = 6000, className }: { 
                   <CostChart providers={providers} data={data.costVsSuccess} />
                 </TabsContent>
               </div>
-              <BenchmarkLegend providers={providers} />
+              <div className="flex justify-center">
+                <BenchmarkLegend providers={providers} />
+              </div>
             </div>
           </div>
           {link && <div className="mt-4 flex justify-center md:hidden">{link}</div>}

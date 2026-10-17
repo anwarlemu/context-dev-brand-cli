@@ -1,34 +1,68 @@
 "use client";
 
 import * as React from "react";
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-// A thin scrollbar that shows only while scrolling or hovered.
-function ScrollArea({ className, children, ...props }: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
+const EDGE_FADE_PX = 28;
+
+/**
+ * The dashboard's scroll area, which says when there's more: no scrollbar taking room on one side (so the padding stays
+ * even), the content fading out at whichever edge has more past it, and while there's more below, a small chevron at
+ * the bottom that scrolls the rest into view. The chevron fades and rises in 200ms ease-out.
+ */
+function ScrollArea({ className, children, ...props }: React.ComponentProps<"div">) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = React.useState({ more: false, above: false, below: false });
+
+  React.useLayoutEffect(() => {
+    const area = ref.current;
+    if (!area) return;
+    const measure = () => {
+      const more = area.scrollHeight > area.clientHeight + 1;
+      const above = more && area.scrollTop > 1;
+      const below = more && area.scrollTop + area.clientHeight < area.scrollHeight - 1;
+      setEdges((previous) => (previous.more === more && previous.above === above && previous.below === below ? previous : { more, above, below }));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(area);
+    for (const child of Array.from(area.children)) observer.observe(child);
+    area.addEventListener("scroll", measure, { passive: true });
+    return () => {
+      observer.disconnect();
+      area.removeEventListener("scroll", measure);
+    };
+  }, []);
+
+  const mask = `linear-gradient(to bottom, ${edges.above ? "transparent" : "black"}, black ${EDGE_FADE_PX}px, black calc(100% - ${EDGE_FADE_PX}px), ${edges.below ? "transparent" : "black"})`;
+
   return (
-    <ScrollAreaPrimitive.Root data-slot="scroll-area" className={cn("relative overflow-hidden", className)} {...props}>
-      <ScrollAreaPrimitive.Viewport data-slot="scroll-area-viewport" className="size-full rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
+    <div data-slot="scroll-area" className="relative flex min-h-0 flex-1 flex-col">
+      <div
+        ref={ref}
+        data-slot="scroll-area-viewport"
+        className={cn("min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", className)}
+        style={edges.more ? { maskImage: mask, WebkitMaskImage: mask } : undefined}
+        {...props}
+      >
         {children}
-      </ScrollAreaPrimitive.Viewport>
-      <ScrollBar />
-      <ScrollAreaPrimitive.Corner />
-    </ScrollAreaPrimitive.Root>
+      </div>
+      <button
+        type="button"
+        tabIndex={-1}
+        aria-hidden
+        onClick={() => ref.current?.scrollBy({ top: ref.current.clientHeight * 0.8, behavior: "smooth" })}
+        className={cn(
+          "absolute bottom-1 left-1/2 grid size-6 -translate-x-1/2 place-items-center rounded-pill bg-surface text-fg-muted shadow-card transition-[opacity,translate] duration-200 ease-out hover:text-fg motion-reduce:transition-[opacity]",
+          edges.below ? "opacity-100" : "pointer-events-none translate-y-1 opacity-0",
+        )}
+      >
+        <ChevronDown className="size-3.5" strokeWidth={1.75} />
+      </button>
+    </div>
   );
 }
 
-function ScrollBar({ className, orientation = "vertical", ...props }: React.ComponentProps<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>) {
-  return (
-    <ScrollAreaPrimitive.ScrollAreaScrollbar
-      data-slot="scroll-area-scrollbar"
-      orientation={orientation}
-      className={cn("flex touch-none p-px select-none transition-colors", orientation === "vertical" ? "h-full w-2" : "h-2 flex-col", className)}
-      {...props}
-    >
-      <ScrollAreaPrimitive.ScrollAreaThumb data-slot="scroll-area-thumb" className="relative flex-1 rounded-pill bg-neutral-20" />
-    </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  );
-}
-
-export { ScrollArea, ScrollBar };
+export { ScrollArea };

@@ -18,7 +18,7 @@ export function Product() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Key actions">
-          <MoreVertical />
+          <MoreVertical strokeWidth={1.5} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

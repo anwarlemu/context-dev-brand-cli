@@ -7,5 +7,5 @@ description: Fires an action only after the pointer or key is held for a set tim
 kinds: []
 use_for: Destructive actions that should not fire on a stray click.
 never: []
-source: dashboard src/hooks/use-hold.ts
+source: src/components/dashboard-ui/hooks/use-hold.ts
 ---

@@ -2,14 +2,24 @@
 
 import * as React from "react";
 
+import { ArrowUpRight } from "lucide-react";
+
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTabGlide } from "@/hooks/use-tab-glide";
 import { cn } from "@/lib/utils";
 
 // The public pricing page: plan cards side by side in one ringed frame, split by hairlines (a 1px gap over a hairline
 // fill, so the rules run between rows as well as columns). Each card has the same five parts (header, price, call to
 // action, the quota box, the feature box), and on wide screens the cards share their rows through subgrid, so every
 // part lines up across the row. Figures in quota and feature lines are picked out in brand blue. Only the most popular
-// plan's button is filled, so the grid has one main action.
+// plan's button is filled (black), so the grid has one main action. `PricingShelves` is the pricing page's two-row
+// layout: the largest plan and Enterprise on the right of the second row, with the plan-fit panel filling the left.
+
+/**
+ * The site's glass ring: a wrapper 8px wider than its card on every side, in the soft brand blue. A wrapper rather than
+ * a spread shadow, so the ring's outer edge shares the card's radius; the negative margin keeps it from adding size.
+ */
+const GLASS_RING = "-m-2 rounded-card bg-ring-tint p-2";
 
 /** Figures in a line (numbers, prices, percentages) that the brand picks out in blue. */
 const FIGURE = /(\$?\d[\d,.]*(?:K|M|%)?)/;
@@ -39,8 +49,9 @@ function PriceNotePill({ className, ...props }: React.ComponentProps<"span">) {
 type BillingPeriod = "monthly" | "yearly";
 
 /**
- * Monthly or yearly. One white pill with a brand-blue hairline glides under the chosen option (transform and width,
- * ease-out); until it has been measured the chosen button draws the pill itself, so the first paint looks the same.
+ * Monthly or yearly. One white pill with a brand-blue hairline glides under the chosen option on the tabs' spring (it
+ * jumps with reduced motion); until it has been placed the chosen button draws the pill itself, so the first paint
+ * looks the same.
  */
 function PricingToggle({
   value,
@@ -55,45 +66,26 @@ function PricingToggle({
   labels?: Record<BillingPeriod, React.ReactNode>;
   className?: string;
 }) {
-  const refs = React.useRef<Record<BillingPeriod, HTMLButtonElement | null>>({ monthly: null, yearly: null });
-  const [pill, setPill] = React.useState<{ x: number; width: number } | null>(null);
-
-  React.useLayoutEffect(() => {
-    const place = () => {
-      const button = refs.current[value];
-      if (button) setPill({ x: button.offsetLeft, width: button.offsetWidth });
-    };
-    place();
-    const observer = new ResizeObserver(place);
-    Object.values(refs.current).forEach((button) => button && observer.observe(button));
-    return () => observer.disconnect();
-  }, [value]);
+  const pillRef = React.useRef<HTMLSpanElement>(null);
+  const placed = useTabGlide(pillRef, value);
 
   const surface = "bg-surface shadow-[inset_0_0_0_var(--ds-space-px)_var(--ds-color-brand)]";
   return (
     <div data-slot="pricing-toggle" className={cn("relative isolate inline-flex items-center rounded-pill bg-surface p-1 ring-1 ring-hairline", className)}>
-      {pill && (
-        <span
-          aria-hidden="true"
-          className={cn("pointer-events-none absolute top-1 bottom-1 left-0 -z-10 rounded-pill transition-[translate,width] duration-200 ease-out motion-reduce:transition-none", surface)}
-          style={{ translate: `${pill.x}px 0`, width: pill.width }}
-        />
-      )}
+      <span ref={pillRef} aria-hidden="true" className={cn("pointer-events-none absolute top-0 left-0 -z-10 rounded-pill", surface, !placed && "invisible")} />
       {(["monthly", "yearly"] as const).map((period) => {
         const selected = value === period;
         return (
           <button
             key={period}
-            ref={(node) => {
-              refs.current[period] = node;
-            }}
+            data-tab-id={period}
             type="button"
             aria-pressed={selected}
             onClick={() => onValueChange(period)}
             className={cn(
               "inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-body-sm font-medium outline-none transition-[color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none",
               selected ? "text-fg" : "text-fg-muted hover:text-fg",
-              selected && !pill && surface,
+              selected && !placed && surface,
             )}
           >
             {labels[period]}
@@ -105,7 +97,11 @@ function PricingToggle({
   );
 }
 
-type PricingFeature = string | { text: string; hint?: React.ReactNode };
+/**
+ * A quota or feature line. `hint` puts a tooltip on it; `label` is the full text for assistive tech when the line shows a
+ * short form (the brand writes "100 concurrent" for "100 concurrent requests"), which also keeps it on one line.
+ */
+type PricingFeature = string | { text: string; hint?: React.ReactNode; label?: string };
 
 type PricingCardProps = {
   name: string;
@@ -133,9 +129,9 @@ type PricingCardProps = {
 };
 
 function FeatureLine({ feature }: { feature: PricingFeature }) {
-  const { text, hint } = typeof feature === "string" ? { text: feature, hint: undefined } : feature;
+  const { text, hint, label } = typeof feature === "string" ? { text: feature, hint: undefined, label: undefined } : feature;
   return (
-    <p className="text-body-sm text-fg-nav max-sm:text-center">
+    <p aria-label={label} className={cn("text-body-sm text-fg-nav max-sm:text-center", label && "whitespace-nowrap")}>
       {hint ? (
         <Tooltip>
           <TooltipTrigger asChild>
@@ -143,7 +139,7 @@ function FeatureLine({ feature }: { feature: PricingFeature }) {
               <PricingHighlight text={text} />
             </span>
           </TooltipTrigger>
-          <TooltipContent className="max-w-xs text-pretty">{hint}</TooltipContent>
+          <TooltipContent wrap className="max-w-72">{hint}</TooltipContent>
         </Tooltip>
       ) : (
         <PricingHighlight text={text} />
@@ -152,29 +148,31 @@ function FeatureLine({ feature }: { feature: PricingFeature }) {
   );
 }
 
-/** A rounded hairline box of lines split by hairline rules. */
+/** A rounded box of lines split by rules, both in the lightest hairline (black at 6%). */
 function PricingCardBox({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="pricing-card-box" className={cn("mt-2 rounded-card p-4 ring-1 ring-hairline ring-inset [&>*+*]:mt-3 [&>*+*]:border-t [&>*+*]:border-hairline [&>*+*]:pt-3", className)} {...props} />;
+  return <div data-slot="pricing-card-box" className={cn("mt-2 rounded-card p-4 ring-1 ring-wash-pill ring-inset [&>*+*]:mt-3 [&>*+*]:border-t [&>*+*]:border-wash-pill [&>*+*]:pt-3", className)} {...props} />;
 }
 
 function PricingCard({ name, description, price, period, note, noteHighlight, originalPrice, cta, quota, features, featured = false, badge, className }: PricingCardProps) {
   return (
     <div data-slot="pricing-card" data-featured={featured || undefined} aria-label={featured ? `${name}, most popular` : undefined} role={featured ? "group" : undefined} className={cn("relative flex w-full flex-col bg-surface p-2 lg:row-span-5 lg:grid lg:grid-rows-subgrid", className)}>
-      <div className="min-w-0 p-2 max-sm:text-center">
-        <div className="flex items-center gap-2 max-sm:justify-center">
-          <h3 className="text-h5 font-normal text-fg">{name}</h3>
-          {badge && <span className="inline-flex h-5 items-center rounded-control border border-line px-2 text-caption font-medium text-fg">{badge}</span>}
+      <div className="flex items-start gap-3 p-2 max-sm:justify-center max-sm:text-center">
+        <div className="min-w-0">
+          <div className="flex items-center gap-2 max-sm:justify-center">
+            <h3 className="text-h5 font-normal text-fg">{name}</h3>
+            {badge && <span className="inline-flex h-5 items-center rounded-control border border-line px-2 text-caption font-medium text-fg">{badge}</span>}
+          </div>
+          {description && <p className="mt-1 text-body-sm text-fg-muted">{description}</p>}
         </div>
-        {description && <p className="mt-1 text-body-sm text-fg-muted">{description}</p>}
       </div>
 
       {/* The price sits just above the button, with the note above it, so the price and button stay put when billing switches. */}
-      <div className="flex min-h-30 flex-col justify-end px-2 pt-6 pb-3 text-center">
+      <div className="relative flex min-h-30 flex-col justify-end px-2 pt-6 pb-3 text-center">
         {(note || noteHighlight) && (
           <div className="mb-2.5 flex h-5 items-center justify-center">
-            <span className="inline-flex items-center gap-1.5 text-caption whitespace-nowrap text-fg-muted">
+            <span className="inline-flex items-center gap-1.5 text-caption whitespace-nowrap text-fg-nav">
               {note}
-              {noteHighlight && <span className={cn("font-medium text-fg-brand", note && "before:mr-1.5 before:text-fg-muted before:content-['·']")}>{noteHighlight}</span>}
+              {noteHighlight && <span className={cn("font-medium text-fg-brand", note && "before:mr-1.5 before:text-fg-nav before:content-['·']")}>{noteHighlight}</span>}
             </span>
           </div>
         )}
@@ -209,7 +207,7 @@ function PricingCard({ name, description, price, period, note, noteHighlight, or
 }
 
 const COLUMNS: Record<number, string> = {
-  1: "lg:grid-cols-1",
+  1: "sm:grid-cols-1 lg:grid-cols-1",
   2: "sm:grid-cols-2 lg:grid-cols-2",
   3: "sm:grid-cols-2 lg:grid-cols-3",
   4: "sm:grid-cols-2 lg:grid-cols-4",
@@ -220,8 +218,160 @@ const COLUMNS: Record<number, string> = {
 /** The ringed frame the cards sit in. Cards wrap to a new row after `columns`, each row still aligned by subgrid. */
 function PricingGrid({ columns = 4, className, children, ...props }: React.ComponentProps<"div"> & { columns?: 1 | 2 | 3 | 4 | 5 | 6 }) {
   return (
-    <div data-slot="pricing-grid" className={cn("rounded-card bg-surface shadow-[0_0_0_var(--ds-space-px)_var(--ds-color-border-hairline),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]", className)} {...props}>
-      <div className={cn("grid grid-cols-1 gap-px overflow-hidden rounded-card bg-hairline", COLUMNS[columns])}>{children}</div>
+    <div data-slot="pricing-grid" className={cn(GLASS_RING, className)} {...props}>
+      <div className="overflow-hidden rounded-card bg-hairline ring-1 ring-hairline">
+        <div className={cn("grid grid-cols-1 gap-px", COLUMNS[columns])}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+const COL_START: Record<number, string> = { 1: "lg:col-start-1", 2: "lg:col-start-2", 3: "lg:col-start-3", 4: "lg:col-start-4", 5: "lg:col-start-5", 6: "lg:col-start-6" };
+const COL_SPAN: Record<number, string> = { 1: "lg:col-span-1", 2: "lg:col-span-2", 3: "lg:col-span-3", 4: "lg:col-span-4", 5: "lg:col-span-5" };
+
+function placed(node: React.ReactNode, className: string) {
+  return React.isValidElement<{ className?: string }>(node) ? React.cloneElement(node, { className: cn(node.props.className, className) }) : node;
+}
+
+/**
+ * The pricing page's two-row grid in one ringed frame. Row one holds `first` (Free and every self-serve plan but the
+ * largest); a short white band follows; row two puts `second` (the largest plan and Enterprise) on the right and `panel`
+ * (usually PricingPlanFit) across the columns they leave free. Cards in each row line up through the shared subgrid rows,
+ * and the panel comes last in the DOM, so it stacks last on phones. Pass PricingCards (or elements that take
+ * `className`) in `second`, since each is placed by class.
+ */
+function PricingShelves({ first, second, panel, className }: { first: React.ReactNode[]; second: React.ReactNode[]; panel?: React.ReactNode; className?: string }) {
+  const columns = Math.max(1, Math.min(first.length, 6));
+  const panelSpan = Math.max(1, columns - second.length);
+  return (
+    <div data-slot="pricing-shelves" className={cn(GLASS_RING, className)}>
+      <div className="overflow-hidden rounded-card bg-hairline ring-1 ring-hairline">
+        <div className={cn("grid grid-cols-1 gap-px lg:grid-rows-[repeat(11,auto)]", COLUMNS[columns])}>
+          {first}
+          <div aria-hidden="true" className="col-span-full h-6 bg-surface lg:row-start-6 lg:h-8" />
+          {second.map((card, i) => (
+            <React.Fragment key={i}>{placed(card, cn("lg:row-start-7", COL_START[panelSpan + 1 + i]))}</React.Fragment>
+          ))}
+          {panel && placed(panel, cn("sm:col-span-2 lg:col-start-1 lg:row-span-5 lg:row-start-7", COL_SPAN[panelSpan]))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+type PlanFitRow = { name: React.ReactNode; range: React.ReactNode; price: React.ReactNode };
+
+/**
+ * "Which plan fits your page volume?": each plan's best-value range in a ringed white card, the price in brand blue, for
+ * the free columns of PricingShelves' second row. `patternSrc` is the faint dot pattern in its top right corner (the
+ * brand's logo-edge.svg), fading out downward.
+ */
+function PricingPlanFit({
+  title = (
+    <>
+      Which plan fits <span className="text-fg-brand">your page volume</span>?
+    </>
+  ),
+  rows,
+  footnote,
+  patternSrc,
+  className,
+}: {
+  title?: React.ReactNode;
+  rows: PlanFitRow[];
+  footnote?: React.ReactNode;
+  patternSrc?: string;
+  className?: string;
+}) {
+  return (
+    <div data-slot="pricing-plan-fit" className={cn("relative flex w-full flex-col bg-surface p-6 lg:p-8", className)}>
+      <div className={cn(GLASS_RING, "relative flex flex-1 flex-col")}>
+        <div className="relative isolate flex flex-1 flex-col justify-center gap-6 overflow-hidden rounded-card bg-surface px-6 py-8 ring-1 ring-wash-pill ring-inset lg:px-10 lg:py-9">
+          {patternSrc && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute top-0 right-0 -z-10 h-2/5 w-full bg-size-[auto_100%] bg-right-top bg-no-repeat opacity-35 [mask-image:linear-gradient(to_bottom,var(--ds-color-black)_30%,transparent)]"
+              style={{ backgroundImage: `url(${patternSrc})` }}
+            />
+          )}
+          <h3 className="max-w-104 text-h3 leading-heading font-normal text-balance text-fg">{title}</h3>
+          <ul className="flex flex-col [&>li+li]:mt-3 [&>li+li]:border-t [&>li+li]:border-wash-pill [&>li+li]:pt-3">
+            {rows.map((row, i) => (
+              <li key={i} className="flex items-baseline gap-4">
+                <span className="w-22 shrink-0 text-body-sm text-fg sm:w-30">{row.name}</span>
+                <span className="flex-1 text-body-sm text-fg-muted">{row.range}</span>
+                <span className="w-14 shrink-0 text-right text-body-sm text-fg-brand sm:w-18">{row.price}</span>
+              </li>
+            ))}
+          </ul>
+          {footnote && <p className="text-caption text-fg-muted">{footnote}</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** A ringed white strip under the plans: a line on the left, an action (an outline pill) on the right. */
+function PricingBanner({ action, className, children }: { action?: React.ReactNode; className?: string; children: React.ReactNode }) {
+  return (
+    <div data-slot="pricing-banner" className={cn(GLASS_RING, className)}>
+      <div className="flex flex-col gap-4 rounded-card bg-surface px-6 py-5 ring-1 ring-hairline sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <p className="text-body text-fg-nav">{children}</p>
+        {action && <div className="shrink-0">{action}</div>}
+      </div>
+    </div>
+  );
+}
+
+type CreditCostRow = { id?: string; title: React.ReactNode; href?: string; cost: React.ReactNode };
+
+/**
+ * What each API costs in credits: one line per API in a ringed white table, the name linking to its docs (with a small
+ * arrow) and the cost in brand blue. Open it with a SectionHeading and SectionHeaderRule, as the pricing page does.
+ */
+function CreditCostsTable({
+  rows,
+  caption = "API credit costs per request",
+  labels = { name: "API", cost: "Credits" },
+  className,
+}: {
+  rows: CreditCostRow[];
+  caption?: string;
+  labels?: { name: React.ReactNode; cost: React.ReactNode };
+  className?: string;
+}) {
+  return (
+    <div data-slot="credit-costs-table" className={cn(GLASS_RING, className)}>
+      <table className="w-full overflow-hidden rounded-card bg-surface text-left text-body ring-1 ring-hairline">
+        <caption className="sr-only">{caption}</caption>
+        <thead>
+          <tr className="border-b border-wash-pill">
+            <th scope="col" className="px-6 py-4 font-normal text-fg-muted md:px-8">
+              {labels.name}
+            </th>
+            <th scope="col" className="px-6 py-4 text-right font-normal text-fg-muted md:px-8">
+              {labels.cost}
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-wash-pill">
+          {rows.map((row, i) => (
+            <tr key={row.id ?? i}>
+              <th scope="row" className="px-6 py-3.5 font-normal md:px-8">
+                {row.href ? (
+                  <a href={row.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 rounded-sm text-fg outline-none hover:text-fg-brand focus-visible:ring-2 focus-visible:ring-focus-ring">
+                    {row.title}
+                    <ArrowUpRight aria-hidden="true" className="size-3.5 shrink-0 text-fg-faint" />
+                  </a>
+                ) : (
+                  <span className="text-fg">{row.title}</span>
+                )}
+              </th>
+              <td className="px-6 py-3.5 text-right text-fg-brand tabular-nums md:px-8">{row.cost}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -236,4 +386,21 @@ function PricingHairlines({ className, ...props }: React.ComponentProps<"div">) 
   );
 }
 
-export { PricingCard, PricingCardBox, PricingGrid, PricingToggle, PricingHighlight, PriceNotePill, PricingHairlines, type PricingCardProps, type PricingFeature, type BillingPeriod };
+export {
+  PricingCard,
+  PricingCardBox,
+  PricingGrid,
+  PricingShelves,
+  PricingPlanFit,
+  PricingBanner,
+  CreditCostsTable,
+  PricingToggle,
+  PricingHighlight,
+  PriceNotePill,
+  PricingHairlines,
+  type PricingCardProps,
+  type PricingFeature,
+  type PlanFitRow,
+  type CreditCostRow,
+  type BillingPeriod,
+};

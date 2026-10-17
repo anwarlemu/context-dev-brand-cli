@@ -3,12 +3,12 @@ import { Badge } from "@/components/ui/badge";
 export function Product() {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Badge>Draft</Badge>
-      <Badge variant="brand">Pro</Badge>
-      <Badge variant="success">Completed</Badge>
-      <Badge variant="warning">Queued</Badge>
-      <Badge variant="destructive">Failed</Badge>
-      <Badge variant="outline">v2</Badge>
+      <Badge>paused</Badge>
+      <Badge variant="brand">running</Badge>
+      <Badge variant="success">completed</Badge>
+      <Badge variant="warning">skipped</Badge>
+      <Badge variant="destructive">failed</Badge>
+      <Badge variant="tag">pricing</Badge>
     </div>
   );
 }
