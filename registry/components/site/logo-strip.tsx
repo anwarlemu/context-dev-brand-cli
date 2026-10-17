@@ -21,7 +21,7 @@ function LogoTile({ logo }: { logo: StripLogo }) {
   return (
     <div className="group/tile flex h-16 w-36 shrink-0 items-center justify-center border-r border-rule bg-surface px-3 sm:h-30 sm:w-44 sm:px-6 md:h-25">
       {logo.href ? (
-        <a href={logo.href} aria-label={logo.name} className="rounded-control outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <a href={logo.href} aria-label={logo.name} className="rounded-control outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
           {mark}
         </a>
       ) : (

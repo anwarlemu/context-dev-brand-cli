@@ -91,7 +91,7 @@ function PricingToggle({
             aria-pressed={selected}
             onClick={() => onValueChange(period)}
             className={cn(
-              "inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-body-sm font-medium outline-none transition-[color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none",
+              "inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-body-sm font-medium outline-none transition-[color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none",
               selected ? "text-fg" : "text-fg-muted hover:text-fg",
               selected && !pill && surface,
             )}
@@ -139,7 +139,7 @@ function FeatureLine({ feature }: { feature: PricingFeature }) {
       {hint ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <span tabIndex={0} className="cursor-help border-b border-dashed border-line-strong outline-none focus-visible:ring-2 focus-visible:ring-ring">
+            <span tabIndex={0} className="cursor-help border-b border-dashed border-line-strong outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
               <PricingHighlight text={text} />
             </span>
           </TooltipTrigger>

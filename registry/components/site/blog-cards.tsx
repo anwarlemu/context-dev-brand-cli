@@ -57,7 +57,7 @@ function BlogCard({ post, surface = "paper", className }: { post: BlogPost; surf
       href={post.href}
       data-slot="blog-card"
       className={cn(
-        "group block rounded-card shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] outline-none transition-[box-shadow] duration-300 ease-out hover:shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-on-brand),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 motion-reduce:transition-none",
+        "group block rounded-card shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] outline-none transition-[box-shadow] duration-300 ease-out hover:shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-on-brand),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-4 motion-reduce:transition-none",
         className,
       )}
     >

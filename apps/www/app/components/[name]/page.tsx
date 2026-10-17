@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Code } from "@www/components/code";
 import { Preview } from "@www/components/preview";
 import { Sidebar } from "@www/components/sidebar";
 import { examples } from "@www/lib/examples.generated";
-import { exampleSource, findItem, items, registryUrl, sourceOf } from "@www/lib/registry";
+import { exampleSource, findItem, items, sourceOf } from "@www/lib/registry";
 
 export function generateStaticParams() {
   return items.map((i) => ({ name: i.name }));
@@ -47,18 +46,8 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
         </div>
 
         <h2 className="mt-12 mb-4 text-h4">Install</h2>
-        <Tabs defaultValue="cli">
-          <TabsList>
-            <TabsTrigger value="cli">CLI</TabsTrigger>
-            <TabsTrigger value="shadcn">shadcn</TabsTrigger>
-          </TabsList>
-          <TabsContent value="cli">
-            <Code lang="bash" code={`npx context-ds add ${item.name}`} />
-          </TabsContent>
-          <TabsContent value="shadcn">
-            <Code lang="bash" code={`npx shadcn add ${registryUrl}/r/${item.name}.json`} />
-          </TabsContent>
-        </Tabs>
+        <Code lang="bash" code={`npx context-ds add ${item.name}`} />
+        <p className="mt-3 text-body-sm text-fg-muted">Copies the source into your project, with what it needs. It is yours to change from there.</p>
 
         <h2 className="mt-12 mb-4 text-h4">Usage</h2>
         <div className="grid gap-4 md:grid-cols-2">

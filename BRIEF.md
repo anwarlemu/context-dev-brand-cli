@@ -47,7 +47,7 @@ All of it goes in `intake/`. Brand identity (A1) may be proposed from the live s
 
 ### B1. Repo layout
 
-`package.json` (bin `context-ds`), `bin.js`, `ds.config.json`, `intake/` (read-only), `principles.md`, `voice.md`, `intents.json`, `tokens/` (DTCG), `build/` (generated), `registry.json`, `registry/{ui,blocks,templates,flows}/<name>/` (source, docs.md, example), `checks/check.config.json`, `review/rubric.md`, `public/r/` (shadcn build output), `src/` (commands, check, review, hooks, skill, schema), `test/fixtures/`.
+`package.json` (bin `context-ds`), `bin.js`, `ds.config.json`, `intake/` (read-only), `principles.md`, `voice.md`, `intents.json`, `tokens/` (DTCG), `build/` (generated), `registry.json`, `registry/{ui,blocks,templates,flows}/<name>/` (source, docs.md, example), `checks/check.config.json`, `review/rubric.md`, `apps/www/public/r/` (the library's built items), `src/` (commands, check, review, hooks, skill, schema), `test/fixtures/`.
 
 Everything under `src/` reads brand values from `ds.config.json`, `principles.md`, `voice.md` and the registry. No brand string is hard-coded in `src/`.
 
@@ -57,7 +57,7 @@ W3C DTCG JSON in three tiers: `primitive`, `semantic` (references primitive), `c
 
 ### B3. Registry: compose, don't create
 
-Use the shadcn `registry.json` and `registry-item.json` schemas and `shadcn build`. No custom installer.
+The library is its own: the same idea as shadcn (components copied into the project as owned source, a registry of items, a CLI that adds them) with its own item format, build (`scripts/build-registry.ts`) and installer (`add`). It does not use or depend on shadcn (decided 2026-10-17).
 
 Templates are slot-based and locked. Each slot declares its allowed blocks, a default, whether it is required and a max. The template's `structure:` lists slots and `forbidden` items. The agent's decision space on a page is therefore: which allowed block goes in each optional slot, and the copy. Nothing else.
 
@@ -102,7 +102,7 @@ Versioning: semver on `context-ds`. Breaking changes to docs frontmatter, slot s
 
 ## Part D: constraints
 
-TypeScript, Node 20+. shadcn registry schema and CLI for installs. No MCP server in this phase. `check`, `resolve` and `scaffold` never call a model; only `review` does. Contract 15 lines, any docs injection 80 lines, enforced in CI. No em dashes. `intake/` read-only. No brand string in `src/`. Every command takes `--json` and `--help`.
+TypeScript, Node 20+. Its own registry format and installer (no shadcn). No MCP server in this phase. `check`, `resolve` and `scaffold` never call a model; only `review` does. Contract 15 lines, any docs injection 80 lines, enforced in CI. No em dashes. `intake/` read-only. No brand string in `src/`. Every command takes `--json` and `--help`.
 
 ## Part E: hand back
 

@@ -50,7 +50,7 @@ export function CodeCard({ samples, defaultExpanded = true, footer, className }:
           type="button"
           onClick={() => copy(code)}
           aria-label={hasCopied ? "Copied" : "Copy code"}
-          className="absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-control text-fg-subtle outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.97] [&_svg]:size-3.5"
+          className="absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-control text-fg-subtle outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.97] [&_svg]:size-3.5"
         >
           {hasCopied ? <Check className="text-success" strokeWidth={1.75} /> : <Copy strokeWidth={1.5} />}
         </button>

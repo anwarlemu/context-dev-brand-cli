@@ -122,7 +122,7 @@ function CustomerStoriesCarousel({ children, tone = "light", label = "Customer s
 
   const light = tone === "light";
   const arrowClass = cn(
-    "hidden size-10 shrink-0 items-center justify-center rounded-pill outline-none transition-[background-color,opacity] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-35 motion-reduce:transition-none md:flex [&_svg]:size-5",
+    "hidden size-10 shrink-0 items-center justify-center rounded-pill outline-none transition-[background-color,opacity] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring disabled:cursor-not-allowed disabled:opacity-35 motion-reduce:transition-none md:flex [&_svg]:size-5",
     light ? "bg-wash-pill text-fg enabled:hover:bg-wash-selected" : "bg-white/10 text-white enabled:hover:bg-white/20",
   );
 
@@ -169,7 +169,7 @@ function CustomerStoriesCarousel({ children, tone = "light", label = "Customer s
           </button>
           <div className="flex items-center gap-2">
             {Array.from({ length: maxIndex + 1 }, (_, i) => (
-              <button key={i} type="button" onClick={() => go(i)} aria-label={`Go to story ${i + 1}`} aria-current={i === current || undefined} className="group -m-1 flex items-center justify-center rounded-pill p-3 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+              <button key={i} type="button" onClick={() => go(i)} aria-label={`Go to story ${i + 1}`} aria-current={i === current || undefined} className="group -m-1 flex items-center justify-center rounded-pill p-3 outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
                 <span
                   className={cn(
                     "block size-2.5 rounded-pill transition-[scale,background-color] duration-200 ease-out motion-reduce:transition-none",
@@ -212,7 +212,7 @@ type CustomerStoryCardProps = {
 
 function CustomerStoryCard({ company, logo, description, quote, person, role, stats, date, dateTime, href, ctaLabel = "Read their story", className }: CustomerStoryCardProps) {
   return (
-    <a href={href} data-slot="customer-story-card" draggable={false} className={cn("group block h-full rounded-card outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2", className)}>
+    <a href={href} data-slot="customer-story-card" draggable={false} className={cn("group block h-full rounded-card outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2", className)}>
       <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-brand text-on-brand sm:h-125">
         <div className="relative flex h-60 items-center justify-center sm:h-auto sm:min-h-0 sm:flex-1 [&_img]:pointer-events-none">{logo ?? <Check aria-hidden="true" className="size-16" />}</div>
 

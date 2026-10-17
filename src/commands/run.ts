@@ -7,7 +7,7 @@ import { installAgents, runningHarness } from '../install/agents.js';
 import { Writer } from '../install/files.js';
 import { installElementLayer } from '../install/layer.js';
 import { installTouches } from '../install/touches.js';
-import { swapShadcn } from '../library/swap.js';
+import { swapMatching } from '../library/swap.js';
 import { installDots, installStyles } from '../install/styles.js';
 import { brand, cli } from '../lib/brand.js';
 import { color, emit } from '../lib/output.js';
@@ -65,8 +65,8 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const surface: Surface = (opts.surface as Surface | undefined) ?? previous?.surface ?? found.surface;
 	const theme = opts.theme === 'dark' ? 'dark' : previous?.theme ?? 'light';
 	const mixed = !opts.surface && found.mixed;
-	// A React + Tailwind app that already uses shadcn gets the library's components in place of its own, first, so the
-	// type check before and after sees only the swap.
+	// A React + Tailwind app gets the library's components in place of its own where they match, first, so the type
+	// check before and after sees only the swap.
 	const pkgJson = (() => {
 		try {
 			return JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as { dependencies?: Record<string, string>; devDependencies?: Record<string, string> };
@@ -74,7 +74,7 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 			return {};
 		}
 	})();
-	const swap = (pkgJson.dependencies?.react || pkgJson.devDependencies?.react) && (project.tailwindMajor ?? 0) >= 4 ? swapShadcn(project, { dryRun: opts.dryRun }) : undefined;
+	const swap = (pkgJson.dependencies?.react || pkgJson.devDependencies?.react) && (project.tailwindMajor ?? 0) >= 4 ? swapMatching(project, { dryRun: opts.dryRun }) : undefined;
 	const converted = convertProject(project, files, mixed ? 'site' : surface, { dryRun: opts.dryRun, theme });
 	const w = new Writer(root, opts.dryRun);
 	const styleText = files.filter((f) => STYLES.test(f) || MARKUP.test(f)).map((f) => readFileSync(join(root, f), 'utf8')).join('\n');

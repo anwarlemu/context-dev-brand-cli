@@ -55,7 +55,7 @@ function DialogContent({
         {showCloseButton && (
           <DialogPrimitive.Close
             aria-label="Close"
-            className="absolute top-5 right-5 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none [&_svg]:size-4"
+            className="absolute top-5 right-5 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:outline-none [&_svg]:size-4"
           >
             <X strokeWidth={1.5} />
           </DialogPrimitive.Close>

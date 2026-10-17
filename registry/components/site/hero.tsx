@@ -45,7 +45,7 @@ function HeroPill({ variant = "plain", href, icon, className, children }: { vari
       href={href}
       data-slot="hero-pill"
       className={cn(
-        "inline-flex max-w-full items-center justify-center gap-1.5 text-center text-body-sm outline-none focus-visible:ring-2 focus-visible:ring-ring [&_img]:size-4.5 [&_img]:rounded-sm [&_svg]:size-4",
+        "inline-flex max-w-full items-center justify-center gap-1.5 text-center text-body-sm outline-none focus-visible:ring-2 focus-visible:ring-focus-ring [&_img]:size-4.5 [&_img]:rounded-sm [&_svg]:size-4",
         variant === "plain" && "text-fg-muted",
         variant === "plain" && href && "underline-offset-4 hover:underline",
         variant === "outline" && "gap-2 rounded-pill px-4 py-2 text-fg ring-1 ring-hairline ring-inset",

@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 // The product's tabs: plain labels, the selected one on a soft gray pill with no border. The site's: pills, the
 // selected one outlined in brand blue. Only the text answers a hover.
 const tabsTriggerVariants = cva(
-  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap outline-none transition-[background-color,border-color,color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-1.5 whitespace-nowrap outline-none transition-[background-color,border-color,color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {

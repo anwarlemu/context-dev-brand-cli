@@ -14,7 +14,7 @@ function HoldButton({ label, onConfirm, holdMs = 1500, className }: { label: str
       data-slot="hold-button"
       {...handlers}
       className={cn(
-        "relative inline-flex h-8 items-center overflow-hidden rounded-control border border-danger px-3.5 text-body-sm text-danger outline-none select-none focus-visible:ring-2 focus-visible:ring-ring",
+        "relative inline-flex h-8 items-center overflow-hidden rounded-control border border-danger px-3.5 text-body-sm text-danger outline-none select-none focus-visible:ring-2 focus-visible:ring-focus-ring",
         className,
       )}
     >

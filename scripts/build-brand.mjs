@@ -19,16 +19,8 @@ const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n
 
 // Tailwind 4: theme names that read the brand variables, so classes like bg-surface or text-fg-muted work.
 const t = vars(root.body);
-// shadcn's role names first, as aliases of the same tokens, so shadcn components and apps read the brand; the brand's
-// own names come after so they stay the names the engine suggests.
-const shadcnRoles = {
-	background: 'bg-default', foreground: 'text-default', card: 'bg-default', 'card-foreground': 'text-default', popover: 'bg-default', 'popover-foreground': 'text-default',
-	'primary-foreground': 'action-primary-fg', secondary: 'bg-subtle', 'secondary-foreground': 'text-default', muted: 'bg-subtle', 'muted-foreground': 'text-muted',
-	accent: 'wash-hover', 'accent-foreground': 'text-default', destructive: 'status-danger', border: 'border-default', input: 'border-default', ring: 'focus-ring',
-};
 const color = {
-	...shadcnRoles,
-	brand: 'brand', black: 'black', white: 'white', primary: 'action-primary', 'primary-hover': 'action-primary-hover',
+	brand: 'brand', black: 'black', white: 'white', primary: 'action-primary', 'primary-hover': 'action-primary-hover', 'on-primary': 'action-primary-fg', 'focus-ring': 'focus-ring',
 	surface: 'bg-default', subtle: 'bg-subtle', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement',
 	fg: 'text-default', 'fg-secondary': 'text-secondary', 'fg-muted': 'text-muted', 'fg-subtle': 'text-subtle', 'fg-faint': 'text-faint', 'fg-nav': 'text-nav', 'fg-inverse': 'text-inverse', 'fg-brand': 'text-brand', 'on-brand': 'text-on-brand',
 	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',

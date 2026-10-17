@@ -56,7 +56,7 @@ function ToolButton({ label, onClick, children }: { label: string; onClick?: () 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <button type="button" aria-label={label} onClick={onClick} className="grid size-8 shrink-0 place-items-center rounded-control border border-line text-fg-muted outline-none transition-colors duration-150 hover:border-line-strong hover:text-fg focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-3.5">
+        <button type="button" aria-label={label} onClick={onClick} className="grid size-8 shrink-0 place-items-center rounded-control border border-line text-fg-muted outline-none transition-colors duration-150 hover:border-line-strong hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-3.5">
           {children}
         </button>
       </TooltipTrigger>

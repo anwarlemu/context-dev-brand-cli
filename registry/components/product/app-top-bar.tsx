@@ -14,7 +14,7 @@ function AppTopBar({ onMenuClick, className, children }: { onMenuClick?: () => v
           type="button"
           onClick={onMenuClick}
           aria-label="Open navigation"
-          className="mr-auto grid size-8 place-items-center rounded-control text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-ring md:hidden [&_svg]:size-4"
+          className="mr-auto grid size-8 place-items-center rounded-control text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring md:hidden [&_svg]:size-4"
         >
           <Menu strokeWidth={1.5} />
         </button>

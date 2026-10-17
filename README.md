@@ -19,7 +19,7 @@ Change how things look, never what they say.
 ```
 
 That is all. In a React + Tailwind app it first swaps in the library's components where the app's own match (its
-shadcn components, or its simple Button, Badge, Card and the like), type-checking the app and putting back any swap
+components/ui folder, or its simple Button, Badge, Card and the like), type-checking the app and putting back any swap
 that would break it. The first run also adds the package to the project, reads whether it is a site or a product, converts every
 style value to the brand (colors by the role they play, type, spacing, radius, shadows, motion), installs the brand
 stylesheet and fonts, and writes short rules and hooks for the agents. Then each run prints one task: one screen,
@@ -32,14 +32,13 @@ value, so new work stays on the brand.
 
 ## The library
 
-Every component, block and visual from Context.dev's site (the redesign branch) and product (the dashboard), ported to
-React and Tailwind 4 on shadcn's conventions: buttons and pills, forms, overlays, menus, tables, charts, the product
+Every component, block and visual from Context.dev's site (the redesign branch) and product (the dashboard), for
+React and Tailwind 4. Components are copied into your project as source you own (nothing to import from a package): buttons and pills, forms, overlays, menus, tables, charts, the product
 shell and pages, the site's header, hero, sections, pricing and FAQ, and the dot visuals (hero dot streams and 43
 stories). Each has a live preview, its code and its install command on the site.
 
 ```sh
 npx context-ds add button card tabs       # copies them in, with what they need and the theme
-npx shadcn add https://context-ds.vercel.app/r/button.json   # the same files through shadcn
 ```
 
 Product screens opt into the compact product scale with the `ds-product` class (or `<Surface kind="product">`).

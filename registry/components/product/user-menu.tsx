@@ -32,7 +32,7 @@ function UserMenu({ name, email, image, sections = [] }: { name: string; email?:
         <button
           type="button"
           aria-label="Account menu"
-          className="group flex h-9 w-full items-center gap-2.5 rounded-control px-3 text-body-sm text-fg outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-wash-hover"
+          className="group flex h-9 w-full items-center gap-2.5 rounded-control px-3 text-body-sm text-fg outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring data-[state=open]:bg-wash-hover"
         >
           <Avatar className="size-5">
             {image && <AvatarImage src={image} alt="" />}
@@ -79,7 +79,7 @@ function UserMenu({ name, email, image, sections = [] }: { name: string; email?:
                 title={label}
                 onClick={() => setTheme(value)}
                 className={cn(
-                  "grid size-6 place-items-center rounded-sm outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring [&_svg]:size-3.5",
+                  "grid size-6 place-items-center rounded-sm outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-3.5",
                   theme === value ? "bg-blue-10 text-fg-brand" : "text-fg-subtle hover:text-fg",
                 )}
               >

@@ -84,7 +84,7 @@ function ProductGrid({
               <li key={api.href}>
                 <a
                   href={api.href}
-                  className="inline-flex items-center rounded-pill px-3 py-1.5 text-body-sm whitespace-nowrap text-fg-nav ring-1 ring-hairline ring-inset outline-none transition-[background-color,color] duration-200 ease-out hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+                  className="inline-flex items-center rounded-pill px-3 py-1.5 text-body-sm whitespace-nowrap text-fg-nav ring-1 ring-hairline ring-inset outline-none transition-[background-color,color] duration-200 ease-out hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none"
                 >
                   {api.label}
                 </a>

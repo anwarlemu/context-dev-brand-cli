@@ -57,7 +57,7 @@ function FaqCard({ item, value, toggle = "plus", className }: { item: FaqItem; v
   return (
     <AccordionItem value={value} data-slot="faq-card" className={cn("group border-b-0 transition-[background-color] duration-200 ease-out hover:bg-subtle motion-reduce:transition-none", CARD, className)}>
       <AccordionPrimitive.Header className="flex">
-        <AccordionPrimitive.Trigger className="flex flex-1 items-center gap-5 rounded-card px-5 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <AccordionPrimitive.Trigger className="flex flex-1 items-center gap-5 rounded-card px-5 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
           <span className="flex-1 text-body-lg leading-snug font-medium tracking-tight text-fg">{item.question}</span>
           {toggle === "dots" ? (
             <FaqToggleDots className="size-6 shrink-0" />
@@ -131,7 +131,7 @@ function FaqAskCard({
           <button
             type="submit"
             aria-label="Ask"
-            className="shrink-0 rounded-control bg-brand p-2.5 text-on-brand transition-[background-color,scale] duration-150 ease-out outline-none hover:bg-blue-90 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
+            className="shrink-0 rounded-control bg-brand p-2.5 text-on-brand transition-[background-color,scale] duration-150 ease-out outline-none hover:bg-blue-90 focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100"
           >
             <ArrowUp className="block size-4" strokeWidth={2} />
           </button>

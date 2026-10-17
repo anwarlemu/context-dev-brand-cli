@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { Code } from "@www/components/code";
-import { GROUPS, items, registryName, registryUrl } from "@www/lib/registry";
+import { GROUPS, items, registryName } from "@www/lib/registry";
 
 export default function Home() {
   return (
@@ -28,8 +28,8 @@ export default function Home() {
       </section>
 
       <section className="grid gap-6 pb-16 md:grid-cols-2">
-        <Code title="Add a component" lang="bash" code={`npx context-ds add button card tabs`} />
-        <Code title="Or with shadcn" lang="bash" code={`npx shadcn add ${registryUrl}/r/button.json`} />
+        <Code title="Add components to a React project" lang="bash" code={`npx context-ds add button card tabs`} />
+        <Code title="Apply the brand to any project" lang="bash" code={`npx -y github:anwarlemu/context-dev-brand-cli#release`} />
       </section>
 
       {GROUPS.map((g) => {
@@ -40,7 +40,7 @@ export default function Home() {
             <h2 className="mb-6 text-h3">{g.label}</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {list.map((i) => (
-                <Link key={i.name} href={`/components/${i.name}`} className="group rounded-card outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <Link key={i.name} href={`/components/${i.name}`} className="group rounded-card outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
                   <Card variant="flat" className="h-full transition-colors duration-150 group-hover:border-line-strong">
                     <CardTitle>{i.title}</CardTitle>
                     <CardDescription>{i.description}</CardDescription>

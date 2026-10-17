@@ -155,14 +155,14 @@ let kindIndex: Map<string, string> | undefined;
 export function libraryItemFor(kind: string) {
 	if (!kindIndex) {
 		// The plainest item that covers a kind wins: a ui component before a composite or a block, and the first of each.
-		const rank: Record<string, number> = { 'registry:ui': 0, 'registry:component': 1, 'registry:block': 2 };
+		const rank: Record<string, number> = { ui: 0, product: 1, site: 1, visual: 2, block: 3 };
 		const items = loadIndexSync()
 			.filter((i) => i.type in rank)
 			.sort((a, b) => rank[a.type] - rank[b.type]);
 		kindIndex = new Map();
 		// An item named for the kind (code-window for code-window) is the answer outright.
-		for (const i of items) for (const k of (i as { meta?: { kinds?: string[] } }).meta?.kinds ?? []) if (k === i.name) kindIndex.set(k, i.name);
-		for (const i of items) for (const k of (i as { meta?: { kinds?: string[] } }).meta?.kinds ?? []) if (!kindIndex.has(k)) kindIndex.set(k, i.name);
+		for (const i of items) for (const k of i.kinds ?? []) if (k === i.name) kindIndex.set(k, i.name);
+		for (const i of items) for (const k of i.kinds ?? []) if (!kindIndex.has(k)) kindIndex.set(k, i.name);
 	}
 	return kindIndex.get(kind);
 }

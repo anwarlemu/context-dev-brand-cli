@@ -40,7 +40,7 @@ function SheetContent({ className, children, side = "right", ...props }: React.C
         {children}
         <SheetPrimitive.Close
           aria-label="Close"
-          className="absolute top-4 right-4 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none [&_svg]:size-4"
+          className="absolute top-4 right-4 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:outline-none [&_svg]:size-4"
         >
           <X strokeWidth={1.5} />
         </SheetPrimitive.Close>

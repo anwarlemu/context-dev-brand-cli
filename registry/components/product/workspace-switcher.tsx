@@ -17,7 +17,7 @@ function WorkspaceSwitcher({ workspaces, value, onValueChange, onCreate }: { wor
         <button
           type="button"
           aria-label="Switch workspace"
-          className="group flex h-9 min-w-0 items-center gap-2 rounded-control px-2 text-left outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-ring data-[state=open]:bg-wash-hover"
+          className="group flex h-9 min-w-0 items-center gap-2 rounded-control px-2 text-left outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring data-[state=open]:bg-wash-hover"
         >
           <WorkspaceMark workspace={current} />
           <span className="min-w-0 flex-1">

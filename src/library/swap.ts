@@ -4,10 +4,11 @@ import { dirname, join } from 'node:path';
 import type { Project } from '../project/detect.js';
 import { itemName, loadIndexSync, loadItemSync, type RegistryItem } from './registry.js';
 
-// Swap where it matches: an app that already uses shadcn has its components/ui files replaced by the library's, which
-// keep shadcn's names and props, so the app's code stays as it is and takes the brand's look. Its cn helper learns the
-// brand's scales (so text-body-sm and a text color both survive a merge). The app is type-checked before and after;
-// a swap that introduces errors is put back, and that component is restyled like any other instead.
+// Swap where it matches: an app's components that the library also has (a components/ui folder of the same names, or
+// its own simple Button, Badge, Card and the like) are replaced by the library's, so the app's code stays as it is and
+// takes the brand's look. Its cn helper learns the brand's scales (so text-body-sm and a text color both survive a
+// merge). The app is type-checked before and after; a swap that introduces errors is put back, and that component is
+// restyled like any other instead.
 
 type Aliases = { components: string; ui: string; utils: string; lib: string; hooks: string };
 export type SwapResult = { swapped: string[]; reverted: string[]; added: string[]; packages: string[]; utils?: string; checked: boolean };
@@ -20,23 +21,11 @@ function readJson(path: string) {
 	}
 }
 
-/** Where the app keeps its shadcn components, and the import aliases it uses, from components.json or by looking. */
-export function shadcnLayout(project: Project): { uiDir: string; aliases: Aliases } | undefined {
-	const root = project.root;
-	const config = readJson(join(root, 'components.json')) as { aliases?: Partial<Aliases> } | undefined;
+/** Where the app keeps its interface components (components/ui), and the import aliases the library's files use. */
+export function componentLayout(project: Project): { uiDir: string; aliases: Aliases } | undefined {
+	if (!project.hasAlias) return undefined;
 	const base = project.srcDir ? 'src/' : '';
-	const toPath = (alias: string) => (alias.startsWith('@/') ? `${base}${alias.slice(2)}` : alias.replace(/^~\//, base));
-	const aliases: Aliases = {
-		components: config?.aliases?.components ?? '@/components',
-		ui: config?.aliases?.ui ?? `${config?.aliases?.components ?? '@/components'}/ui`,
-		utils: config?.aliases?.utils ?? '@/lib/utils',
-		lib: config?.aliases?.lib ?? '@/lib',
-		hooks: config?.aliases?.hooks ?? '@/hooks',
-	};
-	const uiDir = toPath(aliases.ui);
-	if (!existsSync(join(root, uiDir))) return undefined;
-	const hasShadcn = !!config || readdirSync(join(root, uiDir)).some((f) => /^button\.tsx$/.test(f) && /buttonVariants|cva\(/.test(readFileSync(join(root, uiDir, f), 'utf8')));
-	return hasShadcn ? { uiDir, aliases } : undefined;
+	return { uiDir: `${base}components/ui`, aliases: { components: '@/components', ui: '@/components/ui', utils: '@/lib/utils', lib: '@/lib', hooks: '@/hooks' } };
 }
 
 /** The library's file, with its imports rewritten to the app's aliases. */
@@ -70,7 +59,7 @@ export function patchUtils(text: string): string | undefined {
 	if (/extendTailwindMerge/.test(text) && /body-sm/.test(text)) return undefined;
 	const importRe = /import\s*\{\s*twMerge\s*\}\s*from\s*["']tailwind-merge["'];?/;
 	if (importRe.test(text)) return text.replace(importRe, BRAND_MERGE);
-	// Newer shadcn re-exports cn from a package; it becomes the brand-aware cn, the same clsx plus tailwind-merge.
+	// A utils file that re-exports cn from a package gets the brand-aware cn instead, the same clsx plus tailwind-merge.
 	const reexport = /export\s*\{\s*cn\s*\}\s*from\s*["'][^"']+["'];?/;
 	if (reexport.test(text)) return text.replace(reexport, `import { type ClassValue, clsx } from "clsx";\n${BRAND_MERGE}\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}`);
 	return undefined;
@@ -116,12 +105,13 @@ function customCandidates(project: Project, library: Set<string>, skipDir?: stri
 	return out;
 }
 
-export function swapShadcn(project: Project, { dryRun = false } = {}): SwapResult | undefined {
+export function swapMatching(project: Project, { dryRun = false } = {}): SwapResult | undefined {
 	const root = project.root;
-	const library = new Set(loadIndexSync().filter((i) => i.type === 'registry:ui').map((i) => i.name));
+	// Only where the type check can catch a swap that does not fit.
+	if (!project.typescript) return undefined;
+	const library = new Set(loadIndexSync().filter((i) => i.type === 'ui').map((i) => i.name));
 	if (!library.size) return undefined;
-	const base0 = project.srcDir ? 'src/' : '';
-	const layout = shadcnLayout(project) ?? (project.typescript && project.hasAlias ? { uiDir: `${base0}components/ui`, aliases: { components: '@/components', ui: '@/components/ui', utils: '@/lib/utils', lib: '@/lib', hooks: '@/hooks' } } : undefined);
+	const layout = componentLayout(project);
 	if (!layout) return undefined;
 	const appUi = existsSync(join(root, layout.uiDir)) ? readdirSync(join(root, layout.uiDir)).filter((f) => f.endsWith('.tsx')).map((f) => f.replace(/\.tsx$/, '')) : [];
 	const matches = appUi.filter((n) => library.has(n));
@@ -146,13 +136,13 @@ export function swapShadcn(project: Project, { dryRun = false } = {}): SwapResul
 	const visit = (item: RegistryItem, swapping: boolean) => {
 		if (seen.has(item.name)) return;
 		seen.add(item.name);
-		for (const d of item.dependencies ?? []) if (!installed[d]) packages.add(d);
-		for (const dep of item.registryDependencies ?? []) {
+		for (const d of item.packages ?? []) if (!installed[d]) packages.add(d);
+		for (const dep of item.requires ?? []) {
 			const d = loadItemSync(itemName(dep));
-			if (d && d.type !== 'registry:theme') visit(d, false);
+			if (d && d.type !== 'theme') visit(d, false);
 		}
 		for (const f of item.files ?? []) {
-			const target = f.target ?? f.path;
+			const target = f.path;
 			const rel = target.startsWith('components/ui/') ? `${layout.uiDir}/${target.slice('components/ui/'.length)}` : `${base}${target}`;
 			const exists = existsSync(join(root, rel));
 			if (target === 'lib/utils.ts' && exists) {

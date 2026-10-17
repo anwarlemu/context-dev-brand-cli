@@ -29,7 +29,7 @@ const isMenu = (item: NavItem): item is NavMenu => "items" in item;
 const CLOSE_DELAY_MS = 150;
 
 const NAV_LINK =
-  "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-3.5 py-2 text-body-sm font-medium text-fg-nav outline-none transition-colors duration-150 ease-out hover:bg-subtle hover:text-fg-brand focus-visible:ring-2 focus-visible:ring-ring aria-[current=page]:text-fg aria-expanded:text-fg motion-reduce:transition-none";
+  "inline-flex items-center gap-1 whitespace-nowrap rounded-pill px-3.5 py-2 text-body-sm font-medium text-fg-nav outline-none transition-colors duration-150 ease-out hover:bg-subtle hover:text-fg-brand focus-visible:ring-2 focus-visible:ring-focus-ring aria-[current=page]:text-fg aria-expanded:text-fg motion-reduce:transition-none";
 
 const PANEL_COLUMNS = { 1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3" } as const;
 
@@ -41,7 +41,7 @@ function HeaderAnnouncement({ text, href }: { text: React.ReactNode; href?: stri
     <Comp
       href={href}
       data-slot="site-header-announcement"
-      className="group/announcement relative isolate flex min-h-11 w-full items-center justify-center overflow-hidden border-b border-hairline bg-announcement px-4 py-1 text-center text-caption text-fg outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset sm:text-body-sm"
+      className="group/announcement relative isolate flex min-h-11 w-full items-center justify-center overflow-hidden border-b border-hairline bg-announcement px-4 py-1 text-center text-caption text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset sm:text-body-sm"
     >
       {href && (
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-wash-hover opacity-0 transition-opacity duration-150 ease-out group-hover/announcement:opacity-100 motion-reduce:transition-none" />
@@ -53,7 +53,7 @@ function HeaderAnnouncement({ text, href }: { text: React.ReactNode; href?: stri
 
 function MenuItemLink({ item }: { item: NavMenuItem }) {
   return (
-    <a href={item.href} className="flex w-72 items-start gap-3 rounded-card p-3 outline-none transition-colors duration-150 ease-out hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none">
+    <a href={item.href} className="flex w-72 items-start gap-3 rounded-card p-3 outline-none transition-colors duration-150 ease-out hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none">
       {item.icon && <span className="flex size-9 shrink-0 items-center justify-center rounded-control bg-brand text-on-brand [&>svg]:size-4">{item.icon}</span>}
       <span className="flex min-w-0 flex-col gap-0.5">
         <span className="text-body font-medium text-fg">{item.title}</span>
@@ -208,7 +208,7 @@ function MenuIcon() {
 
 function MobileNav({ items, primaryAction, secondaryAction, currentPath }: { items: NavItem[]; primaryAction?: HeaderAction; secondaryAction?: HeaderAction; currentPath?: string }) {
   const [open, setOpen] = React.useState(false);
-  const ROW = "flex items-center border-b border-line-subtle py-5 text-body-lg text-fg outline-none focus-visible:ring-2 focus-visible:ring-ring";
+  const ROW = "flex items-center border-b border-line-subtle py-5 text-body-lg text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring";
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -226,7 +226,7 @@ function MobileNav({ items, primaryAction, secondaryAction, currentPath }: { ite
                   <AccordionTrigger>{item.label}</AccordionTrigger>
                   <AccordionContent className="flex flex-col gap-1">
                     {item.items.map((sub) => (
-                      <a key={sub.href} href={sub.href} className="rounded-control py-1.5 text-body text-fg-muted outline-none transition-colors duration-150 ease-out hover:text-fg focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none">
+                      <a key={sub.href} href={sub.href} className="rounded-control py-1.5 text-body text-fg-muted outline-none transition-colors duration-150 ease-out hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none">
                         {sub.title}
                       </a>
                     ))}
@@ -318,7 +318,7 @@ function SiteHeader({
         />
         <div className="mx-auto grid h-18 w-[min(100%-var(--ds-space-6),var(--ds-frame-column))] grid-cols-[1fr_auto] items-center gap-3 px-[calc(var(--ds-space-1-5)+var(--ds-space-2))] transition-transform duration-300 ease-out group-data-[scrolled=true]/header:translate-y-1.5 motion-reduce:transition-none lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]">
           {/* The pill's round end curves in beside the logo, so the logo keeps an extra inset in both states. */}
-          <a href={logoHref} aria-label={logoLabel} className="flex items-center justify-self-start rounded-control pl-3.5 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+          <a href={logoHref} aria-label={logoLabel} className="flex items-center justify-self-start rounded-control pl-3.5 outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
             {logo}
           </a>
           <DesktopNav items={items} currentPath={currentPath} />

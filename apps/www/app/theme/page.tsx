@@ -2,7 +2,6 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { Code } from "@www/components/code";
-import { registryUrl } from "@www/lib/registry";
 
 type Tokens = { site: Record<string, string>; product: Record<string, string> };
 const tokens = JSON.parse(readFileSync(path.join(process.cwd(), "../../build/tokens.json"), "utf8")) as Tokens;
@@ -16,7 +15,7 @@ export default function ThemePage() {
         Every value comes from one set of tokens. Product screens opt in to the compact scale with the <code className="font-mono text-body-sm">ds-product</code> class.
       </p>
       <div className="mt-8">
-        <Code lang="bash" code={`npx shadcn add ${registryUrl}/r/theme.json`} />
+        <Code lang="bash" code={`npx context-ds add theme`} />
       </div>
       <h2 className="mt-12 mb-4 text-h4">Colors</h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

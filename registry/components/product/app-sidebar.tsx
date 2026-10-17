@@ -84,7 +84,7 @@ function SidebarLink({
       data-slot="sidebar-link"
       aria-current={active ? "page" : undefined}
       className={cn(
-        "group/link relative flex h-8 items-center gap-2.5 rounded-control pr-2 pl-3 text-body-sm no-underline outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring",
+        "group/link relative flex h-8 items-center gap-2.5 rounded-control pr-2 pl-3 text-body-sm no-underline outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring",
         active ? "bg-wash-selected font-medium text-neutral-80" : "text-fg-muted hover:bg-wash-hover hover:text-fg",
         className,
       )}

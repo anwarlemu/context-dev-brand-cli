@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 // (`field`), or a small gray chip in a card's footer (`chip`); the list is the same menu panel, the selected row
 // black with a blue check.
 const triggerVariants = cva(
-  "flex items-center gap-1.5 whitespace-nowrap outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-fg-subtle",
+  "flex items-center gap-1.5 whitespace-nowrap outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-fg-subtle",
   {
     variants: {
       appearance: {

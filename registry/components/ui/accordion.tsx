@@ -22,7 +22,7 @@ function AccordionTrigger({ className, children, icon, ...props }: React.Compone
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "flex flex-1 items-center justify-between gap-4 py-5 text-left text-body-lg text-fg outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-45",
+          "flex flex-1 items-center justify-between gap-4 py-5 text-left text-body-lg text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-45",
           className,
         )}
         {...props}

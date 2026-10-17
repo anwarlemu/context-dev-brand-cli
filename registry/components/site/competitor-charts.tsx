@@ -143,7 +143,7 @@ function SuccessChart({ providers, data }: { providers: BenchmarkProvider[]; dat
                   const tone = toneFor(provider);
                   const baseDelay = g * 120 + p * 60;
                   return (
-                    <div key={provider.key} tabIndex={0} aria-label={`${provider.name}, ${group}: ${value}%`} data-chart-mark className="group/mark relative h-full w-full max-w-7 outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                    <div key={provider.key} tabIndex={0} aria-label={`${provider.name}, ${group}: ${value}%`} data-chart-mark className="group/mark relative h-full w-full max-w-7 outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
                       <div className="absolute bottom-full left-1/2 mb-1.5 flex -translate-x-1/2 flex-col items-center gap-1">
                         <Logo provider={provider} />
                         {/* Four values side by side run together on a phone, so there only the highlighted one is written. */}
@@ -203,7 +203,7 @@ function LatencyChart({ providers, data }: { providers: BenchmarkProvider[]; dat
               const tone = toneFor(provider);
               const filled = Math.round((seconds / max) * LATENCY_STEPS);
               return (
-                <div key={provider.key} tabIndex={0} aria-label={`${provider.name}: ${seconds} seconds`} data-chart-mark className="group/mark relative flex h-9 items-center outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <div key={provider.key} tabIndex={0} aria-label={`${provider.name}: ${seconds} seconds`} data-chart-mark className="group/mark relative flex h-9 items-center outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
                   <div className="relative grid w-full gap-x-0.5 py-1" style={{ gridTemplateColumns: `repeat(${LATENCY_STEPS}, minmax(0, 1fr))` }}>
                     {Array.from({ length: LATENCY_STEPS }, (_, step) => (
                       <MeterDot key={step} solid={shown && step < filled} tone={tone} delay={index * 90 + step * DOT_STAGGER_MS} />
@@ -260,7 +260,7 @@ function CostChart({ providers, data }: { providers: BenchmarkProvider[]; data: 
                 tabIndex={0}
                 aria-label={`${provider.name}: ${point.success}% success at $${point.cost.toFixed(2)} per 1,000 pages`}
                 data-chart-mark
-                className="group/mark absolute flex -translate-x-1/2 translate-y-1/2 items-center outline-none transition-[opacity,scale] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-ring motion-reduce:transition-none"
+                className="group/mark absolute flex -translate-x-1/2 translate-y-1/2 items-center outline-none transition-[opacity,scale] duration-500 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none"
                 style={{ left: `${x}%`, bottom: `${successToY(point.success)}%`, opacity: shown ? 1 : 0, scale: shown ? "1" : "0.9", transitionDelay: `${index * 90}ms` }}
               >
                 <span className={cn("flex size-8 items-center justify-center rounded-card bg-surface shadow-key [&>span]:size-4.5", provider.highlight ? "ring-2 ring-brand" : "ring-1 ring-hairline")}>

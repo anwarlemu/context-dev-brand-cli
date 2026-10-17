@@ -5,21 +5,20 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 // One button for both surfaces. The product's controls (brand blue for the one main action, black, outline, ghost,
-// danger) keep shadcn's variant names so an app's shadcn buttons swap in as is; the site's pills are their own
-// variants. Sizes follow the surface through the tokens (.ds-product makes text and radius compact).
+// destructive) and the site's pills are its variants. Sizes follow the surface through the tokens (.ds-product makes text and radius compact).
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-normal transition-[background-color,border-color,color,scale] duration-150 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-normal transition-[background-color,border-color,color,scale] duration-150 ease-out outline-none select-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
         default: "rounded-control bg-brand text-on-brand hover:bg-blue-90",
-        black: "rounded-control bg-primary text-primary-foreground hover:bg-primary-hover",
+        black: "rounded-control bg-primary text-on-primary hover:bg-primary-hover",
         outline: "rounded-control border border-line-strong bg-transparent text-fg hover:border-fg",
         secondary: "rounded-control bg-subtle text-fg hover:bg-wash-pill",
         ghost: "rounded-control bg-transparent text-fg-subtle hover:bg-wash-hover hover:text-fg",
         destructive: "rounded-control border border-danger bg-transparent text-danger hover:bg-danger/5",
         link: "h-auto rounded-none px-0 text-fg-brand underline-offset-4 hover:underline active:scale-100",
-        pill: "rounded-pill border border-primary bg-primary text-primary-foreground hover:border-primary-hover hover:bg-primary-hover",
+        pill: "rounded-pill border border-primary bg-primary text-on-primary hover:border-primary-hover hover:bg-primary-hover",
         "pill-outline": "rounded-pill border border-brand bg-surface text-fg-brand hover:bg-tint",
         "pill-on-brand": "rounded-pill border border-white bg-transparent text-white hover:bg-ring-on-brand",
       },

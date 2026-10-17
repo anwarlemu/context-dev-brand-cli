@@ -64,7 +64,7 @@ function ComparisonTable({
   return (
     <div data-slot="comparison-table" className={cn("flex flex-col gap-3", className)}>
       <div className="rounded-card bg-ring-tint p-2">
-        <div tabIndex={0} role="region" aria-label={caption} className="overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        <div tabIndex={0} role="region" aria-label={caption} className="overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
           <table className="w-full min-w-160 border-collapse text-left text-body text-fg">
             {caption && <caption className="sr-only">{caption}</caption>}
             <thead>

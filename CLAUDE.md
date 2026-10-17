@@ -16,8 +16,8 @@ npm run ci           # build, limits, tests; must pass before you push
 - `registry/`: the component library. `components/ui|product|site|blocks|visuals`, `lib/` (cn, surface, theme),
   `hooks/`, `docs/<item>.md` (frontmatter: type, surface, kinds, files...) and `examples/<item>.tsx` (exports
   `Product`, `Site` or `Block`). `scripts/build-registry.ts` (`npm run registry`) validates every item, derives files
-  and dependencies from imports, adds the theme item from the brand tokens, runs `shadcn build` into
-  `apps/www/public/r`, type-checks the library and runs the value check over it.
+  and dependencies from imports, adds the theme item from the brand tokens, writes one JSON file per
+  item (its files' content, what it requires, its packages) and an index into `apps/www/public/r`, type-checks the library and runs the value check over it.
 - `apps/www/`: the docs site (Next.js), deployed to the Vercel project `context-ds` (Agencidev team) with
   `vercel deploy --prod --scope agencidev-dev` from the repo root; it renders every item from source.
 - `src/library/`: loading registry items (`registry.ts`) and swap mode (`swap.ts`); `src/commands/add.ts` (add, list).
