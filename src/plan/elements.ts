@@ -1,4 +1,5 @@
-import { type Element, elements } from '../lib/brand.js';
+import { brand, cli, type Element, elements } from '../lib/brand.js';
+import { loadIndexSync } from '../library/registry.js';
 import type { Surface } from '../project/surface.js';
 
 // Finds the elements of a file (markup tags and components, or CSS selectors) and the brand element each one is, from
@@ -149,6 +150,13 @@ export function elementsIn(rel: string, text: string, surface: Surface): Hit[] {
 }
 
 /** An element's brand styling as text: CSS with its states (hover gated to real pointers) and the Tailwind classes. */
+let kindIndex: Map<string, string> | undefined;
+/** The library item that covers an element kind (from each item's kinds in the bundled registry). */
+export function libraryItemFor(kind: string) {
+	kindIndex ??= new Map(loadIndexSync().flatMap((i) => ((i as { meta?: { kinds?: string[] } }).meta?.kinds ?? []).map((k) => [k, i.name] as const)));
+	return kindIndex.get(kind);
+}
+
 export function renderElement(id: string, surface: Surface, { css = true, tailwind = true } = {}) {
 	const def = elements()[surface][id] ?? elements()[surface === 'site' ? 'product' : 'site'][id];
 	if (!def) return '';
@@ -163,5 +171,8 @@ export function renderElement(id: string, surface: Surface, { css = true, tailwi
 		}
 	}
 	if (tailwind) lines.push(`  Tailwind: ${def.tailwind}`);
+	// In a React + Tailwind app the library's component already looks like this.
+	const item = libraryItemFor(id);
+	if (item) lines.push(`  Component: \`${cli()} add ${item}\` (${(brand() as { registryUrl?: string }).registryUrl ?? ''}/components/${item})`);
 	return lines.join('\n');
 }
