@@ -11,14 +11,18 @@ import type { Writer } from './files.js';
 
 export type StyleInstall = { stylesDir: string; brandCss: string; imported?: string; linked: string[]; fonts: string; notes: string[] };
 
-const IMPORT_RE = (bin: string) => new RegExp(`@import\\s+["']\\./${bin}/(?:brand|theme)\\.css["'];\\n?`, 'g');
+// The brand stylesheet folder starts with an underscore: Next's app router ignores such folders as routes, and the
+// name cannot collide with a project's own page (an app may have a route named like this tool). Older installs used
+// the bare name; both are recognized so a rerun moves them.
+const STYLE_DIR = (bin: string) => `_${bin}`;
+const IMPORT_RE = (bin: string) => new RegExp(`@import\\s+["']\\./_?${bin}/(?:brand|theme)\\.css["'];\\n?`, 'g');
 
 export function installStyles(w: Writer, project: Project, surface: Surface, styleText: string): StyleInstall {
 	const bin = brand().bin;
 	const notes: string[] = [];
 	const main = project.mainStylesheet;
 	const stylesDir = main ? dirname(main) : project.framework === 'static' ? '.' : project.srcDir ? 'src/styles' : 'styles';
-	const dir = posix.join(stylesDir, bin);
+	const dir = posix.join(stylesDir, STYLE_DIR(bin));
 	const next = project.framework === 'next';
 	let css = readFileSync(pkgPath('build', surface === 'product' ? 'product.css' : 'site.css'), 'utf8');
 	// A product whose dark theme follows the system setting gets the brand's dark values the same way.
@@ -37,7 +41,7 @@ export function installStyles(w: Writer, project: Project, surface: Surface, sty
 	if (main) {
 		const before = w.read(main) ?? '';
 		let after = before.replace(IMPORT_RE(bin), '');
-		const lines = [`@import "./${bin}/brand.css";`, ...(tailwind4 ? [`@import "./${bin}/theme.css";`] : [])];
+		const lines = [`@import "./${STYLE_DIR(bin)}/brand.css";`, ...(tailwind4 ? [`@import "./${STYLE_DIR(bin)}/theme.css";`] : [])];
 		const tw = after.match(/@import\s+["']tailwindcss["'][^;]*;/);
 		if (tw) after = after.replace(tw[0], `${tw[0]}\n${lines.join('\n')}`);
 		else {
@@ -46,12 +50,12 @@ export function installStyles(w: Writer, project: Project, surface: Surface, sty
 			after = `${lead}${lead && !lead.endsWith('\n') ? '\n' : ''}${lines.join('\n')}\n${after.slice(lead.length).replace(/^\n/, '')}`;
 		}
 		if (w.write(main, after)) imported = main;
-		else if (before.includes(`./${bin}/brand.css`)) imported = main;
+		else if (before.includes(`./${STYLE_DIR(bin)}/brand.css`)) imported = main;
 	} else {
 		// No global stylesheet: every page links the brand stylesheet in its <head>.
 		for (const rel of project.layouts.filter((l) => !/\.(tsx|jsx|js)$/.test(l))) {
 			const text = w.read(rel) ?? '';
-			if (text.includes(`${bin}/brand.css`)) {
+			if (text.includes(`${STYLE_DIR(bin)}/brand.css`)) {
 				linked.push(rel);
 				continue;
 			}

@@ -279,10 +279,10 @@ describe('the one command', () => {
 		expect(first).toMatch(/installed and applied/);
 		expect(first).toMatch(/Task 1 of 2: 2 main screens and the shared shell/);
 		const css = readFileSync(join(p, 'styles.css'), 'utf8');
-		expect(css.startsWith('/* site */\n@import "./context-ds/brand.css";')).toBe(true);
+		expect(css.startsWith('/* site */\n@import "./_context-ds/brand.css";')).toBe(true);
 		expect(css).toContain("@font-face { font-family: 'Brand'; src: url(b.woff2); }");
 		expect(css).toContain('background: var(--ds-color-bg-default)');
-		expect(readFileSync(join(p, 'context-ds/brand.css'), 'utf8')).toMatch(/^@import url\("https:\/\/fonts\.googleapis\.com/);
+		expect(readFileSync(join(p, '_context-ds/brand.css'), 'utf8')).toMatch(/^@import url\("https:\/\/fonts\.googleapis\.com/);
 		expect(readFileSync(join(p, 'index.html'), 'utf8')).toContain('<script src="./context-ds/dots.js" defer></script>');
 		expect(readFileSync(join(p, 'AGENTS.md'), 'utf8')).toContain('ds:contract:start');
 		expect(JSON.parse(readFileSync(join(p, '.claude/settings.json'), 'utf8')).hooks.PreToolUse[0].hooks[0].command).toMatch(/hook pre-tool-use/);

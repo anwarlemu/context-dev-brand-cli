@@ -11,7 +11,7 @@ for (const file of walk('src')) {
 	const text = readFileSync(join(root, file), 'utf8');
 	for (const word of [brand.name, brand.bin]) if (text.includes(word)) errors.push(`${file}: brand string "${word}" (read it from brand/brand.json)`);
 }
-for (const file of [...walk('src'), ...walk('brand').filter((f) => /\.(md|json|css|js)$/.test(f)), 'README.md', 'CLAUDE.md']) {
+for (const file of [...walk('src'), ...walk('registry'), ...walk('brand').filter((f) => /\.(md|json|css|js)$/.test(f)), 'README.md', 'CLAUDE.md']) {
 	if (readFileSync(join(root, file), 'utf8').includes('—')) errors.push(`${file}: em dash`);
 }
 const contract = readFileSync(join(root, 'brand', 'contract.md'), 'utf8').trim().split('\n').length;

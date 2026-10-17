@@ -10,7 +10,8 @@
     "bin.js",
     "dist",
     "brand",
-    "build"
+    "build",
+    "r"
   ],
   "engines": {
     "node": ">=20"
@@ -18,9 +19,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
     "test": "vitest run",
-    "ci": "npm run build && node scripts/ci-limits.mjs && vitest run",
+    "ci": "npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run",
     "prepare": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
-    "release": "sh scripts/release.sh"
+    "release": "sh scripts/release.sh",
+    "registry": "tsx scripts/build-registry.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
@@ -34,7 +36,14 @@
   },
   "devDependencies": {
     "@types/node": "^22.20.4",
+    "esbuild": "^0.28.2",
+    "shadcn": "^4.22.0",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3",
-    "vitest": "^5.0.3"
-  }
+    "vitest": "^5.0.3",
+    "yaml": "^2.8.1"
+  },
+  "workspaces": [
+    "apps/www"
+  ]
 }

@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { Command } from 'commander';
 import { review, snapshot } from './commands/review.js';
 import { run } from './commands/run.js';
+import { add, list } from './commands/add.js';
 import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
 import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
 import { readHookInput } from './hooks/payload.js';
@@ -23,6 +24,8 @@ program
 	.option('--json', 'JSON output')
 	.action((opts) => run(opts));
 
+program.command('add <items...>').description('Copy library components into a React + Tailwind project, with what they need').option('--overwrite', 'replace files that already exist').option('--dry-run', 'show what would be written').action((items, opts) => add(items, opts));
+program.command('list').description('Every component, block and visual in the library').option('--json', 'JSON output').action((opts) => list(opts));
 program.command('review [url]').description('Screenshot a page at desktop and phone width and score it against the brand; a task is done when it passes').option('--threshold <n>', 'minimum score').option('--submit <dir>', 'record the scorecard an agent wrote itself (when no separate reviewer is available)').option('--all', 'review every task screen that is not done yet, at once (pass the app\'s address)').option('--any', 'review a page that is not a task').option('--json', 'JSON output').action((url, opts) => review(url, opts));
 program.command('look [target]').description('The brand styling (CSS, Tailwind, states) for every element in a file, or for one element kind').option('--surface <surface>', 'site or product').option('--json', 'JSON output').action((target, opts) => look(target, opts));
 program.command('check [files...]').description('Check that every style value is a brand token (used by hooks, pre-commit and CI)').option('--fix', 'replace exact matches with their token').option('--changed', 'only files changed in git').option('--json', 'JSON output').action((files, opts) => check(files ?? [], opts));

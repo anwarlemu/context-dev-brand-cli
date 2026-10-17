@@ -19,7 +19,15 @@ const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n
 
 // Tailwind 4: theme names that read the brand variables, so classes like bg-surface or text-fg-muted work.
 const t = vars(root.body);
+// shadcn's role names first, as aliases of the same tokens, so shadcn components and apps read the brand; the brand's
+// own names come after so they stay the names the engine suggests.
+const shadcnRoles = {
+	background: 'bg-default', foreground: 'text-default', card: 'bg-default', 'card-foreground': 'text-default', popover: 'bg-default', 'popover-foreground': 'text-default',
+	'primary-foreground': 'action-primary-fg', secondary: 'bg-subtle', 'secondary-foreground': 'text-default', muted: 'bg-subtle', 'muted-foreground': 'text-muted',
+	accent: 'wash-hover', 'accent-foreground': 'text-default', destructive: 'status-danger', border: 'border-default', input: 'border-default', ring: 'focus-ring',
+};
 const color = {
+	...shadcnRoles,
 	brand: 'brand', black: 'black', white: 'white', primary: 'action-primary', 'primary-hover': 'action-primary-hover',
 	surface: 'bg-default', subtle: 'bg-subtle', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement',
 	fg: 'text-default', 'fg-secondary': 'text-secondary', 'fg-muted': 'text-muted', 'fg-subtle': 'text-subtle', 'fg-faint': 'text-faint', 'fg-nav': 'text-nav', 'fg-inverse': 'text-inverse', 'fg-brand': 'text-brand', 'on-brand': 'text-on-brand',
@@ -42,12 +50,41 @@ const theme = [
 	'\t--ease-out: var(--ds-easing-out);',
 	'\t--ease-in-out: var(--ds-easing-in-out);',
 ];
-const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n`;
+// Motion for popovers, tooltips and menus: a short ease-out pop, only a fade with reduced motion (Emil Kowalski's rules).
+const motion = `@theme {
+	--animate-pop-in: ds-pop-in var(--ds-duration-fast) var(--ds-easing-out);
+	--animate-fade-in: ds-fade-in var(--ds-duration-fast) var(--ds-easing-out);
+
+	@keyframes ds-pop-in {
+		from {
+			opacity: 0;
+			transform: scale(0.97);
+		}
+	}
+
+	@keyframes ds-fade-in {
+		from {
+			opacity: 0;
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	@keyframes ds-pop-in {
+		from {
+			opacity: 0;
+		}
+	}
+}
+`;
+const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}`;
 const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400;500&display=swap");\n`;
 
 mkdirSync(new URL('../build', import.meta.url), { recursive: true });
 const write = (p, s) => writeFileSync(new URL(`../build/${p}`, import.meta.url), s);
 write('site.css', site);
+// Tokens alone (site at the root, product under .ds-product, both darks), for the component library and its docs.
+write('tokens.css', `${header}:root {${root.body}}\n\n.ds-product {${product.body}}\n\n:is(.dark, [data-theme="dark"]) .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n`);
 write('product.css', productCss);
 write('theme.css', themeCss);
 write('fonts.css', fonts);

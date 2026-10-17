@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "../../../build/tokens.css";
+@import "../../../build/theme.css";
+
+@source "../../../registry";
+
+html {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--ds-color-bg-default);
+  color: var(--ds-color-text-default);
+  font-family: var(--ds-font-sans);
+  font-size: var(--ds-text-body);
+  line-height: var(--ds-leading-relaxed);
+  -webkit-font-smoothing: antialiased;
+}
+
+:where(h1, h2, h3, h4) {
+  font-weight: var(--ds-font-weight-regular);
+  letter-spacing: var(--ds-tracking-tight);
+  color: var(--ds-color-text-default);
+}
+
+::selection {
+  background-color: var(--ds-color-blue-60);
+  color: var(--ds-color-white);
+}
+
+/* Shiki's code blocks: the brand's code surface. */
+.code-block pre {
+  overflow-x: auto;
+  padding: var(--ds-space-4) var(--ds-space-5);
+  font-family: var(--ds-font-mono);
+  font-size: var(--ds-text-caption);
+  line-height: var(--ds-leading-relaxed);
+  background: transparent !important;
+}
