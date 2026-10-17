@@ -43,7 +43,7 @@ function PricingHighlight({ text, pattern = FIGURE, className }: { text: string;
 
 /** The small tinted pill for a pricing badge, such as what yearly billing saves. */
 function PriceNotePill({ className, ...props }: React.ComponentProps<"span">) {
-  return <span data-slot="price-note-pill" className={cn("inline-flex h-5 items-center rounded-pill bg-brand/10 px-2 text-caption font-medium whitespace-nowrap text-fg-brand", className)} {...props} />;
+  return <span data-slot="price-note-pill" className={cn("inline-flex h-5 items-center rounded-pill bg-brand/10 px-2 text-caption leading-snug font-medium whitespace-nowrap text-fg-brand", className)} {...props} />;
 }
 
 type BillingPeriod = "monthly" | "yearly";
@@ -83,7 +83,7 @@ function PricingToggle({
             aria-pressed={selected}
             onClick={() => onValueChange(period)}
             className={cn(
-              "inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-body-sm font-medium outline-none transition-[color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none",
+              "inline-flex items-center gap-2 rounded-pill px-4 py-1.5 text-body-sm leading-snug font-medium outline-none transition-[color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring motion-reduce:transition-none",
               selected ? "text-fg" : "text-fg-muted hover:text-fg",
               selected && !placed && surface,
             )}
@@ -155,11 +155,11 @@ function PricingCardBox({ className, ...props }: React.ComponentProps<"div">) {
 
 function PricingCard({ name, description, price, period, note, noteHighlight, originalPrice, cta, quota, features, featured = false, badge, className }: PricingCardProps) {
   return (
-    <div data-slot="pricing-card" data-featured={featured || undefined} aria-label={featured ? `${name}, most popular` : undefined} role={featured ? "group" : undefined} className={cn("relative flex w-full flex-col bg-surface p-2 lg:row-span-5 lg:grid lg:grid-rows-subgrid", className)}>
+    <div data-slot="pricing-card" data-featured={featured || undefined} aria-label={featured ? `${name}, most popular` : undefined} role={featured ? "group" : undefined} className={cn("relative flex w-full flex-col bg-surface p-2 leading-snug lg:row-span-5 lg:grid lg:grid-rows-subgrid", className)}>
       <div className="flex items-start gap-3 p-2 max-sm:justify-center max-sm:text-center">
         <div className="min-w-0">
           <div className="flex items-center gap-2 max-sm:justify-center">
-            <h3 className="text-h5 font-normal text-fg">{name}</h3>
+            <h3 className="text-h5 leading-snug font-normal tracking-normal text-fg">{name}</h3>
             {badge && <span className="inline-flex h-5 items-center rounded-control border border-line px-2 text-caption font-medium text-fg">{badge}</span>}
           </div>
           {description && <p className="mt-1 text-body-sm text-fg-muted">{description}</p>}
@@ -284,7 +284,7 @@ function PricingPlanFit({
   className?: string;
 }) {
   return (
-    <div data-slot="pricing-plan-fit" className={cn("relative flex w-full flex-col bg-surface p-6 lg:p-8", className)}>
+    <div data-slot="pricing-plan-fit" className={cn("relative flex w-full flex-col bg-surface p-6 leading-snug lg:p-8", className)}>
       <div className={cn(GLASS_RING, "relative flex flex-1 flex-col")}>
         <div className="relative isolate flex flex-1 flex-col justify-center gap-6 overflow-hidden rounded-card bg-surface px-6 py-8 ring-1 ring-wash-pill ring-inset lg:px-10 lg:py-9">
           {patternSrc && (
@@ -294,7 +294,7 @@ function PricingPlanFit({
               style={{ backgroundImage: `url(${patternSrc})` }}
             />
           )}
-          <h3 className="max-w-104 text-h3 leading-heading font-normal text-balance text-fg">{title}</h3>
+          <h3 className="max-w-104 text-h3 leading-heading font-normal tracking-normal text-balance text-fg">{title}</h3>
           <ul className="flex flex-col [&>li+li]:mt-3 [&>li+li]:border-t [&>li+li]:border-wash-pill [&>li+li]:pt-3">
             {rows.map((row, i) => (
               <li key={i} className="flex items-baseline gap-4">
@@ -316,7 +316,7 @@ function PricingBanner({ action, className, children }: { action?: React.ReactNo
   return (
     <div data-slot="pricing-banner" className={cn(GLASS_RING, className)}>
       <div className="flex flex-col gap-4 rounded-card bg-surface px-6 py-5 ring-1 ring-hairline sm:flex-row sm:items-center sm:justify-between sm:px-8">
-        <p className="text-body text-fg-nav">{children}</p>
+        <p className="text-body leading-snug text-fg-nav">{children}</p>
         {action && <div className="shrink-0">{action}</div>}
       </div>
     </div>
@@ -342,7 +342,7 @@ function CreditCostsTable({
 }) {
   return (
     <div data-slot="credit-costs-table" className={cn(GLASS_RING, className)}>
-      <table className="w-full overflow-hidden rounded-card bg-surface text-left text-body ring-1 ring-hairline">
+      <table className="w-full overflow-hidden rounded-card bg-surface text-left text-body leading-snug ring-1 ring-hairline">
         <caption className="sr-only">{caption}</caption>
         <thead>
           <tr className="border-b border-wash-pill">

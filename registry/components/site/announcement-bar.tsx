@@ -3,7 +3,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 const BAR =
-  "group/announcement relative isolate flex min-h-11.5 w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 overflow-hidden border-b border-wash-pill px-4 py-1 text-center text-caption text-fg outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:text-body-sm";
+  "group/announcement relative isolate flex min-h-11.5 w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 overflow-hidden border-b border-wash-pill px-4 py-1 text-center text-caption leading-snug text-fg outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:text-body-sm";
 
 /**
  * The one-line strip above the site's header: a cool gray band with a hairline under it, the message centered. As a

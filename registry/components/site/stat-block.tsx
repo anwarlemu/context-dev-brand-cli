@@ -17,7 +17,7 @@ function StatBlock({ value, label, className, ...props }: Omit<React.ComponentPr
     // The ring wraps the card, so its outer edge keeps the card's radius; the negative margin keeps it out of the grid's gaps.
     <div data-slot="stat-block" className={cn("-m-2 rounded-card bg-ring-tint p-2", className)} {...props}>
       <div className="flex h-full min-w-0 flex-col-reverse justify-end gap-2 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8">
-        <dt className="text-body text-fg-secondary">{label}</dt>
+        <dt className="text-body leading-snug text-fg-secondary">{label}</dt>
         <dd className="text-h2 leading-none tracking-tight text-fg-brand">{value}</dd>
       </div>
     </div>

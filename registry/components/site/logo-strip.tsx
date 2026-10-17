@@ -305,7 +305,7 @@ function LogoStrip({
           <div className="flex flex-col overflow-hidden rounded-card border border-rule bg-surface md:flex-row">
             {label && (
               <div className="flex shrink-0 items-center justify-center border-b border-rule px-6 py-4 md:w-76 md:justify-start md:border-r md:border-b-0 md:py-0">
-                <h2 className="text-center text-body font-normal text-balance text-fg-secondary md:text-left">{label}</h2>
+                <h2 className="text-center text-body leading-snug font-normal tracking-normal text-balance text-fg-secondary md:text-left">{label}</h2>
               </div>
             )}
             {/* Two identical rows each slide their own width, so the loop is seamless. */}

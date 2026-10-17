@@ -20,18 +20,18 @@ export type UseCaseStep = { title: string; description: React.ReactNode };
 export type UseCaseSample = { language: string; label: string; code: string; filename: string; install?: string | null };
 
 function StepNumber({ n }: { n: number }) {
-  return <span className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-brand/10 text-body text-fg-brand">{n}</span>;
+  return <span className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-brand/10 text-body leading-snug text-fg-brand">{n}</span>;
 }
 
 /** The install command as an outlined pill with a copy button, or a note when the language needs no install. */
 function UseCaseInstallCommand({ sample, className }: { sample: UseCaseSample; className?: string }) {
   const { hasCopied, copy } = useCopy();
   if (!sample.install) {
-    return <p className={cn("w-fit max-w-full rounded-pill px-4 py-2 text-body-sm text-fg-secondary ring-1 ring-black/10 ring-inset", className)}>No install needed. Call the REST API directly.</p>;
+    return <p className={cn("w-fit max-w-full rounded-pill px-4 py-2 text-body-sm leading-snug text-fg-secondary ring-1 ring-black/10 ring-inset", className)}>No install needed. Call the REST API directly.</p>;
   }
   return (
     <div className={cn("flex w-fit max-w-full items-center gap-2 rounded-pill py-1 pr-1 pl-4 ring-1 ring-black/10 ring-inset", className)}>
-      <code className="min-w-0 overflow-x-auto font-mono text-body-sm whitespace-nowrap text-fg-nav [scrollbar-width:none]">
+      <code className="min-w-0 overflow-x-auto font-mono text-body-sm leading-5 whitespace-nowrap text-fg-nav [scrollbar-width:none]">
         <span aria-hidden="true" className="text-black/35">
           ${" "}
         </span>
@@ -82,7 +82,7 @@ function UseCaseCodeTabs({ samples, language, onLanguageChange, className }: { s
                 onClick={() => onLanguageChange(sample.language)}
                 onKeyDown={onKeyDown}
                 className={cn(
-                  "shrink-0 rounded-pill px-3 py-1.5 text-body-sm outline-none transition-[background-color,color] duration-150 ease-out focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white motion-reduce:transition-none",
+                  "shrink-0 rounded-pill px-3 py-1.5 text-body-sm leading-snug outline-none transition-[background-color,color] duration-150 ease-out focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white motion-reduce:transition-none",
                   selected ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
                 )}
               >
@@ -141,8 +141,8 @@ function UseCaseHowItWorks({
               <li key={step.title} className="flex items-start gap-4 border-t border-hairline py-4 first:border-0 first:pt-0">
                 <StepNumber n={i + 1} />
                 <span className="flex flex-col gap-1">
-                  <span className="text-h5 font-normal text-fg">{step.title}</span>
-                  <span className="text-body-sm text-fg-secondary">{step.description}</span>
+                  <span className="text-h5 leading-snug font-normal text-fg">{step.title}</span>
+                  <span className="text-body-sm leading-snug text-fg-secondary">{step.description}</span>
                 </span>
               </li>
             ))}
@@ -155,7 +155,7 @@ function UseCaseHowItWorks({
                   {docs.label}
                 </a>
               )}
-              {note && <p className="text-body-sm text-fg-subtle">{note}</p>}
+              {note && <p className="text-body-sm leading-snug text-fg-subtle">{note}</p>}
             </div>
           )}
         </div>
@@ -182,8 +182,8 @@ function UseCaseStepCards({ steps, links, className }: { steps: readonly UseCase
             <div className={CARD}>
               <div className="flex flex-col gap-4">
                 <StepNumber n={i + 1} />
-                <h3 className="text-h4 font-normal text-fg">{step.title}</h3>
-                <p className="text-body text-fg-secondary">{step.description}</p>
+                <h3 className="text-h4 leading-snug font-normal tracking-normal text-fg">{step.title}</h3>
+                <p className="text-body leading-snug text-fg-secondary">{step.description}</p>
               </div>
               <div
                 tabIndex={0}

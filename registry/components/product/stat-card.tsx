@@ -77,10 +77,11 @@ function StatCardGrid({ label, className, children }: { label: string; className
   );
 }
 
-/** The figure: 22px medium in tabular numbers, a unit after it in caption subtle on the same baseline. */
+/** The figure: 22px medium in tabular numbers, a unit after it in caption subtle on the same baseline. The row sits at
+   caption size so its tight tracking resolves to the same small step wherever the figure is placed. */
 function StatFigure({ children, suffix, className }: { children: React.ReactNode; suffix?: React.ReactNode; className?: string }) {
   return (
-    <span data-slot="stat-figure" className={cn("flex items-baseline gap-1 leading-none font-medium tracking-tight tabular-nums", className)}>
+    <span data-slot="stat-figure" className={cn("flex items-baseline gap-1 text-caption leading-none font-medium tracking-tight tabular-nums", className)}>
       <span className="text-[calc(var(--ds-text-h5)+var(--ds-space-1))] text-fg">{children}</span>
       {suffix && <span className="text-caption font-normal tracking-normal text-fg-subtle">{suffix}</span>}
     </span>

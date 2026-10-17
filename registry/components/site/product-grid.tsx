@@ -29,7 +29,7 @@ function ProductCard({ name, description, tags = [], href, linkLabel = "Explore"
       <article className="relative flex flex-1 flex-col gap-10 overflow-hidden rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8">
         <div className="flex flex-col gap-3">
           <div className="mb-2 flex items-center justify-between gap-4">
-            <h3 className="text-h3 leading-heading font-normal text-fg">{name}</h3>
+            <h3 className="text-h3 leading-heading font-normal tracking-normal text-fg">{name}</h3>
             <Button asChild variant="pill-outline" className="group/explore">
               <a href={href}>
                 {linkLabel}
@@ -38,9 +38,9 @@ function ProductCard({ name, description, tags = [], href, linkLabel = "Explore"
               </a>
             </Button>
           </div>
-          <p className="text-body-lg text-fg-secondary">{description}</p>
+          <p className="text-body-lg leading-snug text-fg-secondary">{description}</p>
           {tags.length > 0 && (
-            <ul aria-label={`What you can build with ${name}`} className="flex flex-wrap gap-1.5">
+            <ul aria-label={`What you can build with ${name}`} className="flex flex-wrap gap-1.5 leading-snug">
               {tags.map((tag) => (
                 <li key={tag}>
                   <Badge variant="chip">{tag}</Badge>
@@ -65,7 +65,7 @@ function MoreApiList({ items, duplicate = false, className }: { items: { label: 
           <a
             href={api.href}
             tabIndex={duplicate ? -1 : undefined}
-            className="inline-flex w-fit items-center justify-center rounded-pill border border-black/15 px-3 py-1.5 text-body-sm whitespace-nowrap text-fg-nav outline-none transition-colors duration-200 ease-out hover:bg-black/3 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none"
+            className="inline-flex w-fit items-center justify-center rounded-pill border border-black/15 px-3 py-1.5 text-body-sm leading-snug whitespace-nowrap text-fg-nav outline-none transition-colors duration-200 ease-out hover:bg-black/3 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none"
           >
             {api.label}
           </a>
@@ -116,7 +116,7 @@ function MoreApis({ items, label = "Also in the API", icon, className }: { items
 
   return (
     <div data-slot="more-apis" className={cn("flex items-center gap-4 md:overflow-x-auto md:[scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden", className)}>
-      <div className="inline-flex shrink-0 items-center gap-2 text-body-sm whitespace-nowrap text-fg-secondary">
+      <div className="inline-flex shrink-0 items-center gap-2 text-body-sm leading-snug whitespace-nowrap text-fg-secondary">
         {icon ?? <Globe aria-hidden="true" className="size-4" />}
         {label}
       </div>

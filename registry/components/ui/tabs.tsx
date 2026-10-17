@@ -36,7 +36,7 @@ const tabsTriggerVariants = cva(
       variant: {
         default: "text-fg-subtle transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg",
         segmented: "text-fg-muted transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg",
-        pill: "rounded-pill border border-transparent px-5 py-2.5 text-body text-fg-muted transition-[background-color,border-color,color] duration-200 ease-out hover:bg-blue-10 hover:text-fg data-[state=active]:text-fg-brand data-[state=active]:hover:bg-transparent",
+        pill: "rounded-pill border border-transparent px-5 py-2.5 text-body leading-snug text-fg-muted transition-[background-color,border-color,color] duration-200 ease-out hover:bg-blue-10 hover:text-fg data-[state=active]:text-fg-brand data-[state=active]:hover:bg-transparent",
       },
       size: { sm: "", md: "" },
     },

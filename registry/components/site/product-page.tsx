@@ -27,7 +27,7 @@ function ProductPageSection({ className, containerClassName, children, ...props 
 /** The two-line heading: the first line in black, the second in brand blue. */
 function ProductSplitHeading({ title, as: Heading = "h2", className, ...props }: Omit<React.ComponentProps<"h2">, "title"> & { title: readonly [React.ReactNode, React.ReactNode]; as?: "h1" | "h2" }) {
   return (
-    <Heading data-slot="product-split-heading" className={cn("text-h3 leading-heading font-normal tracking-tight sm:text-h2", className)} {...props}>
+    <Heading data-slot="product-split-heading" className={cn("text-h3 leading-display font-normal tracking-tight sm:text-h2 lg:text-h1", className)} {...props}>
       <span className="block text-balance text-fg">{title[0]}</span> <span className="block text-balance text-fg-brand">{title[1]}</span>
     </Heading>
   );
@@ -184,7 +184,7 @@ function ProductStats({ stats, className }: { stats: ProductStat[]; className?: 
       <dl className="grid grid-cols-2 gap-y-8 rounded-shell bg-subtle py-8 lg:grid-cols-4 lg:py-10">
         {stats.map((stat, index) => (
           <div key={index} className={cn("flex flex-col-reverse justify-end gap-2 px-6 xl:px-10", index % 2 === 1 ? "border-l border-rule" : index > 0 && "lg:border-l lg:border-rule")}>
-            <dt className="text-body leading-relaxed text-fg-muted">{stat.label}</dt>
+            <dt className="text-body-lg leading-normal text-fg-muted">{stat.label}</dt>
             <dd className={cn("text-h3 leading-tight tracking-tight sm:text-h2 xl:text-h1", index === stats.length - 1 ? "text-fg-brand" : "text-fg")}>{stat.value}</dd>
           </div>
         ))}
@@ -208,7 +208,7 @@ function ProductCapabilityList({ capabilities, label, className }: { capabilitie
               </span>
               <span>{capability.title}</span>
             </dt>
-            <dd className="text-body leading-relaxed text-pretty text-fg-muted">{capability.description}</dd>
+            <dd className="text-body-lg leading-relaxed text-pretty text-fg-muted">{capability.description}</dd>
           </div>
         ))}
       </dl>
@@ -274,7 +274,7 @@ function InstallCommand({ sample }: { sample: ProductCodeSample }) {
   }
   return (
     <div className="flex w-fit max-w-full items-center justify-between gap-3 rounded-control border border-rule bg-subtle py-1.5 pr-1.5 pl-4">
-      <code className="min-w-0 overflow-x-auto font-mono text-body-sm whitespace-nowrap text-fg [scrollbar-width:none]">
+      <code className="min-w-0 overflow-x-auto font-mono text-body leading-5.5 whitespace-nowrap text-fg [scrollbar-width:none]">
         <span aria-hidden="true" className="text-fg-faint">
           ${" "}
         </span>
@@ -298,7 +298,7 @@ function CodeLines({ sample }: { sample: ProductCodeSample }) {
     .map((_, index) => index + 1)
     .join("\n");
   return (
-    <div className="flex w-max min-w-full gap-6 pt-6 pr-7 pb-7 pl-5 font-mono text-caption leading-code [tab-size:4] sm:text-body-sm">
+    <div className="flex w-max min-w-full gap-6 pt-6 pr-7 pb-7 pl-5 font-mono text-caption leading-code [tab-size:4] sm:text-body">
       <pre aria-hidden="true" className="shrink-0 text-right text-white/20 select-none">
         {numbers}
       </pre>
@@ -391,7 +391,7 @@ function ProductCodeExplorer({
                     onClick={() => storeLanguage(sample.language)}
                     onKeyDown={selectByOffset}
                     className={cn(
-                      "shrink-0 rounded-sm px-3 py-1 text-caption outline-none transition-[background-color,color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset motion-reduce:transition-none sm:text-body-sm",
+                      "shrink-0 rounded-sm px-3 py-1 text-caption leading-5 outline-none transition-[background-color,color] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset motion-reduce:transition-none sm:text-body-sm",
                       selected ? "bg-white/10 font-medium text-white" : "text-white/50 hover:text-white/80",
                     )}
                   >
@@ -401,10 +401,10 @@ function ProductCodeExplorer({
               })}
             </div>
           ) : (
-            <p className="rounded-sm bg-white/10 px-3 py-1 text-caption font-medium text-white sm:text-body-sm">{active.label}</p>
+            <p className="rounded-sm bg-white/10 px-3 py-1 text-caption leading-5 font-medium text-white sm:text-body-sm">{active.label}</p>
           )}
           <div className="flex shrink-0 items-center gap-3">
-            <p className="font-mono text-caption text-white/50 max-sm:hidden sm:text-body-sm">{active.filename}</p>
+            <p className="font-mono text-caption leading-5 text-white/50 max-sm:hidden sm:text-body-sm">{active.filename}</p>
             <button
               type="button"
               onClick={() => copy(active.code)}
@@ -462,8 +462,8 @@ function ProductStepsTimeline({
               <span aria-hidden="true" className="size-2.5 shrink-0 rounded-pill bg-brand" />
               {index < steps.length - 1 && <span aria-hidden="true" className="hidden h-px flex-1 bg-node lg:block" />}
             </div>
-            <h3 className="pt-2 text-h5 leading-snug tracking-tight text-fg">{step.title}</h3>
-            <p className="text-body leading-relaxed text-pretty text-fg-muted">{step.description}</p>
+            <h3 className="pt-2 text-h4 leading-snug tracking-tight text-fg">{step.title}</h3>
+            <p className="text-body-lg leading-relaxed text-pretty text-fg-muted">{step.description}</p>
             {step.snippet && <code className="mt-auto self-start rounded-control border border-rule bg-surface px-3 py-2 font-mono text-caption text-fg">{step.snippet}</code>}
           </li>
         ))}
@@ -515,7 +515,7 @@ function ProductComparison({
                   <span className="sr-only">Compare</span>
                 </th>
                 {columns.map((column, index) => {
-                  const name = <span className={cn("text-body-lg tracking-tight", column.highlighted ? "text-fg-brand" : "text-fg")}>{column.name}</span>;
+                  const name = <span className={cn("text-h5 leading-snug tracking-normal", column.highlighted ? "text-fg-brand" : "text-fg")}>{column.name}</span>;
                   return (
                     <th key={index} scope="col" className={cn("px-5 pb-6 align-top font-normal lg:px-7", column.highlighted ? cn(tint, "border-t-2 border-brand pt-5.5") : "pt-6")}>
                       <span className="flex flex-col gap-1.5">
@@ -549,7 +549,7 @@ function ProductComparison({
             </tbody>
           </table>
         </div>
-        {note && <p className="text-body-sm leading-relaxed text-fg-faint [&_a]:rounded-sm [&_a]:text-fg-muted [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-fg-brand">{note}</p>}
+        {note && <p className="text-body leading-relaxed text-fg-faint [&_a]:rounded-sm [&_a]:text-fg-muted [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-fg-brand">{note}</p>}
       </div>
     </ProductPageSection>
   );
@@ -635,19 +635,19 @@ function ProductPageFaq({
     <ProductPageSection aria-labelledby={titleId} className={cn("pt-24 lg:pt-42", className)} containerClassName="grid gap-10 lg:grid-cols-[25rem_minmax(0,1fr)] lg:gap-18">
       <div className="flex flex-col items-start gap-5">
         <ProductSplitHeading id={titleId} title={title} />
-        {description && <p className="text-body leading-relaxed text-fg-muted [&_a]:rounded-sm [&_a]:text-fg-brand [&_a:hover]:underline">{description}</p>}
+        {description && <p className="text-body-lg leading-relaxed text-fg-muted [&_a]:rounded-sm [&_a]:text-fg-brand [&_a:hover]:underline">{description}</p>}
       </div>
       <div className="min-w-0 border-t border-rule">
         {faqs.map((faq, index) => (
           <details key={index} name={`${id}-questions`} open={index === 0} className="group border-b border-rule">
-            <summary className="flex cursor-pointer list-none items-start justify-between gap-6 rounded-sm py-6.5 text-body-lg font-medium tracking-tight text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-start justify-between gap-6 rounded-sm py-6.5 text-h5 font-medium tracking-normal text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
               {faq.question}
               <span aria-hidden="true" className="flex size-7 shrink-0 items-center justify-center">
                 <Plus className="size-3.5 text-fg-faint group-open:hidden" />
                 <Minus className="size-3.5 text-fg-brand group-not-open:hidden" />
               </span>
             </summary>
-            <div className="-mt-3.5 max-w-150 pb-7 text-body leading-relaxed text-pretty text-fg-muted">{faq.answer}</div>
+            <div className="-mt-3.5 max-w-150 pb-7 text-body-lg leading-relaxed text-pretty text-fg-muted">{faq.answer}</div>
           </details>
         ))}
       </div>
@@ -672,7 +672,7 @@ function ProductRelatedCards({ products, className }: { products: { name: React.
                 <ArrowRight aria-hidden="true" className="size-4 text-fg-brand transition-transform duration-200 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none" />
               </span>
             </span>
-            <span className="text-body leading-relaxed text-fg-muted">{product.description}</span>
+            <span className="text-body-lg leading-relaxed text-fg-muted">{product.description}</span>
           </a>
         ))}
       </nav>
@@ -700,7 +700,7 @@ function ProductCtaPanel({
     <ProductPageSection aria-labelledby={titleId} className={cn("py-24 lg:py-42", className)}>
       <ProductStage backdrop={backdrop} className="flex flex-col items-center gap-8 px-6 py-16 text-center sm:px-16 sm:pt-24 sm:pb-25">
         <div className="flex flex-col items-center gap-4">
-          <h2 id={titleId} className="text-h2 leading-tight font-normal tracking-tight text-balance text-white sm:text-h1">
+          <h2 id={titleId} className="text-h2 leading-tight font-normal tracking-tight text-balance text-white sm:text-h1 lg:text-hero">
             {title}
           </h2>
           {description && <p className="max-w-160 text-body-lg leading-relaxed text-pretty text-white/85 sm:text-h5">{description}</p>}

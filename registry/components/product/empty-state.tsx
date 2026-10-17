@@ -29,7 +29,7 @@ function EmptyState({
   return (
     <div data-slot="empty-state" className={cn("flex flex-col items-center px-8 text-center", fill ? "my-auto flex-1 justify-center py-16" : "pt-8 pb-10", className)}>
       {glyph}
-      <Heading className={cn("text-h4 leading-snug font-[450] text-fg", glyph && "mt-6")}>{title}</Heading>
+      <Heading className={cn("text-h4 leading-snug font-[450] tracking-normal text-fg", glyph && "mt-6")}>{title}</Heading>
       {description && <p className="mt-1 max-w-120 text-body-sm text-balance text-fg-muted">{description}</p>}
       {actions && <div className="mt-5 flex flex-wrap items-center justify-center gap-2">{actions}</div>}
       {footer && <div className="mt-6">{footer}</div>}

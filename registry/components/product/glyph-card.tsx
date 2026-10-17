@@ -56,7 +56,7 @@ function GlyphCard({ glyph, title, aside, className, children }: { glyph: GlyphP
         <span className="flex size-7 shrink-0 items-center justify-center rounded-sm border border-line">
           <StillGlyph name={glyph} dense className="size-4 text-brand" />
         </span>
-        <h3 className="flex-1 text-body-sm font-normal">{title}</h3>
+        <h3 className="flex-1 text-body-sm font-normal tracking-normal">{title}</h3>
         {aside}
       </div>
       {children}
@@ -116,7 +116,7 @@ function CenteredCard({ label, badge, visual, onClick, asChild = false, classNam
 /** A centered card's big number: 26px medium in brand blue, a unit after it, nudged toward its label. */
 function CenteredNumber({ value, suffix }: { value: React.ReactNode; suffix?: React.ReactNode }) {
   return (
-    <span className="flex translate-y-1.5 items-baseline leading-none font-medium tracking-tight tabular-nums">
+    <span className="flex translate-y-1.5 items-baseline text-caption leading-none font-medium tracking-tight tabular-nums">
       <span className="text-[calc(var(--ds-text-h5)+var(--ds-space-2))] text-fg-brand">{value}</span>
       {suffix && <span className="text-body font-normal tracking-normal text-fg-subtle">{suffix}</span>}
     </span>

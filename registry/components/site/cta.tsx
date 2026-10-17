@@ -63,7 +63,7 @@ function ClosingCta({
                   {(figure || figureLabel) && (
                     <p className="flex flex-col items-center text-center text-fg">
                       {figure && <span className="flex w-full max-w-80 justify-center">{figure}</span>}
-                      {figureLabel && <span className="mt-2 text-h5">{figureLabel}</span>}
+                      {figureLabel && <span className="mt-2 text-h5 leading-snug">{figureLabel}</span>}
                     </p>
                   )}
                   {note && <p className="mt-3 text-center text-body-sm leading-relaxed text-fg-muted">{note}</p>}
@@ -86,7 +86,7 @@ function CtaTextLink({ asChild = false, className, children, ...props }: React.C
     <Comp
       data-slot="cta-text-link"
       className={cn(
-        "inline-flex min-h-11 items-center justify-center gap-2 rounded-card text-body-sm font-medium text-fg/70 underline-offset-4 transition-colors duration-150 ease-out outline-none hover:text-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none [&_svg]:size-4",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-card text-body-sm leading-5 font-medium text-fg/70 underline-offset-4 transition-colors duration-150 ease-out outline-none hover:text-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none [&_svg]:size-4",
         className,
       )}
       {...props}

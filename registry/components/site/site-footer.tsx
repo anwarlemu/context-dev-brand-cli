@@ -79,7 +79,7 @@ function FooterCopyButton({
         }
       }}
       className={cn(
-        "pointer-events-auto inline-flex items-center justify-center gap-2 rounded-pill border border-brand bg-dark px-4 py-2 text-body-sm font-medium whitespace-nowrap text-white transition-[background-color,scale] duration-150 ease-out hover:bg-navy-30 active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100",
+        "pointer-events-auto inline-flex items-center justify-center gap-2 rounded-pill border border-brand bg-dark px-4 py-2 text-body-sm leading-5 font-medium whitespace-nowrap text-white transition-[background-color,scale] duration-150 ease-out hover:bg-navy-30 active:scale-95 motion-reduce:transition-none motion-reduce:active:scale-100",
         "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring",
         className,
       )}
@@ -214,12 +214,12 @@ function SiteFooter({
               <span aria-hidden="true" className={cn(NODE, "-top-px right-0 translate-x-1/2 -translate-y-1/2")} />
               <span aria-hidden="true" className={cn(NODE, "-bottom-px left-0 -translate-x-1/2 translate-y-1/2")} />
               <span aria-hidden="true" className={cn(NODE, "-bottom-px right-0 translate-x-1/2 translate-y-1/2")} />
-              <span className="text-body-sm font-medium tracking-tight text-white/60">{copyright}</span>
-              <span className="flex items-center justify-center gap-1 text-body-sm font-medium tracking-tight text-white/60 md:justify-self-center">{note}</span>
+              <span className="text-body-sm leading-5 font-medium tracking-tight text-white/60">{copyright}</span>
+              <span className="flex items-center justify-center gap-1 text-body-sm leading-5 font-medium tracking-tight text-white/60 md:justify-self-center">{note}</span>
               {legal.length > 0 && (
                 <nav aria-label="Legal" className="flex items-center gap-4 md:justify-self-end">
                   {legal.map((link) => (
-                    <a key={link.href} href={link.href} {...external(link)} className={cn("py-0.5 text-body-sm font-medium text-white/60", INLINE_LINK)}>
+                    <a key={link.href} href={link.href} {...external(link)} className={cn("py-0.5 text-body-sm leading-5 font-medium text-white/60", INLINE_LINK)}>
                       {link.label}
                     </a>
                   ))}

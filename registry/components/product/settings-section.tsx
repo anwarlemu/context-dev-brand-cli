@@ -12,7 +12,7 @@ function SettingsSection({ title, aside, className, children }: { title: React.R
   return (
     <section data-slot="settings-section" className={cn("flex flex-col gap-2", className)}>
       <div className="flex items-baseline justify-between gap-4 px-1">
-        <h3 className="text-body-sm font-normal text-fg-subtle">{title}</h3>
+        <h3 className="text-body-sm font-normal tracking-normal text-fg-subtle">{title}</h3>
         {aside}
       </div>
       <div className="divide-y divide-line-subtle rounded-card bg-surface px-5 shadow-card">{children}</div>

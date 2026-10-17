@@ -261,13 +261,13 @@ function CustomerStoryCard({ company, logo, description, date, dateTime, href, c
       <article className="relative flex h-full flex-col overflow-hidden rounded-card bg-brand sm:h-125">
         <div className="relative flex h-60 shrink-0 items-center justify-center text-white sm:h-49 [&_img]:pointer-events-none">{logo ?? <Check aria-hidden="true" className="size-16" />}</div>
         <div className="flex flex-1 flex-col p-6 sm:p-8">
-          <time className="mb-1.5 block text-body-sm text-white" dateTime={dateTime}>
+          <time className="mb-1.5 block text-body-sm leading-snug text-white" dateTime={dateTime}>
             {date}
           </time>
-          <h3 className="mb-3 text-h4 font-normal text-white">{company}</h3>
-          <p className="mb-6 line-clamp-3 text-body-lg text-white sm:mb-8 sm:line-clamp-4">{description}</p>
+          <h3 className="mb-3 text-h4 leading-snug font-normal tracking-normal text-white">{company}</h3>
+          <p className="mb-6 line-clamp-3 text-body-lg leading-snug text-white sm:mb-8 sm:line-clamp-4">{description}</p>
           {/* The site's outline pill on blue; it answers the card's hover, since the whole card is the link. */}
-          <span className="mt-auto inline-flex w-fit items-center justify-center rounded-pill border border-white px-5 py-3 text-body whitespace-nowrap text-white transition-[background-color] duration-200 ease-out group-hover:bg-white/12 motion-reduce:transition-none">
+          <span className="mt-auto inline-flex w-fit items-center justify-center rounded-pill border border-white px-5 py-3 text-body leading-snug whitespace-nowrap text-white transition-[background-color] duration-200 ease-out group-hover:bg-white/12 motion-reduce:transition-none">
             {ctaLabel}
           </span>
         </div>

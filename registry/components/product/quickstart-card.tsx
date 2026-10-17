@@ -32,7 +32,7 @@ function QuickstartStep({ number, title, aside, children }: { number: number; ti
     <section data-slot="quickstart-step" className="flex flex-col gap-2">
       <div className="flex min-h-7 items-center gap-2">
         <span className="grid size-5 shrink-0 place-items-center rounded-sm border border-line text-axis text-fg-muted tabular-nums">{number}</span>
-        <h4 className="flex-1 text-body-sm font-normal">{title}</h4>
+        <h4 className="flex-1 text-body-sm font-normal tracking-normal">{title}</h4>
         {aside}
       </div>
       {children}

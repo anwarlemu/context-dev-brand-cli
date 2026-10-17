@@ -154,7 +154,7 @@ export function PlaygroundRunButton({ creditLabel, className, children, ...props
 export function PlaygroundReadyState({ action, examples = [], onExample, onRun, runDisabled, creditLabel, note }: { action: string; examples?: string[]; onExample?: (example: string) => void; onRun?: () => void; runDisabled?: boolean; creditLabel?: string; note?: React.ReactNode }) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
-      <h3 className="text-h5 font-normal text-fg">Ready to {action.toLowerCase()}</h3>
+      <h3 className="text-h5 leading-snug font-normal tracking-normal text-fg">Ready to {action.toLowerCase()}</h3>
       <p className="max-w-sm text-body-sm text-balance text-fg-muted">Hit {action} and what comes back shows up here, as a preview and in full as JSON.</p>
       {examples.length > 0 && (
         <p className="max-w-md text-caption text-balance text-fg-subtle">

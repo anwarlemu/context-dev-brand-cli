@@ -142,9 +142,9 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
                   {active && !reduced && items.length > 1 && <CycleDonut restartKey={`${i}-${pick}`} running={running} />}
                   <span className="flex items-center gap-3">
                     {item.icon && <span className="grid size-7 shrink-0 place-items-center rounded-control bg-brand p-1.5 text-white [&_svg]:size-4">{item.icon}</span>}
-                    <span className="text-body font-normal whitespace-nowrap text-fg">{item.title}</span>
+                    <span className="text-body leading-snug font-normal whitespace-nowrap text-fg">{item.title}</span>
                   </span>
-                  <span className={cn("text-body-sm whitespace-normal text-fg-muted", item.icon && "pl-10")}>{item.description}</span>
+                  <span className={cn("text-body-sm leading-snug whitespace-normal text-fg-muted", item.icon && "pl-10")}>{item.description}</span>
                 </TabsTrigger>
               );
             })}

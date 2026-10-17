@@ -450,7 +450,7 @@ function BenchmarkPanel({ providers, data, link, cycleMs = 6000, className }: { 
                 key={t.id}
                 value={t.id}
                 className={cn(
-                  "group/tab relative h-auto shrink-0 gap-2 overflow-hidden rounded-none rounded-t-card border border-b-0 border-transparent px-2.5 py-2.5 font-mono text-axis text-fg-subtle transition-[color] duration-150 ease-out hover:text-fg-brand focus-visible:outline-offset-[calc(var(--ds-space-0-5)*-1)] data-[state=active]:bg-transparent data-[state=active]:text-fg data-[state=active]:hover:text-fg sm:px-4 sm:text-caption",
+                  "group/tab relative h-auto shrink-0 gap-2 overflow-hidden rounded-none rounded-t-card border border-b-0 border-transparent px-2.5 py-2.5 font-mono text-axis leading-snug text-fg-subtle transition-[color] duration-150 ease-out hover:text-fg-brand focus-visible:outline-offset-[calc(var(--ds-space-0-5)*-1)] data-[state=active]:bg-transparent data-[state=active]:text-fg data-[state=active]:hover:text-fg sm:px-4 sm:text-caption",
                   // Inactive tabs answer a hover with a soft blue wash inside the tab.
                   "before:absolute before:inset-1 before:-z-10 before:rounded-control before:bg-brand/10 before:opacity-0 before:transition-opacity before:duration-150 before:ease-out hover:before:opacity-100 data-[state=active]:before:hidden motion-reduce:before:transition-none",
                 )}

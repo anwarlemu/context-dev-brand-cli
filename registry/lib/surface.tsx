@@ -5,13 +5,15 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 
 // A product area on a site page (or a site area in a product): its class sets the scale, and dialogs, menus and
-// tooltips opened inside it render inside it too, so they keep that scale instead of the page's.
+// tooltips opened inside it render inside it too, so they keep that scale instead of the page's. A product area also
+// takes the product's snug line height (as product.css gives the body), so text inside it does not inherit a site
+// page's looser leading.
 const PortalContainer = React.createContext<HTMLElement | null>(null);
 
 export function Surface({ kind, className, children, ...props }: React.ComponentProps<"div"> & { kind: "site" | "product" }) {
   const [element, setElement] = React.useState<HTMLDivElement | null>(null);
   return (
-    <div ref={setElement} data-surface={kind} className={cn(kind === "product" && "ds-product", className)} {...props}>
+    <div ref={setElement} data-surface={kind} className={cn(kind === "product" && "ds-product leading-snug", className)} {...props}>
       <PortalContainer.Provider value={element}>{children}</PortalContainer.Provider>
     </div>
   );

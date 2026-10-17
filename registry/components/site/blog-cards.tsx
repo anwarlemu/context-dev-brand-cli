@@ -68,18 +68,18 @@ function BlogCard({ post, surface = "paper", className }: { post: BlogPost; surf
         <div className="relative flex flex-col p-8 pt-6">
           <div className="flex items-center gap-2">
             {post.tag && (
-              <Badge variant="chip" className={cn("px-2.5 py-0.5 text-caption", text.tag)}>
+              <Badge variant="chip" className={cn("px-2.5 py-0.5 text-caption leading-snug", text.tag)}>
                 {post.tag}
               </Badge>
             )}
-            <time className={cn("text-body-sm", text.date)} dateTime={post.dateTime}>
+            <time className={cn("text-body-sm leading-snug", text.date)} dateTime={post.dateTime}>
               {post.date}
             </time>
           </div>
-          <h3 className={cn("mt-2 line-clamp-2 text-h4 leading-snug font-normal", text.title)} title={post.title}>
+          <h3 className={cn("mt-2 line-clamp-2 text-h4 leading-snug font-normal tracking-normal", text.title)} title={post.title}>
             {post.title}
           </h3>
-          {post.excerpt && <p className={cn("mt-3 line-clamp-2 text-body", text.excerpt)}>{post.excerpt}</p>}
+          {post.excerpt && <p className={cn("mt-3 line-clamp-2 text-body leading-snug", text.excerpt)}>{post.excerpt}</p>}
         </div>
       </article>
     </a>

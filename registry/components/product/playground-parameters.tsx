@@ -164,7 +164,7 @@ function PlaygroundParameters({
   return (
     <aside data-slot="playground-parameters" aria-label={title} className={cn("flex w-80 flex-col overflow-hidden rounded-card bg-surface shadow-card", className)}>
       <div className="mt-2 flex h-8 shrink-0 items-center gap-1.5 pr-2.5 pl-7">
-        <h2 className="text-body text-fg">{title}</h2>
+        <h2 className="text-body font-normal tracking-normal text-fg">{title}</h2>
         {modifiedCount > 0 && (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -206,7 +206,7 @@ function PlaygroundParameters({
 function ParameterGroup({ title, count, className, children }: { title: React.ReactNode; count?: React.ReactNode; className?: string; children: React.ReactNode }) {
   return (
     <section data-slot="parameter-group" className="flex w-full min-w-0 flex-col">
-      <h3 className="mb-2 flex flex-wrap items-baseline gap-2 px-3 text-caption font-medium text-fg-muted">
+      <h3 className="mb-2 flex flex-wrap items-baseline gap-2 px-3 text-caption font-medium tracking-normal text-fg-muted">
         {title}
         {count !== undefined && <span className="font-normal text-fg-subtle tabular-nums">{count}</span>}
       </h3>

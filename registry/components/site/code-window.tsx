@@ -161,7 +161,7 @@ function CodeTabs({
                 tabIndex={selected ? 0 : -1}
                 onClick={() => select(sample.language)}
                 className={cn(
-                  "shrink-0 rounded-pill px-3 py-1.5 text-body-sm outline-none transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white motion-reduce:transition-none",
+                  "shrink-0 rounded-pill px-3 py-1.5 text-body-sm leading-snug outline-none transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white motion-reduce:transition-none",
                   selected ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
                 )}
               >
@@ -201,7 +201,7 @@ function InstallCommand({ command, label = "install command", className }: { com
   }
   return (
     <div data-slot="install-command" className={cn("flex w-fit max-w-full items-center gap-2 rounded-pill py-1 pr-1 pl-4 ring-1 ring-black/10 ring-inset", className)}>
-      <code className="min-w-0 overflow-x-auto font-mono text-body-sm whitespace-nowrap text-fg/70 [scrollbar-width:none]">
+      <code className="min-w-0 overflow-x-auto font-mono text-body-sm leading-5 whitespace-nowrap text-fg/70 [scrollbar-width:none]">
         <span aria-hidden="true" className="text-fg/35">
           ${" "}
         </span>

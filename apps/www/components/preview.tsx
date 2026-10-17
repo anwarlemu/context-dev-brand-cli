@@ -4,7 +4,8 @@ import { Surface } from "@/lib/surface";
 import { cn } from "@/lib/utils";
 
 // Each example sits in the site's soft blue ring. Product examples render inside a product Surface (compact type,
-// product radius and shadows, overlays kept inside it) on the canvas; site examples on the white page.
+// product radius and shadows, overlays kept inside it) on the canvas; site examples on the white page, at the 1.5 line
+// height a site page's body has (these docs set a looser one for their own prose).
 export function Preview({ example: Example, surface, label, block = false }: { example: ComponentType; surface: "site" | "product"; label: string; block?: boolean }) {
   return (
     <figure className="min-w-0 rounded-card bg-ring-tint p-2">
@@ -17,7 +18,7 @@ export function Preview({ example: Example, surface, label, block = false }: { e
         className={cn(
           "relative overflow-hidden rounded-card shadow-[0_0_0_1px_var(--ds-color-border-hairline)]",
           block ? "h-180" : "flex min-h-56 items-center justify-center p-6 sm:p-10",
-          surface === "product" ? "bg-canvas" : "bg-surface",
+          surface === "product" ? "bg-canvas" : "bg-surface leading-normal",
         )}
       >
         <div className={cn(block ? "h-full w-full" : "w-full max-w-full")}>

@@ -35,7 +35,7 @@ function TableCard({ label, minWidth, children }: { label: string; minWidth: str
   return (
     <div className="-m-2 rounded-card bg-ring-tint p-2">
       <div tabIndex={0} role="region" aria-label={label} className="overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2">
-        <table className={cn("w-full border-collapse text-left", minWidth)}>{children}</table>
+        <table className={cn("w-full border-collapse text-left leading-snug", minWidth)}>{children}</table>
       </div>
     </div>
   );
@@ -52,7 +52,7 @@ export type QuickCompareRow = { feature: string; ours: ComparisonSupport; theirs
 function AlternativeQuickCompare({ ours, competitor, rows, rowsOnPhones = 3, className }: { ours: string; competitor: string; rows: QuickCompareRow[]; rowsOnPhones?: number; className?: string }) {
   return (
     <div data-slot="alternative-quick-compare" className={cn("w-full overflow-hidden rounded-card bg-surface text-left", className)}>
-      <table className="w-full border-collapse">
+      <table className="w-full border-collapse leading-snug">
         <thead>
           <tr className="text-caption sm:text-body-sm">
             <th scope="col" className="px-4 py-3 font-normal text-fg-muted sm:px-6">
@@ -91,9 +91,9 @@ export type AlternativeReason = { title: React.ReactNode; body: React.ReactNode;
 function ReasonCard({ reason, featured = false }: { reason: AlternativeReason; featured?: boolean }) {
   return (
     <div className="flex h-full min-w-0 flex-col gap-4 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8">
-      <span className="w-fit rounded-pill bg-ring-tint px-3 py-1 text-body-sm text-fg-brand">{reason.tag}</span>
-      <h3 className={cn("font-normal text-fg", featured ? "max-w-3xl text-h3" : "text-h4")}>{reason.title}</h3>
-      <p className={cn("text-fg-secondary", featured ? "max-w-3xl text-body-lg" : "text-body")}>{reason.body}</p>
+      <span className="w-fit rounded-pill bg-ring-tint px-3 py-1 text-body-sm leading-snug text-fg-brand">{reason.tag}</span>
+      <h3 className={cn("font-normal tracking-normal text-fg", featured ? "max-w-3xl text-h3 leading-heading" : "text-h4 leading-snug")}>{reason.title}</h3>
+      <p className={cn("text-fg-secondary", featured ? "max-w-3xl text-body-lg leading-snug" : "text-body leading-snug")}>{reason.body}</p>
     </div>
   );
 }
@@ -267,7 +267,7 @@ function AlternativePricingTable({
         </tbody>
       </TableCard>
       {footnotes && footnotes.length > 0 && (
-        <ol className="mt-8 flex max-w-3xl list-decimal flex-col gap-2 pl-5 text-body-sm text-fg-muted [&_strong]:font-medium [&_strong]:text-fg-nav">
+        <ol className="mt-8 flex max-w-3xl list-decimal flex-col gap-2 pl-5 text-body-sm leading-snug text-fg-muted [&_strong]:font-medium [&_strong]:text-fg-nav">
           {footnotes.map((note, index) => (
             <li key={index} className={note.strong ? "font-medium text-fg-nav" : undefined}>
               {note.content}
@@ -307,7 +307,7 @@ function AlternativeFitGuide({
   return (
     <SiteSection lines className={cn("pt-16 pb-16 md:pt-24 md:pb-24", className)} {...props}>
       <div className="mb-12 flex flex-col items-center gap-5 text-center">
-        <h2 className="text-h2 leading-tight font-normal tracking-tight text-fg md:text-h1">{title}</h2>
+        <h2 className="text-h2 leading-none font-normal tracking-tight text-fg md:text-h1">{title}</h2>
         {description && <p className="max-w-xl text-body-lg leading-relaxed text-fg-subtle [&_a]:text-fg-brand [&_a]:underline [&_a]:underline-offset-4">{description}</p>}
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
@@ -324,12 +324,12 @@ function AlternativeFitGuide({
       </div>
       {stories.length > 0 && (
         <>
-          {storiesTitle && <h3 className="mt-16 mb-6 text-center text-h4 font-normal tracking-tight text-fg md:text-h3">{storiesTitle}</h3>}
+          {storiesTitle && <h3 className="mt-16 mb-6 text-center text-h4 leading-snug font-normal tracking-tight text-fg md:text-h3">{storiesTitle}</h3>}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
             {stories.map((story, index) => (
               <figure key={index} className={cn(FIT_CARD, "flex flex-col justify-between gap-5")}>
                 <blockquote className="text-body leading-relaxed text-fg-nav">“{story.quote}”</blockquote>
-                <figcaption className="flex flex-col gap-2 text-body-sm">
+                <figcaption className="flex flex-col gap-2 text-body-sm leading-5">
                   <span className="font-medium text-fg">{story.person}</span>
                   {story.href && story.linkLabel && (
                     <a href={story.href} className="w-fit rounded-sm font-medium text-fg-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring">

@@ -32,8 +32,8 @@ function WorkflowCard({ title, description, media, mediaVariant, className }: Wo
     <div data-slot="workflow-card" className={cn("rounded-card bg-ring-tint p-2", className)}>
       <div className="flex h-full min-w-0 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8 xl:p-6">
         <div className="flex flex-col gap-3">
-          <h3 className="text-h4 leading-snug font-normal text-fg">{title}</h3>
-          <p className="text-body leading-relaxed text-fg-secondary">{description}</p>
+          <h3 className="text-h4 leading-snug font-normal tracking-normal text-fg">{title}</h3>
+          <p className="text-body leading-normal text-fg-secondary">{description}</p>
         </div>
         {media !== undefined && <WorkflowMedia variant={mediaVariant} className="mt-auto">
             {media}

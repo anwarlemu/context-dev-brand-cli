@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 // Inert, so nothing in it takes focus or the pointer.
 export function Thumb({ example: Example, surface, scale = 0.6, align = "center", className }: { example: ComponentType; surface: "site" | "product"; scale?: number; align?: "center" | "start"; className?: string }) {
   return (
-    <Surface kind={surface} className={cn("relative h-52 overflow-hidden rounded-card shadow-[0_0_0_1px_var(--ds-color-border-hairline)]", surface === "product" ? "bg-canvas" : "bg-surface", className)}>
+    <Surface kind={surface} className={cn("relative h-52 overflow-hidden rounded-card shadow-[0_0_0_1px_var(--ds-color-border-hairline)]", surface === "product" ? "bg-canvas" : "bg-surface leading-normal", className)}>
       <div
         inert
         aria-hidden

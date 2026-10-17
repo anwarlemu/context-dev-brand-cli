@@ -82,7 +82,7 @@ function HeroPill({ variant = "plain", href, icon, className, children }: { vari
       href={href}
       data-slot="hero-pill"
       className={cn(
-        "inline-flex max-w-full shrink-0 items-center justify-center gap-1.5 text-center text-body-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring [&_img]:size-4.5 [&_img]:rounded-sm [&_svg]:size-4",
+        "inline-flex max-w-full shrink-0 items-center justify-center gap-1.5 text-center text-body-sm leading-snug outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring [&_img]:size-4.5 [&_img]:rounded-sm [&_svg]:size-4",
         variant === "plain" && surface.muted,
         variant === "plain" && href && "min-h-11 gap-2 underline-offset-4 hover:underline",
         variant === "outline" && cn("gap-2 rounded-pill border border-current px-4 py-2", surface.title),
@@ -101,7 +101,7 @@ function HeroAction({ note, className, children }: { note?: React.ReactNode; cla
   return (
     <div data-slot="hero-action" className={cn("flex flex-col items-center gap-2", className)}>
       {children}
-      {note && <span className={cn("text-center text-caption", surface.muted)}>{note}</span>}
+      {note && <span className={cn("text-center text-caption leading-snug", surface.muted)}>{note}</span>}
     </div>
   );
 }
@@ -208,7 +208,7 @@ function Hero({
                 </div>
                 {description && (
                   <div {...step(2)} className={cn("w-full", step(2).className)}>
-                    <p className={cn("text-balance", tone.muted, large ? "text-h5" : "text-body-lg")}>{description}</p>
+                    <p className={cn("text-balance", tone.muted, large ? "text-h5 leading-snug" : "text-body-lg leading-snug")}>{description}</p>
                   </div>
                 )}
               </div>

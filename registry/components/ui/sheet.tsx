@@ -62,7 +62,7 @@ function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {
-  return <SheetPrimitive.Title data-slot="sheet-title" className={cn("truncate text-h5 font-normal text-fg", className)} {...props} />;
+  return <SheetPrimitive.Title data-slot="sheet-title" className={cn("truncate text-h5 leading-snug font-normal tracking-normal text-fg", className)} {...props} />;
 }
 
 function SheetDescription({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Description>) {

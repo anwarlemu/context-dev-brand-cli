@@ -24,7 +24,7 @@ function ProductHeading({ title, size = "section", className, ...props }: Omit<R
 }
 
 const ACTION =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-body font-medium shadow-key outline-none transition-[background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:size-4 [&_svg]:shrink-0";
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-body leading-5.5 font-medium shadow-key outline-none transition-[background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:size-4 [&_svg]:shrink-0";
 
 const ACTION_TONES = {
   /** Black, for the hero. */
@@ -93,7 +93,7 @@ function ProductHero({
             {title[0]} <br />
             <span className="text-fg-brand">{title[1]}</span>
           </h1>
-          {description && <p className="max-w-170 text-body leading-relaxed text-pretty text-fg-nav sm:text-body-lg">{description}</p>}
+          {description && <p className="max-w-170 text-body leading-normal text-pretty text-fg-nav sm:text-body-lg">{description}</p>}
           {actions && <div className="flex flex-wrap items-center justify-center gap-3 pt-0.5">{actions}</div>}
         </div>
         {children}
@@ -145,12 +145,12 @@ function ProductSteps({
           {steps.map((step, index) => (
             <li key={index} className="flex flex-col gap-3">
               {numbered && (
-                <span aria-hidden="true" className="font-mono text-body-sm text-fg-brand">
+                <span aria-hidden="true" className="font-mono text-body-sm leading-5 text-fg-brand">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               )}
-              <h3 className="text-h5 leading-relaxed font-normal text-fg">{step.title}</h3>
-              <p className="text-body leading-relaxed text-fg-subtle">{step.description}</p>
+              <h3 className="text-h4 leading-normal font-normal tracking-normal text-fg">{step.title}</h3>
+              <p className="text-body-lg leading-normal text-fg-subtle">{step.description}</p>
             </li>
           ))}
         </ol>
@@ -227,7 +227,7 @@ function ProductCallToAction({
         <h2 id={titleId} className="text-h3 leading-tight font-normal tracking-tight text-balance sm:text-h2">
           {title}
         </h2>
-        {description && <p className="max-w-160 text-body leading-relaxed text-pretty text-white/85 sm:text-body-lg">{description}</p>}
+        {description && <p className="max-w-160 text-body leading-7 text-pretty text-white/85 sm:text-body-lg">{description}</p>}
         {actions && <div className="flex flex-wrap justify-center gap-3 pt-1.5">{actions}</div>}
       </ProductContainer>
     </section>

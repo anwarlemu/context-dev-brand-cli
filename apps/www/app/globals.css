@@ -6,6 +6,14 @@
 
 /* In the base layer, so the library's utilities (text-white on a dark band's heading) win over these defaults. */
 @layer base {
+  /* The brand site renders its rem scale at 90% from 43.2rem up; the docs are a brand site, so examples show at the
+     size they have on the real pages. */
+  @media (min-width: 43.2rem) {
+    html {
+      font-size: 90%;
+    }
+  }
+
   html {
     color-scheme: light;
     scrollbar-gutter: stable;

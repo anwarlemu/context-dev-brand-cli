@@ -367,7 +367,7 @@ function FaqPlainList({ items, idPrefix = "faq", className }: { items: FaqItem[]
         {items.map((item, i) => (
           <AccordionItem key={values[i]} value={values[i]} className="group border-t border-b-0 border-hairline py-5 first:border-t-0 md:py-6">
             <AccordionPrimitive.Header className="flex">
-              <AccordionPrimitive.Trigger className="flex flex-1 cursor-pointer items-center justify-between gap-5 rounded-sm text-left text-body-lg text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
+              <AccordionPrimitive.Trigger className="flex flex-1 cursor-pointer items-center justify-between gap-5 rounded-sm text-left text-body-lg leading-snug tracking-normal text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
                 {item.question}
                 <Plus aria-hidden="true" className="size-4 shrink-0 text-fg-brand group-data-[state=open]:hidden" />
                 <Minus aria-hidden="true" className="size-4 shrink-0 text-fg-brand group-data-[state=closed]:hidden" />
@@ -392,7 +392,7 @@ function FaqHeader({ title, description, action, className }: { title: React.Rea
     <div data-slot="faq-header" className={cn("mb-8 flex flex-col items-center gap-8 text-center lg:items-start lg:text-left", className)}>
       <div className="flex max-w-(--ds-layout-text) flex-col items-center gap-6 lg:items-start">
         <h2 className="text-h2 leading-none tracking-tight text-fg md:text-h1">{title}</h2>
-        {description && <p className="text-body-lg leading-relaxed text-fg-nav">{description}</p>}
+        {description && <p className="text-body-lg leading-6.5 text-fg-nav">{description}</p>}
         {action}
       </div>
     </div>
@@ -453,7 +453,7 @@ function FaqSection({
           <div className="mb-5 overflow-x-auto px-1 pt-1 pb-3 [mask-image:linear-gradient(to_right,var(--ds-color-black)_calc(100%-var(--ds-space-10)),transparent)] sm:[mask-image:none] md:mb-7">
             <TabsList variant="pill" aria-label="FAQ categories" className="mx-auto w-max gap-0.5 sm:gap-2">
               {categories.map((category) => (
-                <TabsTrigger key={category.value} value={category.value} className="px-2.5 py-1.5 text-caption hover:text-fg sm:px-5 sm:py-2.5 sm:text-body">
+                <TabsTrigger key={category.value} value={category.value} className="px-2.5 py-1.5 text-caption leading-snug hover:text-fg sm:px-5 sm:py-2.5 sm:text-body">
                   {category.label}
                 </TabsTrigger>
               ))}

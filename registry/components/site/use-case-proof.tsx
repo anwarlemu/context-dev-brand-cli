@@ -42,7 +42,7 @@ function UseCaseCustomers({ items, className }: { items: readonly UseCaseCustome
                 className={cn("size-7 shrink-0 rounded-pill object-cover ring-1 ring-black/6", customer.background && "p-1")}
                 style={customer.background ? { backgroundColor: customer.background } : undefined}
               />
-              <span className="text-body-sm text-fg">{customer.name}</span>
+              <span className="text-body-sm leading-snug text-fg">{customer.name}</span>
             </>
           )}
         </li>
@@ -63,8 +63,8 @@ function UseCaseProof({ quote, metrics, className }: { quote: UseCaseProofQuote;
           <blockquote className="text-h5 leading-snug tracking-tight text-pretty text-fg md:text-h4">&ldquo;{quote.quote}&rdquo;</blockquote>
           <figcaption className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
             <span className="flex flex-col gap-0.5">
-              <span className="text-body text-fg">{quote.name}</span>
-              <span className="text-body-sm text-fg-subtle">{quote.role}</span>
+              <span className="text-body leading-snug text-fg">{quote.name}</span>
+              <span className="text-body-sm leading-snug text-fg-subtle">{quote.role}</span>
             </span>
             {quote.story && (
               <a href={quote.story.href} className={cn(buttonVariants({ variant: "pill-outline" }), "gap-2 py-2.5")}>
@@ -79,7 +79,7 @@ function UseCaseProof({ quote, metrics, className }: { quote: UseCaseProofQuote;
         {metrics.map((metric) => (
           <div key={metric.value} className={RING}>
             <div className={cn(CARD, "flex-col-reverse justify-end gap-2")}>
-              <dt className="text-body text-fg-secondary">{metric.label}</dt>
+              <dt className="text-body leading-snug text-fg-secondary">{metric.label}</dt>
               <dd className="text-h2 leading-none tracking-tight text-fg-brand">{metric.value}</dd>
             </div>
           </div>
@@ -98,9 +98,9 @@ function UseCaseExampleCards({ items, className }: { items: readonly UseCaseExam
       {items.map((item) => (
         <li key={item.title} className={RING}>
           <div className={CARD}>
-            <h3 className="text-h4 font-normal text-fg">{item.title}</h3>
-            <p className="text-body text-fg-secondary">{item.description}</p>
-            <a href={item.href} className={cn("group mt-auto inline-flex w-fit items-center gap-2 rounded-sm pt-2 text-body text-fg-brand", FOCUS)}>
+            <h3 className="text-h4 leading-snug font-normal tracking-normal text-fg">{item.title}</h3>
+            <p className="text-body leading-snug text-fg-secondary">{item.description}</p>
+            <a href={item.href} className={cn("group mt-auto inline-flex w-fit items-center gap-2 rounded-sm pt-2 text-body leading-snug text-fg-brand", FOCUS)}>
               {item.credit}
               <ArrowRight aria-hidden="true" className={ARROW_NUDGE} />
             </a>
@@ -121,13 +121,13 @@ function UseCaseStoryCards({ items, className }: { items: readonly UseCaseStory[
         <li key={story.href} className={RING}>
           <a href={story.href} className={cn(CARD, "group relative justify-between gap-10 transition-[background-color] duration-200 ease-out hover:bg-tint/40 motion-reduce:transition-none", FOCUS)}>
             <span className="flex flex-col gap-3 pr-8">
-              <span className="text-body-sm text-fg-subtle">{story.customer}</span>
-              <span className="text-h5 text-pretty text-fg">{story.title}</span>
+              <span className="text-body-sm leading-snug text-fg-subtle">{story.customer}</span>
+              <span className="text-h5 leading-snug text-pretty text-fg">{story.title}</span>
             </span>
             <ArrowUpRight aria-hidden="true" className="absolute top-6 right-6 size-5 text-black/35 transition-[color] duration-200 ease-out group-hover:text-fg-brand motion-reduce:transition-none md:top-8 md:right-8" />
             <span className="flex flex-col gap-1">
               <span className="text-h3 leading-none tracking-tight text-fg-brand">{story.metric}</span>
-              <span className="text-body-sm text-fg-secondary">{story.metricLabel}</span>
+              <span className="text-body-sm leading-snug text-fg-secondary">{story.metricLabel}</span>
             </span>
           </a>
         </li>

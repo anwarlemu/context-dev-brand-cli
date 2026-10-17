@@ -68,7 +68,7 @@ function TestimonialCard({ testimonial, active = false, className, ...props }: R
           </span>
         )}
         <span className="min-w-0">
-          <span className="block truncate text-body-sm font-medium text-fg">{name}</span>
+          <span className="block truncate text-body-sm leading-5 font-medium text-fg">{name}</span>
           <span className="block truncate text-body-sm text-fg-subtle" title={role}>
             {role}
           </span>

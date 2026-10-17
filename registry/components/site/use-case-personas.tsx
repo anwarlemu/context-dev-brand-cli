@@ -50,8 +50,8 @@ function PersonaStoryWindow({ story, descriptions, phase = "impact" }: { story: 
                 {/* The glass rule that frames the brand's white cards, as on the blog's quotes. */}
                 <span aria-hidden="true" className="w-2 shrink-0 rounded-card bg-brand/10 ring-1 ring-brand/12 ring-inset" />
                 <div className="flex flex-col gap-1.5">
-                  <p className={cn("text-body-sm font-medium", key === "impact" ? "text-fg-brand" : "text-fg")}>{label}</p>
-                  <p className={cn("text-body", key === "impact" ? "text-fg" : "text-fg-secondary")}>{descriptions[key]}</p>
+                  <p className={cn("text-body-sm leading-snug font-medium", key === "impact" ? "text-fg-brand" : "text-fg")}>{label}</p>
+                  <p className={cn("text-body leading-snug", key === "impact" ? "text-fg" : "text-fg-secondary")}>{descriptions[key]}</p>
                 </div>
               </div>
             ))}
@@ -73,8 +73,8 @@ function UseCasePersonas({ items, className }: { items: readonly UseCasePersona[
             <div className="flex items-center gap-4">
               {persona.glyph ?? (persona.icon && <UseCaseIconChip>{persona.icon}</UseCaseIconChip>)}
               <div className="min-w-0">
-                <h3 className="text-h5 font-normal text-fg">{persona.type}</h3>
-                <p className="mt-1 text-body-sm text-fg-subtle">{persona.role}</p>
+                <h3 className="text-h5 leading-snug font-normal tracking-normal text-fg">{persona.type}</h3>
+                <p className="mt-1 text-body-sm leading-snug text-fg-subtle">{persona.role}</p>
               </div>
             </div>
             {persona.story ? (
@@ -83,8 +83,8 @@ function UseCasePersonas({ items, className }: { items: readonly UseCasePersona[
               <dl className="flex flex-col gap-5">
                 {PHASES.map(({ key, label }) => (
                   <div key={key} className="flex flex-col gap-1.5">
-                    <dt className={cn("text-body-sm font-medium", key === "impact" ? "text-fg-brand" : "text-fg")}>{label}</dt>
-                    <dd className={cn("text-body", key === "impact" ? "text-fg" : "text-fg-secondary")}>{persona[key]}</dd>
+                    <dt className={cn("text-body-sm leading-snug font-medium", key === "impact" ? "text-fg-brand" : "text-fg")}>{label}</dt>
+                    <dd className={cn("text-body leading-snug", key === "impact" ? "text-fg" : "text-fg-secondary")}>{persona[key]}</dd>
                   </div>
                 ))}
               </dl>

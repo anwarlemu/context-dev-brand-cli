@@ -165,7 +165,7 @@ const motion = `@theme {
 }
 `;
 const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}`;
-const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400;500&display=swap");\n`;
+const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400..500&display=swap");\n`;
 
 mkdirSync(new URL('../build', import.meta.url), { recursive: true });
 const write = (p, s) => writeFileSync(new URL(`../build/${p}`, import.meta.url), s);

@@ -54,7 +54,7 @@ const WHEEL_GESTURE_GAP_MS = 120;
 
 const FOCUS = "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring";
 const NAV_LINK = cn(
-  "flex cursor-pointer items-center gap-1 whitespace-nowrap rounded-pill px-2 py-2 text-body-sm font-medium transition-colors duration-150 ease-out motion-reduce:transition-none min-[1280px]:px-3.5",
+  "flex cursor-pointer items-center gap-1 whitespace-nowrap rounded-pill px-2 py-2 text-body-sm leading-5 font-medium transition-colors duration-150 ease-out motion-reduce:transition-none min-[1280px]:px-3.5",
   FOCUS,
 );
 const PILL = "inline-flex w-fit items-center justify-center whitespace-nowrap rounded-pill border font-normal transition-colors duration-200 ease-out motion-reduce:transition-none";
@@ -167,7 +167,7 @@ function NavFeaturedCard({
     <a href={href} className={cn("group/featured flex w-68 shrink-0 rounded-card", FOCUS, className)}>
       <NavBlueFrame backdrop={backdrop} className="flex w-full flex-col justify-end p-5 text-on-brand">
         <span className="relative flex flex-col gap-2">
-          <span className="text-h4 leading-tight tracking-tight">{title}</span>
+          <span className="text-h4 leading-7.5 tracking-tight">{title}</span>
           {description && <span className="text-body-sm text-white/85">{description}</span>}
           {cta && (
             <span className="flex items-center gap-1.5 pt-1.5 text-body-sm font-medium">
@@ -340,7 +340,7 @@ function NavStoriesPanel({
       <div className="flex items-baseline justify-between gap-4">
         <p className="text-body-lg text-fg">{title}</p>
         {viewAll && (
-          <a href={viewAll.href} className={cn(OUTLINE_PILL, "px-4 py-1.5 text-body-sm")}>
+          <a href={viewAll.href} className={cn(OUTLINE_PILL, "px-4 py-1.5 text-body-sm leading-5")}>
             {viewAll.label}
           </a>
         )}
@@ -588,7 +588,7 @@ function DesktopNav({
             onPointerEnter={cancelClose}
             onPointerLeave={(event) => event.pointerType === "mouse" && scheduleClose()}
             className={cn(
-              "absolute top-[calc(100%+var(--ds-space-5))] left-1/2 isolate z-1000 origin-top -translate-x-1/2 rounded-card p-1.5 shadow-floating transition-[opacity,translate,scale] duration-300 ease-out motion-reduce:transition-none",
+              "absolute top-[calc(100%+var(--ds-space-5))] left-1/2 isolate z-1000 origin-top -translate-x-1/2 rounded-card p-1.5 leading-snug shadow-floating transition-[opacity,translate,scale] duration-300 ease-out motion-reduce:transition-none",
               surface === "brand" ? "bg-ring-on-brand" : "bg-ring-tint",
               state.active ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-2 scale-95 opacity-0",
             )}
@@ -1025,7 +1025,7 @@ function SiteHeader({
                   href={secondaryAction.href}
                   {...linkTarget(secondaryAction.external)}
                   className={cn(
-                    "flex h-10.5 items-center justify-center whitespace-nowrap rounded-pill border border-black/12 bg-surface px-3 text-body-sm font-normal text-fg shadow-[0_1px_2px_var(--ds-color-wash-pill)] transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-frame min-[1280px]:px-5",
+                    "flex h-10.5 items-center justify-center whitespace-nowrap rounded-pill border border-black/12 bg-surface px-3 text-body-sm leading-5 font-normal text-fg shadow-[0_1px_2px_var(--ds-color-wash-pill)] transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-frame min-[1280px]:px-5",
                     FOCUS,
                   )}
                 >
@@ -1037,7 +1037,7 @@ function SiteHeader({
                   href={primaryAction.href}
                   {...linkTarget(primaryAction.external)}
                   className={cn(
-                    "flex h-10.5 items-center justify-center whitespace-nowrap rounded-pill border border-primary bg-neutral-90 px-3 text-body-sm font-normal text-on-primary shadow-key transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-neutral-80 min-[1280px]:px-5",
+                    "flex h-10.5 items-center justify-center whitespace-nowrap rounded-pill border border-primary bg-neutral-90 px-3 text-body-sm leading-5 font-normal text-on-primary shadow-key transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-neutral-80 min-[1280px]:px-5",
                     FOCUS,
                   )}
                 >

@@ -36,7 +36,7 @@ function PageSection({ title, action, className, children }: { title?: React.Rea
     <section data-slot="page-section" className={cn("flex flex-col gap-3", className)}>
       {(title || action) && (
         <div className="flex items-center justify-between gap-3">
-          {title && <h2 className="text-body-sm font-normal text-fg">{title}</h2>}
+          {title && <h2 className="text-body-sm font-normal tracking-normal text-fg">{title}</h2>}
           {action}
         </div>
       )}

@@ -41,10 +41,10 @@ function CustomerStoryPage({
           </div>
         )}
         <header className="relative mx-auto flex max-w-3xl flex-col items-start gap-6">
-          <a href={backHref} className="rounded-sm text-body-sm text-fg-nav outline-none transition-[color] duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none">
+          <a href={backHref} className="rounded-sm text-body-sm leading-snug text-fg-nav outline-none transition-[color] duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none">
             &larr; {backLabel}
           </a>
-          <h1 id={titleId} className="w-full text-h3 font-normal text-balance text-fg md:text-h2">
+          <h1 id={titleId} className="w-full text-h3 leading-heading font-normal tracking-normal text-balance text-fg md:text-h2">
             {title}
             {accent && (
               <>
@@ -54,7 +54,7 @@ function CustomerStoryPage({
             )}
           </h1>
           {date && (
-            <time dateTime={dateTime} className="text-body-sm text-fg-nav">
+            <time dateTime={dateTime} className="text-body-sm leading-snug text-fg-nav">
               {date}
             </time>
           )}

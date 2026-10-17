@@ -15,7 +15,7 @@ const badgeVariants = cva("inline-flex w-fit shrink-0 items-center justify-cente
       warning: "rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-warning",
       destructive: "rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-danger",
       tag: "h-6 rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-blue-10 px-2.5 text-caption text-fg-brand",
-      chip: "rounded-pill px-3 py-1 text-body-sm text-fg-nav ring-1 ring-line ring-inset",
+      chip: "rounded-pill px-3 py-1 text-body-sm leading-snug text-fg-nav ring-1 ring-line ring-inset",
     },
   },
   defaultVariants: { variant: "default" },

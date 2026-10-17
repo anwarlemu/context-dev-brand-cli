@@ -26,8 +26,8 @@ function BlogAuthor({ name, image, handle, href, updatedAt, className }: { name:
     <>
       {photo}
       <div className="flex flex-col">
-        <p className="text-body-sm text-fg">{name}</p>
-        {handle && <p className="text-caption text-fg-nav">@{handle}</p>}
+        <p className="text-body-sm leading-snug text-fg">{name}</p>
+        {handle && <p className="text-caption leading-snug text-fg-nav">@{handle}</p>}
       </div>
     </>
   );
@@ -72,12 +72,12 @@ function BlogPost({
   const meta = [
     author,
     published && (
-      <time key="published" dateTime={published.iso} className="text-body-sm text-fg-nav">
+      <time key="published" dateTime={published.iso} className="text-body-sm leading-snug text-fg-nav">
         {published.label}
       </time>
     ),
     updated && (
-      <time key="updated" dateTime={updated.iso} className="text-body-sm text-fg-nav">
+      <time key="updated" dateTime={updated.iso} className="text-body-sm leading-snug text-fg-nav">
         Updated {updated.label}
       </time>
     ),
@@ -92,7 +92,7 @@ function BlogPost({
           </div>
         )}
         <header className="relative mx-auto flex max-w-3xl flex-col gap-6">
-          <h1 id={titleId} className="text-h3 font-normal text-balance text-fg md:text-h2">
+          <h1 id={titleId} className="text-h3 leading-heading font-normal tracking-normal text-balance text-fg md:text-h2">
             {title}
             {accent && (
               <>
@@ -101,7 +101,7 @@ function BlogPost({
               </>
             )}
           </h1>
-          {subtitle && <p className="-mt-2 text-body-lg text-balance text-fg-nav">{subtitle}</p>}
+          {subtitle && <p className="-mt-2 text-body-lg leading-snug text-balance text-fg-nav">{subtitle}</p>}
           {meta.length > 0 && (
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 self-start">
               {meta.map((item, index) => (
@@ -129,7 +129,7 @@ function BlogPost({
 // soft blue bar, inline code on the blue tint, and images and tables as white cards in the soft blue ring. A code
 // sample is best a CodeWindow (its pre carries data-slot, so these rules leave it alone).
 const PROSE = cn(
-  "text-fg-muted [&>*:first-child]:mt-0",
+  "text-fg-nav [&>*:first-child]:mt-0",
   "[&_:is(h1,h2,h3,h4,h5,h6)]:font-normal [&_:is(h1,h2,h3,h4,h5,h6)]:tracking-normal [&_:is(h1,h2,h3,h4,h5,h6)]:text-fg",
   "[&_h1]:mt-12 [&_h1]:mb-6 [&_h1]:text-h2 [&_h1]:leading-heading [&_h2]:mt-12 [&_h2]:mb-5 [&_h2]:text-h3 [&_h2]:leading-heading",
   "[&_h3]:mt-10 [&_h3]:mb-4 [&_h3]:text-h4 [&_h3]:leading-snug [&_:is(h4,h5,h6)]:mt-8 [&_:is(h4,h5,h6)]:mb-3 [&_:is(h4,h5,h6)]:text-h5 [&_:is(h4,h5,h6)]:leading-snug",
@@ -148,7 +148,7 @@ const PROSE = cn(
   "[&_p:has(>img:only-child)]:my-0 [&_figure]:my-8 [&_figure>img]:mb-5 [&_figcaption]:text-body-sm [&_figcaption]:leading-relaxed [&_figcaption]:text-fg-muted",
   "[&_table]:mx-auto [&_table]:my-8 [&_table]:w-[calc(100%-var(--ds-space-4))] [&_table]:border-separate [&_table]:border-spacing-0 [&_table]:rounded-card [&_table]:border [&_table]:border-hairline [&_table]:bg-surface [&_table]:text-left [&_table]:shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
   "[&_:is(th,td)]:border-b [&_:is(th,td)]:border-line [&_:is(th,td)]:px-5 [&_:is(th,td)]:py-3.5 [&_:is(th,td)]:align-top [&_tbody_tr:last-child_td]:border-b-0",
-  "[&_th]:text-body-sm [&_th]:leading-relaxed [&_td]:text-body [&_td]:leading-relaxed [&_td:first-child]:text-fg",
+  "[&_th]:text-body-sm [&_th]:leading-normal [&_td]:text-body [&_td]:leading-relaxed [&_td:first-child]:text-fg",
   "[&_hr]:my-12 [&_hr]:border-line",
 );
 
@@ -185,7 +185,7 @@ function RelatedPostCard({ post, className }: { post: RelatedPost; className?: s
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/30 via-black/5 to-transparent" />
         <div className="relative">
           <h3 className="line-clamp-2 text-body-lg leading-snug font-medium tracking-tight text-white md:text-h5">{post.title}</h3>
-          {post.summary && <p className="mt-2 line-clamp-2 text-body-sm leading-snug text-white/80">{post.summary}</p>}
+          {post.summary && <p className="mt-2 line-clamp-2 text-body-sm leading-5 text-white/80">{post.summary}</p>}
           {post.date && (
             <time dateTime={post.date.iso} className="mt-3 block text-caption text-white/65">
               {post.date.label}

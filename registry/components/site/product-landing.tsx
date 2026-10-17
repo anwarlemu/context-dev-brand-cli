@@ -19,8 +19,8 @@ function ProductStoryCard({ title, description, story, className }: ProductStory
     <li data-slot="product-story-card" className={cn("-m-2 flex rounded-card bg-ring-tint p-2", className)}>
       <div className="flex h-full min-w-0 flex-1 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8">
         <div className="flex flex-col gap-3">
-          <h3 className="text-h4 font-normal text-fg">{title}</h3>
-          <p className="text-body leading-relaxed text-fg-secondary">{description}</p>
+          <h3 className="text-h4 leading-snug font-normal tracking-normal text-fg">{title}</h3>
+          <p className="text-body leading-normal text-fg-secondary">{description}</p>
         </div>
         <ProductMedia className="[&>div]:px-4 [&>div]:py-8 sm:[&>div]:px-9">{story}</ProductMedia>
       </div>
@@ -63,7 +63,7 @@ function ProductStorySection({
 /** The install command as a hairline pill: a faint prompt and the command in mono. */
 function InstallChip({ command, className }: { command: string; className?: string }) {
   return (
-    <div data-slot="install-chip" className={cn("flex items-center gap-2 rounded-pill px-4 py-2 font-mono text-body-sm text-fg-nav ring-1 ring-line-strong ring-inset", className)}>
+    <div data-slot="install-chip" className={cn("flex items-center gap-2 rounded-pill px-4 py-2 font-mono text-body-sm leading-5 text-fg-nav ring-1 ring-line-strong ring-inset", className)}>
       <span aria-hidden="true" className="text-fg-faint">
         $
       </span>
@@ -128,7 +128,7 @@ function ProductFaqList({ id, faqs, className }: { id: string; faqs: ProductFaqI
       <div className="rounded-card bg-surface px-6 ring-1 ring-hairline md:px-8">
         {faqs.map((faq, index) => (
           <details key={faq.question} name={`${id}-questions`} open={index === 0} className="group border-t border-hairline py-5 first:border-0 md:py-6">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-5 rounded-sm text-body-lg text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-5 rounded-sm text-body-lg leading-snug text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
               {faq.question}
               <Plus aria-hidden="true" className="size-4 shrink-0 text-fg-brand group-open:hidden" />
               <Minus aria-hidden="true" className="size-4 shrink-0 text-fg-brand group-not-open:hidden" />

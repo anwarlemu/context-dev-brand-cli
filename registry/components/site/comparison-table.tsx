@@ -64,7 +64,7 @@ function ComparisonTable({
       {/* The glass ring: a wrapper 8px wider than the card, so its outer edge shares the card's radius. */}
       <div className="-m-2 rounded-card bg-ring-tint p-2">
         <div tabIndex={0} role="region" aria-label={caption} className="overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
-          <table className={cn("w-full border-collapse text-left", marks ? "min-w-136" : "min-w-160")}>
+          <table className={cn("w-full border-collapse text-left leading-snug", marks ? "min-w-136" : "min-w-160")}>
             {caption && <caption className="sr-only">{caption}</caption>}
             <thead>
               {marks ? (
