@@ -35,7 +35,11 @@ export function listScreens(project: Project, files: string[], profileResult: Pr
 			out.push({ id: path, url: path, file: rel, surface: surfaceOf(rel, profileResult), files: [] });
 			break;
 		}
-		if (/(Screen|View|Page)\.(swift|kt|dart)$/.test(rel)) out.push({ id: rel.split('/').pop()!.replace(/\.\w+$/, ''), file: rel, surface: surfaceOf(rel, profileResult), files: [] });
+		// Native screens: AccountsScreen.swift and SettingsView.kt, or Flutter's accounts_screen.dart, or any file in a
+		// screens, views or pages folder. The screen's own file is what its task restyles.
+		if (/\.(swift|kt|dart)$/.test(rel) && (/(Screen|View|Page)\.\w+$/.test(rel) || /_(screen|view|page)\.dart$/.test(rel) || /(^|\/)(screens|views|pages)\/[^/]+$/.test(rel))) {
+			out.push({ id: rel.split('/').pop()!.replace(/\.\w+$/, ''), file: rel, surface: surfaceOf(rel, profileResult), files: [rel] });
+		}
 	}
 	// A Next app whose home is a rewrite (source '/' to destination '/x') starts from that page.
 	const config = ['next.config.ts', 'next.config.js', 'next.config.mjs'].map((f) => join(project.root, f)).find(existsSync);
