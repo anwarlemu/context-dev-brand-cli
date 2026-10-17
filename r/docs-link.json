@@ -1,0 +1,21 @@
+{
+  "name": "docs-link",
+  "type": "ui",
+  "title": "Docs link",
+  "description": "A small muted link to the docs with a book and an arrow that nudges on hover.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/docs-link.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowUpRight, BookOpen } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's link to the docs: a book, the label in muted caption that underlines on hover, and an arrow that\n// nudges up and out (150ms ease-out). Opens in a new tab.\nfunction DocsLink({ className, children = \"Read the docs\", ...props }: React.ComponentProps<\"a\">) {\n  return (\n    <a\n      target=\"_blank\"\n      rel=\"noopener noreferrer\"\n      data-slot=\"docs-link\"\n      className={cn(\n        \"group flex h-6 w-fit shrink-0 items-center gap-1 text-caption whitespace-nowrap text-fg-muted decoration-fg/25 underline-offset-4 transition-colors duration-150 ease-out outline-none hover:text-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\",\n        className,\n      )}\n      {...props}\n    >\n      <BookOpen className=\"size-3.5\" strokeWidth={1.5} />\n      {children}\n      <ArrowUpRight\n        className=\"size-3.5 shrink-0 transition-colors duration-150 ease-out motion-reduce:transition-none\"\n        strokeWidth={1.5}\n        aria-hidden\n      />\n    </a>\n  );\n}\n\nexport { DocsLink };\n"
+    }
+  ]
+}

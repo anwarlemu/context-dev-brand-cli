@@ -1,0 +1,21 @@
+{
+  "name": "progress",
+  "type": "ui",
+  "title": "Progress",
+  "description": "A thin pill track with a brand-blue fill.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-progress"
+  ],
+  "files": [
+    {
+      "path": "components/ui/progress.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as ProgressPrimitive from \"@radix-ui/react-progress\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A thin pill track with a brand-blue fill, square at its leading edge (a batch's progress, credits used). The fill moves\n// on transform in 300ms ease-out.\nfunction Progress({ className, value, ...props }: React.ComponentProps<typeof ProgressPrimitive.Root>) {\n  return (\n    <ProgressPrimitive.Root data-slot=\"progress\" className={cn(\"relative h-1.5 w-full overflow-hidden rounded-pill bg-neutral-10\", className)} {...props}>\n      <ProgressPrimitive.Indicator\n        data-slot=\"progress-indicator\"\n        className=\"h-full w-full flex-1 bg-brand transition-transform duration-300 ease-out motion-reduce:transition-none\"\n        style={{ transform: `translateX(-${100 - (value ?? 0)}%)` }}\n      />\n    </ProgressPrimitive.Root>\n  );\n}\n\nexport { Progress };\n"
+    }
+  ]
+}

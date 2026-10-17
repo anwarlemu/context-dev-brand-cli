@@ -1,0 +1,21 @@
+{
+  "name": "settings-section",
+  "type": "product",
+  "title": "Settings section",
+  "description": "A quiet title over a card of rows (title, muted text, control at the right), stacked fields, a notice and the danger button.",
+  "surface": "product",
+  "kinds": [
+    "app-card"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/product/settings-section.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Settings as the dashboard lays them out: a quiet subtle-gray title just above a card (an aside, such as a link, can\n// sit at its right), rows inside the card divided by a light line, each with a title, muted text and its control at\n// the right (stacked under the text on a phone). Fields stack their label over the control; a notice is a card of\n// muted text for what you can't change here.\nfunction SettingsSection({ title, aside, className, children }: { title: React.ReactNode; aside?: React.ReactNode; className?: string; children: React.ReactNode }) {\n  return (\n    <section data-slot=\"settings-section\" className={cn(\"flex flex-col gap-2\", className)}>\n      <div className=\"flex items-baseline justify-between gap-4 px-1\">\n        <h3 className=\"text-body-sm font-normal tracking-normal text-fg-subtle\">{title}</h3>\n        {aside}\n      </div>\n      <div className=\"divide-y divide-line-subtle rounded-card bg-surface px-5 shadow-card\">{children}</div>\n    </section>\n  );\n}\n\nfunction SettingsRow({ title, description, action, muted = false, children }: { title?: React.ReactNode; description?: React.ReactNode; action?: React.ReactNode; muted?: boolean; children?: React.ReactNode }) {\n  return (\n    <div data-slot=\"settings-row\" className=\"flex flex-col gap-3 py-4\">\n      <div className=\"flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6\">\n        <div className={cn(\"min-w-0 flex-1\", muted && \"opacity-50\")}>\n          {title && <div className=\"text-body-sm text-fg\">{title}</div>}\n          {description && <div className={cn(\"text-body-sm text-fg-muted\", title && \"mt-1\")}>{description}</div>}\n        </div>\n        {action}\n      </div>\n      {children}\n    </div>\n  );\n}\n\n/** A field on a settings card: its label (and an aside such as a \"Change\" link) over the control, given the id. */\nfunction SettingsField({ label, aside, children }: { label: React.ReactNode; aside?: React.ReactNode; children: (id: string) => React.ReactNode }) {\n  const id = React.useId();\n  return (\n    <div data-slot=\"settings-field\" className=\"flex flex-col gap-2\">\n      <span className=\"flex items-center gap-1.5 text-body-sm text-fg\">\n        <label htmlFor={id}>{label}</label>\n        {aside}\n      </span>\n      {children(id)}\n    </div>\n  );\n}\n\nfunction SettingsNotice({ className, children }: { className?: string; children: React.ReactNode }) {\n  return <div data-slot=\"settings-notice\" className={cn(\"rounded-card bg-surface p-5 text-body-sm text-fg-muted shadow-card\", className)}>{children}</div>;\n}\n\n/** The solid red button a danger zone ends on; the confirming dialog then asks for a hold. */\nfunction SettingsDangerButton({ className, ...props }: React.ComponentProps<\"button\">) {\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"settings-danger-button\"\n      className={cn(\n        \"inline-flex h-9 shrink-0 items-center justify-center rounded-control bg-danger px-4 text-body-sm whitespace-nowrap text-white outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-danger/90 focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { SettingsDangerButton, SettingsField, SettingsNotice, SettingsRow, SettingsSection };\n"
+    }
+  ]
+}

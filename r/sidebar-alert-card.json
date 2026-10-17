@@ -1,0 +1,21 @@
+{
+  "name": "sidebar-alert-card",
+  "type": "product",
+  "title": "Sidebar alert card",
+  "description": "A billing problem at the foot of the sidebar (a failed payment, a plan ending), the whole card the fix, with a pulsing dot.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/sidebar-alert-card.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowUpRight, RotateCcw } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst TONES = {\n  danger: {\n    card: \"border-danger/30 bg-danger/4 hover:border-danger/50 hover:bg-danger/7\",\n    text: \"text-danger\",\n    dot: \"bg-danger\",\n    ping: \"bg-danger/60\",\n  },\n  warning: {\n    card: \"border-warning/30 bg-warning/5 hover:border-warning/50 hover:bg-warning/8\",\n    text: \"text-warning\",\n    dot: \"bg-warning\",\n    ping: \"bg-warning/60\",\n  },\n} as const;\n\n// A billing problem at the foot of the sidebar, above Help: the whole card is the fix. A pulsing dot and a short tag\n// in the tone's color (\"Last payment failed\", \"3 days left\"), one line in body text, then the action with its arrow,\n// which nudges on hover. Danger for a failed payment (the arrow goes up and right, out to billing); warning for a plan\n// that is ending (the arrow turns back, resuming it). Hidden while the sidebar shows the playground's APIs.\nfunction SidebarAlertCard({\n  tone = \"danger\",\n  tag,\n  message,\n  action,\n  pendingAction,\n  pending = false,\n  icon = tone === \"danger\" ? \"external\" : \"resume\",\n  onClick,\n  className,\n}: {\n  tone?: keyof typeof TONES;\n  tag: React.ReactNode;\n  message: React.ReactNode;\n  action: React.ReactNode;\n  /** The action's words while it runs (\"Opening...\"). */\n  pendingAction?: React.ReactNode;\n  pending?: boolean;\n  icon?: \"external\" | \"resume\";\n  onClick?: () => void;\n  className?: string;\n}) {\n  const t = TONES[tone];\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"sidebar-alert-card\"\n      onClick={onClick}\n      disabled={pending}\n      className={cn(\n        \"group mb-2 flex w-full flex-col gap-1 rounded-card border px-3 py-2.5 text-left outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring disabled:cursor-not-allowed disabled:opacity-70\",\n        t.card,\n        className,\n      )}\n    >\n      <span className=\"flex items-center gap-2\">\n        <span aria-hidden className=\"relative flex size-1.5 shrink-0\">\n          <span className={cn(\"absolute inline-flex size-full animate-ping rounded-pill [animation-duration:2s] motion-reduce:hidden\", t.ping)} />\n          <span className={cn(\"relative inline-flex size-1.5 rounded-pill\", t.dot)} />\n        </span>\n        <span className={cn(\"text-caption\", t.text)}>{tag}</span>\n      </span>\n      <span className=\"text-body-sm text-fg\">{message}</span>\n      <span className={cn(\"flex items-center text-caption\", icon === \"external\" ? \"gap-0.5\" : \"gap-1\", t.text)}>\n        {pending && pendingAction ? pendingAction : action}\n        {icon === \"external\" ? (\n          <ArrowUpRight className=\"size-3\" />\n        ) : (\n          <RotateCcw className=\"size-3 transition-transform duration-150 ease-out group-hover:-rotate-45 motion-reduce:transition-none\" />\n        )}\n      </span>\n    </button>\n  );\n}\n\nexport { SidebarAlertCard };\n"
+    }
+  ]
+}

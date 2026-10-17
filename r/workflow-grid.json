@@ -1,0 +1,23 @@
+{
+  "name": "workflow-grid",
+  "type": "site",
+  "title": "Workflow grid",
+  "description": "Cards in the soft blue ring, three across on wide screens, each with an h4 title, a short description and a picture panel of fixed shape.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring",
+    "media-frame"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/workflow-grid.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The home page's workflow cards: three across on wide screens, each a white card in the soft blue ring with an h4\n// title, a short description and a picture panel pinned to the bottom. The panels keep one shape (459 by 317 in three\n// columns, a fixed height below), so each picture scales down rather than reflowing and cards in a row line up.\n\nexport type WorkflowItem = { title: string; description: string; media?: React.ReactNode; mediaVariant?: \"story\" | \"mockup\" };\n\n/**\n * The picture panel, in the ring with its radius repeated so the corners match. `story` (the default) is white and\n * holds a dot story centered at up to 26rem (81.5% of the panel in three columns, so it scales with it); `mockup` is\n * the pale panel the site's interface mockups sit in, filled edge to edge.\n */\nfunction WorkflowMedia({ variant = \"story\", children, className }: { variant?: \"story\" | \"mockup\"; children?: React.ReactNode; className?: string }) {\n  return (\n    <div data-slot=\"workflow-media\" className={cn(\"h-92 rounded-card bg-ring-tint p-2 xl:aspect-[459/317] xl:h-auto\", className)}>\n      {variant === \"mockup\" ? (\n        <div className=\"flex h-full flex-col justify-center overflow-hidden rounded-card bg-announcement select-none\">{children}</div>\n      ) : (\n        <div className=\"flex h-full items-center justify-center overflow-hidden rounded-card bg-surface px-4 select-none sm:px-9 xl:px-0\">\n          <div className=\"relative flex w-full max-w-104 justify-center xl:w-[81.5%] xl:max-w-none\">{children}</div>\n        </div>\n      )}\n    </div>\n  );\n}\n\nfunction WorkflowCard({ title, description, media, mediaVariant, className }: WorkflowItem & { className?: string }) {\n  return (\n    <div data-slot=\"workflow-card\" className={cn(\"rounded-card bg-ring-tint p-2\", className)}>\n      <div className=\"flex h-full min-w-0 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8 xl:p-6\">\n        <div className=\"flex flex-col gap-3\">\n          <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{title}</h3>\n          <p className=\"text-body leading-normal text-fg-secondary\">{description}</p>\n        </div>\n        {media !== undefined && <WorkflowMedia variant={mediaVariant} className=\"mt-auto\">\n            {media}\n          </WorkflowMedia>}\n      </div>\n    </div>\n  );\n}\n\nfunction WorkflowGrid({ items, className }: { items: WorkflowItem[]; className?: string }) {\n  return (\n    <ul data-slot=\"workflow-grid\" className={cn(\"grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-5\", className)}>\n      {items.map((item) => (\n        <li key={item.title} className=\"-m-2 flex\">\n          <WorkflowCard className=\"flex-1\" {...item} />\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport { WorkflowGrid, WorkflowCard, WorkflowMedia };\n"
+    }
+  ]
+}

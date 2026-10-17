@@ -1,0 +1,20 @@
+{
+  "name": "upgrade-glyph",
+  "type": "visual",
+  "title": "Upgrade glyph",
+  "description": "The upgrade card's picture, a gift that melts into a rocket and back, in the fine dot pattern.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "glyph-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/upgrade-glyph.tsx",
+      "content": "\"use client\";\n\nimport { DotStory, type LoadDotStory } from \"@/components/visuals/dot-engine/dot-story\";\nimport { cellStates } from \"@/components/visuals/dot-engine/dot-story-cells\";\nimport { GLYPH_GRID } from \"@/components/visuals/glyph/glyph-art\";\nimport { GIFT_CELLS } from \"@/components/visuals/glyph/upgrade-story-art\";\nimport { FINE_GRID, fineCellsOf } from \"@/components/visuals/glyph/upgrade-story-fine\";\n\nconst RESTING = { cells: fineCellsOf(cellStates(GLYPH_GRID, GIFT_CELLS)) };\n\nconst load: LoadDotStory = async (stage) => {\n  const { createUpgradeStoryPlayer } = await import(\"@/components/visuals/glyph/upgrade-story-player\");\n  return createUpgradeStoryPlayer(stage);\n};\n\n/** The upgrade card's picture: a gift that takes off as a rocket, on a loop while on screen. Reduced motion keeps the gift. */\nexport function UpgradeGlyph({ className }: { className?: string }) {\n  return <DotStory grid={FINE_GRID} resting={RESTING} load={load} className={className} />;\n}\n"
+    }
+  ]
+}

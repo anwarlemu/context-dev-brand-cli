@@ -1,0 +1,21 @@
+{
+  "name": "scroll-area",
+  "type": "ui",
+  "title": "Scroll area",
+  "description": "A scroller with no scrollbar that fades at whichever edge has more, with a chevron that scrolls the rest into view.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/scroll-area.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ChevronDown } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst EDGE_FADE_PX = 28;\n\n/**\n * The dashboard's scroll area, which says when there's more: no scrollbar taking room on one side (so the padding stays\n * even), the content fading out at whichever edge has more past it, and while there's more below, a small chevron at\n * the bottom that scrolls the rest into view. The chevron fades and rises in 200ms ease-out.\n */\nfunction ScrollArea({ className, children, ...props }: React.ComponentProps<\"div\">) {\n  const ref = React.useRef<HTMLDivElement>(null);\n  const [edges, setEdges] = React.useState({ more: false, above: false, below: false });\n\n  React.useLayoutEffect(() => {\n    const area = ref.current;\n    if (!area) return;\n    const measure = () => {\n      const more = area.scrollHeight > area.clientHeight + 1;\n      const above = more && area.scrollTop > 1;\n      const below = more && area.scrollTop + area.clientHeight < area.scrollHeight - 1;\n      setEdges((previous) => (previous.more === more && previous.above === above && previous.below === below ? previous : { more, above, below }));\n    };\n    measure();\n    const observer = new ResizeObserver(measure);\n    observer.observe(area);\n    for (const child of Array.from(area.children)) observer.observe(child);\n    area.addEventListener(\"scroll\", measure, { passive: true });\n    return () => {\n      observer.disconnect();\n      area.removeEventListener(\"scroll\", measure);\n    };\n  }, []);\n\n  const mask = `linear-gradient(to bottom, ${edges.above ? \"transparent\" : \"black\"}, black ${EDGE_FADE_PX}px, black calc(100% - ${EDGE_FADE_PX}px), ${edges.below ? \"transparent\" : \"black\"})`;\n\n  return (\n    <div data-slot=\"scroll-area\" className=\"relative flex min-h-0 flex-1 flex-col\">\n      <div\n        ref={ref}\n        data-slot=\"scroll-area-viewport\"\n        className={cn(\"min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden\", className)}\n        style={edges.more ? { maskImage: mask, WebkitMaskImage: mask } : undefined}\n        {...props}\n      >\n        {children}\n      </div>\n      <button\n        type=\"button\"\n        tabIndex={-1}\n        aria-hidden\n        onClick={() => ref.current?.scrollBy({ top: ref.current.clientHeight * 0.8, behavior: \"smooth\" })}\n        className={cn(\n          \"absolute bottom-1 left-1/2 grid size-6 -translate-x-1/2 place-items-center rounded-pill bg-surface text-fg-muted shadow-card transition-[opacity,translate] duration-200 ease-out hover:text-fg motion-reduce:transition-[opacity]\",\n          edges.below ? \"opacity-100\" : \"pointer-events-none translate-y-1 opacity-0\",\n        )}\n      >\n        <ChevronDown className=\"size-3.5\" strokeWidth={1.75} />\n      </button>\n    </div>\n  );\n}\n\nexport { ScrollArea };\n"
+    }
+  ]
+}

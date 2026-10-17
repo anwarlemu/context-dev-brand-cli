@@ -1,0 +1,22 @@
+{
+  "name": "checkbox",
+  "type": "ui",
+  "title": "Checkbox",
+  "description": "A 16px box, brand blue when checked.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-checkbox",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/checkbox.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as CheckboxPrimitive from \"@radix-ui/react-checkbox\";\nimport { Check, Minus } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A 16px box with a hairline edge; checked fills brand blue with a white check.\nfunction Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {\n  return (\n    <CheckboxPrimitive.Root\n      data-slot=\"checkbox\"\n      className={cn(\n        \"peer grid size-4 shrink-0 place-items-center rounded-sm border border-line-strong bg-surface text-white outline-none transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-brand data-[state=checked]:bg-brand data-[state=indeterminate]:border-brand data-[state=indeterminate]:bg-brand\",\n        className,\n      )}\n      {...props}\n    >\n      <CheckboxPrimitive.Indicator data-slot=\"checkbox-indicator\" className=\"grid place-items-center [&_svg]:size-3\">\n        {props.checked === \"indeterminate\" ? <Minus strokeWidth={2.5} /> : <Check strokeWidth={2.5} />}\n      </CheckboxPrimitive.Indicator>\n    </CheckboxPrimitive.Root>\n  );\n}\n\nexport { Checkbox };\n"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "api-grid-glyph",
+  "type": "visual",
+  "title": "API grid glyph",
+  "description": "Every API as a small dot tile in one grid, with a highlight that hops between them and names the one it lands on.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "glyph-engine",
+    "glyph-tile",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/api-grid-glyph.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef, useState } from \"react\";\nimport type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { StillGlyph } from \"@/components/visuals/glyph/glyph-tile\";\nimport { cn } from \"@/lib/utils\";\n\nconst STEP_MS = 1100;\n\nexport type ApiGridItem = { title: string; glyph: GlyphPairName };\n\n/** The dashboard's Data APIs, in their playground order. */\nexport const DATA_APIS: ApiGridItem[] = [\n  { title: \"Scrape Anything\", glyph: \"scrape\" },\n  { title: \"Map URLs\", glyph: \"map\" },\n  { title: \"Crawl Website\", glyph: \"crawl\" },\n  { title: \"Search Web\", glyph: \"search\" },\n  { title: \"Answers\", glyph: \"answers\" },\n  { title: \"Brand Retrieval\", glyph: \"retrieve\" },\n  { title: \"Search Brands\", glyph: \"brandSearch\" },\n  { title: \"Extract Styleguide\", glyph: \"styleguide\" },\n  { title: \"Enrich Person\", glyph: \"peopleEnrich\" },\n  { title: \"Search News\", glyph: \"newsSearch\" },\n  { title: \"NAICS Lookup\", glyph: \"naics\" },\n  { title: \"Parse File\", glyph: \"parse\" },\n];\n\n/**\n * The Browse APIs card's picture: every API as a small dot tile in one grid, with a highlight that hops between them\n * the way a pick moves through a menu, so the card reads as a choice of many rather than a single thing. The hop runs\n * only while on screen, and holds on the first tile with reduced motion.\n */\nexport function ApiGridGlyph({ apis = DATA_APIS, className }: { apis?: ApiGridItem[]; className?: string }) {\n  const rootRef = useRef<HTMLSpanElement>(null);\n  const [active, setActive] = useState(0);\n\n  useEffect(() => {\n    const root = rootRef.current;\n    if (!root || apis.length < 2) return;\n    if (window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return;\n\n    let timer = 0;\n    let isOnScreen = false;\n    const hop = () =>\n      // Never the same tile twice in a row, and never just the neighbor (when there are enough), so the hop reads as a\n      // jump across the grid.\n      setActive((current) => (apis.length > 3 ? (current + 2 + Math.floor(Math.random() * (apis.length - 3))) % apis.length : (current + 1) % apis.length));\n    const sync = () => {\n      window.clearInterval(timer);\n      if (isOnScreen && !document.hidden) timer = window.setInterval(hop, STEP_MS);\n    };\n    const visibility = new IntersectionObserver(([entry]) => {\n      isOnScreen = entry.isIntersecting;\n      sync();\n    });\n    visibility.observe(root);\n    document.addEventListener(\"visibilitychange\", sync);\n    return () => {\n      window.clearInterval(timer);\n      visibility.disconnect();\n      document.removeEventListener(\"visibilitychange\", sync);\n    };\n  }, [apis]);\n\n  const current = apis[active % Math.max(apis.length, 1)];\n\n  return (\n    <span ref={rootRef} aria-hidden className={cn(\"flex flex-col items-center gap-2\", className)}>\n      <span className=\"grid grid-cols-4 gap-1.5\">\n        {apis.map(({ title, glyph }, index) => (\n          <span\n            key={title}\n            className={cn(\n              \"grid size-7 place-items-center rounded-control p-1 transition-colors duration-300 ease-out\",\n              index === active ? \"bg-brand text-on-brand\" : \"bg-blue-10/60 text-brand/60\",\n            )}\n          >\n            <StillGlyph name={glyph} className=\"w-full\" />\n          </span>\n        ))}\n      </span>\n      {/* Names the highlighted tile, so each hop says which API it landed on. */}\n      {current && (\n        <span key={active} className=\"animate-content-in text-caption text-fg-subtle\">\n          {current.title}\n        </span>\n      )}\n    </span>\n  );\n}\n"
+    }
+  ]
+}

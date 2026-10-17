@@ -1,0 +1,22 @@
+{
+  "name": "glyph-tile",
+  "type": "visual",
+  "title": "Glyph tile",
+  "description": "A page's dot glyph in a small bordered tile that loops between its subject and what it gives you, or held still; StillGlyph is the plain SVG.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "glyph-engine",
+    "glyph-loop",
+    "glyph-story",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-tile.tsx",
+      "content": "import { GLYPH_GRID, glyphSubject, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { GlyphLoop } from \"@/components/visuals/glyph/glyph-loop\";\nimport { GlyphStory } from \"@/components/visuals/glyph/glyph-story\";\nimport { SURFACE_COLOR } from \"@/components/visuals/glyph/surface-color\";\nimport { cn } from \"@/lib/utils\";\n\ntype GlyphTileProps = {\n  name: GlyphPairName;\n  className?: string;\n  /** The large, featured glyph: fine brand-blue dots on the page instead of a small bordered tile. */\n  ringed?: boolean;\n  /** How far into its loop this tile starts, so neighbors don't change in step. */\n  startsAtSeconds?: number;\n  /** Holds the pair's first picture instead of looping between the two. */\n  still?: boolean;\n};\n\n/**\n * A page's glyph as the dashboard's cards show it. Small, it is a brand-blue glyph in a plain bordered square that\n * loops between what the page is about and what it gives you; `ringed`, it is drawn large in the fine dot pattern.\n */\nexport function GlyphTile({ name, className, ringed = false, startsAtSeconds, still = false }: GlyphTileProps) {\n  // The large, featured glyph is drawn like the Browse APIs and Upgrade plan cards: fine brand-blue dots on the page.\n  if (ringed) return <GlyphStory name={name} still={still} className={cn(\"shrink-0 text-brand\", className)} />;\n  // A small brand-blue glyph in a plain bordered square, like the chart cards' icons.\n  return (\n    <span className={cn(\"flex shrink-0 items-center justify-center rounded-control border border-line bg-surface\", className)}>\n      {still ? (\n        <StillGlyph name={name} className=\"w-full text-brand\" />\n      ) : (\n        <GlyphLoop name={name} surfaceColor={SURFACE_COLOR} startsAtSeconds={startsAtSeconds} className=\"w-full text-brand\" />\n      )}\n    </span>\n  );\n}\n\n// Drawn small, the usual dots leave more gap than ink and a glyph reads faded; dense ones nearly touch, so a 20px icon\n// keeps its weight and one-dot lines (a key's shaft, a trend line) stay joined up.\nconst DENSE_DOT_RADIUS = 4.7;\n\n/** A glyph's first picture as a still SVG, in the current text color. */\nexport function StillGlyph({\n  name,\n  className = \"w-full text-white\",\n  dense = false,\n}: {\n  name: GlyphPairName;\n  className?: string;\n  /** Bigger dots for icon sizes, where the default spacing looks thin. */\n  dense?: boolean;\n}) {\n  const { columns, rows, pitch, ringStroke } = GLYPH_GRID;\n  const dotRadius = dense ? DENSE_DOT_RADIUS : GLYPH_GRID.dotRadius;\n  return (\n    <svg aria-hidden=\"true\" viewBox={`0 0 ${columns * pitch} ${rows * pitch}`} className={className}>\n      {glyphSubject(name).map(({ column, row, filled }) => (\n        <circle\n          key={`${column}:${row}`}\n          cx={(column + 0.5) * pitch}\n          cy={(row + 0.5) * pitch}\n          r={filled ? dotRadius : dotRadius - ringStroke / 2}\n          fill={filled ? \"currentColor\" : \"none\"}\n          stroke={filled ? \"none\" : \"currentColor\"}\n          strokeWidth={ringStroke}\n        />\n      ))}\n    </svg>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "field",
+  "type": "ui",
+  "title": "Field",
+  "description": "A label above a control, help or an error below.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "label",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/field.tsx",
+      "content": "import * as React from \"react\";\n\nimport { Label } from \"@/components/ui/label\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's form field: the label above in body-sm (not muted), a red asterisk when required, help or an error\n// below in caption.\nfunction Field({\n  label,\n  htmlFor,\n  help,\n  error,\n  required = false,\n  className,\n  children,\n}: {\n  label: React.ReactNode;\n  htmlFor?: string;\n  help?: React.ReactNode;\n  error?: React.ReactNode;\n  required?: boolean;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  return (\n    <div data-slot=\"field\" data-invalid={error ? true : undefined} className={cn(\"flex flex-col gap-2\", className)}>\n      <Label htmlFor={htmlFor} className=\"block\">\n        {label}\n        {required && (\n          <>\n            <span aria-hidden className=\"ml-0.5 text-danger\">\n              *\n            </span>\n            <span className=\"sr-only\"> (required)</span>\n          </>\n        )}\n      </Label>\n      {children}\n      {(error || help) && <p className={cn(\"text-caption\", error ? \"text-danger\" : \"text-fg-subtle\")}>{error ?? help}</p>}\n    </div>\n  );\n}\n\nexport { Field };\n"
+    }
+  ]
+}

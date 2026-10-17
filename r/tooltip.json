@@ -1,0 +1,24 @@
+{
+  "name": "tooltip",
+  "type": "ui",
+  "title": "Tooltip",
+  "description": "A short label on hover or focus; waits a beat, then appears at once for neighbors.",
+  "surface": "product",
+  "kinds": [
+    "app-tooltip"
+  ],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-tooltip"
+  ],
+  "files": [
+    {
+      "path": "components/ui/tooltip.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as TooltipPrimitive from \"@radix-ui/react-tooltip\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// Hovering waits a beat before the label appears, so passing over a control doesn't flash it; once one is showing,\n// the next one within the warm window appears at once (Radix's skip delay), so sweeping a row of icons doesn't wait.\nfunction TooltipProvider({ delayDuration = 1000, skipDelayDuration = 300, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {\n  return <TooltipPrimitive.Provider data-slot=\"tooltip-provider\" delayDuration={delayDuration} skipDelayDuration={skipDelayDuration} {...props} />;\n}\n\nfunction Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {\n  return (\n    <TooltipProvider>\n      <TooltipPrimitive.Root data-slot=\"tooltip\" {...props} />\n    </TooltipProvider>\n  );\n}\n\nfunction TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {\n  return <TooltipPrimitive.Trigger data-slot=\"tooltip-trigger\" {...props} />;\n}\n\n// The dashboard's label: white, control corners, 11px on a hairline and a soft shadow, on one line unless `wrap`, 6px\n// above (or 8px beside) its trigger. The first one hovered grows from its trigger in a short ease-out pop; the next ones\n// in the warm window (Radix's instant open) appear at once. Reduced motion keeps only the fade.\nfunction TooltipContent({ className, side, sideOffset, wrap = false, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content> & { wrap?: boolean }) {\n  return (\n    <TooltipPrimitive.Portal container={usePortalContainer()}>\n      <TooltipPrimitive.Content\n        data-slot=\"tooltip-content\"\n        side={side}\n        sideOffset={sideOffset ?? (side === \"left\" || side === \"right\" ? 8 : 6)}\n        className={cn(\n          \"z-50 origin-(--radix-tooltip-content-transform-origin) rounded-control bg-surface px-2 py-1 text-axis leading-4 text-fg shadow-tooltip data-[state=delayed-open]:animate-pop-in\",\n          wrap ? \"w-max max-w-64 text-pretty\" : \"whitespace-nowrap\",\n          className,\n        )}\n        {...props}\n      >\n        {children}\n      </TooltipPrimitive.Content>\n    </TooltipPrimitive.Portal>\n  );\n}\n\nexport { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };\n"
+    }
+  ]
+}
