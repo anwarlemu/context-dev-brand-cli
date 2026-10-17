@@ -7,3 +7,4 @@ apps/www/.next/
 registry.json
 .vercel
 .env*
+.claude/worktrees/
