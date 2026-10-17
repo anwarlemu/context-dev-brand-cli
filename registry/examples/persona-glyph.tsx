@@ -11,8 +11,8 @@ export function Site() {
         ))}
       </div>
       <div className="flex gap-3">
-        {NAMES.map((name, i) => (
-          <MenuGlyph key={name} name={name} index={i} />
+        {NAMES.map((name) => (
+          <MenuGlyph key={name} name={name} />
         ))}
       </div>
     </div>

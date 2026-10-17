@@ -38,7 +38,7 @@ function StatCard({
         {isAction && (
           <ArrowUpRight
             aria-hidden
-            className="size-3.5 shrink-0 text-fg-subtle transition-[translate,color] duration-150 ease-out group-hover:translate-x-px group-hover:-translate-y-px group-hover:text-fg motion-reduce:transition-none"
+            className="size-3.5 shrink-0 text-fg-subtle transition-colors duration-150 ease-out group-hover:text-fg motion-reduce:transition-none"
             strokeWidth={1.5}
           />
         )}

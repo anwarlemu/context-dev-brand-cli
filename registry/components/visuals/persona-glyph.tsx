@@ -31,9 +31,12 @@ function PersonaGlyph({ name, index = 0, still = false, className }: { name: Per
   );
 }
 
-/** The header menus' icon: a persona glyph in a 36px blue tile, as the site's Products and Use cases menus draw them. */
-function MenuGlyph({ name, index = 0, className }: { name: PersonaGlyphName; index?: number; className?: string }) {
-  return <PersonaGlyph name={name} index={index} className={cn("size-9 rounded-control p-2.5", className)} />;
+/**
+ * The header menus' icon: a persona glyph in a 36px blue tile, as the site's Products and Use cases menus draw them.
+ * Held still: an icon in a menu should not move while the pointer is over it.
+ */
+function MenuGlyph({ name, className }: { name: PersonaGlyphName; className?: string }) {
+  return <PersonaGlyph name={name} still className={cn("size-9 rounded-control p-2.5", className)} />;
 }
 
 export { MenuGlyph, PersonaGlyph, type PersonaGlyphName };

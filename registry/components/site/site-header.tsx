@@ -172,7 +172,7 @@ function NavFeaturedCard({
           {cta && (
             <span className="flex items-center gap-1.5 pt-1.5 text-body-sm font-medium">
               {cta}
-              <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-200 ease-out group-hover/featured:translate-x-0.5 motion-reduce:transition-none" />
+              <ArrowRight aria-hidden="true" className="size-3.5" />
             </span>
           )}
         </span>
@@ -289,7 +289,7 @@ function NavPreviewPanel({
               className={cn("group/more flex items-center gap-2 rounded-card px-3 py-2 text-body-sm text-fg-nav transition-colors duration-150 ease-out hover:text-fg motion-reduce:transition-none", FOCUS)}
             >
               {footerLink.label}
-              <ArrowRight aria-hidden="true" className="size-3 transition-transform duration-200 ease-out group-hover/more:translate-x-0.5 motion-reduce:transition-none" />
+              <ArrowRight aria-hidden="true" className="size-3" />
             </a>
           </>
         )}
@@ -357,7 +357,7 @@ function NavStoriesPanel({
             </div>
             <span className="inline-flex items-center gap-1.5 text-body-sm text-fg-brand">
               {readLabel}
-              <ArrowRight aria-hidden="true" className="size-3.5 transition-transform duration-150 ease-out group-hover/story:translate-x-0.5 motion-reduce:transition-none" />
+              <ArrowRight aria-hidden="true" className="size-3.5" />
             </span>
           </a>
         ))}

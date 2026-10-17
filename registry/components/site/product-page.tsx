@@ -85,7 +85,7 @@ function ArrowTextLink({ className, children, ...props }: React.ComponentProps<"
       {...props}
     >
       {children}
-      <ArrowRight aria-hidden="true" className="size-4 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none" />
+      <ArrowRight aria-hidden="true" className="size-4 shrink-0" />
     </a>
   );
 }
@@ -669,7 +669,7 @@ function ProductRelatedCards({ products, className }: { products: { name: React.
             <span className="flex items-center justify-between gap-4 text-h5 leading-snug tracking-tight text-fg sm:text-h4">
               {product.name}
               <span className="flex size-9 shrink-0 items-center justify-center rounded-pill bg-surface">
-                <ArrowRight aria-hidden="true" className="size-4 text-fg-brand transition-transform duration-200 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none" />
+                <ArrowRight aria-hidden="true" className="size-4 text-fg-brand" />
               </span>
             </span>
             <span className="text-body-lg leading-relaxed text-fg-muted">{product.description}</span>

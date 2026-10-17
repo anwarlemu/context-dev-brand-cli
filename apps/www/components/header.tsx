@@ -30,12 +30,12 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
             />
           ),
           items: [
-            { title: "Components", description: `${n("ui")} primitives for both surfaces`, href: "/components#components", glyph: <MenuGlyph name="design" index={0} /> },
-            { title: "Product", description: `${n("product")} dashboard pieces`, href: "/components#product", glyph: <MenuGlyph name="theme" index={1} /> },
-            { title: "Site", description: `${n("site")} marketing sections`, href: "/components#site", glyph: <MenuGlyph name="portal" index={2} /> },
-            { title: "Blocks", description: `${n("block")} full pages to start from`, href: "/components#blocks", glyph: <MenuGlyph name="batches" index={3} /> },
-            { title: "Visuals", description: `${n("visual")} dot fields and stories`, href: "/components#visuals", glyph: <MenuGlyph name="generate" index={4} /> },
-            { title: "Theme", description: "The tokens behind every value", href: "/theme", glyph: <MenuGlyph name="styleguide" index={5} /> },
+            { title: "Components", description: `${n("ui")} primitives for both surfaces`, href: "/components#components", glyph: <MenuGlyph name="design" /> },
+            { title: "Product", description: `${n("product")} dashboard pieces`, href: "/components#product", glyph: <MenuGlyph name="theme" /> },
+            { title: "Site", description: `${n("site")} marketing sections`, href: "/components#site", glyph: <MenuGlyph name="portal" /> },
+            { title: "Blocks", description: `${n("block")} full pages to start from`, href: "/components#blocks", glyph: <MenuGlyph name="batches" /> },
+            { title: "Visuals", description: `${n("visual")} dot fields and stories`, href: "/components#visuals", glyph: <MenuGlyph name="generate" /> },
+            { title: "Theme", description: "The tokens behind every value", href: "/theme", glyph: <MenuGlyph name="styleguide" /> },
           ],
           footer: (
             <>

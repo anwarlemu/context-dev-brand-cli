@@ -173,7 +173,7 @@ function ApiKeyRow({ apiKey: k, canDelete, canRename }: { apiKey: ApiKey; canDel
           )}
           <ArrowUpRight
             aria-hidden
-            className="size-3.5 shrink-0 opacity-0 transition-[opacity,translate] duration-150 ease-out group-hover:translate-x-px group-hover:-translate-y-px group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
+            className="size-3.5 shrink-0 opacity-0 transition-opacity duration-150 ease-out group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none"
             strokeWidth={1.5}
           />
         </a>

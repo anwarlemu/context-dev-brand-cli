@@ -15,7 +15,7 @@ function LinkArrow({ className }: { className?: string }) {
   return (
     <ArrowUpRight
       aria-hidden
-      className={cn("size-3.5 shrink-0 transition-[translate,color] duration-150 ease-out group-hover:translate-x-px group-hover:-translate-y-px motion-reduce:transition-none", className)}
+      className={cn("size-3.5 shrink-0 transition-colors duration-150 ease-out motion-reduce:transition-none", className)}
       strokeWidth={1.5}
     />
   );

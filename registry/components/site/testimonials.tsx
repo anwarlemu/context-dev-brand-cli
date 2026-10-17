@@ -47,7 +47,7 @@ function TestimonialCard({ testimonial, active = false, className, ...props }: R
       {href && (
         <a href={href} aria-label={`${linkLabel}: ${name}`} title={linkLabel} className="absolute inset-0 z-10 rounded-card outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2">
           <span className="absolute top-4 right-4 flex size-8 items-center justify-center rounded-pill text-fg-faint transition-[background-color,color] duration-200 ease-out group-hover:bg-tint group-hover:text-fg-brand motion-reduce:transition-none">
-            <ArrowUpRight aria-hidden="true" className="size-4 transition-transform duration-200 ease-out group-hover:translate-x-px group-hover:-translate-y-px motion-reduce:transition-none" />
+            <ArrowUpRight aria-hidden="true" className="size-4" />
           </span>
         </a>
       )}

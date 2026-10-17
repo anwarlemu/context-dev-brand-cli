@@ -34,7 +34,7 @@ function ProductCard({ name, description, tags = [], href, linkLabel = "Explore"
               <a href={href}>
                 {linkLabel}
                 <span className="sr-only"> {name}</span>
-                <ArrowUpRight aria-hidden="true" className="transition-transform duration-200 ease-out group-hover/explore:translate-x-0.5 group-hover/explore:-translate-y-0.5 motion-reduce:transition-none" />
+                <ArrowUpRight aria-hidden="true" />
               </a>
             </Button>
           </div>

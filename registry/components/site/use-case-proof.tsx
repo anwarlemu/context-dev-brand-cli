@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const RING = "-m-2 rounded-card bg-ring-tint p-2";
 const CARD = "flex h-full min-w-0 flex-col gap-4 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8";
 const FOCUS = "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring";
-const ARROW_NUDGE = "size-4 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none";
+const ARROW = "size-4 shrink-0";
 
 export type UseCaseCustomer = {
   name: string;
@@ -102,7 +102,7 @@ function UseCaseExampleCards({ items, className }: { items: readonly UseCaseExam
             <p className="text-body leading-snug text-fg-secondary">{item.description}</p>
             <a href={item.href} className={cn("group mt-auto inline-flex w-fit items-center gap-2 rounded-sm pt-2 text-body leading-snug text-fg-brand", FOCUS)}>
               {item.credit}
-              <ArrowRight aria-hidden="true" className={ARROW_NUDGE} />
+              <ArrowRight aria-hidden="true" className={ARROW} />
             </a>
           </div>
         </li>

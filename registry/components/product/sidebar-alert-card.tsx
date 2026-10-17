@@ -70,7 +70,7 @@ function SidebarAlertCard({
       <span className={cn("flex items-center text-caption", icon === "external" ? "gap-0.5" : "gap-1", t.text)}>
         {pending && pendingAction ? pendingAction : action}
         {icon === "external" ? (
-          <ArrowUpRight className="size-3 transition-transform duration-150 ease-out group-hover:translate-x-0.5 motion-reduce:transition-none" />
+          <ArrowUpRight className="size-3" />
         ) : (
           <RotateCcw className="size-3 transition-transform duration-150 ease-out group-hover:-rotate-45 motion-reduce:transition-none" />
         )}

@@ -119,7 +119,7 @@ function QuoteCardContent({ quote }: { quote: Testimonial }) {
       {quote.href && (
         <a href={quote.href} target="_blank" rel="noopener noreferrer" className="group/case mt-4 inline-flex items-center gap-1 rounded-sm text-caption font-medium text-fg-brand outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2">
           <span>{quote.linkLabel ?? "Read the case study"}</span>
-          <ArrowRight aria-hidden="true" className="size-3 transition-transform duration-200 ease-out group-hover/case:translate-x-0.5 motion-reduce:transition-none" />
+          <ArrowRight aria-hidden="true" className="size-3" />
         </a>
       )}
     </div>

@@ -132,7 +132,7 @@ export default function Home() {
             </ol>
             <Link href="/cli" className="group/link flex w-fit items-center gap-1.5 rounded-sm text-body-sm font-medium text-fg-brand outline-none focus-visible:outline-2 focus-visible:outline-focus-ring">
               How the CLI works
-              <ArrowRight aria-hidden className="size-3.5 transition-transform duration-200 ease-out group-hover/link:translate-x-0.5 motion-reduce:transition-none" />
+              <ArrowRight aria-hidden className="size-3.5" />
             </Link>
           </div>
           <CodeWindow label="terminal" actions={<WindowCopyButton value={APPLY_COMMAND} />}>

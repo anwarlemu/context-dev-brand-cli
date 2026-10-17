@@ -20,7 +20,7 @@ function DocsLink({ className, children = "Read the docs", ...props }: React.Com
       <BookOpen className="size-3.5" strokeWidth={1.5} />
       {children}
       <ArrowUpRight
-        className="size-3.5 shrink-0 transition-[translate,color] duration-150 ease-out group-hover:translate-x-px group-hover:-translate-y-px motion-reduce:transition-none"
+        className="size-3.5 shrink-0 transition-colors duration-150 ease-out motion-reduce:transition-none"
         strokeWidth={1.5}
         aria-hidden
       />
