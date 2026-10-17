@@ -17,11 +17,12 @@ export function Preview({ example: Example, surface, label, block = false }: { e
         kind={surface}
         className={cn(
           "relative overflow-hidden rounded-card shadow-[0_0_0_1px_var(--ds-color-border-hairline)]",
-          block ? "h-180" : "flex min-h-56 items-center justify-center p-6 sm:p-10",
+          block ? "h-180" : "flex min-h-56 items-center justify-center p-6 sm:p-8",
           surface === "product" ? "bg-canvas" : "bg-surface leading-normal",
         )}
       >
-        <div className={cn(block ? "h-full w-full" : "w-full max-w-full")}>
+        {/* Centered both ways: an example with its own width (a form, a card) sits in the middle with even space around it. */}
+        <div className={cn(block ? "h-full w-full" : "flex w-full max-w-full justify-center")}>
           <Example />
         </div>
       </Surface>

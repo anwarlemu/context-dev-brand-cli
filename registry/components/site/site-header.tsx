@@ -977,36 +977,33 @@ function SiteHeader({
           "group/header sticky top-0 isolate z-1000 h-16 w-full min-[880px]:h-18",
           "[--header-card:min(100%-var(--ds-space-4),var(--ds-layout-column-wide))] md:[--header-card:min(100%-var(--ds-space-4),var(--ds-layout-column-wide),var(--ds-frame-column)-var(--ds-space-6))] min-[880px]:[--header-card:min(100%-var(--ds-space-6),var(--ds-layout-column-wide),var(--ds-frame-column)-var(--ds-space-6))]",
           "[--header-content:calc(var(--header-card)-var(--ds-space-6)-var(--ds-space-0-5))] data-[menu-open=true]:[--header-content:calc(var(--header-card)-var(--ds-space-8)-var(--ds-space-0-5))] min-[880px]:[--header-content:calc(var(--header-card)-var(--ds-space-7))]",
-          // Scrolled, the pill keeps its own gap from the top of the window: the bar slides down by it (a transform, so
-          // nothing is laid out again), eased like the card.
-          "transition-[translate] duration-300 ease-out motion-reduce:transition-none min-[880px]:data-[scrolled=true]:data-[menu-open=false]:translate-y-1.5",
-          // The card's geometry, read by its clip-paths: how far the pill sits in from the bar's top and bottom, the
-          // ring's width, and how far in from each side (half the bar's width less the card's).
-          "[--hc-y:var(--ds-space-1-5)] [--hc-ring:calc(var(--ds-space-1)+var(--ds-space-px))] [--hc-x:calc((100%-var(--header-card))/2)] min-[880px]:[--hc-y:var(--ds-space-0-5)] min-[880px]:[--hc-ring:var(--ds-space-1-5)]",
+          // Scrolled, the pill keeps its own gap from the top of the window.
+          "min-[880px]:data-[scrolled=true]:top-1.5",
           mobileOpen && MOBILE_RAILS,
           className,
         )}
       >
-        {/* The card: a ring (frosted, translucent) and the white card inset by the ring's width, each a layer that covers
-            the whole bar and is clipped to its shape. At the top of the page they are clipped to the full bar and faded
-            out; scrolled, the clips close in to the pill with its rounded ends and the layers fade in. Only clip-path and
-            opacity change, so the morph never lays the page out again and stays smooth. */}
-        <div aria-hidden="true" data-slot="site-header-card" className="pointer-events-none absolute inset-0 -z-10">
+        {/* The card's surface is its own layer, so it can change shape without moving the content. The ring is the
+            layer's fill and the white card is inset by the ring's width, so the ring's outer edge keeps the card's
+            radius. Scrolled, the radius eases to 3rem rather than the pill radius, so the corners visibly round in. */}
+        <div
+          aria-hidden="true"
+          data-slot="site-header-card"
+          className={cn(
+            "pointer-events-none absolute inset-y-1.5 left-1/2 -z-10 w-(--header-card) -translate-x-1/2 rounded-card backdrop-blur-lg min-[880px]:inset-y-0.5",
+            // The site's morph: 500ms on its ease-out for the shape, fill and blur; the shadow settles in 200ms.
+            "transition-[width,inset-block,border-radius,background-color,backdrop-filter,opacity,box-shadow] ease-out [transition-duration:500ms,500ms,500ms,500ms,500ms,500ms,200ms] motion-reduce:transition-none",
+            surface === "brand" ? "bg-ring-on-brand" : "bg-ring-tint",
+            "group-data-[scrolled=true]/header:rounded-[var(--ds-space-12)] group-data-[scrolled=true]/header:shadow-floating",
+            "group-data-[scrolled=false]/header:inset-y-0 group-data-[scrolled=false]/header:w-full group-data-[scrolled=false]/header:rounded-none group-data-[scrolled=false]/header:bg-transparent group-data-[scrolled=false]/header:backdrop-blur-[0px]",
+            "group-data-[menu-open=true]/header:opacity-0",
+          )}
+        >
           <div
             className={cn(
-              "absolute inset-0 backdrop-blur-lg transition-[clip-path,opacity] duration-300 ease-out motion-reduce:transition-none",
-              surface === "brand" ? "bg-ring-on-brand" : "bg-ring-tint",
-              "opacity-0 [clip-path:inset(0_0_0_0_round_0)]",
-              "group-data-[scrolled=true]/header:opacity-100 group-data-[scrolled=true]/header:[clip-path:inset(var(--hc-y)_var(--hc-x)_var(--hc-y)_var(--hc-x)_round_var(--ds-space-12))]",
-              "group-data-[menu-open=true]/header:opacity-0",
-            )}
-          />
-          <div
-            className={cn(
-              "absolute inset-0 bg-surface transition-[clip-path,opacity] duration-300 ease-out motion-reduce:transition-none",
-              "opacity-0 [clip-path:inset(0_0_0_0_round_0)]",
-              "group-data-[scrolled=true]/header:opacity-100 group-data-[scrolled=true]/header:[clip-path:inset(calc(var(--hc-y)+var(--hc-ring))_calc(var(--hc-x)+var(--hc-ring))_calc(var(--hc-y)+var(--hc-ring))_calc(var(--hc-x)+var(--hc-ring))_round_calc(var(--ds-space-12)-var(--hc-ring)))]",
-              "group-data-[menu-open=true]/header:opacity-0",
+              "absolute inset-[calc(var(--ds-space-1)+var(--ds-space-px))] rounded-card bg-surface transition-[inset,border-radius,background-color] duration-500 ease-out motion-reduce:transition-none min-[880px]:inset-1.5",
+              "group-data-[scrolled=true]/header:rounded-[var(--ds-space-12)]",
+              "group-data-[scrolled=false]/header:inset-0 group-data-[scrolled=false]/header:rounded-none group-data-[scrolled=false]/header:bg-transparent",
             )}
           />
         </div>
