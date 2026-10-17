@@ -1,0 +1,21 @@
+{
+  "name": "empty-state",
+  "type": "product",
+  "title": "Empty state",
+  "description": "A glyph tile, an h4 title, one balanced line of muted text and the next actions; a one-line row for an empty table.",
+  "surface": "product",
+  "kinds": [
+    "app-empty-state"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/product/empty-state.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Never a blank page: a glyph tile (64px, or the 112px ringed story for a product's first visit), the title at h4, one\n// balanced line of muted text at most 480px wide, then the next actions (the brand button first) and anything quieter\n// under them, such as a usage line. Centered in the page column, which it fills when the page has nothing else.\nfunction EmptyState({\n  glyph,\n  title,\n  description,\n  actions,\n  footer,\n  fill = false,\n  as: Heading = \"h2\",\n  className,\n}: {\n  glyph?: React.ReactNode;\n  title: React.ReactNode;\n  description?: React.ReactNode;\n  actions?: React.ReactNode;\n  footer?: React.ReactNode;\n  /** Takes the page's height and centers itself in it, as on a page with nothing else to show. */\n  fill?: boolean;\n  /** h1 when the empty state is the whole page (it stands in for the page header). */\n  as?: \"h1\" | \"h2\" | \"h3\";\n  className?: string;\n}) {\n  return (\n    <div data-slot=\"empty-state\" className={cn(\"flex flex-col items-center px-8 text-center\", fill ? \"my-auto flex-1 justify-center py-16\" : \"pt-8 pb-10\", className)}>\n      {glyph}\n      <Heading className={cn(\"text-h4 leading-snug font-[450] tracking-normal text-fg\", glyph && \"mt-6\")}>{title}</Heading>\n      {description && <p className=\"mt-1 max-w-120 text-body-sm text-balance text-fg-muted\">{description}</p>}\n      {actions && <div className=\"mt-5 flex flex-wrap items-center justify-center gap-2\">{actions}</div>}\n      {footer && <div className=\"mt-6\">{footer}</div>}\n    </div>\n  );\n}\n\n/** Inside a table: the one row saying nothing matches, or nothing has happened yet, in quiet text. */\nfunction EmptyStateRow({ colSpan, className, children }: { colSpan: number; className?: string; children: React.ReactNode }) {\n  return (\n    <tr data-slot=\"empty-state-row\">\n      <td colSpan={colSpan} className={cn(\"px-4 py-12 text-center text-body-sm text-fg-subtle\", className)}>\n        {children}\n      </td>\n    </tr>\n  );\n}\n\nexport { EmptyState, EmptyStateRow };\n"
+    }
+  ]
+}

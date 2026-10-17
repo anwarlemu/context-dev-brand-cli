@@ -1,0 +1,18 @@
+{
+  "name": "dot-glyph",
+  "type": "ui",
+  "title": "Dot icon",
+  "description": "A small static icon drawn as solid dots and rings on a square grid (rows of text in, an SVG out), sized and colored like any icon, as in the credits gem. It does not move and draws no image; for a picture redrawn in dots, use Dot shader image.",
+  "surface": "both",
+  "kinds": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/dot-glyph.tsx",
+      "content": "import type { CSSProperties, ReactNode } from \"react\";\n\nexport const GLYPH_PITCH = 3.2;\nexport const GLYPH_DOT_RADIUS = 1.25;\nconst GLYPH_RING_STROKE = 0.55;\n\n/**\n * An icon drawn on a small square grid of dots, the brand's dot language. Each row is a string: 2 is a solid dot,\n * 1 a hollow ring, anything else an empty cell. Each dot carries --dot-delay, growing along the diagonal from the top\n * left, for animations that sweep across the glyph. Children draw on the same grid, above the dots.\n */\nexport function DotGlyph({ rows, className, dotStaggerMs = 0, children }: { rows: readonly string[]; className?: string; dotStaggerMs?: number; children?: ReactNode }) {\n  const size = rows.length * GLYPH_PITCH;\n  return (\n    <svg aria-hidden=\"true\" viewBox={`0 0 ${size} ${size}`} data-slot=\"dot-glyph\" className={className}>\n      {rows.flatMap((row, y) =>\n        [...row].map((cell, x) => {\n          if (cell !== \"1\" && cell !== \"2\") return null;\n          const solid = cell === \"2\";\n          return (\n            <circle\n              key={`${x}:${y}`}\n              cx={(x + 0.5) * GLYPH_PITCH}\n              cy={(y + 0.5) * GLYPH_PITCH}\n              r={solid ? GLYPH_DOT_RADIUS : GLYPH_DOT_RADIUS - GLYPH_RING_STROKE / 2}\n              fill={solid ? \"currentColor\" : \"none\"}\n              stroke={solid ? \"none\" : \"currentColor\"}\n              strokeWidth={GLYPH_RING_STROKE}\n              style={{ \"--dot-delay\": `${(x + y) * dotStaggerMs}ms` } as CSSProperties}\n            />\n          );\n        }),\n      )}\n      {children}\n    </svg>\n  );\n}\n"
+    }
+  ]
+}

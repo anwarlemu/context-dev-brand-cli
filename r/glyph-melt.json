@@ -1,0 +1,23 @@
+{
+  "name": "glyph-melt",
+  "type": "visual",
+  "title": "Glyph melt",
+  "description": "A product page's glyph that melts into what the page gives you while its card is hovered or focused (and on a loop while the card is in view), then eases back. It needs a link, button or data-hover-morph card around it.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "glyph-engine",
+    "glyph-tile",
+    "use-hover-dot-morph",
+    "theme-store",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-melt.tsx",
+      "content": "\"use client\";\n\nimport { useCallback, useRef } from \"react\";\nimport { GLYPH_GRID, GLYPH_MELT_MARGIN, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { StillGlyph } from \"@/components/visuals/glyph/glyph-tile\";\nimport { resolveColor, SURFACE_COLOR } from \"@/components/visuals/glyph/surface-color\";\nimport { type LoadDotMorph, useHoverDotMorph } from \"@/components/visuals/use-hover-dot-morph\";\nimport { useResolvedTheme } from \"@/lib/theme\";\nimport { cn } from \"@/lib/utils\";\n\ntype GlyphMeltProps = {\n  name: GlyphPairName;\n  /** The color repainted around the dots; defaults to the surface token. */\n  surfaceColor?: string;\n  className?: string;\n};\n\nconst percent = (share: number) => `${share * 100}%`;\n// The canvas reaches the melt's margin past the glyph on every side, so its dots land on the still glyph's.\nconst SPILL = GLYPH_MELT_MARGIN / GLYPH_GRID.columns;\nconst CANVAS_BOX = { left: percent(-SPILL), top: percent(-SPILL), width: percent(1 + SPILL * 2), height: percent(1 + SPILL * 2) };\n\n/**\n * A page glyph that melts into what it gives you, as the blog covers do: on a loop while its card is in view, and\n * for as long as the card is hovered or keyboard-focused. The card is the nearest link, button or `data-hover-morph`.\n * At rest, and with reduced motion, it is the still glyph.\n */\nexport function GlyphMelt({ name, surfaceColor = SURFACE_COLOR, className }: GlyphMeltProps) {\n  const theme = useResolvedTheme();\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const load = useCallback<LoadDotMorph>(\n    async (canvas, onPlayingChange) => {\n      const { createGlyphMelt } = await import(\"@/components/visuals/glyph/glyph-melt-engine\");\n      return createGlyphMelt({\n        canvas,\n        name,\n        palette: { dots: getComputedStyle(canvas).color, background: resolveColor(canvas, surfaceColor) },\n        onPlayingChange,\n      });\n    },\n    // `theme` reloads the morph so it repaints in the new surface color.\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n    [name, surfaceColor, theme],\n  );\n  const isPlaying = useHoverDotMorph(canvasRef, load, { playOnView: true });\n\n  return (\n    <span aria-hidden=\"true\" className={cn(\"relative block text-brand\", className)}>\n      <StillGlyph name={name} className={cn(\"block w-full\", isPlaying && \"invisible\")} />\n      <canvas ref={canvasRef} className={cn(\"absolute\", !isPlaying && \"invisible\")} style={CANVAS_BOX} />\n    </span>\n  );\n}\n"
+    }
+  ]
+}

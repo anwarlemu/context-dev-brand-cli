@@ -1,0 +1,2403 @@
+{
+  "name": "Context.dev",
+  "homepage": "https://context-ds.vercel.app",
+  "items": [
+    {
+      "name": "theme",
+      "type": "theme",
+      "title": "Context.dev theme",
+      "description": "The Context.dev tokens and the Tailwind names that read them. Product screens opt in with the ds-product class.",
+      "surface": "both",
+      "kinds": [],
+      "requires": []
+    },
+    {
+      "name": "accordion",
+      "type": "ui",
+      "title": "Accordion",
+      "description": "Questions in medium weight on light rules, with a chevron that turns over when open.",
+      "surface": "site",
+      "kinds": [
+        "faq"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "agent-setup-window",
+      "type": "site",
+      "title": "Agent setup window",
+      "description": "The home page's dark window with the ways to set an agent up (Prompt, MCP, CLI) as tabs that cycle while it is on screen, agent logos that copy the prompt, a copy button, and the prompt revealed word by word.",
+      "surface": "site",
+      "kinds": [
+        "code-window",
+        "tabs"
+      ],
+      "requires": [
+        "theme",
+        "copy-button",
+        "tabs",
+        "utils"
+      ]
+    },
+    {
+      "name": "alternative-sections",
+      "type": "site",
+      "title": "Alternative page sections",
+      "description": "The sections of an alternatives page. A quick comparison card for the hero's blue frame, why switch (a featured reason card and tagged cards in the soft blue ring), the full comparison and the cost per 1,000 pages as ringed tables with our column tinted, and which one fits with two bullet cards and switch quotes.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "section",
+        "utils"
+      ]
+    },
+    {
+      "name": "announcement-bar",
+      "type": "site",
+      "title": "Announcement bar",
+      "description": "The one-line strip above the site's header, a cool gray band with a hairline under it and the message centered; as a link, hover lays a neutral wash over the band.",
+      "surface": "site",
+      "kinds": [
+        "announcement"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "announcement-dot-strip",
+      "type": "visual",
+      "title": "Announcement dot strip",
+      "description": "Three rows of faint dots along the announcement strip above the header, with a clear gap around its label; dots brighten briefly at random and under the pointer.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "api-grid-glyph",
+      "type": "visual",
+      "title": "API grid glyph",
+      "description": "The Browse APIs card's picture: every API as a small still dot icon in one grid, with a brand-blue highlight that hops from tile to tile and names the API it lands on. The tiles do not melt; only the highlight moves.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glyph-engine",
+        "glyph-tile",
+        "utils"
+      ]
+    },
+    {
+      "name": "app-shell",
+      "type": "block",
+      "title": "App shell",
+      "description": "The product shell: canvas, sidebar with its groups and footer, the top bar with the credits menu, and the page's own scroller.",
+      "surface": "product",
+      "kinds": [
+        "app-page"
+      ],
+      "requires": [
+        "theme",
+        "app-sidebar",
+        "app-top-bar",
+        "credits-menu",
+        "sidebar-alert-card",
+        "user-menu",
+        "workspace-switcher",
+        "utils"
+      ]
+    },
+    {
+      "name": "app-sidebar",
+      "type": "product",
+      "title": "App sidebar",
+      "description": "The product sidebar on the canvas: workspace and search at the top, one centered list of groups, billing cards, Help, Documentation and the account at the foot; a drawer on phones.",
+      "surface": "product",
+      "kinds": [
+        "app-sidebar",
+        "app-nav-item",
+        "app-nav-label"
+      ],
+      "requires": [
+        "theme",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "app-top-bar",
+      "type": "product",
+      "title": "App top bar",
+      "description": "The strip above every product page, level with the sidebar's workspace row: no title, no fill and no border, only the menu button on phones and the credits (or the account) at the right.",
+      "surface": "product",
+      "kinds": [
+        "app-topbar"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "avatar",
+      "type": "ui",
+      "title": "Avatar",
+      "description": "A round picture with white initials on the brand blue as the fallback.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "badge",
+      "type": "ui",
+      "title": "Badge",
+      "description": "The product's status label (the word in mono, colored by status) and tag chip, and the site's hairline chip.",
+      "surface": "both",
+      "kinds": [
+        "app-badge",
+        "chip"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "banner",
+      "type": "ui",
+      "title": "Banner",
+      "description": "A notice across the top of a page, blue for news or soft red for trouble, with actions at the end.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "bar-chart",
+      "type": "product",
+      "title": "Bar chart",
+      "description": "Stacked bars with rounded tops that grow in once, glide between values, a legend that picks series out, and the shared chart tooltip.",
+      "surface": "product",
+      "kinds": [
+        "app-chart"
+      ],
+      "requires": [
+        "theme",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "blog-cards",
+      "type": "site",
+      "title": "Blog cards",
+      "description": "Tall post cards, cover on top and date, title and summary below, alternating white and brand blue, a translucent white ring on hover, and the home page's dark Latest updates band that holds them.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "chip"
+      ],
+      "requires": [
+        "theme",
+        "section",
+        "badge",
+        "dot-glyph",
+        "utils"
+      ]
+    },
+    {
+      "name": "blog-post",
+      "type": "site",
+      "title": "Blog post",
+      "description": "A post in the ruled column. The title with its closing words in blue, a subtitle and the author and dates over a dot field, a header rule, then the article in a reading column with the site's prose (regular headings, muted body at 1.7, blue check bullets, a soft blue quote bar, images and tables as ringed white cards), and related posts as blue cards.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "section",
+        "utils"
+      ]
+    },
+    {
+      "name": "button",
+      "type": "ui",
+      "title": "Button",
+      "description": "The brand's buttons. The product's controls (black primary, brand blue, outline, outline brand, ghost, on brand; sm 32px and md 40px) and the site's pills.",
+      "surface": "both",
+      "kinds": [
+        "button-primary",
+        "button-secondary",
+        "button-on-brand",
+        "app-button-brand",
+        "app-button-black",
+        "app-button-outline",
+        "app-button-ghost"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "card",
+      "type": "ui",
+      "title": "Card",
+      "description": "The product's white card with its hairline in the shadow, and the site's card in a soft blue ring.",
+      "surface": "both",
+      "kinds": [
+        "card",
+        "app-card"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "checkbox",
+      "type": "ui",
+      "title": "Checkbox",
+      "description": "A 16px box, brand blue when checked.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "code-card",
+      "type": "product",
+      "title": "Code card",
+      "description": "The call in mono straight on the card, folded to five lines until expanded, copy in the corner, and a footer with the language chip, the fold and an Open in row.",
+      "surface": "product",
+      "kinds": [
+        "code-window"
+      ],
+      "requires": [
+        "theme",
+        "copy-button",
+        "select",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "code-window",
+      "type": "site",
+      "title": "Code window",
+      "description": "The site's near-black terminal window in the soft blue ring, with window dots, a label chip, actions, a tabbed variant for languages with a fixed scrolling code area, and the install command pill that sits beside it.",
+      "surface": "site",
+      "kinds": [
+        "code-window"
+      ],
+      "requires": [
+        "theme",
+        "copy-button",
+        "utils"
+      ]
+    },
+    {
+      "name": "collapse",
+      "type": "ui",
+      "title": "Collapse",
+      "description": "Grows to its content's height and back, so what sits below glides rather than jumps.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "command",
+      "type": "ui",
+      "title": "Command",
+      "description": "A search field over grouped destinations with keyboard hints below; as CommandDialog it is the command palette, opening without animation.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dialog",
+        "utils"
+      ]
+    },
+    {
+      "name": "comparison-table",
+      "type": "site",
+      "title": "Comparison table",
+      "description": "A table in a white card in the soft blue glass ring, the brand's column tinted blue. `text` for answers in words under h5 heads with captions, `marks` for checks, dashes and short figures under category headings.",
+      "surface": "site",
+      "kinds": [
+        "table",
+        "card-ring"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "competitor-charts",
+      "type": "site",
+      "title": "Competitor charts",
+      "description": "The benchmark card: mono folder tabs (Success rate, Latency, Cost vs success) over dot-meter charts on the brand's faint rings, the brand in blue and others in gray.",
+      "surface": "site",
+      "kinds": [
+        "tabs",
+        "card-ring"
+      ],
+      "requires": [
+        "theme",
+        "tabs",
+        "utils"
+      ]
+    },
+    {
+      "name": "copy-button",
+      "type": "ui",
+      "title": "Copy button",
+      "description": "An icon button that turns into a green check once copied.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "credits-dot-number",
+      "type": "visual",
+      "title": "Credits dot number",
+      "description": "A number drawn in the brand dot grid, solid dots on a field of rings that fade toward the edges, morphing on screen into the same number (or a word) in Doto and back.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "credits-menu",
+      "type": "product",
+      "title": "Credits menu",
+      "description": "The top bar's credits: a gem and the credits left, opening the plan, a dot meter, refresh and rate limit, auto top-up and the upgrade and usage actions.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "stat-card",
+        "button",
+        "dot-glyph",
+        "popover",
+        "skeleton",
+        "switch",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "cta",
+      "type": "site",
+      "title": "Call to action",
+      "description": "The home page's closing call to action (a white card in the soft blue ring with the offer card beside the heading) and the call to action band on the dimmed brand-blue water, with its dashed frame, nodes and its light and glass buttons.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "section",
+        "utils"
+      ]
+    },
+    {
+      "name": "customer-logo-dots",
+      "type": "visual",
+      "title": "Customer logo dots",
+      "description": "A customer's logo redrawn in the brand dot grid over a faint ring backdrop; inside a link, hover or focus melts it into an arrow.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils",
+        "logo-dot-sampling",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "customer-stories",
+      "type": "site",
+      "title": "Customer stories",
+      "description": "Tall brand-blue story cards in a full-width row that scrolls natively (the next card peeks past the edge), dragged with a mouse or moved a card at a time by the arrows, with one dot per card.",
+      "surface": "site",
+      "kinds": [
+        "card"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "customer-story-page",
+      "type": "site",
+      "title": "Customer story page",
+      "description": "A customer story's first section, under the header: a back link, the title at section-heading size with its closing words in blue and the date over an optional dot field, a rule, then the story in a 48rem column.",
+      "surface": "site",
+      "kinds": [
+        "section",
+        "section-heading"
+      ],
+      "requires": [
+        "theme",
+        "section",
+        "utils"
+      ]
+    },
+    {
+      "name": "data-toolbar",
+      "type": "product",
+      "title": "Data toolbar",
+      "description": "The search at the left (a 32px bordered field, or an icon that opens a blue-ringed field) and the filters at the right.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "dialog",
+      "type": "ui",
+      "title": "Dialog",
+      "description": "A white panel in a 6px frame, top-aligned at 12vh, rising as it fades in. Focus trap, scroll lock and Escape included.",
+      "surface": "product",
+      "kinds": [
+        "app-dialog"
+      ],
+      "requires": [
+        "theme",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "docs-link",
+      "type": "ui",
+      "title": "Docs link",
+      "description": "A small muted link to the docs that opens in a new tab, with a book before the label and an up-right arrow after it; on hover the text darkens and underlines.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "dot-engine",
+      "type": "lib",
+      "title": "Dot engine",
+      "description": "The dot animation engine the site's stories and the product's glyphs share. Pictures drawn on the brand dot grid that melt, build or sweep from one to the next on a canvas, with a static SVG resting picture.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "utils"
+      ]
+    },
+    {
+      "name": "dot-glyph",
+      "type": "ui",
+      "title": "Dot icon",
+      "description": "A small static icon drawn as solid dots and rings on a square grid (rows of text in, an SVG out), sized and colored like any icon, as in the credits gem. It does not move and draws no image; for a picture redrawn in dots, use Dot shader image.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "theme"
+      ]
+    },
+    {
+      "name": "dot-shader-image",
+      "type": "visual",
+      "title": "Dot shader image",
+      "description": "Any picture (a logo, icon or product shot) redrawn as brand artwork by the dot shader: a component that shades the image in the browser into hollow and solid circles over a faint ring backdrop, on white, blue or black. Not an icon: for the dashboard's tiny static dot icons see Dot icon (dot-glyph).",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils",
+        "image-dot-shader"
+      ]
+    },
+    {
+      "name": "dot-shader-playground",
+      "type": "visual",
+      "title": "Dot shader playground",
+      "description": "The brand page's interactive tool for the dot shader: a large shaded preview on white, blue or black, sample images, upload by click, drop or paste, and Copy SVG, SVG and PNG downloads.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "button",
+        "copy-button",
+        "utils",
+        "dot-shader-image",
+        "image-dot-shader"
+      ]
+    },
+    {
+      "name": "dropdown-menu",
+      "type": "ui",
+      "title": "Dropdown menu",
+      "description": "Row menus with labels, separators, checks and hold-to-confirm destructive rows.",
+      "surface": "product",
+      "kinds": [
+        "app-menu"
+      ],
+      "requires": [
+        "theme",
+        "use-hold",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "empty-state",
+      "type": "product",
+      "title": "Empty state",
+      "description": "A glyph tile, an h4 title, one balanced line of muted text and the next actions; a one-line row for an empty table.",
+      "surface": "product",
+      "kinds": [
+        "app-empty-state"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "faq",
+      "type": "site",
+      "title": "FAQ section",
+      "description": "Heading on the left; category pills and ringed question cards on the right, ending with an Ask anything card. The list holds room for its tallest answer, or scrolls inside its closed height.",
+      "surface": "site",
+      "kinds": [
+        "faq",
+        "tabs",
+        "card"
+      ],
+      "requires": [
+        "theme",
+        "accordion",
+        "spinner",
+        "tabs",
+        "utils"
+      ]
+    },
+    {
+      "name": "field",
+      "type": "ui",
+      "title": "Field",
+      "description": "A labeled form control. The label above it (with a red asterisk when required), the control, and help or an error in red below.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "label",
+        "utils"
+      ]
+    },
+    {
+      "name": "footer-watermark",
+      "type": "visual",
+      "title": "Footer watermark",
+      "description": "The wordmark across the footer's foot, rebuilt from the brand's circles (\"context.\" in rings, \"dev\" in solid dots); a soft patch follows the pointer and swaps the two. A dotted cursor clicks the button set on the wordmark, then glides onto the letters.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "glide-tabs",
+      "type": "product",
+      "title": "Glide tabs",
+      "description": "The product cards' small option row (28px, caption): one pill springs to the picked option, a soft gray wash (`wash`) or a white pill on a gray track with hairlines between the rest (`track`). Options can carry an icon, and `role=\"tab\"` makes it tabs over content. For a picker in a form, use segmented-control; for tabs with panels, tabs.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "glyph-card",
+      "type": "product",
+      "title": "Glyph card",
+      "description": "The redesign's cards: a glyph-tile header with a title and an aside, a centered big-number card with a corner pill, the arrow link out and status pills.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glyph-tile",
+        "glyph-engine",
+        "utils"
+      ]
+    },
+    {
+      "name": "glyph-engine",
+      "type": "lib",
+      "title": "Glyph engine",
+      "description": "The product's glyph art and players, built on the dot engine. Glyph art, the looping story and melt players, and the pages cover's scene and shader; the dot field, the melt, the story and morph players and the hover morph come from dot-engine and use-hover-dot-morph.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "glyph-loop",
+      "type": "visual",
+      "title": "Glyph loop",
+      "description": "A product page's glyph in the regular dot grid, its subject sweeping into what the page gives you and back on its own, on a loop while on screen. No tile and no hover; for a glyph that answers the pointer see Glyph melt, for the large fine-dot version see Glyph story.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "glyph-engine"
+      ]
+    },
+    {
+      "name": "glyph-melt",
+      "type": "visual",
+      "title": "Glyph melt",
+      "description": "A product page's glyph that melts into what the page gives you while its card is hovered or focused (and on a loop while the card is in view), then eases back. It needs a link, button or data-hover-morph card around it.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glyph-engine",
+        "glyph-tile",
+        "use-hover-dot-morph",
+        "theme-store",
+        "utils"
+      ]
+    },
+    {
+      "name": "glyph-story",
+      "type": "visual",
+      "title": "Glyph story",
+      "description": "A product page's glyph drawn large in the blog covers' fine dot pattern, the subject melting into what it gives you on a loop while in view, or held still with `still`. The featured picture on cards like Browse APIs; GlyphTile `ringed` draws the same thing.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "glyph-engine"
+      ]
+    },
+    {
+      "name": "glyph-tile",
+      "type": "visual",
+      "title": "Glyph tile",
+      "description": "A product page's glyph as a small icon in a bordered square, looping between its subject and what it gives you, or held still. `StillGlyph` is the bare static SVG; `ringed` swaps the tile for the large fine-dot Glyph story.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glyph-engine",
+        "glyph-loop",
+        "glyph-story",
+        "utils"
+      ]
+    },
+    {
+      "name": "hero-circle-pattern",
+      "type": "visual",
+      "title": "Hero circle pattern",
+      "description": "The brand's ring pattern as a surface that clears itself around its marked content, with optional solid diamond clusters, and StoryStage, the faint ring stage a card's dot story plays on.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils",
+        "hero-pattern-hole"
+      ]
+    },
+    {
+      "name": "hero-data-flow",
+      "type": "visual",
+      "title": "Hero data flow",
+      "description": "Dotted strands flowing into the hero's demo from the left and out to the right. `scrape` braids strands with flickering binary; `answers` reads labeled sources one at a time, types the question, and sends the answer out with citation tags.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "hero-dot-field",
+      "type": "visual",
+      "title": "Hero dot field",
+      "description": "The hero's dot backdrop. Winding bands of faint dots, rings and a few lit dots, or with `streams`, curved streams of dots running in from the edges toward the content with light pulsing along them; the pointer leaves a trail. Optional words in its gaps and the logo mark in dots in the corner.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils",
+        "hero-pattern-hole"
+      ]
+    },
+    {
+      "name": "hero-globe",
+      "type": "visual",
+      "title": "Hero globe",
+      "description": "A hairline wireframe globe rising from the hero's foot, cut to a dome, with comets running node to node along its grid. HeroGlobeStats adds four stat windows beside its crown, each wired to a node by an elbowed hairline, on screens 90rem and wider only.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "hero-monitor",
+      "type": "visual",
+      "title": "Hero monitor",
+      "description": "An old terminal drawn in the brand dot grid, with a 58 by 38 dot story set on its screen. Its silhouette is painted in the surface color, so a dot field or data flow behind it stays hidden.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "utils"
+      ]
+    },
+    {
+      "name": "hero-pattern-hole",
+      "type": "lib",
+      "title": "Hero pattern hole",
+      "description": "The attribute that marks content for the dot patterns to clear around, and the kinds of hole (text, box, snug-box, tight-box, cover, oval).",
+      "surface": "site",
+      "kinds": [],
+      "requires": []
+    },
+    {
+      "name": "hero-stat-morphs",
+      "type": "visual",
+      "title": "Hero stat morphs",
+      "description": "Four figures drawn in the brand dot grid in the hero's open corners, each holding, then melting through a run of dot shapes (a monitor, an envelope, a document, a logo) and back on its own clock. Shown on screens 80rem and wider.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "utils",
+        "hero-pattern-hole",
+        "logo-dot-sampling"
+      ]
+    },
+    {
+      "name": "hero-water",
+      "type": "visual",
+      "title": "Hero water",
+      "description": "A WebGL water surface under a white to blue sky that ripples on its own and in the pointer's wake, or printed as a halftone dot screen. A still picture of the water shows where WebGL is missing, on small or touch screens, and under reduced motion.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "hero",
+      "type": "site",
+      "title": "Hero",
+      "description": "The site's centered hero on white (the home page, key phrase in blue) or brand blue (inner pages), with an eyebrow line, a pill, the title, one muted line, the actions with their caption, and a ringed blue visual panel with an optional glass tab. The large title holds one line on wide screens unless `wrapTitle`. It can fill the first screen, stagger in on load and carries data-ds-dots for the dot streams.",
+      "surface": "site",
+      "kinds": [
+        "hero",
+        "hero-title",
+        "hero-subtitle",
+        "eyebrow"
+      ],
+      "requires": [
+        "theme",
+        "ring-backdrop",
+        "utils"
+      ]
+    },
+    {
+      "name": "hold-button",
+      "type": "ui",
+      "title": "Hold button",
+      "description": "An outlined red button that confirms a destructive action only when held; red fills it from the left while it is held (1.2 seconds by default), and letting go early snaps it back.",
+      "surface": "product",
+      "kinds": [
+        "app-button-danger"
+      ],
+      "requires": [
+        "theme",
+        "use-hold",
+        "utils"
+      ]
+    },
+    {
+      "name": "image-dot-shader",
+      "type": "lib",
+      "title": "Image dot shader functions",
+      "description": "The dot shader behind Dot shader image and the playground, as plain functions with no UI. An image in, one dot state per cell of the 80 by 60 grid out (solid, hollow or none), and the picture as an SVG string.",
+      "surface": "site",
+      "kinds": [],
+      "requires": []
+    },
+    {
+      "name": "input",
+      "type": "ui",
+      "title": "Input",
+      "description": "A 40px text field; its border darkens on hover and turns brand blue on focus.",
+      "surface": "both",
+      "kinds": [
+        "input",
+        "app-input"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "json-viewer",
+      "type": "product",
+      "title": "JSON viewer",
+      "description": "A response as numbered, wrapped, foldable lines with search, copy and download.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "copy-button",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "ui",
+      "title": "Kbd",
+      "description": "A keyboard key for a shortcut, a 20px box with a light border and the key in small gray type.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "label",
+      "type": "ui",
+      "title": "Label",
+      "description": "The name of a form control, in body-sm over or beside it; it dims with its control when that is disabled. Field adds the required asterisk, help and error.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "line-chart",
+      "type": "product",
+      "title": "Line chart",
+      "description": "One smooth brand-blue line for the total (or one series) over a soft fill, with a marker at each point, the last stretch dotted while today fills, an optional headline pill, and the shared chart tooltip on hover.",
+      "surface": "product",
+      "kinds": [
+        "app-chart"
+      ],
+      "requires": [
+        "theme",
+        "utils",
+        "bar-chart"
+      ]
+    },
+    {
+      "name": "logo-dot-sampling",
+      "type": "lib",
+      "title": "Logo dot sampling",
+      "description": "Samples a logo image onto a square grid of cells, solid dots for its lighter parts and rings for its darker parts (or its tile).",
+      "surface": "site",
+      "kinds": [],
+      "requires": []
+    },
+    {
+      "name": "logo-strip",
+      "type": "site",
+      "title": "Logo strip",
+      "description": "The boxed logo strip under the hero, with a label cell at the left and gray logos in ruled cells looping sideways; the loop coasts to a stop under the pointer and a quote card glides from logo to logo.",
+      "surface": "site",
+      "kinds": [
+        "logo-strip"
+      ],
+      "requires": [
+        "theme",
+        "testimonials",
+        "utils"
+      ]
+    },
+    {
+      "name": "overview-page",
+      "type": "block",
+      "title": "Overview page",
+      "description": "The redesigned overview: the try box, the usage card over four credit and plan cards, the quickstart beside them, and the usage summary dialog.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "app-shell",
+        "bar-chart",
+        "credits-menu",
+        "glyph-card",
+        "page",
+        "quickstart-card",
+        "stat-card",
+        "try-api",
+        "usage-card",
+        "usage-summary",
+        "dot-glyph",
+        "segmented-control"
+      ]
+    },
+    {
+      "name": "page",
+      "type": "product",
+      "title": "Page",
+      "description": "The product page column (880px, balanced between the sidebar and the support button) with its centered header, sections and the cards' rise.",
+      "surface": "product",
+      "kinds": [
+        "app-page-column",
+        "app-page-header",
+        "app-page-title"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "pages-cover",
+      "type": "visual",
+      "title": "Pages cover",
+      "description": "The pages blog cover, drawn in brand-blue dots: three pages gather and bind into one big page while its card is in view or hovered, with what goes in and what comes out labeled either side.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glyph-engine",
+        "use-hover-dot-morph",
+        "theme-store",
+        "utils"
+      ]
+    },
+    {
+      "name": "persona-glyph",
+      "type": "visual",
+      "title": "Persona glyph",
+      "description": "A site glyph in white dots on a brand-blue tile that melts between two pictures (what a team builds, then what the API gives it). `MenuGlyph` is the 36px still tile the header menus use as icons.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "utils"
+      ]
+    },
+    {
+      "name": "playground-parameters",
+      "type": "product",
+      "title": "Playground parameters",
+      "description": "The playground's parameters panel, with groups of rows in soft gray boxes, filled gray fields, a changed count, Reset, scroll fades and a fetching lock.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "input",
+        "popover",
+        "select",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "playground-result-card",
+      "type": "product",
+      "title": "Playground result card",
+      "description": "The result of a call, with Preview, JSON and History tabs above the card, the status, a stats strip and the response in an inset panel; plus the ready and running states.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "button",
+        "segmented-control",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "popover",
+      "type": "ui",
+      "title": "Popover",
+      "description": "A white floating panel 6px off its trigger, growing out of the corner nearest it, for a small form or details.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "pricing",
+      "type": "site",
+      "title": "Pricing",
+      "description": "Plan cards in one ringed frame split by hairlines, parts aligned across the row, a glide toggle for monthly or yearly, the two-row shelves with the plan-fit panel, a discount banner, and the credit costs table.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "chip",
+        "table"
+      ],
+      "requires": [
+        "theme",
+        "tooltip",
+        "use-tab-glide",
+        "utils"
+      ]
+    },
+    {
+      "name": "product-grid",
+      "type": "site",
+      "title": "Product grid",
+      "description": "The home page's product cards in two columns, each with an h3 name, an outline Explore pill, a description, chips and a demo window.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring",
+        "chip",
+        "media-frame"
+      ],
+      "requires": [
+        "theme",
+        "badge",
+        "button",
+        "utils"
+      ]
+    },
+    {
+      "name": "product-hero",
+      "type": "site",
+      "title": "Product page (water)",
+      "description": "The sections of the blue water product pages, not only the hero. A full-bleed blue hero whose water fades up to white behind a centered two-line title and keyed pills, a centered row of gray customer logos, numbered steps and a compact hairline FAQ in a narrow column, and a blue closing band.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "product-landing",
+      "type": "site",
+      "title": "Product page (landing)",
+      "description": "A product page on the home page's design, in the ruled column. Story card sections (three capabilities, two workflows), each a white card in the soft blue ring with a demo window, a code section with an install pill and a docs pill, and an FAQ in one ringed card.",
+      "surface": "site",
+      "kinds": [
+        "demo-panel"
+      ],
+      "requires": [
+        "theme",
+        "button",
+        "product-grid",
+        "section",
+        "utils"
+      ]
+    },
+    {
+      "name": "product-page",
+      "type": "site",
+      "title": "Product page (stage)",
+      "description": "The stage design for a product page. A wide column with two-line headings (black, then blue), the product on a blue stage under the hero, a customer row, figures on a gray panel, capabilities under blue-led hairlines, a tabbed code explorer, a steps timeline, a comparison table, a hairline FAQ, related cards and a blue closing panel.",
+      "surface": "site",
+      "kinds": [
+        "stat"
+      ],
+      "requires": [
+        "theme",
+        "copy-button",
+        "code-window",
+        "utils"
+      ]
+    },
+    {
+      "name": "progress",
+      "type": "ui",
+      "title": "Progress",
+      "description": "A thin pill track with a brand-blue fill.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "quickstart-card",
+      "type": "product",
+      "title": "Quickstart card",
+      "description": "Numbered onboarding steps in a glyph card that scroll inside it, with a masked key field, tabbed setup snippets and copy pills.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glyph-card",
+        "glide-tabs",
+        "copy-button",
+        "secret-field",
+        "tooltip",
+        "glyph-engine",
+        "utils"
+      ]
+    },
+    {
+      "name": "ring-backdrop",
+      "type": "visual",
+      "title": "Ring backdrop",
+      "description": "A faint grid of rings behind a panel or card, keeping only whole rings: none is sliced by a rounded corner or by content marked `data-ring-clear` on top of it.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "scroll-area",
+      "type": "ui",
+      "title": "Scroll area",
+      "description": "A scroller with no scrollbar that fades at whichever edge has more, with a chevron that scrolls the rest into view.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "secret-field",
+      "type": "ui",
+      "title": "Secret field",
+      "description": "An API key on a pale inset well, masked after its first characters, with show and copy buttons; it can start revealed for the moment after a key is created.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "copy-button",
+        "tooltip",
+        "utils"
+      ]
+    },
+    {
+      "name": "section",
+      "type": "site",
+      "title": "Section",
+      "description": "A full-bleed site band with its content in the ruled column, the column's edge lines and header rule with their nodes, and the left aligned section heading with its closing words in blue.",
+      "surface": "site",
+      "kinds": [
+        "section",
+        "section-heading",
+        "section-description"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "segmented-control",
+      "type": "ui",
+      "title": "Segmented control",
+      "description": "The dashboard's tabs as a value picker, with radio semantics and the gliding pill.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "use-tab-glide",
+        "utils"
+      ]
+    },
+    {
+      "name": "select",
+      "type": "ui",
+      "title": "Select",
+      "description": "A single-choice dropdown: a toolbar button, a form field, or a small chip.",
+      "surface": "product",
+      "kinds": [
+        "app-select"
+      ],
+      "requires": [
+        "theme",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "ui",
+      "title": "Separator",
+      "description": "A light hairline between groups of content, horizontal or vertical.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "settings-page",
+      "type": "block",
+      "title": "Settings page",
+      "description": "Settings as centered tabs (personal, organization, billing, referrals) over cards of fields, switch rows, the billing summary and danger zones.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "app-shell",
+        "page",
+        "settings-section",
+        "button",
+        "dialog",
+        "dropdown-menu",
+        "hold-button",
+        "input",
+        "select",
+        "switch",
+        "tabs",
+        "tooltip",
+        "glyph-tile",
+        "utils"
+      ]
+    },
+    {
+      "name": "settings-section",
+      "type": "product",
+      "title": "Settings section",
+      "description": "A quiet title over a card of rows (title, muted text, control at the right), stacked fields, a notice and the danger button.",
+      "surface": "product",
+      "kinds": [
+        "app-card"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "ui",
+      "title": "Sheet",
+      "description": "A side panel floating over the page's edge in the dialog's frame, with no scrim.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "sidebar-alert-card",
+      "type": "product",
+      "title": "Sidebar alert card",
+      "description": "A billing problem at the foot of the sidebar (a failed payment, a plan ending), the whole card the fix, with a pulsing dot.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "site-footer",
+      "type": "site",
+      "title": "Site footer",
+      "description": "The site's near-black footer. The brand block (logo, two-line description, socials and a \"Backed by\" line) and the compliance badges over a row of inline links sit over a white rule; the link groups run in four columns; the copyright row sits between two rules with nodes on the crossings; and a watermark band with its button closes it.",
+      "surface": "site",
+      "kinds": [
+        "footer"
+      ],
+      "requires": [
+        "theme",
+        "section",
+        "utils"
+      ]
+    },
+    {
+      "name": "site-header",
+      "type": "site",
+      "title": "Site header",
+      "description": "The site's header. Edge to edge with no fill at the top of the page, it gathers into a floating white pill in a translucent ring once the page scrolls; menus open as one ringed panel whose menus slide side by side, and below 880px the links move into a full-screen menu under the bar.",
+      "surface": "site",
+      "kinds": [
+        "header",
+        "header-scrolled",
+        "nav-link",
+        "header-action"
+      ],
+      "requires": [
+        "theme",
+        "announcement-bar",
+        "utils"
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "ui",
+      "title": "Skeleton",
+      "description": "A pale block with a slow sheen while content loads.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "sonner",
+      "type": "ui",
+      "title": "Toaster",
+      "description": "Where toasts appear (Toaster, with `toast()` from sonner to raise one). White toasts with a light border, a soft shadow and a close button, at the bottom center.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme"
+      ]
+    },
+    {
+      "name": "spinner",
+      "type": "ui",
+      "title": "Spinner",
+      "description": "A thin ring turning once a second in the color of the text around it, alone or inside a button.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "stat-block",
+      "type": "site",
+      "title": "Stat block",
+      "description": "A big brand-blue figure with a plain caption under it, in a white card inside the soft blue ring.",
+      "surface": "site",
+      "kinds": [
+        "stat",
+        "card"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "stat-card",
+      "type": "product",
+      "title": "Stat card",
+      "description": "A caption title, a 22px tabular figure and a quiet footer; the whole card can be the button or the link, with a dot meter for what's left.",
+      "surface": "product",
+      "kinds": [
+        "app-stat"
+      ],
+      "requires": [
+        "theme",
+        "skeleton",
+        "utils"
+      ]
+    },
+    {
+      "name": "story-actions",
+      "type": "visual",
+      "title": "Actions story",
+      "description": "A looping dot picture. A pointer clicks, an hourglass waits and a mouse scrolls, then the page they leave behind renders.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-answer",
+      "type": "visual",
+      "title": "Answer story",
+      "description": "A looping dot picture. A question is asked, its sources are read, and the answer is written between braces in the shape that was asked for.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-assets",
+      "type": "visual",
+      "title": "Assets story",
+      "description": "A looping dot picture. A brand's logo becomes its colors, then a company profile wearing both.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-autofill",
+      "type": "visual",
+      "title": "Autofill story",
+      "description": "A looping dot picture. A domain is typed, a pointer clicks Auto-fill, and a signup form fills itself field by field.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-batch",
+      "type": "visual",
+      "title": "Batch story",
+      "description": "A looping dot picture. A job counts up to 25,000 URLs, becomes a page of results, and the page is packed into a box as one dataset.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-batches",
+      "type": "visual",
+      "title": "Batches story",
+      "description": "A looping dot picture. A batch reads its sources, then counts through its URLs as its progress fills dot by dot.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-blog-hero",
+      "type": "visual",
+      "title": "Blog hero story",
+      "description": "A looping dot picture with a caption column. A post writes itself line by line, then becomes a megaphone calling out the news.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "story-parts",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-brand-kit",
+      "type": "visual",
+      "title": "Brand kit story",
+      "description": "A looping dot picture. A typed domain becomes a kit box, then the logo, colors, typeface and company details unpacked from it.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "story-parts"
+      ]
+    },
+    {
+      "name": "story-collect",
+      "type": "visual",
+      "title": "Collect story",
+      "description": "A looping dot picture. A ring fills as the job runs, becomes the results a page at a time, then the paper plane of the completion webhook.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-compare-hero",
+      "type": "visual",
+      "title": "Compare hero story",
+      "description": "A looping dot picture with a caption column. Two tools checked feature by feature, then their bars rising side by side.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "story-parts",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-components",
+      "type": "visual",
+      "title": "Components story",
+      "description": "A looping dot picture. A button rounds to the site's radius and becomes a card, then the sun and moon of its light and dark themes.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-context",
+      "type": "visual",
+      "title": "Context story",
+      "description": "A looping dot picture. A company's building becomes its social links, then a profile card whose fields fill in.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-crawl",
+      "type": "visual",
+      "title": "Crawl story",
+      "description": "A looping dot picture. A sitemap becomes a web, spun outwards a ring of links at a time to the scope that was set.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-datasets-hero",
+      "type": "visual",
+      "title": "Datasets hero story",
+      "description": "A looping dot picture with a caption column. Source documents collected one by one, then the table they are delivered as filling row by row.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "story-parts",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-design-system",
+      "type": "visual",
+      "title": "Design system story",
+      "description": "A looping dot picture. A live website is scanned and becomes its design system, a board of its type, colors, buttons and spacing.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "story-output",
+        "story-parts"
+      ]
+    },
+    {
+      "name": "story-discover",
+      "type": "visual",
+      "title": "Discover story",
+      "description": "A looping dot picture. A radar sweeps a domain and finds its pages, then becomes the list of their URLs.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-enrich",
+      "type": "visual",
+      "title": "Enrich story",
+      "description": "A looping dot picture. An agent's eye reads an identifier and melts into the company and the person behind it, each with its profile.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-extract",
+      "type": "visual",
+      "title": "Extract story",
+      "description": "A looping dot picture. A scan reads a live page, which melts into a window that steps through each output format in its tabs (Markdown, HTML, JSON, images, a screenshot and highlights), typing the text ones and building the pictures.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-free-tools-hero",
+      "type": "visual",
+      "title": "Free tools hero story",
+      "description": "A looping dot picture with a caption column. A shelf of tools lighting up one by one, then one of them run on a URL.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "story-parts",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-freshness",
+      "type": "visual",
+      "title": "Freshness story",
+      "description": "A looping dot picture. A dial sets how old a copy may be, and becomes the cache or the live web the page then comes from.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-generate",
+      "type": "visual",
+      "title": "Generate story",
+      "description": "A looping dot picture. A prompt naming a company becomes the spark of the model at work, then the email, social post and landing page it makes in that company's brand.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "story-parts"
+      ]
+    },
+    {
+      "name": "story-glossary-hero",
+      "type": "visual",
+      "title": "Glossary hero story",
+      "description": "A looping dot picture with a caption column. An open book read line by line, then one entry looked up term after term.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "story-parts",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-grants-hero",
+      "type": "visual",
+      "title": "Grants hero story",
+      "description": "A looping dot picture with a caption column. A reward curve climbing as an experiment runs, then the grant's usage credits awarded a tranche at a time.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "story-parts",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-identity",
+      "type": "visual",
+      "title": "Identity story",
+      "description": "A looping dot picture. A domain, an email, a name and a ticker melt into one another, then into the seal of the brand they resolve to.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "story-freshness"
+      ]
+    },
+    {
+      "name": "story-metadata",
+      "type": "visual",
+      "title": "Metadata story",
+      "description": "A looping dot picture. A tag becomes three mapped URLs, two of which gain their title and description while the third waits.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-monitor-ways",
+      "type": "visual",
+      "title": "Monitor ways stories",
+      "description": "Three looping dot pictures, one per way to monitor: a page re-scraped until a line changes and its diff, a sitemap that loses one URL and gains one, then the new page, and an extract instruction read into a scored record.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "story-parts"
+      ]
+    },
+    {
+      "name": "story-output",
+      "type": "visual",
+      "title": "Output story",
+      "description": "A looping dot picture. A switch is thrown for each format under a live page, which becomes the three files the request returns.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-parse",
+      "type": "visual",
+      "title": "Parse story",
+      "description": "A looping dot picture. An uploaded PDF is read by OCR and becomes a Markdown document.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-parts",
+      "type": "lib",
+      "title": "Story parts",
+      "description": "Pieces more than one dot story draws with. The page heroes' shared grid and caption kit, the style guide's letters and swatches, and the prompt field the generate stories type into.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-persona",
+      "type": "visual",
+      "title": "Persona story",
+      "description": "A looping dot picture for a kind of team: what it builds crumbles under its challenge, a request is answered, and it has what the API gives it, with a three-line caption for each part.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "persona-glyph"
+      ]
+    },
+    {
+      "name": "story-question",
+      "type": "visual",
+      "title": "Question story",
+      "description": "A looping dot picture. A pile of pages becomes the question asked instead, then the magnifier that reads for you.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-rag",
+      "type": "visual",
+      "title": "RAG story",
+      "description": "A looping dot picture. A question is typed into a search field, the field becomes a brain, and the brain hands out the pages that answer it.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-research",
+      "type": "visual",
+      "title": "Research story",
+      "description": "A looping dot picture. A magnifying glass reads across a company's page, then the page becomes its brand profile: typeface, colors, logo and facts.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-scope",
+      "type": "visual",
+      "title": "Scope story",
+      "description": "A looping dot picture. A domain takes in its subdomains, then becomes a meter that fills with links and stops at the limit.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-scrape",
+      "type": "visual",
+      "title": "Scrape story",
+      "description": "A looping dot picture. A URL is typed, its Markdown streams out, and the page is captured as a screenshot with its images lifted out.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-search",
+      "type": "visual",
+      "title": "Search story",
+      "description": "A looping dot picture. A question is typed at an old terminal, which becomes three ranked results with their pages read.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-setup",
+      "type": "visual",
+      "title": "Setup story",
+      "description": "A looping dot picture. An envelope opens, becomes a terminal that types an API key, then a package that is unpacked.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-site-map",
+      "type": "visual",
+      "title": "Site map story",
+      "description": "A looping dot picture. A domain typed under a paper map becomes the site as a tree of its pages, and the pages to scrape are picked.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-sources",
+      "type": "visual",
+      "title": "Sources story",
+      "description": "A looping dot picture. An answer becomes the link its claims keep, then the answer again with each claim tied to its numbered URL.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-spacing",
+      "type": "visual",
+      "title": "Spacing story",
+      "description": "A looping dot picture. Two blocks open to each step of the spacing scale, then a card is lifted by each of the shadows.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-structure",
+      "type": "visual",
+      "title": "Structure story",
+      "description": "A looping dot picture. A paragraph of prose becomes a tree of named fields, which fill with the answer's values.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-tenant-theme",
+      "type": "visual",
+      "title": "Tenant theme story",
+      "description": "A looping dot picture. One dashboard re-themed for three tenants in turn, each brand spreading across it from the mark in its sidebar.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-type",
+      "type": "visual",
+      "title": "Type story",
+      "description": "A looping dot picture. A type specimen set from light to bold, then a site's colors read one chip at a time.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "story-parts"
+      ]
+    },
+    {
+      "name": "story-url-list",
+      "type": "visual",
+      "title": "URL list story",
+      "description": "A looping dot picture. A list of URLs runs up to the batch limit, then one of them is shown with the identifier and metadata it carries.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "story-watch",
+      "type": "visual",
+      "title": "Watch story",
+      "description": "A looping dot picture. A clock checks a page on its schedule until a check finds a change, then becomes a bell beside the notice of what changed.",
+      "surface": "site",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "surface",
+      "type": "lib",
+      "title": "Surface",
+      "description": "Marks an area as product or site, so its components and their overlays use that scale.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "utils"
+      ]
+    },
+    {
+      "name": "switch",
+      "type": "ui",
+      "title": "Switch",
+      "description": "An on/off toggle for a setting that applies at once; a pale track with a hairline when off, brand blue when on, dimmed when disabled.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "table-page",
+      "type": "block",
+      "title": "Table page",
+      "description": "The API keys page; a centered header, the plan's key allowance, search and status filter, the keys table with hold-to-confirm row menus, and the empty page.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "app-shell",
+        "data-toolbar",
+        "empty-state",
+        "page",
+        "button",
+        "dialog",
+        "dropdown-menu",
+        "field",
+        "input",
+        "secret-field",
+        "select",
+        "table",
+        "glyph-tile",
+        "utils"
+      ]
+    },
+    {
+      "name": "table",
+      "type": "ui",
+      "title": "Table",
+      "description": "A table on a card: a faint header band, rows on light lines, tabular numbers.",
+      "surface": "product",
+      "kinds": [
+        "app-table",
+        "app-th",
+        "app-td"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "tabs",
+      "type": "ui",
+      "title": "Tabs",
+      "description": "Switch between views. The product's plain labels with a soft gray pill gliding to the selected one (or `segmented`, a white pill on a gray track), or the site's pills with a blue-outlined pill gliding between them.",
+      "surface": "both",
+      "kinds": [
+        "tabs",
+        "app-tabs"
+      ],
+      "requires": [
+        "theme",
+        "use-tab-glide",
+        "utils"
+      ]
+    },
+    {
+      "name": "tag-filter",
+      "type": "ui",
+      "title": "Tag filter",
+      "description": "The picked tags as clearable blue chips, then a Tags button that opens a searchable, checkable list.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "popover",
+        "utils"
+      ]
+    },
+    {
+      "name": "tags-input",
+      "type": "ui",
+      "title": "Tags input",
+      "description": "A field that turns typed or pasted values into small blue chips, red when invalid.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "testimonials",
+      "type": "site",
+      "title": "Testimonials",
+      "description": "Quote cards on a hairline, all the same anatomy; the active card's highlighted phrases turn brand blue.",
+      "surface": "site",
+      "kinds": [
+        "card"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "textarea",
+      "type": "ui",
+      "title": "Textarea",
+      "description": "Multi-line text entry with the input's border and states (hover, brand-blue focus, invalid, disabled), fixed in size.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "theme-store",
+      "type": "lib",
+      "title": "Theme store",
+      "description": "Keeps the product's theme (light, dark or system) across visits and applies it before first paint. No control of its own; the user menu's theme switch reads and sets it.",
+      "surface": "product",
+      "kinds": [],
+      "requires": []
+    },
+    {
+      "name": "tooltip",
+      "type": "ui",
+      "title": "Tooltip",
+      "description": "A short label on hover or focus; waits a beat, then appears at once for neighbors.",
+      "surface": "product",
+      "kinds": [
+        "app-tooltip"
+      ],
+      "requires": [
+        "theme",
+        "surface",
+        "utils"
+      ]
+    },
+    {
+      "name": "trust-strip",
+      "type": "site",
+      "title": "Trust strip",
+      "description": "Three security cards in the soft blue ring, each with a blue dot mark (`TrustMark`: compliance, policies, controls), a title, a sentence and an outline pill; the whole card is the link.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring",
+        "button-secondary"
+      ],
+      "requires": [
+        "theme",
+        "button",
+        "dot-glyph",
+        "utils"
+      ]
+    },
+    {
+      "name": "try-api",
+      "type": "product",
+      "title": "Try API box",
+      "description": "The overview's lead: API tabs on a gray track with a gliding white pill, an input that types its examples, and a square blue run button.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "glide-tabs",
+        "dot-glyph",
+        "utils"
+      ]
+    },
+    {
+      "name": "upgrade-glyph",
+      "type": "visual",
+      "title": "Upgrade glyph",
+      "description": "The Upgrade plan card's picture in the fine dot pattern: a gift that melts into a rocket and back, on a loop while on screen. Reduced motion keeps the gift.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dot-engine",
+        "glyph-engine"
+      ]
+    },
+    {
+      "name": "usage-card",
+      "type": "product",
+      "title": "Usage card",
+      "description": "The overview's usage chart: the breakdown menu as its title, the range on a gliding pill, stacked bars and a legend that picks series out per breakdown.",
+      "surface": "product",
+      "kinds": [
+        "app-chart"
+      ],
+      "requires": [
+        "theme",
+        "bar-chart",
+        "glide-tabs",
+        "popover",
+        "skeleton",
+        "glyph-tile",
+        "glyph-engine",
+        "utils"
+      ]
+    },
+    {
+      "name": "usage-summary",
+      "type": "product",
+      "title": "Usage summary",
+      "description": "The usage page at a glance, in a dialog over the overview: credits remaining over a long dot meter, today's and this month's use beside it, and a ranked bar list of the top APIs, with a link out to full usage in the footer.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "stat-card",
+        "dialog",
+        "utils"
+      ]
+    },
+    {
+      "name": "use-case-features",
+      "type": "site",
+      "title": "Use case features",
+      "description": "The use case pages' feature cards in the soft blue ring (a marker, a title that can link, tags, a code chip and a dot story in a demo window), the closing note card, the comparison table with Context.dev's column on a faint blue wash, and the before and after panels.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring",
+        "table"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "use-case-how-it-works",
+      "type": "site",
+      "title": "Use case how it works",
+      "description": "The numbered steps in a ring card with the install command for the picked language, the docs pill and a note, beside a tabbed code window in every SDK language; or a card per step with its own code.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring",
+        "code-window",
+        "tabs"
+      ],
+      "requires": [
+        "theme",
+        "code-window",
+        "button",
+        "copy-button",
+        "utils"
+      ]
+    },
+    {
+      "name": "use-case-personas",
+      "type": "site",
+      "title": "Use case personas",
+      "description": "Who a use case is for, a ring card per persona two across, with its glyph or icon tile, its role, and the challenge, solution and impact (impact in blue), or a dot story with the part it is playing written beneath.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring"
+      ],
+      "requires": [
+        "theme",
+        "use-case-features",
+        "utils"
+      ]
+    },
+    {
+      "name": "use-case-proof",
+      "type": "site",
+      "title": "Use case proof",
+      "description": "The use case pages' proof blocks in the soft blue ring: customers as outlined chips, a large quote card beside a stack of brand-blue metrics, example cards with an arrow link to the customer, and story cards with their headline number.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring",
+        "stat",
+        "chip"
+      ],
+      "requires": [
+        "theme",
+        "button",
+        "utils"
+      ]
+    },
+    {
+      "name": "use-cases",
+      "type": "site",
+      "title": "Use cases explorer",
+      "description": "The home page's tabbed code explorer in the soft blue ring (not the use case pages' sections, which are the use-case items), the use cases listed on the left with a pale brand-tint card gliding to the picked one, the code for each in a code window; it steps through them every six seconds while on screen, with a countdown donut.",
+      "surface": "site",
+      "kinds": [
+        "tabs",
+        "code-window",
+        "card-ring"
+      ],
+      "requires": [
+        "theme",
+        "code-window",
+        "tabs",
+        "utils"
+      ]
+    },
+    {
+      "name": "use-hold",
+      "type": "hook",
+      "title": "useHold",
+      "description": "Fires an action only after the pointer or key is held for a set time.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme"
+      ]
+    },
+    {
+      "name": "use-hover-dot-morph",
+      "type": "lib",
+      "title": "Hover dot morph",
+      "description": "Plays a dot morph on a canvas while its card is hovered or focused, and lets it settle back home after. The card is the nearest link or button, or the nearest element marked `data-hover-morph` when it is neither.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "dot-engine"
+      ]
+    },
+    {
+      "name": "use-tab-glide",
+      "type": "hook",
+      "title": "useTabGlide",
+      "description": "Glides one pill to the selected tab on a spring, starting from wherever it is mid-glide.",
+      "surface": "both",
+      "kinds": [],
+      "requires": [
+        "theme"
+      ]
+    },
+    {
+      "name": "user-menu",
+      "type": "product",
+      "title": "User menu",
+      "description": "The account at the foot of the sidebar, opening upward with who you are, link groups, the theme switch and Log out.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dropdown-menu",
+        "tooltip",
+        "theme-store",
+        "utils"
+      ]
+    },
+    {
+      "name": "utils",
+      "type": "lib",
+      "title": "cn",
+      "description": "Merges class names, aware of the brand's scales (text-body-sm, rounded-card, shadow-floating).",
+      "surface": "both",
+      "kinds": [],
+      "requires": []
+    },
+    {
+      "name": "workflow-grid",
+      "type": "site",
+      "title": "Workflow grid",
+      "description": "Cards in the soft blue ring, three across on wide screens, each with an h4 title, a short description and a picture panel of fixed shape.",
+      "surface": "site",
+      "kinds": [
+        "card",
+        "card-ring",
+        "media-frame"
+      ],
+      "requires": [
+        "theme",
+        "utils"
+      ]
+    },
+    {
+      "name": "workspace-switcher",
+      "type": "product",
+      "title": "Workspace switcher",
+      "description": "The workspace at the top of the sidebar, listing the default and the other workspaces with plan tags, make-default and settings.",
+      "surface": "product",
+      "kinds": [],
+      "requires": [
+        "theme",
+        "dropdown-menu",
+        "tooltip",
+        "utils"
+      ]
+    }
+  ]
+}

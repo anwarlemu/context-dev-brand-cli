@@ -1,0 +1,25 @@
+{
+  "name": "badge",
+  "type": "ui",
+  "title": "Badge",
+  "description": "The product's status label (the word in mono, colored by status) and tag chip, and the site's hairline chip.",
+  "surface": "both",
+  "kinds": [
+    "app-badge",
+    "chip"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/badge.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The product's status label (the dashboard's StatusBadge): the word in mono caption on a hairline-bordered box, the\n// status told by its color alone. `tag` is the dashboard's tag chip (blue on blue 10); `chip` is the site's hairline pill.\nconst badgeVariants = cva(\"inline-flex w-fit shrink-0 items-center justify-center gap-1 whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-3\", {\n  variants: {\n    variant: {\n      default: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-fg-subtle\",\n      brand: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-fg-brand\",\n      success: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-success\",\n      warning: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-warning\",\n      destructive: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-danger\",\n      tag: \"h-6 rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-blue-10 px-2.5 text-caption text-fg-brand\",\n      chip: \"rounded-pill px-3 py-1 text-body-sm leading-snug text-fg-nav ring-1 ring-line ring-inset\",\n    },\n  },\n  defaultVariants: { variant: \"default\" },\n});\n\nfunction Badge({ className, variant, asChild = false, ...props }: React.ComponentProps<\"span\"> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"span\";\n  return <Comp data-slot=\"badge\" className={cn(badgeVariants({ variant }), className)} {...props} />;\n}\n\nexport { Badge, badgeVariants };\n"
+    }
+  ]
+}

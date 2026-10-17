@@ -1,0 +1,20 @@
+{
+  "name": "sonner",
+  "type": "ui",
+  "title": "Toaster",
+  "description": "Where toasts appear (Toaster, with `toast()` from sonner to raise one). White toasts with a light border, a soft shadow and a close button, at the bottom center.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [
+    "sonner"
+  ],
+  "files": [
+    {
+      "path": "components/ui/sonner.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Toaster as Sonner, type ToasterProps } from \"sonner\";\n\n// The brand's toasts (src/components/ui/sonner.tsx): white with a light border and a soft shadow, the description muted,\n// a close button on each, at the bottom center (src/app/providers.tsx). Sonner's own enter and exit motion is kept.\nfunction Toaster(props: ToasterProps) {\n  return (\n    <Sonner\n      className=\"toaster group\"\n      position=\"bottom-center\"\n      closeButton\n      toastOptions={{\n        classNames: {\n          toast: \"bg-surface! text-fg! border! border-line! shadow-[0_0.25rem_0.75rem_rgb(0_0_0/0.08)]! font-sans! text-body-sm!\",\n          description: \"text-fg-muted!\",\n          actionButton: \"rounded-control! bg-primary! text-on-primary!\",\n          cancelButton: \"rounded-control! bg-subtle! text-fg-muted!\",\n          closeButton: \"bg-surface! text-fg! border-line! hover:bg-wash-hover!\",\n        },\n      }}\n      {...props}\n    />\n  );\n}\n\nexport { Toaster };\n"
+    }
+  ]
+}

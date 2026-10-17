@@ -1,0 +1,22 @@
+{
+  "name": "hold-button",
+  "type": "ui",
+  "title": "Hold button",
+  "description": "An outlined red button that confirms a destructive action only when held; red fills it from the left while it is held (1.2 seconds by default), and letting go early snaps it back.",
+  "surface": "product",
+  "kinds": [
+    "app-button-danger"
+  ],
+  "requires": [
+    "theme",
+    "use-hold",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/hold-button.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { useHold } from \"@/hooks/use-hold\";\nimport { cn } from \"@/lib/utils\";\n\n// Hold to confirm a destructive action: an outlined red button that fills red while held. The fill carries a white copy\n// of the label and is revealed by clip-path from the left, so the label reads red on white ahead of the fill and white\n// on red behind it at every moment (the site's version turned the whole label white at once, leaving it white on white\n// until the fill arrived). The reveal runs at a constant rate while held and snaps back in 150ms ease-out on release.\nfunction HoldButton({ label, onConfirm, holdMs = 1200, className }: { label: string; onConfirm: () => void; holdMs?: number; className?: string }) {\n  const { isHolding, handlers } = useHold(holdMs, onConfirm);\n  const text = isHolding ? \"Keep holding…\" : label;\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"hold-button\"\n      {...handlers}\n      className={cn(\n        \"relative inline-flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-control border border-danger px-3.5 text-body-sm whitespace-nowrap text-danger outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\",\n        className,\n      )}\n    >\n      <span>{text}</span>\n      <span\n        aria-hidden\n        className={cn(\n          \"absolute inset-0 flex items-center justify-center bg-danger text-white transition-[clip-path] motion-reduce:transition-none\",\n          isHolding ? \"[clip-path:inset(0_0_0_0)] ease-linear\" : \"[clip-path:inset(0_100%_0_0)] duration-150 ease-out\",\n        )}\n        style={isHolding ? { transitionDuration: `${holdMs}ms` } : undefined}\n      >\n        {text}\n      </span>\n    </button>\n  );\n}\n\nexport { HoldButton };\n"
+    }
+  ]
+}

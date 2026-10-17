@@ -1,0 +1,19 @@
+{
+  "name": "skeleton",
+  "type": "ui",
+  "title": "Skeleton",
+  "description": "A pale block with a slow sheen while content loads.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/skeleton.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's skeleton: a pale block with a sheen sliding across it on transform (constant motion, so linear); with\n// reduced motion, the block alone.\nfunction Skeleton({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      aria-hidden\n      data-slot=\"skeleton\"\n      className={cn(\n        \"relative overflow-hidden rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-neutral-5 after:absolute after:inset-0 after:animate-shimmer after:bg-linear-to-r after:from-transparent after:via-skeleton-shine after:to-transparent after:[animation-duration:1.4s] after:[animation-timing-function:linear] motion-reduce:after:hidden\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Skeleton };\n"
+    }
+  ]
+}

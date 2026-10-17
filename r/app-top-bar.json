@@ -1,0 +1,23 @@
+{
+  "name": "app-top-bar",
+  "type": "product",
+  "title": "App top bar",
+  "description": "The strip above every product page, level with the sidebar's workspace row: no title, no fill and no border, only the menu button on phones and the credits (or the account) at the right.",
+  "surface": "product",
+  "kinds": [
+    "app-topbar"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/app-top-bar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Menu } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Level with the sidebar's workspace row (80px, 56px on phones). Every page heads itself, so the bar has no title and\n// no fill: only the menu button where the sidebar is a drawer, and the credits (or the account) at the right.\nfunction AppTopBar({ onMenuClick, className, children }: { onMenuClick?: () => void; className?: string; children?: React.ReactNode }) {\n  return (\n    <header data-slot=\"app-top-bar\" className={cn(\"flex h-14 shrink-0 items-center justify-end gap-4 px-3 md:h-20 md:pr-4.5 md:pl-5\", className)}>\n      {onMenuClick && (\n        <button\n          type=\"button\"\n          onClick={onMenuClick}\n          aria-label=\"Open navigation\"\n          className=\"mr-auto -ml-0.5 grid size-9 shrink-0 place-items-center rounded-control text-fg-muted outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring md:hidden\"\n        >\n          <Menu className=\"size-4.5\" strokeWidth={1.5} />\n        </button>\n      )}\n      {children}\n    </header>\n  );\n}\n\nexport { AppTopBar };\n"
+    }
+  ]
+}

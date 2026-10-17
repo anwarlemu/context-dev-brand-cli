@@ -1,0 +1,21 @@
+{
+  "name": "spinner",
+  "type": "ui",
+  "title": "Spinner",
+  "description": "A thin ring turning once a second in the color of the text around it, alone or inside a button.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/spinner.tsx",
+      "content": "import * as React from \"react\";\nimport { Loader2 } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's spinner: a thin ring turning once a second, in the color of the text around it.\nfunction Spinner({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return <Loader2 role=\"status\" aria-label=\"Loading\" data-slot=\"spinner\" className={cn(\"size-4 animate-spin\", className)} strokeWidth={1.5} {...props} />;\n}\n\nexport { Spinner };\n"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+/* The product layer: what every Context.dev product screen has before any component is styled, from the dashboard
+   prototype. A 15px root, the canvas page, compact 12.6px UI text. Defaults use :where() so the app's own rules
+   still win. */
+
+/* Element defaults sit in the base layer, so a utility class on an element (a library component's text-white) wins
+   over them; their :where() selectors already let an app's own rules win. */
+@layer base {
+	html {
+		font-size: 93.75%;
+	}
+
+	html,
+	body {
+		background-color: var(--ds-color-bg-canvas);
+		color: var(--ds-color-text-default);
+	}
+
+	body {
+		font-family: var(--ds-font-sans);
+		font-size: var(--ds-text-body-sm);
+		line-height: var(--ds-leading-snug);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	:where(h1, h2, h3, h4, h5, h6) {
+		font-family: var(--ds-font-sans);
+		font-weight: var(--ds-font-weight-regular);
+		color: var(--ds-color-text-default);
+	}
+
+	:where(code, kbd, pre, samp) {
+		font-family: var(--ds-font-mono);
+	}
+
+	:where(td, th, output, data, time) {
+		font-variant-numeric: tabular-nums;
+	}
+
+	::selection {
+		background-color: var(--ds-color-blue-60);
+		color: var(--ds-color-white);
+	}
+
+	:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+		outline: 2px solid var(--ds-color-focus-ring);
+		outline-offset: 2px;
+	}
+
+	:where(*) {
+		scrollbar-width: thin;
+		scrollbar-color: var(--ds-color-neutral-20) transparent;
+	}
+}
+
+/* Every interactive role shows a pointer; disabled ones do not. */
+:where(button, [role="button"], [role="tab"], [role="menuitem"], [role="option"], summary, label[for], select) {
+	cursor: pointer;
+}
+
+:where(button, [role="button"], input, select, textarea):disabled {
+	cursor: default;
+}
+
+/* Figures in Doto: the rare hero numeral of a screen, never labels or words. */
+.ds-figure {
+	font-family: var(--ds-font-data);
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+	color: var(--ds-color-text-brand);
+}

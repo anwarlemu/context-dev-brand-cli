@@ -1,0 +1,19 @@
+{
+  "name": "collapse",
+  "type": "ui",
+  "title": "Collapse",
+  "description": "Grows to its content's height and back, so what sits below glides rather than jumps.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/collapse.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Grows from nothing to its content's height and back (300ms ease-out on the grid's rows, with a fade), so whatever\n * sits below glides rather than jumps. Stays mounted while closed (inert, so nothing inside takes focus), and clips only\n * until it has fully opened, so menus inside can still spill out of it. Reduced motion opens and closes at once.\n */\nfunction Collapse({ open, id, className, children }: { open: boolean; id?: string; className?: string; children: React.ReactNode }) {\n  const [isFullyOpen, setFullyOpen] = React.useState(open);\n  if (!open && isFullyOpen) setFullyOpen(false);\n\n  const handleTransitionEnd = (event: React.TransitionEvent<HTMLDivElement>) => {\n    if (open && event.target === event.currentTarget && event.propertyName === \"grid-template-rows\") setFullyOpen(true);\n  };\n\n  return (\n    <div\n      id={id}\n      data-slot=\"collapse\"\n      data-state={open ? \"open\" : \"closed\"}\n      inert={!open}\n      onTransitionEnd={handleTransitionEnd}\n      className={cn(\"grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none\", open ? \"grid-rows-[1fr] opacity-100\" : \"grid-rows-[0fr] opacity-0\")}\n    >\n      <div className={cn(\"min-h-0\", !isFullyOpen && \"overflow-hidden\", open && \"motion-reduce:overflow-visible\")}>\n        <div className={className}>{children}</div>\n      </div>\n    </div>\n  );\n}\n\nexport { Collapse };\n"
+    }
+  ]
+}

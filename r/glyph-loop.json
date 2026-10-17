@@ -1,0 +1,20 @@
+{
+  "name": "glyph-loop",
+  "type": "visual",
+  "title": "Glyph loop",
+  "description": "A product page's glyph in the regular dot grid, its subject sweeping into what the page gives you and back on its own, on a loop while on screen. No tile and no hover; for a glyph that answers the pointer see Glyph melt, for the large fine-dot version see Glyph story.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "glyph-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-loop.tsx",
+      "content": "\"use client\";\n\nimport { useCallback, useMemo } from \"react\";\nimport { DotStory, type LoadDotStory } from \"@/components/visuals/dot-engine/dot-story\";\nimport { GLYPH_GRID, glyphSubject, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\n\ntype GlyphLoopProps = {\n  name: GlyphPairName;\n  /** The color repainted around the dots; defaults to the surface token. */\n  surfaceColor?: string;\n  /** How far into the subject's hold this loop starts, so neighbors don't change in step. */\n  startsAtSeconds?: number;\n  className?: string;\n};\n\n/**\n * A page's picture in the brand dot grid: its subject sweeps into what it gives you and back, while on screen.\n * Reduced motion keeps the subject.\n */\nexport function GlyphLoop({ name, surfaceColor, startsAtSeconds = 0, className }: GlyphLoopProps) {\n  const resting = useMemo(() => ({ cells: glyphSubject(name) }), [name]);\n  const load = useCallback<LoadDotStory>(\n    async (stage) => {\n      const { createGlyphLoopPlayer } = await import(\"@/components/visuals/glyph/glyph-loop-player\");\n      return createGlyphLoopPlayer(stage, name, startsAtSeconds);\n    },\n    [name, startsAtSeconds],\n  );\n  return <DotStory grid={GLYPH_GRID} resting={resting} load={load} surfaceColor={surfaceColor} className={className} />;\n}\n"
+    }
+  ]
+}

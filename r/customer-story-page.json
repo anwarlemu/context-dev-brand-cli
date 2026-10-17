@@ -1,0 +1,23 @@
+{
+  "name": "customer-story-page",
+  "type": "site",
+  "title": "Customer story page",
+  "description": "A customer story's first section, under the header: a back link, the title at section-heading size with its closing words in blue and the date over an optional dot field, a rule, then the story in a 48rem column.",
+  "surface": "site",
+  "kinds": [
+    "section",
+    "section-heading"
+  ],
+  "requires": [
+    "theme",
+    "section",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/customer-story-page.tsx",
+      "content": "import * as React from \"react\";\n\nimport { SectionHeaderRule, SiteSection } from \"@/components/site/section\";\nimport { cn } from \"@/lib/utils\";\n\n// A customer story's page: the first section under the header, its column edge lines starting below the navbar. A back\n// link to all the stories, the title at section-heading size with its closing words in blue, and the date, left aligned\n// in a 48rem column over an optional backdrop (the site runs its fine dot field here, from edge line to edge line and\n// down to the rule). Under the rule, the story itself in the same column (the blog's prose).\n\nfunction CustomerStoryPage({\n  title,\n  accent,\n  date,\n  dateTime,\n  backHref = \"/customers\",\n  backLabel = \"All customer stories\",\n  backdrop,\n  className,\n  children,\n}: {\n  title: React.ReactNode;\n  /** The title's closing words, in brand blue. */\n  accent?: React.ReactNode;\n  date?: string;\n  dateTime?: string;\n  backHref?: string;\n  backLabel?: string;\n  backdrop?: React.ReactNode;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  const titleId = React.useId();\n  return (\n    <SiteSection lines header=\"below\" aria-labelledby={titleId} data-slot=\"customer-story-page\" className={className}>\n      {/* The section's padding is taken back, so the backdrop runs from edge line to edge line and down to the rule. */}\n      <div className=\"relative isolate -mx-6 -mt-10 -mb-10 px-6 pt-10 pb-10 md:-mx-10 md:-mt-12 md:-mb-12 md:px-10 md:pt-12 md:pb-12 lg:-mx-12 lg:px-12\">\n        {backdrop && (\n          <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 -z-10\">\n            {backdrop}\n          </div>\n        )}\n        <header className=\"relative mx-auto flex max-w-3xl flex-col items-start gap-6\">\n          <a href={backHref} className=\"rounded-sm text-body-sm leading-snug text-fg-nav outline-none transition-[color] duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none\">\n            &larr; {backLabel}\n          </a>\n          <h1 id={titleId} className=\"w-full text-h3 leading-heading font-normal tracking-normal text-balance text-fg md:text-h2\">\n            {title}\n            {accent && (\n              <>\n                {\" \"}\n                <span className=\"text-fg-brand\">{accent}</span>\n              </>\n            )}\n          </h1>\n          {date && (\n            <time dateTime={dateTime} className=\"text-body-sm leading-snug text-fg-nav\">\n              {date}\n            </time>\n          )}\n        </header>\n      </div>\n      <SectionHeaderRule />\n      <div className={cn(\"mx-auto max-w-3xl\")}>{children}</div>\n    </SiteSection>\n  );\n}\n\nexport { CustomerStoryPage };\n"
+    }
+  ]
+}
