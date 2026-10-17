@@ -1,0 +1,12 @@
+---
+name: story-brand-kit
+title: Brand kit story
+type: visual
+surface: site
+description: "A looping dot picture. A typed domain becomes a kit box, then the logo, colors, typeface and company details unpacked from it."
+kinds: []
+use_for: "A brand kit page hero or card on the site. Plays only on screen; shows the unpacked kit with reduced motion."
+never: [Stories as the main content of a page]
+source: site src/components/sections/products/brand-kit-story.tsx
+files: [components/visuals/stories/brand-kit-story.tsx, components/visuals/stories/brand-kit-story-player.ts, components/visuals/stories/brand-kit-story-scenes.ts, components/visuals/stories/prompt-field.ts, components/visuals/stories/style-guide-parts.ts]
+---
