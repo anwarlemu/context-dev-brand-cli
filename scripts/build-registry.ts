@@ -41,7 +41,14 @@ for (const file of readdirSync(join(REG, 'docs')).filter((f) => f.endsWith('.md'
 		problems.push(`docs/${file}: no frontmatter`);
 		continue;
 	}
-	const parsed = docsSchema.safeParse(parse(m[1]));
+	let raw: unknown;
+	try {
+		raw = parse(m[1]);
+	} catch (error) {
+		problems.push(`docs/${file}: ${(error as Error).message.split('\n')[0]} (quote values that contain ": ")`);
+		continue;
+	}
+	const parsed = docsSchema.safeParse(raw);
 	if (!parsed.success) {
 		problems.push(`docs/${file}: ${parsed.error.issues.map((i) => `${i.path.join('.')} ${i.message}`).join('; ')}`);
 		continue;
@@ -94,6 +101,10 @@ const themeItem = {
 		':is(.dark, [data-theme="dark"]) .ds-product, .ds-product:is(.dark, [data-theme="dark"])': strip(tokensJson.dark),
 		'@keyframes ds-pop-in': { from: { opacity: '0', transform: 'scale(0.97)' } },
 		'@keyframes ds-fade-in': { from: { opacity: '0' } },
+		'@keyframes ds-content-in': { from: { opacity: '0', transform: 'translateY(4px)' } },
+		'@keyframes ds-sheet-right': { from: { opacity: '0', transform: 'translateX(12px)' } },
+		'@keyframes ds-sheet-left': { from: { opacity: '0', transform: 'translateX(-12px)' } },
+		'@keyframes ds-shimmer': { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(100%)' } },
 	},
 };
 

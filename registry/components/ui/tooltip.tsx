@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
+import { usePortalContainer } from "@/lib/surface";
 import { cn } from "@/lib/utils";
 
 // Hovering waits a beat before the label appears, so passing over a control doesn't flash it; once one is showing,
@@ -26,7 +27,7 @@ function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trig
 // Grows from its trigger (Radix's transform origin) in a short ease-out pop; reduced motion keeps only the fade.
 function TooltipContent({ className, sideOffset = 6, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal container={usePortalContainer()}>
       <TooltipPrimitive.Content
         data-slot="tooltip-content"
         sideOffset={sideOffset}

@@ -54,6 +54,9 @@ const theme = [
 const motion = `@theme {
 	--animate-pop-in: ds-pop-in var(--ds-duration-fast) var(--ds-easing-out);
 	--animate-fade-in: ds-fade-in var(--ds-duration-fast) var(--ds-easing-out);
+	--animate-content-in: ds-content-in var(--ds-duration-base) var(--ds-easing-out);
+	--animate-shimmer: ds-shimmer 1.6s var(--ds-easing-in-out) infinite;
+	--animate-spin-slow: spin 0.8s linear infinite;
 
 	@keyframes ds-pop-in {
 		from {
@@ -67,10 +70,58 @@ const motion = `@theme {
 			opacity: 0;
 		}
 	}
+
+	@keyframes ds-content-in {
+		from {
+			opacity: 0;
+			transform: translateY(4px);
+		}
+	}
+
+	@keyframes ds-sheet-right {
+		from {
+			opacity: 0;
+			transform: translateX(12px);
+		}
+	}
+
+	@keyframes ds-sheet-left {
+		from {
+			opacity: 0;
+			transform: translateX(-12px);
+		}
+	}
+
+	@keyframes ds-shimmer {
+		from {
+			transform: translateX(-100%);
+		}
+		to {
+			transform: translateX(100%);
+		}
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
 	@keyframes ds-pop-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes ds-content-in {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes ds-sheet-right {
+		from {
+			opacity: 0;
+		}
+	}
+
+	@keyframes ds-sheet-left {
 		from {
 			opacity: 0;
 		}
