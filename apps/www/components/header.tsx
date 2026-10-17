@@ -1,9 +1,9 @@
 "use client";
 
-import { Blocks, Box, LayoutDashboard, Monitor, Palette, Sparkles } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { NavFeaturedCard, NavFooterLink, SiteHeader } from "@/components/site/site-header";
+import { MenuGlyph } from "@/components/visuals/persona-glyph";
 import { LogoMark, Wordmark } from "@www/components/logo";
 
 export function Header({ name, repo, counts }: { name: string; repo: string; counts: Record<string, number> }) {
@@ -30,12 +30,12 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
             />
           ),
           items: [
-            { title: "Components", description: `${n("ui")} primitives for both surfaces`, href: "/components#components", icon: <Box /> },
-            { title: "Product", description: `${n("product")} dashboard pieces`, href: "/components#product", icon: <LayoutDashboard /> },
-            { title: "Site", description: `${n("site")} marketing sections`, href: "/components#site", icon: <Monitor /> },
-            { title: "Blocks", description: `${n("block")} full pages to start from`, href: "/components#blocks", icon: <Blocks /> },
-            { title: "Visuals", description: `${n("visual")} dot fields and stories`, href: "/components#visuals", icon: <Sparkles /> },
-            { title: "Theme", description: "The tokens behind every value", href: "/theme", icon: <Palette /> },
+            { title: "Components", description: `${n("ui")} primitives for both surfaces`, href: "/components#components", glyph: <MenuGlyph name="design" index={0} /> },
+            { title: "Product", description: `${n("product")} dashboard pieces`, href: "/components#product", glyph: <MenuGlyph name="theme" index={1} /> },
+            { title: "Site", description: `${n("site")} marketing sections`, href: "/components#site", glyph: <MenuGlyph name="portal" index={2} /> },
+            { title: "Blocks", description: `${n("block")} full pages to start from`, href: "/components#blocks", glyph: <MenuGlyph name="batches" index={3} /> },
+            { title: "Visuals", description: `${n("visual")} dot fields and stories`, href: "/components#visuals", glyph: <MenuGlyph name="generate" index={4} /> },
+            { title: "Theme", description: "The tokens behind every value", href: "/theme", glyph: <MenuGlyph name="styleguide" index={5} /> },
           ],
           footer: (
             <>

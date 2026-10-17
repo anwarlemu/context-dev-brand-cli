@@ -7,7 +7,16 @@ import { AnnouncementBar } from "@/components/site/announcement-bar";
 import { cn } from "@/lib/utils";
 
 type NavLink = { label: string; href: string; external?: boolean };
-type NavMenuItem = { title: React.ReactNode; description?: React.ReactNode; href: string; icon?: React.ReactNode; external?: boolean };
+type NavMenuItem = {
+  title: React.ReactNode;
+  description?: React.ReactNode;
+  href: string;
+  /** A line icon, set in the blue tile. */
+  icon?: React.ReactNode;
+  /** Drawn as is in place of the tile, as the site's menus draw their persona glyphs (a `MenuGlyph`). */
+  glyph?: React.ReactNode;
+  external?: boolean;
+};
 type NavMobileGroup = { label?: React.ReactNode; links: { label: React.ReactNode; href: string; external?: boolean }[] };
 type NavMenu = {
   label: string;
@@ -172,11 +181,11 @@ function NavFeaturedCard({
   );
 }
 
-/** A menu link: a blue icon chip (or your glyph), the name and a muted line under it. */
+/** A menu link: a glyph or a blue icon tile, the name and a muted line under it. */
 function NavMenuLink({ item }: { item: NavMenuItem }) {
   return (
     <a href={item.href} {...linkTarget(item.external)} data-glide-item="" className={cn("flex items-start gap-3 rounded-card p-3", FOCUS)}>
-      {item.icon && <span className="flex size-9 shrink-0 items-center justify-center rounded-control bg-brand text-on-brand [&>svg]:size-4">{item.icon}</span>}
+      {item.glyph ?? (item.icon && <span className="flex size-9 shrink-0 items-center justify-center rounded-control bg-brand text-on-brand [&>svg]:size-4">{item.icon}</span>)}
       <span className="flex min-w-0 flex-col gap-0.5">
         <span className="text-body font-medium text-fg">{item.title}</span>
         {item.description && <span className="text-body-sm text-fg-nav">{item.description}</span>}

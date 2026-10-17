@@ -3,3 +3,4 @@ next-env.d.ts
 public/r/
 lib/registry-index.json
 lib/examples.generated.ts
+tsconfig.tsbuildinfo

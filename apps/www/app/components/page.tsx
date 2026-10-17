@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
 import { InstallCommand } from "@/components/site/code-window";
+import { Prose } from "@www/components/prose";
 import { GROUPS, items, registryName } from "@www/lib/registry";
 
 export const metadata = { title: "Library" };
@@ -39,7 +40,7 @@ export default function Library() {
                       <span className="text-body font-medium text-fg">{i.title}</span>
                       <span className="shrink-0 text-caption text-fg-subtle">{SURFACE[i.surface]}</span>
                     </span>
-                    <span className="line-clamp-3 text-body-sm text-fg-muted">{i.description}</span>
+                    <span className="line-clamp-3 text-body-sm text-fg-muted"><Prose text={i.description} /></span>
                   </Link>
                 </li>
               ))}

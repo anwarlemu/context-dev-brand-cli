@@ -9,46 +9,50 @@
 	}
 }
 
-html,
-body {
-	background-color: var(--ds-color-bg-default);
-	color: var(--ds-color-text-default);
-}
+/* Element defaults sit in the base layer, so a utility class on an element (a library component's text-white) wins
+   over them; their :where() selectors already let an app's own rules win. */
+@layer base {
+	html,
+	body {
+		background-color: var(--ds-color-bg-default);
+		color: var(--ds-color-text-default);
+	}
 
-body {
-	font-family: var(--ds-font-sans);
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
+	body {
+		font-family: var(--ds-font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
 
-:where(h1, h2, h3, h4, h5, h6) {
-	font-family: var(--ds-font-sans);
-	font-weight: var(--ds-font-weight-regular);
-	color: var(--ds-color-text-default);
-	text-wrap: balance;
-}
+	:where(h1, h2, h3, h4, h5, h6) {
+		font-family: var(--ds-font-sans);
+		font-weight: var(--ds-font-weight-regular);
+		color: var(--ds-color-text-default);
+		text-wrap: balance;
+	}
 
-:where(h1, h2, h3) {
-	letter-spacing: var(--ds-tracking-tight);
-	line-height: var(--ds-leading-heading);
-}
+	:where(h1, h2, h3) {
+		letter-spacing: var(--ds-tracking-tight);
+		line-height: var(--ds-leading-heading);
+	}
 
-:where(p, li, blockquote, figcaption, dd, td) {
-	text-wrap: pretty;
-}
+	:where(p, li, blockquote, figcaption, dd, td) {
+		text-wrap: pretty;
+	}
 
-:where(code, kbd, pre, samp) {
-	font-family: var(--ds-font-mono);
-}
+	:where(code, kbd, pre, samp) {
+		font-family: var(--ds-font-mono);
+	}
 
-::selection {
-	background-color: var(--ds-color-blue-60);
-	color: var(--ds-color-white);
-}
+	::selection {
+		background-color: var(--ds-color-blue-60);
+		color: var(--ds-color-white);
+	}
 
-:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
-	outline: 2px solid var(--ds-color-focus-ring);
-	outline-offset: 2px;
+	:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+		outline: 2px solid var(--ds-color-focus-ring);
+		outline-offset: 2px;
+	}
 }
 
 /* The ruled column: hairlines down both edges of the content column from below the hero to the end, a full-bleed rule between

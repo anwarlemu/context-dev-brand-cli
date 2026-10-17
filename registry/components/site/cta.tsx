@@ -170,8 +170,8 @@ function Cta({
 }
 
 /**
- * The band's two buttons. `light` is the white key with a soft white glow (it dims a step on hover); `glass` is the
- * frosted pill beside it.
+ * The band's two buttons, one shape (the brand's button radius, 48px tall): `light` is the white key with a soft white
+ * glow (it dims a step on hover); `glass` is the frosted key beside it.
  */
 function CtaButton({ tone = "light", asChild = false, className, ...props }: React.ComponentProps<"a"> & { tone?: "light" | "glass"; asChild?: boolean }) {
   const Comp = asChild ? Slot : "a";
@@ -183,7 +183,7 @@ function CtaButton({ tone = "light", asChild = false, className, ...props }: Rea
         tone === "light" &&
           "h-12 rounded-control border border-black/10 bg-white px-6.5 leading-snug text-fg shadow-[0_0_0_1px_color-mix(in_srgb,var(--ds-color-white)_35%,transparent),0_var(--ds-space-3)_var(--ds-space-10)_color-mix(in_srgb,var(--ds-color-white)_12%,transparent)] transition-[filter,scale] duration-150 ease-out hover:brightness-97",
         tone === "glass" &&
-          "rounded-pill border border-white/18 bg-white/16 px-6 py-4 leading-none text-white shadow-key outline-1 -outline-offset-1 outline-white/12 backdrop-blur-xs transition-[background-color,scale] duration-200 ease-out hover:bg-white/20",
+          "h-12 rounded-control bg-white/16 px-6 leading-snug text-white shadow-key outline-1 -outline-offset-1 outline-white/12 backdrop-blur-xs transition-[background-color,scale] duration-200 ease-out hover:bg-white/24",
         className,
       )}
       {...props}

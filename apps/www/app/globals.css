@@ -4,28 +4,32 @@
 
 @source "../../../registry";
 
-html {
-  color-scheme: light;
-  overflow-x: clip;
-  scroll-padding-top: calc(var(--spacing) * 24);
-}
+/* In the base layer, so the library's utilities (text-white on a dark band's heading) win over these defaults. */
+@layer base {
+  html {
+    color-scheme: light;
+    scrollbar-gutter: stable;
+    overflow-x: clip;
+    scroll-padding-top: calc(var(--spacing) * 24);
+  }
 
-body {
-  background-color: var(--ds-color-bg-default);
-  color: var(--ds-color-text-default);
-  font-family: var(--ds-font-sans);
-  font-size: var(--ds-text-body);
-  line-height: var(--ds-leading-relaxed);
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    background-color: var(--ds-color-bg-default);
+    color: var(--ds-color-text-default);
+    font-family: var(--ds-font-sans);
+    font-size: var(--ds-text-body);
+    line-height: var(--ds-leading-relaxed);
+    -webkit-font-smoothing: antialiased;
+  }
 
-:where(h1, h2, h3, h4) {
-  font-weight: var(--ds-font-weight-regular);
-  letter-spacing: var(--ds-tracking-tight);
-  color: var(--ds-color-text-default);
-}
+  :where(h1, h2, h3, h4) {
+    font-weight: var(--ds-font-weight-regular);
+    letter-spacing: var(--ds-tracking-tight);
+    color: var(--ds-color-text-default);
+  }
 
-::selection {
-  background-color: var(--ds-color-blue-60);
-  color: var(--ds-color-white);
+  ::selection {
+    background-color: var(--ds-color-blue-60);
+    color: var(--ds-color-white);
+  }
 }
