@@ -82,15 +82,51 @@ function typeErrors(root: string): Set<string> | undefined {
 	return new Set(`${run.stdout}`.split('\n').filter((l) => /error TS\d+/.test(l)));
 }
 
+const pascal = (name: string) => name.replace(/(^|-)([a-z])/g, (_, __, c: string) => c.toUpperCase());
+
+/**
+ * An app's own simple components named like a library component (components/Button.tsx, badge.tsx): a TypeScript file
+ * under 150 lines that exports only that component. Each becomes a re-export of the library's, so every use takes the
+ * brand; the type check puts back any whose uses need props the library's does not have.
+ */
+function customCandidates(project: Project, library: Set<string>, skipDir?: string) {
+	const root = project.root;
+	if (!project.typescript || !project.hasAlias) return [];
+	const out: { rel: string; name: string; exportName: string }[] = [];
+	const walk = (dir: string, depth: number) => {
+		if (depth > 4 || !existsSync(join(root, dir))) return;
+		for (const entry of readdirSync(join(root, dir), { withFileTypes: true })) {
+			const rel = `${dir}/${entry.name}`;
+			if (entry.isDirectory()) {
+				if (!/^(node_modules|\.|_)/.test(entry.name) && rel !== skipDir) walk(rel, depth + 1);
+				continue;
+			}
+			const m = entry.name.match(/^([A-Za-z][\w-]*)\.tsx$/);
+			if (!m) continue;
+			const name = m[1].replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+			if (!library.has(name)) continue;
+			const text = readFileSync(join(root, rel), 'utf8');
+			const exportName = pascal(name);
+			const exports = [...text.matchAll(/export\s+(?:default\s+)?(?:function|const|class)\s+(\w+)|export\s*\{([^}]*)\}/g)].flatMap((x) => (x[1] ? [x[1]] : x[2].split(',').map((p) => p.trim().split(/\s+as\s+/).pop()!)));
+			if (text.split('\n').length > 150 || /export\s+default/.test(text) || exports.some((e) => e && e !== exportName) || !exports.includes(exportName)) continue;
+			out.push({ rel, name, exportName });
+		}
+	};
+	for (const dir of [project.srcDir ? 'src/components' : 'components']) walk(dir, 0);
+	return out;
+}
+
 export function swapShadcn(project: Project, { dryRun = false } = {}): SwapResult | undefined {
-	const layout = shadcnLayout(project);
-	if (!layout) return undefined;
 	const root = project.root;
 	const library = new Set(loadIndexSync().filter((i) => i.type === 'registry:ui').map((i) => i.name));
 	if (!library.size) return undefined;
-	const appUi = readdirSync(join(root, layout.uiDir)).filter((f) => f.endsWith('.tsx')).map((f) => f.replace(/\.tsx$/, ''));
+	const base0 = project.srcDir ? 'src/' : '';
+	const layout = shadcnLayout(project) ?? (project.typescript && project.hasAlias ? { uiDir: `${base0}components/ui`, aliases: { components: '@/components', ui: '@/components/ui', utils: '@/lib/utils', lib: '@/lib', hooks: '@/hooks' } } : undefined);
+	if (!layout) return undefined;
+	const appUi = existsSync(join(root, layout.uiDir)) ? readdirSync(join(root, layout.uiDir)).filter((f) => f.endsWith('.tsx')).map((f) => f.replace(/\.tsx$/, '')) : [];
 	const matches = appUi.filter((n) => library.has(n));
-	if (!matches.length) return undefined;
+	const custom = customCandidates(project, library, layout.uiDir);
+	if (!matches.length && !custom.length) return undefined;
 
 	const before = dryRun ? undefined : typeErrors(root);
 	const backups = new Map<string, string | undefined>();
@@ -138,6 +174,15 @@ export function swapShadcn(project: Project, { dryRun = false } = {}): SwapResul
 		const item = loadItemSync(name);
 		if (item) visit(item, true);
 	}
+	// The app's own components: the library's file goes in alongside (unless the app has it), and the app's file
+	// re-exports it, so imports across the app keep working.
+	for (const c of custom) {
+		const item = loadItemSync(c.name);
+		if (!item) continue;
+		visit(item, false);
+		write(c.rel, `// The ${c.exportName} from the design system library: same name, the brand's look.\nexport { ${c.exportName} } from "${layout.aliases.ui}/${c.name}";\n`);
+		result.swapped.push(c.rel);
+	}
 	result.packages = [...packages];
 	if (dryRun) return result;
 	if (packages.size) {
@@ -150,7 +195,6 @@ export function swapShadcn(project: Project, { dryRun = false } = {}): SwapResul
 		const fresh = [...after].filter((l) => !before.has(l));
 		if (fresh.length) {
 			// An error usually shows in the file that uses a component, so a swap is implicated by the files it is imported in.
-			const errorFiles = [...new Set(fresh.map((l) => l.replace(/\(\d+,\d+\).*$/, '').trim()))];
 			const textOf = (f: string) => {
 				try {
 					return readFileSync(join(root, f), 'utf8');
@@ -158,9 +202,20 @@ export function swapShadcn(project: Project, { dryRun = false } = {}): SwapResul
 					return '';
 				}
 			};
+			// The line each error points at usually names the component (<Badge variant="primary">); only when none is
+			// named does every swap the file imports count.
+			const errorLines = fresh.map((l) => {
+				const m = l.match(/^(.*?)\((\d+),\d+\)/);
+				return m ? { file: m[1].trim(), text: textOf(m[1].trim()).split('\n')[Number(m[2]) - 1] ?? '' } : { file: l, text: '' };
+			});
+			const named = (text: string, exportName: string) => new RegExp(`\\b${exportName}\\b`).test(text);
+			const exportNames = result.swapped.map((rel) => pascal(rel.split('/').pop()!.replace(/\.tsx$/, '').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()));
 			for (const rel of result.swapped) {
 				const name = rel.split('/').pop()!.replace(/\.tsx$/, '');
-				const implicated = errorFiles.some((f) => f === rel || new RegExp(`/ui/${name}["']`).test(textOf(f)));
+				const exportName = pascal(name.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
+				const implicated = errorLines.some(
+					(e) => e.file === rel || (new RegExp(`/${name}["']`).test(textOf(e.file)) && (named(e.text, exportName) || !exportNames.some((n) => named(e.text, n)))),
+				);
 				if (!implicated) continue;
 				const original = backups.get(rel);
 				if (original !== undefined) writeFileSync(join(root, rel), original);

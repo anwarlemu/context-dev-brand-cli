@@ -150,9 +150,9 @@ export function renderBatch(root: string, state: State, statuses: TaskStatus[], 
 	const snapped = existsSync(join(root, '.ds', 'before'));
 	const lines = [
 		...(!snapped ? [color.bold(`Before any edit: run the app and \`${cli()} snapshot ${base}\` (saves how each screen looks now; reviews check sizes, places and effects stay the same).`)] : []),
-		color.bold(`Task 1 of 2: ${statuses.length === 1 ? 'the main screen' : `${statuses.length} main screens`}${home ? ' and the shared shell (header, footer, page)' : ''} (${done} of ${total} done). Restyle them all, then review them together.`),
+		color.bold(`Task 1 of 2: ${statuses.length === 1 ? 'the main screen' : `${statuses.length} main screens`}${home ? ` and the shared shell (${home.screen.surface === 'product' ? 'sidebar, top bar, page' : 'header, footer, page'})` : ''} (${done} of ${total} done). Restyle them all, then review them together.`),
 		`  For each: say in one line what it is for and keep that; no words or elements change. Restyle its elements the way \`${cli()} look <file>\` shows.`,
-		...(home ? [`  The shell (header, footer, page frame) shows on every page: start there. Hero dots and the blue closing words of the home headings are already in place; check them.`] : []),
+		...(home ? [`  The shell (${home.screen.surface === 'product' ? 'sidebar, top bar, page' : 'header, footer, page frame'}) shows on every page: start there.${home.screen.surface === 'site' ? ' Hero dots and the blue closing words of the home headings are already in place; check them.' : ''}`] : []),
 		...(home?.touches.includes('accent') ? ['  Wrap the closing words of the hero headline and of each section heading in <span class="ds-accent"> where they are not yet (same words; never a whole heading).'] : []),
 	];
 	for (const st of statuses) {
