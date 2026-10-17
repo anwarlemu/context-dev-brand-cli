@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "node ../../scripts/build-brand.mjs && npm --prefix ../.. run registry",
+    "prebuild": "npm --prefix ../.. run build && npm --prefix ../.. run registry",
     "build": "next build",
     "start": "next start"
   },
