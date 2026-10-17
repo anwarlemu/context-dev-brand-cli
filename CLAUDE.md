@@ -13,6 +13,15 @@ npm run ci           # build, limits, tests; must pass before you push
 
 ## Where things are
 
+- `registry/`: the component library. `components/ui|product|site|blocks|visuals`, `lib/` (cn, surface, theme),
+  `hooks/`, `docs/<item>.md` (frontmatter: type, surface, kinds, files...) and `examples/<item>.tsx` (exports
+  `Product`, `Site` or `Block`). `scripts/build-registry.ts` (`npm run registry`) validates every item, derives files
+  and dependencies from imports, adds the theme item from the brand tokens, runs `shadcn build` into
+  `apps/www/public/r`, type-checks the library and runs the value check over it.
+- `apps/www/`: the docs site (Next.js), deployed to the Vercel project `context-ds` (Agencidev team) with
+  `vercel deploy --prod --scope agencidev-dev` from the repo root; it renders every item from source.
+- `src/library/`: loading registry items (`registry.ts`) and swap mode (`swap.ts`); `src/commands/add.ts` (add, list).
+
 - `brand/`: the only brand-specific content. `tokens.css` is the single source of values (site at `:root`, product
   under `.ds-product`, product dark). `site.css` and `product.css` are the base layers. `elements.json` holds how each
   kind of element is styled (site and product), with `match` data for detection and a `source` in the brand's code.
@@ -35,6 +44,8 @@ npm run ci           # build, limits, tests; must pass before you push
   the tests check every value.
 - Restyle only: nothing the CLI writes may change a project's copy, elements or structure. The only markup it asks for
   is `data-ds-dots` on the home hero and `ds-accent` spans around existing words.
+- Library items use only brand token classes (the value check runs over `registry/` in CI), follow the animation
+  rules, take data through props (no Next imports, auth or analytics), and have a docs entry and an example.
 - Apps install the `release` branch: a compiled tree (no source, intake or dev dependencies) so installs take
   seconds. `npm run release` runs the checks, builds it and pushes it; nothing reaches apps until then. To automate it,
   copy `scripts/release.workflow.yml` to `.github/workflows/` (needs a token with the workflow scope).

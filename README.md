@@ -1,6 +1,8 @@
 # context-ds
 
-Make any website or app look like Context.dev, and keep coding agents on it.
+Context.dev's design system as a library and a CLI: the components, blocks and visuals of Context.dev's own site and
+product for React and Tailwind, browsable at https://context-ds.vercel.app, and one command that applies them to any
+project and keeps coding agents on the brand.
 
 It works on anything: a marketing site or a product (dashboard, admin, app), in any stack or language: plain HTML
 and CSS, Astro, Next, Vue, Svelte, Tailwind, CSS-in-JS, server templates, SwiftUI, Compose, Flutter and more. It
@@ -16,7 +18,9 @@ Apply the Context.dev design system to this project: run
 Change how things look, never what they say.
 ```
 
-That is all. The first run adds the package to the project, reads whether it is a site or a product, converts every
+That is all. In a React + Tailwind app it first swaps in the library's components where the app's own match (its
+shadcn components, or its simple Button, Badge, Card and the like), type-checking the app and putting back any swap
+that would break it. The first run also adds the package to the project, reads whether it is a site or a product, converts every
 style value to the brand (colors by the role they play, type, spacing, radius, shadows, motion), installs the brand
 stylesheet and fonts, and writes short rules and hooks for the agents. Then each run prints one task: one screen,
 with the elements to restyle and how. A task is done when the screen passes `review` (screenshots at desktop and
@@ -26,11 +30,27 @@ screen is done it says so.
 From then on the hooks (Claude Code, Codex, Cursor) and a git pre-commit check block any write that adds an off-brand
 value, so new work stays on the brand.
 
+## The library
+
+Every component, block and visual from Context.dev's site (the redesign branch) and product (the dashboard), ported to
+React and Tailwind 4 on shadcn's conventions: buttons and pills, forms, overlays, menus, tables, charts, the product
+shell and pages, the site's header, hero, sections, pricing and FAQ, and the dot visuals (hero dot streams and 43
+stories). Each has a live preview, its code and its install command on the site.
+
+```sh
+npx context-ds add button card tabs       # copies them in, with what they need and the theme
+npx shadcn add https://context-ds.vercel.app/r/button.json   # the same files through shadcn
+```
+
+Product screens opt into the compact product scale with the `ds-product` class (or `<Surface kind="product">`).
+
 ## Commands
 
 | Command | Does |
 |---|---|
 | `npx context-ds` | First run: install and convert. Every run after: the next task. `--surface site\|product`, `--theme dark` (product), `--redo`, `--dry-run`. |
+| `npx context-ds add <items...>` | Copies library components into a React + Tailwind project, with the items they need, the theme and their packages. |
+| `npx context-ds list` | Every component, block and visual in the library. |
 | `npx context-ds review <url>` | Screenshots at desktop and phone width, scored against the brand; checks off the screen's task at 7 or more. |
 | `npx context-ds look <file\|element>` | The brand styling (CSS, Tailwind, states) for every element in a file, or one element kind. |
 | `npx context-ds check [files]` | Every style value must be a brand token. `--fix` for exact matches, `--changed` for git changes. |
