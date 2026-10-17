@@ -3,7 +3,7 @@ name: separator
 title: Separator
 type: ui
 surface: both
-description: A hairline between groups of content.
+description: A light hairline between groups of content, horizontal or vertical.
 kinds: []
 use_for: Dividing menu groups, card sections, toolbars.
 never: [Thick or dark rules]

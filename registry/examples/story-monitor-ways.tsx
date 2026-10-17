@@ -1,20 +1,21 @@
 import { Card } from "@/components/ui/card";
 import { PageMonitorStory, SitemapMonitorStory, ExtractMonitorStory } from "@/components/visuals/stories/monitor-ways-story";
 
+// One card per way to monitor, stacked so each picture is drawn at a size its dots can be read at.
 export function Site() {
   return (
-    <div className="grid w-full max-w-4xl gap-4 md:grid-cols-3">
-      <Card variant="ring" className="items-center justify-center">
+    <div className="mx-auto grid w-full max-w-md gap-6">
+      <Card variant="ring" className="items-center justify-center p-4 md:p-5">
         <div className="relative w-full">
           <PageMonitorStory />
         </div>
       </Card>
-      <Card variant="ring" className="items-center justify-center">
+      <Card variant="ring" className="items-center justify-center p-4 md:p-5">
         <div className="relative w-full">
           <SitemapMonitorStory />
         </div>
       </Card>
-      <Card variant="ring" className="items-center justify-center">
+      <Card variant="ring" className="items-center justify-center p-4 md:p-5">
         <div className="relative w-full">
           <ExtractMonitorStory />
         </div>

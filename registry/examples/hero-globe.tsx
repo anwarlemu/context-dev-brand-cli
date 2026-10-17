@@ -6,7 +6,7 @@ import { HeroGlobeStats } from "@/components/visuals/hero-globe-stats";
 export function Site() {
   return (
     <Hero
-      className="min-h-200 pb-60"
+      className="min-h-160 pb-60"
       background={
         <>
           <HeroGlobe />

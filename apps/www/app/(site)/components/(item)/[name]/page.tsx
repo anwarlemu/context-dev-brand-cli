@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { InstallCommand } from "@/components/site/code-window";
 import { Badge } from "@/components/ui/badge";
 import { Code } from "@www/components/code";
+import { FramePreview } from "@www/components/frame-preview";
 import { Preview } from "@www/components/preview";
 import { Prose } from "@www/components/prose";
 import { examples } from "@www/lib/examples.generated";
@@ -65,7 +66,9 @@ function H2({ id, children }: { id: string; children: React.ReactNode }) {
 export default async function ComponentPage({ params }: { params: Promise<{ name: string }> }) {
   const item = findItem((await params).name);
   if (!item) notFound();
-  const demos = examples[item.name] ?? {};
+  // The main examples first (Block, then Site and Product), then its states (Loading, Empty...) in their own order.
+  const MAIN = ["Block", "Site", "Product"];
+  const demos = Object.fromEntries(Object.entries(examples[item.name] ?? {}).sort(([a], [b]) => (MAIN.includes(a) ? MAIN.indexOf(a) : 9) - (MAIN.includes(b) ? MAIN.indexOf(b) : 9)));
   const requires = item.dependencies.filter((d) => d !== "utils");
   const sections = [
     ...(Object.keys(demos).length ? [{ id: "preview", label: "Preview" }] : []),
@@ -86,7 +89,11 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
           <div id="preview" className="mt-10 grid gap-6">
             {Object.entries(demos).map(([name, Demo]) => (
-              <Preview key={name} example={Demo} block={name === "Block"} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
+              item.type === "site" || item.type === "block" ? (
+                <FramePreview key={name} src={`/preview/${item.name}/${name}`} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
+              ) : (
+                <Preview key={name} example={Demo} block={name === "Block"} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
+              )
             ))}
           </div>
 

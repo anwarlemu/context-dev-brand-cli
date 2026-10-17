@@ -1,8 +1,10 @@
-import { Clock, Globe, Layers } from "lucide-react";
+import { Clock, Globe, Map as MapIcon } from "lucide-react";
 
 import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
 import { BeforeAfterPanel, BeforeAfterPanels, BeforeAfterStats, UseCaseComparisonTable, UseCaseFeatureCards, UseCaseNote } from "@/components/site/use-case-features";
 import { DotGlyph } from "@/components/ui/dot-glyph";
+import { PageMonitorStory, SitemapMonitorStory } from "@/components/visuals/stories/monitor-ways-story";
+import { WatchStory } from "@/components/visuals/stories/watch-story";
 
 const SCRAPE_GLYPH = ["0222220", "2111112", "2122212", "2111112", "2122212", "2111112", "0222220"];
 
@@ -13,10 +15,12 @@ export function Site() {
         <SectionHeading title="Watch the pages" accent="that matter." description="Point a monitor at a page, a section or a whole site, and get the change, not the whole page, at your webhook." />
         <SectionHeaderRule />
         <UseCaseFeatureCards
+          // One to a row, each story beside its text, so the stories have room in this frame.
+          layout="rows"
           items={[
-            { title: "Pages", description: "Track one URL for any change to its text, prices or links.", icon: <Globe />, meta: "target: page", tags: ["Exact", "Semantic"], href: "/products/monitor" },
-            { title: "Sections", description: "Watch only the part of a page you care about, picked by a CSS selector.", icon: <Layers />, meta: "target: selector", badge: "New" },
-            { title: "Schedules", description: "Check every few minutes or once a day, and get a webhook when something moves.", icon: <Clock />, meta: "schedule: 6 hours" },
+            { title: "Pages", description: "Track one URL for any change to its text, prices or links.", icon: <Globe />, meta: "target: page", tags: ["Exact", "Semantic"], href: "/products/monitor", story: <PageMonitorStory /> },
+            { title: "Sitemaps", description: "Watch a whole site and hear about every page that is added or removed.", icon: <MapIcon />, meta: "target: sitemap", badge: "New", story: <SitemapMonitorStory /> },
+            { title: "Schedules", description: "Check every few minutes or once a day, and get a webhook when something moves.", icon: <Clock />, meta: "schedule: 6 hours", story: <WatchStory /> },
           ]}
         />
         <UseCaseNote glyph={<DotGlyph rows={SCRAPE_GLYPH} className="size-9 rounded-control bg-brand p-1.5 text-white" />}>

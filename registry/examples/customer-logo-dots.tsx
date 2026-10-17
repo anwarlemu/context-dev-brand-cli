@@ -5,12 +5,12 @@ const LOGO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3
 
 export function Site() {
   return (
-    <a href="/customers/acme" className="group flex w-full max-w-sm flex-col overflow-hidden rounded-card bg-brand text-on-brand outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
+    <a href="/customers/northwind" className="group mx-auto flex w-full max-w-sm flex-col overflow-hidden rounded-card bg-brand text-on-brand outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
       <div className="relative h-60">
         <CustomerLogoDots src={LOGO} className="absolute inset-0 size-full" />
       </div>
       <div className="flex flex-col gap-1 p-6">
-        <span className="text-h5">Acme</span>
+        <span className="text-h5">Northwind</span>
         <span className="text-body-sm text-on-brand/80">Branded docs for every customer, built on brand context.</span>
       </div>
     </a>

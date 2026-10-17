@@ -4,7 +4,7 @@ import { ArrowUpRight, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // The dashboard's link to the docs: a book, the label in muted caption that underlines on hover, and an arrow that
-// nudges up and out (150ms ease-out). Opens in a new tab.
+// darkens with it (150ms ease-out). Opens in a new tab.
 function DocsLink({ className, children = "Read the docs", ...props }: React.ComponentProps<"a">) {
   return (
     <a

@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 // title in body text and anything at the right (a link out, a switch, a status). CenteredCard holds one centered
 // visual (a big number) over its label, with a small pill in the corner. CardLink is the quiet way out of a card.
 
-/** The up-right arrow every "go somewhere" link carries; it nudges up and right when its group is hovered. */
+/** The up-right arrow every "go somewhere" link carries; it takes its group's hover color and never moves. */
 function LinkArrow({ className }: { className?: string }) {
   return (
     <ArrowUpRight

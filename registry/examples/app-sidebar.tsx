@@ -8,7 +8,7 @@ import { WorkspaceSwitcher } from "@/components/product/workspace-switcher";
 
 export function Product() {
   return (
-    <div className="h-[34rem] overflow-hidden rounded-card border border-line">
+    <div className="h-[34rem] w-full overflow-hidden">
       <AppSidebar
         header={
           <>

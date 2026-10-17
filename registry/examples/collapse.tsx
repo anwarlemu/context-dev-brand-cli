@@ -8,7 +8,7 @@ import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
 export function Product() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   return (
     <div className="flex w-full max-w-sm flex-col gap-3">
       <Button variant="ghost" size="sm" className="self-start" aria-expanded={open} aria-controls="advanced" onClick={() => setOpen((o) => !o)}>

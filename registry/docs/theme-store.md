@@ -1,9 +1,9 @@
 ---
 name: theme-store
-title: Theme switch
+title: Theme store
 type: lib
 surface: product
-description: Light, dark or system for the product, kept across visits and applied before first paint.
+description: Keeps the product's theme (light, dark or system) across visits and applies it before first paint. No control of its own; the user menu's theme switch reads and sets it.
 kinds: []
 use_for: The user menu theme switch and canvases that repaint on theme change.
 never: []

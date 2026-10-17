@@ -3,7 +3,7 @@ name: api-grid-glyph
 title: API grid glyph
 type: visual
 surface: product
-description: Every API as a small dot tile in one grid, with a highlight that hops between them and names the one it lands on.
+description: "The Browse APIs card's picture: every API as a small still dot icon in one grid, with a brand-blue highlight that hops from tile to tile and names the API it lands on. The tiles do not melt; only the highlight moves."
 kinds: []
 use_for: A card that browses many APIs. Pass the list as `apis` (title and glyph); the dashboard's Data APIs are the default.
 never: [More than about sixteen tiles, Tiles without a glyph]

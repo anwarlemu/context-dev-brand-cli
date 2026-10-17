@@ -21,8 +21,7 @@ const TONES = {
 } as const;
 
 // A billing problem at the foot of the sidebar, above Help: the whole card is the fix. A pulsing dot and a short tag
-// in the tone's color ("Last payment failed", "3 days left"), one line in body text, then the action with its arrow,
-// which nudges on hover. Danger for a failed payment (the arrow goes up and right, out to billing); warning for a plan
+// in the tone's color ("Last payment failed", "3 days left"), one line in body text, then the action with its arrow. Danger for a failed payment (the arrow goes up and right, out to billing); warning for a plan
 // that is ending (the arrow turns back, resuming it). Hidden while the sidebar shows the playground's APIs.
 function SidebarAlertCard({
   tone = "danger",

@@ -2,7 +2,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 export function Site() {
   return (
-    <Accordion type="single" collapsible className="w-full max-w-xl">
+    <Accordion type="single" collapsible defaultValue="a" className="w-full max-w-xl">
       <AccordionItem value="a">
         <AccordionTrigger>Do you respect robots.txt?</AccordionTrigger>
         <AccordionContent>Yes. Every crawl follows the site&rsquo;s rules unless you own the domain.</AccordionContent>

@@ -10,7 +10,21 @@ export function Product() {
         <span>Daily</span>
         <Separator orientation="vertical" />
         <span>Weekly</span>
+        <Separator orientation="vertical" />
+        <span>Monthly</span>
       </div>
+    </div>
+  );
+}
+
+export function Site() {
+  return (
+    <div className="w-full max-w-md">
+      <p className="text-h5 text-fg">Scrape</p>
+      <p className="text-body text-fg-muted">Any page as clean Markdown.</p>
+      <Separator className="my-5" />
+      <p className="text-h5 text-fg">Search</p>
+      <p className="text-body text-fg-muted">The web, read for you.</p>
     </div>
   );
 }

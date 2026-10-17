@@ -3,7 +3,7 @@ import { SearchStory } from "@/components/visuals/stories/search-story";
 
 export function Site() {
   return (
-    <div className="w-full max-w-xl">
+    <div className="mx-auto w-full max-w-xl">
       <HeroMonitor>
         <SearchStory />
       </HeroMonitor>

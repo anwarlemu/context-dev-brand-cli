@@ -1,6 +1,6 @@
 ---
 name: product-landing
-title: Product landing sections
+title: Product page (landing)
 type: site
 surface: site
 description: A product page on the home page's design, in the ruled column. Story card sections (three capabilities, two workflows), each a white card in the soft blue ring with a demo window, a code section with an install pill and a docs pill, and an FAQ in one ringed card.

@@ -15,7 +15,7 @@ export function Block() {
 
 export function PaymentFailed() {
   return (
-    <div className="h-[40rem]">
+    <div className="h-180">
       <AppShell active="Overview" paymentFailed>
         <PageColumn>
           <PageHeader title="Overview" />

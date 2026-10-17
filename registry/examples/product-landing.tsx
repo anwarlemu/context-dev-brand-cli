@@ -1,12 +1,10 @@
-import { DotGlyph } from "@/components/ui/dot-glyph";
 import { CodeBlock, CodeWindow, WindowCopyButton } from "@/components/site/code-window";
 import { ProductFaq, ProductIntegration, ProductStorySection } from "@/components/site/product-landing";
-
-// Stand-ins for the products' dot stories.
-const PAGE = ["22222", "2...2", "2.2.2", "2...2", "22222"];
-const CLICK = ["2....", "22...", "222..", "2222.", "22..."];
-const CLOCK = [".222.", "2.2.2", "2.22.", "2...2", ".222."];
-const story = (rows: string[]) => <DotGlyph rows={rows} className="size-24 text-brand" />;
+import { ActionsStory } from "@/components/visuals/stories/actions-story";
+import { BatchStory } from "@/components/visuals/stories/batch-story";
+import { FreshnessStory } from "@/components/visuals/stories/freshness-story";
+import { OutputStory } from "@/components/visuals/stories/output-story";
+import { RagStory } from "@/components/visuals/stories/rag-story";
 
 const CODE = `import ContextDev from 'context.dev';
 
@@ -25,9 +23,9 @@ export function Site() {
         accent="One request."
         description="Choose the outputs your product needs and get them back together, from clean Markdown to a full-page screenshot."
         items={[
-          { title: "Every output format", description: "Markdown, HTML, links, images, JSON, and screenshots from the same request.", story: story(PAGE) },
-          { title: "Browser actions", description: "Click, scroll, or wait for a selector before the page is captured.", story: story(CLICK) },
-          { title: "Fresh or cached", description: "Read the live page, or reuse a recent copy when speed matters more.", story: story(CLOCK) },
+          { title: "Every output format", description: "Markdown, HTML, links, images, JSON, and screenshots from the same request.", story: <OutputStory className="w-full" /> },
+          { title: "Browser actions", description: "Click, scroll, or wait for a selector before the page is captured.", story: <ActionsStory className="w-full" /> },
+          { title: "Fresh or cached", description: "Read the live page, or reuse a recent copy when speed matters more.", story: <FreshnessStory className="w-full" /> },
         ]}
       />
       <ProductIntegration
@@ -50,8 +48,8 @@ export function Site() {
         accent="to your next feature."
         description="Feed your knowledge pipeline, or collect pages across a much larger job with the same API key."
         items={[
-          { title: "Ground RAG in fresh content", description: "Crawl a sitemap, convert every page to clean Markdown, and send it straight into your embeddings.", story: story(PAGE) },
-          { title: "Run batches at scale", description: "Scrape thousands of URLs in one job, then collect the results when the batch completes.", story: story(CLOCK) },
+          { title: "Ground RAG in fresh content", description: "Crawl a sitemap, convert every page to clean Markdown, and send it straight into your embeddings.", story: <RagStory className="w-full" /> },
+          { title: "Run batches at scale", description: "Scrape thousands of URLs in one job, then collect the results when the batch completes.", story: <BatchStory className="w-full" /> },
         ]}
       />
       <ProductFaq

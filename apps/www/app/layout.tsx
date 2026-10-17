@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Doto, IBM_Plex_Mono, Rethink_Sans } from "next/font/google";
 
-import { Footer } from "@www/components/footer";
-import { Header } from "@www/components/header";
-import { BRAND_SITE, REPO, counts, registryName, registryUrl } from "@www/lib/registry";
+import { registryName, registryUrl } from "@www/lib/registry";
 
 import "./globals.css";
 
@@ -20,11 +18,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${rethinkSans.variable} ${doto.variable} ${plexMono.variable}`}>
-      <body>
-        <Header name={registryName} repo={REPO} counts={counts} />
-        {children}
-        <Footer name={registryName} repo={REPO} site={BRAND_SITE} />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

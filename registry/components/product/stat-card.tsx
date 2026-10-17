@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 // The overview's stat card: a caption title at the top, the figure (22px medium, tabular) in the middle, a quiet line
 // at the foot that keeps its height while loading. Given onClick, the whole card is the button; given asChild (wrap
-// your router's link), the whole card is the link. Either way the title underlines, the arrow nudges up and right, and
+// your router's link), the whole card is the link. Either way the title underlines, the arrow darkens, and
 // the card gains the translucent brand ring on hover. Lay several out in a list (StatCardGrid), two by two.
 function StatCard({
   title,

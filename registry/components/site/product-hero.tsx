@@ -224,7 +224,7 @@ function ProductCallToAction({
         </div>
       )}
       <ProductContainer className="relative flex flex-col items-center gap-5.5">
-        <h2 id={titleId} className="text-h3 leading-tight font-normal tracking-tight text-balance sm:text-h2">
+        <h2 id={titleId} className="text-h3 leading-tight font-normal tracking-tight text-balance text-white sm:text-h2">
           {title}
         </h2>
         {description && <p className="max-w-160 text-body leading-7 text-pretty text-white/85 sm:text-body-lg">{description}</p>}

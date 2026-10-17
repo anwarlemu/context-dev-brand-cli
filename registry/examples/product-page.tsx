@@ -11,6 +11,7 @@ import {
   ProductStats,
   ProductStepsTimeline,
 } from "@/components/site/product-page";
+import { SearchStory } from "@/components/visuals/stories/search-story";
 
 const TS = `import ContextDev from 'context.dev';
 
@@ -52,7 +53,11 @@ export function Site() {
         }
         caption="POST /web/search · 10 results with Markdown · 2 credits"
       >
-        <div className="flex min-h-80 w-full max-w-170 items-center justify-center rounded-shell bg-surface/70 text-body-sm text-fg-muted">The product window goes here</div>
+        <div className="flex min-h-80 w-full max-w-170 items-center justify-center rounded-shell bg-surface p-8">
+          <div className="relative w-full max-w-[26rem]">
+            <SearchStory />
+          </div>
+        </div>
       </ProductStageHero>
       <ProductCustomerRow lead="Backed by Y Combinator. Teams build with Context.dev." logos={["Mintlify", "daily.dev", "Daydream", "Super.com"].map((name) => ({ name, src: LOGO(name) }))} />
       <ProductStats

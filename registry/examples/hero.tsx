@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill } from "@/components/site/hero";
+import { ScrapeStory } from "@/components/visuals/stories/scrape-story";
 
 export function Site() {
   return (
     <Hero
       size="large"
+      // The large title holds one line on wide screens; wrapTitle breaks it at its own line break to fit this frame.
+      wrapTitle
       staggerIn
       background={<HeroFrame />}
       eyebrow={<HeroPill>Backed by Y Combinator</HeroPill>}
-      title="Turn the web into context your agents can use."
+      title={"The web as context\nfor your agents."}
       accent={["context", "agents"]}
       description="One API for agents to scrape, search, monitor, and collect data from the web."
       actions={
@@ -35,7 +38,9 @@ export function Site() {
           }
         >
           <HeroMediaCard>
-            <div className="flex h-56 w-full items-end justify-center p-4 font-mono text-caption text-fg-muted">POST /v1/batch/submit</div>
+            <div className="mx-auto w-full max-w-[22rem] p-4">
+              <ScrapeStory />
+            </div>
           </HeroMediaCard>
         </HeroMedia>
       }
@@ -49,7 +54,7 @@ export function Blue() {
       surface="blue"
       eyebrow={<HeroPill>Backed by Y Combinator</HeroPill>}
       pill={<HeroPill variant="outline">New: monitors</HeroPill>}
-      title="Website Crawler {API}"
+      title="Website crawler {API}"
       description="Map and crawl entire websites into clean Markdown your agents can read."
       actions={
         <>
