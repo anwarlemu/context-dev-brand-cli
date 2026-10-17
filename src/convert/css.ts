@@ -40,13 +40,18 @@ const SCALED = /^(font-size|border(-[a-z]+)*-radius|padding(-[a-z]+)*|margin(-[a
 const SCRIM = /(backdrop|overlay|scrim|modal|lightbox|dimmer|mask)/i;
 const SERIES_NAME = /(series|chart|graph|plot|dataset|legend|swatch)/i;
 
-/** Site variables in a size, replaced by their own values (through chains and fallbacks); colors stay as vars. */
-function resolveSiteVars(value: string, vars: Map<string, string>, depth = 0): string {
+/**
+ * Site variables in a size, replaced by their own values (through chains and fallbacks); colors stay as vars. A
+ * variable whose value varies (redefined at a breakpoint or in a theme) or is fluid (vw, clamp, calc of other
+ * variables) stays a reference: inlining its first value would freeze a responsive layout.
+ */
+function resolveSiteVars(value: string, vars: Map<string, string>, varying?: Set<string>, depth = 0): string {
 	if (depth > 5) return value;
 	return value.replace(/var\((--(?!ds-)[\w-]+)\s*(?:,\s*([^()]*(?:\([^()]*\))?[^()]*))?\)/g, (all, name: string, fallback?: string) => {
+		if (varying?.has(name)) return all;
 		const raw = vars.get(name) ?? fallback?.trim();
-		if (!raw || /var\(--ds-|#|rgb|hsl|oklch/.test(raw)) return all;
-		return resolveSiteVars(raw, vars, depth + 1);
+		if (!raw || /var\(--ds-|#|rgb|hsl|oklch/.test(raw) || /\b(clamp|min|max)\(|v[whib]|dv[hw]|sv[hw]|lv[hw]|%/.test(raw)) return all;
+		return resolveSiteVars(raw, vars, varying, depth + 1);
 	});
 }
 
@@ -72,7 +77,7 @@ function convertDecls(css: string, palette: Palette, stats: Stats, selector: str
 		const p = prop.toLowerCase();
 		const isVar = p.startsWith('--');
 		const pal = isVar && palette.modes?.get(p) ? themed(palette, palette.modes.get(p)) : palette;
-		let next = !isVar && SCALED.test(p) && palette.vars ? resolveSiteVars(value, palette.vars) : value;
+		let next = !isVar && SCALED.test(p) && palette.vars ? resolveSiteVars(value, palette.vars, palette.varying) : value;
 		if (palette.vars)
 			next = next.replace(/\b(rgba?)\(\s*var\((--[\w-]+)\)\s*(?:[/,]\s*([\d.]+%?)\s*)?\)/g, (m, fn: string, name: string, alpha?: string) => {
 				const channels = palette.vars?.get(name)?.match(/^(\d{1,3})[\s,]+(\d{1,3})[\s,]+(\d{1,3})$/);

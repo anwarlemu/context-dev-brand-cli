@@ -14,6 +14,8 @@ export type Palette = {
 	fg: number;
 	found?: boolean;
 	vars?: Map<string, string>;
+	/** Variables defined more than once (redefined in a media query, a theme or a component): their value varies. */
+	varying?: Set<string>;
 	usage?: Map<string, Family>;
 	modes?: Map<string, Mode>;
 	series?: Map<string, number>;
@@ -65,16 +67,25 @@ export function resolveColor(value: string | undefined, vars: Map<string, string
 /** The palette of a stylesheet (or all of a project's styles joined): its page colors and how its variables are used. */
 export function sitePalette(css: string): Palette {
 	const vars = new Map<string, string>();
-	for (const m of css.matchAll(/(--[\w-]+)\s*:\s*([^;}]+)/g)) if (!vars.has(m[1])) vars.set(m[1], m[2].trim());
+	const varying = new Set<string>();
+	for (const m of css.matchAll(/(--[\w-]+)\s*:\s*([^;}]+)/g)) {
+		if (vars.has(m[1])) varying.add(m[1]);
+		else vars.set(m[1], m[2].trim());
+	}
 	const resolve = (v?: string) => resolveColor(v, vars);
 	const pick = (re: RegExp) => [...vars].find(([n, v]) => re.test(n) && resolve(v))?.[1];
 	// The page's own colors: body or html, also scoped (body:has(#app)), or the root element of a page that styles
 	// itself apart from the rest of the site (#fx-root, .page-root).
-	const roots = [...css.matchAll(/(?:^|[}\s,])((?:html|body)(?:[:.#[][^{,]*)?|[#.][\w-]*(?:root|page|site|app)\b[^{,]*)\s*\{([^}]*)\}/g)].map((m) => m[2]);
+	// Pseudo-elements (a scrollbar thumb, ::selection) are not the page; plain body and html come before scoped rules.
+	const rank = (sel: string) => (/^body\s*$/.test(sel) ? 0 : /^html\s*$/.test(sel) ? 1 : 2);
+	const roots = [...css.matchAll(/(?:^|[}\s,])((?:html|body)(?:[:.#[][^{,]*)?|[#.][\w-]*(?:root|page|site|app)\b[^{,]*)\s*\{([^}]*)\}/g)]
+		.filter((m) => !m[1].includes('::') && !/scrollbar|selection|placeholder/.test(m[1]))
+		.sort((a, b) => rank(a[1].trim()) - rank(b[1].trim()))
+		.map((m) => m[2]);
 	const body = roots.find((r) => /background(?:-color)?\s*:/.test(r) && resolve(r.match(/background(?:-color)?\s*:\s*([^;]+)/)?.[1])) ?? roots[0] ?? '';
 	const bg = resolve(body.match(/background(?:-color)?\s*:\s*([^;]+)/)?.[1]) ?? resolve(pick(/^--(bg|background|surface|paper|canvas|base)$/)) ?? resolve(pick(/(bg|background|paper|canvas)/));
 	const fg = resolve(body.match(/(?:^|;|\s)color\s*:\s*([^;]+)/)?.[1]) ?? resolve(pick(/^--(ink|text|fg|foreground|body)$/)) ?? resolve(pick(/(ink|text|fg|foreground)/));
-	return { ...fromLightness(bg, fg), vars, ...variableUse(css) };
+	return { ...fromLightness(bg, fg), vars, varying, ...variableUse(css) };
 }
 
 /**

@@ -24,11 +24,20 @@ export function accentSplit(text: string): [string, string] | undefined {
 	return at > 0 ? [text.slice(0, at), trimmed.slice(at)] : undefined;
 }
 
-export function addTouches(text: string, jsx: boolean) {
+// A class that names the hero itself (hero, home-hero, hero-section), not a part of it (hero-inner, hero-title).
+const HERO_CLASS = /(?:^|\s)(?:hero|[\w-]+-hero|hero-(?:section|wrap|wrapper|container|block|area|root))(?=\s|$)/i;
+
+export function addTouches(text: string, jsx: boolean, { dots = true }: { dots?: boolean } = {}) {
 	const cls = jsx ? 'className' : 'class';
 	let out = text;
-	// The hero: the first section or header whose class names it.
-	if (!/\bdata-ds-dots\b/.test(out)) out = out.replace(/<(section|header|div)\b([^>]*\bclass(?:Name)?=["'][^"']*\bhero\b[^"']*["'][^>]*)>/i, (all, tag: string, attrs: string) => `<${tag}${attrs} data-ds-dots>`);
+	// The hero: the first section, header or div whose class names it.
+	if (dots && !/\bdata-ds-dots\b/.test(out)) {
+		out = out.replace(/<(section|header|div)\b([^>]*\bclass(?:Name)?=["']([^"']*)["'][^>]*)>/gi, (all, tag: string, attrs: string, classes: string) => {
+			if (!dots || !HERO_CLASS.test(classes)) return all;
+			dots = false;
+			return `<${tag}${attrs} data-ds-dots>`;
+		});
+	}
 	if (/\bds-accent\b/.test(out)) return out;
 	let h1 = false;
 	return out.replace(/<(h1|h2)\b([^>]*)>([^<>{}]+)<\/\1>/gi, (all, tag: string, attrs: string, inner: string) => {
@@ -44,9 +53,12 @@ export function addTouches(text: string, jsx: boolean) {
 /** Adds the touches to the home page's own files (not the shared shell). Returns the files changed. */
 export function installTouches(w: Writer, files: string[]) {
 	const changed: string[] = [];
+	// One hero per project: once a file has it, the others only get their accents.
+	let dots = !files.some((f) => MARKUP.test(f) && /\bdata-ds-dots\b/.test(readFileSync(join(w.root, f), 'utf8')));
 	for (const rel of files.filter((f) => MARKUP.test(f))) {
 		const text = readFileSync(join(w.root, rel), 'utf8');
-		const next = addTouches(text, /\.(tsx|jsx)$/.test(rel));
+		const next = addTouches(text, /\.(tsx|jsx)$/.test(rel), { dots });
+		if (dots && /\bdata-ds-dots\b/.test(next)) dots = false;
 		if (next !== text) {
 			w.write(rel, next);
 			changed.push(rel);

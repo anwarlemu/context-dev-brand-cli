@@ -25,6 +25,7 @@ import { listScreens } from '../src/project/screens.js';
 import { profile } from '../src/project/surface.js';
 import { pickEngine, scorecardJsonSchema } from '../src/review/critique.js';
 import { elementLayer } from '../src/install/layer.js';
+import { insertAfterImports } from '../src/install/styles.js';
 import { addTouches } from '../src/install/touches.js';
 import { patchUtils } from '../src/library/swap.js';
 
@@ -82,6 +83,14 @@ describe('convert', () => {
 		expect(out).toContain('body { background: var(--ds-color-bg-default); color: var(--ds-color-text-default)');
 		expect(out).toContain('.cta { background: var(--ds-color-bg-brand); color: var(--ds-color-text-on-brand)');
 		expect(out).toMatch(/\.muted \{ color: var\(--ds-color-text-(muted|subtle)\)/);
+	});
+	it('reads the page from body, not from a scrollbar thumb, and keeps responsive variables as references', () => {
+		const css = ':root { --gray: #8f998f; --void: #0c0e0e; --gutter: 16px; --pad: 20px; }\n@media (min-width: 900px) { :root { --gutter: 40px; } }\nhtml::-webkit-scrollbar-thumb { background: var(--gray); }\nbody { background: var(--void); color: #fff; }\n.frame { padding-inline: var(--gutter); }\n.card { padding: var(--pad); }';
+		const palette = sitePalette(css);
+		expect(palette.mode).toBe('dark');
+		const out = convertCss(css, palette, stats());
+		expect(out).toContain('.frame { padding-inline: var(--gutter); }');
+		expect(out).toContain('.card { padding: var(--ds-space-5); }');
 	});
 	it('maps dark inks to black, warm paper to white, and red only where it means an error', () => {
 		const css = ':root { --ink: #2b1a1f; --wine: #5c1a2c; --paper: #fbf6f0; }\nbody { background: var(--paper); color: var(--ink); }\n.btn { background: var(--wine); }\n.rose { color: #b85566; }\n.err { color: #dc2626; }';
@@ -230,6 +239,15 @@ describe('swap', () => {
 	});
 });
 
+describe('imports', () => {
+	it('adds an import after the last one, never inside the comment after it', () => {
+		const text = 'import type { Metadata } from "next"\nimport {\n  A,\n  B,\n} from "x"\nimport "./globals.css"\n\n/* Self-hosted through next/font, so the first paint;\n   import nothing else here */\nconst a = 1\n';
+		const out = insertAfterImports(text, 'import { dsFontVariables } from "@/lib/ds-fonts";');
+		expect(out).toContain('import "./globals.css"\nimport { dsFontVariables } from "@/lib/ds-fonts";\n\n/* Self-hosted');
+		expect(insertAfterImports('"use client";\nconst a = 1;\n', 'import X from "x";')).toBe('"use client";\nimport X from "x";\nconst a = 1;\n');
+	});
+});
+
 describe('touches', () => {
 	it('adds hero dots and wraps the closing words of plain headings, without changing them', () => {
 		const html = '<section class="hero"><h1>All your tasks, sales and clients \u2014 in one workspace</h1></section><h2>Built for agencies of every size</h2><h2>FAQ</h2><h2>Our <b>team</b> today</h2>';
@@ -348,6 +366,17 @@ describe('the one command', () => {
 	});
 	it('every command answers --help', () => {
 		for (const c of ['review', 'look', 'check', 'tokens', 'approve', 'done', 'skip', 'snapshot', 'hook']) expect(execFileSync(process.execPath, [BIN, c, '--help'], { encoding: 'utf8' })).toMatch(/Usage/);
+	});
+});
+
+describe('touches', () => {
+	it('marks one hero per project, by a class that names the hero itself', () => {
+		const text = '<section className="hero"><div className="hero-inner"><div className="hero-grid">x</div></div></section>';
+		const out = addTouches(text, true);
+		expect(out.match(/data-ds-dots/g)).toHaveLength(1);
+		expect(out).toContain('<section className="hero" data-ds-dots>');
+		expect(addTouches('<div className="hero-inner">x</div>', true)).not.toContain('data-ds-dots');
+		expect(addTouches('<section className="hero">x</section>', true, { dots: false })).not.toContain('data-ds-dots');
 	});
 });
 

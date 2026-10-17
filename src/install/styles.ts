@@ -70,6 +70,17 @@ export function installStyles(w: Writer, project: Project, surface: Surface, sty
 }
 
 /** Next: a next/font loader for the three typefaces, added to the root layout's <html> className. */
+/**
+ * Adds an import line after a file's last import statement: with or without semicolons, on one line or several,
+ * never into a comment that follows them; after a "use client" directive when there are no imports.
+ */
+export function insertAfterImports(text: string, line: string) {
+	const last = [...text.matchAll(/^import[^\n]*?(?:from\s+["'][^"'\n]+["']|^import\s+["'][^"'\n]+["'])[^\n]*\n|^import\s*(?:type\s+)?\{[^}]*\}\s*from\s+["'][^"'\n]+["'][^\n]*\n|^import\s+["'][^"'\n]+["'][^\n]*\n/gm)].pop();
+	if (last) return text.slice(0, last.index! + last[0].length) + `${line}\n` + text.slice(last.index! + last[0].length);
+	const directive = text.match(/^\s*["']use (client|server)["'];?\n/);
+	return directive ? `${directive[0]}${line}\n${text.slice(directive[0].length)}` : `${line}\n${text}`;
+}
+
 function wireNextFonts(w: Writer, project: Project) {
 	const libDir = project.srcDir && !project.appDir?.startsWith('app') ? 'src/lib' : 'lib';
 	const loader = `${libDir}/ds-fonts.${project.typescript ? 'ts' : 'js'}`;
@@ -85,9 +96,7 @@ function wireNextFonts(w: Writer, project: Project) {
 	});
 	if (next === text) next = text.replace(/<html\b/, '<html className={dsFontVariables}');
 	if (next === text) return loader;
-	const lastImport = [...next.matchAll(/^import [^;]+;?\n/gm)].pop();
-	const line = `import { dsFontVariables } from '${from}';\n`;
-	next = lastImport ? next.slice(0, lastImport.index! + lastImport[0].length) + line + next.slice(lastImport.index! + lastImport[0].length) : line + next;
+	next = insertAfterImports(next, `import { dsFontVariables } from '${from}';`);
 	w.write(layout, next);
 	return layout;
 }
@@ -111,8 +120,13 @@ export function installDots(w: Writer, project: Project) {
 		// React hoists and dedupes an async script; Astro would try to bundle a script without is:inline.
 		const local = posix.relative(posix.dirname(rel), `${bin}/dots.js`) || `${bin}/dots.js`;
 		const src = project.publicDir === '.' ? (local.startsWith('.') ? local : `./${local}`) : url;
-		const tag = jsx ? `<script src="${url}" async />` : `<script${rel.endsWith('.astro') ? ' is:inline' : ''} src="${src}" defer></script>`;
-		if (w.write(rel, text.replace(close, `${tag}\n${close}`))) wired.push(rel);
+		// In Next, the script loads after hydration (it adds the dot layers to the hero, which React would otherwise see
+		// as a mismatch); elsewhere a deferred script.
+		const next = project.framework === 'next' && jsx;
+		const tag = next ? `<DsScript src="${url}" strategy="afterInteractive" />` : jsx ? `<script src="${url}" async />` : `<script${rel.endsWith('.astro') ? ' is:inline' : ''} src="${src}" defer></script>`;
+		let out = text.replace(close, `${tag}\n${close}`);
+		if (next) out = insertAfterImports(out, 'import DsScript from "next/script";');
+		if (w.write(rel, out)) wired.push(rel);
 	}
 	return wired;
 }
