@@ -107,10 +107,11 @@ function MoreApis({ items, label = "Also in the API", icon, className }: { items
       if (!node.matches(":hover, :focus-within")) animation.play();
     };
     const events: [string, () => void][] = [["pointerenter", pause], ["pointerdown", pause], ["focusin", pause], ["pointerleave", play], ["pointerup", play], ["focusout", play]];
-    events.forEach(([name, handler]) => node.addEventListener(name, handler));
+    const controller = new AbortController();
+    events.forEach(([name, handler]) => node.addEventListener(name, handler, { signal: controller.signal }));
     return () => {
       animation.cancel();
-      events.forEach(([name, handler]) => node.removeEventListener(name, handler));
+      controller.abort();
     };
   }, [marquee]);
 

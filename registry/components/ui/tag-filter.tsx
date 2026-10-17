@@ -51,7 +51,6 @@ function TagFilter({
         </PopoverTrigger>
         <PopoverContent align="end" sideOffset={8} className="w-56 p-3">
           <input
-            autoFocus
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search tags"

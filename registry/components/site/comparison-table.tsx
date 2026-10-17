@@ -105,9 +105,9 @@ function ComparisonTable({
                     </th>
                   </tr>
                 )}
-                {group.rows.map((row, index) =>
+                {group.rows.map((row) =>
                   marks ? (
-                    <tr key={`${row.feature}-${index}`} className="border-t border-wash-pill">
+                    <tr key={row.feature} className="border-t border-wash-pill">
                       <th scope="row" className="px-5 py-3.5 text-body font-normal text-fg-nav md:px-8">
                         {row.feature}
                       </th>
@@ -118,7 +118,7 @@ function ComparisonTable({
                       ))}
                     </tr>
                   ) : (
-                    <tr key={`${row.feature}-${index}`} className="border-t border-hairline">
+                    <tr key={row.feature} className="border-t border-hairline">
                       <th scope="row" className="px-5 py-4 text-body font-normal text-fg md:px-8">
                         {row.feature}
                       </th>

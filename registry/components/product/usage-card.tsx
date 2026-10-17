@@ -47,8 +47,10 @@ function UsageCard<B extends string, R extends string>({
   className?: string;
 }) {
   const [picks, setPicks] = React.useState<Partial<Record<B, string[]>>>({});
-  const picked = (picks[breakdown] ?? []).filter((k) => view.series.some((s) => s.key === k));
-  const fadedKeys = new Set(picked.length ? view.series.map((s) => s.key).filter((k) => !picked.includes(k)) : []);
+  const seriesKeys = new Set(view.series.map((s) => s.key));
+  const picked = (picks[breakdown] ?? []).filter((k) => seriesKeys.has(k));
+  const pickedKeys = new Set(picked);
+  const fadedKeys = new Set(picked.length ? view.series.map((s) => s.key).filter((k) => !pickedKeys.has(k)) : []);
   const select = (key: string, mode: SeriesSelectMode) =>
     setPicks((p) => ({ ...p, [breakdown]: mode === "toggle" ? (picked.includes(key) ? picked.filter((k) => k !== key) : [...picked, key]) : picked.length === 1 && picked[0] === key ? [] : [key] }));
   return (

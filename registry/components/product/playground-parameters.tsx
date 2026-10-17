@@ -151,14 +151,15 @@ function PlaygroundParameters({
   className?: string;
   children: React.ReactNode;
 }) {
+  const closeOnEscape = React.useEffectEvent(() => onOpenChange(false));
   React.useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && !e.shiftKey && !isOverlayOpen()) onOpenChange(false);
+      if (e.key === "Escape" && !e.shiftKey && !isOverlayOpen()) closeOnEscape();
     };
     window.addEventListener("keydown", onKey, true);
     return () => window.removeEventListener("keydown", onKey, true);
-  }, [open, onOpenChange]);
+  }, [open]);
 
   if (!open) return null;
   return (

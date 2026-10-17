@@ -74,8 +74,8 @@ function UserMenu({
             {hasName && email && <p className="truncate text-caption text-fg-subtle">{email}</p>}
           </div>
         </div>
-        {sections.map((section, i) => (
-          <React.Fragment key={i}>
+        {sections.map((section) => (
+          <React.Fragment key={section.map((item) => item.href ?? item.label).join("|")}>
             <DropdownMenuSeparator />
             <DropdownMenuGroup className="flex flex-col gap-0.5">
               {section.map((item) => (

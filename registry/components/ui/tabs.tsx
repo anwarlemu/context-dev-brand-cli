@@ -93,6 +93,7 @@ function TabsList({
   const active = React.useContext(ActiveValue);
   const pillRef = React.useRef<HTMLSpanElement>(null);
   const isPlaced = useTabGlide(pillRef, active ?? "");
+  const listState = React.useMemo(() => ({ variant, size, isPillPlaced: glide && isPlaced }), [variant, size, glide, isPlaced]);
   const pillRadius = variant === "pill" ? "" : variant === "default" && size === "md" ? "rounded-control" : INNER_RADIUS;
 
   return (
@@ -106,7 +107,7 @@ function TabsList({
       {...props}
     >
       {glide && <span ref={pillRef} aria-hidden className={cn("pointer-events-none absolute top-0 left-0 -z-10", pillRadius, PILL_SURFACE[variant], pillClassName, !isPlaced && "invisible")} />}
-      <ListState.Provider value={{ variant, size, isPillPlaced: glide && isPlaced }}>{children}</ListState.Provider>
+      <ListState.Provider value={listState}>{children}</ListState.Provider>
     </TabsPrimitive.List>
   );
 }

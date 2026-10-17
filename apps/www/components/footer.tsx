@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { SiteFooter } from "@/components/site/site-footer";
 import { FooterWatermark } from "@/components/visuals/footer-watermark";
 import { LogoMark } from "@www/components/logo";
@@ -6,10 +8,10 @@ export function Footer({ name, repo, site }: { name: string; repo: string; site:
   return (
     <SiteFooter
       logo={
-        <a href="/" aria-label={`${name} UI home`} className="flex items-center gap-2 rounded-card">
+        <Link href="/" aria-label={`${name} UI home`} className="flex items-center gap-2 rounded-card">
           <LogoMark className="h-6" />
           <span className="text-h5 leading-none font-medium text-white">{name}</span>
-        </a>
+        </Link>
       }
       description={
         <>

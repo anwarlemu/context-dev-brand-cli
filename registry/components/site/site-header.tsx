@@ -252,7 +252,7 @@ function NavPreviewPanel({
   backdrop?: React.ReactNode;
   ctaLabel?: React.ReactNode;
 }) {
-  const [activeId, setActiveId] = React.useState(items[0]?.id);
+  const [activeId, setActiveId] = React.useState<string>();
   const active = items.find((item) => item.id === activeId) ?? items[0];
   if (!active) return null;
   return (
@@ -703,8 +703,8 @@ function MobileSection({ label, open, onToggle, groups }: { label: string; open:
       <div className={cn("grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")} inert={!open || undefined}>
         <div className="overflow-hidden">
           <div ref={contentRef} className="pt-1 pb-4">
-            {groups.map((group, index) => (
-              <div key={index} className="not-first:mt-5">
+            {groups.map((group) => (
+              <div key={group.links.map((link) => link.href).join("|")} className="not-first:mt-5">
                 {group.label && <p className="mx-3 mb-1 text-caption font-medium text-fg-nav">{group.label}</p>}
                 {group.links.map((link) => (
                   <a key={link.href} href={link.href} {...linkTarget(link.external)} className={cn(MOBILE_SUBLINK, FOCUS)}>
@@ -737,6 +737,7 @@ function MobileNavigation({
 }) {
   const menuRef = React.useRef<HTMLElement>(null);
   const [openSection, setOpenSection] = React.useState<string | null>(null);
+  const close = React.useEffectEvent(onClose);
 
   React.useLayoutEffect(() => {
     const menu = menuRef.current;
@@ -756,7 +757,7 @@ function MobileNavigation({
     const observer = new ResizeObserver(updateTop);
     observer.observe(header);
     const desktop = window.matchMedia(DESKTOP_QUERY);
-    const closeOnDesktop = () => (desktop.matches ? onClose() : updateTop());
+    const closeOnDesktop = () => (desktop.matches ? close() : updateTop());
 
     // Everything outside the header goes inert while the menu is open.
     const background: { element: HTMLElement; inert: boolean }[] = [];
@@ -774,12 +775,12 @@ function MobileNavigation({
     trigger.focus({ preventScroll: true });
 
     const closeOnNavigation = (event: MouseEvent) => {
-      if (event.target instanceof Element && event.target.closest("a[href]")) onClose();
+      if (event.target instanceof Element && event.target.closest("a[href]")) close();
     };
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        close();
       }
       if (event.key !== "Tab") return;
       const focusable = Array.from(header.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), [tabindex='0']")).filter(
@@ -813,7 +814,7 @@ function MobileNavigation({
       for (const { element, inert } of background) element.inert = inert;
       if (trigger.isConnected && !desktop.matches) trigger.focus({ preventScroll: true });
     };
-  }, [headerRef, onClose]);
+  }, [headerRef]);
 
   return (
     <nav

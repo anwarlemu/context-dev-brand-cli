@@ -150,13 +150,17 @@ export function DotShaderPlayground({
   // Keyed on the samples' content, so a parent that passes a new array each render does not refetch them.
   const sampleKey = samples.map((sample) => `${sample.id}:${sample.src ?? ""}:${sample.svg?.length ?? 0}`).join("|");
   const latestSamples = React.useRef(samples);
-  latestSamples.current = samples;
+  React.useEffect(() => {
+    latestSamples.current = samples;
+  }, [samples]);
   React.useEffect(() => {
     let current = true;
     for (const sample of latestSamples.current) {
       loadSample(sample)
         .then((states) => current && states && setSampleDots((loaded) => ({ ...loaded, [sample.id]: states })))
-        .catch(() => undefined);
+        .catch(() => {
+          if (current) setMessage("A sample image could not be loaded. Try another sample or upload an image.");
+        });
     }
     return () => {
       current = false;

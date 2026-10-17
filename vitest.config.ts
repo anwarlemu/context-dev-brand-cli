@@ -1,3 +1,6 @@
 import { defineConfig } from 'vitest/config';
 
-export default defineConfig({ test: { include: ['test/**/*.test.ts'], testTimeout: 30000 } });
+export default defineConfig({
+  resolve: { alias: { '@': new URL('./registry', import.meta.url).pathname } },
+  test: { include: ['test/**/*.test.ts'], testTimeout: 30000 },
+});

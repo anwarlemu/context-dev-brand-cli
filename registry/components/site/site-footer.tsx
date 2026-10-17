@@ -187,8 +187,8 @@ function SiteFooter({
 
           {groups.length > 0 && (
             <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 pt-8 sm:gap-x-8 md:grid-cols-4">
-              {groups.map((group, index) => (
-                <div key={index} className="flex min-w-0 flex-col gap-3">
+              {groups.map((group) => (
+                <div key={group.links.map((link) => link.href).join("|")} className="flex min-w-0 flex-col gap-3">
                   <p className="text-body font-medium text-white">{group.title}</p>
                   <ul className="flex flex-col gap-1">
                     {group.links.map((link) => (

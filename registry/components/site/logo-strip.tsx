@@ -268,11 +268,12 @@ function LogoStrip({
     const stage = stageRef.current;
     const card = cardRef.current;
     if (!anchor || !stage || !card) return;
-    const place = () =>
+    const place = () => {
+      const next = placeCard(anchor, { width: card.offsetWidth, height: card.offsetHeight }, stage.getBoundingClientRect());
       setPlacement((previous) => {
-        const next = placeCard(anchor, { width: card.offsetWidth, height: card.offsetHeight }, stage.getBoundingClientRect());
         return { ...next, glide: previous !== null && previous.below === next.below };
       });
+    };
     place();
     window.addEventListener("scroll", place, { passive: true });
     window.addEventListener("resize", place);
@@ -353,7 +354,7 @@ function LogoStrip({
                   {quotes.map((quote, index) =>
                     quote ? (
                       <div
-                        key={index}
+                        key={logos[index].name}
                         aria-hidden={quote !== shownQuote}
                         className={cn("transition-[opacity,visibility] duration-150 ease-out motion-reduce:transition-none", quote === shownQuote ? "visible relative opacity-100" : "invisible absolute inset-x-0 top-0 opacity-0")}
                       >

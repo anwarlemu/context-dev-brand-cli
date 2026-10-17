@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { Surface } from "@/lib/surface";
+import { PreviewSizeReporter } from "@www/components/preview-size-reporter";
 import { examples } from "@www/lib/examples.generated";
 import { findItem, items } from "@www/lib/registry";
 
@@ -23,6 +24,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ name: 
   return (
     <Surface kind={surface} data-preview-root="" className={surface === "product" ? "bg-canvas" : "bg-surface"}>
       <Example />
+      <PreviewSizeReporter />
     </Surface>
   );
 }

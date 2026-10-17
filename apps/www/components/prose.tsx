@@ -2,13 +2,13 @@
 export function Prose({ text }: { text: string }) {
   return (
     <>
-      {text.split(/(`[^`]+`)/g).map((part, i) =>
-        part.startsWith("`") && part.endsWith("`") ? (
-          <code key={i} className="rounded-sm bg-subtle px-1 py-px font-mono text-[0.9em] text-fg">
-            {part.slice(1, -1)}
+      {Array.from(text.matchAll(/`[^`]+`|[^`]+|`/g), (match) =>
+        match[0].length > 1 && match[0].startsWith("`") && match[0].endsWith("`") ? (
+          <code key={`code:${match.index}`} className="rounded-sm bg-subtle px-1 py-px font-mono text-[0.9em] text-fg">
+            {match[0].slice(1, -1)}
           </code>
         ) : (
-          part
+          match[0]
         ),
       )}
     </>

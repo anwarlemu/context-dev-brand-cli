@@ -64,13 +64,19 @@ export function seriesSelectModeForClick(event: { shiftKey: boolean; metaKey: bo
 export function useSeriesSelection<K extends string>(series: { key: K }[]) {
   const [selected, setSelected] = React.useState<K[]>([]);
   // Selections survive range and metric changes, so keys whose series are gone drop out instead of leaving an empty chart.
-  const active = React.useMemo(() => selected.filter((k) => series.some((s) => s.key === k)), [selected, series]);
+  const active = React.useMemo(() => {
+    const keys = new Set(series.map((s) => s.key));
+    return selected.filter((k) => keys.has(k));
+  }, [selected, series]);
   const selectSeries = React.useCallback(
     (key: K, mode: SeriesSelectMode) =>
       setSelected(mode === "toggle" ? (active.includes(key) ? active.filter((k) => k !== key) : [...active, key]) : active.length === 1 && active[0] === key ? [] : [key]),
     [active],
   );
-  const fadedKeys = React.useMemo(() => new Set(active.length === 0 ? [] : series.map((s) => s.key).filter((k) => !active.includes(k))), [active, series]);
+  const fadedKeys = React.useMemo(() => {
+    const picked = new Set(active);
+    return new Set(active.length === 0 ? [] : series.map((s) => s.key).filter((k) => !picked.has(k)));
+  }, [active, series]);
   return { fadedKeys, selectSeries };
 }
 

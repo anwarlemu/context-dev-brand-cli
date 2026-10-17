@@ -187,8 +187,8 @@ function PricingCard({ name, description, price, period, note, noteHighlight, or
 
       {quota && quota.length > 0 ? (
         <PricingCardBox>
-          {quota.map((line, i) => (
-            <FeatureLine key={i} feature={line} />
+          {quota.map((line) => (
+            <FeatureLine key={typeof line === "string" ? line : line.text} feature={line} />
           ))}
         </PricingCardBox>
       ) : (
@@ -197,8 +197,8 @@ function PricingCard({ name, description, price, period, note, noteHighlight, or
 
       {features && features.length > 0 && (
         <PricingCardBox>
-          {features.map((line, i) => (
-            <FeatureLine key={i} feature={line} />
+          {features.map((line) => (
+            <FeatureLine key={typeof line === "string" ? line : line.text} feature={line} />
           ))}
         </PricingCardBox>
       )}
@@ -249,9 +249,7 @@ function PricingShelves({ first, second, panel, className }: { first: React.Reac
         <div className={cn("grid grid-cols-1 gap-px lg:grid-rows-[repeat(11,auto)]", COLUMNS[columns])}>
           {first}
           <div aria-hidden="true" className="col-span-full h-6 bg-surface lg:row-start-6 lg:h-8" />
-          {second.map((card, i) => (
-            <React.Fragment key={i}>{placed(card, cn("lg:row-start-7", COL_START[panelSpan + 1 + i]))}</React.Fragment>
-          ))}
+          {React.Children.map(second, (card, i) => placed(card, cn("lg:row-start-7", COL_START[panelSpan + 1 + i])))}
           {panel && placed(panel, cn("sm:col-span-2 lg:col-start-1 lg:row-span-5 lg:row-start-7", COL_SPAN[panelSpan]))}
         </div>
       </div>

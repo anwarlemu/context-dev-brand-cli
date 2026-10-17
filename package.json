@@ -17,6 +17,8 @@
     "node": ">=20"
   },
   "scripts": {
+    "doctor": "react-doctor apps/www --scope full --verbose",
+    "doctor:library": "react-doctor --project registry --scope full --verbose",
     "build": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
     "test": "vitest run",
     "ci": "npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run",

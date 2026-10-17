@@ -99,8 +99,8 @@ export function AppShell({ active = "Overview", paymentFailed = false, className
           </>
         }
       >
-        {NAV.map((group, i) => (
-          <SidebarGroup key={group.label ?? i} label={group.label}>
+        {NAV.map((group) => (
+          <SidebarGroup key={group.label ?? "main"} label={group.label}>
             {group.items.map((item) => (
               <SidebarLink key={item.title} href="#" icon={item.icon} trailing={item.trailing} active={isActive(item.title)} onClick={(e) => e.preventDefault()}>
                 {item.title}

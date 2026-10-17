@@ -20,6 +20,7 @@ export function FramePreview({ src, label, surface }: { src: string; label: stri
   const [pageHeight, setPageHeight] = React.useState(900);
   const width = WIDTHS[device];
   const scale = boxWidth ? Math.min(1, boxWidth / width) : 0;
+  const ready = scale > 0;
 
   React.useEffect(() => {
     const el = box.current;
@@ -29,14 +30,16 @@ export function FramePreview({ src, label, surface }: { src: string; label: stri
     return () => observer.disconnect();
   }, []);
 
-  // The page's height once it has laid out at this width, and again whenever it changes (images, stories).
-  const measure = React.useCallback(() => {
-    const doc = frame.current?.contentDocument;
-    const root = doc?.querySelector<HTMLElement>("[data-preview-root]");
-    if (!root) return;
-    // The example's own height, not the document's (which is never shorter than the frame).
-    const observer = new ResizeObserver(() => setPageHeight(Math.max(120, Math.min(MAX_HEIGHT, Math.ceil(root.getBoundingClientRect().height)))));
-    observer.observe(root);
+  // The sandboxed example reports its size without giving it access to the parent document.
+  React.useEffect(() => {
+    const measure = (event: MessageEvent) => {
+      if (!frame.current || event.source !== frame.current.contentWindow || event.origin !== "null") return;
+      const data = event.data;
+      if (data?.type !== "context-preview-size" || typeof data.height !== "number" || !Number.isFinite(data.height)) return;
+      setPageHeight(Math.max(120, Math.min(MAX_HEIGHT, Math.ceil(data.height))));
+    };
+    window.addEventListener("message", measure);
+    return () => window.removeEventListener("message", measure);
   }, []);
 
   return (
@@ -63,13 +66,13 @@ export function FramePreview({ src, label, surface }: { src: string; label: stri
       </figcaption>
       <div ref={box} className="relative overflow-hidden rounded-card bg-surface shadow-[0_0_0_1px_var(--ds-color-border-hairline)]" style={{ height: scale ? pageHeight * scale : 400 }}>
         <div className={cn("absolute top-0", device === "phone" ? "left-1/2 -translate-x-1/2" : "left-0")} style={{ width: width * scale || "100%" }}>
-          {scale > 0 && (
+          {ready && (
             <iframe
               ref={frame}
               key={device}
               src={src}
               title={label}
-              onLoad={measure}
+              sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
               className="block origin-top-left border-0"
               style={{ width, height: pageHeight, transform: `scale(${scale})` }}
             />

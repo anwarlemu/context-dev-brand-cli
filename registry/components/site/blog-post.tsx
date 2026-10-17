@@ -1,4 +1,5 @@
 import * as React from "react";
+import sanitizeHtml from "sanitize-html";
 
 import { SectionHeaderRule, SiteSection } from "@/components/site/section";
 import { cn } from "@/lib/utils";
@@ -152,9 +153,9 @@ const PROSE = cn(
   "[&_hr]:my-12 [&_hr]:border-line",
 );
 
-/** The article body: wraps HTML from Markdown (pass `html`) or JSX children in the site's article styles. */
+/** The article body: wraps sanitized Markdown HTML (pass `html`) or JSX children in the site's article styles. */
 function BlogProse({ html, className, children, ...props }: React.ComponentProps<"article"> & { html?: string }) {
-  if (html !== undefined) return <article data-slot="blog-prose" className={cn(PROSE, className)} dangerouslySetInnerHTML={{ __html: html }} {...props} />;
+  if (html !== undefined) return <article data-slot="blog-prose" className={cn(PROSE, className)} {...props} dangerouslySetInnerHTML={{ __html: sanitizeHtml(html, { allowedTags: [...sanitizeHtml.defaults.allowedTags, "img"], allowedAttributes: { ...sanitizeHtml.defaults.allowedAttributes, "*": ["class", "id"], code: ["class", "data-slot"], pre: ["class", "data-slot"] } }) }} />;
   return (
     <article data-slot="blog-prose" className={cn(PROSE, className)} {...props}>
       {children}

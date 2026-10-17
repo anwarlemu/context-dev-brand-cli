@@ -35,6 +35,9 @@ value, so new work stays on the brand.
 
 ## The library
 
+Run `npm run doctor` to audit the complete docs site with the pinned React Doctor version. `npm run doctor:library`
+audits the shared registry source separately. Both commands report every finding; neither disables rules.
+
 Every component, block and visual from Context.dev's site (the redesign branch) and product (the dashboard), for
 React and Tailwind 4. Components are copied into your project as source you own (nothing to import from a package): buttons and pills, forms, overlays, menus, tables, charts, the product
 shell and pages, the site's header, hero, sections, pricing and FAQ, and the dot visuals (hero dot streams and 43

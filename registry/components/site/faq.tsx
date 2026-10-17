@@ -320,8 +320,8 @@ function FaqList({
     <div ref={ref} data-slot="faq-list" className={cn(sizing === "closed" && SCROLLING, className)}>
       <div className="flex flex-col gap-5">
         <Accordion type="single" collapsible className="flex flex-col gap-5">
-          {items.map((item, i) => (
-            <FaqCard key={item.id ?? i} value={item.id ?? `${idPrefix}-${i}`} item={item} toggle={toggle} />
+          {items.map((item) => (
+            <FaqCard key={item.id ?? item.question} value={item.id ?? `${idPrefix}-${item.question}`} item={item} toggle={toggle} />
           ))}
         </Accordion>
         {ask}
@@ -332,7 +332,7 @@ function FaqList({
 
 /** Question cards in two columns from md (one open at a time across both), one column on phones. */
 function FaqCardGrid({ items, toggle, idPrefix = "faq", className }: { items: FaqItem[]; toggle?: FaqToggle; idPrefix?: string; className?: string }) {
-  const valued = items.map((item, i) => ({ item, value: item.id ?? `${idPrefix}-${i}` }));
+  const valued = items.map((item) => ({ item, value: item.id ?? `${idPrefix}-${item.question}` }));
   const column = (picked: typeof valued) => (
     <div className="flex flex-1 flex-col gap-5">
       {picked.map(({ item, value }) => (

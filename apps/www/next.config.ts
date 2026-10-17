@@ -9,6 +9,13 @@ const config: NextConfig = {
   outputFileTracingRoot: root,
   // The repo has its own agent instructions; dev must not write AGENTS.md and CLAUDE.md here.
   agentRules: false,
+  // Sandboxed examples have an opaque origin. Only public font and image assets need cross-origin reads.
+  async headers() {
+    return ["/_next/static/media/:path*", "/dot-shader/:path*"].map((source) => ({
+      source,
+      headers: [{ key: "Access-Control-Allow-Origin", value: "*" }],
+    }));
+  },
 };
 
 export default config;

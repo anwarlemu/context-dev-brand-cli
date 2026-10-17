@@ -140,7 +140,9 @@ export function HeroStatMorphs({ stats = DEFAULT_STATS, label = "Context.dev in 
   const canvasRefs = React.useRef<(HTMLCanvasElement | null)[]>([]);
   const labelRefs = React.useRef<(HTMLParagraphElement | null)[]>([]);
   const statsRef = React.useRef(stats);
-  statsRef.current = stats;
+  React.useEffect(() => {
+    statsRef.current = stats;
+  }, [stats]);
   const statsKey = JSON.stringify(stats);
 
   React.useEffect(() => {

@@ -131,7 +131,9 @@ export function CustomerLogoDots({
 
   // Sampling fetches and decodes the logo, so it waits until the card is nearly on screen.
   const resolveRef = React.useRef(resolveSrc);
-  resolveRef.current = resolveSrc;
+  React.useEffect(() => {
+    resolveRef.current = resolveSrc;
+  }, [resolveSrc]);
   React.useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;

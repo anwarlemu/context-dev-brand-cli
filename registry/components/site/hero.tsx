@@ -54,20 +54,16 @@ function Braced({ phrase }: { phrase: string }) {
 function AccentedTitle({ title, accent, className }: { title: string; accent: string[]; className: string }) {
   const phrases = accent.filter((phrase) => title.includes(phrase)).sort((a, b) => b.length - a.length);
   if (phrases.length === 0) return <>{title}</>;
-  const pattern = new RegExp(`(${phrases.map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "g");
-  return (
-    <>
-      {title.split(pattern).map((part, index) =>
-        phrases.includes(part) ? (
-          <span key={index} className={className}>
-            <Braced phrase={part} />
-          </span>
-        ) : (
-          <React.Fragment key={index}>{part}</React.Fragment>
-        ),
-      )}
-    </>
-  );
+  const pattern = new RegExp(phrases.map((phrase) => phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"), "g");
+  const parts: React.ReactNode[] = [];
+  let cursor = 0;
+  for (const match of title.matchAll(pattern)) {
+    parts.push(title.slice(cursor, match.index));
+    parts.push(<span key={`accent:${match.index}`} className={className}><Braced phrase={match[0]} /></span>);
+    cursor = match.index + match[0].length;
+  }
+  parts.push(title.slice(cursor));
+  return <>{parts}</>;
 }
 
 /**
