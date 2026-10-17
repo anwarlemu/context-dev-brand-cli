@@ -27,6 +27,7 @@ const SURE: Record<string, RegExp> = {
 	'section-heading': /(^|[-_])section[-_]?(title|heading)$/,
 	'hero-title': /(^|[-_])hero[-_]?(title|heading|headline)$/,
 	column: /^(nav|header|navbar|topbar|site-header)[-_]?(inner|container|wrap|wrapper|content)$/,
+	header: /^(nav|navbar|header|site-header|site-nav|main-nav|topbar|masthead)$/,
 	'logo-strip': /(^|[-_])(marquee|logo[-_]?(strip|wall|row|cloud|bar)|logos)$/,
 };
 // The header's inner row sits on the column like the brand's: width only, its own layout stays.

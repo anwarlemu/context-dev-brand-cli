@@ -51,7 +51,7 @@ body {
 	outline-offset: 2px;
 }
 
-/* The ruled column: hairlines down both edges of the content column for the whole page, a full-bleed rule between
+/* The ruled column: hairlines down both edges of the content column from below the hero to the end, a full-bleed rule between
    top-level sections, and a solid node where a rule meets a column edge. The lines sit above section backgrounds (a
    hero's own fill would hide them) and under anything positioned above them; content keeps inside them. */
 @media (min-width: 43.2rem) {
@@ -86,6 +86,14 @@ body::after {
 :where(body, main) > :where(section) + :where(section, footer) {
 	position: relative;
 	border-top: 1px solid var(--ds-color-border-rule);
+}
+
+/* The hero (and the header over it) has no side lines, as on the brand's pages: the opening section sits above them on
+   the page's own white, and the lines begin at the rule under it. */
+:where([data-ds-dots], .hero, main > section:first-child, body > section:first-of-type) {
+	position: relative;
+	z-index: 1;
+	background-color: var(--ds-color-bg-default);
 }
 
 :where(body, body > div, main) > :where(footer) {

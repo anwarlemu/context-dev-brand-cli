@@ -5,7 +5,7 @@
 			"match": { "tags": ["html", "body"] },
 			"css": { "background-color": "var(--ds-color-bg-default)", "color": "var(--ds-color-text-default)", "font-family": "var(--ds-font-sans)" },
 			"tailwind": "bg-surface text-fg font-sans antialiased",
-			"rules": ["A white page. Never a gray, cream or tinted page background.", "The ruled column (site layer) runs the full height; nothing else decorates the page."],
+			"rules": ["A white page. Never a gray, cream or tinted page background.", "The ruled column (site layer) runs from below the hero to the end of the page; the hero has no side lines. Nothing else decorates the page."],
 			"source": "src/app/(marketing)/layout.tsx:43"
 		},
 		"column": {
@@ -155,9 +155,9 @@
 		"header": {
 			"name": "Header",
 			"match": { "tags": ["header"], "words": ["header", "nav", "navbar", "topbar", "site-header", "masthead"], "roles": ["banner"] },
-			"css": { "position": "sticky", "top": "0", "z-index": "1000", "display": "flex", "align-items": "center", "justify-content": "space-between", "min-height": "calc(var(--ds-space-16) + var(--ds-space-2))", "background-color": "transparent" },
-			"tailwind": "sticky top-0 z-1000 flex items-center justify-between min-h-18 bg-transparent",
-			"rules": ["At the top it runs edge to edge with no fill. Logo left, links centered, two actions right (tertiary, then the black primary).", "Once scrolled it gathers into the floating pill (header-scrolled)."],
+			"css": { "position": "sticky", "top": "0", "z-index": "1000", "display": "flex", "align-items": "center", "justify-content": "space-between", "min-height": "calc(var(--ds-space-16) + var(--ds-space-2))", "background-color": "color-mix(in srgb, var(--ds-color-bg-default) 85%, transparent)", "backdrop-filter": "blur(var(--ds-space-4))" },
+			"tailwind": "sticky top-0 z-1000 flex items-center justify-between min-h-18 bg-surface/85 backdrop-blur-[var(--ds-space-4)]",
+			"rules": ["At the top it runs edge to edge on see-through white (85 percent, with a blur), never transparent over the page. Logo left, links centered, two actions right (tertiary, then the black primary).", "Once scrolled it gathers into the floating pill (header-scrolled)."],
 			"source": "src/components/sections/shared/marketing-header-frame.module.css:1"
 		},
 		"header-scrolled": {

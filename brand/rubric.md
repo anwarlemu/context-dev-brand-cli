@@ -12,6 +12,8 @@ arrangement. Nothing enlarged to fill space or shrunk, no floating piece moved o
 image or effect lost (a background drawing, a trail, a glow that is now invisible). Colors and type are expected to
 change; sizes, proportions and overlaps are not. Report any break as a blocker naming the element.
 
+The ruled column's side lines start below the hero: a hero (and the header over it) without side lines is correct.
+
 ## Purpose (score: hierarchy)
 Say in one line what the screen is for. Its main action is the most prominent thing (one filled primary), its key
 information is easy to find and scan, and the restyle did not bury, flatten or reorder anything.
