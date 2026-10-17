@@ -17,10 +17,12 @@ const STEP_S = 1 / 240;
 type Box = { x: number; y: number; width: number; height: number };
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
 
+// In the container's own pixels, so the pill lands on its tab inside a scaled ancestor too.
 function boxWithin(el: HTMLElement, container: HTMLElement): Box {
   const r = el.getBoundingClientRect();
   const c = container.getBoundingClientRect();
-  return { x: r.left - c.left, y: r.top - c.top, width: r.width, height: r.height };
+  const scale = container.offsetWidth ? c.width / container.offsetWidth : 1;
+  return { x: (r.left - c.left) / scale, y: (r.top - c.top) / scale, width: r.width / scale, height: r.height / scale };
 }
 
 function paint(pill: HTMLElement, box: Box) {

@@ -14,10 +14,13 @@ type Box = { x: number; y: number; width: number; height: number };
 
 const mix = (from: number, to: number, t: number) => from + (to - from) * t;
 
+// In the container's own pixels: screen boxes divided by its scale, so the pill lands on its tab inside a scaled
+// ancestor too (a dialog mid pop-in, a preview drawn small).
 function boxWithin(element: HTMLElement, container: HTMLElement): Box {
   const rect = element.getBoundingClientRect();
   const containerRect = container.getBoundingClientRect();
-  return { x: rect.left - containerRect.left, y: rect.top - containerRect.top, width: rect.width, height: rect.height };
+  const scale = container.offsetWidth ? containerRect.width / container.offsetWidth : 1;
+  return { x: (rect.left - containerRect.left) / scale, y: (rect.top - containerRect.top) / scale, width: rect.width / scale, height: rect.height / scale };
 }
 
 function paintPill(pill: HTMLElement, box: Box) {

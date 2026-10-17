@@ -4,10 +4,11 @@ import { ArrowRight } from "lucide-react";
 
 import { CodeBlock, CodeWindow, TerminalWindow, WindowCopyButton } from "@/components/site/code-window";
 import { Cta, CtaButton } from "@/components/site/cta";
-import { Hero, HeroMedia, HeroMediaCard, HeroPill } from "@/components/site/hero";
+import { Hero, HeroMedia, HeroMediaCard } from "@/components/site/hero";
 import { SectionHeading, SiteSection } from "@/components/site/section";
 import { Button } from "@/components/ui/button";
 import { HeroDotField } from "@/components/visuals/hero-dot-field";
+import { ComponentsShowcase } from "@www/components/components-showcase";
 import { Thumb } from "@www/components/thumb";
 import { examples } from "@www/lib/examples.generated";
 import { APPLY_COMMAND, GROUPS, counts, items, registryName } from "@www/lib/registry";
@@ -33,7 +34,6 @@ const CARD_LINK =
 
 // One live example per group, drawn small.
 const SHOWCASE: { type: string; item: string; example: string; surface: "site" | "product"; scale: number; align?: "start" }[] = [
-  { type: "ui", item: "button", example: "Product", surface: "product", scale: 0.85 },
   { type: "product", item: "stat-card", example: "Product", surface: "product", scale: 0.62 },
   { type: "site", item: "cta", example: "Site", surface: "site", scale: 0.36, align: "start" },
   { type: "block", item: "overview-page", example: "Block", surface: "product", scale: 0.3, align: "start" },
@@ -47,7 +47,6 @@ const STEPS = [
 ];
 
 export default function Home() {
-  const total = items.length;
   return (
     <main>
       <Hero
@@ -55,7 +54,6 @@ export default function Home() {
         staggerIn
         style={{ "--hero-offset": "calc(var(--spacing) * 29.5)" } as CSSProperties}
         background={<HeroDotField fine streams fillFootOnPhones className="text-fg-brand" />}
-        eyebrow={<HeroPill>{total} items from the {registryName} site and product</HeroPill>}
         title={`${registryName} design system`}
         accent={[registryName]}
         description="Components, blocks and visuals for React and Tailwind. Add them yourself, or let the CLI apply the brand to an app you already have."
@@ -85,10 +83,10 @@ export default function Home() {
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {GROUPS.map((g) => {
             const show = SHOWCASE.find((s) => s.type === g.type);
-            const Example = show ? examples[show.item]?.[show.example] : undefined;
+            const Example = g.type === "ui" ? ComponentsShowcase : show ? examples[show.item]?.[show.example] : undefined;
             return (
               <div key={g.type} className={CARD}>
-                {Example && show && <Thumb example={Example} surface={show.surface} scale={show.scale} align={show.align} />}
+                {Example && <Thumb example={Example} surface={show?.surface ?? "product"} scale={show?.scale ?? 0.64} align={show?.align} />}
                 <div className="flex flex-1 flex-col gap-1.5 px-3 pt-4 pb-3">
                   <p className="flex items-center justify-between text-h5 leading-snug text-fg">
                     <Link href={`/components#${g.id}`} className={CARD_LINK}>
