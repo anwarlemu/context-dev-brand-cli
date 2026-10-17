@@ -22,6 +22,7 @@ import { profile } from '../src/project/surface.js';
 import { pickEngine, scorecardJsonSchema } from '../src/review/critique.js';
 import { elementLayer } from '../src/install/layer.js';
 import { addTouches } from '../src/install/touches.js';
+import { patchUtils } from '../src/library/swap.js';
 
 const ROOT = join(import.meta.dirname, '..');
 const BIN = join(ROOT, 'bin.js');
@@ -128,6 +129,11 @@ describe('convert', () => {
 		expect(convertMarkup('<script>const s = { color: "#ffffff" };</script>', dark, stats())).not.toContain('#ffffff');
 		expect(convertMarkup('<script type="application/ld+json">{"color":"#ffffff"}</script>', dark, stats())).toContain('#ffffff');
 	});
+	it('converts bare spacing numbers only in inline styles, not in settings objects', () => {
+		const out = convertScript('const design = { gap: 3.8, dot: 7 };\nconst el = <div style={{ gap: 6, marginTop: 16 }} />;', sitePalette(''), stats(), {});
+		expect(out).toContain('gap: 3.8');
+		expect(out).toMatch(/style=\{\{ gap: 'var\(--ds-space-/);
+	});
 	it('leaves the colors of a 3D or canvas scene alone', () => {
 		const scene = "import * as THREE from 'three';\nconst sea = new THREE.Color('#1a4fd0');\nconst style = { color: '#ff6600' };";
 		const out = convertScript(scene, sitePalette(''), stats(), {});
@@ -198,6 +204,18 @@ describe('element layer', () => {
 		expect(block).toContain('@media (hover: hover) and (pointer: fine)');
 		expect(block).toContain('prefers-reduced-motion: reduce');
 		expect(count).toBeGreaterThanOrEqual(2);
+	});
+});
+
+describe('swap', () => {
+	it("teaches an app's cn the brand's scales, keeping its other exports", () => {
+		const old = 'import { clsx, type ClassValue } from "clsx";\nimport { twMerge } from "tailwind-merge";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\nexport const formatDate = () => "";\n';
+		const patched = patchUtils(old)!;
+		expect(patched).toContain('extendTailwindMerge');
+		expect(patched).toContain('"body-sm"');
+		expect(patched).toContain('export const formatDate');
+		expect(patchUtils(patched)).toBeUndefined();
+		expect(patchUtils('export { cn } from "cn"\n')).toContain('export function cn(');
 	});
 });
 

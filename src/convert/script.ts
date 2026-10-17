@@ -83,12 +83,20 @@ export function convertScript(text: string, palette: Palette, stats: Stats, opts
 			const out = decl.slice(decl.indexOf(':') + 1).trim();
 			return out === value ? all : `${q}${key}${q}${sep}${quote}${out}${quote}`;
 		});
-	// style={{ marginTop: 16, gap: 6 }}: React reads bare numbers as pixels.
-	next = next.replace(/(\b(?:margin|padding)(?:Top|Right|Bottom|Left|Inline|Block)?|\b(?:row|column)?[gG]ap)(\s*:\s*)(\d+(?:\.\d+)?)(?=\s*[,}\n])/g, (all, key: string, sep: string, n: string) => {
-		if (Number(n) === 0) return all;
-		stats.spacing++;
-		return `${key}${sep}'var(${nearest(scales().space, Number(n))})'`;
-	});
+	// style={{ marginTop: 16, gap: 6 }}: React reads bare numbers as pixels. Only in a style: an inline style attribute,
+	// or an object whose keys are mostly CSS properties. Elsewhere a number named gap or padding is a setting (a
+	// canvas's dot spacing), and a string there would not type-check.
+	const styleLike = (obj: string) => {
+		const keys = [...obj.matchAll(/([a-zA-Z]+)\s*:/g)].map((m) => m[1]);
+		return keys.length > 0 && keys.filter((k) => CSS_PROPS_CAMEL.test(k) || /^(margin|padding|gap|rowGap|columnGap|width|height|top|left|right|bottom|fontSize|lineHeight|display|position|opacity|zIndex)/.test(k)).length / keys.length >= 0.6;
+	};
+	next = next.replace(/(\bstyle=\{)?\{[^{}]*\}/g, (obj, inStyle?: string) =>
+		!inStyle && !styleLike(obj) ? obj : obj.replace(/(\b(?:margin|padding)(?:Top|Right|Bottom|Left|Inline|Block)?|\b(?:row|column)?[gG]ap)(\s*:\s*)(\d+(?:\.\d+)?)(?=\s*[,}\n])/g, (all, key: string, sep: string, n: string) => {
+			if (Number(n) === 0) return all;
+			stats.spacing++;
+			return `${key}${sep}'var(${nearest(scales().space, Number(n))})'`;
+		}),
+	);
 	if (opts.tailwind) next = next.replace(/(["'`])((?:(?!\1)[^\n\\])*)\1/g, (all, q: string, body: string) => (/(?:^|\s|:)(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|placeholder|caret|accent)-/.test(body) ? `${q}${convertClasses(body, palette, stats, opts.tailwind === 'theme')}${q}` : all));
 	// A 3D or drawn scene's colors (terrain, materials, shaders, particles) are what it shows, not its styling; only
 	// the plain white or black it draws for a dark page flips with the page.

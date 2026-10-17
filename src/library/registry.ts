@@ -77,3 +77,20 @@ export async function closure(names: string[]): Promise<RegistryItem[]> {
 	for (const item of seen.values()) place(item);
 	return order;
 }
+
+/** The same, synchronously, from a local copy only (the one bundled with the CLI or this repo's docs build). */
+export function loadItemSync(name: string): RegistryItem | undefined {
+	for (const dir of sources().dirs) {
+		const file = join(dir, `${name}.json`);
+		if (existsSync(file)) return JSON.parse(readFileSync(file, 'utf8'));
+	}
+	return undefined;
+}
+
+export function loadIndexSync(): { name: string; type: string }[] {
+	for (const dir of sources().dirs) {
+		const file = join(dir, 'registry.json');
+		if (existsSync(file)) return JSON.parse(readFileSync(file, 'utf8')).items;
+	}
+	return [];
+}
