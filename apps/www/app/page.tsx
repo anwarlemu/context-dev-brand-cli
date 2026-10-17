@@ -56,7 +56,7 @@ export default function Home() {
         style={{ "--hero-offset": "calc(var(--spacing) * 29.5)" } as CSSProperties}
         background={<HeroDotField fine streams fillFootOnPhones className="text-fg-brand" />}
         eyebrow={<HeroPill>{total} items from the {registryName} site and product</HeroPill>}
-        title={`Make any project look like ${registryName}.`}
+        title={`${registryName} design system`}
         accent={[registryName]}
         description="Components, blocks and visuals for React and Tailwind. Add them yourself, or let the CLI apply the brand to an app you already have."
         actions={
