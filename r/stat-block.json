@@ -1,0 +1,22 @@
+{
+  "name": "stat-block",
+  "type": "site",
+  "title": "Stat block",
+  "description": "A big brand-blue figure with a plain caption under it, in a white card inside the soft blue ring.",
+  "surface": "site",
+  "kinds": [
+    "stat",
+    "card"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/stat-block.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The use-case pages' proof figures: a big brand-blue figure in the heading face with a plain caption under it, each\n// in a white card inside the soft blue ring. The caption is the term and the figure its value, so the list reads right\n// to a screen reader while the figure still sits on top.\n\n/** A list of figures. One column on phones, two from sm; beside a quote, pass `lg:grid-cols-1` to stack them. */\nfunction StatBlocks({ className, ...props }: React.ComponentProps<\"dl\">) {\n  return <dl data-slot=\"stat-blocks\" className={cn(\"grid grid-cols-1 gap-6 sm:grid-cols-2\", className)} {...props} />;\n}\n\n/** One figure and its caption, e.g. \"< 1 day\" over \"for SiteGPT to move its website crawling off Firecrawl\". */\nfunction StatBlock({ value, label, className, ...props }: Omit<React.ComponentProps<\"div\">, \"children\"> & { value: React.ReactNode; label: React.ReactNode }) {\n  return (\n    // The ring wraps the card, so its outer edge keeps the card's radius; the negative margin keeps it out of the grid's gaps.\n    <div data-slot=\"stat-block\" className={cn(\"-m-2 rounded-card bg-ring-tint p-2\", className)} {...props}>\n      <div className=\"flex h-full min-w-0 flex-col-reverse justify-end gap-2 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\">\n        <dt className=\"text-body leading-snug text-fg-secondary\">{label}</dt>\n        <dd className=\"text-h2 leading-none tracking-tight text-fg-brand\">{value}</dd>\n      </div>\n    </div>\n  );\n}\n\nexport { StatBlock, StatBlocks };\n"
+    }
+  ]
+}

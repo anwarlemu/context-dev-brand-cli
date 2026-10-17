@@ -1,0 +1,20 @@
+{
+  "name": "segmented-control",
+  "type": "ui",
+  "title": "Segmented control",
+  "description": "The dashboard's tabs as a value picker, with radio semantics and the gliding pill.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "use-tab-glide",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/segmented-control.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { useTabGlide } from \"@/hooks/use-tab-glide\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's tabs used as a value picker inside a form or a chart (form.tsx SegmentedControl): the same gliding\n// soft gray pill, with radio semantics. `segmented` sits the options on a gray track with a white pill.\ntype Option<T extends string> = { value: T; label: React.ReactNode; count?: number };\n\nconst INNER_RADIUS = \"rounded-[calc(var(--ds-radius-control)-0.125rem)]\";\nconst PILL_SURFACE = { plain: \"bg-wash-pill\", segmented: \"bg-surface shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]\" };\n\nfunction SegmentedControl<T extends string>({\n  value,\n  onValueChange,\n  options,\n  label,\n  size = \"md\",\n  variant = \"plain\",\n  className,\n}: {\n  value: T;\n  onValueChange: (value: T) => void;\n  options: Option<T>[];\n  label: string;\n  size?: \"sm\" | \"md\";\n  variant?: \"plain\" | \"segmented\";\n  className?: string;\n}) {\n  const pillRef = React.useRef<HTMLSpanElement>(null);\n  const isPlaced = useTabGlide(pillRef, value);\n  const segmented = variant === \"segmented\";\n  const radius = size === \"sm\" || segmented ? INNER_RADIUS : \"rounded-control\";\n\n  return (\n    <div\n      role=\"radiogroup\"\n      aria-label={label}\n      data-slot=\"segmented-control\"\n      className={cn(\"relative isolate inline-flex w-fit items-center\", segmented ? \"gap-0.5 rounded-control bg-neutral-5 p-0.5\" : size === \"sm\" ? \"gap-0.5\" : \"gap-1\", className)}\n    >\n      <span ref={pillRef} aria-hidden className={cn(\"pointer-events-none absolute top-0 left-0 -z-10\", radius, PILL_SURFACE[variant], !isPlaced && \"invisible\")} />\n      {options.map((o) => {\n        const selected = o.value === value;\n        return (\n          <button\n            key={o.value}\n            type=\"button\"\n            role=\"radio\"\n            aria-checked={selected}\n            data-tab-id={o.value}\n            onClick={() => onValueChange(o.value)}\n            className={cn(\n              \"flex items-center gap-1.5 whitespace-nowrap outline-none transition-[color] duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring motion-reduce:transition-none\",\n              radius,\n              size === \"sm\" ? \"h-7 px-3 text-caption\" : segmented ? \"h-8 px-3.5 text-body-sm\" : \"h-9 px-4 text-body-sm\",\n              // Only the text answers a hover, so nothing fades over the pill gliding in beneath.\n              selected ? \"text-fg\" : cn(\"hover:text-fg\", segmented ? \"text-fg-muted\" : \"text-fg-subtle\"),\n              // Until the pill lands, the selected option draws the surface itself so the first paint matches.\n              selected && !isPlaced && PILL_SURFACE[variant],\n            )}\n          >\n            {o.label}\n            {o.count !== undefined && <span className={cn(\"tabular-nums transition-[color] duration-200 ease-out\", selected ? \"text-fg-muted\" : \"text-fg-subtle\")}>{o.count}</span>}\n          </button>\n        );\n      })}\n    </div>\n  );\n}\n\nexport { SegmentedControl };\n"
+    }
+  ]
+}

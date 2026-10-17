@@ -1,0 +1,19 @@
+{
+  "name": "utils",
+  "type": "lib",
+  "title": "cn",
+  "description": "Merges class names, aware of the brand's scales (text-body-sm, rounded-card, shadow-floating).",
+  "surface": "both",
+  "kinds": [],
+  "requires": [],
+  "packages": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "lib/utils.ts",
+      "content": "import { type ClassValue, clsx } from \"clsx\";\nimport { extendTailwindMerge } from \"tailwind-merge\";\n\n// The brand's scales have their own names (text-body-sm, rounded-card, shadow-floating). Without teaching\n// tailwind-merge, it reads text-body-sm as a text color and drops the real color beside it, and keeps a default\n// rounded-md next to a brand radius meant to replace it.\nconst twMerge = extendTailwindMerge({\n  extend: {\n    theme: {\n      radius: [\"sm\", \"control\", \"card\", \"shell\", \"panel\", \"pill\"],\n      shadow: [\"card\", \"raised\", \"floating\", \"key\", \"tooltip\", \"ring-hover\"],\n    },\n    classGroups: {\n      \"font-size\": [{ text: [\"hero\", \"display\", \"h1\", \"h2\", \"h3\", \"h4\", \"h5\", \"body-lg\", \"body\", \"body-sm\", \"caption\", \"axis\"] }],\n    },\n  },\n});\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n"
+    }
+  ]
+}

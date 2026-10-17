@@ -1,0 +1,21 @@
+{
+  "name": "avatar",
+  "type": "ui",
+  "title": "Avatar",
+  "description": "A round picture with white initials on the brand blue as the fallback.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-avatar"
+  ],
+  "files": [
+    {
+      "path": "components/ui/avatar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as AvatarPrimitive from \"@radix-ui/react-avatar\";\n\nimport { cn } from \"@/lib/utils\";\n\nfunction Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {\n  return <AvatarPrimitive.Root data-slot=\"avatar\" className={cn(\"relative flex size-7 shrink-0 overflow-hidden rounded-pill\", className)} {...props} />;\n}\n\nfunction AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {\n  return <AvatarPrimitive.Image data-slot=\"avatar-image\" className={cn(\"aspect-square size-full object-cover\", className)} {...props} />;\n}\n\n// Initials in white on the brand blue, at 11px (the dashboard's team table and user menu).\nfunction AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {\n  return <AvatarPrimitive.Fallback data-slot=\"avatar-fallback\" className={cn(\"flex size-full items-center justify-center bg-brand text-axis text-on-brand\", className)} {...props} />;\n}\n\nexport { Avatar, AvatarFallback, AvatarImage };\n"
+    }
+  ]
+}

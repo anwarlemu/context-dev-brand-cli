@@ -1,0 +1,23 @@
+{
+  "name": "table",
+  "type": "ui",
+  "title": "Table",
+  "description": "A table on a card: a faint header band, rows on light lines, tabular numbers.",
+  "surface": "product",
+  "kinds": [
+    "app-table",
+    "app-th",
+    "app-td"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/table.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The product's table (API keys, team, batches): on a card with no outer border and no vertical rules; a faint gray\n// header band in sentence case; rows divided by a light line; numbers in tabular figures.\nfunction Table({ className, ...props }: React.ComponentProps<\"table\">) {\n  return (\n    <div data-slot=\"table-container\" className=\"relative w-full overflow-x-auto rounded-card bg-surface shadow-card\">\n      <table data-slot=\"table\" className={cn(\"w-full caption-bottom border-collapse text-left text-body-sm\", className)} {...props} />\n    </div>\n  );\n}\n\nfunction TableHeader({ className, ...props }: React.ComponentProps<\"thead\">) {\n  return <thead data-slot=\"table-header\" className={cn(\"bg-neutral-10/40\", className)} {...props} />;\n}\n\nfunction TableBody({ className, ...props }: React.ComponentProps<\"tbody\">) {\n  return <tbody data-slot=\"table-body\" className={cn(\"divide-y divide-line-subtle\", className)} {...props} />;\n}\n\nfunction TableFooter({ className, ...props }: React.ComponentProps<\"tfoot\">) {\n  return <tfoot data-slot=\"table-footer\" className={cn(\"border-t border-line-subtle\", className)} {...props} />;\n}\n\nfunction TableRow({ className, ...props }: React.ComponentProps<\"tr\">) {\n  return <tr data-slot=\"table-row\" className={cn(\"data-[state=selected]:bg-wash-selected\", className)} {...props} />;\n}\n\nfunction TableHead({ className, ...props }: React.ComponentProps<\"th\">) {\n  return <th data-slot=\"table-head\" className={cn(\"px-3 py-2.5 text-caption font-normal whitespace-nowrap text-fg-subtle\", className)} {...props} />;\n}\n\nfunction TableCell({ className, ...props }: React.ComponentProps<\"td\">) {\n  return <td data-slot=\"table-cell\" className={cn(\"px-3 py-3 text-body-sm text-fg tabular-nums\", className)} {...props} />;\n}\n\nfunction TableCaption({ className, ...props }: React.ComponentProps<\"caption\">) {\n  return <caption data-slot=\"table-caption\" className={cn(\"mt-3 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nexport { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };\n"
+    }
+  ]
+}

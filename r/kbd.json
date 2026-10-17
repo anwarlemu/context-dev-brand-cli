@@ -1,0 +1,19 @@
+{
+  "name": "kbd",
+  "type": "ui",
+  "title": "Kbd",
+  "description": "A keyboard key for a shortcut, a 20px box with a light border and the key in small gray type.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/kbd.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A keyboard key in menus and the command palette: 20px, a light border on white, 11px.\nfunction Kbd({ className, ...props }: React.ComponentProps<\"kbd\">) {\n  return (\n    <kbd\n      data-slot=\"kbd\"\n      className={cn(\"inline-grid h-5 min-w-5 place-items-center rounded-[calc(var(--ds-radius-control)-0.125rem)] border border-line bg-surface px-1 font-sans text-axis text-fg-subtle\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { Kbd };\n"
+    }
+  ]
+}

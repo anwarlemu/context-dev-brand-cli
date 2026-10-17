@@ -1,0 +1,18 @@
+{
+  "name": "use-hold",
+  "type": "hook",
+  "title": "useHold",
+  "description": "Fires an action only after the pointer or key is held for a set time.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "hooks/use-hold.ts",
+      "content": "\"use client\";\n\nimport { type KeyboardEvent, useEffect, useRef, useState } from \"react\";\n\n/** Fires `onConfirm` only after the pointer or key stays down for `durationMs`, so a stray click can't do anything. */\nexport function useHold(durationMs: number, onConfirm: () => void) {\n  const [isHolding, setHolding] = useState(false);\n  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);\n  useEffect(() => () => clearTimeout(timeoutRef.current), []);\n\n  function start() {\n    if (isHolding) return;\n    setHolding(true);\n    timeoutRef.current = setTimeout(() => {\n      setHolding(false);\n      onConfirm();\n    }, durationMs);\n  }\n\n  function cancel() {\n    clearTimeout(timeoutRef.current);\n    setHolding(false);\n  }\n\n  const handlers = {\n    onPointerDown: start,\n    onPointerUp: cancel,\n    onPointerLeave: cancel,\n    onKeyDown: (event: KeyboardEvent) => {\n      if ((event.key === \"Enter\" || event.key === \" \") && !event.repeat) {\n        event.preventDefault();\n        start();\n      }\n    },\n    onKeyUp: cancel,\n    onBlur: cancel,\n  };\n\n  return { isHolding, handlers };\n}\n"
+    }
+  ]
+}

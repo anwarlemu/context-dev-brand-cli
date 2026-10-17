@@ -1,0 +1,18 @@
+{
+  "name": "surface",
+  "type": "lib",
+  "title": "Surface",
+  "description": "Marks an area as product or site, so its components and their overlays use that scale.",
+  "surface": "both",
+  "kinds": [],
+  "requires": [
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "lib/surface.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A product area on a site page (or a site area in a product): its class sets the scale, and dialogs, menus and\n// tooltips opened inside it render inside it too, so they keep that scale instead of the page's. A product area also\n// takes the product's snug line height (as product.css gives the body), so text inside it does not inherit a site\n// page's looser leading.\nconst PortalContainer = React.createContext<HTMLElement | null>(null);\n\nexport function Surface({ kind, className, children, ...props }: React.ComponentProps<\"div\"> & { kind: \"site\" | \"product\" }) {\n  const [element, setElement] = React.useState<HTMLDivElement | null>(null);\n  return (\n    <div ref={setElement} data-surface={kind} className={cn(kind === \"product\" && \"ds-product leading-snug\", className)} {...props}>\n      <PortalContainer.Provider value={element}>{children}</PortalContainer.Provider>\n    </div>\n  );\n}\n\n/** Where overlays render: the nearest Surface, else the page body. */\nexport function usePortalContainer() {\n  return React.useContext(PortalContainer) ?? undefined;\n}\n"
+    }
+  ]
+}

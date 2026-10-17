@@ -1,0 +1,20 @@
+{
+  "name": "glyph-story",
+  "type": "visual",
+  "title": "Glyph story",
+  "description": "A product page's glyph drawn large in the blog covers' fine dot pattern, the subject melting into what it gives you on a loop while in view, or held still with `still`. The featured picture on cards like Browse APIs; GlyphTile `ringed` draws the same thing.",
+  "surface": "product",
+  "kinds": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "glyph-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-story.tsx",
+      "content": "\"use client\";\n\nimport { useMemo } from \"react\";\nimport { DotStory, type LoadDotStory } from \"@/components/visuals/dot-engine/dot-story\";\nimport { cellStates } from \"@/components/visuals/dot-engine/dot-story-cells\";\nimport { GLYPH_GRID, glyphSubject, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { FINE_GRID, fineCellsOf } from \"@/components/visuals/glyph/upgrade-story-fine\";\n\n/**\n * A glyph pair drawn in the blog covers' fine dot pattern, like the Browse APIs and Upgrade plan cards: brand-blue dots\n * on the page, the subject melting into what it gives you on a loop while in view. `still` holds the subject instead,\n * as reduced motion does.\n */\nexport function GlyphStory({ name, still = false, className }: { name: GlyphPairName; still?: boolean; className?: string }) {\n  const resting = useMemo(() => ({ cells: fineCellsOf(cellStates(GLYPH_GRID, glyphSubject(name))) }), [name]);\n  const load = useMemo<LoadDotStory>(\n    () => async (stage) => {\n      const { createGlyphStoryPlayer } = await import(\"@/components/visuals/glyph/glyph-story-player\");\n      return createGlyphStoryPlayer(stage, name);\n    },\n    [name],\n  );\n  return <DotStory grid={FINE_GRID} resting={resting} load={load} still={still} className={className} />;\n}\n"
+    }
+  ]
+}

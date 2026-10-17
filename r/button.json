@@ -1,0 +1,30 @@
+{
+  "name": "button",
+  "type": "ui",
+  "title": "Button",
+  "description": "The brand's buttons. The product's controls (black primary, brand blue, outline, outline brand, ghost, on brand; sm 32px and md 40px) and the site's pills.",
+  "surface": "both",
+  "kinds": [
+    "button-primary",
+    "button-secondary",
+    "button-on-brand",
+    "app-button-brand",
+    "app-button-black",
+    "app-button-outline",
+    "app-button-ghost"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/button.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// One button for both surfaces. The product's variants and sizes are the dashboard's (button-class-name.ts): black\n// `primary`, brand blue `brand` for the one main action, `outline` (the default), `outline-brand`, `ghost` and\n// `on-brand`, all with control corners and a small press. The site's pills (brand-outline-pill.ts) are the other three:\n// the black pill, the blue outline pill and the white outline pill on blue.\nconst buttonVariants = cva(\n  \"inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-normal outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5\",\n  {\n    variants: {\n      variant: {\n        primary: \"rounded-control bg-primary text-on-primary hover:bg-neutral-90\",\n        brand: \"rounded-control bg-brand text-on-brand hover:bg-blue-90\",\n        outline: \"rounded-control border border-line-strong text-fg hover:border-fg\",\n        \"outline-brand\": \"rounded-control border border-brand text-fg-brand hover:bg-blue-10\",\n        ghost: \"rounded-control text-fg-muted hover:bg-wash-hover hover:text-fg data-[state=open]:bg-wash-hover data-[state=open]:text-fg\",\n        \"on-brand\": \"rounded-control border border-white text-white hover:bg-white/10\",\n        pill: \"rounded-pill border border-black bg-black text-white hover:bg-neutral-80\",\n        \"pill-outline\": \"rounded-pill border border-brand bg-white text-fg-brand hover:bg-blue-10\",\n        \"pill-on-brand\": \"rounded-pill border border-white text-white hover:bg-white/12\",\n      },\n      size: {\n        sm: \"h-8 px-3.5 text-body-sm\",\n        // The main action on a form or page (the dashboard's Support button).\n        md: \"h-10 px-4.5 text-body-sm\",\n        // A square icon button, the size of the dashboard's row menu and dialog close buttons.\n        icon: \"size-8 px-0 [&_svg:not([class*='size-'])]:size-4\",\n      },\n    },\n    compoundVariants: [\n      { variant: [\"primary\", \"brand\", \"outline\", \"outline-brand\", \"ghost\", \"on-brand\"], className: \"transition-[color,background-color,border-color,scale] duration-150 ease-out\" },\n      { variant: \"ghost\", size: \"icon\", className: \"text-fg-subtle\" },\n      // The site's pills are sized by their padding, at body size, as on the brand's pages; `sm` is the smaller pill\n      // the brand's forms and lists use.\n      { variant: [\"pill\", \"pill-outline\", \"pill-on-brand\"], className: \"transition-[color,background-color,border-color,scale] duration-200 ease-out\" },\n      { variant: [\"pill\", \"pill-outline\", \"pill-on-brand\"], size: \"md\", className: \"h-auto px-5 py-3 text-body leading-snug\" },\n      { variant: [\"pill\", \"pill-outline\", \"pill-on-brand\"], size: \"sm\", className: \"h-auto px-4 py-2 text-body-sm leading-snug\" },\n    ],\n    defaultVariants: { variant: \"outline\", size: \"md\" },\n  },\n);\n\ntype ButtonProps = React.ComponentProps<\"button\"> & VariantProps<typeof buttonVariants> & { asChild?: boolean };\n\nfunction Button({ className, variant, size, asChild = false, type, ...props }: ButtonProps) {\n  const Comp = asChild ? Slot : \"button\";\n  return <Comp data-slot=\"button\" type={asChild ? type : (type ?? \"button\")} className={cn(buttonVariants({ variant, size, className }))} {...props} />;\n}\n\nexport { Button, buttonVariants };\n"
+    }
+  ]
+}

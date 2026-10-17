@@ -1,0 +1,21 @@
+{
+  "name": "announcement-bar",
+  "type": "site",
+  "title": "Announcement bar",
+  "description": "The one-line strip above the site's header, a cool gray band with a hairline under it and the message centered; as a link, hover lays a neutral wash over the band.",
+  "surface": "site",
+  "kinds": [
+    "announcement"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/announcement-bar.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst BAR =\n  \"group/announcement relative isolate flex min-h-11.5 w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 overflow-hidden border-b border-wash-pill px-4 py-1 text-center text-caption leading-snug text-fg outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:text-body-sm\";\n\n/**\n * The one-line strip above the site's header: a cool gray band with a hairline under it, the message centered. As a\n * link, hover lays a neutral wash over the band rather than swapping its color, so the band keeps its hue.\n */\nfunction AnnouncementBar({\n  href,\n  external = false,\n  className,\n  children,\n}: {\n  /** Makes the whole strip a link. */\n  href?: string;\n  /** Opens the link in a new tab. */\n  external?: boolean;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  const content = (\n    <>\n      <span aria-hidden=\"true\" data-slot=\"announcement-bar-surface\" className=\"pointer-events-none absolute inset-0 -z-10 bg-announcement\" />\n      {href && (\n        <span\n          aria-hidden=\"true\"\n          className=\"pointer-events-none absolute inset-0 -z-10 bg-wash-hover opacity-0 transition-opacity duration-150 ease-out group-hover/announcement:opacity-100 motion-reduce:transition-none\"\n        />\n      )}\n      <span data-slot=\"announcement-bar-text\" className=\"min-w-0\">\n        {children}\n      </span>\n    </>\n  );\n  return (\n    <div data-slot=\"announcement-bar\" className={cn(\"relative z-70 min-h-11.5 shrink-0 overflow-hidden\", className)}>\n      {href ? (\n        <a href={href} target={external ? \"_blank\" : undefined} rel={external ? \"noopener noreferrer\" : undefined} className={BAR}>\n          {content}\n        </a>\n      ) : (\n        <div className={BAR}>{content}</div>\n      )}\n    </div>\n  );\n}\n\nexport { AnnouncementBar };\n"
+    }
+  ]
+}
