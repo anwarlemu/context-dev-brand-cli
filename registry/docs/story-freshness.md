@@ -3,7 +3,7 @@ name: story-freshness
 title: Freshness story
 type: visual
 surface: site
-description: "A looping dot picture. A dial sets how old a copy may be, and becomes the cache or the live web the page then comes from."
+description: "Dot animation of freshness settings selecting cached or live content."
 kinds: []
 use_for: "Caching and freshness settings on a site card. Plays only on screen; shows the live capture with reduced motion."
 never: [Stories as the main content of a page]

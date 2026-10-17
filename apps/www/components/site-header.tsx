@@ -14,11 +14,11 @@ export function SiteHeader() {
             <span className="rounded-sm bg-brand/40" />
             <span className="rounded-sm bg-brand" />
           </span>
-          {registryName} UI
+          {registryName} design system
         </Link>
         <nav className="flex items-center gap-6 text-body-sm text-fg-nav">
           <Link href="/components" className="transition-colors duration-150 hover:text-fg">Components</Link>
-          <Link href="/theme" className="transition-colors duration-150 hover:text-fg">Theme</Link>
+          <Link href="/theme" className="transition-colors duration-150 hover:text-fg">Tokens</Link>
           <Link href="/cli" className="transition-colors duration-150 hover:text-fg">CLI</Link>
           <Button asChild variant="pill" size="sm">
             <a href="https://github.com/anwarlemu/context-dev-brand-cli">GitHub</a>

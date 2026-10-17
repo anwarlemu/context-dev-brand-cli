@@ -84,7 +84,7 @@ function CreditsMenu({
           type="button"
           aria-label={`${formatted} credits remaining`}
           className={cn(
-            "ml-auto flex h-8 items-center gap-1.5 rounded-control px-2.5 text-body-sm font-medium outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring data-[state=open]:bg-wash-hover",
+            "ml-auto flex h-8 items-center gap-(--ds-space-frame) rounded-control px-2.5 text-body-sm font-medium outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring data-[state=open]:bg-wash-hover",
             className,
           )}
         >
@@ -94,8 +94,8 @@ function CreditsMenu({
           </span>
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" aria-label="Plan and credits" className="w-80 max-w-[calc(100vw-1.5rem)] p-1.5">
-        <div className="flex flex-col gap-1.5 rounded-control bg-surface p-0.5">
+      <PopoverContent align="end" aria-label="Plan and credits" className="w-80 max-w-[calc(100vw-1.5rem)] p-(--ds-space-frame)">
+        <div className="flex flex-col gap-(--ds-space-frame) rounded-control bg-surface p-0.5">
           <div className="flex items-center gap-3 rounded-control bg-neutral-5 px-3 py-2.5">
             <DotGlyph rows={GEM_GLYPH} className="size-8 shrink-0 text-brand" />
             <div className="min-w-0">

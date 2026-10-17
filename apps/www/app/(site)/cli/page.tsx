@@ -1,24 +1,24 @@
 import { InstallCommand } from "@/components/site/code-window";
 import { Code } from "@www/components/code";
 import { DocsHeading, DocsSection, DocsSectionRule } from "@www/components/docs-section";
-import { APPLY_COMMAND, registryName } from "@www/lib/registry";
+import { APPLY_COMMAND } from "@www/lib/registry";
 
 export const metadata = { title: "CLI" };
 
 const COMMANDS = [
-  ["add <items...>", "Copies library items into a React and Tailwind project, with the theme and what each needs."],
-  ["list", "Every library item, by group."],
-  ["look <file>", "The brand styling for each element in a file, and the library component that covers it."],
-  ["check [files]", "Every style value must be a brand token. Hooks and the pre-commit run it for you."],
-  ["review", "Screenshots each main screen and scores it against the brand's own pages."],
-  ["tokens", "The brand tokens, by role."],
+  ["add <items...>", "Add component source files, tokens, and required packages to a React and Tailwind project."],
+  ["list", "List the available components, blocks, and visuals."],
+  ["look <file>", "Find component and styling guidance for the elements in a file."],
+  ["check [files...]", "Find styles that do not use design tokens. Use --changed to check the current changes."],
+  ["review [url]", "Capture desktop and phone screenshots and compare them with the reference pages. Use --any for a page outside the current task list."],
+  ["tokens [term]", "Find a token by name or value."],
 ];
 
 const FLOW = [
-  { title: "Swap", body: "Components the app has that match the library (same name, same props) are swapped for the library's. The app is type-checked before and after; any swap that breaks it goes back." },
-  { title: "Restyle", body: "Every other value, in CSS, templates, scripts, Tailwind or native code, is converted by its role: a text color to a text token, a card radius to the card radius." },
-  { title: "Finish", body: "A short task list for the coding agent covers what conversion cannot: the main screens and the shared shell, then a review against the brand." },
-  { title: "Stay", body: "Hooks for Claude Code, Codex and Cursor, and a pre-commit check, keep every later change on the brand." },
+  { title: "Read the reference", body: "Choose the product or site surface. Find the components for the task and read their usage notes and source." },
+  { title: "Add components", body: "Use add to copy the required components into the project. Reuse existing components before creating a new one." },
+  { title: "Build the interface", body: "Compose the page with the components and tokens. Follow the reference layout, spacing, typography, states, and interactions." },
+  { title: "Verify the result", body: "Run check, test keyboard and pointer interactions, and review desktop and phone layouts against the reference." },
 ];
 
 export default function CliPage() {
@@ -27,16 +27,15 @@ export default function CliPage() {
       <DocsSection lines header="under">
         <DocsHeading
           as="h1"
-          title="One command"
-          accent="applies the brand."
-          description={`Run it in any project: it swaps in library components where the app's own match, restyles everything else, and keeps coding agents on ${registryName}.`}
+          title="CLI"
+          description="Use the CLI to add Context.dev components, find tokens, and check new pages and interfaces."
         >
-          <InstallCommand command={APPLY_COMMAND} />
+          <InstallCommand command="npx context-ds list" />
         </DocsHeading>
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="What it does" />
+        <DocsHeading title="Agent workflow" />
         <DocsSectionRule />
         <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {FLOW.map((s, i) => (
@@ -50,7 +49,13 @@ export default function CliPage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Commands" description="Once installed, the CLI is context-ds in the project." />
+        <DocsHeading title="Set up the project" description="Run this from the project root. It installs the design tokens, fonts, agent instructions, and checks for Claude Code, Codex, and Cursor. It also adapts matching components and existing styles to the design system." />
+        <DocsSectionRule />
+        <InstallCommand command={APPLY_COMMAND} />
+      </DocsSection>
+
+      <DocsSection lines>
+        <DocsHeading title="Commands" description="After setup, run these commands from the project root." />
         <DocsSectionRule />
         <dl className="grid divide-y divide-line-subtle">
           {COMMANDS.map(([cmd, what]) => (
@@ -63,9 +68,21 @@ export default function CliPage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Add components" description="In a React project on Tailwind 4, add items by name. Files land in components/ui, product, site, blocks or visuals, honoring a src folder and the @ alias." />
+        <DocsHeading title="Add components" description="For React and Tailwind 4 projects. The CLI uses the project's src directory and @ alias when present." />
         <DocsSectionRule />
         <Code title="terminal" code={`npx context-ds add button card tabs tooltip\nnpx context-ds add app-shell overview-page`} />
+      </DocsSection>
+
+      <DocsSection lines>
+        <DocsHeading title="Agent instructions" description="Include this in the task when asking an agent to build or change a page." />
+        <DocsSectionRule />
+        <Code title="task instructions" code={`Use the Context.dev design system at https://context-ds.vercel.app.
+Read the relevant component usage notes and source before implementing.
+Use product components for dashboard interfaces and site components for marketing pages.
+Reuse existing components and design tokens. Do not invent new visual styles.
+Run npx context-ds check --changed.
+Test the page at desktop and phone sizes, including keyboard interactions.
+Review the result against the reference before marking the task complete.`} />
       </DocsSection>
     </main>
   );

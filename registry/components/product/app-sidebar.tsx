@@ -5,6 +5,7 @@ import { Slot } from "@radix-ui/react-slot";
 import { Search, type LucideIcon } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useScrollingScrollbars } from "@/hooks/use-scrolling-scrollbars";
 import { cn } from "@/lib/utils";
 
 // The dashboard's sidebar: on the canvas, no border or separate fill, 212px wide, 28px in from its edges. The workspace
@@ -20,6 +21,8 @@ function AppSidebar({
   open = false,
   onOpenChange,
   listPosition = "center",
+  navLabel = "Dashboard",
+  navRef,
   className,
   children,
 }: {
@@ -29,9 +32,12 @@ function AppSidebar({
   onOpenChange?: (open: boolean) => void;
   /** "high" for a long list: less space above it than below. */
   listPosition?: "center" | "high";
+  navLabel?: string;
+  navRef?: React.Ref<HTMLElement>;
   className?: string;
   children: React.ReactNode;
 }) {
+  useScrollingScrollbars();
   React.useEffect(() => {
     if (!open) return;
     const close = () => onOpenChange?.(false);
@@ -51,19 +57,19 @@ function AppSidebar({
       <div
         aria-hidden
         onClick={() => onOpenChange?.(false)}
-        className={cn("fixed inset-0 z-40 bg-scrim transition-opacity duration-200 ease-out md:hidden motion-reduce:transition-none", !open && "pointer-events-none opacity-0")}
+        className={cn("fixed inset-0 z-40 bg-scrim transition-opacity duration-200 ease-emphasized md:hidden motion-reduce:transition-none", !open && "pointer-events-none opacity-0")}
       />
       <aside
         data-slot="app-sidebar"
         className={cn(
-          "flex h-full w-53 shrink-0 flex-col bg-canvas px-7",
-          "max-md:fixed max-md:inset-y-2 max-md:left-2 max-md:z-50 max-md:h-auto max-md:rounded-shell max-md:bg-surface max-md:shadow-floating max-md:transition-[translate,visibility] max-md:ease-out motion-reduce:max-md:transition-none",
+          "flex h-full w-(--ds-layout-sidebar) shrink-0 flex-col bg-canvas px-7",
+          "max-md:fixed max-md:inset-y-2 max-md:left-2 max-md:z-50 max-md:h-auto max-md:rounded-shell max-md:bg-surface max-md:shadow-drawer max-md:transition-[translate,visibility] max-md:ease-emphasized motion-reduce:max-md:transition-none",
           open ? "max-md:translate-x-0 max-md:duration-250" : "max-md:invisible max-md:-translate-x-[calc(100%+1rem)] max-md:duration-200",
           className,
         )}
       >
         {header && <div className="flex shrink-0 items-center gap-0.5 pt-6 pb-2">{header}</div>}
-        <nav aria-label="Dashboard" className="-mx-7 flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5 [scrollbar-width:thin]">
+        <nav ref={navRef} aria-label={navLabel} className="ds-scrollbar -mx-7 flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5">
           <div aria-hidden className="min-h-0 flex-1" />
           <div className="relative flex shrink-0 flex-col gap-1.5">{children}</div>
           <div aria-hidden className={cn("min-h-0", listPosition === "high" ? "flex-[2.5]" : "flex-1")} />
@@ -78,7 +84,7 @@ function AppSidebar({
 function SidebarGroup({ label, children }: { label?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div data-slot="sidebar-group" className="flex flex-col gap-0.5">
-      {label && <p className="mt-3 mb-1 ml-3 w-fit rounded-sm border border-line px-1.5 py-px font-sans text-axis leading-4 text-fg-muted">{label}</p>}
+      {label && <p className="mt-3 mb-1 ml-3 w-fit rounded-tag border border-line px-1.5 py-px font-sans text-axis leading-4 text-fg-muted">{label}</p>}
       {children}
     </div>
   );

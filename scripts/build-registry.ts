@@ -91,7 +91,7 @@ const themeItem = {
 	name: 'theme',
 	type: 'theme',
 	title: `${brand.name} theme`,
-	description: `The ${brand.name} tokens and the Tailwind names that read them. Product screens opt in with the ds-product class.`,
+	description: `${brand.name} design tokens and Tailwind utilities. Use ds-product for product interfaces.`,
 	surface: 'both',
 	kinds: [] as string[],
 	requires: [] as string[],

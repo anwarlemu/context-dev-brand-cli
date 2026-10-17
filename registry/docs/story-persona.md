@@ -3,7 +3,7 @@ name: story-persona
 title: Persona story
 type: visual
 surface: site
-description: "A looping dot picture for a kind of team: what it builds crumbles under its challenge, a request is answered, and it has what the API gives it, with a three-line caption for each part."
+description: "Dot animation of a team's task and API result, with captions."
 kinds: []
 use_for: "Use-case and persona cards on the site. `onPhase` reports which part is playing, to show its longer text beside the picture. Plays only on screen; shows the outcome with reduced motion."
 never: [Stories as the main content of a page]

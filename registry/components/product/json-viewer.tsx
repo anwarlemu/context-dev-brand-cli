@@ -156,7 +156,7 @@ export function JsonViewer({ value, fileName = "response.json", className, bodyC
           </ToolButton>
         </div>
       )}
-      <div className={cn("min-h-0 flex-1 overflow-x-hidden overflow-y-auto py-3 font-mono text-caption leading-relaxed", bodyClassName)}>
+      <div className={cn("ds-scrollbar min-h-0 flex-1 overflow-x-hidden overflow-y-auto py-3 font-mono text-caption leading-code-card", bodyClassName)}>
         <ol>
           {lines.map((line, i) => {
             const canFold = line.kind === "open" || line.kind === "folded";

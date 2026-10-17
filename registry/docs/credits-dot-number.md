@@ -3,7 +3,7 @@ name: credits-dot-number
 title: Credits dot number
 type: visual
 surface: site
-description: A number drawn in the brand dot grid, solid dots on a field of rings that fade toward the edges, morphing on screen into the same number (or a word) in Doto and back.
+description: "A dot-grid number that transitions to Doto text and back."
 files: [components/visuals/credits-dot-number.tsx]
 kinds: []
 use_for: "The free credits figure in the closing call to action (`value=\"1,000\"`) and step numbers (`value=\"1\" morphTo=\"PLAN\" sideColumns={0}`). It is decorative: keep the figure in text beside it."

@@ -3,9 +3,9 @@ name: label
 title: Label
 type: ui
 surface: both
-description: The name of a form control, in body-sm over or beside it; it dims with its control when that is disabled. Field adds the required asterisk, help and error.
+description: "Form control label with support for disabled states."
 kinds: []
 use_for: Every form field.
 never: [Uppercase labels]
-source: src/components/dashboard-ui/form.tsx (Field)
+source: context-dashboard c0ddf7a src/components/ui/form.tsx
 ---

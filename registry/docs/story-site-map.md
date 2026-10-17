@@ -3,7 +3,7 @@ name: story-site-map
 title: Site map story
 type: visual
 surface: site
-description: "A looping dot picture. A domain typed under a paper map becomes the site as a tree of its pages, and the pages to scrape are picked."
+description: "Dot animation of a domain's page tree and page selection."
 kinds: []
 use_for: "Site mapping on a site card or product hero. Plays only on screen; shows the tree with its pages picked with reduced motion."
 never: [Stories as the main content of a page]

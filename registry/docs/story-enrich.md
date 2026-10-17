@@ -3,7 +3,7 @@ name: story-enrich
 title: Enrich story
 type: visual
 surface: site
-description: "A looping dot picture. An agent's eye reads an identifier and melts into the company and the person behind it, each with its profile."
+description: "Dot animation of an identifier resolving to company and person profiles."
 kinds: []
 use_for: "Entity enrichment on a site card. Plays only on screen; shows its resting picture with reduced motion."
 never: [Stories as the main content of a page]

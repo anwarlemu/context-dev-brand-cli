@@ -5,7 +5,7 @@ import { InstallCommand } from "@/components/site/code-window";
 import { Code } from "@www/components/code";
 import { DocsHeading, DocsSection, DocsSectionRule } from "@www/components/docs-section";
 
-export const metadata = { title: "Theme" };
+export const metadata = { title: "Design tokens" };
 
 type Tokens = { site: Record<string, string>; product: Record<string, string>; dark: Record<string, string> };
 const tokens = JSON.parse(readFileSync(path.join(process.cwd(), "../../build/tokens.json"), "utf8")) as Tokens;
@@ -38,16 +38,15 @@ export default function ThemePage() {
       <DocsSection lines header="under">
         <DocsHeading
           as="h1"
-          title="One set of tokens,"
-          accent="every value."
-          description="Colors, type, space, radii, shadows and motion come from one file. Product screens opt in to the compact scale with the ds-product class, and dark mode follows .dark or data-theme."
+          title="Design tokens"
+          description="Use these tokens for colors, typography, spacing, radii, shadows, and motion. Product interfaces use ds-product. Dark mode follows .dark or data-theme."
         >
           <InstallCommand command="npx context-ds add theme" />
         </DocsHeading>
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Color" description="The ramps the brand draws from, then the roles every component reads." />
+        <DocsHeading title="Color" description="Color scales and semantic roles. Use the role token that matches the element." />
         <DocsSectionRule />
         <div className="grid gap-8">
           {RAMPS.map((r) => {
@@ -74,7 +73,7 @@ export default function ThemePage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Type" description="Rethink Sans at regular weight, tight at display sizes; IBM Plex Mono for code; Doto for figures." />
+        <DocsHeading title="Typography" description="Rethink Sans for interface text, IBM Plex Mono for code, and Doto for display figures." />
         <DocsSectionRule />
         <div className="grid divide-y divide-line-subtle">
           {SCALE.map(([name, value]) => (
@@ -83,7 +82,7 @@ export default function ThemePage() {
                 {name.replace("--ds-text-", "text-")} <span className="text-fg-faint">{value}</span>
               </p>
               <p className="truncate leading-tight tracking-tight text-fg" style={{ fontSize: `var(${name})` }}>
-                Turn the web into context
+                Context.dev design system
               </p>
             </div>
           ))}
@@ -91,7 +90,7 @@ export default function ThemePage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Radii" description="Site values at the page root; the product's under ds-product." />
+        <DocsHeading title="Radii" description="Site values apply at the root. Product values apply within ds-product." />
         <DocsSectionRule />
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {RADII.map(([name, value]) => (
@@ -106,7 +105,7 @@ export default function ThemePage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Use it" description="The theme item writes the tokens and the Tailwind names that read them. Import both after Tailwind." />
+        <DocsHeading title="Install the tokens" description="The theme item adds the token definitions and Tailwind utilities. Import both after Tailwind." />
         <DocsSectionRule />
         <Code
           title="app/globals.css"

@@ -3,7 +3,7 @@ name: surface
 title: Surface
 type: lib
 surface: both
-description: Marks an area as product or site, so its components and their overlays use that scale.
+description: "Applies site or product tokens to an area and its portaled overlays."
 kinds: []
 use_for: Product screens inside a marketing site, or previews of one surface inside the other.
 never: []

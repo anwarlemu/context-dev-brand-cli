@@ -3,9 +3,9 @@ name: app-shell
 title: App shell
 type: block
 surface: product
-description: "The product shell: canvas, sidebar with its groups and footer, the top bar with the credits menu, and the page's own scroller."
+description: "Dashboard layout with a sidebar, top bar, credits menu, and scrollable page area."
 kinds: [app-page]
 use_for: The layout of a product.
 never: []
-source: brand-dev-webapp src/components/dashboard/shell/DashboardShell.tsx
+source: context-dashboard c0ddf7a src/components/shell/shell-provider.tsx; src/components/shell/sidebar.tsx
 ---

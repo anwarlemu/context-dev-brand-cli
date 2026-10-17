@@ -23,9 +23,9 @@ function SheetClose(props: React.ComponentProps<typeof SheetPrimitive.Close>) {
 }
 
 const SIDES = {
-  right: "inset-y-2 right-2 w-[min(440px,calc(100vw-1rem))] starting:translate-x-2",
-  left: "inset-y-2 left-2 w-[min(440px,calc(100vw-1rem))] starting:-translate-x-2",
-  bottom: "inset-x-2 bottom-2 max-h-[85vh] starting:translate-y-2",
+  right: "inset-y-4 right-4 w-[min(440px,calc(100vw-2rem))] starting:translate-x-2 data-[state=closed]:animate-sheet-right-out",
+  left: "inset-y-4 left-4 w-[min(440px,calc(100vw-2rem))] starting:-translate-x-2 data-[state=closed]:animate-sheet-left-out",
+  bottom: "inset-x-2 bottom-2 max-h-[85vh] starting:translate-y-2 data-[state=closed]:animate-sheet-bottom-out",
 } as const;
 
 function SheetContent({ className, children, side = "right", ...props }: React.ComponentProps<typeof SheetPrimitive.Content> & { side?: keyof typeof SIDES }) {
@@ -35,7 +35,7 @@ function SheetContent({ className, children, side = "right", ...props }: React.C
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          "fixed z-50 flex flex-col rounded-shell bg-surface p-1.5 shadow-floating outline-none transition-[opacity,translate] duration-200 ease-out starting:opacity-0 motion-reduce:starting:translate-x-0 motion-reduce:starting:translate-y-0",
+          "fixed z-50 flex flex-col rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none transition-[opacity,translate] duration-200 ease-emphasized starting:opacity-0 motion-reduce:starting:translate-x-0 motion-reduce:starting:translate-y-0",
           SIDES[side],
           className,
         )}
@@ -58,7 +58,7 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="sheet-body" className={cn("min-h-0 flex-1 overflow-y-auto px-5 pt-2.5 pb-5 text-body-sm text-fg", className)} {...props} />;
+  return <div data-slot="sheet-body" className={cn("ds-scrollbar min-h-0 flex-1 overflow-y-auto px-5 pt-5 pb-5 text-body-sm text-fg", className)} {...props} />;
 }
 
 function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {

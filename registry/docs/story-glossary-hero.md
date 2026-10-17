@@ -3,7 +3,7 @@ name: story-glossary-hero
 title: Glossary hero story
 type: visual
 surface: site
-description: "A looping dot picture with a caption column. An open book read line by line, then one entry looked up term after term."
+description: "Dot animation of glossary entries and lookup, with captions."
 kinds: []
 use_for: "The glossary page hero on the site. Plays only on screen; shows the book with reduced motion."
 never: [Stories as the main content of a page]

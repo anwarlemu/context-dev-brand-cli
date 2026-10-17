@@ -11,8 +11,8 @@ const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], var
 
 export const metadata: Metadata = {
   metadataBase: new URL(registryUrl),
-  title: { default: `${registryName} UI`, template: `%s | ${registryName} UI` },
-  description: `The ${registryName} design system: components, blocks and visuals for React and Tailwind, and a CLI that applies them to any project.`,
+  title: { default: `${registryName} design system`, template: `%s | ${registryName} design system` },
+  description: `Components, tokens, and CLI instructions for the ${registryName} team and coding agents building pages and interfaces.`,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

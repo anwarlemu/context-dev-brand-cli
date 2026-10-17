@@ -10,12 +10,12 @@ import { cn } from "@/lib/utils";
 // title in body text and anything at the right (a link out, a switch, a status). CenteredCard holds one centered
 // visual (a big number) over its label, with a small pill in the corner. CardLink is the quiet way out of a card.
 
-/** The up-right arrow every "go somewhere" link carries; it takes its group's hover color and never moves. */
+/** The up-right arrow every "go somewhere" link carries; it nudges in its direction on hover. */
 function LinkArrow({ className }: { className?: string }) {
   return (
     <ArrowUpRight
       aria-hidden
-      className={cn("size-3.5 shrink-0 transition-colors duration-150 ease-out motion-reduce:transition-none", className)}
+      className={cn("size-3.5 shrink-0 transition-[translate,color] duration-150 ease-emphasized group-hover:translate-x-px group-hover:-translate-y-px motion-reduce:transition-none motion-reduce:translate-none", className)}
       strokeWidth={1.5}
     />
   );
@@ -53,7 +53,7 @@ function GlyphCard({ glyph, title, aside, className, children }: { glyph: GlyphP
   return (
     <section data-slot="glyph-card" className={cn("flex min-w-0 flex-col rounded-card bg-surface p-3 shadow-card", className)}>
       <div className="mb-2 flex items-center gap-2.5">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-sm border border-line">
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-tag border border-line">
           <StillGlyph name={glyph} dense className="size-4 text-brand" />
         </span>
         <h3 className="flex-1 text-body-sm font-normal tracking-normal">{title}</h3>
@@ -67,7 +67,7 @@ function GlyphCard({ glyph, title, aside, className, children }: { glyph: GlyphP
 /** A small outlined pill for a card's corner or header: a state, with its colored dot. */
 function StatusPill({ dotClassName, className, children }: { dotClassName?: string; className?: string; children: React.ReactNode }) {
   return (
-    <span className={cn("flex h-5 shrink-0 items-center gap-1.5 rounded-sm border border-line px-2 text-caption text-fg-muted", className)}>
+    <span className={cn("flex h-5 shrink-0 items-center gap-1.5 rounded-tag border border-line px-2 text-caption text-fg-muted", className)}>
       {dotClassName && <span className={cn("size-1.5 rounded-pill", dotClassName)} aria-hidden />}
       {children}
     </span>
@@ -90,7 +90,7 @@ function CenteredCard({ label, badge, visual, onClick, asChild = false, classNam
     <>
       <span className="relative flex flex-1 items-center">{visual}</span>
       <span className={cn("relative mt-2 text-body-sm text-fg", interactive && "transition-colors duration-150 group-hover:text-fg-brand")}>{label}</span>
-      {badge && <span className="absolute top-2.5 right-2.5 flex h-5 items-center rounded-sm border border-line bg-surface px-2 text-caption text-fg-muted">{badge}</span>}
+      {badge && <span className="absolute top-2.5 right-2.5 flex h-5 items-center rounded-tag border border-line bg-surface px-2 text-caption text-fg-muted">{badge}</span>}
     </>
   );
   if (asChild && React.isValidElement(children)) {
@@ -117,7 +117,7 @@ function CenteredCard({ label, badge, visual, onClick, asChild = false, classNam
 function CenteredNumber({ value, suffix }: { value: React.ReactNode; suffix?: React.ReactNode }) {
   return (
     <span className="flex translate-y-1.5 items-baseline text-caption leading-none font-medium tracking-tight tabular-nums">
-      <span className="text-[calc(var(--ds-text-h5)+var(--ds-space-2))] text-fg-brand">{value}</span>
+      <span className="text-metric text-fg-brand">{value}</span>
       {suffix && <span className="text-body font-normal tracking-normal text-fg-subtle">{suffix}</span>}
     </span>
   );

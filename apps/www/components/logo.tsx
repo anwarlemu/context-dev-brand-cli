@@ -18,7 +18,7 @@ export function Wordmark({ name, className }: { name: string; className?: string
   return (
     <span className={cn("flex items-baseline gap-1.5 text-h5 leading-none font-medium tracking-tight whitespace-nowrap", className)}>
       {name}
-      <span className="font-mono text-caption font-normal tracking-normal text-fg-subtle">ui</span>
+      <span className="font-mono text-caption font-normal tracking-normal text-fg-subtle">ds</span>
     </span>
   );
 }

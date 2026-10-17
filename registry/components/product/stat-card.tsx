@@ -38,7 +38,7 @@ function StatCard({
         {isAction && (
           <ArrowUpRight
             aria-hidden
-            className="size-3.5 shrink-0 text-fg-subtle transition-colors duration-150 ease-out group-hover:text-fg motion-reduce:transition-none"
+            className="size-3.5 shrink-0 text-fg-subtle transition-[translate,color] duration-150 ease-emphasized group-hover:translate-x-px group-hover:-translate-y-px group-hover:text-fg motion-reduce:transition-none motion-reduce:translate-none"
             strokeWidth={1.5}
           />
         )}
@@ -82,7 +82,7 @@ function StatCardGrid({ label, className, children }: { label: string; className
 function StatFigure({ children, suffix, className }: { children: React.ReactNode; suffix?: React.ReactNode; className?: string }) {
   return (
     <span data-slot="stat-figure" className={cn("flex items-baseline gap-1 text-caption leading-none font-medium tracking-tight tabular-nums", className)}>
-      <span className="text-[calc(var(--ds-text-h5)+var(--ds-space-1))] text-fg">{children}</span>
+      <span className="text-stat text-fg">{children}</span>
       {suffix && <span className="text-caption font-normal tracking-normal text-fg-subtle">{suffix}</span>}
     </span>
   );
@@ -90,7 +90,7 @@ function StatFigure({ children, suffix, className }: { children: React.ReactNode
 
 /** While the figure loads: a block at its height, so the card never jumps. */
 function StatFigureSkeleton() {
-  return <Skeleton className="h-[calc(var(--ds-text-h5)+var(--ds-space-1))] w-24" />;
+  return <Skeleton className="h-(--ds-text-stat) w-24" />;
 }
 
 /** A meter of dots, the charts' language: brand blue for the share left, pale blue for the rest. */

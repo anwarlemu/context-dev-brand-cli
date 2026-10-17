@@ -2,124 +2,158 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown, Search } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { ArrowLeft, Blocks, Boxes, ChevronRight, Code, Component, Globe, LayoutGrid, Palette, Sparkles, Terminal, type LucideIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils";
+import { AppSidebar, SidebarGroup, SidebarLink, SidebarSearchButton } from "@/components/product/app-sidebar";
+import { AppTopBar } from "@/components/product/app-top-bar";
+import { CommandDialog, CommandEmpty, CommandFooter, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Kbd } from "@/components/ui/kbd";
+import { Surface } from "@/lib/surface";
+import { LogoMark } from "@www/components/logo";
 
-type Group = { label: string; items: { name: string; title: string }[] };
+type Group = { id: string; label: string; type: string; items: { name: string; title: string }[] };
+const ICONS: Record<string, LucideIcon> = { ui: Component, product: Boxes, site: Globe, block: Blocks, visual: Sparkles };
 
-const LINK =
-  "block rounded-control px-2.5 py-1.5 text-body-sm text-fg-muted outline-none transition-colors duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring aria-[current=page]:bg-blue-10 aria-[current=page]:text-fg-brand motion-reduce:transition-none";
+function LibrarySearch({ groups, open, onOpenChange, onNavigate }: { groups: Group[]; open: boolean; onOpenChange: (open: boolean) => void; onNavigate: (href: string) => void }) {
+  return (
+    <CommandDialog open={open} onOpenChange={onOpenChange} title="Search the library" description="Find a component, block, or visual.">
+      <CommandInput placeholder="Search the library…" />
+      <CommandList>
+        <CommandEmpty>Nothing matches.</CommandEmpty>
+        {groups.map((group) => {
+          const Icon = ICONS[group.type];
+          return (
+            <CommandGroup key={group.id} heading={group.label}>
+              {group.items.map((item) => (
+                <CommandItem key={item.name} value={`${item.title} ${item.name}`} onSelect={() => onNavigate(`/components/${item.name}`)}>
+                  <Icon strokeWidth={1.75} />
+                  {item.title}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          );
+        })}
+      </CommandList>
+      <CommandFooter><span><Kbd>↑</Kbd><Kbd>↓</Kbd> Navigate</span><span><Kbd>↵</Kbd> Open</span><span><Kbd>esc</Kbd> Close</span></CommandFooter>
+    </CommandDialog>
+  );
+}
 
-function useCurrent() {
+// The docs use the same sidebar, links, group tags, command palette, and mobile drawer as the product library.
+export function LibraryShell({ groups, name, repo, children }: { groups: Group[]; name: string; repo: string; children: React.ReactNode }) {
   const pathname = usePathname();
-  return pathname.startsWith("/components/") ? pathname.slice("/components/".length) : undefined;
-}
+  const router = useRouter();
+  const [navOpen, setNavOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [pending, setPending] = React.useState<string | null>(null);
+  const [pendingPath, setPendingPath] = React.useState(pathname);
+  const nav = React.useRef<HTMLElement>(null);
+  const content = React.useRef<HTMLDivElement>(null);
+  const current = pathname.slice("/components/".length);
+  const group = groups.find((g) => g.items.some((item) => item.name === current));
+  const title = group?.items.find((item) => item.name === current)?.title;
+  const active = pending ?? pathname;
 
-function Filter({ value, onChange, className }: { value: string; onChange: (v: string) => void; className?: string }) {
-  return (
-    <label className={cn("flex h-9 items-center gap-2 rounded-control bg-surface px-2.5 shadow-[0_0_0_1px_var(--ds-color-border-hairline)] transition-shadow duration-150 ease-out focus-within:shadow-[0_0_0_1px_var(--ds-color-blue-60)] motion-reduce:transition-none", className)}>
-      <Search aria-hidden className="size-3.5 shrink-0 text-fg-subtle" />
-      <input
-        type="search"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Filter the library"
-        aria-label="Filter the library"
-        className="min-w-0 flex-1 bg-transparent text-body-sm text-fg outline-none placeholder:text-fg-subtle [&::-webkit-search-cancel-button]:hidden"
-      />
-    </label>
-  );
-}
-
-function Groups({ groups, current, query }: { groups: Group[]; current?: string; query: string }) {
-  const q = query.trim().toLowerCase();
-  const shown = groups.map((g) => ({ ...g, items: q ? g.items.filter((i) => i.title.toLowerCase().includes(q) || i.name.includes(q)) : g.items })).filter((g) => g.items.length);
-  if (!shown.length) return <p className="px-2.5 py-2 text-body-sm text-fg-subtle">Nothing matches.</p>;
-  return (
-    <>
-      {shown.map((g) => (
-        <div key={g.label} className="mb-6 last:mb-0">
-          <p className="mb-1.5 px-2.5 text-body-sm font-medium text-fg">{g.label}</p>
-          <ul className="grid gap-px">
-            {g.items.map((i) => (
-              <li key={i.name}>
-                <Link href={`/components/${i.name}`} aria-current={i.name === current ? "page" : undefined} data-item={i.name} className={LINK}>
-                  {i.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </>
-  );
-}
-
-/**
- * The library's sidebar, from 1024px: sticky under the header and as tall as the screen, scrolling on its own. It
- * brings the current item into view only when it is out of sight, so picking an item never moves the list under the
- * pointer.
- */
-export function LibraryNav({ groups }: { groups: Group[] }) {
-  const current = useCurrent();
-  const [query, setQuery] = React.useState("");
-  const listRef = React.useRef<HTMLDivElement>(null);
+  if (pendingPath !== pathname) {
+    setPendingPath(pathname);
+    setPending(null);
+  }
 
   React.useEffect(() => {
-    const list = listRef.current;
-    const link = current ? list?.querySelector<HTMLElement>(`[data-item="${current}"]`) : null;
+    setNavOpen(false);
+    content.current?.scrollTo({ top: 0 });
+    const list = nav.current;
+    const link = list?.querySelector<HTMLElement>('[aria-current="page"]');
     if (!list || !link) return;
-    // The list is the link's offset parent, so offsetTop is the link's place in the list.
-    const top = link.offsetTop;
-    if (top < list.scrollTop || top + link.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = top - list.clientHeight / 3;
-  }, [current]);
+    const row = link.getBoundingClientRect();
+    const viewport = list.getBoundingClientRect();
+    if (row.top < viewport.top || row.bottom > viewport.bottom) list.scrollTop += row.top - viewport.top - list.clientHeight / 3;
+  }, [pathname]);
+
+  React.useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setNavOpen(false);
+        setSearchOpen((open) => !open);
+      }
+      const typing = event.target instanceof HTMLElement && (event.target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName));
+      if (event.key === "Escape" && event.shiftKey && group && !typing && !document.querySelector('[role="dialog"], [role="menu"], [role="listbox"]')) {
+        event.preventDefault();
+        setNavOpen(false);
+        router.push("/components");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [group, router]);
+
+  const navigate = (href: string) => {
+    setSearchOpen(false);
+    setNavOpen(false);
+    setPending(href);
+    router.push(href);
+  };
 
   return (
-    <aside aria-label="Library" className="sticky top-18 hidden h-[calc(100svh-var(--spacing)*18)] w-56 shrink-0 flex-col self-start lg:flex">
-      <div className="pt-8 pb-3 pr-4">
-        <Filter value={query} onChange={setQuery} />
-      </div>
-      <div
-        ref={listRef}
-        className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain pr-4 pb-10 [mask-image:linear-gradient(to_bottom,var(--ds-color-black)_calc(100%-var(--ds-space-8)),transparent)] [scrollbar-width:thin] [scrollbar-color:var(--ds-color-neutral-20)_transparent]"
+    <Surface kind="product" data-library-shell="" className="flex h-dvh overflow-hidden bg-canvas text-fg">
+      <AppSidebar
+        navLabel="Library"
+        navRef={nav}
+        open={navOpen}
+        onOpenChange={setNavOpen}
+        listPosition={group ? "high" : "center"}
+        header={
+          <>
+            <Link href="/" aria-label={`${name} home`} className="flex h-8 min-w-0 items-center gap-2 rounded-control pr-2 pl-3 text-body-sm font-medium hover:bg-wash-hover">
+              <LogoMark className="h-4 shrink-0" />
+              <span className="truncate">{name}</span>
+            </Link>
+            <SidebarSearchButton onClick={() => { setNavOpen(false); setSearchOpen(true); }} />
+          </>
+        }
+        footer={
+          <>
+            <SidebarLink asChild icon={Palette}><Link href="/theme">Tokens</Link></SidebarLink>
+            <SidebarLink asChild icon={Terminal}><Link href="/cli">Use the CLI</Link></SidebarLink>
+            <SidebarLink href={repo} icon={Code} target="_blank" rel="noreferrer">GitHub</SidebarLink>
+          </>
+        }
       >
-        <div className="pt-3">
-          <Groups groups={groups} current={current} query={query} />
+        <SidebarGroup>
+          <SidebarLink asChild icon={group ? ArrowLeft : LayoutGrid} active={active === "/components"} onClick={() => setPending("/components")}>
+            <Link href="/components">{group ? "Back" : "Library"}</Link>
+          </SidebarLink>
+        </SidebarGroup>
+        {group ? (
+          <SidebarGroup label={group.label}>
+            {group.items.map((item) => (
+              <SidebarLink key={item.name} asChild icon={ICONS[group.type]} active={active === `/components/${item.name}`} onClick={() => setPending(`/components/${item.name}`)}>
+                <Link href={`/components/${item.name}`} title={item.title}>{item.title}</Link>
+              </SidebarLink>
+            ))}
+          </SidebarGroup>
+        ) : (
+          <SidebarGroup label="Browse">
+            {groups.map((g) => (
+              <SidebarLink key={g.id} asChild icon={ICONS[g.type]} trailing={<ChevronRight className="size-3.5 text-fg-subtle" strokeWidth={1.75} />}>
+                <Link href={`/components/${g.items[0].name}`}>{g.label}</Link>
+              </SidebarLink>
+            ))}
+          </SidebarGroup>
+        )}
+      </AppSidebar>
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+        <AppTopBar onMenuClick={() => setNavOpen(true)}>
+          <span className="mr-auto text-body-sm text-fg-muted">{title ?? "Component library"}</span>
+          <Link href="/" className="text-body-sm text-fg-muted hover:text-fg">Design system</Link>
+        </AppTopBar>
+        <div ref={content} data-docs-content="" className="ds-scrollbar relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
+          {children}
         </div>
       </div>
-    </aside>
-  );
-}
-
-/** Below 1024px: a bar that sticks under the header and opens the same list. */
-export function LibraryBar({ groups }: { groups: Group[] }) {
-  const current = useCurrent();
-  const [query, setQuery] = React.useState("");
-  const [open, setOpen] = React.useState(false);
-  React.useEffect(() => setOpen(false), [current]);
-  const title = groups.flatMap((g) => g.items).find((i) => i.name === current)?.title;
-  return (
-    <div className="sticky top-16 z-30 border-b border-line-subtle bg-surface/90 backdrop-blur-[var(--ds-space-3)] min-[880px]:top-18 lg:hidden">
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={() => setOpen((o) => !o)}
-        className="mx-auto flex h-11 w-full max-w-(--ds-frame-column) items-center justify-between gap-3 px-6 text-body-sm outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:px-8 md:px-10"
-      >
-        <span className="truncate">
-          <span className="text-fg-muted">Library</span>
-          {title && <span className="text-fg"> / {title}</span>}
-        </span>
-        <ChevronDown aria-hidden className={cn("size-4 shrink-0 text-fg-muted transition-transform duration-200 ease-out motion-reduce:transition-none", open && "rotate-180")} />
-      </button>
-      {open && (
-        <div className="mx-auto max-h-[70svh] max-w-(--ds-frame-column) overflow-y-auto overscroll-contain border-t border-line-subtle px-4 pt-3 pb-6 sm:px-6 md:px-8">
-          <Filter value={query} onChange={setQuery} className="mb-4" />
-          <Groups groups={groups} current={current} query={query} />
-        </div>
-      )}
-    </div>
+      <LibrarySearch groups={groups} open={searchOpen} onOpenChange={setSearchOpen} onNavigate={navigate} />
+    </Surface>
   );
 }

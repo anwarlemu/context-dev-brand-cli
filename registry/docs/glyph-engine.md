@@ -3,7 +3,7 @@ name: glyph-engine
 title: Glyph engine
 type: lib
 surface: product
-description: The product's glyph art and players, built on the dot engine. Glyph art, the looping story and melt players, and the pages cover's scene and shader; the dot field, the melt, the story and morph players and the hover morph come from dot-engine and use-hover-dot-morph.
+description: "Product glyph artwork and animation players built on the dot engine."
 kinds: []
 use_for: The product's glyph visuals (glyph-tile, glyph-loop, glyph-melt, glyph-story, pages-cover, upgrade-glyph, api-grid-glyph). Build a new picture from glyph-art and the story or morph players.
 never: [Hex colors in canvas code (read the --ds-* variables), Playing under reduced motion or off screen]

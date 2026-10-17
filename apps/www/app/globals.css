@@ -34,6 +34,13 @@
     scroll-padding-top: calc(var(--spacing) * 24);
   }
 
+  /* Product pages and standalone product examples use the dashboard's actual 15px root. */
+  html:has([data-library-shell]),
+  html:has([data-preview-root][data-surface="product"]) {
+    font-size: 93.75%;
+    scrollbar-gutter: auto;
+  }
+
   body {
     background-color: var(--ds-color-bg-default);
     color: var(--ds-color-text-default);

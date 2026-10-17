@@ -38,7 +38,7 @@ function CopyButton({ value, label = "Copy", className }: { value: string; label
           onClick={() => copy(value)}
           aria-label={hasCopied ? "Copied" : label}
           className={cn(
-            "grid size-7 shrink-0 place-items-center rounded-control outline-none transition-colors duration-150 ease-out hover:bg-wash-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-3.5",
+            "grid size-7 shrink-0 place-items-center rounded-control outline-none transition-colors duration-150 ease-out hover:bg-wash-control focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-3.5",
             hasCopied ? "text-success" : "text-fg-subtle hover:text-fg",
             className,
           )}

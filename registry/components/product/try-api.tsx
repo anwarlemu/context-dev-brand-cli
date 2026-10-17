@@ -122,7 +122,7 @@ function TryApi<T extends string>({
               aria-label={tab.inputLabel}
               spellCheck={false}
               autoComplete="off"
-              className="relative min-w-0 flex-1 bg-transparent py-0 text-[calc(var(--ds-text-caption)+var(--ds-space-0-5))] leading-normal text-fg outline-none placeholder:text-fg/45"
+              className="relative min-w-0 flex-1 bg-transparent py-0 text-composer leading-normal text-fg outline-none placeholder:text-fg/45"
             />
           </label>
           <button
@@ -130,7 +130,7 @@ function TryApi<T extends string>({
             disabled={!canRun}
             aria-busy={running}
             aria-label={tab.runLabel}
-            className="relative isolate flex h-8 w-9 shrink-0 cursor-pointer items-center justify-center rounded-sm bg-brand text-on-brand outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-blue-90 focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.97] disabled:cursor-default disabled:opacity-60 motion-reduce:active:scale-100"
+            className="relative isolate flex h-8 w-9 shrink-0 cursor-pointer items-center justify-center rounded-tag bg-brand text-on-brand outline-none transition-[filter] duration-150 hover:brightness-110 focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.97] disabled:cursor-default disabled:opacity-60 motion-reduce:active:scale-100"
           >
             {running ? <Loader2 className="size-3.5 animate-spin" /> : <ArrowRight className="size-3.5" />}
           </button>

@@ -3,9 +3,9 @@ name: json-viewer
 title: JSON viewer
 type: product
 surface: product
-description: A response as numbered, wrapped, foldable lines with search, copy and download.
+description: "JSON display with line numbers, folding, search, copy, and download."
 kinds: []
 use_for: API responses in the playground.
 never: [Sideways scrolling code]
-source: brand-dev-webapp src/components/dashboard-ui/json-viewer.tsx
+source: context-dashboard c0ddf7a src/components/playground/json-viewer.tsx
 ---

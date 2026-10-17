@@ -3,9 +3,9 @@ name: use-hold
 title: useHold
 type: hook
 surface: product
-description: Fires an action only after the pointer or key is held for a set time.
+description: "Runs an action after a pointer or key is held for the required duration."
 kinds: []
 use_for: Destructive actions that should not fire on a stray click.
 never: []
-source: src/components/dashboard-ui/hooks/use-hold.ts
+source: context-dashboard c0ddf7a src/hooks/use-hold.ts
 ---

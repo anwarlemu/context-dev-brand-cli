@@ -3,7 +3,7 @@ name: hero-dot-field
 title: Hero dot field
 type: visual
 surface: site
-description: The hero's dot backdrop. Winding bands of faint dots, rings and a few lit dots, or with `streams`, curved streams of dots running in from the edges toward the content with light pulsing along them; the pointer leaves a trail. Optional words in its gaps and the logo mark in dots in the corner.
+description: "Dot-pattern hero background with optional streams, labels, logo mark, and pointer interaction."
 files: [components/visuals/hero-dot-field.tsx, components/visuals/hero-dot-logo-shape.ts]
 kinds: []
 use_for: "A Hero's `background` (`<HeroDotField fine lively streams />` on the home page, `fine lively streams miniStreams` on a short page header, `fine solidDots={false}` for a quiet field). It clears around content marked with the pattern hole attribute, or, with none marked, around the hero's text, actions and media. Color it with a text class (text-brand/60 by default, text-white/40 on blue)."

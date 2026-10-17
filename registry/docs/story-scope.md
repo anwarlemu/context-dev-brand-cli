@@ -3,7 +3,7 @@ name: story-scope
 title: Scope story
 type: visual
 surface: site
-description: "A looping dot picture. A domain takes in its subdomains, then becomes a meter that fills with links and stops at the limit."
+description: "Dot animation of subdomain scope and crawl limits."
 kinds: []
 use_for: "Scoping link discovery on a site card. Plays only on screen; shows the meter at its limit with reduced motion."
 never: [Stories as the main content of a page]

@@ -3,7 +3,7 @@ name: story-assets
 title: Assets story
 type: visual
 surface: site
-description: "A looping dot picture. A brand's logo becomes its colors, then a company profile wearing both."
+description: "Dot animation of a logo, colors, and company profile."
 kinds: []
 use_for: "Brand logos and colors on a site card. Plays only on screen; shows the profile with reduced motion."
 never: [Stories as the main content of a page]

@@ -3,7 +3,7 @@ name: story-brand-kit
 title: Brand kit story
 type: visual
 surface: site
-description: "A looping dot picture. A typed domain becomes a kit box, then the logo, colors, typeface and company details unpacked from it."
+description: "Dot animation of a domain resolving to logo, color, typography, and company data."
 kinds: []
 use_for: "A brand kit page hero or card on the site. Plays only on screen; shows the unpacked kit with reduced motion."
 never: [Stories as the main content of a page]

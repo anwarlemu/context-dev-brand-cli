@@ -3,7 +3,7 @@ name: pricing
 title: Pricing
 type: site
 surface: site
-description: Plan cards in one ringed frame split by hairlines, parts aligned across the row, a glide toggle for monthly or yearly, the two-row shelves with the plan-fit panel, a discount banner, and the credit costs table.
+description: "Pricing cards, billing interval selection, plan comparisons, discounts, and credit cost tables."
 kinds: [card, chip, table]
 use_for: "A pricing page or section. Plans come in as props: PricingShelves (or PricingGrid) around PricingCards, PricingToggle above, PricingPlanFit in the second row, PricingBanner under it; CreditCostsTable lists what each API costs."
 never: [More than one filled call to action in the grid, Colored or gradient plan cards, Bold prices, Hiding the overage rate]
@@ -22,4 +22,4 @@ your page volume?") across the columns they leave free. Phones stack the cards a
 A quota line can show a short form with the full text as its label: `{ text: "100 concurrent", label: "100 concurrent
 requests" }`.
 
-Motion: the toggle's pill glides on the tabs' spring, as on the brand's site, and jumps with reduced motion.
+Motion: the toggle's pill glides on the tabs' spring, as on Context.dev's site, and jumps with reduced motion.

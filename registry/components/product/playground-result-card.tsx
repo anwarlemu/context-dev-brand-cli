@@ -88,7 +88,7 @@ export function PlaygroundResultCard({
                 type="button"
                 onClick={onBack}
                 aria-label="Back to ready"
-                className="-ml-1 grid size-7 place-items-center rounded-sm text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
+                className="-ml-1 grid size-7 place-items-center rounded-tag text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
               >
                 <ChevronLeft className="size-4" strokeWidth={1.5} />
               </button>

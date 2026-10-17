@@ -66,8 +66,8 @@ export function CodeCard({
 
   return (
     <div data-slot="code-card" data-expanded={(expanded && canExpand) || undefined} className={cn("@container flex min-h-0 flex-col rounded-card bg-surface text-fg shadow-card", className)}>
-      <div className="relative min-h-0 flex-1 overflow-y-auto">
-        <pre className={cn("py-4 pr-14 pl-5 font-mono text-caption leading-relaxed", !expanded && canExpand && "max-h-[122px] overflow-y-hidden")}>
+      <div className="ds-scrollbar relative min-h-0 flex-1 overflow-y-auto">
+        <pre className={cn("py-4 pr-14 pl-5 font-mono text-caption leading-code-card", !expanded && canExpand && "max-h-[122px] overflow-y-hidden")}>
           <code>
             {lines.map((line, i) => (
               <span key={i} className="block min-h-[1.65em] whitespace-pre-wrap [overflow-wrap:anywhere]">

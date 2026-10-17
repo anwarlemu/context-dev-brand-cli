@@ -105,9 +105,9 @@ export type GlideTabsOption<T extends string> = { value: T; label: React.ReactNo
 
 const APPEARANCES = {
   // The overview's range picker: options side by side on a gliding soft gray pill.
-  wash: { track: "gap-0.5", pill: "rounded-sm bg-wash-pill", tab: "rounded-sm", idle: "text-fg-subtle hover:text-fg" },
+  wash: { track: "gap-0.5", pill: "rounded-tag bg-wash-pill", tab: "rounded-tag", idle: "text-fg-subtle hover:text-fg" },
   // The try box's API tabs: a pale gray track, one white pill, hairlines parting the tabs at rest.
-  track: { track: "rounded-control bg-neutral-5 p-0.5", pill: "rounded-sm bg-surface shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]", tab: "rounded-sm", idle: "text-fg-muted hover:text-fg" },
+  track: { track: "rounded-control bg-neutral-5 p-0.5", pill: "rounded-tag bg-surface shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]", tab: "rounded-tag", idle: "text-fg-muted hover:text-fg" },
 } as const;
 
 /**

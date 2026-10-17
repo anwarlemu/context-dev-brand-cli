@@ -3,9 +3,9 @@ name: dropdown-menu
 title: Dropdown menu
 type: ui
 surface: product
-description: Row menus with labels, separators, checks and hold-to-confirm destructive rows.
+description: "Action menu with labels, separators, selection states, and hold-to-confirm actions."
 kinds: [app-menu]
 use_for: Overflow actions at the end of a row, account menus.
 never: [Destructive actions without a hold or a confirm]
-source: src/components/dashboard-ui/menu.tsx (ActionMenu, HoldMenuItem, MENU_* classes)
+source: context-dashboard c0ddf7a src/components/ui/menu.tsx
 ---

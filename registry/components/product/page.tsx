@@ -12,7 +12,7 @@ function PageColumn({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="page-column"
       data-page-column
-      className={cn("@container mx-auto flex w-full max-w-220 flex-col gap-6 px-8 pt-8 pb-10 max-md:px-4 md:ml-[max(0px,calc((100%-55rem)/2-80px))]", className)}
+      className={cn("@container mx-auto flex w-full max-w-(--ds-layout-product-column) flex-col gap-6 px-8 pt-8 pb-10 max-md:px-4 md:ml-[max(0px,calc((100%-var(--ds-layout-product-column))/2-80px))]", className)}
       {...props}
     />
   );
@@ -22,7 +22,7 @@ function PageHeader({ title, description, action, className }: { title: React.Re
   return (
     <header data-slot="page-header" className={cn("flex flex-col items-center gap-3 text-center", className)}>
       <div>
-        <h1 className="text-h4 leading-snug font-[450] tracking-normal text-fg">{title}</h1>
+        <h1 className="text-h4 leading-title font-[450] tracking-normal text-fg">{title}</h1>
         {description && <p className="mt-1 text-body-sm text-balance text-fg-muted">{description}</p>}
       </div>
       {action}

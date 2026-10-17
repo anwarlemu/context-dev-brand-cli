@@ -10,7 +10,7 @@ import { findItem, items } from "@www/lib/registry";
 export const framed = (type: string) => type === "site" || type === "block";
 
 export function generateStaticParams() {
-  return items.filter((i) => framed(i.type)).flatMap((i) => Object.keys(examples[i.name] ?? {}).map((example) => ({ name: i.name, example })));
+  return items.flatMap((i) => Object.keys(examples[i.name] ?? {}).map((example) => ({ name: i.name, example })));
 }
 
 export const metadata = { robots: { index: false } };
@@ -23,7 +23,7 @@ export default async function ExamplePage({ params }: { params: Promise<{ name: 
   const surface = example === "Site" || (item.surface === "site" && example !== "Product") ? "site" : "product";
   return (
     <Surface kind={surface} data-preview-root="" className={surface === "product" ? "bg-canvas" : "bg-surface"}>
-      <Example />
+      {framed(item.type) ? <Example /> : <div className="flex min-h-56 items-center justify-center p-8"><Example /></div>}
       <PreviewSizeReporter />
     </Surface>
   );

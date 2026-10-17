@@ -7,6 +7,7 @@ import { GlyphCard } from "@/components/product/glyph-card";
 import { GlideTabs } from "@/components/product/glide-tabs";
 import { useCopy } from "@/components/ui/copy-button";
 import { maskSecret } from "@/components/ui/secret-field";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { GlyphPairName } from "@/components/visuals/glyph/glyph-art";
 import { cn } from "@/lib/utils";
@@ -20,7 +21,7 @@ function QuickstartCard({ title = "Quickstart", glyph = "apiKeys", aside, classN
     <GlyphCard glyph={glyph} title={title} aside={aside} className={cn("h-full min-h-0", className)}>
       {/* It reaches 4px past the card's content on each side, so the ring a hovered control draws isn't clipped. */}
       <div className="-mx-1 flex min-h-0 flex-1 flex-col border-t border-line-subtle">
-        <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-1 pt-3 pb-1 [scrollbar-width:thin]">{children}</div>
+        <ScrollArea className="flex flex-col gap-4 px-1 pt-3 pb-1">{children}</ScrollArea>
       </div>
     </GlyphCard>
   );
@@ -31,7 +32,7 @@ function QuickstartStep({ number, title, aside, children }: { number: number; ti
   return (
     <section data-slot="quickstart-step" className="flex flex-col gap-2">
       <div className="flex min-h-7 items-center gap-2">
-        <span className="grid size-5 shrink-0 place-items-center rounded-sm border border-line text-axis text-fg-muted tabular-nums">{number}</span>
+        <span className="grid size-5 shrink-0 place-items-center rounded-tag border border-line text-axis text-fg-muted tabular-nums">{number}</span>
         <h4 className="flex-1 text-body-sm font-normal tracking-normal">{title}</h4>
         {aside}
       </div>
@@ -54,7 +55,7 @@ function CopyPill({ value, label, compact = false }: { value: string; label: str
       onClick={() => copy(value)}
       aria-label={hasCopied ? "Copied" : label}
       className={cn(
-        "flex h-7 shrink-0 items-center gap-1.5 rounded-sm border bg-surface text-caption outline-none transition-[color,border-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.96] motion-reduce:active:scale-100",
+        "flex h-7 shrink-0 items-center gap-1.5 rounded-tag border bg-surface text-caption outline-none transition-[color,border-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.96] motion-reduce:active:scale-100",
         compact ? "px-2" : "px-2.5",
         hasCopied ? "border-success/40 text-success" : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
       )}
@@ -90,7 +91,7 @@ function KeyField({ secret, name = "key", visibleChars = 14 }: { secret: string;
             type="button"
             onClick={() => setRevealed((r) => !r)}
             aria-label={revealed ? `Hide ${name}` : `Show ${name}`}
-            className="grid size-7 shrink-0 place-items-center rounded-sm text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
+            className="grid size-7 shrink-0 place-items-center rounded-tag text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-control hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
           >
             {revealed ? <EyeOff className="size-3.5" strokeWidth={1.5} /> : <Eye className="size-3.5" strokeWidth={1.5} />}
           </button>
@@ -114,13 +115,13 @@ function SnippetBox<T extends string>({ label, snippets, value, onValueChange, a
   return (
     <div data-slot="snippet-box" className="rounded-control border border-line">
       <div className="flex h-10 items-center gap-2 border-b border-line-subtle pr-1 pl-1.5">
-        <GlideTabs label={label} value={shown.value} onValueChange={onValueChange} options={snippets.map((s) => ({ value: s.value, label: s.label }))} />
+        <GlideTabs role="tab" className="[&>button]:px-3" label={label} value={shown.value} onValueChange={onValueChange} options={snippets.map((s) => ({ value: s.value, label: s.label }))} />
         <span className="ml-auto flex items-center gap-1.5">
           <CopyPill value={shown.copy ?? shown.code} label={`Copy ${label.toLowerCase()} snippet`} compact />
           {aside}
         </span>
       </div>
-      <div className="grid overflow-hidden rounded-b-control bg-neutral-5">
+      <div className="grid overflow-hidden rounded-b-snippet bg-neutral-5">
         {snippets.map((s) => {
           const isShown = s.value === shown.value;
           return (
@@ -133,7 +134,7 @@ function SnippetBox<T extends string>({ label, snippets, value, onValueChange, a
                 isShown ? "translate-y-0 opacity-100 blur-none duration-300" : "pointer-events-none translate-y-1 opacity-0 blur-[2px] duration-150",
               )}
             >
-              <pre className="px-3 py-2.5 font-mono text-axis leading-relaxed wrap-anywhere whitespace-pre-wrap text-fg-muted">{s.code}</pre>
+              <pre className="px-3 py-2.5 font-mono text-axis leading-snippet wrap-anywhere whitespace-pre-wrap text-fg-muted">{s.code}</pre>
               {s.note && <p className="border-t border-line-subtle px-3 py-2 text-caption text-fg-subtle">{s.note}</p>}
             </div>
           );

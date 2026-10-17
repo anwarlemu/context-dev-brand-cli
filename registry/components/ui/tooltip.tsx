@@ -4,15 +4,14 @@ import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 
 import { usePortalContainer } from "@/lib/surface";
+import { TooltipProvider, useTooltipScope } from "@/lib/tooltip-provider";
 import { cn } from "@/lib/utils";
 
 // Hovering waits a beat before the label appears, so passing over a control doesn't flash it; once one is showing,
 // the next one within the warm window appears at once (Radix's skip delay), so sweeping a row of icons doesn't wait.
-function TooltipProvider({ delayDuration = 1000, skipDelayDuration = 300, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
-  return <TooltipPrimitive.Provider data-slot="tooltip-provider" delayDuration={delayDuration} skipDelayDuration={skipDelayDuration} {...props} />;
-}
-
 function Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {
+  const shared = useTooltipScope();
+  if (shared) return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
   return (
     <TooltipProvider>
       <TooltipPrimitive.Root data-slot="tooltip" {...props} />
@@ -27,7 +26,7 @@ function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trig
 // The dashboard's label: white, control corners, 11px on a hairline and a soft shadow, on one line unless `wrap`, 6px
 // above (or 8px beside) its trigger. The first one hovered grows from its trigger in a short ease-out pop; the next ones
 // in the warm window (Radix's instant open) appear at once. Reduced motion keeps only the fade.
-function TooltipContent({ className, side, sideOffset, wrap = false, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content> & { wrap?: boolean }) {
+function TooltipContent({ className, side = "right", sideOffset, wrap = false, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content> & { wrap?: boolean }) {
   return (
     <TooltipPrimitive.Portal container={usePortalContainer()}>
       <TooltipPrimitive.Content

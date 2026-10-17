@@ -3,9 +3,9 @@ name: command
 title: Command
 type: ui
 surface: product
-description: A search field over grouped destinations with keyboard hints below; as CommandDialog it is the command palette, opening without animation.
+description: "Searchable command list with grouped results and keyboard navigation. CommandDialog opens it as a palette."
 kinds: []
 use_for: The command palette (Cmd+K) and searchable pickers.
 never: []
-source: src/components/dashboard/shell/ShellCommandPalette.tsx
+source: context-dashboard c0ddf7a src/components/shell/command-palette.tsx
 ---

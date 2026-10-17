@@ -17,8 +17,8 @@
 
 	body {
 		font-family: var(--ds-font-sans);
-		font-size: var(--ds-text-body-sm);
-		line-height: var(--ds-leading-snug);
+		font-size: var(--ds-text-body);
+		line-height: var(--ds-leading-normal);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}

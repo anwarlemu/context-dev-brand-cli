@@ -3,7 +3,7 @@ name: story-free-tools-hero
 title: Free tools hero story
 type: visual
 surface: site
-description: "A looping dot picture with a caption column. A shelf of tools lighting up one by one, then one of them run on a URL."
+description: "Dot animation of tools processing a URL, with captions."
 kinds: []
 use_for: "The free tools page hero on the site. Plays only on screen; shows the tool's results with reduced motion."
 never: [Stories as the main content of a page]

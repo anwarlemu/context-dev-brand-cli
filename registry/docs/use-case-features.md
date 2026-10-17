@@ -3,7 +3,7 @@ name: use-case-features
 title: Use case features
 type: site
 surface: site
-description: The use case pages' feature cards in the soft blue ring (a marker, a title that can link, tags, a code chip and a dot story in a demo window), the closing note card, the comparison table with Context.dev's column on a faint blue wash, and the before and after panels.
+description: "Use-case feature cards, comparison tables, and before-and-after panels."
 kinds: [card, card-ring, table]
 use_for: The middle of a use case page, inside a `SiteSection` under a `SectionHeading` and `SectionHeaderRule`. Cards three across when they divide by three, two otherwise, or `layout="rows"` with each story beside its text. One highlighted column in a comparison.
 never: [More than one highlighted column, Colored icon tiles other than brand blue, Bold feature titles, Tables that squeeze their columns on phones (they scroll)]

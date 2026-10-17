@@ -3,7 +3,7 @@ name: story-context
 title: Context story
 type: visual
 surface: site
-description: "A looping dot picture. A company's building becomes its social links, then a profile card whose fields fill in."
+description: "Dot animation of company information filling a profile."
 kinds: []
 use_for: "Company data or enrichment on a site card. Plays only on screen; shows the filled card with reduced motion."
 never: [Stories as the main content of a page]

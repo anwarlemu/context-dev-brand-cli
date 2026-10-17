@@ -3,7 +3,7 @@ name: story-autofill
 title: Autofill story
 type: visual
 surface: site
-description: "A looping dot picture. A domain is typed, a pointer clicks Auto-fill, and a signup form fills itself field by field."
+description: "Dot animation of a domain populating a signup form."
 kinds: []
 use_for: "Onboarding autofill on a site card. Plays only on screen; shows its resting picture with reduced motion."
 never: [Stories as the main content of a page]

@@ -3,9 +3,9 @@ name: settings-page
 title: Settings page
 type: block
 surface: product
-description: Settings as centered tabs (personal, organization, billing, referrals) over cards of fields, switch rows, the billing summary and danger zones.
+description: "Settings layout with tabs, form sections, billing details, and destructive actions."
 kinds: []
 use_for: Workspace and account settings.
 never: []
-source: brand-dev-webapp src/app/(dashboard)/o/[org_id]/(main)/settings/SettingsClient.tsx
+source: context-dashboard c0ddf7a src/components/settings/settings-page.tsx
 ---

@@ -3,7 +3,7 @@ name: site-footer
 title: Site footer
 type: site
 surface: site
-description: The site's near-black footer. The brand block (logo, two-line description, socials and a "Backed by" line) and the compliance badges over a row of inline links sit over a white rule; the link groups run in four columns; the copyright row sits between two rules with nodes on the crossings; and a watermark band with its button closes it.
+description: "Site footer with brand information, link groups, badges, copyright, and an optional watermark."
 kinds: [footer]
 use_for: The foot of every site page, once. Pass `badges` (the SOC 2 images) and `asideLinks` (`FooterInlineLink`, `FooterStatusLink` with the service's state), the link groups, the legal links, and the `watermark` (`FooterWatermark`) with a `FooterCopyButton` as its `watermarkAction`.
 never: [A gray or blue footer, Bold link text, More than four link columns, The watermark band without the dark footer above it]

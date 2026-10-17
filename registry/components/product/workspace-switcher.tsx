@@ -11,7 +11,7 @@ export type Workspace = { id: string; name: string; plan?: string; logo?: string
 
 /** The workspace's logo, or its initial on a black tile. */
 export function WorkspaceMark({ workspace, size = "sm" }: { workspace?: Workspace; size?: "sm" | "md" }) {
-  const sizeClass = size === "sm" ? "size-4 rounded-sm text-[calc(var(--ds-text-axis)*0.8)]" : "size-5 rounded-sm text-[calc(var(--ds-text-axis)*0.9)]";
+  const sizeClass = size === "sm" ? "size-4 rounded-icon text-initial" : "size-5 rounded-logo text-counter";
   if (workspace?.logo) return <img src={workspace.logo} alt="" className={cn("shrink-0 object-cover", sizeClass)} />;
   return <span className={cn("grid shrink-0 place-items-center bg-black font-medium text-white", sizeClass)}>{(workspace?.name || "H").trim().charAt(0).toUpperCase()}</span>;
 }
@@ -55,7 +55,7 @@ function WorkspaceSwitcher({
         <WorkspaceMark workspace={w} size="md" />
         <span className="flex min-w-0 flex-1 items-center gap-1.5">
           <span className={cn("truncate", isCurrent ? "text-fg" : "text-fg-muted group-hover/org:text-fg")}>{w.name || "Home"}</span>
-          {w.plan && <span className="shrink-0 rounded-sm bg-blue-10 px-1.5 py-px text-axis leading-4 text-fg-brand">{w.plan}</span>}
+          {w.plan && <span className="shrink-0 rounded-icon bg-blue-10 px-1.5 py-px text-counter leading-badge text-fg-brand">{w.plan}</span>}
         </span>
         {canMakeDefault && onMakeDefault && (
           <button
@@ -68,7 +68,7 @@ function WorkspaceSwitcher({
               e.stopPropagation();
               onMakeDefault(w.id);
             }}
-            className="grid size-6 place-items-center rounded-sm text-fg-subtle opacity-0 transition-[color,opacity] duration-150 group-hover/org:opacity-100 group-focus-within/org:opacity-100 group-data-[highlighted]/org:opacity-100 hover:text-fg focus-visible:opacity-100 pointer-coarse:opacity-100"
+            className="grid size-6 place-items-center rounded-tag text-fg-subtle opacity-0 transition-[color,opacity] duration-150 group-hover/org:opacity-100 group-focus-within/org:opacity-100 group-data-[highlighted]/org:opacity-100 hover:text-fg focus-visible:opacity-100 pointer-coarse:opacity-100"
           >
             <Star strokeWidth={1.5} />
           </button>
@@ -85,7 +85,7 @@ function WorkspaceSwitcher({
                   e.stopPropagation();
                   onOpenSettings(w.id);
                 }}
-                className="grid size-6 place-items-center rounded-sm border border-line bg-surface text-fg-subtle transition-colors duration-150 hover:border-line-strong hover:text-fg"
+                className="grid size-6 place-items-center rounded-tag border border-line bg-surface text-fg-subtle transition-colors duration-150 hover:border-line-strong hover:text-fg"
               >
                 <Settings strokeWidth={1.5} />
               </button>

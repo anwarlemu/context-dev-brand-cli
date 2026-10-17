@@ -47,7 +47,7 @@ function CommandInput({ className, ...props }: React.ComponentProps<typeof Comma
 }
 
 function CommandList({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.List>) {
-  return <CommandPrimitive.List data-slot="command-list" className={cn("max-h-[52vh] scroll-py-1.5 overflow-x-hidden overflow-y-auto p-1.5", className)} {...props} />;
+  return <CommandPrimitive.List data-slot="command-list" className={cn("ds-scrollbar max-h-[52vh] scroll-py-1.5 overflow-x-hidden overflow-y-auto p-1.5", className)} {...props} />;
 }
 
 function CommandEmpty({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
@@ -59,7 +59,7 @@ function CommandGroup({ className, ...props }: React.ComponentProps<typeof Comma
   return (
     <CommandPrimitive.Group
       data-slot="command-group"
-      className={cn("pb-1 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-2.5 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:text-axis [&_[cmdk-group-heading]]:text-fg-subtle", className)}
+      className={cn("pb-1 [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:pt-2.5 [&_[cmdk-group-heading]]:pb-1.5 [&_[cmdk-group-heading]]:font-mono [&_[cmdk-group-heading]]:tracking-label [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:text-axis [&_[cmdk-group-heading]]:text-fg-subtle", className)}
       {...props}
     />
   );
@@ -74,7 +74,7 @@ function CommandItem({ className, ...props }: React.ComponentProps<typeof Comman
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "relative flex h-9 cursor-default items-center gap-3 rounded-control px-3 text-body-sm text-fg-muted outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-40 data-[selected=true]:bg-wash-hover data-[selected=true]:text-fg [&_svg]:size-4 [&_svg]:shrink-0",
+        "relative flex h-9 cursor-default items-center gap-3 rounded-control px-3 text-body-sm text-fg-muted outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-40 data-[selected=true]:bg-wash-control data-[selected=true]:text-fg [&_svg]:size-4 [&_svg]:shrink-0",
         className,
       )}
       {...props}

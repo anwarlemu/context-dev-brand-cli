@@ -3,7 +3,7 @@ name: hero-water
 title: Hero water
 type: visual
 surface: site
-description: A WebGL water surface under a white to blue sky that ripples on its own and in the pointer's wake, or printed as a halftone dot screen. A still picture of the water shows where WebGL is missing, on small or touch screens, and under reduced motion.
+description: "WebGL water background with a static fallback for reduced motion and unsupported devices."
 files: [components/visuals/hero-water.tsx, components/visuals/hero-water-renderer.ts, components/visuals/hero-water-simulation.ts]
 kinds: []
 use_for: "A Hero's `background` on a launch or campaign page, with the content in the white sky above the water."

@@ -1,24 +1,26 @@
 # context-ds
 
-Context.dev's design system as a library and a CLI: the components, blocks and visuals of Context.dev's own site and
-product for React and Tailwind, browsable at https://context-ds.vercel.app, and one command that applies them to any
-project and keeps coding agents on the brand.
+The design system for the Context.dev team and coding agents building its pages and interfaces. The library contains
+React and Tailwind components, page layouts, visual assets, and design tokens. Browse the reference at
+https://context-ds.vercel.app. The CLI adds components and checks implementation against the design system.
 
-It works on anything: a marketing site or a product (dashboard, admin, app), in any stack or language: plain HTML
-and CSS, Astro, Next, Vue, Svelte, Tailwind, CSS-in-JS, server templates, SwiftUI, Compose, Flutter and more. It
-changes how things look and never what they say: every word, element and screen's purpose stays as it is.
+The CLI can also adapt existing interfaces across React, HTML/CSS, other web frameworks, and native stacks. That
+conversion changes styling while preserving copy, elements, and screen purpose.
 
 ## Use it
 
-Give your coding agent (Claude Code, Codex, Cursor, Hermes or any other) this prompt:
+For a new page or interface, give the agent these instructions:
 
 ```text
-Apply the Context.dev design system to this project: run
-`npx -y github:anwarlemu/context-dev-brand-cli#release` and do what it says until it says you are done.
-Change how things look, never what they say.
+Use the Context.dev design system at https://context-ds.vercel.app.
+Read the relevant component usage notes and source before implementing.
+Reuse the components and tokens for the product or site surface.
+Run npx context-ds check --changed and test the page at desktop and phone sizes.
+Review the result against the reference before marking the task complete.
 ```
 
-That is all. It first identifies the app's components: what each one is, from its name, what it renders, its props
+To set up or adapt an existing project, run `npx -y github:anwarlemu/context-dev-brand-cli#release` from its root.
+The CLI first identifies the app's components: what each one is, from its name, what it renders, its props
 and how it is used. In a React + Tailwind app, a component the library covers either renders the library's (its props
 mapped, its name and every use unchanged), or, where that would lose something, takes the library item's look on the
 element it renders; in any stack, stylesheet classes it recognizes get that element's brand styling. Anything nothing
@@ -37,6 +39,15 @@ value, so new work stays on the brand.
 
 Run `npm run doctor` to audit the complete docs site with the pinned React Doctor version. `npm run doctor:library`
 audits the shared registry source separately. Both commands report every finding; neither disables rules.
+
+Product components and the docs shell follow `context-dashboard` at `c0ddf7a`; marketing-only components keep the
+website redesign reference. The docs use the registry's sidebar, top bar, page headers, cards, search palette, and
+preview controls directly. Product previews use the dashboard's 15px root; site previews keep their own document scale.
+
+After a production build, start the docs on port 3109 and run `npm run check:docs` for desktop/mobile navigation,
+search, preview hydration, and overflow checks. Set `DOCS_URL` to check another deployment and
+`DASHBOARD_REFERENCE_URL` to compare the sidebar's computed styles with a running reference checkout. Set
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` if Chromium is installed outside Playwright's default location.
 
 The docs project's Vercel Toolbar must stay disabled for preview and production deployments. Its injected cookie
 check throws inside the sandboxed example frames and prevents React from starting, including the preview size reporter.

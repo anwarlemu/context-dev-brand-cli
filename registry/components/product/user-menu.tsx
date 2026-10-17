@@ -27,7 +27,7 @@ export function initialsOf(name: string, email = "") {
 
 /** A round photo, or the initials on brand blue. */
 export function UserAvatar({ image, initials, size = "sm" }: { image?: string; initials: string; size?: "sm" | "md" }) {
-  const sizeClass = size === "sm" ? "size-5 text-[calc(var(--ds-text-axis)*0.8)]" : "size-8 text-axis";
+  const sizeClass = size === "sm" ? "size-5 text-initial" : "size-8 text-axis";
   if (image) return <img src={image} alt="" referrerPolicy="no-referrer" className={cn("shrink-0 rounded-pill object-cover", sizeClass)} />;
   return <span className={cn("grid shrink-0 place-items-center rounded-pill bg-brand text-on-brand", sizeClass)}>{initials}</span>;
 }
@@ -106,7 +106,7 @@ function UserMenu({
                     aria-label={label}
                     onClick={() => setTheme(value)}
                     className={cn(
-                      "grid size-6 place-items-center rounded-sm outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring",
+                      "grid size-6 place-items-center rounded-tag outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring",
                       theme === value ? "bg-blue-10 text-fg-brand" : "text-fg-subtle hover:text-fg",
                     )}
                   >

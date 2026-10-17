@@ -3,7 +3,7 @@ name: dot-shader-image
 title: Dot shader image
 type: visual
 surface: site
-description: "Any picture (a logo, icon or product shot) redrawn as brand artwork by the dot shader: a component that shades the image in the browser into hollow and solid circles over a faint ring backdrop, on white, blue or black. Not an icon: for the dashboard's tiny static dot icons see Dot icon (dot-glyph)."
+description: "Image rendered as solid and hollow dots on a white, blue, or black surface."
 files: [components/visuals/dot-shader-image.tsx]
 kinds: []
 use_for: "Brand imagery from any picture: `src` (a logo, icon or product shot, best as a PNG with a transparent background), `surface` (`white`, `blue` or `black`) and an optional `size`. Pass `states` to draw dots shaded elsewhere. Graphics sit behind or beside content."

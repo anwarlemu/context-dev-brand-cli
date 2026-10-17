@@ -3,7 +3,7 @@ name: utils
 title: cn
 type: lib
 surface: both
-description: Merges class names, aware of the brand's scales (text-body-sm, rounded-card, shadow-floating).
+description: "Class-name merging for the design system's Tailwind utilities."
 kinds: []
 use_for: Every component's className.
 never: []

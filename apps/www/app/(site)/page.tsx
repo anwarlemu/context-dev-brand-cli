@@ -10,20 +10,16 @@ import { ComponentsShowcase } from "@www/components/components-showcase";
 import { DocsHeading, DocsSection } from "@www/components/docs-section";
 import { Thumb } from "@www/components/thumb";
 import { examples } from "@www/lib/examples.generated";
-import { APPLY_COMMAND, GROUPS, counts, registryName } from "@www/lib/registry";
+import { GROUPS, counts, registryName } from "@www/lib/registry";
 
-const ADD_OUTPUT = `$ npx context-ds add button stat-card hero
-  theme        styles/tokens.css, styles/theme.css
-  button       components/ui/button.tsx
-  stat-card    components/product/stat-card.tsx
-  hero         components/site/hero.tsx
-Added 4 items and their packages.`;
+const ADD_COMMANDS = `npx context-ds add page card button
+npx context-ds add app-sidebar app-top-bar`;
 
-const APPLY_OUTPUT = `$ ${APPLY_COMMAND}
-Swapped 6 of the app's components for the library's
-Restyled 41 files: colors, type, radii and motion
-Installed the brand stylesheet, fonts and agent hooks
-Next: 2 tasks, then a review against the brand`;
+const AGENT_COMMANDS = `npx context-ds list
+npx context-ds look src/app/new-page/page.tsx
+npx context-ds add page card button
+npx context-ds check --changed
+npx context-ds review http://localhost:3000/new-page --any`;
 
 // Keep the blue ring around the example, with a quiet caption below it. The title link covers the whole card.
 const CARD = "group/card relative flex min-w-0 flex-col";
@@ -39,9 +35,9 @@ const SHOWCASE: { type: string; item: string; example: string; surface: "site" |
 ];
 
 const STEPS = [
-  { title: "Swap where it matches", body: "An app's own buttons, cards and inputs become the library's, with the same names and props. The build is checked before and after." },
-  { title: "Restyle the rest", body: "Every other style value in any stack, from CSS to templates to native, is converted by its role to a brand token." },
-  { title: "Keep agents on it", body: "Hooks for Claude Code, Codex and Cursor reject values off the brand, and a review scores each screen against the brand's own pages." },
+  { title: "Choose components", body: "Find the components or page block for the task. Read their usage notes and examples before writing the interface." },
+  { title: "Use the tokens", body: "Build with the existing components and tokens. Follow the product or site reference for layout, spacing, type, and interaction." },
+  { title: "Check the page", body: "Run the token check, test the interactions, and review the page at desktop and phone sizes against the reference." },
 ];
 
 export default function Home() {
@@ -54,7 +50,6 @@ export default function Home() {
         background={<HeroDotField fine streams fillFootOnPhones className="text-fg-brand" />}
         title={`${registryName} design system`}
         accent={[registryName]}
-        description="Components, blocks and visuals for React and Tailwind. Add them yourself, or let the CLI apply the brand to an app you already have."
         actions={
           <>
             <Button asChild variant="pill">
@@ -68,8 +63,8 @@ export default function Home() {
         media={
           <HeroMedia size="small">
             <HeroMediaCard cardClassName="bg-code">
-              <TerminalWindow label="terminal" actions={<WindowCopyButton value="npx context-ds add button stat-card hero" />} className="rounded-none">
-                <CodeBlock code={ADD_OUTPUT} className="overflow-x-auto" />
+              <TerminalWindow label="terminal" actions={<WindowCopyButton value={ADD_COMMANDS} />} className="rounded-none">
+                <CodeBlock code={ADD_COMMANDS} className="overflow-x-auto" />
               </TerminalWindow>
             </HeroMediaCard>
           </HeroMedia>
@@ -77,7 +72,7 @@ export default function Home() {
       />
 
       <DocsSection lines>
-        <DocsHeading title="Every piece of the brand," accent="ready to add." description="Ported from the brand's own code, one component for each thing it draws. Every value is a brand token, and each item comes with a live preview and its source." />
+        <DocsHeading title="Component library" description="Use these components for Context.dev pages and interfaces. Each entry includes a preview, usage notes, an example, and source code." />
         <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {GROUPS.map((g) => {
             const show = SHOWCASE.find((s) => s.type === g.type);
@@ -112,10 +107,10 @@ export default function Home() {
             <div className="flex flex-1 flex-col gap-2 px-2 pt-5">
               <p className="text-h5 leading-snug text-fg">
                 <Link href="/theme" className={CARD_LINK}>
-                  Theme
+                  Tokens
                 </Link>
               </p>
-              <p className="text-body-sm text-fg-muted">One set of tokens behind every value, for the site and for the product.</p>
+              <p className="text-body-sm text-fg-muted">Colors, typography, spacing, radii, shadows, and motion for site and product interfaces.</p>
             </div>
           </div>
         </div>
@@ -124,7 +119,7 @@ export default function Home() {
       <DocsSection lines>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div className="flex flex-col gap-10">
-            <DocsHeading title="Apply the brand" accent="to any project." description="One command brings an existing app onto the brand, in any stack, and keeps the agents that work on it there." />
+            <DocsHeading title="Agent workflow" description="When building or changing a Context.dev page, use this library as the design reference." />
             <ol className="grid gap-8">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
@@ -135,20 +130,19 @@ export default function Home() {
               ))}
             </ol>
             <Link href="/cli" className="group/link flex w-fit items-center gap-1.5 rounded-sm text-body-sm font-medium text-fg-brand outline-none focus-visible:outline-2 focus-visible:outline-focus-ring">
-              How the CLI works
+              CLI setup and commands
               <ArrowRight aria-hidden className="size-3.5" />
             </Link>
           </div>
-          <CodeWindow label="terminal" actions={<WindowCopyButton value={APPLY_COMMAND} />}>
-            <CodeBlock code={APPLY_OUTPUT} className="overflow-x-auto" />
+          <CodeWindow label="terminal" actions={<WindowCopyButton value={AGENT_COMMANDS} />}>
+            <CodeBlock code={AGENT_COMMANDS} className="overflow-x-auto" />
           </CodeWindow>
         </div>
       </DocsSection>
 
       <Cta
-        title="Start building"
-        accent={`as ${registryName}.`}
-        description="Copy in one component, or bring a whole app onto the brand in a single command."
+        title="Build a page"
+        description="Choose a component or page block, then follow its usage notes."
         primaryAction={
           <CtaButton asChild>
             <Link href="/components">Browse components</Link>

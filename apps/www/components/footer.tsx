@@ -8,15 +8,15 @@ export function Footer({ name, repo, site }: { name: string; repo: string; site:
   return (
     <SiteFooter
       logo={
-        <Link href="/" aria-label={`${name} UI home`} className="flex items-center gap-2 rounded-card">
+        <Link href="/" aria-label={`${name} design system home`} className="flex items-center gap-2 rounded-card">
           <LogoMark className="h-6" />
           <span className="text-h5 leading-none font-medium text-white">{name}</span>
         </Link>
       }
       description={
         <>
-          <span className="block">The {name} design system.</span>
-          <span className="block">Components for React and Tailwind, and a CLI that applies them anywhere.</span>
+          <span className="block">{name} design system.</span>
+          <span className="block">Reference for the team and agents building pages and interfaces.</span>
         </>
       }
       groups={[
@@ -31,9 +31,9 @@ export function Footer({ name, repo, site }: { name: string; repo: string; site:
           ],
         },
         {
-          title: "Use it",
+          title: "Reference",
           links: [
-            { label: "Theme", href: "/theme" },
+            { label: "Tokens", href: "/theme" },
             { label: "CLI", href: "/cli" },
             { label: "Registry index", href: "/r/index.json" },
           ],

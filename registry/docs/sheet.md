@@ -3,9 +3,9 @@ name: sheet
 title: Sheet
 type: ui
 surface: product
-description: A side panel floating over the page's edge in the dialog's frame, with no scrim.
+description: "Floating side panel for record details, without a background scrim."
 kinds: []
 use_for: Detail panels next to a list (a monitor, a batch).
 never: [Sheets for primary navigation]
-source: src/app/(dashboard)/o/[org_id]/(main)/monitors/components/MonitorSidePanel.tsx
+source: context-dashboard c0ddf7a src/components/monitors/monitor-panel.tsx
 ---

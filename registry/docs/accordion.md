@@ -3,7 +3,7 @@ name: accordion
 title: Accordion
 type: ui
 surface: site
-description: Questions in medium weight on light rules, with a chevron that turns over when open.
+description: "Expandable question and answer rows with a rotating chevron."
 kinds: [faq]
 use_for: FAQs.
 never: [Hiding essential content]

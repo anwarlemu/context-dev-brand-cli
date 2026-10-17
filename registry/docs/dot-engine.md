@@ -3,7 +3,7 @@ name: dot-engine
 title: Dot engine
 type: lib
 surface: both
-description: The dot animation engine the site's stories and the product's glyphs share. Pictures drawn on the brand dot grid that melt, build or sweep from one to the next on a canvas, with a static SVG resting picture.
+description: "Shared canvas and SVG rendering utilities for dot animations."
 kinds: []
 use_for: "Building a dot story: `DotStory` with a grid, a resting picture and a lazy `load` that returns a player from `createBeatStoryPlayer` (beats) or `createDotStoryPlayer` (any frame function). Also `DotWindow` and `DotRule` around live content, and `PauseWhenOffscreen` inside animated SVGs."
 never: [Hex colors in a story (use brand tokens through canvasColor), Stories that keep playing off screen or with reduced motion]

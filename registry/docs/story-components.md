@@ -3,7 +3,7 @@ name: story-components
 title: Components story
 type: visual
 surface: site
-description: "A looping dot picture. A button rounds to the site's radius and becomes a card, then the sun and moon of its light and dark themes."
+description: "Dot animation of component shapes and theme changes."
 kinds: []
 use_for: "Component styles and themes on a site card. Plays only on screen; shows the card with reduced motion."
 never: [Stories as the main content of a page]

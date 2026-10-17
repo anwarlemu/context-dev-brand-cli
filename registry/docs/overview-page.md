@@ -3,9 +3,9 @@ name: overview-page
 title: Overview page
 type: block
 surface: product
-description: "The redesigned overview: the try box, the usage card over four credit and plan cards, the quickstart beside them, and the usage summary dialog."
+description: "Dashboard overview with an API demo, usage chart, credit statistics, quickstart, and usage summary dialog."
 kinds: []
 use_for: A product home.
 never: []
-source: brand-dev-webapp src/components/dashboard/overview/OrganizationHomeClient.tsx
+source: context-dashboard c0ddf7a src/components/overview/overview-page.tsx
 ---

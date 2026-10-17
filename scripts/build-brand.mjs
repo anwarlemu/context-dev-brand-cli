@@ -13,7 +13,7 @@ const vars = (body) => Object.fromEntries([...body.matchAll(/(--ds-[\w-]+)\s*:\s
 
 const header = '/* Written by context-ds from its brand files. Do not edit; run the CLI again to update. */\n';
 // A site may also hold product screens (an app behind the marketing pages): they opt in with the ds-product class.
-const site = `${header}:root {${root.body}}\n\n.ds-product {${product.body}}\n\n.dark .ds-product,\n[data-theme="dark"] .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n\n${read('site.css')}`;
+const site = `${header}:root, .ds-site {${root.body}}\n\n.ds-product {${product.body}}\n\n.dark .ds-product,\n[data-theme="dark"] .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n\n${read('site.css')}`;
 // A product project is a product everywhere, so its values apply at the root; its dark theme follows the app's own switch.
 const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n:root:is(.dark, [data-theme="dark"]),\n.dark .ds-product,\n[data-theme="dark"] .ds-product {${dark.body}}\n\n${read('product.css')}`;
 
@@ -24,7 +24,7 @@ const color = {
 	surface: 'bg-default', subtle: 'bg-subtle', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement',
 	fg: 'text-default', 'fg-secondary': 'text-secondary', 'fg-muted': 'text-muted', 'fg-subtle': 'text-subtle', 'fg-faint': 'text-faint', 'fg-nav': 'text-nav', 'fg-inverse': 'text-inverse', 'fg-brand': 'text-brand', 'on-brand': 'text-on-brand',
 	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',
-	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
+	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-control': 'wash-control', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
 	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
@@ -36,11 +36,14 @@ const theme = [
 	...Object.entries(color).map(([k, v]) => `\t--color-${k}: var(--ds-color-${v});`),
 	...['sans', 'data', 'mono'].map((k) => `\t--font-${k}: var(--ds-font-${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-text-')).map((k) => `\t--text-${k.slice(10)}: var(${k});`),
+	...['body', 'body-lg', 'body-sm', 'caption', 'h5'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-body);`),
+	...['display', 'h3', 'h4'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-leading-')).map((k) => `\t--leading-${k.slice(13)}: var(${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-tracking-')).map((k) => `\t--tracking-${k.slice(14)}: var(${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-radius-')).map((k) => `\t--radius-${k.slice(12)}: var(${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-shadow-')).map((k) => `\t--shadow-${k.slice(12)}: var(${k});`),
 	'\t--ease-out: var(--ds-easing-out);',
+	'\t--ease-emphasized: var(--ds-easing-out);',
 	'\t--ease-in-out: var(--ds-easing-in-out);',
 ];
 // Motion for popovers, tooltips and menus: a short ease-out pop, only a fade with reduced motion (Emil Kowalski's rules).
@@ -164,14 +167,29 @@ const motion = `@theme {
 	}
 }
 `;
-const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}`;
+const scrollbar = `
+.ds-scrollbar { scrollbar-width: thin; scrollbar-color: transparent transparent; }
+.ds-scrollbar[data-scrolling] { scrollbar-color: var(--ds-color-neutral-20) transparent; }
+.ds-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; background: transparent; }
+.ds-scrollbar::-webkit-scrollbar-thumb { border-radius: 3px; background: transparent; }
+.ds-scrollbar[data-scrolling]::-webkit-scrollbar-thumb { background: var(--ds-color-neutral-20); }
+`;
+const sheetExit = Object.entries({ right: 'var(--ds-space-2) 0', left: 'calc(-1 * var(--ds-space-2)) 0', bottom: '0 var(--ds-space-2)' }).map(([side, translate]) => `
+@theme {
+  --animate-sheet-${side}-out: ds-sheet-${side}-out var(--ds-duration-fast) var(--ds-easing-out) forwards;
+  @keyframes ds-sheet-${side}-out { to { opacity: 0; translate: ${translate}; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  @keyframes ds-sheet-${side}-out { to { opacity: 0; } }
+}`).join('\n');
+const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}\n${sheetExit}\n${scrollbar}`;
 const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400..500&display=swap");\n`;
 
 mkdirSync(new URL('../build', import.meta.url), { recursive: true });
 const write = (p, s) => writeFileSync(new URL(`../build/${p}`, import.meta.url), s);
 write('site.css', site);
 // Tokens alone (site at the root, product under .ds-product, both darks), for the component library and its docs.
-write('tokens.css', `${header}:root {${root.body}}\n\n.ds-product {${product.body}}\n\n:is(.dark, [data-theme="dark"]) .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n`);
+write('tokens.css', `${header}:root, .ds-site {${root.body}}\n\n.ds-product {${product.body}}\n\n:is(.dark, [data-theme="dark"]) .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n`);
 write('product.css', productCss);
 write('theme.css', themeCss);
 write('fonts.css', fonts);

@@ -3,9 +3,9 @@ name: code-card
 title: Code card
 type: product
 surface: product
-description: The call in mono straight on the card, folded to five lines until expanded, copy in the corner, and a footer with the language chip, the fold and an Open in row.
+description: "Code display with language selection, copy, expand and collapse controls, and footer actions."
 kinds: [code-window]
 use_for: Quickstarts and request samples.
 never: [Dark code cards in the product]
-source: brand-dev-webapp src/components/dashboard/api-demo/components/shared/CodeDisplay.tsx
+source: context-dashboard c0ddf7a src/components/playground/code-card.tsx
 ---

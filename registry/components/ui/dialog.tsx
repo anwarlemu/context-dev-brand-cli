@@ -27,7 +27,7 @@ function DialogPortal(props: React.ComponentProps<typeof DialogPrimitive.Portal>
 }
 
 function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
-  return <DialogPrimitive.Overlay data-slot="dialog-overlay" className={cn("fixed inset-0 z-50 animate-fade-in bg-scrim", className)} {...props} />;
+  return <DialogPrimitive.Overlay data-slot="dialog-overlay" className={cn("fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overscroll-contain bg-scrim px-4 pt-[12vh] pb-6 max-md:pt-4", className)} {...props} />;
 }
 
 const WIDTHS = { md: "max-w-lg", lg: "max-w-3xl", xl: "max-w-5xl", "2xl": "max-w-6xl" } as const;
@@ -41,32 +41,35 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & { size?: keyof typeof WIDTHS; showCloseButton?: boolean }) {
   return (
     <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Content
-        data-slot="dialog-content"
-        className={cn(
-          "fixed top-[12vh] left-1/2 z-50 w-[calc(100%-2rem)] -translate-x-1/2 animate-content-in rounded-shell bg-surface p-1.5 shadow-floating outline-none max-md:top-4",
-          WIDTHS[size],
-          className,
-        )}
-        {...props}
-      >
-        <div className="relative max-h-[80vh] overflow-y-auto rounded-shell bg-surface">{children}</div>
-        {showCloseButton && (
-          <DialogPrimitive.Close
-            aria-label="Close"
-            className="absolute top-5 right-4.5 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 ease-out outline-none hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-4"
-          >
-            <X strokeWidth={1.5} />
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Content>
+      <DialogOverlay>
+        <DialogPrimitive.Content
+          data-slot="dialog-content"
+          className={cn(
+            "relative z-50 w-full shrink-0 animate-content-in rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none",
+            WIDTHS[size],
+            className,
+          )}
+          {...props}
+        >
+          <div className="relative rounded-shell bg-surface">
+            {children}
+            {showCloseButton && (
+            <DialogPrimitive.Close
+              aria-label="Close"
+              className="absolute top-3.5 right-3 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 ease-out outline-none hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-4"
+            >
+              <X strokeWidth={1.5} />
+            </DialogPrimitive.Close>
+            )}
+          </div>
+        </DialogPrimitive.Content>
+      </DialogOverlay>
     </DialogPortal>
   );
 }
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-header" className={cn("flex flex-col gap-1.5 px-5 pt-5 pr-14", className)} {...props} />;
+  return <div data-slot="dialog-header" className={cn("flex flex-col gap-1.5 px-5 pt-5 pr-15", className)} {...props} />;
 }
 
 function DialogBody({ className, ...props }: React.ComponentProps<"div">) {

@@ -3,7 +3,7 @@ name: use-hover-dot-morph
 title: Hover dot morph
 type: lib
 surface: both
-description: Plays a dot morph on a canvas while its card is hovered or focused, and lets it settle back home after. The card is the nearest link or button, or the nearest element marked `data-hover-morph` when it is neither.
+description: "Runs a dot animation while its parent card is hovered or focused."
 files: [components/visuals/use-hover-dot-morph.ts]
 kinds: []
 use_for: A dot picture that changes when its card is pointed at (CustomerLogoDots, PagesCover, GlyphMelt). Pass a lazy `load` that returns a player from `createDotMorphPlayer`.

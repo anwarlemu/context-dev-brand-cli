@@ -29,9 +29,11 @@ npm run ci           # build, limits, tests; must pass before you push
   under `.ds-product`, product dark). `site.css` and `product.css` are the base layers. `elements.json` holds how each
   kind of element is styled (site and product), with `match` data for detection and a `source` in the brand's code.
   `reference/` holds the brand's own pages as screenshots (used by `review`). `brand.json` holds names and the source.
-- References for the look: both the site and the product are brand-dev-webapp PR 1045, branch `agencidev/redesign-dashboard-and-website` (private: clone it read-only with `gh repo clone` into a scratch folder; the
-  dashboard is in src/components/dashboard-ui and the sidebar files; never write to that repo; the local checkout and
-  the older context-dashboard prototype lag behind).
+- Product reference: the sibling `context-dashboard` repository, currently `c0ddf7a`. Its components, interactions,
+  and computed styles are the source of truth for product items and the library site's shell. Keep the source read-only;
+  use a scratch copy for browser comparisons. The library site must consume the registry components directly.
+- Marketing-only components retain the website reference: brand-dev-webapp PR 1045, branch
+  `agencidev/redesign-dashboard-and-website`. Never write to that repository.
   When the brand changes, re-measure there (computed styles), update `brand/`, and recapture `brand/reference/`.
 - `src/project/`: stack detection, main stylesheet and layouts, site or product, screens and the files each is drawn from.
 - `src/convert/`: converts style values by role in every file type (CSS, templates, scripts, Tailwind, native).

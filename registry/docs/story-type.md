@@ -3,7 +3,7 @@ name: story-type
 title: Type story
 type: visual
 surface: site
-description: "A looping dot picture. A type specimen set from light to bold, then a site's colors read one chip at a time."
+description: "Dot animation demonstrating font weights and color values."
 kinds: []
 use_for: "Colors and typography on a site card. Plays only on screen; shows the bold specimen with reduced motion."
 never: [Stories as the main content of a page]

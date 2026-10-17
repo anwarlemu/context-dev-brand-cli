@@ -52,7 +52,7 @@ function TagsInput({
             type="button"
             aria-label={`Remove ${tag}`}
             onClick={() => onTagsChange(tags.filter((existing) => existing !== tag))}
-            className="grid size-4 place-items-center rounded-sm outline-none transition-colors duration-150 ease-out hover:bg-brand hover:text-on-brand focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-solid focus-visible:outline-focus-ring"
+            className="grid size-4 place-items-center rounded-icon outline-none transition-colors duration-150 ease-out hover:bg-brand hover:text-on-brand focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-solid focus-visible:outline-focus-ring"
           >
             <X className="size-3" strokeWidth={1.75} />
           </button>

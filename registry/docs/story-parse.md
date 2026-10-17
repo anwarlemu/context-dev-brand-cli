@@ -3,7 +3,7 @@ name: story-parse
 title: Parse story
 type: visual
 surface: site
-description: "A looping dot picture. An uploaded PDF is read by OCR and becomes a Markdown document."
+description: "Dot animation of a PDF converted to Markdown through OCR."
 kinds: []
 use_for: "File parsing on a site card or product section. Plays only on screen; shows the Markdown with reduced motion."
 never: [Stories as the main content of a page]

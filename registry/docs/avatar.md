@@ -3,9 +3,9 @@ name: avatar
 title: Avatar
 type: ui
 surface: product
-description: A round picture with white initials on the brand blue as the fallback.
+description: "Profile image with initials as the fallback."
 kinds: []
 use_for: People and organizations.
 never: []
-source: src/components/team/TeamMembersTable.tsx; src/components/dashboard/shell/ShellUserMenu.tsx
+source: context-dashboard c0ddf7a src/components/shell/user-menu.tsx; src/components/team/team-page.tsx
 ---

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { InstallCommand } from "@/components/site/code-window";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/components/product/page";
+import { Card } from "@/components/ui/card";
 import { Code } from "@www/components/code";
 import { FramePreview } from "@www/components/frame-preview";
 import { Preview } from "@www/components/preview";
@@ -40,7 +42,7 @@ function exampleLabel(name: string) {
 // From 1280px, the page's sections down the right, sticky under the header.
 function OnThisPage({ sections }: { sections: { id: string; label: string }[] }) {
   return (
-    <nav aria-label="On this page" className="sticky top-18 hidden w-40 shrink-0 self-start pt-12 xl:block">
+    <nav aria-label="On this page" className="sticky top-6 hidden w-40 shrink-0 self-start pt-8 xl:block">
       <p className="mb-2 text-body-sm font-medium text-fg">On this page</p>
       <ul className="grid gap-px border-l border-line-subtle">
         {sections.map((s) => (
@@ -57,7 +59,7 @@ function OnThisPage({ sections }: { sections: { id: string; label: string }[] })
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="mt-16 mb-6 text-h4 leading-snug tracking-tight">
+    <h2 id={id} className="mt-12 mb-4 text-h5 leading-snug tracking-normal">
       {children}
     </h2>
   );
@@ -78,19 +80,17 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   ];
   return (
     <div className="flex gap-10">
-        <main className="min-w-0 flex-1 pt-10 pb-24 sm:pt-12">
+        <main className="min-w-0 flex-1 pt-8 pb-16">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge variant="tag">{TYPE_LABEL[item.type]}</Badge>
             {SURFACE_LABEL[item.surface] !== TYPE_LABEL[item.type] && <Badge variant="tag">{SURFACE_LABEL[item.surface]}</Badge>}
           </div>
-          <h1 className="text-h2 leading-display tracking-tight">{item.title}</h1>
-          <p className="mt-4 max-w-(--ds-layout-text) text-body-lg text-fg-muted"><Prose text={item.description} /></p>
-          <InstallCommand command={`npx context-ds add ${item.name}`} className="mt-8" />
+          <PageHeader title={item.title} description={<Prose text={item.description} />} action={<InstallCommand command={`npx context-ds add ${item.name}`} />} className="items-start text-left" />
 
           <div id="preview" className="mt-10 grid gap-8">
             {Object.entries(demos).map(([name, Demo]) => (
-              item.type === "site" || item.type === "block" ? (
-                <FramePreview key={name} src={`/preview/${item.name}/${name}`} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
+              item.type === "site" || item.type === "block" || exampleSurface(item, name) === "site" ? (
+                <FramePreview key={name} src={`/preview/${item.name}/${name}`} surface={exampleSurface(item, name)} label={exampleLabel(name)} fullPage={item.type === "site" || item.type === "block"} />
               ) : (
                 <Preview key={name} example={Demo} block={name === "Block"} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
               )
@@ -99,15 +99,15 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
           <H2 id="usage">Usage</H2>
           <div className="grid gap-5 md:grid-cols-2">
-            <div className="rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
+            <Card className="gap-0">
               <p className="mb-2 text-body-sm font-medium text-fg">Use it for</p>
               <p className="text-body-sm text-fg-muted">
                 <Prose text={item.use_for} />
               </p>
-            </div>
+            </Card>
             {item.never.length > 0 && (
-              <div className="rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
-                <p className="mb-2 text-body-sm font-medium text-fg">Never</p>
+              <Card className="gap-0">
+                <p className="mb-2 text-body-sm font-medium text-fg">Avoid</p>
                 <ul className="grid list-disc gap-1 pl-4 text-body-sm text-fg-muted marker:text-fg-subtle">
                   {item.never.map((n) => (
                     <li key={n}>
@@ -115,12 +115,12 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
                     </li>
                   ))}
                 </ul>
-              </div>
+              </Card>
             )}
           </div>
           {(requires.length > 0 || item.npm.length > 0) && (
             <p className="mt-5 text-body-sm text-fg-muted">
-              Brings{" "}
+              Dependencies:{" "}
               {requires.map((d, i) => (
                 <span key={d}>
                   <Link href={`/components/${d}`} className="rounded-sm text-fg-brand outline-none hover:underline focus-visible:outline-2 focus-visible:outline-focus-ring">
@@ -135,7 +135,6 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
                   {i < item.npm.length - 1 ? ", " : ""}
                 </code>
               ))}
-              {" "}with it.
             </p>
           )}
 
@@ -152,7 +151,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
               <Code key={p} title={p} code={sourceOf(p)} tall />
             ))}
           </div>
-          {item.source && <p className="mt-6 text-caption text-fg-subtle">Ported from {item.source}.</p>}
+          {item.source && <p className="mt-6 text-caption text-fg-subtle">Reference: {item.source}.</p>}
         </main>
         <OnThisPage sections={sections} />
     </div>

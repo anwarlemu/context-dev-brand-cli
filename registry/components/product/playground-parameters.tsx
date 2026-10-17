@@ -16,8 +16,8 @@ import { cn } from "@/lib/utils";
 // and say so on hover, rather than the panel closing and the page shifting. It appears and goes at once; Escape closes
 // it unless a menu or dialog is open over the page.
 
-const FIELD = "h-8 rounded-control border-0 bg-wash-pill px-3 text-body-sm text-fg shadow-none outline-none transition-colors duration-150 hover:bg-wash-selected focus-visible:shadow-none focus-visible:ring-2 focus-visible:ring-focus-ring";
-const ROW_ICON_BUTTON = "flex size-4 shrink-0 items-center justify-center rounded-sm text-fg-subtle outline-none transition-colors duration-150 hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring";
+const FIELD = "h-8 rounded-control border-0 bg-wash-control px-3 text-body-sm text-fg shadow-none outline-none transition-colors duration-150 hover:bg-wash-selected focus-visible:shadow-none focus-visible:ring-2 focus-visible:ring-focus-ring";
+const ROW_ICON_BUTTON = "flex size-4 shrink-0 items-center justify-center rounded-tag text-fg-subtle outline-none transition-colors duration-150 hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring";
 // Long option labels wrap inside the narrow panel instead of pushing the control past its edge.
 const CONTROL = "min-w-0 [&>*]:max-w-full";
 
@@ -27,7 +27,7 @@ function isOverlayOpen() {
 
 /** The count of changed parameters: a small brand dot that rides beside "Parameters". */
 function ParametersChangedCount({ count }: { count: number }) {
-  return <span className="grid size-4 shrink-0 place-items-center rounded-pill bg-brand text-axis text-on-brand tabular-nums">{count}</span>;
+  return <span className="grid size-4 shrink-0 place-items-center rounded-pill bg-brand text-counter text-on-brand tabular-nums">{count}</span>;
 }
 
 /** The composer's toggle: pressed while the panel is open, with the changed count riding along so edits show when it's closed. */
@@ -40,7 +40,7 @@ function ParametersButton({ open, onToggle, modifiedCount = 0, className }: { op
       aria-label={modifiedCount > 0 ? `Parameters, ${modifiedCount} changed` : "Parameters"}
       className={cn(
         "flex h-8 shrink-0 items-center gap-1.5 rounded-control px-3 text-body-sm outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring",
-        open ? "bg-wash-pill text-fg" : "text-fg-muted hover:bg-wash-hover hover:text-fg",
+        open ? "bg-wash-control text-fg" : "text-fg-muted hover:bg-wash-hover hover:text-fg",
         className,
       )}
     >
@@ -71,7 +71,7 @@ function FetchingOverlay() {
         if (labelRef.current) labelRef.current.style.opacity = "0";
       }}
     >
-      <span ref={labelRef} className="pointer-events-none absolute top-0 left-0 rounded-sm bg-primary px-2 py-1 text-caption whitespace-nowrap text-on-primary opacity-0 transition-opacity duration-150">
+      <span ref={labelRef} className="pointer-events-none absolute top-0 left-0 rounded-tag bg-primary px-2 py-1 text-caption whitespace-nowrap text-on-primary opacity-0 transition-opacity duration-150">
         Uneditable while fetching
       </span>
     </div>
@@ -163,8 +163,8 @@ function PlaygroundParameters({
 
   if (!open) return null;
   return (
-    <aside data-slot="playground-parameters" aria-label={title} className={cn("flex w-80 flex-col overflow-hidden rounded-card bg-surface shadow-card", className)}>
-      <div className="mt-2 flex h-8 shrink-0 items-center gap-1.5 pr-2.5 pl-7">
+    <aside data-slot="playground-parameters" aria-label={title} className={cn("flex w-(--ds-layout-parameters) flex-col overflow-hidden rounded-card bg-surface shadow-card", className)}>
+      <div className="mt-2 flex h-(--ds-layout-parameters-header) shrink-0 items-center gap-1.5 pr-2.5 pl-7">
         <h2 className="text-body font-normal tracking-normal text-fg">{title}</h2>
         {modifiedCount > 0 && (
           <Tooltip>
@@ -182,7 +182,7 @@ function PlaygroundParameters({
               type="button"
               onClick={onReset}
               disabled={fetching}
-              className="flex h-6 items-center gap-1.5 rounded-sm px-2.5 text-caption text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring disabled:opacity-50"
+              className="flex h-6 items-center gap-1.5 rounded-tag px-2.5 text-caption text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring disabled:opacity-50"
             >
               <RotateCcw className="size-3.5" strokeWidth={1.5} />
               Reset
@@ -192,7 +192,7 @@ function PlaygroundParameters({
             type="button"
             onClick={() => onOpenChange(false)}
             aria-label={`Close ${title.toLowerCase()}`}
-            className="grid size-7 place-items-center rounded-sm text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-pill hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
+            className="grid size-7 place-items-center rounded-tag text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-control hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
           >
             <X className="size-3.5" strokeWidth={1.5} />
           </button>
@@ -266,7 +266,7 @@ function ParameterRow({
         {!stacked && <div className={cn(CONTROL, "flex max-w-[55%] shrink-0 justify-end")}>{children}</div>}
       </div>
       {description && (
-        <p id={descriptionId} className="mt-0.5 text-body-sm leading-snug text-fg-muted [overflow-wrap:anywhere]">
+        <p id={descriptionId} className="mt-0.5 text-body-sm leading-field text-fg-muted [overflow-wrap:anywhere]">
           {description}
         </p>
       )}
@@ -294,7 +294,7 @@ function ParameterInput({ className, type = "text", ...props }: React.ComponentP
 /** A number with its unit after it (ms, pages) inside the same gray field. */
 function ParameterUnitInput({ unit, className, ...props }: React.ComponentProps<"input"> & { unit: string }) {
   return (
-    <div className={cn("flex h-8 w-28 max-w-full min-w-0 items-center rounded-control bg-wash-pill px-3 transition-colors duration-150 hover:bg-wash-selected", className)}>
+    <div className={cn("flex h-8 w-28 max-w-full min-w-0 items-center rounded-control bg-wash-control px-3 transition-colors duration-150 hover:bg-wash-selected", className)}>
       <ParameterInput type="number" className="h-auto min-w-0 flex-1 rounded-none bg-transparent p-0 hover:bg-transparent focus-visible:ring-0" {...props} />
       <span className="ml-1 shrink-0 text-caption text-fg-subtle lowercase">{unit}</span>
     </div>

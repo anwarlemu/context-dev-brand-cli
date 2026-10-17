@@ -3,7 +3,7 @@ name: story-structure
 title: Structure story
 type: visual
 surface: site
-description: "A looping dot picture. A paragraph of prose becomes a tree of named fields, which fill with the answer's values."
+description: "Dot animation of prose converted to structured fields."
 kinds: []
 use_for: "Structured output on a site card. Plays only on screen; shows the fields filled with reduced motion."
 never: [Stories as the main content of a page]

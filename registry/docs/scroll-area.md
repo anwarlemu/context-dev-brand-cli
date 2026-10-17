@@ -3,9 +3,9 @@ name: scroll-area
 title: Scroll area
 type: ui
 surface: product
-description: A scroller with no scrollbar that fades at whichever edge has more, with a chevron that scrolls the rest into view.
+description: "Scrollable content with edge fades and a button to scroll down."
 kinds: []
 use_for: Long lists inside panels.
 never: []
-source: src/components/dashboard-ui/scroll-area.tsx
+source: context-dashboard c0ddf7a src/components/ui/scroll-area.tsx
 ---

@@ -3,7 +3,7 @@ name: story-grants-hero
 title: Grants hero story
 type: visual
 surface: site
-description: "A looping dot picture with a caption column. A reward curve climbing as an experiment runs, then the grant's usage credits awarded a tranche at a time."
+description: "Dot animation of experiment progress and grant credits, with captions."
 kinds: []
 use_for: "The research grants page hero on the site. Plays only on screen; shows the full award with reduced motion."
 never: [Stories as the main content of a page]

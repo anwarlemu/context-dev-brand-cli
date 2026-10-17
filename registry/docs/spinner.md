@@ -3,7 +3,7 @@ name: spinner
 title: Spinner
 type: ui
 surface: product
-description: A thin ring turning once a second in the color of the text around it, alone or inside a button.
+description: "Loading indicator that uses the surrounding text color."
 kinds: []
 use_for: Buttons and inline waits under a second or two.
 never: [Full-page spinners]

@@ -3,9 +3,9 @@ name: copy-button
 title: Copy button
 type: ui
 surface: product
-description: An icon button that turns into a green check once copied.
+description: "Copy action with a temporary success indicator."
 kinds: []
 use_for: Keys, snippets, IDs.
 never: []
-source: src/components/dashboard-ui/copy-button.tsx
+source: context-dashboard c0ddf7a src/components/ui/copy-button.tsx
 ---

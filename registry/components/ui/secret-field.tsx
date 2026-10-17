@@ -51,7 +51,7 @@ function SecretField({
             type="button"
             onClick={() => setRevealed((r) => !r)}
             aria-label={revealed ? `Hide ${label}` : `Show ${label}`}
-            className="grid size-7 shrink-0 place-items-center rounded-control text-fg-subtle outline-none transition-colors duration-150 ease-out hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-3.5"
+            className="grid size-7 shrink-0 place-items-center rounded-control text-fg-subtle outline-none transition-colors duration-150 ease-out hover:bg-wash-control hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-3.5"
           >
             {revealed ? <EyeOff strokeWidth={1.5} /> : <Eye strokeWidth={1.5} />}
           </button>

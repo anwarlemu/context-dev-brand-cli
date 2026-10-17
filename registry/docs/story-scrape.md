@@ -3,7 +3,7 @@ name: story-scrape
 title: Scrape story
 type: visual
 surface: site
-description: "A looping dot picture. A URL is typed, its Markdown streams out, and the page is captured as a screenshot with its images lifted out."
+description: "Dot animation of a URL producing Markdown, images, and a screenshot."
 kinds: []
 use_for: "Scraping on a site card or product hero. Plays only on screen; shows its resting picture with reduced motion."
 never: [Stories as the main content of a page]

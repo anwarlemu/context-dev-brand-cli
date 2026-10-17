@@ -3,7 +3,7 @@ name: story-answer
 title: Answer story
 type: visual
 surface: site
-description: "A looping dot picture. A question is asked, its sources are read, and the answer is written between braces in the shape that was asked for."
+description: "Dot animation of a question, sources, and a structured answer."
 kinds: []
 use_for: "The research or answers product on a site card. Plays only on screen; shows its resting picture with reduced motion."
 never: [Stories as the main content of a page]

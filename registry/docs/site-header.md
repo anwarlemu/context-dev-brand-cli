@@ -3,7 +3,7 @@ name: site-header
 title: Site header
 type: site
 surface: site
-description: The site's header. Edge to edge with no fill at the top of the page, it gathers into a floating white pill in a translucent ring once the page scrolls; menus open as one ringed panel whose menus slide side by side, and below 880px the links move into a full-screen menu under the bar.
+description: "Site navigation with desktop dropdowns, a mobile menu, and a compact scrolled state."
 kinds: [header, header-scrolled, nav-link, header-action]
 use_for: The top of every site page, once. Links take `{label, href}`; menus take a `panel` (`NavLinksPanel` with a `NavFeaturedCard` and a "Build with" strip, `NavPreviewPanel` for use cases, `NavStoriesPanel` for customer stories) and a `width`, plus `mobile` groups for the phone menu. `announcement` draws an `AnnouncementBar` above it; `surface="brand"` when the hero behind it is blue.
 never: [A white or blurred bar at the very top of the page, More than two buttons at the right, Bold nav links, A drawer instead of the full-screen phone menu, The header inside the product]
@@ -22,6 +22,6 @@ The phone menu fills the screen under the bar between two rails, wipes down, and
 rest of the page goes inert, focus stays in the header and the page does not scroll. Menus open as sections in place,
 one at a time.
 
-Motion: the panel opens over 300ms (the brand's 300ms); switching menus and the bar's morph run 300ms here where the
+Motion: the panel opens over 300ms (Context.dev's 300ms); switching menus and the bar's morph run 300ms here where the
 brand's site uses 400ms and 500ms, and the phone menu's rows rise over 300ms where the site uses 420ms. Everything is
 still with reduced motion.

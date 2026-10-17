@@ -4,11 +4,11 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-import { type ChartBucket, type ChartCursor, type ChartSeries, ChartTooltip, niceMax, useChartSize, Y_INTERVALS } from "@/components/product/bar-chart";
+import { type ChartBucket, type ChartSeries, niceMax, useChartSize, Y_INTERVALS } from "@/components/product/bar-chart";
 
 // Usage over time as one smooth line over a soft fill, in brand blue for the total (or the series it follows). The last
 // stretch is dotted: that bucket (today) is still filling. Horizontal gridlines only, 11px subtle labels, a hover
-// marker and the shared chart tooltip. The line draws itself in from the left on mount (900ms, as the redesign's
+// marker and a tooltip placed away from the active point. The line draws itself in from the left on mount (900ms, as the redesign's
 // chart-line-in), the fill fades in after it and the markers pop in along it. The redesigned dashboard charts usage
 // as stacked bars (bar-chart); use this where one trend over time is the whole story.
 
@@ -55,7 +55,6 @@ export function LineChart<K extends string>({
   const gradientId = React.useId();
   const { ref, size } = useChartSize();
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
-  const [cursor, setCursor] = React.useState<ChartCursor>();
 
   const plotWidth = Math.max(0, size.width - PAD.left - PAD.right);
   const plotHeight = Math.max(0, size.height - PAD.top - PAD.bottom);
@@ -76,6 +75,8 @@ export function LineChart<K extends string>({
 
   const active = activeIndex === null ? null : buckets[activeIndex];
   const activeX = activeIndex === null ? 0 : xAt(activeIndex);
+  const tooltipSide = activeX > PAD.left + plotWidth / 2 ? "left" : "right";
+  const tooltipLow = activeIndex !== null && points[activeIndex]?.[1] < PAD.top + plotHeight / 2;
   const ready = size.width > 0 && size.height > 0;
 
   return (
@@ -85,9 +86,8 @@ export function LineChart<K extends string>({
       aria-label={label}
       data-slot="line-chart"
       onMouseMove={(e) => {
-        if (!plotWidth) return;
+        if (!plotWidth || !buckets.length) return;
         const x = e.clientX - e.currentTarget.getBoundingClientRect().left - PAD.left;
-        setCursor({ x: e.clientX, y: e.clientY });
         setActiveIndex(Math.min(buckets.length - 1, Math.max(0, Math.round((x / plotWidth) * (buckets.length - 1)))));
       }}
       onMouseLeave={() => setActiveIndex(null)}
@@ -95,7 +95,7 @@ export function LineChart<K extends string>({
     >
       {headline && ready && (
         <span
-          className="pointer-events-none absolute z-10 flex h-6 -translate-1/2 items-center rounded-control border border-line bg-surface px-2.5 text-caption text-fg-brand tabular-nums"
+          className="pointer-events-none absolute z-10 flex h-6 -translate-1/2 items-center rounded-tag border border-line bg-surface px-2.5 text-caption text-fg-brand tabular-nums"
           style={{ left: PAD.left + plotWidth / 2, top: yAt(top / Y_INTERVALS) }}
         >
           {headline}
@@ -155,18 +155,34 @@ export function LineChart<K extends string>({
       )}
       {active && activeIndex !== null && (
         <>
-          <span className="pointer-events-none absolute bottom-[3px] flex h-5 -translate-x-1/2 items-center rounded-control bg-brand px-2 text-caption whitespace-nowrap text-on-brand" style={{ left: activeX }}>
+          <span className="pointer-events-none absolute bottom-[3px] flex h-5 -translate-x-1/2 items-center rounded-tag bg-brand px-2 text-axis whitespace-nowrap text-on-brand" style={{ left: activeX }}>
             {active.label}
           </span>
-          {cursor && (
-            <ChartTooltip
-              cursor={cursor}
-              title={active.label}
-              total={active.total}
-              unit={unit}
-              rows={series.map((s) => ({ key: s.key, label: s.label, color: s.color, value: active.values[s.key] ?? 0 }))}
-            />
-          )}
+          <div
+            role="tooltip"
+            className={cn("pointer-events-none absolute z-10 w-max min-w-52 rounded-shell bg-surface p-(--ds-space-frame) shadow-floating", tooltipSide === "left" && "-translate-x-full")}
+            style={{ left: activeX + (tooltipSide === "left" ? -16 : 16), ...(tooltipLow ? { bottom: PAD.bottom } : { top: PAD.top }) }}
+          >
+            <div className="rounded-card bg-surface p-3 text-caption">
+              <p className="text-fg-subtle">{active.label}</p>
+              <p className="mt-1.5 flex items-baseline gap-1.5">
+                <span className="text-metric leading-none font-medium tracking-tight text-fg-brand tabular-nums">{active.total.toLocaleString("en-US")}</span>
+                <span className="text-fg-muted">{active.total === 1 ? unit.replace(/s$/, "") : unit}</span>
+              </p>
+              <ul className="mt-3 flex flex-col gap-1.5 border-t border-line-subtle pt-2.5">
+                {series.map((entry) => {
+                  const value = active.values[entry.key] ?? 0;
+                  return (
+                    <li key={entry.key} className={cn("flex items-center gap-2", value === 0 && "text-fg-subtle")}>
+                      <span aria-hidden className={cn("size-2 rounded-pill", value === 0 && "opacity-30")} style={{ backgroundColor: entry.color }} />
+                      <span className={cn("flex-1", value > 0 && "text-fg-muted")}>{entry.label}</span>
+                      <span className="tabular-nums">{value.toLocaleString("en-US")}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </div>
         </>
       )}
     </div>

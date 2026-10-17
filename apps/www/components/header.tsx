@@ -13,7 +13,7 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
     <SiteHeader
       logo={<LogoMark />}
       wordmark={<Wordmark name={name} />}
-      logoLabel={`${name} UI home`}
+      logoLabel={`${name} design system home`}
       currentPath={pathname}
       items={[
         {
@@ -24,17 +24,17 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
             <NavFeaturedCard
               href="/components"
               title="Browse the library"
-              description={`${Object.values(counts).reduce((a, b) => a + b, 0)} items, each with a live preview and its source.`}
-              cta="See everything"
+              description={`${Object.values(counts).reduce((a, b) => a + b, 0)} entries with previews, usage notes, and source code.`}
+              cta="View components"
             />
           ),
           items: [
-            { title: "Components", description: `${n("ui")} primitives for both surfaces`, href: "/components#components", glyph: <MenuGlyph name="design" /> },
-            { title: "Product", description: `${n("product")} dashboard pieces`, href: "/components#product", glyph: <MenuGlyph name="theme" /> },
+            { title: "Components", description: `${n("ui")} controls for site and product interfaces`, href: "/components#components", glyph: <MenuGlyph name="design" /> },
+            { title: "Product", description: `${n("product")} dashboard components`, href: "/components#product", glyph: <MenuGlyph name="theme" /> },
             { title: "Site", description: `${n("site")} marketing sections`, href: "/components#site", glyph: <MenuGlyph name="portal" /> },
-            { title: "Blocks", description: `${n("block")} full pages to start from`, href: "/components#blocks", glyph: <MenuGlyph name="batches" /> },
-            { title: "Visuals", description: `${n("visual")} dot fields and stories`, href: "/components#visuals", glyph: <MenuGlyph name="generate" /> },
-            { title: "Theme", description: "The tokens behind every value", href: "/theme", glyph: <MenuGlyph name="styleguide" /> },
+            { title: "Blocks", description: `${n("block")} page layouts`, href: "/components#blocks", glyph: <MenuGlyph name="batches" /> },
+            { title: "Visuals", description: `${n("visual")} glyphs, dot fields, and animations`, href: "/components#visuals", glyph: <MenuGlyph name="generate" /> },
+            { title: "Tokens", description: "Color, type, spacing, and motion", href: "/theme", glyph: <MenuGlyph name="styleguide" /> },
           ],
           footer: (
             <>
@@ -47,7 +47,7 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
           mobile: [
             {
               links: [
-                { label: "Everything", href: "/components" },
+                { label: "All components", href: "/components" },
                 { label: "Components", href: "/components#components" },
                 { label: "Product", href: "/components#product" },
                 { label: "Site", href: "/components#site" },
@@ -57,7 +57,7 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
             },
           ],
         },
-        { label: "Theme", href: "/theme" },
+        { label: "Tokens", href: "/theme" },
         { label: "CLI", href: "/cli" },
         { label: "GitHub", href: repo, external: true },
       ]}

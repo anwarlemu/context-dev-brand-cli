@@ -3,7 +3,7 @@ name: dot-shader-playground
 title: Dot shader playground
 type: visual
 surface: site
-description: "The brand page's interactive tool for the dot shader: a large shaded preview on white, blue or black, sample images, upload by click, drop or paste, and Copy SVG, SVG and PNG downloads."
+description: "Interactive dot-shader preview with image upload, sample images, and SVG or PNG export."
 files: [components/visuals/dot-shader-playground.tsx]
 kinds: []
 use_for: "A brand or press page section that lets visitors shade their own image. `samples` (id, label and the `src` of a shader SVG, or any image) and `defaultSample` come from the app."

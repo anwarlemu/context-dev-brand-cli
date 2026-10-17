@@ -114,7 +114,7 @@ function BreakdownPicker<B extends string>({ options, value, onValueChange, labe
           <ChevronDown className="size-3.5 text-fg-subtle" strokeWidth={1.5} />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-72 p-1.5">
+      <PopoverContent align="start" className="w-72 p-(--ds-space-frame)">
         <ul role="listbox" aria-label={label} className="flex flex-col gap-0.5">
           {options.map((o) => {
             const isSelected = o.value === value;

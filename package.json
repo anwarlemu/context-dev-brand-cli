@@ -1,7 +1,7 @@
 {
   "name": "context-ds",
   "version": "2.0.0",
-  "description": "Make any website or app look like Context.dev, and keep coding agents on it.",
+  "description": "Context.dev components, tokens, and checks for agents building pages and interfaces.",
   "type": "module",
   "bin": {
     "context-ds": "./bin.js"
@@ -19,6 +19,7 @@
   "scripts": {
     "doctor": "react-doctor apps/www --scope full --verbose",
     "doctor:library": "react-doctor --project registry --scope full --verbose",
+    "check:docs": "node scripts/check-docs.mjs",
     "build": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
     "test": "vitest run",
     "ci": "npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run",

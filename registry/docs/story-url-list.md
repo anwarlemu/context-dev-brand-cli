@@ -3,7 +3,7 @@ name: story-url-list
 title: URL list story
 type: visual
 surface: site
-description: "A looping dot picture. A list of URLs runs up to the batch limit, then one of them is shown with the identifier and metadata it carries."
+description: "Dot animation of a URL batch and its metadata."
 kinds: []
 use_for: "Large URL lists and batches on a site card. Plays only on screen; shows that URL with reduced motion."
 never: [Stories as the main content of a page]

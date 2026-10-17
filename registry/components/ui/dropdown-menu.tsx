@@ -28,7 +28,7 @@ function DropdownMenuContent({ className, sideOffset = 6, align = "end", ...prop
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         align={align}
-        className={cn("z-50 flex min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 rounded-shell bg-surface p-1.5 shadow-floating outline-none", className)}
+        className={cn("z-50 flex min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none", className)}
         {...props}
       />
     </DropdownMenuPrimitive.Portal>
@@ -136,7 +136,7 @@ function DropdownMenuSubContent({ className, ...props }: React.ComponentProps<ty
     <DropdownMenuPrimitive.Portal container={usePortalContainer()}>
       <DropdownMenuPrimitive.SubContent
         data-slot="dropdown-menu-sub-content"
-        className={cn("z-50 flex min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 rounded-shell bg-surface p-1.5 shadow-floating", className)}
+        className={cn("z-50 flex min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 rounded-shell bg-surface p-(--ds-space-frame) shadow-floating", className)}
         {...props}
       />
     </DropdownMenuPrimitive.Portal>

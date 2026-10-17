@@ -3,9 +3,9 @@ name: hold-button
 title: Hold button
 type: ui
 surface: product
-description: An outlined red button that confirms a destructive action only when held; red fills it from the left while it is held (1.2 seconds by default), and letting go early snaps it back.
+description: "Destructive action that requires a sustained pointer or key press, with a progress indicator."
 kinds: [app-button-danger]
 use_for: Deleting keys, workspaces, monitors.
 never: []
-source: src/components/dashboard-ui/hold-button.tsx
+source: context-dashboard c0ddf7a src/components/ui/hold-button.tsx
 ---

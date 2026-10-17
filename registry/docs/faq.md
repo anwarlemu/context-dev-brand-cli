@@ -3,7 +3,7 @@ name: faq
 title: FAQ section
 type: site
 surface: site
-description: "Heading on the left; category pills and ringed question cards on the right, ending with an Ask anything card. The list holds room for its tallest answer, or scrolls inside its closed height."
+description: "FAQ section with categories, expandable answers, and a contact action."
 kinds: [faq, tabs, card]
 use_for: The FAQ on the home, pricing and product pages. FaqList alone for a single list without tabs, FaqCardGrid for two columns of cards, FaqPlainList for a product page's hairline list in one card.
 never: [Bold questions, Open answers by default in the card stack, Gray card backgrounds, A spread shadow for the ring (it rounds the ring's outer edge too far), Wiring the ask card to a service inside the component]
@@ -25,5 +25,5 @@ radius. The whole card turns light gray on hover (only where hovering is real), 
 
 The ask card waits for three characters; pass `onAsk`, then `pending` while you fetch, and `answer` or `error`.
 
-Motion: an answer's height opens over 250ms on the ease-in-out curve while its fade runs 200ms (the brand's timings);
+Motion: an answer's height opens over 250ms on the ease-in-out curve while its fade runs 200ms (Context.dev's timings);
 the category pill glides on the tabs' spring. Reduced motion keeps only the fades and scrolls without smoothing.
