@@ -214,7 +214,7 @@
 			"name": "Code window",
 			"match": { "tags": ["pre"], "words": ["code", "terminal", "snippet", "codeblock", "console", "editor", "window"] },
 			"css": { "overflow": "hidden", "border-radius": "var(--ds-radius-card)", "background-color": "var(--ds-color-bg-code)", "color": "var(--ds-color-text-inverse)", "font-family": "var(--ds-font-mono)", "font-size": "var(--ds-text-body-sm)", "line-height": "1.7", "box-shadow": "0 0 0 var(--ds-space-2) var(--ds-color-ring-tint)" },
-			"tailwind": "overflow-hidden rounded-card bg-code text-white font-mono text-body-sm leading-[1.7] shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
+			"tailwind": "overflow-hidden rounded-card bg-code text-white font-mono text-body-sm leading-code shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
 			"rules": ["Near-black window in the soft blue ring; a 40px chrome bar with three 12px dots; one accent color for strings and numbers."],
 			"source": "src/components/sections/shared/code-frame.tsx:4"
 		},

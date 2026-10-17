@@ -34,6 +34,7 @@ const color = {
 	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',
 	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
 	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
+	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
 for (const name of Object.keys(t)) {
 	const m = name.match(/^--ds-color-((?:blue|navy|neutral)-\d+|chart-series-\d)$/);
@@ -57,6 +58,8 @@ const motion = `@theme {
 	--animate-content-in: ds-content-in var(--ds-duration-base) var(--ds-easing-out);
 	--animate-shimmer: ds-shimmer 1.6s var(--ds-easing-in-out) infinite;
 	--animate-spin-slow: spin 0.8s linear infinite;
+	--animate-accordion-down: ds-accordion-down var(--ds-duration-base) var(--ds-easing-out);
+	--animate-accordion-up: ds-accordion-up var(--ds-duration-fast) var(--ds-easing-out);
 	--animate-chart-line: ds-chart-line 900ms var(--ds-easing-out) backwards;
 	--animate-chart-area: ds-fade-in 600ms var(--ds-easing-out) 250ms backwards;
 	--animate-chart-tip: ds-chart-tip 360ms var(--ds-easing-out) backwards;
@@ -93,6 +96,24 @@ const motion = `@theme {
 		from {
 			opacity: 0;
 			transform: translateX(-12px);
+		}
+	}
+
+	@keyframes ds-accordion-down {
+		from {
+			height: 0;
+		}
+		to {
+			height: var(--radix-accordion-content-height);
+		}
+	}
+
+	@keyframes ds-accordion-up {
+		from {
+			height: var(--radix-accordion-content-height);
+		}
+		to {
+			height: 0;
 		}
 	}
 

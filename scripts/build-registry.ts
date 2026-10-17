@@ -104,6 +104,8 @@ const themeItem = {
 		'@keyframes ds-content-in': { from: { opacity: '0', transform: 'translateY(4px)' } },
 		'@keyframes ds-sheet-right': { from: { opacity: '0', transform: 'translateX(12px)' } },
 		'@keyframes ds-sheet-left': { from: { opacity: '0', transform: 'translateX(-12px)' } },
+		'@keyframes ds-accordion-down': { from: { height: '0' }, to: { height: 'var(--radix-accordion-content-height)' } },
+		'@keyframes ds-accordion-up': { from: { height: 'var(--radix-accordion-content-height)' }, to: { height: '0' } },
 		'@keyframes ds-chart-line': { from: { 'stroke-dashoffset': '1' } },
 		'@keyframes ds-chart-tip': { from: { opacity: '0', transform: 'scale(0.4)' } },
 		'@keyframes ds-chart-bar': { from: { transform: 'scaleY(0.04)' } },
