@@ -1,6 +1,6 @@
 import { InstallCommand } from "@/components/site/code-window";
-import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
 import { Code } from "@www/components/code";
+import { DocsHeading, DocsSection, DocsSectionRule } from "@www/components/docs-section";
 import { APPLY_COMMAND, registryName } from "@www/lib/registry";
 
 export const metadata = { title: "CLI" };
@@ -24,49 +24,49 @@ const FLOW = [
 export default function CliPage() {
   return (
     <main>
-      <SiteSection lines header="under">
-        <SectionHeading
+      <DocsSection lines header="under">
+        <DocsHeading
           as="h1"
           title="One command"
           accent="applies the brand."
           description={`Run it in any project: it swaps in library components where the app's own match, restyles everything else, and keeps coding agents on ${registryName}.`}
         >
           <InstallCommand command={APPLY_COMMAND} />
-        </SectionHeading>
-      </SiteSection>
+        </DocsHeading>
+      </DocsSection>
 
-      <SiteSection lines>
-        <SectionHeading title="What it does" />
-        <SectionHeaderRule />
-        <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <DocsSection lines>
+        <DocsHeading title="What it does" />
+        <DocsSectionRule />
+        <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {FLOW.map((s, i) => (
-            <li key={s.title} className="flex flex-col gap-3 rounded-card p-5 shadow-[0_0_0_1px_var(--ds-color-border-hairline),0_0_0_var(--ds-space-1-5)_var(--ds-color-ring-tint)]">
+            <li key={s.title} className="flex flex-col gap-4 rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
               <span className="flex size-7 items-center justify-center rounded-pill bg-blue-10 font-mono text-caption text-fg-brand">{i + 1}</span>
               <span className="text-body font-medium text-fg">{s.title}</span>
               <span className="text-body-sm text-fg-muted">{s.body}</span>
             </li>
           ))}
         </ol>
-      </SiteSection>
+      </DocsSection>
 
-      <SiteSection lines>
-        <SectionHeading title="Commands" description="Once installed, the CLI is context-ds in the project." />
-        <SectionHeaderRule />
+      <DocsSection lines>
+        <DocsHeading title="Commands" description="Once installed, the CLI is context-ds in the project." />
+        <DocsSectionRule />
         <dl className="grid divide-y divide-line-subtle">
           {COMMANDS.map(([cmd, what]) => (
-            <div key={cmd} className="grid gap-1 py-4 sm:grid-cols-[16rem_1fr] sm:gap-6">
+            <div key={cmd} className="grid gap-2 py-5 sm:grid-cols-[16rem_1fr] sm:gap-6">
               <dt className="font-mono text-body-sm text-fg">npx context-ds {cmd}</dt>
               <dd className="text-body-sm text-fg-muted">{what}</dd>
             </div>
           ))}
         </dl>
-      </SiteSection>
+      </DocsSection>
 
-      <SiteSection lines>
-        <SectionHeading title="Add components" description="In a React project on Tailwind 4, add items by name. Files land in components/ui, product, site, blocks or visuals, honoring a src folder and the @ alias." />
-        <SectionHeaderRule />
+      <DocsSection lines>
+        <DocsHeading title="Add components" description="In a React project on Tailwind 4, add items by name. Files land in components/ui, product, site, blocks or visuals, honoring a src folder and the @ alias." />
+        <DocsSectionRule />
         <Code title="terminal" code={`npx context-ds add button card tabs tooltip\nnpx context-ds add app-shell overview-page`} />
-      </SiteSection>
+      </DocsSection>
     </main>
   );
 }

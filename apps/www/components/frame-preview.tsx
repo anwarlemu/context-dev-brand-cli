@@ -43,8 +43,8 @@ export function FramePreview({ src, label, surface }: { src: string; label: stri
   }, []);
 
   return (
-    <figure className="min-w-0 rounded-card bg-ring-tint p-2">
-      <figcaption className="flex items-center gap-2 px-2 pt-0.5 pb-2 text-caption text-fg-muted">
+    <figure className="min-w-0 overflow-hidden rounded-card border border-line-subtle bg-surface">
+      <figcaption className="flex items-center gap-2 border-b border-line-subtle px-4 py-3 text-caption text-fg-muted">
         <span aria-hidden className={cn("size-1.5 rounded-pill", surface === "product" ? "bg-neutral-50" : "bg-brand")} />
         {label}
         <span className="ml-auto flex items-center gap-1">
@@ -64,7 +64,7 @@ export function FramePreview({ src, label, surface }: { src: string; label: stri
           </a>
         </span>
       </figcaption>
-      <div ref={box} className="relative overflow-hidden rounded-card bg-surface shadow-[0_0_0_1px_var(--ds-color-border-hairline)]" style={{ height: scale ? pageHeight * scale : 400 }}>
+      <div ref={box} className="relative overflow-hidden bg-surface" style={{ height: scale ? pageHeight * scale : 400 }}>
         <div className={cn("absolute top-0", device === "phone" ? "left-1/2 -translate-x-1/2" : "left-0")} style={{ width: width * scale || "100%" }}>
           {ready && (
             <iframe

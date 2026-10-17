@@ -40,7 +40,7 @@ function exampleLabel(name: string) {
 // From 1280px, the page's sections down the right, sticky under the header.
 function OnThisPage({ sections }: { sections: { id: string; label: string }[] }) {
   return (
-    <nav aria-label="On this page" className="sticky top-18 hidden w-40 shrink-0 self-start pt-10 xl:block">
+    <nav aria-label="On this page" className="sticky top-18 hidden w-40 shrink-0 self-start pt-12 xl:block">
       <p className="mb-2 text-body-sm font-medium text-fg">On this page</p>
       <ul className="grid gap-px border-l border-line-subtle">
         {sections.map((s) => (
@@ -57,7 +57,7 @@ function OnThisPage({ sections }: { sections: { id: string; label: string }[] })
 
 function H2({ id, children }: { id: string; children: React.ReactNode }) {
   return (
-    <h2 id={id} className="mt-16 mb-5 text-h4 leading-snug tracking-tight">
+    <h2 id={id} className="mt-16 mb-6 text-h4 leading-snug tracking-tight">
       {children}
     </h2>
   );
@@ -78,7 +78,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   ];
   return (
     <div className="flex gap-10">
-        <main className="min-w-0 flex-1 pt-10 pb-24">
+        <main className="min-w-0 flex-1 pt-10 pb-24 sm:pt-12">
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge variant="tag">{TYPE_LABEL[item.type]}</Badge>
             {SURFACE_LABEL[item.surface] !== TYPE_LABEL[item.type] && <Badge variant="tag">{SURFACE_LABEL[item.surface]}</Badge>}
@@ -87,7 +87,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
           <p className="mt-4 max-w-(--ds-layout-text) text-body-lg text-fg-muted"><Prose text={item.description} /></p>
           <InstallCommand command={`npx context-ds add ${item.name}`} className="mt-8" />
 
-          <div id="preview" className="mt-10 grid gap-6">
+          <div id="preview" className="mt-10 grid gap-8">
             {Object.entries(demos).map(([name, Demo]) => (
               item.type === "site" || item.type === "block" ? (
                 <FramePreview key={name} src={`/preview/${item.name}/${name}`} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
@@ -98,15 +98,15 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
           </div>
 
           <H2 id="usage">Usage</H2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-card p-5 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
               <p className="mb-2 text-body-sm font-medium text-fg">Use it for</p>
               <p className="text-body-sm text-fg-muted">
                 <Prose text={item.use_for} />
               </p>
             </div>
             {item.never.length > 0 && (
-              <div className="rounded-card p-5 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
+              <div className="rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
                 <p className="mb-2 text-body-sm font-medium text-fg">Never</p>
                 <ul className="grid list-disc gap-1 pl-4 text-body-sm text-fg-muted marker:text-fg-subtle">
                   {item.never.map((n) => (

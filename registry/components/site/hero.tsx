@@ -124,6 +124,7 @@ function Hero({
   background,
   staggerIn = false,
   className,
+  contentClassName,
   ...props
 }: Omit<React.ComponentProps<"section">, "title"> & {
   /** `white` is the home hero; `blue` the other pages'. */
@@ -150,6 +151,8 @@ function Hero({
   background?: React.ReactNode;
   /** Brings the pieces in one after another on load. */
   staggerIn?: boolean;
+  /** Adjusts the inner content's spacing and height without changing the background. */
+  contentClassName?: string;
 }) {
   const tone = SURFACES[surface];
   const large = size === "large";
@@ -177,6 +180,7 @@ function Hero({
             media
               ? "min-h-[max(calc(100svh-var(--hero-offset,0px)),calc(var(--spacing)*128))] justify-center gap-7 pt-8 pb-16 sm:pt-0 lg:gap-8"
               : "min-h-[min(calc(100svh-var(--hero-offset,0px)),calc(var(--spacing)*250))] justify-center gap-8 py-10 sm:py-12 lg:py-16",
+            contentClassName,
           )}
         >
           <div className={cn("relative z-10 mx-auto flex w-full shrink-0 flex-col items-center", media ? "gap-3" : "gap-6", large ? "max-w-240" : "max-w-200")}>

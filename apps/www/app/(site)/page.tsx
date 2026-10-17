@@ -1,17 +1,16 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { CodeBlock, CodeWindow, TerminalWindow, WindowCopyButton } from "@/components/site/code-window";
 import { Cta, CtaButton } from "@/components/site/cta";
 import { Hero, HeroMedia, HeroMediaCard } from "@/components/site/hero";
-import { SectionHeading, SiteSection } from "@/components/site/section";
 import { Button } from "@/components/ui/button";
 import { HeroDotField } from "@/components/visuals/hero-dot-field";
 import { ComponentsShowcase } from "@www/components/components-showcase";
+import { DocsHeading, DocsSection } from "@www/components/docs-section";
 import { Thumb } from "@www/components/thumb";
 import { examples } from "@www/lib/examples.generated";
-import { APPLY_COMMAND, GROUPS, counts, items, registryName } from "@www/lib/registry";
+import { APPLY_COMMAND, GROUPS, counts, registryName } from "@www/lib/registry";
 
 const ADD_OUTPUT = `$ npx context-ds add button stat-card hero
   theme        styles/tokens.css, styles/theme.css
@@ -26,9 +25,8 @@ Restyled 41 files: colors, type, radii and motion
 Installed the brand stylesheet, fonts and agent hooks
 Next: 2 tasks, then a review against the brand`;
 
-// A card in the soft blue ring whose title link covers the whole card (the live example inside has links of its own,
-// and links cannot nest). Hover turns the title blue.
-const CARD = "group/card relative flex flex-col rounded-card bg-ring-tint p-2";
+// Keep the blue ring around the example, with a quiet caption below it. The title link covers the whole card.
+const CARD = "group/card relative flex min-w-0 flex-col";
 const CARD_LINK =
   "rounded-sm outline-none transition-colors duration-150 ease-out after:absolute after:inset-0 after:rounded-card focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-focus-ring group-hover/card:text-fg-brand motion-reduce:transition-none";
 
@@ -52,7 +50,7 @@ export default function Home() {
       <Hero
         size="large"
         staggerIn
-        style={{ "--hero-offset": "calc(var(--spacing) * 18)" } as CSSProperties}
+        contentClassName="min-h-0 gap-8 py-16 sm:pt-20 sm:pb-20 lg:gap-10 lg:py-24"
         background={<HeroDotField fine streams fillFootOnPhones className="text-fg-brand" />}
         title={`${registryName} design system`}
         accent={[registryName]}
@@ -78,16 +76,20 @@ export default function Home() {
         }
       />
 
-      <SiteSection lines>
-        <SectionHeading title="Every piece of the brand," accent="ready to add." description="Ported from the brand's own code, one component for each thing it draws. Every value is a brand token, and each item comes with a live preview and its source." />
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <DocsSection lines>
+        <DocsHeading title="Every piece of the brand," accent="ready to add." description="Ported from the brand's own code, one component for each thing it draws. Every value is a brand token, and each item comes with a live preview and its source." />
+        <div className="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:mt-12 lg:grid-cols-3">
           {GROUPS.map((g) => {
             const show = SHOWCASE.find((s) => s.type === g.type);
             const Example = g.type === "ui" ? ComponentsShowcase : show ? examples[show.item]?.[show.example] : undefined;
             return (
               <div key={g.type} className={CARD}>
-                {Example && <Thumb example={Example} surface={show?.surface ?? "product"} scale={show?.scale ?? 0.64} align={show?.align} />}
-                <div className="flex flex-1 flex-col gap-1.5 px-3 pt-4 pb-3">
+                {Example && (
+                  <div className="rounded-card bg-ring-tint p-2">
+                    <Thumb example={Example} surface={show?.surface ?? "product"} scale={show?.scale ?? 0.64} align={show?.align} className="h-56" />
+                  </div>
+                )}
+                <div className="flex flex-1 flex-col gap-2 px-2 pt-5">
                   <p className="flex items-center justify-between text-h5 leading-snug text-fg">
                     <Link href={`/components#${g.id}`} className={CARD_LINK}>
                       {g.label}
@@ -100,12 +102,14 @@ export default function Home() {
             );
           })}
           <div className={CARD}>
-            <div className="grid h-52 grid-cols-4 grid-rows-3 gap-1.5 overflow-hidden rounded-card bg-surface p-3 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
-              {["bg-brand", "bg-blue-80", "bg-blue-60", "bg-blue-40", "bg-blue-20", "bg-blue-10", "bg-navy-60", "bg-neutral-90", "bg-neutral-50", "bg-neutral-20", "bg-canvas", "bg-ring-tint"].map((c) => (
-                <span key={c} className={`${c} rounded-control`} />
-              ))}
+            <div className="rounded-card bg-ring-tint p-2">
+              <div className="grid h-56 grid-cols-4 grid-rows-3 gap-2 overflow-hidden rounded-card bg-surface p-4 shadow-[0_0_0_1px_var(--ds-color-border-hairline)]">
+                {["bg-brand", "bg-blue-80", "bg-blue-60", "bg-blue-40", "bg-blue-20", "bg-blue-10", "bg-navy-60", "bg-neutral-90", "bg-neutral-50", "bg-neutral-20", "bg-canvas", "bg-ring-tint"].map((c) => (
+                  <span key={c} className={`${c} rounded-control`} />
+                ))}
+              </div>
             </div>
-            <div className="flex flex-1 flex-col gap-1.5 px-3 pt-4 pb-3">
+            <div className="flex flex-1 flex-col gap-2 px-2 pt-5">
               <p className="text-h5 leading-snug text-fg">
                 <Link href="/theme" className={CARD_LINK}>
                   Theme
@@ -115,13 +119,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </SiteSection>
+      </DocsSection>
 
-      <SiteSection lines>
+      <DocsSection lines>
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <div className="flex flex-col gap-10">
-            <SectionHeading title="Apply the brand" accent="to any project." description="One command brings an existing app onto the brand, in any stack, and keeps the agents that work on it there." />
-            <ol className="grid gap-6">
+            <DocsHeading title="Apply the brand" accent="to any project." description="One command brings an existing app onto the brand, in any stack, and keeps the agents that work on it there." />
+            <ol className="grid gap-8">
               {STEPS.map((s, i) => (
                 <li key={s.title} className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
                   <span className="row-span-2 flex size-7 items-center justify-center rounded-pill bg-blue-10 font-mono text-caption text-fg-brand">{i + 1}</span>
@@ -139,7 +143,7 @@ export default function Home() {
             <CodeBlock code={APPLY_OUTPUT} className="overflow-x-auto" />
           </CodeWindow>
         </div>
-      </SiteSection>
+      </DocsSection>
 
       <Cta
         title="Start building"
