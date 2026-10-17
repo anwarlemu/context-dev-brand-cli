@@ -36,7 +36,13 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
 
         <div className="mt-8 grid gap-6">
           {Object.entries(demos).map(([name, Demo]) => (
-            <Preview key={name} example={Demo} surface={name === "Site" ? "site" : "product"} label={name === "Site" ? "On the site" : "In the product"} />
+            <Preview
+              key={name}
+              example={Demo}
+              block={name === "Block"}
+              surface={name === "Site" || (name === "Block" && item.surface === "site") ? "site" : "product"}
+              label={name === "Block" ? "Full page" : name === "Site" ? "On the site" : "In the product"}
+            />
           ))}
         </div>
 

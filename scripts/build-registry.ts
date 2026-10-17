@@ -104,6 +104,9 @@ const themeItem = {
 		'@keyframes ds-content-in': { from: { opacity: '0', transform: 'translateY(4px)' } },
 		'@keyframes ds-sheet-right': { from: { opacity: '0', transform: 'translateX(12px)' } },
 		'@keyframes ds-sheet-left': { from: { opacity: '0', transform: 'translateX(-12px)' } },
+		'@keyframes ds-chart-line': { from: { 'stroke-dashoffset': '1' } },
+		'@keyframes ds-chart-tip': { from: { opacity: '0', transform: 'scale(0.4)' } },
+		'@keyframes ds-chart-bar': { from: { transform: 'scaleY(0.04)' } },
 		'@keyframes ds-shimmer': { from: { transform: 'translateX(-100%)' }, to: { transform: 'translateX(100%)' } },
 	},
 };

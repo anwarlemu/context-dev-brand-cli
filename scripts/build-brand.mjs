@@ -57,6 +57,10 @@ const motion = `@theme {
 	--animate-content-in: ds-content-in var(--ds-duration-base) var(--ds-easing-out);
 	--animate-shimmer: ds-shimmer 1.6s var(--ds-easing-in-out) infinite;
 	--animate-spin-slow: spin 0.8s linear infinite;
+	--animate-chart-line: ds-chart-line 900ms var(--ds-easing-out) backwards;
+	--animate-chart-area: ds-fade-in 600ms var(--ds-easing-out) 250ms backwards;
+	--animate-chart-tip: ds-chart-tip 360ms var(--ds-easing-out) backwards;
+	--animate-chart-bar: ds-chart-bar 420ms var(--ds-easing-out) backwards;
 
 	@keyframes ds-pop-in {
 		from {
@@ -89,6 +93,25 @@ const motion = `@theme {
 		from {
 			opacity: 0;
 			transform: translateX(-12px);
+		}
+	}
+
+	@keyframes ds-chart-line {
+		from {
+			stroke-dashoffset: 1;
+		}
+	}
+
+	@keyframes ds-chart-tip {
+		from {
+			opacity: 0;
+			transform: scale(0.4);
+		}
+	}
+
+	@keyframes ds-chart-bar {
+		from {
+			transform: scaleY(0.04);
 		}
 	}
 

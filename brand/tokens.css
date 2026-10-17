@@ -92,6 +92,8 @@
 	--ds-text-body: 1rem;
 	--ds-text-body-sm: 0.875rem;
 	--ds-text-caption: 0.75rem;
+	/* Chart axis labels (the product's charts). */
+	--ds-text-axis: 11px;
 	--ds-leading-tight: 1.1;
 	--ds-leading-heading: 1.2;
 	--ds-leading-snug: 1.3;
