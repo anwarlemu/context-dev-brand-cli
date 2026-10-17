@@ -18,7 +18,8 @@ const BLOCK = /\/\* ds:elements:start[\s\S]*?\/\* ds:elements:end \*\/\n?/;
 const SURE: Record<string, RegExp> = {
 	'button-primary': /(^|[-_])(btn|button)[-_]?(primary|solid|filled|dark)\b|^(btn|button)[-_]?cta$|(^|[-_])cta[-_]?(btn|button)$/,
 	'button-secondary': /(^|[-_])(btn|button)[-_]?(secondary|ghost|outline|outlined|light|tertiary)\b/,
-	card: /(^|[-_])(card|tile)$/,
+	// Not "tile": logo and icon tiles in a strip are not cards, and a card ring around each would overlap.
+	card: /(^|[-_])card$/,
 	'card-ring': /(^|[-_])(card[-_]?ring|frame)$/,
 	chip: /(^|[-_])(chip|badge|pill|tag)$/,
 	eyebrow: /(^|[-_])(eyebrow|kicker|overline)$/,

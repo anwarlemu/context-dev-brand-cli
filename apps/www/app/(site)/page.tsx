@@ -52,7 +52,7 @@ export default function Home() {
       <Hero
         size="large"
         staggerIn
-        style={{ "--hero-offset": "calc(var(--spacing) * 29.5)" } as CSSProperties}
+        style={{ "--hero-offset": "calc(var(--spacing) * 18)" } as CSSProperties}
         background={<HeroDotField fine streams fillFootOnPhones className="text-fg-brand" />}
         title={`${registryName} design system`}
         accent={[registryName]}

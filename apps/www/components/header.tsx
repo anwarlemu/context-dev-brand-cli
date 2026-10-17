@@ -14,7 +14,6 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
       logo={<LogoMark />}
       wordmark={<Wordmark name={name} />}
       logoLabel={`${name} UI home`}
-      announcement={{ text: <>Every component, block and visual from the {name} site and product, ready to add.</>, href: "/components" }}
       currentPath={pathname}
       items={[
         {
