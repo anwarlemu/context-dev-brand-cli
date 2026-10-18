@@ -9,9 +9,10 @@ const browser = await chromium.launch({ executablePath: process.env.PLAYWRIGHT_C
 const results = [], errors = [];
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 page.setDefaultTimeout(8000);
+page.setDefaultNavigationTimeout(30000);
 page.on('pageerror', error => errors.push({ url: page.url(), message: error.message }));
 const check = async (name, run) => {
-  if (process.env.LIBRARY_CHECK && !name.includes(process.env.LIBRARY_CHECK)) return;
+  if (process.env.LIBRARY_CHECK && !new RegExp(process.env.LIBRARY_CHECK).test(name)) return;
   try { await run(); results.push({ name, passed: true }); console.log(`PASS ${name}`); }
   catch (error) { results.push({ name, passed: false, error: error.message }); console.log(`FAIL ${name}: ${error.message.slice(0, 250)}`); await page.screenshot({ path: `${out}/failure-${results.length}.png` }); }
 };
@@ -23,9 +24,12 @@ const open = async (name, example = 'Product') => {
   await frame.locator('[data-preview-ready]').waitFor();
   return frame;
 };
-// Playwright's iframe locator coordinates omit the iframe's CSS scale. Use the rendered frame bounds for real pointer clicks.
+// Playwright's iframe coordinates omit CSS scale. Scroll natively, wait for layout, then use rendered bounds for real pointer clicks.
 const click = async locator => {
-  await locator.scrollIntoViewIfNeeded();
+  await locator.evaluate(el => {
+    el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+    return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve(null))));
+  });
   const handle = await locator.elementHandle();
   const frame = await handle.ownerFrame();
   if (frame === page.mainFrame()) { await locator.click(); return; }
