@@ -30,6 +30,8 @@ const click = async locator => {
     el.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
     return new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve(null))));
   });
+  // The shell scroll and preview resize finish within the dashboard's 300ms motion window.
+  await page.waitForTimeout(300);
   const handle = await locator.elementHandle();
   const frame = await handle.ownerFrame();
   if (frame === page.mainFrame()) { await locator.click(); return; }
