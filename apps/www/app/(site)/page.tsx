@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import { CodeBlock, CodeWindow, TerminalWindow, WindowCopyButton } from "@/components/site/code-window";
-import { Cta, CtaButton } from "@/components/site/cta";
 import { Hero, HeroMedia, HeroMediaCard } from "@/components/site/hero";
 import { Button } from "@/components/ui/button";
 import { HeroDotField } from "@/components/visuals/hero-dot-field";
@@ -136,21 +135,6 @@ export default function Home() {
           </CodeWindow>
         </div>
       </DocsSection>
-
-      <Cta
-        title="Build a page"
-        description="Choose a component or page block, then follow its usage notes."
-        primaryAction={
-          <CtaButton asChild>
-            <Link href="/components">Browse components</Link>
-          </CtaButton>
-        }
-        secondaryAction={
-          <CtaButton asChild tone="glass">
-            <Link href="/cli">Use the CLI</Link>
-          </CtaButton>
-        }
-      />
     </main>
   );
 }
