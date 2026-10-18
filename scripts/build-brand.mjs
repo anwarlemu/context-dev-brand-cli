@@ -24,7 +24,7 @@ const color = {
 	surface: 'bg-default', subtle: 'bg-subtle', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement',
 	fg: 'text-default', 'fg-secondary': 'text-secondary', 'fg-muted': 'text-muted', 'fg-subtle': 'text-subtle', 'fg-faint': 'text-faint', 'fg-nav': 'text-nav', 'fg-inverse': 'text-inverse', 'fg-brand': 'text-brand', 'on-brand': 'text-on-brand',
 	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',
-	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-control': 'wash-control', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
+	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-announcement': 'wash-announcement', 'wash-control': 'wash-control', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
 	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-18T09:13:05.307Z",
+  "checkedAt": "2026-10-18T09:29:39.689Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
@@ -864,7 +864,7 @@
       "library": [
         {
           "path": "components/site/announcement-bar.tsx",
-          "sha256": "06ca0a2511bdb73b63e01d9977ef9c7a274b329c8bca2fe7658a3d638d3f343e"
+          "sha256": "3c0c4c7510436dbb0ffc177ed0143024f5a9afcc669eacb182f1d2bf3e1cd719"
         }
       ],
       "sources": [
@@ -876,31 +876,6 @@
           "retained": false,
           "exports": [
             "Header"
-          ]
-        }
-      ],
-      "unresolvedHistoricalPaths": [],
-      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
-    },
-    {
-      "name": "announcement-dot-strip",
-      "surface": "site",
-      "kind": "website",
-      "library": [
-        {
-          "path": "components/visuals/announcement-dot-strip.tsx",
-          "sha256": "8084b032fd09b5883a16fdf9ffffa048b8ab372a0e9117d7653c3f7f3612a79a"
-        }
-      ],
-      "sources": [
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
-          "path": "src/components/sections/shared/announcement-dot-strip.tsx",
-          "sha256": "137be341d565ef0a23e5ffedad5631911bd4db6d14dc30d4ff58f09f79897395",
-          "retained": false,
-          "exports": [
-            "AnnouncementDotStrip"
           ]
         }
       ],

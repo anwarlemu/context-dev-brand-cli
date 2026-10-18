@@ -9,6 +9,13 @@ const config: NextConfig = {
   outputFileTracingRoot: root,
   // The repo has its own agent instructions; dev must not write AGENTS.md and CLAUDE.md here.
   agentRules: false,
+  async redirects() {
+    return [
+      { source: "/components/announcement-dot-strip", destination: "/components/announcement-bar", permanent: true },
+      { source: "/components/announcement-dot-strip.md", destination: "/components/announcement-bar.md", permanent: true },
+      { source: "/preview/announcement-dot-strip/Site", destination: "/preview/announcement-bar/Site", permanent: true },
+    ];
+  },
   // Sandboxed examples have an opaque origin. Only public font and image assets need cross-origin reads.
   async headers() {
     return ["/_next/static/media/:path*", "/dot-shader/:path*"].map((source) => ({

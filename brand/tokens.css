@@ -60,6 +60,7 @@
 	--ds-color-ring-tint: rgb(37 99 235 / 0.1);
 	--ds-color-ring-on-brand: rgb(255 255 255 / 0.3);
 	--ds-color-wash-hover: rgb(0 0 0 / 0.04);
+	--ds-color-wash-announcement: rgb(0 0 0 / 0.035);
 	--ds-color-wash-control: rgb(0 0 0 / 0.05);
 	--ds-color-wash-pill: rgb(0 0 0 / 0.06);
 	--ds-color-wash-selected: rgb(0 0 0 / 0.07);

@@ -189,9 +189,9 @@
 		"announcement": {
 			"name": "Announcement bar",
 			"match": { "words": ["announcement", "promo", "topbar", "notice", "ribbon", "alert-bar"] },
-			"css": { "display": "flex", "align-items": "center", "justify-content": "center", "min-height": "calc(var(--ds-space-10) + var(--ds-space-1))", "padding-inline": "var(--ds-space-4)", "border-bottom": "1px solid var(--ds-color-border-hairline)", "background-color": "var(--ds-color-bg-announcement)", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-body-sm)" },
-			"tailwind": "flex items-center justify-center min-h-11 px-4 border-b border-hairline bg-announcement text-fg text-body-sm",
-			"rules": ["A quiet strip above the header, centered text, no color fill."],
+			"css": { "display": "flex", "align-items": "center", "justify-content": "center", "min-height": "calc(var(--ds-space-10) + var(--ds-space-1-5))", "padding-inline": "var(--ds-space-4)", "border-bottom": "1px solid var(--ds-color-wash-pill)", "background-color": "var(--ds-color-bg-announcement)", "color": "var(--ds-color-text-default)", "font-size": "var(--ds-text-body-sm)" },
+			"tailwind": "flex items-center justify-center min-h-11.5 px-4 border-b border-wash-pill bg-announcement text-fg text-caption leading-snug sm:text-body-sm",
+			"rules": ["A plain light-gray strip above the header, centered text, no dots or decorative patterns."],
 			"source": "src/components/sections/shared/header.tsx:432"
 		},
 		"chip": {

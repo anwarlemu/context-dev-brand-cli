@@ -28,7 +28,7 @@ function AnnouncementBar({
       {href && (
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-wash-hover opacity-0 transition-opacity duration-150 ease-out group-hover/announcement:opacity-100 motion-reduce:transition-none"
+          className="pointer-events-none absolute inset-0 -z-10 bg-wash-announcement opacity-0 transition-opacity duration-150 ease-out group-hover/announcement:opacity-100 motion-reduce:transition-none"
         />
       )}
       <span data-slot="announcement-bar-text" className="min-w-0">
