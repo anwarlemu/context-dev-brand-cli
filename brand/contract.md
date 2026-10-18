@@ -1,11 +1,11 @@
 # {{brand}} design system
-- This project uses the {{brand}} design system for how it looks. It never changes what the project says or does.
-- To apply it or continue applying it: run `{{cli}}` and do the task it prints; run it again after each task until it says the project is done.
-- Restyle only: keep every word, link, image and element, their order and each screen's purpose. Never add sections, components or copy.
-- Keep each element's size, place and effects relative to the rest. An arrangement wider than the column is scaled as a whole, never by enlarging one part or moving pieces over others.
-- The only markup you may add: `data-ds-dots` on the home hero and `<span class="ds-accent">` around the closing words of a heading (never the whole heading).
-- Style each element the way `{{cli}} look <file>` shows (exact CSS and Tailwind, with states).
-- Style values are brand tokens, `var(--ds-*)`; `{{cli}} tokens <term>` finds one. No raw colors, sizes, fonts or timings.
-- Writes that add off-brand values are blocked, and you cannot finish while `{{cli}} check` has errors.
-- A screen is done when `{{cli}} review <url>` scores it 7 or more. Fix its punch list, do not argue with it.
+- Read `.ds/guide.md` before designing or editing UI; it works with any agent and explains setup, surfaces, components, and verification.
+- For new pages or requested features: find components with `{{cli}} list <query> --json`, read `{{cli}} inspect <name> --json`, then install with `{{cli}} add <name>` and connect real application state.
+- For restyling an existing interface: run `{{cli}} --dry-run --json` first, then `{{cli}}` and follow its tasks. Preserve copy, links, elements, order, and purpose unless the user explicitly requests changes.
+- Choose site or product before styling. Product pages use a 15px root and `.ds-product`; site pages use 16px on phones and 90% from 43.2rem up. Read the component's usage and API rather than guessing props.
+- Keep existing content and structure outside the requested change. Do not add decorative sections or replace application behavior as a side effect of styling.
+- Use the installed components, their `cn` helper, and brand tokens (`var(--ds-*)`); `{{cli}} tokens <term>` finds a value and `{{cli}} look <file>` shows element rules.
+- Validate controlled inputs, every visible action, keyboard focus, overlays, scrolling, and loading/error/empty states. Example data and callbacks are not backend implementations.
+- Run `{{cli}} check --changed --json`, the app's own checks, and browser tests at desktop and phone sizes. A clean token check alone does not prove the interface works.
+- Review the rendered page against its stated reference with `{{cli}} review <url> --any --json`; follow the review packet if no separate reviewer is available and disclose self-scoring.
 - A `ds-override: <reason>` comment only counts after the user approves it with `{{cli}} approve`.

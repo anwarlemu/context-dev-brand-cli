@@ -2,16 +2,20 @@
 // its imports, adds the theme (from brand/tokens.css via build/), writes one JSON file per item (with its files'
 // content) and an index into apps/www/public/r, type-checks every item and runs the value check over them.
 // usage: tsx scripts/build-registry.ts
+import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse } from 'yaml';
 import { z } from 'zod';
+import { declarations, exampleFiles, markdown } from './registry-docs.js';
 
 const ROOT = new URL('..', import.meta.url).pathname;
 const REG = join(ROOT, 'registry');
-const brand = JSON.parse(readFileSync(join(ROOT, 'brand', 'brand.json'), 'utf8')) as { name: string; registryUrl: string };
+const brand = JSON.parse(readFileSync(join(ROOT, 'brand', 'brand.json'), 'utf8')) as { name: string; bin: string; source: string; registryUrl: string };
 const problems: string[] = [];
+const audit = JSON.parse(readFileSync(join(ROOT, 'brand/reference-audit.json'), 'utf8')) as { items: { name: string; sources: unknown[]; scope: string; library: { path: string; sha256: string }[] }[] };
+
 
 const TYPES = ['ui', 'site', 'product', 'visual', 'block', 'hook', 'lib'] as const;
 const docsSchema = z.object({
@@ -88,6 +92,9 @@ const tokensJson = JSON.parse(readFileSync(join(ROOT, 'build', 'tokens.json'), '
 const themeCss = readFileSync(join(ROOT, 'build', 'theme.css'), 'utf8');
 const productOnly = Object.fromEntries(Object.entries(tokensJson.product).filter(([k, v]) => tokensJson.site[k] !== v));
 const themeItem = {
+	schemaVersion: 1,
+	usage: 'Use init --surface site or init --surface product to install the correct stylesheet and fonts. React components need Tailwind 4. Product pages use a 15px root; site pages use 16px on phones and 90% from 43.2rem up.',
+	documentation: `${brand.registryUrl}/theme`,
 	name: 'theme',
 	type: 'theme',
 	title: `${brand.name} theme`,
@@ -103,24 +110,49 @@ const themeItem = {
 	tokens: { site: tokensJson.site, product: productOnly, dark: tokensJson.dark },
 };
 
+const revision = spawnSync('git', ['rev-parse', 'HEAD'], { cwd: ROOT, encoding: 'utf8' }).stdout?.trim() || 'unknown';
+const api = declarations(ROOT);
 const index: Record<string, unknown>[] = [];
 const items = [
 	themeItem,
 	...docs.map((d) => {
 		const { internal, npm } = importsOf(d.name, d.paths);
+		const coverage = audit.items.find(item => item.name === d.name);
+		if (!coverage) problems.push(`${d.name}: missing reference coverage`);
+		for (const path of d.paths) {
+			const hash = createHash('sha256').update(readFileSync(join(REG, path), 'utf8')).digest('hex');
+			if (coverage?.library.find(file => file.path === path)?.sha256 !== hash) problems.push(`${d.name}: source changed since reference audit; run npm run audit:references`);
+		}
+
 		for (const dep of d.dependencies) if (!docs.some((x) => x.name === dep)) problems.push(`${d.name}: unknown dependency ${dep}`);
 		const deps = [...new Set([...internal, ...d.dependencies])];
 		const example = join(REG, 'examples', `${d.name}.tsx`);
 		const exampleText = existsSync(example) ? readFileSync(example, 'utf8') : '';
+		const helperFiles = exampleFiles(REG, d.name);
+		const exampleDeps = importsOf(d.name, helperFiles.map(file => file.path));
 		if (d.type !== 'lib' && d.type !== 'hook' && !exampleText) problems.push(`${d.name}: no registry/examples/${d.name}.tsx`);
 		index.push({ ...d, dependencies: deps, npm, examples: [...exampleText.matchAll(/export function (\w+)/g)].map((m) => m[1]) });
 		return {
+			schemaVersion: 1,
+			revision,
 			name: d.name,
 			type: d.type,
 			title: d.title,
 			description: d.description,
 			surface: d.surface,
 			kinds: d.kinds,
+			usage: d.use_for,
+			avoid: d.never,
+			notes: d.body,
+			documentation: `${brand.registryUrl}/components/${d.name}.md`,
+			install: `npx -y ${brand.source} add ${d.name}`,
+			requirements: { react: '>=19.2', tailwindcss: '>=4', alias: '@/* resolves to the source directory' },
+			reference: { source: d.source, audit: `${brand.registryUrl}/reference-audit.json`, scope: coverage?.scope, sources: coverage?.sources },
+			api: d.paths.filter(p => api.has(p)).map(p => ({ path: p.replace(/\.tsx?$/, '.d.ts'), content: api.get(p)! })),
+			examples: [...exampleText.matchAll(/export function (\w+)/g)].map(m => ({ name: m[1], url: `${brand.registryUrl}/preview/${d.name}/${m[1]}` })),
+			exampleFiles: helperFiles,
+			exampleRequires: exampleDeps.internal,
+			examplePackages: exampleDeps.npm,
 			requires: [...(d.type === 'lib' ? [] : ['theme']), ...deps],
 			packages: npm,
 			files: d.paths.map((p) => ({ path: p, content: readFileSync(join(REG, p), 'utf8') })),
@@ -139,8 +171,19 @@ mkdirSync(out, { recursive: true });
 for (const item of items) writeFileSync(join(out, `${item.name}.json`), `${JSON.stringify(item, null, 2)}\n`);
 writeFileSync(
 	join(out, 'index.json'),
-	`${JSON.stringify({ name: brand.name, homepage: brand.registryUrl, items: items.map(({ name, type, title, description, surface, kinds, requires }) => ({ name, type, title, description, surface, kinds, requires })) }, null, 2)}\n`,
+	`${JSON.stringify({ schemaVersion: 1, revision, name: brand.name, homepage: brand.registryUrl, guide: `${brand.registryUrl}/agents.md`, items: items.map(item => { const { files, ...entry } = item; const { api: _api, exampleFiles: _examples, tokens: _tokens, ...compact } = entry as typeof entry & { api?: unknown; exampleFiles?: unknown; tokens?: unknown }; return compact; }) }, null, 2)}\n`,
 );
+const publicDir = join(ROOT, 'apps', 'www', 'public');
+const guide = readFileSync(join(ROOT, 'brand', 'agent-guide.md'), 'utf8').replaceAll('{{brand}}', brand.name).replaceAll('{{bin}}', brand.bin).replaceAll('{{cli}}', `npx ${brand.bin}`).replaceAll('{{source}}', brand.source).replaceAll('{{url}}', brand.registryUrl);
+writeFileSync(join(publicDir, 'agents.md'), guide);
+writeFileSync(join(publicDir, 'reference-audit.json'), JSON.stringify(audit, null, 2) + '\n');
+const componentDocs = join(publicDir, 'components');
+rmSync(componentDocs, { recursive: true, force: true });
+mkdirSync(componentDocs, { recursive: true });
+const pages = items.filter(item => item.type !== 'theme').map(item => ({ name: item.name, text: markdown(item, brand.registryUrl) }));
+for (const page of pages) writeFileSync(join(componentDocs, `${page.name}.md`), page.text);
+writeFileSync(join(publicDir, 'llms.txt'), `# ${brand.name} design system\n\nComponents and instructions for agents building ${brand.name} pages. The design-system CLI is ${brand.bin}; it is separate from the web-data API CLI.\n\n- [Start here](${brand.registryUrl}/agents.md): setup, surfaces, composition, and validation.\n- [Catalog JSON](${brand.registryUrl}/r/index.json): search by description, usage, type, and surface.\n- [Complete catalog](${brand.registryUrl}/llms-full.txt): component API and examples in Markdown.\n- [Tokens](${brand.registryUrl}/r/theme.json)\n- [Reference coverage](${brand.registryUrl}/reference-audit.json)\n\n## Components\n\n${items.filter(item => item.type !== 'theme').map(item => `- [${item.name}](${brand.registryUrl}/components/${item.name}.md): ${item.description}`).join('\n')}\n`);
+writeFileSync(join(publicDir, 'llms-full.txt'), `${guide}\n\n${pages.map(p => p.text).join('\n\n')}\n`);
 mkdirSync(join(ROOT, 'apps', 'www', 'lib'), { recursive: true });
 writeFileSync(join(ROOT, 'apps', 'www', 'lib', 'registry-index.json'), `${JSON.stringify({ name: brand.name, url: brand.registryUrl, items: index }, null, 2)}\n`);
 // The docs render every example from source: one static import per item that has one.

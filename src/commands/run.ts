@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, symlinkSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { formatFinding, ownFindings, recordAutoPass, runCheck } from '../check/engine.js';
 import { convertProject } from '../convert/project.js';
@@ -36,7 +36,7 @@ export function run(opts: RunOptions) {
  * code is one bundle), so it is copied into node_modules and recorded in package.json, with no install of the whole
  * project's dependencies; a teammate's next install fetches the same source.
  */
-function selfInstall(root: string, opts: RunOptions) {
+export function selfInstall(root: string, opts: RunOptions) {
 	if (opts.install === false || opts.dryRun || !/[\\/]_npx[\\/]/.test(PKG_ROOT)) return;
 	const b = { ...brand(), source: process.env.DS_SOURCE ?? brand().source };
 	const pkgPath = join(root, 'package.json');
@@ -52,6 +52,9 @@ function selfInstall(root: string, opts: RunOptions) {
 	const pw = join(dirname(PKG_ROOT), 'playwright-core');
 	if (existsSync(pw) && !existsSync(join(root, 'node_modules', 'playwright-core'))) cpSync(pw, join(root, 'node_modules', 'playwright-core'), { recursive: true });
 	const local = join(target, 'bin.js');
+	const binDir = join(root, 'node_modules', '.bin');
+	mkdirSync(binDir, { recursive: true });
+	if (!existsSync(join(binDir, b.bin))) symlinkSync(join('..', b.bin, 'bin.js'), join(binDir, b.bin));
 	process.stderr.write(`Added ${b.name}'s design system to this project (node_modules/${b.bin}, recorded in package.json).\n`);
 	const handOff = spawnSync(process.execPath, [local, ...process.argv.slice(2), '--no-install'], { cwd: process.cwd(), stdio: 'inherit' });
 	process.exit(handOff.status ?? 1);

@@ -1,13 +1,16 @@
 import { InstallCommand } from "@/components/site/code-window";
 import { Code } from "@www/components/code";
 import { DocsHeading, DocsSection, DocsSectionRule } from "@www/components/docs-section";
-import { APPLY_COMMAND } from "@www/lib/registry";
+import { APPLY_COMMAND, SETUP_COMMAND } from "@www/lib/registry";
 
 export const metadata = { title: "CLI" };
 
 const COMMANDS = [
+  ["guide", "Read the complete agent instructions. This command does not change files."],
+  ["init --surface site|product", "Install theme, fonts, and agent instructions without converting component styles."],
+  ["inspect <items...>", "Read actual APIs, usage, examples, and source. Use --json for structured output."],
   ["add <items...>", "Add component source files, tokens, and required packages to a React and Tailwind project."],
-  ["list", "List the available components, blocks, and visuals."],
+  ["list [query]", "Search all items. Filter with --surface and --type; use --json for structured output."],
   ["look <file>", "Find component and styling guidance for the elements in a file."],
   ["check [files...]", "Find styles that do not use design tokens. Use --changed to check the current changes."],
   ["review [url]", "Capture desktop and phone screenshots and compare them with the reference pages. Use --any for a page outside the current task list."],
@@ -30,7 +33,7 @@ export default function CliPage() {
           title="CLI"
           description="Use the CLI to add Context.dev components, find tokens, and check new pages and interfaces."
         >
-          <InstallCommand command="npx context-ds list" />
+          <InstallCommand command={`${APPLY_COMMAND} guide`} />
         </DocsHeading>
       </DocsSection>
 
@@ -49,9 +52,9 @@ export default function CliPage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Set up the project" description="Run this from the project root. It installs the design tokens, fonts, agent instructions, and checks for Claude Code, Codex, and Cursor. It also adapts matching components and existing styles to the design system." />
+        <DocsHeading title="Set up the project" description="Run this from the project root. Use product for dashboards or site for marketing pages. Init installs design tokens, fonts, and agent instructions, preserving existing component styles. Read .ds/guide.md before implementing." />
         <DocsSectionRule />
-        <InstallCommand command={APPLY_COMMAND} />
+        <InstallCommand command={SETUP_COMMAND} />
       </DocsSection>
 
       <DocsSection lines>
@@ -68,16 +71,22 @@ export default function CliPage() {
       </DocsSection>
 
       <DocsSection lines>
-        <DocsHeading title="Add components" description="For React and Tailwind 4 projects. The CLI uses the project's src directory and @ alias when present." />
+        <DocsHeading title="Add components" description="Requires React 19.2+ and Tailwind 4. Configure @/* in TypeScript and the bundler. Use --dry-run --json to preview changes; existing files are kept unless --overwrite is passed." />
         <DocsSectionRule />
-        <Code title="terminal" code={`npx context-ds add button card tabs tooltip\nnpx context-ds add app-shell overview-page`} />
+        <Code title="terminal" code={`npx context-ds inspect button card tabs tooltip --json\nnpx context-ds add button card tabs tooltip --surface product --json\nnpx context-ds add app-shell overview-page`} />
+      </DocsSection>
+
+      <DocsSection lines>
+        <DocsHeading title="Restyle an existing interface" description="The default command converts existing styles and adapts matching components. Use this only for a restyling task. Preview changes first, then run without --dry-run and follow the returned tasks." />
+        <DocsSectionRule />
+        <Code title="terminal" code={`${APPLY_COMMAND} --surface site --dry-run --json`} />
       </DocsSection>
 
       <DocsSection lines>
         <DocsHeading title="Agent instructions" description="Include this in the task when asking an agent to build or change a page." />
         <DocsSectionRule />
         <Code title="task instructions" code={`Use the Context.dev design system at https://context-ds.vercel.app.
-Read the relevant component usage notes and source before implementing.
+Read https://context-ds.vercel.app/agents.md first.\nUse guide, list --json, and inspect --json before installing components.
 Use product components for dashboard interfaces and site components for marketing pages.
 Reuse existing components and design tokens. Do not invent new visual styles.
 Run npx context-ds check --changed.

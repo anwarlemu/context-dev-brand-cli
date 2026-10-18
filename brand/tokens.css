@@ -111,7 +111,10 @@
 	--ds-font-mono: var(--font-ibm-plex-mono, "IBM Plex Mono"), ui-monospace, monospace;
 	--ds-font-weight-regular: 400;
 	--ds-font-weight-medium: 500;
-	--ds-text-hero: clamp(2.5rem, 1.75rem + 2.5vw, 3.875rem);
+	--ds-text-hero: 2.5rem;
+	--ds-text-hero-tablet: 48px;
+	--ds-text-hero-desktop: 56px;
+	--ds-leading-hero: 1.08;
 	--ds-text-h1: 3.5rem;
 	--ds-text-h2: 2.75rem;
 	--ds-text-h3: 2rem;
@@ -141,10 +144,10 @@
 	--ds-leading-snippet: 1.6;
 	--ds-leading-code-card: 1.65;
 	--ds-leading-badge: 14px;
-	--ds-leading-type-body: 1.625;
+	--ds-leading-type-body: 1.3;
 	--ds-leading-type-display: 1.625;
-	--ds-leading-type-h3: 1.625;
-	--ds-leading-type-h4: 1.625;
+	--ds-leading-type-h3: 1.2;
+	--ds-leading-type-h4: 1.2;
 	--ds-tracking-tight: -0.035em;
 	--ds-tracking-normal: 0;
 	--ds-tracking-label: 0.08em;

@@ -35,6 +35,8 @@ export function Footer({ name, repo, site }: { name: string; repo: string; site:
           links: [
             { label: "Tokens", href: "/theme" },
             { label: "CLI", href: "/cli" },
+            { label: "Agent instructions", href: "/agents" },
+            { label: "llms.txt", href: "/llms.txt" },
             { label: "Registry index", href: "/r/index.json" },
           ],
         },

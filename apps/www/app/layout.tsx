@@ -12,6 +12,7 @@ const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], var
 export const metadata: Metadata = {
   metadataBase: new URL(registryUrl),
   title: { default: `${registryName} design system`, template: `%s | ${registryName} design system` },
+  alternates: { types: { "text/plain": "/llms.txt", "text/markdown": "/agents.md", "application/json": "/r/index.json" } },
   description: `Components, tokens, and CLI instructions for the ${registryName} team and coding agents building pages and interfaces.`,
 };
 

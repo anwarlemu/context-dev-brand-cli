@@ -59,6 +59,7 @@ export function Header({ name, repo, counts }: { name: string; repo: string; cou
         },
         { label: "Tokens", href: "/theme" },
         { label: "CLI", href: "/cli" },
+        { label: "Agents", href: "/agents" },
         { label: "GitHub", href: repo, external: true },
       ]}
       secondaryAction={{ label: "Use the CLI", href: "/cli" }}

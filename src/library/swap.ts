@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { brand } from '../lib/brand.js';
+import { brand, tokens } from '../lib/brand.js';
 import { styledFiles, type Project } from '../project/detect.js';
 import type { Surface } from '../project/surface.js';
 import { adaptable, adaptComponent, libraryClasses, lookOf, restyleRoot } from './adapt.js';
@@ -47,6 +47,8 @@ function retarget(content: string, a: Aliases) {
 		.replaceAll('"@/components/', `"${a.components}/`);
 }
 
+const FONT_SIZES = [...new Set([...Object.keys(tokens().site), ...Object.keys(tokens().product)].filter(key => key.startsWith('--ds-text-')).map(key => key.slice(10)))];
+
 const BRAND_MERGE = `import { extendTailwindMerge } from "tailwind-merge";
 
 // The brand's scales have their own names (text-body-sm, rounded-card, shadow-floating): taught here so a merge keeps
@@ -58,14 +60,22 @@ const twMerge = extendTailwindMerge({
       shadow: ["card", "raised", "floating", "key", "tooltip", "ring-hover"],
     },
     classGroups: {
-      "font-size": [{ text: ["hero", "h1", "h2", "h3", "h4", "h5", "body-lg", "body", "body-sm", "caption", "axis"] }],
+      "font-size": [{ text: ${JSON.stringify(FONT_SIZES)} }],
     },
   },
 });`;
 
 /** Teaches the app's cn the brand's scales, keeping every other export of its utils file. */
 export function patchUtils(text: string): string | undefined {
-	if (/extendTailwindMerge/.test(text) && /body-sm/.test(text)) return undefined;
+	if (/extendTailwindMerge/.test(text) && /body-sm/.test(text)) {
+		const group = /(["']font-size["']\s*:\s*\[\s*\{\s*text\s*:\s*\[)([^\]]*)(\])/;
+		const match = text.match(group);
+		if (!match) return undefined;
+		const existing = [...match[2].matchAll(/["']([^"']+)["']/g)].map(m => m[1]);
+		const missing = FONT_SIZES.filter(size => !existing.includes(size));
+		if (!missing.length) return undefined;
+		return text.replace(group, (_all, start, values, end) => `${start}${values.trimEnd().replace(/,$/, '')}, ${missing.map(size => JSON.stringify(size)).join(', ')}${end}`);
+	}
 	const importRe = /import\s*\{\s*twMerge\s*\}\s*from\s*["']tailwind-merge["'];?/;
 	if (importRe.test(text)) return text.replace(importRe, BRAND_MERGE);
 	// A utils file that re-exports cn from a package gets the brand-aware cn instead, the same clsx plus tailwind-merge.

@@ -34,7 +34,7 @@ const plans: Plan[] = [
     monthly: 0,
     credits: 1_000,
     overage: "No overage",
-    concurrency: "1 concurrent request",
+    concurrency: "2 concurrent requests",
     features: [
       { text: "Scrape 1,000 pages", hint: SCRAPE_HINT },
       { text: "JS rendering & proxies included", hint: INCLUDED_HINT },

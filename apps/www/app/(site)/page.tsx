@@ -10,12 +10,12 @@ import { ComponentsShowcase } from "@www/components/components-showcase";
 import { DocsHeading, DocsSection } from "@www/components/docs-section";
 import { Thumb } from "@www/components/thumb";
 import { examples } from "@www/lib/examples.generated";
-import { APPLY_COMMAND, GROUPS, counts, registryName } from "@www/lib/registry";
+import { SETUP_COMMAND, GROUPS, counts, registryName } from "@www/lib/registry";
 
-const AGENT_COMMANDS = `npx context-ds list
-npx context-ds look src/app/new-page/page.tsx
-npx context-ds add page card button
-npx context-ds check --changed
+const AGENT_COMMANDS = `npx context-ds list --surface product --json
+npx context-ds inspect page card button --json
+npx context-ds add page card button --surface product --json
+npx context-ds check --changed --json
 npx context-ds review http://localhost:3000/new-page --any`;
 
 // Keep the blue ring around the example, with a quiet caption below it. The title link covers the whole card.
@@ -53,15 +53,15 @@ export default function Home() {
               <Link href="/components">Browse components</Link>
             </Button>
             <Button asChild variant="pill-outline">
-              <Link href="/cli">Use the CLI</Link>
+              <Link href="/agents">Agent instructions</Link>
             </Button>
           </>
         }
         media={
           <HeroMedia size="small">
             <HeroMediaCard cardClassName="bg-code">
-              <TerminalWindow label="Install" actions={<WindowCopyButton value={APPLY_COMMAND} label="Copy install command" />} className="rounded-none">
-                <CodeBlock code={`# Run from your project root\n${APPLY_COMMAND}`} className="[overflow-wrap:anywhere] [&>code>span]:whitespace-pre-wrap" />
+              <TerminalWindow label="Install" actions={<WindowCopyButton value={SETUP_COMMAND} label="Copy install command" />} className="rounded-none">
+                <CodeBlock code={`# From your project root; use site for marketing\n${SETUP_COMMAND}`} className="[overflow-wrap:anywhere] [&>code>span]:whitespace-pre-wrap" />
               </TerminalWindow>
             </HeroMediaCard>
           </HeroMedia>
@@ -126,8 +126,8 @@ export default function Home() {
                 </li>
               ))}
             </ol>
-            <Link href="/cli" className="group/link flex w-fit items-center gap-1.5 rounded-sm text-body-sm font-medium text-fg-brand outline-none focus-visible:outline-2 focus-visible:outline-focus-ring">
-              CLI setup and commands
+            <Link href="/agents" className="group/link flex w-fit items-center gap-1.5 rounded-sm text-body-sm font-medium text-fg-brand outline-none focus-visible:outline-2 focus-visible:outline-focus-ring">
+              Read the agent instructions
               <ArrowRight aria-hidden className="size-3.5" />
             </Link>
           </div>

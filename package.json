@@ -26,7 +26,9 @@
     "ci": "npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run",
     "prepare": "node -e \"process.exit(process.env.VERCEL ? 0 : 1)\" || (tsc -p tsconfig.json && node scripts/build-brand.mjs)",
     "release": "sh scripts/release.sh",
-    "registry": "tsx scripts/build-registry.ts"
+    "registry": "tsx scripts/build-registry.ts",
+    "audit:references": "tsx scripts/audit-references.ts",
+    "check:references": "node scripts/check-references.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",

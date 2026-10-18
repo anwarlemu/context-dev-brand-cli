@@ -3,7 +3,10 @@ import { join } from 'node:path';
 import { Command } from 'commander';
 import { review, snapshot } from './commands/review.js';
 import { run } from './commands/run.js';
-import { add, list } from './commands/add.js';
+import { add } from './commands/add.js';
+import { list, inspect } from './commands/discover.js';
+import { guide } from './commands/guide.js';
+import { init } from './commands/init.js';
 import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
 import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
 import { readHookInput } from './hooks/payload.js';
@@ -12,10 +15,12 @@ import { findProjectRoot } from './lib/paths.js';
 
 const program = new Command();
 const b = brand();
+program.exitOverride();
+program.configureOutput({ writeErr: text => { if (!process.argv.includes('--json')) process.stderr.write(text); } });
 
 program
 	.name(b.bin)
-	.description(`Make any website or app look like ${b.name}, and keep coding agents on it. Run it with no command and do what it says.`)
+	.description(`${b.name} design system. Start with guide; init sets up a project; no command restyles an existing project.`)
 	.option('--surface <surface>', 'site (pages people read) or product (an app people work in); default: read from the project')
 	.option('--theme <theme>', 'product only: light (default) or dark')
 	.option('--redo', 'convert the project again (after an update, or after reverting)')
@@ -24,12 +29,15 @@ program
 	.option('--json', 'JSON output')
 	.action((opts) => run(opts));
 
-program.command('add <items...>').description('Copy library components into a React + Tailwind project, with what they need').option('--overwrite', 'replace files that already exist').option('--dry-run', 'show what would be written').action((items, opts) => add(items, opts));
-program.command('list').description('Every component, block and visual in the library').option('--json', 'JSON output').action((opts) => list(opts));
-program.command('review [url]').description('Screenshot a page at desktop and phone width and score it against the brand; a task is done when it passes').option('--threshold <n>', 'minimum score').option('--submit <dir>', 'record the scorecard an agent wrote itself (when no separate reviewer is available)').option('--all', 'review every task screen that is not done yet, at once (pass the app\'s address)').option('--any', 'review a page that is not a task').option('--json', 'JSON output').action((url, opts) => review(url, opts));
-program.command('look [target]').description('The brand styling (CSS, Tailwind, states) for every element in a file, or for one element kind').option('--surface <surface>', 'site or product').option('--json', 'JSON output').action((target, opts) => look(target, opts));
-program.command('check [files...]').description('Check that every style value is a brand token (used by hooks, pre-commit and CI)').option('--fix', 'replace exact matches with their token').option('--changed', 'only files changed in git').option('--json', 'JSON output').action((files, opts) => check(files ?? [], opts));
-program.command('tokens [term]').description('Find a brand token by name or value').option('--json', 'JSON output').action((term, opts) => tokensCommand(term, opts));
+program.command('guide').description('Read the agent workflow without changing files').option('--json', 'JSON output').action((_opts, cmd) => guide(cmd.optsWithGlobals()));
+program.command('init').description('Install theme, fonts and agent instructions without converting existing styles').option('--surface <surface>', 'site or product (required)').option('--dry-run', 'show changes without writing').option('--json', 'JSON output').action((_opts, cmd) => init(cmd.optsWithGlobals()));
+program.command('inspect <items...>').description('Read usage, actual APIs, examples, dependencies and source without installing').option('--json', 'complete metadata and source as JSON').action((items, _opts, cmd) => inspect(items, cmd.optsWithGlobals()));
+program.command('add <items...>').description('Copy components and dependencies into a React 19.2+ and Tailwind 4 project').option('--overwrite', 'replace files that already exist').option('--surface <surface>', 'site or product').option('--dry-run', 'show what would be written').option('--json', 'JSON output').action((items, _opts, cmd) => add(items, cmd.optsWithGlobals()));
+program.command('list [query]').description('Search all library items without installing').option('--surface <surface>', 'site or product, including shared items').option('--type <type>', 'ui, product, site, block, visual, hook, lib, or theme').option('--json', 'JSON output').action((query, _opts, cmd) => list(query, cmd.optsWithGlobals()));
+program.command('review [url]').description('Screenshot a page at desktop and phone width and score it against the brand; a task is done when it passes').option('--threshold <n>', 'minimum score').option('--submit <dir>', 'record the scorecard an agent wrote itself (when no separate reviewer is available)').option('--all', 'review every task screen that is not done yet, at once (pass the app\'s address)').option('--any', 'review a page that is not a task').option('--json', 'JSON output').action((url, _opts, cmd) => review(url, cmd.optsWithGlobals()));
+program.command('look [target]').description('The brand styling (CSS, Tailwind, states) for every element in a file, or for one element kind').option('--surface <surface>', 'site or product').option('--json', 'JSON output').action((target, _opts, cmd) => look(target, cmd.optsWithGlobals()));
+program.command('check [files...]').description('Check that every style value is a brand token (used by hooks, pre-commit and CI)').option('--fix', 'replace exact matches with their token').option('--changed', 'only files changed in git').option('--json', 'JSON output').action((files, _opts, cmd) => check(files ?? [], cmd.optsWithGlobals()));
+program.command('tokens [term]').description('Find a brand token by name or value').option('--json', 'JSON output').action((term, _opts, cmd) => tokensCommand(term, cmd.optsWithGlobals()));
 program.command('approve').description('Approve ds-override comments (a person, in a terminal)').option('--all', 'approve every pending override').action((opts) => approve(opts));
 program.command('snapshot [url]').description('Save how each main screen looks before hand edits (run once, with the app running); reviews compare against it').action((url) => snapshot(url));
 program.command('skip <screen>').description('Leave a screen as it is when it cannot pass without changing words or elements; the person sees the reason').requiredOption('--reason <text>', 'why').action((id, opts) => skip(id, opts.reason));
@@ -64,8 +72,10 @@ program
 		process.exit(result.exitCode ?? 0);
 	});
 
-program.parseAsync().catch((error: Error) => {
-	process.stderr.write(`${error.message}\n`);
+program.parseAsync().catch((error: Error & { exitCode?: number }) => {
+	if (error.exitCode === 0) return;
+	if (process.argv.includes('--json')) process.stdout.write(`${JSON.stringify({ error: { message: error.message } })}\n`);
+	else process.stderr.write(`${error.message}\n`);
 	process.exit(1);
 });
 void cli;

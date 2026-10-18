@@ -19,26 +19,45 @@ export type RegistryItem = {
 	requires?: string[];
 	packages?: string[];
 	files?: RegistryFile[];
+	schemaVersion?: number;
+	revision?: string;
+	usage?: string;
+	avoid?: string[];
+	notes?: string;
+	documentation?: string;
+	install?: string;
+	requirements?: { react: string; tailwindcss: string; alias: string };
+	api?: RegistryFile[];
+	examples?: { name: string; url: string }[];
+	exampleFiles?: RegistryFile[];
+	exampleRequires?: string[];
+	examplePackages?: string[];
+	reference?: { source?: string; url?: string; audit?: string };
 };
-export type IndexEntry = Omit<RegistryItem, 'files' | 'packages'>;
+export type IndexEntry = Omit<RegistryItem, 'files' | 'api' | 'exampleFiles'>;
 
 function sources() {
 	const env = process.env.DS_REGISTRY;
-	const dirs = [env && !/^https?:/.test(env) ? (isAbsolute(env) ? env : join(process.cwd(), env)) : undefined, pkgPath('r'), pkgPath('apps', 'www', 'public', 'r')].filter((d): d is string => !!d && existsSync(d));
+	const dirs = [env && !/^https?:/.test(env) ? (isAbsolute(env) ? env : join(process.cwd(), env)) : undefined, !env ? pkgPath('r') : undefined, !env ? pkgPath('apps', 'www', 'public', 'r') : undefined].filter((d): d is string => !!d && existsSync(d));
 	const url = env && /^https?:/.test(env) ? env.replace(/\/$/, '') : `${(brand() as { registryUrl?: string }).registryUrl ?? ''}/r`;
 	return { dirs, url };
 }
 
 /** The name an item is known by, from a bare name or its URL (https://…/r/button.json). */
-export const itemName = (ref: string) => ref.replace(/^.*\//, '').replace(/\.json$/, '');
+export function itemName(ref: string) {
+	const name = ref.replace(/^.*\//, '').replace(/\.json$/, '');
+	if (!/^[a-z][a-z0-9-]*$/.test(name)) throw new Error(`Invalid library item name: ${name}`);
+	return name;
+}
 
 export async function loadItem(name: string): Promise<RegistryItem> {
+	if (itemName(name) !== name) throw new Error('Use a library item name.');
 	const { dirs, url } = sources();
 	for (const dir of dirs) {
 		const file = join(dir, `${name}.json`);
 		if (existsSync(file)) return JSON.parse(readFileSync(file, 'utf8'));
 	}
-	const res = await fetch(`${url}/${name}.json`).catch(() => undefined);
+	const res = await fetch(`${url}/${name}.json`, { signal: AbortSignal.timeout(15000) }).catch(() => undefined);
 	if (!res?.ok) throw new Error(`No library item "${name}". \`${'list'}\` shows every item.`);
 	return (await res.json()) as RegistryItem;
 }
@@ -49,7 +68,7 @@ export async function loadIndex(): Promise<IndexEntry[]> {
 		const file = join(dir, 'index.json');
 		if (existsSync(file)) return JSON.parse(readFileSync(file, 'utf8')).items;
 	}
-	const res = await fetch(`${url}/index.json`).catch(() => undefined);
+	const res = await fetch(`${url}/index.json`, { signal: AbortSignal.timeout(15000) }).catch(() => undefined);
 	if (!res?.ok) throw new Error('The component library could not be reached.');
 	return ((await res.json()) as { items: IndexEntry[] }).items;
 }

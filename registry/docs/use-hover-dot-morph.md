@@ -8,5 +8,5 @@ files: [components/visuals/use-hover-dot-morph.ts]
 kinds: []
 use_for: A dot picture that changes when its card is pointed at (CustomerLogoDots, PagesCover, GlyphMelt). Pass a lazy `load` that returns a player from `createDotMorphPlayer`.
 never: [A hover morph with no link, button or data-hover-morph around it, Playing under reduced motion]
-source: src/components/sections/shared/use-hover-dot-morph.ts; src/components/dashboard-ui/dots/use-hover-dot-morph.ts
+source: website src/components/sections/shared/use-hover-dot-morph.ts; context-dashboard c0ddf7a src/components/dots/use-hover-dot-morph.ts
 ---

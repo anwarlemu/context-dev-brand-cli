@@ -85,7 +85,7 @@ export function findMainStylesheet(root: string): string | undefined {
 			const href = m[0].match(/href=["']([^"']+)["']/)?.[1];
 			if (!href || /^(https?:)?\/\//.test(href)) continue;
 			const rel = href.replace(/^\.?\//, '').split(/[?#]/)[0];
-			if (existsSync(join(root, rel))) linked.set(rel, (linked.get(rel) ?? 0) + (page === 'index.html' ? 2 : 1));
+			if (!isOwnFile(rel) && existsSync(join(root, rel))) linked.set(rel, (linked.get(rel) ?? 0) + (page === 'index.html' ? 2 : 1));
 		}
 	}
 	return [...linked].sort((a, b) => b[1] - a[1])[0]?.[0];

@@ -199,8 +199,8 @@ function Hero({
                       "w-full font-normal whitespace-pre-line text-balance",
                       tone.title,
                       large
-                        ? cn("text-hero leading-tight tracking-tight antialiased", wrapTitle ? titleNeedsMeasure && "max-w-(--ds-layout-text)" : "xl:w-max xl:shrink-0 xl:whitespace-nowrap")
-                        : "text-hero leading-heading tracking-normal sm:text-h1",
+                        ? cn("text-hero leading-tight tracking-tight antialiased sm:text-hero-tablet lg:text-hero-desktop lg:leading-hero", wrapTitle ? titleNeedsMeasure && "max-w-(--ds-layout-text)" : "xl:w-max xl:shrink-0 xl:whitespace-nowrap")
+                        : "text-hero leading-tight tracking-tight antialiased sm:text-hero-tablet lg:text-hero-desktop lg:leading-hero",
                     )}
                   >
                     {typeof title === "string" ? <AccentedTitle title={title} accent={accentList} className={tone.accent} /> : title}

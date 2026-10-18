@@ -1,3 +1,4 @@
+import { agentGuide } from '../commands/guide.js';
 import { chmodSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { brand, cli } from '../lib/brand.js';
@@ -53,6 +54,7 @@ function mergeHooks(existing: any, cmd: string, harness: 'claude-code' | 'codex'
 
 export function installAgents(w: Writer) {
 	const text = contract();
+	w.write('.ds/guide.md', agentGuide());
 	// A CLAUDE.md that only imports AGENTS.md gets the contract through it.
 	const claude = w.read('CLAUDE.md');
 	if (claude === undefined && w.read('AGENTS.md') !== undefined) w.write('CLAUDE.md', '@AGENTS.md\n');

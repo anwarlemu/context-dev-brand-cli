@@ -46,7 +46,7 @@ export function sessionStart(root: string, input: HookInput = {}): HookResult {
 	} catch {}
 	const state = readState(root);
 	const b = brand();
-	if (!state) return { stdout: `${b.name} design system is installed here. To apply it, run \`${cli()}\` and do the task it prints.` };
+	if (!state) return { stdout: `${b.name} design system is installed here. Read .ds/guide.md. For new pages use list, inspect, and add. Run the default command only when the user requests restyling existing UI.` };
 	const screens = mainScreens(state);
 	const done = screens.filter((sc, i) => taskStatus(root, state, sc, i).done).length;
 	return { stdout: [`${b.name} design system is active (${state.surface}): ${done} of ${screens.length} screens done.`, done < screens.length ? `Continue with \`${cli()}\`: it prints the next task.` : 'Keep new work on the brand: style values are brand tokens; `look <file>` shows how each element is styled.', 'Writes with off-brand values are blocked; you cannot finish while the check fails.'].join('\n') };
@@ -57,7 +57,7 @@ const APPLY_BRAND = /\b(apply|applying|restyle|rebrand|re-brand|reskin|re-skin|t
 export function userPromptSubmit(root: string, input: HookInput): HookResult {
 	const prompt = promptOf(input);
 	if (!APPLY_BRAND.test(prompt)) return {};
-	return { stdout: `${cli()}: to apply the brand, run \`${cli()}\` and do the task it prints; run it again after each task until it says the project is done. Styling only: keep every word, element and each screen's purpose.` };
+	return { stdout: `Read .ds/guide.md and follow the requested scope. New pages use list, inspect, and add. For a restyling task, run \`${cli()}\` and do the task it prints; run it again after each task until it says the project is done. Preserve existing words, elements, and purpose unless the user requested changes.` };
 }
 
 export function preToolUse(root: string, input: HookInput): HookResult {

@@ -1,0 +1,687 @@
+{
+  "checkedAt": "2026-10-18T09:10:43.712Z",
+  "reference": "https://www.context.dev/",
+  "method": "Computed styles in Chromium at 1440px and 390px with reduced motion and loaded fonts. Font-size, weight, line height, tracking, colors, borders, and padding; font family names differ under Next font hashing.",
+  "checks": [
+    {
+      "name": "site root",
+      "viewport": 1440,
+      "property": "fontSize",
+      "reference": "14.4px",
+      "library": "14.4px",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 1440,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 1440,
+      "property": "lineHeight",
+      "reference": "21.6px",
+      "library": "21.6px",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 1440,
+      "property": "letterSpacing",
+      "reference": "normal",
+      "library": "normal",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 1440,
+      "property": "color",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 1440,
+      "property": "fontSize",
+      "reference": "56px",
+      "library": "56px",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 1440,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 1440,
+      "property": "lineHeight",
+      "reference": "60.48px",
+      "library": "60.48px",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 1440,
+      "property": "letterSpacing",
+      "reference": "-1.96px",
+      "library": "-1.96px",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 1440,
+      "property": "color",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "fontSize",
+      "reference": "14.4px",
+      "library": "14.4px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "lineHeight",
+      "reference": "18.72px",
+      "library": "18.72px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "color",
+      "reference": "rgb(255, 255, 255)",
+      "library": "rgb(255, 255, 255)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "backgroundColor",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "borderColor",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "borderWidth",
+      "reference": "1px",
+      "library": "1px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "paddingTop",
+      "reference": "10.8px",
+      "library": "10.8px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "paddingRight",
+      "reference": "18px",
+      "library": "18px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "paddingBottom",
+      "reference": "10.8px",
+      "library": "10.8px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 1440,
+      "property": "paddingLeft",
+      "reference": "18px",
+      "library": "18px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "fontSize",
+      "reference": "14.4px",
+      "library": "14.4px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "lineHeight",
+      "reference": "18.72px",
+      "library": "18.72px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "color",
+      "reference": "rgb(37, 99, 235)",
+      "library": "rgb(37, 99, 235)",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "backgroundColor",
+      "reference": "rgb(255, 255, 255)",
+      "library": "rgb(255, 255, 255)",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "borderColor",
+      "reference": "rgb(37, 99, 235)",
+      "library": "rgb(37, 99, 235)",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "borderWidth",
+      "reference": "1px",
+      "library": "1px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "paddingTop",
+      "reference": "10.8px",
+      "library": "10.8px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "paddingRight",
+      "reference": "18px",
+      "library": "18px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "paddingBottom",
+      "reference": "10.8px",
+      "library": "10.8px",
+      "matches": true
+    },
+    {
+      "name": "site outline pill",
+      "viewport": 1440,
+      "property": "paddingLeft",
+      "reference": "18px",
+      "library": "18px",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 390,
+      "property": "fontSize",
+      "reference": "16px",
+      "library": "16px",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 390,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 390,
+      "property": "lineHeight",
+      "reference": "24px",
+      "library": "24px",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 390,
+      "property": "letterSpacing",
+      "reference": "normal",
+      "library": "normal",
+      "matches": true
+    },
+    {
+      "name": "site root",
+      "viewport": 390,
+      "property": "color",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 390,
+      "property": "fontSize",
+      "reference": "40px",
+      "library": "40px",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 390,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 390,
+      "property": "lineHeight",
+      "reference": "44px",
+      "library": "44px",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 390,
+      "property": "letterSpacing",
+      "reference": "-1.4px",
+      "library": "-1.4px",
+      "matches": true
+    },
+    {
+      "name": "hero heading",
+      "viewport": 390,
+      "property": "color",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "fontSize",
+      "reference": "16px",
+      "library": "16px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "fontWeight",
+      "reference": "400",
+      "library": "400",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "lineHeight",
+      "reference": "20.8px",
+      "library": "20.8px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "color",
+      "reference": "rgb(255, 255, 255)",
+      "library": "rgb(255, 255, 255)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "backgroundColor",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "borderColor",
+      "reference": "rgb(0, 0, 0)",
+      "library": "rgb(0, 0, 0)",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "borderWidth",
+      "reference": "1px",
+      "library": "1px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "paddingTop",
+      "reference": "12px",
+      "library": "12px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "paddingRight",
+      "reference": "20px",
+      "library": "20px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "paddingBottom",
+      "reference": "12px",
+      "library": "12px",
+      "matches": true
+    },
+    {
+      "name": "site primary pill",
+      "viewport": 390,
+      "property": "paddingLeft",
+      "reference": "20px",
+      "library": "20px",
+      "matches": true
+    }
+  ],
+  "failed": 0,
+  "pages": [
+    {
+      "url": "https://www.context.dev/mcp",
+      "status": 200,
+      "title": "Context.dev MCP: Web context for your AI tools",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/map-api",
+      "status": 200,
+      "title": "Sitemap Extractor & URL Map API: Find Every Page on a Site",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/blog/introducing-context-highlights",
+      "status": 200,
+      "title": "Introducing Context Highlights",
+      "heading": {
+        "fontSize": "39.6px",
+        "fontWeight": "400",
+        "lineHeight": "47.52px",
+        "letterSpacing": "normal"
+      }
+    },
+    {
+      "url": "https://www.context.dev/web-scraping-api",
+      "status": 200,
+      "title": "Web Scraping API for AI Agents: URL to Markdown, HTML, JSON",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/use-cases/ai-grounding",
+      "status": 200,
+      "title": "AI Grounding API: Ground LLMs and Agents in Live Web Data | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/",
+      "status": 200,
+      "title": "Context.dev: Web Data API for AI Agents (Scrape, Search, Crawl)",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/brand",
+      "status": 200,
+      "title": "Brand & Press | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/monitors-api",
+      "status": 200,
+      "title": "Website Change Monitoring API: Detect Changes, Get Webhooks",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/datasets",
+      "status": 200,
+      "title": "Custom web scraping with a forward-deployed engineer | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/zero-data-retention",
+      "status": 200,
+      "title": "Zero data retention | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/free-tools",
+      "status": 200,
+      "title": "Free SEO & AI Tools: AI-SEO / GEO Checker, Design.md Generator, and More | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/answers-api",
+      "status": 200,
+      "title": "Deep Research API: Structured Answers with Sources | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/glossary",
+      "status": 200,
+      "title": "Web & Brand Glossary - 90+ Terms for Developers | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/compare/the-top-firecrawl-alternative",
+      "status": 200,
+      "title": "Firecrawl Alternative for Web Scraping & Crawling | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/brand-api",
+      "status": 200,
+      "title": "Brand API: Logos, Colors & Company Data from Any Domain | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/cli",
+      "status": 200,
+      "title": "Context.dev CLI: Web context from your terminal",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/pricing",
+      "status": 200,
+      "title": "Web Scraping API Pricing: Plans from $0 | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/integrations",
+      "status": 200,
+      "title": "Context.dev Integrations: Connect your tools",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/blog",
+      "status": 200,
+      "title": "Blog | Context.dev - Web Scraping API for AI Agents",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/search-api",
+      "status": 200,
+      "title": "Web Search API for AI Agents: 10,000 Free Results a Month",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/use-cases/web-crawling",
+      "status": 200,
+      "title": "Web Crawling API: Crawl Any Website to Markdown | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/customers",
+      "status": 200,
+      "title": "Customers | Context.dev",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    },
+    {
+      "url": "https://www.context.dev/batches-api",
+      "status": 200,
+      "title": "Bulk & Batch Web Scraping API: 100,000 URLs per Job",
+      "heading": {
+        "fontSize": "56px",
+        "fontWeight": "400",
+        "lineHeight": "60.48px",
+        "letterSpacing": "-1.96px"
+      }
+    }
+  ]
+}

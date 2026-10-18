@@ -9,7 +9,7 @@ import { Code } from "@www/components/code";
 import { FramePreview } from "@www/components/frame-preview";
 import { Prose } from "@www/components/prose";
 import { examples } from "@www/lib/examples.generated";
-import { type Item, exampleSource, findItem, items, sourceOf } from "@www/lib/registry";
+import { type Item, APPLY_COMMAND, itemMetadata, findItem, items, sourceOf } from "@www/lib/registry";
 
 export function generateStaticParams() {
   return items.map((i) => ({ name: i.name }));
@@ -17,7 +17,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ name: string }> }) {
   const item = findItem((await params).name);
-  return item ? { title: item.title, description: item.description } : {};
+  return item ? { title: item.title, description: item.description, alternates: { canonical: `/components/${item.name}`, types: { "text/markdown": `/components/${item.name}.md`, "application/json": `/r/${item.name}.json` } } } : {};
 }
 
 const SURFACE_LABEL = { site: "Site", product: "Product", both: "Site and product" } as const;
@@ -70,10 +70,12 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   // The main examples first (Block, then Site and Product), then its states (Loading, Empty...) in their own order.
   const MAIN = ["Block", "Site", "Product"];
   const demos = Object.fromEntries(Object.entries(examples[item.name] ?? {}).sort(([a], [b]) => (MAIN.includes(a) ? MAIN.indexOf(a) : 9) - (MAIN.includes(b) ? MAIN.indexOf(b) : 9)));
+  const data = itemMetadata(item.name);
   const requires = item.dependencies.filter((d) => d !== "utils");
   const sections = [
     ...(Object.keys(demos).length ? [{ id: "preview", label: "Preview" }] : []),
     { id: "usage", label: "Usage" },
+    { id: "api", label: "API" },
     ...(item.examples.length ? [{ id: "example", label: "Example" }] : []),
     { id: "source", label: "Source" },
   ];
@@ -84,7 +86,9 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
             <Badge variant="tag">{TYPE_LABEL[item.type]}</Badge>
             {SURFACE_LABEL[item.surface] !== TYPE_LABEL[item.type] && <Badge variant="tag">{SURFACE_LABEL[item.surface]}</Badge>}
           </div>
-          <PageHeader title={item.title} description={<Prose text={item.description} />} action={<InstallCommand command={`npx context-ds add ${item.name}`} />} className="items-start text-left" />
+          <PageHeader title={item.title} description={<Prose text={item.description} />} action={<InstallCommand command={`${APPLY_COMMAND} add ${item.name}`} />} className="items-start text-left" />
+
+          <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-body-sm text-fg-brand"><a href={`/components/${item.name}.md`} className="underline underline-offset-4">Markdown</a><a href={`/r/${item.name}.json`} className="underline underline-offset-4">JSON and source</a><Link href="/agents" className="underline underline-offset-4">Agent instructions</Link></p>
 
           <div id="preview" className="mt-10 grid gap-8">
             {Object.keys(demos).map((name) => (
@@ -118,7 +122,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
               Dependencies:{" "}
               {requires.map((d, i) => (
                 <span key={d}>
-                  <Link href={`/components/${d}`} className="rounded-sm text-fg-brand outline-none hover:underline focus-visible:outline-2 focus-visible:outline-focus-ring">
+                  <Link href={findItem(d) ? `/components/${d}` : `/components/${d}.md`} className="rounded-sm text-fg-brand outline-none hover:underline focus-visible:outline-2 focus-visible:outline-focus-ring">
                     {d}
                   </Link>
                   {i < requires.length - 1 || item.npm.length ? ", " : ""}
@@ -133,10 +137,16 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
             </p>
           )}
 
+          {item.body && <div className="mt-6 whitespace-pre-line text-body-sm text-fg-muted"><Prose text={item.body} /></div>}
+          <H2 id="api">API</H2>
+          <p className="mb-4 text-body-sm text-fg-muted">Generated from the component source. Read these exports and props before composing the component.</p>
+          {data.api.map(file => <details key={file.path} className="mb-4 rounded-card border border-line-subtle p-4"><summary className="cursor-pointer text-body-sm text-fg">{file.path}</summary><div className="mt-4"><Code title={file.path} code={file.content} /></div></details>)}
+
           {item.examples.length > 0 && (
             <>
               <H2 id="example">Example</H2>
-              <Code title={`examples/${item.name}.tsx`} code={exampleSource(item.name)} />
+              <p className="mb-4 text-body-sm text-fg-muted">Examples use local demo state. Connect your application data, routes, and callbacks. Relative helper files are included.</p>
+              <div className="grid gap-5">{data.exampleFiles.map(file => <Code key={file.path} title={file.path} code={file.content} />)}</div>
             </>
           )}
 

@@ -4,3 +4,8 @@ public/r/
 lib/registry-index.json
 lib/examples.generated.ts
 tsconfig.tsbuildinfo
+public/agents.md
+public/llms.txt
+public/llms-full.txt
+public/components/
+public/reference-audit.json
