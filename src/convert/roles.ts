@@ -1,4 +1,4 @@
-import { type RGBA, hsl, isStrong } from './color.js';
+import { type RGBA, contrast, hsl, isStrong } from './color.js';
 import type { Family, Palette } from './palette.js';
 
 // A color becomes the brand token for the role it plays on the project: measured against the project's own page and
@@ -55,7 +55,10 @@ export function colorToken(rgba: RGBA, family: Family, palette: Palette, series?
 
 /** Text on a strong color (a blue button, a green badge) is the brand's text on color; on an opposite panel, inverse. */
 export function onColor(rgba: RGBA, family: Family, background?: RGBA, palette?: Palette): ColorToken | undefined {
-	if (family !== 'text' || !background || isStrong(rgba)) return undefined;
+	if (family !== 'text' || !background) return undefined;
+	// Pale colored text on a dark panel is still readable foreground, not an accent to turn blue. Keep saturated
+	// links and status colors; only treat a light tint with enough original contrast as text on the panel.
+	if (isStrong(rgba) && (hsl(rgba).l < 0.7 || contrast(rgba, background) < 4.5)) return undefined;
 	if (isStrong(background)) return { name: 'text-on-brand', alpha: rgba[3] };
 	if (!palette || background[3] < 0.9) return undefined;
 	const at = (c: RGBA) => (hsl(c).l - palette.bg) / (palette.fg - palette.bg || 1);

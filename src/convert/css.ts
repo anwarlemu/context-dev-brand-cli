@@ -1,6 +1,6 @@
 import { nearest, scales } from '../lib/brand.js';
-import { COLOR_IN_VALUE, hsl, parseColor } from './color.js';
-import { type Palette, familyOf, themed } from './palette.js';
+import { COLOR_IN_VALUE, type RGBA, hsl, parseColor } from './color.js';
+import { type Palette, familyOf, resolveColor, themed } from './palette.js';
 import { cssColor, mapColor, onColor } from './roles.js';
 import { walkCss } from './walk.js';
 
@@ -65,12 +65,43 @@ const isWide = (value: string) => {
 
 export function convertCss(css: string, palette: Palette, stats: Stats) {
 	palette.series ??= new Map();
-	return walkCss(css, (decls, ctx) => (ctx.fontFace ? decls : convertDecls(decls, themed(palette, ctx.mode), stats, ctx.selector)));
+	// A descendant's text sits on its ancestor's panel even when the declarations live in separate rules. Only
+	// infer simple, unambiguous selectors; differing responsive backgrounds and complex selectors need no guess.
+	const backgrounds = new Map<string, Map<string, RGBA | undefined>>();
+	walkCss(css, (decls, ctx) => {
+		const own = declaredBackground(decls, palette);
+		if (!own) return decls;
+		const mode = ctx.mode ?? palette.mode;
+		const rules = backgrounds.get(mode) ?? new Map<string, RGBA | undefined>();
+		for (const selector of ctx.selector.split(',').map((s) => s.trim().replace(/\s+/g, ' '))) {
+			if (!/^[\w.#-]+(?:\s+(?:>\s*)?[\w.#-]+)*$/.test(selector) || /^(html|body)$/.test(selector)) continue;
+			const color = rules.has(selector) && JSON.stringify(rules.get(selector)) !== JSON.stringify(own.color) ? undefined : own.color;
+			rules.set(selector, color);
+		}
+		backgrounds.set(mode, rules);
+		return decls;
+	});
+	return walkCss(css, (decls, ctx) => {
+		if (ctx.fontFace) return decls;
+		const rules = backgrounds.get(ctx.mode ?? palette.mode);
+		const inherited = ctx.selector.split(',').map((s) => {
+			const selector = s.trim().replace(/\s+/g, ' ');
+			const matches = [...(rules ?? [])].filter(([parent]) => selector === parent || (selector.startsWith(`${parent} `) && !/^[+~]/.test(selector.slice(parent.length).trim()))).sort(([a], [b]) => b.length - a.length);
+			return matches[0]?.[1];
+		});
+		const background = inherited.every((color) => JSON.stringify(color) === JSON.stringify(inherited[0])) ? inherited[0] : undefined;
+		return convertDecls(decls, themed(palette, ctx.mode), stats, ctx.selector, background);
+	});
 }
 
-function convertDecls(css: string, palette: Palette, stats: Stats, selector: string) {
-	const bgValue = css.match(/(?:^|[;{\s])background(?:-color)?\s*:\s*([^;}]+)/)?.[1];
-	const background = bgValue?.match(COLOR_IN_VALUE)?.map((c) => parseColor(c)).find(Boolean);
+function declaredBackground(css: string, palette: Palette): { color?: RGBA } | undefined {
+	const value = [...css.matchAll(/(?:^|[;{\s])background(?:-color)?\s*:\s*([^;}]+)/g)].at(-1)?.[1]?.replace(/\s*!important\b/gi, '').trim();
+	return value === undefined ? undefined : { color: resolveColor(value, palette.vars ?? new Map()) };
+}
+
+function convertDecls(css: string, palette: Palette, stats: Stats, selector: string, inheritedBackground?: RGBA) {
+	const own = declaredBackground(css, palette);
+	const background = own ? own.color : inheritedBackground;
 	const decl = palette.lines ? /(^|[{;\s])(--[\w-]+|[a-z-]+)(\s*:\s*)([^;{}\n]+?)(\s*)(?=;|\}|$)/gm : /(^|[{;\s])(--[\w-]+|[a-z-]+)(\s*:\s*)([^;{}]+?)(\s*)(?=;|\}|$)/g;
 	return css.replace(decl, (all, lead: string, prop: string, sep: string, value: string, trail: string) => {
 		if (prop.startsWith('--ds-') || /^(src|content|grid-template|grid-area|font-feature|unicode-range|size-adjust|ascent|descent|line-gap)/.test(prop) || (/url\(/.test(value) && !/gradient/.test(value))) return all;
@@ -113,6 +144,9 @@ function convertDecls(css: string, palette: Palette, stats: Stats, selector: str
 			// Headings are never bold in the brand: size carries them. Elsewhere a heavier weight becomes medium.
 			const heading = /(^|[\s,>+~])h[1-6]\b|title|heading|headline|display|hero/i.test(selector);
 			next = !heading && (/^(bold|bolder|semibold)$/.test(next) || Number(next) >= 500) ? 'var(--ds-font-weight-medium)' : 'var(--ds-font-weight-regular)';
+		} else if (p === 'text-transform' && /^uppercase(?:\s*!important)?$/i.test(next.trim())) {
+			stats.type++;
+			next = next.replace(/uppercase/i, 'none');
 		} else if (p === 'letter-spacing' && !/^(0|normal|0em|0px|inherit)$/.test(next.trim())) {
 			stats.type++;
 			// Large headings keep the brand's tight tracking; everything else is set normally.

@@ -37,6 +37,10 @@ const TW_FAMILY: [RegExp, Family][] = [
 const WIDE_TW = /(?<![\w-])((?:[\w-]+:)*)max-w-(5xl|6xl|7xl|screen-lg|screen-xl|screen-2xl|\[(\d{3,4})px\])(?![\w-])/g;
 
 export function convertClasses(value: string, palette: Palette, stats: Stats, theme: boolean) {
+	value = value.replace(/(^|\s)((?:[\w-]+:)*)(!?)uppercase(?=\s|$)/g, (_all, space: string, variants: string, important: string) => {
+		stats.type++;
+		return `${space}${variants}${important}normal-case`;
+	});
 	if (palette.column)
 		value = value.replace(WIDE_TW, (all, variants: string, size: string, px?: string) => {
 			if (px && Number(px) < 900) return all;
@@ -59,7 +63,7 @@ export function convertClasses(value: string, palette: Palette, stats: Stats, th
 	});
 }
 
-const CSS_PROPS_CAMEL = /^(color|background|backgroundColor|backgroundImage|border|border(Top|Right|Bottom|Left|Inline|Block)?(Color)?|outline(Color)?|fill|stroke|boxShadow|textShadow|caretColor|accentColor|textDecorationColor|fontFamily|fontWeight|letterSpacing|borderRadius|border(Top|Bottom)(Left|Right)Radius|transition|animation)$/;
+const CSS_PROPS_CAMEL = /^(color|background|backgroundColor|backgroundImage|border|border(Top|Right|Bottom|Left|Inline|Block)?(Color)?|outline(Color)?|fill|stroke|boxShadow|textShadow|caretColor|accentColor|textDecorationColor|textTransform|fontFamily|fontWeight|letterSpacing|borderRadius|border(Top|Bottom)(Left|Right)Radius|transition|animation)$/;
 const kebab = (s: string) => s.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
 /** A brand color's literal value in a theme, written as hex (or ARGB for native code). */
@@ -97,7 +101,11 @@ export function convertScript(text: string, palette: Palette, stats: Stats, opts
 			return `${key}${sep}'var(${nearest(scales().space, Number(n))})'`;
 		}),
 	);
-	if (opts.tailwind) next = next.replace(/(["'`])((?:(?!\1)[^\n\\])*)\1/g, (all, q: string, body: string) => (/(?:^|\s|:)(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|placeholder|caret|accent)-/.test(body) ? `${q}${convertClasses(body, palette, stats, opts.tailwind === 'theme')}${q}` : all));
+	if (opts.tailwind) {
+		next = next.replace(/(["'`])((?:(?!\1)[^\n\\])*)\1/g, (all, q: string, body: string) => (/(?:^|\s|:)(?:bg|text|border|ring|fill|stroke|from|via|to|divide|outline|decoration|placeholder|caret|accent)-/.test(body) ? `${q}${convertClasses(body, palette, stats, opts.tailwind === 'theme')}${q}` : all));
+		// A standalone "uppercase" string may be copy or data. Only convert it where it is a class attribute.
+		next = next.replace(/(\bclass(?:Name)?\s*=\s*)(["'])([^"'\n]*)\2/g, (_all, head: string, quote: string, classes: string) => `${head}${quote}${convertClasses(classes, palette, stats, opts.tailwind === 'theme')}${quote}`);
+	}
 	// A 3D or drawn scene's colors (terrain, materials, shaders, particles) are what it shows, not its styling; only
 	// the plain white or black it draws for a dark page flips with the page.
 	if (SCENE.test(text)) return flipNeutrals(next, palette, opts.theme ?? 'site');

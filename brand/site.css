@@ -109,13 +109,13 @@ body::after {
 	content: "";
 	position: absolute;
 	top: calc(-1 * var(--ds-space-1) - 0.5px);
-	left: calc(50% - var(--ds-frame-column) / 2 - var(--ds-space-1));
+	left: 0;
 	z-index: 1;
-	width: calc(var(--ds-frame-column) + var(--ds-space-2));
+	width: 100%;
 	height: var(--ds-space-2);
 	background:
-		radial-gradient(circle closest-side, var(--ds-color-border-node) 92%, transparent) left center / var(--ds-space-2) var(--ds-space-2) no-repeat,
-		radial-gradient(circle closest-side, var(--ds-color-border-node) 92%, transparent) right center / var(--ds-space-2) var(--ds-space-2) no-repeat;
+		radial-gradient(circle closest-side, var(--ds-color-border-node) 92%, transparent) calc(50% - var(--ds-frame-column) / 2) center / var(--ds-space-2) var(--ds-space-2) no-repeat,
+		radial-gradient(circle closest-side, var(--ds-color-border-node) 92%, transparent) calc(50% + var(--ds-frame-column) / 2) center / var(--ds-space-2) var(--ds-space-2) no-repeat;
 	pointer-events: none;
 }
 

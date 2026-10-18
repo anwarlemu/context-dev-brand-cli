@@ -42,6 +42,19 @@ const SKIN = /^(color|background(-color|-image|-clip)?|border(-[a-z]+)*|outline(
 const CONTROL_KINDS = /(button|chip|input|action|announcement)/;
 const CONTROL = /^(padding(-[a-z]+)*|gap|white-space)$/;
 
+// A class can name a control's wrapper. Keep control styles on the actual control without changing its markup or
+// increasing selector specificity. In particular, label.field must not receive a second input border.
+function controlSelector(selector: string, kind: string): string | undefined {
+	const input = kind === 'input';
+	if (!input && !kind.startsWith('button-')) return selector;
+	const last = selector.match(/([^\s>+~]+)$/);
+	if (!last) return undefined;
+	const tag = last[0].match(/^[a-z][\w-]*/i)?.[0]?.toLowerCase();
+	if (tag) return (input ? ['input', 'textarea', 'select'] : ['button', 'a', 'input']).includes(tag) ? selector : undefined;
+	const controls = input ? 'input, textarea, select, [role="textbox"], [role="combobox"]' : 'button, a, input[type="button"], input[type="submit"], input[type="reset"], [role="button"]';
+	return `${selector.slice(0, last.index)}:where(${controls})${last[0]}`;
+}
+
 type Def = { css: Record<string, string>; states?: Record<string, Record<string, string>> };
 
 function skin(kind: string, decls: Record<string, string>, state = false) {
@@ -59,8 +72,13 @@ export function elementLayer(rel: string, text: string, surface: Surface): { blo
 	for (const hit of elementsIn(rel, text.replace(BLOCK, ''), surface)) {
 		const sel = hit.selector;
 		// Bare tags (button, a) are left to the base layer: one selector would restyle every one of them.
-		if (!sel || !SURE[hit.kind] || /[&%@:]/.test(sel) || !lastClasses(sel).some((c) => SURE[hit.kind].test(c))) continue;
-		if (!bySelector.has(sel)) bySelector.set(sel, hit.kind);
+		if (!sel || !SURE[hit.kind] || /[&%@:]/.test(sel)) continue;
+		// The generic base class supplies a default. A scoped layout rule such as .pricing-card .button must not
+		// get a more specific primary skin that overrides .button-secondary on the same control.
+		const genericButton = hit.kind === 'button-primary' && /^(?:(?:a|button|input))?\.(?:btn|button)$/.test(sel);
+		if (!genericButton && !lastClasses(sel).some((c) => SURE[hit.kind].test(c))) continue;
+		const target = controlSelector(sel, hit.kind);
+		if (target && !bySelector.has(target)) bySelector.set(target, hit.kind);
 	}
 	const byKind = new Map<string, string[]>();
 	for (const [sel, kind] of bySelector) byKind.set(kind, [...(byKind.get(kind) ?? []), sel]);
