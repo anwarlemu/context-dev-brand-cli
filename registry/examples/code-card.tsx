@@ -1,8 +1,12 @@
+"use client";
+
+import { useCopy } from "@/components/ui/copy-button";
 import { Bot, Sparkles } from "lucide-react";
 
 import { CodeCard, CodeCardAction } from "@/components/product/code-card";
 
 export function Product() {
+  const { copy, hasCopied } = useCopy();
   return (
     <CodeCard
       className="w-full max-w-xl"
@@ -17,10 +21,10 @@ export function Product() {
       footer={
         <>
           <span className="hidden @md:inline">Open in</span>
-          <CodeCardAction label="Open in Claude">
+          <CodeCardAction label="Open in Claude" onClick={() => window.open("https://claude.ai/new", "_blank", "noopener,noreferrer")}>
             <Sparkles strokeWidth={1.5} />
           </CodeCardAction>
-          <CodeCardAction label="Copy for your agent">
+          <CodeCardAction label={hasCopied ? "Copied" : "Copy for your agent"} onClick={() => copy("Use the Context.dev API to scrape https://acme.com and return markdown.")}>
             <Bot strokeWidth={1.5} />
           </CodeCardAction>
         </>

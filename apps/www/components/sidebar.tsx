@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ArrowLeft, Blocks, Boxes, ChevronRight, Code, Component, Globe, LayoutGrid, Palette, Sparkles, Terminal, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 import { AppSidebar, SidebarGroup, SidebarLink, SidebarSearchButton } from "@/components/product/app-sidebar";
 import { AppTopBar } from "@/components/product/app-top-bar";
@@ -13,7 +13,6 @@ import { Surface } from "@/lib/surface";
 import { LogoMark } from "@www/components/logo";
 
 type Group = { id: string; label: string; type: string; items: { name: string; title: string }[] };
-const ICONS: Record<string, LucideIcon> = { ui: Component, product: Boxes, site: Globe, block: Blocks, visual: Sparkles };
 
 function LibrarySearch({ groups, open, onOpenChange, onNavigate }: { groups: Group[]; open: boolean; onOpenChange: (open: boolean) => void; onNavigate: (href: string) => void }) {
   return (
@@ -22,12 +21,10 @@ function LibrarySearch({ groups, open, onOpenChange, onNavigate }: { groups: Gro
       <CommandList>
         <CommandEmpty>Nothing matches.</CommandEmpty>
         {groups.map((group) => {
-          const Icon = ICONS[group.type];
           return (
             <CommandGroup key={group.id} heading={group.label}>
               {group.items.map((item) => (
                 <CommandItem key={item.name} value={`${item.title} ${item.name}`} onSelect={() => onNavigate(`/components/${item.name}`)}>
-                  <Icon strokeWidth={1.75} />
                   {item.title}
                 </CommandItem>
               ))}
@@ -115,21 +112,21 @@ export function LibraryShell({ groups, name, repo, children }: { groups: Group[]
         }
         footer={
           <>
-            <SidebarLink asChild icon={Palette}><Link href="/theme">Tokens</Link></SidebarLink>
-            <SidebarLink asChild icon={Terminal}><Link href="/cli">Use the CLI</Link></SidebarLink>
-            <SidebarLink href={repo} icon={Code} target="_blank" rel="noreferrer">GitHub</SidebarLink>
+            <SidebarLink asChild><Link href="/theme">Tokens</Link></SidebarLink>
+            <SidebarLink asChild><Link href="/cli">Use the CLI</Link></SidebarLink>
+            <SidebarLink href={repo} target="_blank" rel="noreferrer">GitHub</SidebarLink>
           </>
         }
       >
         <SidebarGroup>
-          <SidebarLink asChild icon={group ? ArrowLeft : LayoutGrid} active={active === "/components"} onClick={() => setPending("/components")}>
+          <SidebarLink asChild active={active === "/components"} onClick={() => setPending("/components")}>
             <Link href="/components">{group ? "Back" : "Library"}</Link>
           </SidebarLink>
         </SidebarGroup>
         {group ? (
           <SidebarGroup label={group.label}>
             {group.items.map((item) => (
-              <SidebarLink key={item.name} asChild icon={ICONS[group.type]} active={active === `/components/${item.name}`} onClick={() => setPending(`/components/${item.name}`)}>
+              <SidebarLink key={item.name} asChild active={active === `/components/${item.name}`} onClick={() => setPending(`/components/${item.name}`)}>
                 <Link href={`/components/${item.name}`} title={item.title}>{item.title}</Link>
               </SidebarLink>
             ))}
@@ -137,7 +134,7 @@ export function LibraryShell({ groups, name, repo, children }: { groups: Group[]
         ) : (
           <SidebarGroup label="Browse">
             {groups.map((g) => (
-              <SidebarLink key={g.id} asChild icon={ICONS[g.type]} trailing={<ChevronRight className="size-3.5 text-fg-subtle" strokeWidth={1.75} />}>
+              <SidebarLink key={g.id} asChild trailing={<ChevronRight className="size-3.5 text-fg-subtle" strokeWidth={1.75} />}>
                 <Link href={`/components/${g.items[0].name}`}>{g.label}</Link>
               </SidebarLink>
             ))}

@@ -1,3 +1,4 @@
+import { SiteSection } from "@/components/site/section";
 import { BlogCards, BlogSection, type BlogPost } from "@/components/site/blog-cards";
 
 // Recent posts from the blog; the covers fall back to the ring-and-dots placeholder until the cover art is ported.
@@ -8,7 +9,7 @@ const posts: BlogPost[] = [
     date: "October 8, 2026",
     dateTime: "2026-10-08",
     tag: "Guide",
-    href: "/blog/headless-scraping-at-scale",
+    href: "https://context.dev/blog/headless-scraping-at-scale",
   },
   {
     title: "Browser Fingerprinting Explained: Headless Browsers and Anti-Detect Profiles",
@@ -16,7 +17,7 @@ const posts: BlogPost[] = [
     date: "September 27, 2026",
     dateTime: "2026-09-27",
     tag: "Deep dive",
-    href: "/blog/browser-fingerprinting-explained",
+    href: "https://context.dev/blog/browser-fingerprinting-explained",
   },
   {
     title: "How to Set Up Context.dev MCP in Cursor and Claude",
@@ -24,12 +25,12 @@ const posts: BlogPost[] = [
     date: "September 21, 2026",
     dateTime: "2026-09-21",
     tag: "Deep dive",
-    href: "/blog/how-to-set-up-context-dev-mcp-in-cursor-and-claude",
+    href: "https://context.dev/blog/how-to-set-up-context-dev-mcp-in-cursor-and-claude",
   },
 ];
 
 export function Site() {
-  return <BlogCards posts={posts} className="w-full" />;
+  return <SiteSection><BlogCards posts={posts} className="w-full" /></SiteSection>;
 }
 
 export function Band() {

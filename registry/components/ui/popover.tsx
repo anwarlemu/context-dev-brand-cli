@@ -23,7 +23,8 @@ function PopoverContent({ className, align = "start", sideOffset = 6, ...props }
         data-slot="popover-content"
         align={align}
         sideOffset={sideOffset}
-        className={cn("z-50 w-72 origin-(--radix-popover-content-transform-origin) animate-pop-in rounded-shell bg-surface p-3 text-body-sm text-fg shadow-floating outline-none", className)}
+        collisionPadding={8}
+        className={cn("ds-scrollbar z-50 max-h-(--radix-popover-content-available-height) w-72 max-w-[calc(100vw-1rem)] origin-(--radix-popover-content-transform-origin) animate-pop-in overflow-y-auto rounded-shell bg-surface p-3 text-body-sm text-fg shadow-floating outline-none", className)}
         {...props}
       />
     </PopoverPrimitive.Portal>

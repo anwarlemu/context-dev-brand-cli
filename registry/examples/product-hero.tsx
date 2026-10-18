@@ -13,7 +13,7 @@ export function Site() {
         description="Scrape anything, crawl entire sites, run batches, and monitor changes, plus answers and brand data. Choose the APIs your product needs, with one API key."
         actions={
           <>
-            <ProductAction href="/signup">Get API key</ProductAction>
+            <ProductAction href="https://context.dev/signup">Get API key</ProductAction>
             <ProductAction tone="frost" href="https://docs.context.dev" target="_blank" rel="noopener noreferrer" className="pr-4">
               View documentation
               <ArrowRight aria-hidden="true" />
@@ -43,7 +43,7 @@ export function Site() {
         description="Search the web. Read a page. Get the sources in the chat."
         actions={
           <>
-            <ProductAction tone="light" href="/signup">
+            <ProductAction tone="light" href="https://context.dev/signup">
               Get API key
             </ProductAction>
             <ProductAction tone="clear" href="https://docs.context.dev">

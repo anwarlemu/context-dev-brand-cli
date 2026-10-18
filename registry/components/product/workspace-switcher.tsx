@@ -39,6 +39,7 @@ function WorkspaceSwitcher({
   onCreate?: () => void;
   createLabel?: string;
 }) {
+  const [open, setOpen] = React.useState(false);
   const current = workspaces.find((w) => w.id === value) ?? workspaces[0];
   const fallback = workspaces.find((w) => w.id === defaultId) ?? workspaces[0];
   const others = workspaces.filter((w) => w.id !== fallback?.id);
@@ -63,6 +64,8 @@ function WorkspaceSwitcher({
             aria-label={`Make ${w.name} your default organization`}
             title="Make default"
             onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -80,9 +83,12 @@ function WorkspaceSwitcher({
                 type="button"
                 aria-label="Organization settings"
                 onPointerDown={(e) => e.stopPropagation()}
+                onPointerUp={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
+                  setOpen(false);
                   onOpenSettings(w.id);
                 }}
                 className="grid size-6 place-items-center rounded-tag border border-line bg-surface text-fg-subtle transition-colors duration-150 hover:border-line-strong hover:text-fg"
@@ -97,7 +103,7 @@ function WorkspaceSwitcher({
     );
   };
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <button
           type="button"
@@ -111,7 +117,7 @@ function WorkspaceSwitcher({
           <ChevronsUpDown className="-ml-0.5 size-3.5 shrink-0 text-fg-subtle" strokeWidth={1.5} />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="max-h-[70vh] w-54 max-w-[calc(100vw-2rem)] gap-0 overflow-y-auto">
+      <DropdownMenuContent align="start" className="max-h-[min(70vh,var(--radix-dropdown-menu-content-available-height))] w-54 max-w-[calc(100vw-2rem)] gap-0 overflow-y-auto">
         <DropdownMenuLabel className="text-body-sm">Default organization</DropdownMenuLabel>
         {fallback && row(fallback, false)}
         {others.length > 0 && (

@@ -11,13 +11,13 @@ export function Site() {
         title="Introducing Monitors:"
         accent="watch the web for changes"
         subtitle="Get notified when pricing, content, or pages change, with the diff sent to your webhook."
-        author={<BlogAuthor name="Yahia Bakour" handle="mynameisyahia" image={AVATAR} href="/authors/yahia-bakour" />}
+        author={<BlogAuthor name="Yahia Bakour" handle="mynameisyahia" image={AVATAR} href="https://context.dev/authors/yahia-bakour" />}
         published={{ iso: "2026-09-02", label: "September 2, 2026" }}
         updated={{ iso: "2026-09-20", label: "September 20, 2026" }}
       >
         <BlogProse>
           <p>
-            Monitors watch any page on a schedule and tell you when it changes. Point one at a <a href="/pricing">pricing page</a> and get the change as soon as it lands.
+            Monitors watch any page on a schedule and tell you when it changes. Point one at a <a href="https://context.dev/pricing">pricing page</a> and get the change as soon as it lands.
           </p>
           <h2>What you can watch</h2>
           <ul>
@@ -55,8 +55,8 @@ export function Site() {
       </BlogPost>
       <RelatedPosts
         posts={[
-          { title: "Introducing the Answers API", summary: "Web research, structured answers, one API call.", href: "/blog/introducing-answers-api", date: { iso: "2026-08-12", label: "August 12, 2026" } },
-          { title: "Our free tier is back", summary: "1,000 free API credits every month.", href: "/blog/our-free-tier-is-back", date: { iso: "2026-07-01", label: "July 1, 2026" } },
+          { title: "Introducing the Answers API", summary: "Web research, structured answers, one API call.", href: "https://context.dev/blog/introducing-answers-api", date: { iso: "2026-08-12", label: "August 12, 2026" } },
+          { title: "Our free tier is back", summary: "1,000 free API credits every month.", href: "https://context.dev/blog/our-free-tier-is-back", date: { iso: "2026-07-01", label: "July 1, 2026" } },
         ]}
       />
     </div>

@@ -18,7 +18,7 @@ export function Site() {
         <>
           <HeroAction note="No card required">
             <Button asChild variant="pill">
-              <a href="/signup">Start for free</a>
+              <a href="https://context.dev/signup">Start for free</a>
             </Button>
           </HeroAction>
           <Button asChild variant="pill-outline">
@@ -60,7 +60,7 @@ export function Blue() {
         <>
           <HeroAction note="No card required">
             <Button asChild variant="pill">
-              <a href="/signup">Start for free</a>
+              <a href="https://context.dev/signup">Start for free</a>
             </Button>
           </HeroAction>
           <Button asChild variant="pill-on-brand">

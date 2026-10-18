@@ -15,7 +15,7 @@ export function Surface({ kind, className, children, ...props }: React.Component
   useScrollingScrollbars();
   const [element, setElement] = React.useState<HTMLDivElement | null>(null);
   return (
-    <div ref={setElement} data-surface={kind} className={cn(kind === "product" ? "ds-product text-body leading-normal" : "ds-site", className)} {...props}>
+    <div ref={setElement} data-surface={kind} className={cn("relative", kind === "product" ? "ds-product text-body leading-normal" : "ds-site", className)} {...props}>
       <PortalContainer.Provider value={element}><TooltipProvider>{children}</TooltipProvider></PortalContainer.Provider>
     </div>
   );

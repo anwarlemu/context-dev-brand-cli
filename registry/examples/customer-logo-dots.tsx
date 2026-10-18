@@ -5,7 +5,7 @@ const LOGO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3
 
 export function Site() {
   return (
-    <a href="/customers/northwind" className="group mx-auto flex w-full max-w-sm flex-col overflow-hidden rounded-card bg-brand text-on-brand outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
+    <a href="https://context.dev/customers/northwind" className="group mx-auto flex w-full max-w-sm flex-col overflow-hidden rounded-card bg-brand text-on-brand outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
       <div className="relative h-60">
         <CustomerLogoDots src={LOGO} className="absolute inset-0 size-full" />
       </div>

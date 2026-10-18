@@ -1,7 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export function Product() {
+  const [schema, setSchema] = useState("{ plans: [");
+  let valid = true;
+  try { JSON.parse(schema); } catch { valid = false; }
   return (
     <div className="grid w-full max-w-sm gap-5">
       <div className="grid gap-2">
@@ -10,8 +16,8 @@ export function Product() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="example-schema">Schema</Label>
-        <Textarea id="example-schema" defaultValue="{ plans: [" aria-invalid />
-        <p className="text-caption text-danger">This isn't valid JSON yet.</p>
+        <Textarea id="example-schema" value={schema} onChange={(event) => setSchema(event.target.value)} aria-invalid={!valid} aria-describedby="schema-help" />
+        <p id="schema-help" aria-live="polite" className={`text-caption ${valid ? "text-fg-subtle" : "text-danger"}`}>{valid ? "Valid JSON." : "This isn't valid JSON yet."}</p>
       </div>
     </div>
   );

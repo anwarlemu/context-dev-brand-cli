@@ -36,11 +36,16 @@ const credits = new Intl.NumberFormat("en-US", { maximumFractionDigits: 6 });
 // search and a status filter, then the keys on a card: name with when it was made, the masked key, permissions,
 // status, 30-day usage and a row menu whose disable and delete ask for a hold. With no keys at all the page is a
 // centered empty state instead; a search that matches nothing keeps the table and says so in one row.
-export function TablePage({ keys = SAMPLE_KEYS, plan = "free" }: { keys?: ApiKey[]; plan?: "free" | "paid" }) {
+export function TablePage({ keys: initialKeys = SAMPLE_KEYS, plan = "free" }: { keys?: ApiKey[]; plan?: "free" | "paid" }) {
+  const [keys, setKeys] = React.useState(initialKeys);
+  const [editing, setEditing] = React.useState<ApiKey | null>(null);
+  const [permissions, setPermissions] = React.useState("Full access");
+  const [editedName, setEditedName] = React.useState("");
+  const [upgraded, setUpgraded] = React.useState(false);
   const [query, setQuery] = React.useState("");
   const [status, setStatus] = React.useState("all");
   const [createOpen, setCreateOpen] = React.useState(false);
-  const isPaid = plan === "paid";
+  const isPaid = upgraded || plan === "paid";
   const limit = isPaid ? PAID_KEY_LIMIT : FREE_KEY_LIMIT;
   const isAtLimit = keys.length >= limit;
   const q = query.trim().toLowerCase();
@@ -83,8 +88,8 @@ export function TablePage({ keys = SAMPLE_KEYS, plan = "free" }: { keys?: ApiKey
                   {keys.length > limit ? "Existing keys keep working, but creating another key requires upgrading." : `Upgrade to create up to ${PAID_KEY_LIMIT} named keys, rotate them anytime, and scope each one to the APIs it needs.`}
                 </p>
               </div>
-              <Button variant="outline" size="sm">
-                View plans
+              <Button variant="outline" size="sm" onClick={() => setUpgraded(true)}>
+                Try paid plan
                 <ArrowRight className="size-3.5" strokeWidth={1.5} />
               </Button>
             </section>
@@ -123,18 +128,25 @@ export function TablePage({ keys = SAMPLE_KEYS, plan = "free" }: { keys?: ApiKey
             <TableBody>
               {rows.length === 0 && <EmptyStateRow colSpan={6}>No keys match these filters.</EmptyStateRow>}
               {rows.map((k) => (
-                <ApiKeyRow key={k.id} apiKey={k} canDelete={keys.length > 1} canRename={isPaid} />
+                <ApiKeyRow key={k.id} apiKey={k} canDelete={keys.length > 1} canRename={isPaid} onEdit={() => { setEditing(k); setEditedName(k.name); setPermissions(k.permissions); }} onToggle={() => setKeys((all) => all.map((key) => key.id === k.id ? { ...key, enabled: !key.enabled } : key))} onDelete={() => setKeys((all) => all.filter((key) => key.id !== k.id))} />
               ))}
             </TableBody>
           </Table>
         </PageColumn>
       )}
-      <CreateKeyDialog open={createOpen} onOpenChange={setCreateOpen} />
+      <CreateKeyDialog open={createOpen} onOpenChange={setCreateOpen} onCreate={(name) => { const id = crypto.randomUUID(); setKeys((all) => [...all, { id, name, secret: `ctx_example_${id.replaceAll("-", "")}`, created: "Just now", permissions: "Full access", enabled: true, credits: 0 }]); }} />
+      <Dialog open={editing !== null} onOpenChange={(open) => { if (!open) setEditing(null); }}><DialogContent>
+        <form onSubmit={(event) => { event.preventDefault(); setKeys((all) => all.map((key) => key.id === editing?.id ? { ...key, name: isPaid ? editedName.trim() : key.name, permissions } : key)); setEditing(null); }}>
+          <DialogHeader><DialogTitle>Edit key</DialogTitle><DialogDescription>Update this key's name and access.</DialogDescription></DialogHeader>
+          <DialogBody className="grid gap-4"><Field label="Name"><Input value={editedName} disabled={!isPaid} onChange={(event) => setEditedName(event.target.value)} required /></Field><Field label="Permissions"><select className="h-10 rounded-control border border-line bg-surface px-3 text-body-sm" value={permissions} onChange={(event) => setPermissions(event.target.value)}><option>Full access</option><option>Scrape only</option><option>Read only</option></select></Field></DialogBody>
+          <DialogFooter><Button variant="outline" onClick={() => setEditing(null)}>Cancel</Button><Button type="submit" variant="brand" disabled={!editedName.trim()}>Save</Button></DialogFooter>
+        </form>
+      </DialogContent></Dialog>
     </AppShell>
   );
 }
 
-function ApiKeyRow({ apiKey: k, canDelete, canRename }: { apiKey: ApiKey; canDelete: boolean; canRename: boolean }) {
+function ApiKeyRow({ apiKey: k, canDelete, canRename, onEdit, onToggle, onDelete }: { apiKey: ApiKey; canDelete: boolean; canRename: boolean; onEdit: () => void; onToggle: () => void; onDelete: () => void }) {
   return (
     <TableRow className="hover:bg-transparent">
       <TableCell className="px-3">
@@ -152,7 +164,7 @@ function ApiKeyRow({ apiKey: k, canDelete, canRename }: { apiKey: ApiKey; canDel
         <SecretField secret={k.secret} visibleChars={VISIBLE_SECRET_CHARS} label={`${k.name} key`} className="w-full max-w-75" />
       </TableCell>
       <TableCell className="hidden px-3 xl:table-cell">
-        <button type="button" aria-label={`Edit permissions for ${k.name}`} className="whitespace-nowrap text-fg-muted underline-offset-4 outline-none transition-colors duration-150 hover:text-fg hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring">
+        <button type="button" onClick={onEdit} aria-label={`Edit permissions for ${k.name}`} className="whitespace-nowrap text-fg-muted underline-offset-4 outline-none transition-colors duration-150 hover:text-fg hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring">
           {k.permissions}
         </button>
       </TableCell>
@@ -163,7 +175,7 @@ function ApiKeyRow({ apiKey: k, canDelete, canRename }: { apiKey: ApiKey; canDel
         </span>
       </TableCell>
       <TableCell className="hidden px-3 lg:table-cell">
-        <a href="#usage" onClick={(e) => e.preventDefault()} title="Credits consumed in the last 30 days" className="group flex items-center gap-1 whitespace-nowrap text-fg-subtle no-underline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
+        <a href="/usage" title="Credits consumed in the last 30 days" className="group flex items-center gap-1 whitespace-nowrap text-fg-subtle no-underline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
           {k.credits === undefined ? (
             <span className="text-fg-muted">Usage unavailable</span>
           ) : (
@@ -187,23 +199,23 @@ function ApiKeyRow({ apiKey: k, canDelete, canRename }: { apiKey: ApiKey; canDel
             <MoreVertical className="size-4" strokeWidth={1.5} />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={onEdit}>
               <Pencil strokeWidth={1.5} />
               {canRename ? "Edit name and permissions" : "Edit permissions"}
             </DropdownMenuItem>
             {k.enabled ? (
-              <DropdownMenuHoldItem onConfirm={() => {}} className="text-fg-muted data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg">
+              <DropdownMenuHoldItem onConfirm={onToggle} className="text-fg-muted data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg">
                 <Pause strokeWidth={1.5} />
                 Disable key
               </DropdownMenuHoldItem>
             ) : (
-              <DropdownMenuItem>
+              <DropdownMenuItem onSelect={onToggle}>
                 <Play strokeWidth={1.5} />
                 Enable key
               </DropdownMenuItem>
             )}
             {canDelete && (
-              <DropdownMenuHoldItem onConfirm={() => {}}>
+              <DropdownMenuHoldItem onConfirm={onDelete}>
                 <Trash2 strokeWidth={1.5} />
                 Delete key
               </DropdownMenuHoldItem>
@@ -215,7 +227,7 @@ function ApiKeyRow({ apiKey: k, canDelete, canRename }: { apiKey: ApiKey; canDel
   );
 }
 
-function CreateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
+function CreateKeyDialog({ open, onOpenChange, onCreate }: { open: boolean; onOpenChange: (open: boolean) => void; onCreate: (name: string) => void }) {
   const [name, setName] = React.useState("");
   const [tried, setTried] = React.useState(false);
   const error = tried && !name.trim() ? "Give the key a name so you can tell it apart." : undefined;
@@ -240,7 +252,7 @@ function CreateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenChange: 
           onSubmit={(e) => {
             e.preventDefault();
             setTried(true);
-            if (name.trim()) onOpenChange(false);
+            if (name.trim()) { onCreate(name.trim()); setName(""); setTried(false); onOpenChange(false); }
           }}
         >
           <DialogBody>

@@ -35,9 +35,9 @@ function ScrapedPage() {
 }
 
 // After a call: the view tabs and status above the card, the stats strip, and the response in its inset panel.
-export function Product() {
+function ResultExample({ initial = "done" }: { initial?: "ready" | "running" | "done" }) {
   const [view, setView] = React.useState<PlaygroundResultView>("preview");
-  const [state, setState] = React.useState<"ready" | "running" | "done">("done");
+  const [state, setState] = React.useState<"ready" | "running" | "done">(initial);
   const run = () => {
     setState("running");
     setTimeout(() => setState("done"), 1200);
@@ -55,24 +55,14 @@ export function Product() {
       ready={<PlaygroundReadyState action="Scrape" examples={["https://acme.com", "https://example.com/blog", "https://news.ycombinator.com"]} onExample={run} onRun={run} creditLabel="1 credit" />}
       history={<p className="p-6 text-body-sm text-fg-muted">Your last calls show up here.</p>}
     >
-      {view === "json" ? <JsonViewer value={RESPONSE} className="min-h-0 flex-1" /> : <ScrapedPage />}
+      {state === "done" ? (view === "json" ? <JsonViewer value={RESPONSE} className="min-h-0 flex-1" /> : <ScrapedPage />) : undefined}
     </PlaygroundResultCard>
   );
 }
 
-// Before the first call: just "Result", and the ready state with examples to try and the run button.
-export function Ready() {
-  const [view, setView] = React.useState<PlaygroundResultView>("preview");
-  return (
-    <PlaygroundResultCard
-      className="w-full max-w-xl"
-      view={view}
-      onViewChange={setView}
-      statusCode={null}
-      ready={<PlaygroundReadyState action="Scrape" examples={["https://acme.com", "https://example.com/blog"]} onExample={() => {}} onRun={() => {}} creditLabel="1 credit" />}
-    />
-  );
-}
+export function Product() { return <ResultExample />; }
+
+export function Ready() { return <ResultExample initial="ready" />; }
 
 // While a call runs: pulsing dots naming what it's calling.
 export function Running() {

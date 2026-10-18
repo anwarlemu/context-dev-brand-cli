@@ -1,8 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 // Empty with a placeholder, filled, invalid and disabled.
 export function Product() {
+  const [email, setEmail] = useState("anwar@");
+  const [valid, setValid] = useState(false);
   return (
     <div className="grid w-full max-w-sm gap-4">
       <div className="grid gap-2">
@@ -15,7 +20,7 @@ export function Product() {
       </div>
       <div className="grid gap-2">
         <Label htmlFor="input-email">Email</Label>
-        <Input id="input-email" defaultValue="anwar@" aria-invalid />
+        <Input id="input-email" type="email" required value={email} aria-invalid={!valid} onChange={(event) => { setEmail(event.target.value); setValid(event.target.validity.valid); }} />
       </div>
       <div className="group grid gap-2" data-disabled="true">
         <Label htmlFor="input-org">Organization ID</Label>

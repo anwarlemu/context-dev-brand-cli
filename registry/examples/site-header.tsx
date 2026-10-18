@@ -21,12 +21,12 @@ function ContextMark() {
 }
 
 const products = [
-  { title: "Web search", description: "Search the live web for AI agents and LLM apps.", href: "/search-api", icon: <Search /> },
-  { title: "Map domains", description: "Discover URLs across a website before you scrape.", href: "/map-api", icon: <Network /> },
-  { title: "Run batches", description: "Scrape thousands of URLs or crawl entire websites.", href: "/batches-api", icon: <Layers /> },
-  { title: "Answers from the web", description: "Research questions, structured answers, and sources.", href: "/answers-api", icon: <MessageSquare /> },
-  { title: "Create monitors", description: "Watch the web for changes and receive updates.", href: "/monitors-api", icon: <Clock /> },
-  { title: "Retrieve brand data", description: "Company profile and the website's design system.", href: "/brand-api", icon: <Building2 /> },
+  { title: "Web search", description: "Search the live web for AI agents and LLM apps.", href: "https://context.dev/search-api", icon: <Search /> },
+  { title: "Map domains", description: "Discover URLs across a website before you scrape.", href: "https://context.dev/map-api", icon: <Network /> },
+  { title: "Run batches", description: "Scrape thousands of URLs or crawl entire websites.", href: "https://context.dev/batches-api", icon: <Layers /> },
+  { title: "Answers from the web", description: "Research questions, structured answers, and sources.", href: "https://context.dev/answers-api", icon: <MessageSquare /> },
+  { title: "Create monitors", description: "Watch the web for changes and receive updates.", href: "https://context.dev/monitors-api", icon: <Clock /> },
+  { title: "Retrieve brand data", description: "Company profile and the website's design system.", href: "https://context.dev/brand-api", icon: <Building2 /> },
 ];
 
 // The preview's white card would play a short story; a few lines stand in for it here.
@@ -46,7 +46,7 @@ const useCases: NavPreviewItem[] = [
   {
     id: "web-crawling",
     title: "Crawl the web",
-    href: "/use-cases/web-crawling",
+    href: "https://context.dev/use-cases/web-crawling",
     icon: <Layers className="size-4 text-fg-brand" />,
     summary: "Every page of a site as clean Markdown.",
     proof: "SiteGPT moved its crawling off Firecrawl in under a day.",
@@ -55,7 +55,7 @@ const useCases: NavPreviewItem[] = [
   {
     id: "web-monitoring",
     title: "Monitor everything",
-    href: "/use-cases/web-monitoring",
+    href: "https://context.dev/use-cases/web-monitoring",
     icon: <Clock className="size-4 text-fg-brand" />,
     summary: "Competitors, prices, subreddits, and regulations.",
     proof: "Dench CRM opened $3M+ in pipeline from Reddit leads.",
@@ -64,7 +64,7 @@ const useCases: NavPreviewItem[] = [
   {
     id: "rag-pipeline",
     title: "Feed RAG pipelines",
-    href: "/use-cases/rag-pipeline",
+    href: "https://context.dev/use-cases/rag-pipeline",
     icon: <Globe className="size-4 text-fg-brand" />,
     summary: "Fresh web data, ready to chunk and embed.",
     proof: "Agently swapped the scraper behind its company brain the same day.",
@@ -73,7 +73,7 @@ const useCases: NavPreviewItem[] = [
   {
     id: "research-agents",
     title: "Research agents",
-    href: "/use-cases/research-agents",
+    href: "https://context.dev/use-cases/research-agents",
     icon: <MessageSquare className="size-4 text-fg-brand" />,
     summary: "Cited answers, from one company to a million.",
     proof: "Bystreet has run 1M+ scrapes for its research agent.",
@@ -93,7 +93,7 @@ const items: NavItem[] = [
       <NavLinksPanel
         featured={
           <NavFeaturedCard
-            href="/web-scraping-api"
+            href="https://context.dev/web-scraping-api"
             title="Scrape anything"
             description="Scrape any URL with a 99.96% success rate. Browser rendering and proxy escalation are automatic."
             cta="Explore Scrape anything"
@@ -106,26 +106,26 @@ const items: NavItem[] = [
             <NavFooterLink href="https://docs.context.dev" external>
               API docs
             </NavFooterLink>
-            <NavFooterLink href="/integrations">SDKs</NavFooterLink>
-            <NavFooterLink href="/cli">CLI</NavFooterLink>
-            <NavFooterLink href="/mcp">MCP</NavFooterLink>
+            <NavFooterLink href="https://context.dev/integrations">SDKs</NavFooterLink>
+            <NavFooterLink href="https://context.dev/cli">CLI</NavFooterLink>
+            <NavFooterLink href="https://context.dev/mcp">MCP</NavFooterLink>
           </>
         }
       />
     ),
-    items: [{ title: "Scrape anything", href: "/web-scraping-api" }, ...products],
+    items: [{ title: "Scrape anything", href: "https://context.dev/web-scraping-api" }, ...products],
   },
   {
     label: "Use Cases",
     width: "50rem",
-    panel: <NavPreviewPanel items={useCases} footerLink={{ label: "All customer stories", href: "/customers" }} />,
+    panel: <NavPreviewPanel items={useCases} footerLink={{ label: "All customer stories", href: "https://context.dev/customers" }} />,
     mobile: [
       { label: "Scraping & AI agents", links: useCases.map((useCase) => ({ label: useCase.title, href: useCase.href })) },
       {
         label: "Product & brand experiences",
         links: [
-          { label: "Enrich Any Entity", href: "/use-cases/enrich-company-profiles" },
-          { label: "Programmatic Theming", href: "/use-cases/programmatic-theming" },
+          { label: "Enrich Any Entity", href: "https://context.dev/use-cases/enrich-company-profiles" },
+          { label: "Programmatic Theming", href: "https://context.dev/use-cases/programmatic-theming" },
         ],
       },
     ],
@@ -135,16 +135,16 @@ const items: NavItem[] = [
     width: "38.125rem",
     panel: (
       <NavStoriesPanel
-        viewAll={{ label: "View all stories", href: "/customers" }}
+        viewAll={{ label: "View all stories", href: "https://context.dev/customers" }}
         stories={[
-          { name: "SiteGPT", summary: "Moved its crawling off Firecrawl in under a day.", href: "/customers/sitegpt", visual: <StoryMark name="SiteGPT" /> },
-          { name: "Bystreet", summary: "Has run over a million scrapes for its research agent.", href: "/customers/bystreet", visual: <StoryMark name="Bystreet" /> },
+          { name: "SiteGPT", summary: "Moved its crawling off Firecrawl in under a day.", href: "https://context.dev/customers/sitegpt", visual: <StoryMark name="SiteGPT" /> },
+          { name: "Bystreet", summary: "Has run over a million scrapes for its research agent.", href: "https://context.dev/customers/bystreet", visual: <StoryMark name="Bystreet" /> },
         ]}
       />
     ),
-    mobile: [{ links: [{ label: "All customer stories", href: "/customers" }] }],
+    mobile: [{ links: [{ label: "All customer stories", href: "https://context.dev/customers" }] }],
   },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Pricing", href: "https://context.dev/pricing" },
   { label: "Docs", href: "https://docs.context.dev", external: true },
 ];
 
@@ -154,11 +154,11 @@ export function Site() {
       logo={<ContextMark />}
       wordmark="Context.dev"
       logoLabel="Context.dev"
-      announcement={{ text: "Introducing Highlights: the context that matters", href: "/blog/introducing-context-highlights", external: true }}
+      announcement={{ text: "Introducing Highlights: the context that matters", href: "https://context.dev/blog/introducing-context-highlights", external: true }}
       items={items}
       secondaryAction={{ label: "Book demo", href: "https://cal.com/context-dev/30min" }}
-      mobileSecondaryAction={{ label: "Log in", href: "/login" }}
-      primaryAction={{ label: "Start for free", href: "/signup" }}
+      mobileSecondaryAction={{ label: "Log in", href: "https://context.dev/login" }}
+      primaryAction={{ label: "Start for free", href: "https://context.dev/signup" }}
     />
   );
 }

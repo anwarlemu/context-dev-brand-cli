@@ -50,13 +50,15 @@ export function Product() {
 }
 
 export function Fetching() {
+  const [open, setOpen] = React.useState(true);
   return (
-    <PlaygroundParameters open onOpenChange={() => {}} modifiedCount={1} onReset={() => {}} fetching>
+    <div className="grid w-full max-w-xl gap-3"><ParametersButton open={open} onToggle={() => setOpen((value) => !value)} modifiedCount={0} />
+    <PlaygroundParameters open={open} onOpenChange={setOpen} modifiedCount={0} fetching>
       <ParameterGroup title="Output">
         <ParameterRow label="Main content only" description="Drops navigation, footers and cookie banners.">
           <Switch defaultChecked aria-label="Main content only" />
         </ParameterRow>
       </ParameterGroup>
-    </PlaygroundParameters>
+    </PlaygroundParameters></div>
   );
 }

@@ -20,6 +20,7 @@
     "doctor": "react-doctor apps/www --scope full --verbose",
     "doctor:library": "react-doctor --project registry --scope full --verbose",
     "check:docs": "node scripts/check-docs.mjs",
+    "check:library": "node scripts/check-library.mjs",
     "build": "tsc -p tsconfig.json && node scripts/build-brand.mjs",
     "test": "vitest run",
     "ci": "npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run",

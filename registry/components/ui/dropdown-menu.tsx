@@ -13,8 +13,15 @@ import { cn } from "@/lib/utils";
 // hold (DropdownMenuHoldItem) so a stray click can't delete anything.
 const ROW = "relative flex w-full cursor-default items-center gap-2 rounded-control px-2.5 py-1.5 text-body-sm leading-5 text-fg-muted outline-none select-none transition-colors duration-150 data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg [&_svg]:size-3.5 [&_svg]:shrink-0";
 
-function DropdownMenu(props: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
-  return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+const CloseMenuContext = React.createContext<(() => void) | null>(null);
+
+function DropdownMenu({ open, defaultOpen = false, onOpenChange, modal = false, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);
+  const changeOpen = (next: boolean) => {
+    if (open === undefined) setInternalOpen(next);
+    onOpenChange?.(next);
+  };
+  return <CloseMenuContext.Provider value={() => changeOpen(false)}><DropdownMenuPrimitive.Root data-slot="dropdown-menu" open={open ?? internalOpen} onOpenChange={changeOpen} modal={modal} {...props} /></CloseMenuContext.Provider>;
 }
 
 function DropdownMenuTrigger(props: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
@@ -28,7 +35,8 @@ function DropdownMenuContent({ className, sideOffset = 6, align = "end", ...prop
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         align={align}
-        className={cn("z-50 flex min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none", className)}
+        collisionPadding={8}
+        className={cn("ds-scrollbar z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0", className)}
         {...props}
       />
     </DropdownMenuPrimitive.Portal>
@@ -59,7 +67,8 @@ function DropdownMenuHoldItem({
   className,
   ...props
 }: Omit<React.ComponentProps<typeof DropdownMenuPrimitive.Item>, "onSelect"> & { holdMs?: number; onConfirm: () => void; variant?: "default" | "destructive" }) {
-  const { isHolding, handlers } = useHold(holdMs, onConfirm);
+  const close = React.useContext(CloseMenuContext);
+  const { isHolding, handlers } = useHold(holdMs, () => { onConfirm(); close?.(); });
   const danger = variant === "destructive";
   return (
     <DropdownMenuPrimitive.Item
@@ -136,7 +145,8 @@ function DropdownMenuSubContent({ className, ...props }: React.ComponentProps<ty
     <DropdownMenuPrimitive.Portal container={usePortalContainer()}>
       <DropdownMenuPrimitive.SubContent
         data-slot="dropdown-menu-sub-content"
-        className={cn("z-50 flex min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 rounded-shell bg-surface p-(--ds-space-frame) shadow-floating", className)}
+        collisionPadding={8}
+        className={cn("ds-scrollbar z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating [&>*]:shrink-0", className)}
         {...props}
       />
     </DropdownMenuPrimitive.Portal>

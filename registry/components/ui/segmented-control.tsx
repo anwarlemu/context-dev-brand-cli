@@ -42,7 +42,7 @@ function SegmentedControl<T extends string>({
       className={cn("relative isolate inline-flex w-fit items-center", segmented ? "gap-0.5 rounded-control bg-neutral-5 p-0.5" : size === "sm" ? "gap-0.5" : "gap-1", className)}
     >
       <span ref={pillRef} aria-hidden className={cn("pointer-events-none absolute top-0 left-0 -z-10", radius, PILL_SURFACE[variant], !isPlaced && "invisible")} />
-      {options.map((o) => {
+      {options.map((o, index) => {
         const selected = o.value === value;
         return (
           <button
@@ -50,8 +50,17 @@ function SegmentedControl<T extends string>({
             type="button"
             role="radio"
             aria-checked={selected}
+            tabIndex={selected || (!options.some((option) => option.value === value) && index === 0) ? 0 : -1}
             data-tab-id={o.value}
             onClick={() => onValueChange(o.value)}
+            onKeyDown={(event) => {
+              const delta = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+              if (!delta && event.key !== "Home" && event.key !== "End") return;
+              event.preventDefault();
+              const next = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1 : (index + delta + options.length) % options.length;
+              onValueChange(options[next].value);
+              event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="radio"]')[next]?.focus();
+            }}
             className={cn(
               "flex items-center gap-1.5 whitespace-nowrap outline-none transition-[color] duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring motion-reduce:transition-none",
               radius,

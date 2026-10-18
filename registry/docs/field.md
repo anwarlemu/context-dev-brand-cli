@@ -9,3 +9,5 @@ use_for: Every form control.
 never: [Placeholder as the only label]
 source: context-dashboard c0ddf7a src/components/ui/form.tsx
 ---
+
+Pass one form control as the child. The field connects its label, help text, required state, and error message to that control. Pass a reactive `error` from your form validation; the field does not validate the value itself. Clear the error when the value is valid.

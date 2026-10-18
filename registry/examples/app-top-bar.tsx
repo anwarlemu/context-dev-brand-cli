@@ -1,18 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { AppTopBar } from "@/components/product/app-top-bar";
-import { CreditsMenu } from "@/components/product/credits-menu";
-import { PageHeader } from "@/components/product/page";
+import { AppSidebar, SidebarGroup, SidebarLink } from "@/components/product/app-sidebar";
+import { Product as CreditsExample } from "./credits-menu";
 
-// The bar straight on the canvas, as wide as the page: no fill, no border and no title, only the credits at the right
-// (and the menu button on phones). The page under it carries its own title.
 export function Product() {
-  return (
-    <div className="w-full">
-      <AppTopBar onMenuClick={() => {}}>
-        <CreditsMenu remaining={6420} total={10000} plan={{ name: "Starter", price: "$19/month", resetLabel: "Nov 1" }} onUpgrade={() => {}} />
-      </AppTopBar>
-      <PageHeader title="Overview" className="pt-4" />
-    </div>
-  );
+  const [open, setOpen] = useState(false);
+  return <div className="w-full self-start"><AppTopBar onMenuClick={() => setOpen(true)}><CreditsExample /></AppTopBar>
+    <div className="md:hidden"><AppSidebar open={open} onOpenChange={setOpen} navLabel="Example navigation"><SidebarGroup><SidebarLink href="/preview/overview-page/Block">Overview</SidebarLink><SidebarLink href="/preview/table-page/Block">API keys</SidebarLink></SidebarGroup></AppSidebar></div>
+  </div>;
 }

@@ -1,9 +1,10 @@
+import { SiteSection } from "@/components/site/section";
 import { TrustMark, TrustStrip } from "@/components/site/trust-strip";
 
 const TRUST_CENTER = "https://trust.context.dev/";
 
 export function Site() {
-  return (
+  return (<SiteSection>
     <TrustStrip
       className="w-full"
       items={[
@@ -12,5 +13,5 @@ export function Site() {
         { mark: <TrustMark mark="controls" />, label: "Security controls", description: "Explore published controls for encryption at rest, security monitoring, and supplier security.", linkLabel: "Review controls", href: TRUST_CENTER },
       ]}
     />
-  );
+  </SiteSection>);
 }

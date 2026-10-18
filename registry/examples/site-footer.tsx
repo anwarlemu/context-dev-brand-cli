@@ -7,7 +7,7 @@ export function Site() {
   return (
     <SiteFooter
       logo={
-        <a href="/" aria-label="Context.dev home" className="flex items-center gap-2 rounded-card">
+        <a href="https://context.dev/" aria-label="Context.dev home" className="flex items-center gap-2 rounded-card">
           <svg viewBox="0 0 772.32 531.2" aria-hidden="true" className="h-6 w-auto text-fg-brand">
             <path fill="currentColor" fillRule="evenodd" d="M287.56,0H745.26A27.06,27.06,0,0,1,772.32,27.06V484.77A27.06,27.06,0,0,1,745.26,511.83H284.51A24.01,24.01,0,0,1,260.5,487.82V27.06A27.06,27.06,0,0,1,287.56,0ZM260.5,358.28a153.55,153.55,0,1,0,307.1,0a153.55,153.55,0,1,0,-307.1,0Z" />
             <circle cx="153.55" cy="377.64" r="153.55" fill="currentColor" />
@@ -34,10 +34,10 @@ export function Site() {
         <FooterStatusLink key="status" href="https://status.context.dev" state="operational" />,
       ]}
       groups={[
-        { title: "Product", links: [{ label: "Scrape anything", href: "/web-scraping-api" }, { label: "Web search", href: "/search-api" }, { label: "Run batches", href: "/batches-api" }, { label: "Create monitors", href: "/monitors-api" }, { label: "Pricing", href: "/pricing" }] },
-        { title: "Developers", links: [{ label: "Documentation", href: "https://docs.context.dev" }, { label: "Playground", href: "/playground/scrape" }, { label: "Integrations & SDKs", href: "/integrations" }, { label: "MCP Server", href: "/mcp" }, { label: "CLI", href: "/cli" }] },
-        { title: "Resources", links: [{ label: "Blog", href: "/blog" }, { label: "Guides", href: "/guides" }, { label: "Customers", href: "/customers" }, { label: "Compare Alternatives", href: "/compare" }, { label: "Glossary", href: "/glossary" }] },
-        { title: "Company", links: [{ label: "Contact", href: "/contact" }, { label: "Request Brand Update", href: "/update" }] },
+        { title: "Product", links: [{ label: "Scrape anything", href: "https://context.dev/web-scraping-api" }, { label: "Web search", href: "https://context.dev/search-api" }, { label: "Run batches", href: "https://context.dev/batches-api" }, { label: "Create monitors", href: "https://context.dev/monitors-api" }, { label: "Pricing", href: "https://context.dev/pricing" }] },
+        { title: "Developers", links: [{ label: "Documentation", href: "https://docs.context.dev" }, { label: "Playground", href: "https://context.dev/playground/scrape" }, { label: "Integrations & SDKs", href: "https://context.dev/integrations" }, { label: "MCP Server", href: "https://context.dev/mcp" }, { label: "CLI", href: "https://context.dev/cli" }] },
+        { title: "Resources", links: [{ label: "Blog", href: "https://context.dev/blog" }, { label: "Guides", href: "https://context.dev/guides" }, { label: "Customers", href: "https://context.dev/customers" }, { label: "Compare Alternatives", href: "https://context.dev/compare" }, { label: "Glossary", href: "https://context.dev/glossary" }] },
+        { title: "Company", links: [{ label: "Contact", href: "https://context.dev/contact" }, { label: "Request Brand Update", href: "https://context.dev/update" }] },
       ]}
       copyright="© 2026 Context.dev"
       note={
@@ -50,9 +50,9 @@ export function Site() {
         </>
       }
       legal={[
-        { label: "Terms", href: "/term" },
-        { label: "DPA", href: "/dpa" },
-        { label: "Privacy", href: "/privacy" },
+        { label: "Terms", href: "https://context.dev/term" },
+        { label: "DPA", href: "https://context.dev/dpa" },
+        { label: "Privacy", href: "https://context.dev/privacy" },
       ]}
       watermark={<FooterWatermark className="max-sm:top-14 max-sm:h-auto" />}
       watermarkAction={<FooterCopyButton text="Signup for an account & get API key with context.dev/auth.md, then follow docs.context.dev/agent-quickstart to integrate into the codebase" label="Onboard your agent" aria-label="Onboard your agent: copy the setup prompt" />}

@@ -12,7 +12,7 @@ export function Site() {
       description="One API for agents to scrape, search, monitor, and collect data from the web."
       actions={
         <Button asChild variant="pill">
-          <a href="/signup">Start for free</a>
+          <a href="https://context.dev/signup">Start for free</a>
         </Button>
       }
     />

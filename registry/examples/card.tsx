@@ -8,9 +8,7 @@ export function Product() {
         <CardTitle>API usage</CardTitle>
         <CardDescription>Requests this billing period.</CardDescription>
         <CardAction>
-          <Button variant="ghost" size="sm">
-            Details
-          </Button>
+          <Button variant="ghost" size="sm" asChild><a href="/preview/usage-card/Product">Details</a></Button>
         </CardAction>
       </CardHeader>
       <CardContent>

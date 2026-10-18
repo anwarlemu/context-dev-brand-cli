@@ -1,3 +1,5 @@
+"use client";
+
 import { BookOpen, Bot, Clock, Globe, Layers, Map as MapIcon, Terminal } from "lucide-react";
 
 import { windowButtonClass } from "@/components/site/code-window";
@@ -11,10 +13,10 @@ const client = new ContextDev({ apiKey: 'YOUR_API_KEY' });`;
 const docs = (href: string) => (
   <>
     <UseCaseTryIn>
-      <button type="button" aria-label="Try in Claude" className={windowButtonClass}>
+      <button type="button" aria-label="Try in Claude" onClick={() => window.open("https://claude.ai/new", "_blank", "noopener,noreferrer")} className={windowButtonClass}>
         <Bot />
       </button>
-      <button type="button" aria-label="Try in Codex" className={windowButtonClass}>
+      <button type="button" aria-label="Try in Codex" onClick={() => window.open("https://chatgpt.com/codex", "_blank", "noopener,noreferrer")} className={windowButtonClass}>
         <Terminal />
       </button>
     </UseCaseTryIn>

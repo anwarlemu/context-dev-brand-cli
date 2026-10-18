@@ -8,7 +8,7 @@ const quotes: Partial<Record<string, StripLogo["quote"]>> = {
     quote: "Onboarding couldn't be simpler. Self-serve sign-up gives you an API key immediately, the documentation is thorough, and we were integrating within 10 minutes.",
     name: "Nick Khami",
     role: "Engineering Manager @ Mintlify",
-    href: "/blog/mintlify-turns-github-repos-into-branded-docs-sites-with-brand-dev",
+    href: "https://context.dev/blog/mintlify-turns-github-repos-into-branded-docs-sites-with-brand-dev",
   },
   Super: {
     quote: "Context.dev gave us company data for every signup on day one, so the product feels tailored before anyone touches a setting.",

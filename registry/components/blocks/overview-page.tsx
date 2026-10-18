@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { navigate } from "@/lib/navigation";
 
 import { AppShell } from "@/components/blocks/app-shell";
 import type { ChartBucket, ChartSeries } from "@/components/product/bar-chart";
@@ -93,6 +94,8 @@ type Method = "mcp" | "skill" | "cli";
 export function OverviewPage() {
   const [api, setApi] = React.useState<(typeof TABS)[number]["value"]>("scrape");
   const [input, setInput] = React.useState("");
+  const [running, setRunning] = React.useState(false);
+  const [result, setResult] = React.useState("");
   const [breakdown, setBreakdown] = React.useState<Breakdown>("status");
   const [range, setRange] = React.useState<Range>("30");
   const [metric, setMetric] = React.useState<Metric>("calls");
@@ -119,7 +122,8 @@ export function OverviewPage() {
       <PageColumn className="min-h-full shrink-0 gap-3 px-4 pt-2 pb-8 @2xl:px-8">
         <PageHeader title="Overview" description="Try any API, then track what your calls use." className="mb-3" />
         <PageRise index={0} className="mb-3">
-          <TryApi tabs={TABS} value={api} onValueChange={setApi} input={input} onInputChange={setInput} onRun={() => {}} aside={<CardLink href="#">API Playground</CardLink>} />
+          <TryApi tabs={TABS} value={api} onValueChange={setApi} input={input} onInputChange={setInput} running={running} onRun={() => { setRunning(true); setResult(""); setTimeout(() => { setRunning(false); setResult(`Example ${api} request completed for ${input}.`); }, 600); }} aside={<CardLink href="/playground/scrape">API Playground</CardLink>} />
+          <p role="status" className="mt-3 text-body-sm text-fg-muted empty:hidden">{result}</p>
         </PageRise>
         <div className="grid gap-3 @4xl:grid-cols-2 @4xl:grid-rows-[auto_auto]">
           <PageRise index={2} className="min-h-0">
@@ -135,7 +139,7 @@ export function OverviewPage() {
             />
           </PageRise>
           <PageRise index={3} className="min-h-0 @4xl:row-span-2 @4xl:[contain:size]">
-            <QuickstartCard aside={<CardLink href="#">Manage keys</CardLink>}>
+            <QuickstartCard aside={<CardLink href="/api-keys">Manage keys</CardLink>}>
               <QuickstartStep number={1} title="Copy your API key">
                 <KeyField secret={KEY} name="Default" />
               </QuickstartStep>
@@ -172,7 +176,7 @@ export function OverviewPage() {
                   <StatMeter value={41590} max={100000} />
                 </span>
               </StatCard>
-              <StatCard title="Current plan" footer="100K credits/mo · 600 req/min" onClick={() => {}}>
+              <StatCard title="Current plan" footer="100K credits/mo · 600 req/min" onClick={() => { navigate("/settings?tab=billing"); }}>
                 <span className="flex items-center gap-2">
                   <DotGlyph rows={GEM_GLYPH} className="size-4 shrink-0 text-brand" />
                   <span className="truncate text-body-sm font-medium text-fg">Pro</span>
@@ -182,7 +186,7 @@ export function OverviewPage() {
           </PageRise>
         </div>
       </PageColumn>
-      <UsageSummaryDialog open={summaryOpen} onOpenChange={setSummaryOpen} description="On the Pro plan, resetting Nov 1." footer={<CardLink href="#">See full usage</CardLink>}>
+      <UsageSummaryDialog open={summaryOpen} onOpenChange={setSummaryOpen} description="On the Pro plan, resetting Nov 1." footer={<CardLink href="/usage">See full usage</CardLink>}>
         <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
           <CreditsRemaining remaining={41590} total={100000} />
           <CreditsUsed today={2318} month={58410} />

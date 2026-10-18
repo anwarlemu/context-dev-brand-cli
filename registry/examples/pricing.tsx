@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { ArrowRight } from "lucide-react";
 
-import { SectionHeaderRule, SectionHeading } from "@/components/site/section";
+import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
 import { CreditCostsTable, PricingBanner, PricingCard, PricingPlanFit, PricingShelves, PricingToggle, type BillingPeriod, type PricingFeature } from "@/components/site/pricing";
 import { Button } from "@/components/ui/button";
 
@@ -193,7 +193,7 @@ export function Site() {
     );
   });
 
-  return (
+  return (<SiteSection>
     <div className="flex w-full flex-col gap-16">
       <div className="flex flex-col">
         <div className="mb-8 flex justify-center pt-6">
@@ -209,7 +209,7 @@ export function Site() {
           className="mt-10"
           action={
             <Button asChild variant="pill-outline" className="gap-2 py-2.5">
-              <a href="/startups">
+              <a href="https://context.dev/startups">
                 Apply for the discount
                 <ArrowRight aria-hidden="true" />
               </a>
@@ -225,5 +225,5 @@ export function Site() {
         <CreditCostsTable rows={creditCosts} />
       </div>
     </div>
-  );
+  </SiteSection>);
 }

@@ -24,8 +24,8 @@ export function Site() {
         description="Scrape, crawl, map, and search the web with more concurrency and a lower price per page."
         actions={
           <>
-            <Button variant="pill">Get API access free</Button>
-            <Button variant="pill-outline">View documentation</Button>
+            <Button variant="pill" asChild><a href="https://context.dev/signup">Get API access free</a></Button>
+            <Button variant="pill-outline" asChild><a href="https://docs.context.dev">View documentation</a></Button>
           </>
         }
         media={
@@ -68,7 +68,7 @@ export function Site() {
           { title: "Choose Firecrawl if", points: ["You need to self-host.", "You need long, live browser sessions."] },
         ]}
         storiesTitle="Teams that switched"
-        stories={[{ quote: "Pricing was what triggered it, and responsive support sealed the deal.", person: "A founder", href: "/customers", linkLabel: "Read the story" }]}
+        stories={[{ quote: "Pricing was what triggered it, and responsive support sealed the deal.", person: "A founder", href: "https://context.dev/customers", linkLabel: "Read the story" }]}
       />
     </div>
   );

@@ -7,7 +7,6 @@ import { PageHeader } from "@/components/product/page";
 import { Card } from "@/components/ui/card";
 import { Code } from "@www/components/code";
 import { FramePreview } from "@www/components/frame-preview";
-import { Preview } from "@www/components/preview";
 import { Prose } from "@www/components/prose";
 import { examples } from "@www/lib/examples.generated";
 import { type Item, exampleSource, findItem, items, sourceOf } from "@www/lib/registry";
@@ -88,12 +87,8 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
           <PageHeader title={item.title} description={<Prose text={item.description} />} action={<InstallCommand command={`npx context-ds add ${item.name}`} />} className="items-start text-left" />
 
           <div id="preview" className="mt-10 grid gap-8">
-            {Object.entries(demos).map(([name, Demo]) => (
-              item.type === "site" || item.type === "block" || exampleSurface(item, name) === "site" ? (
+            {Object.keys(demos).map((name) => (
                 <FramePreview key={name} src={`/preview/${item.name}/${name}`} surface={exampleSurface(item, name)} label={exampleLabel(name)} fullPage={item.type === "site" || item.type === "block"} />
-              ) : (
-                <Preview key={name} example={Demo} block={name === "Block"} surface={exampleSurface(item, name)} label={exampleLabel(name)} />
-              )
             ))}
           </div>
 

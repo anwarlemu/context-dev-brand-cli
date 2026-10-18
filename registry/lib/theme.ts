@@ -12,10 +12,12 @@ export type ResolvedTheme = "light" | "dark";
 const STORAGE_KEY = "theme";
 const DEFAULT_THEME: Theme = "light";
 const DARK_QUERY = "(prefers-color-scheme: dark)";
+let sessionTheme: Theme | undefined;
 
 export const THEME_SCRIPT = `(function(){try{var t=localStorage.getItem("${STORAGE_KEY}");if(t!=="light"&&t!=="dark"&&t!=="system")t="${DEFAULT_THEME}";var d=t==="dark"||(t==="system"&&matchMedia("${DARK_QUERY}").matches);document.documentElement.setAttribute("data-theme",d?"dark":"light")}catch(e){}})()`;
 
 function readTheme(): Theme {
+  if (sessionTheme) return sessionTheme;
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     return stored === "light" || stored === "dark" || stored === "system" ? stored : DEFAULT_THEME;
@@ -49,8 +51,10 @@ function subscribe(listener: () => void) {
 }
 
 export function setTheme(theme: Theme) {
+  sessionTheme = theme;
   try {
     localStorage.setItem(STORAGE_KEY, theme);
+    sessionTheme = undefined;
   } catch {
     // Storage can be off (private windows); the theme still applies for this visit.
   }

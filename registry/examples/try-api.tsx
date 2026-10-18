@@ -15,8 +15,9 @@ export function Product() {
   const [api, setApi] = useState<(typeof TABS)[number]["value"]>("scrape");
   const [input, setInput] = useState("");
   const [running, setRunning] = useState(false);
+  const [result, setResult] = useState("");
   return (
-    <div className="w-full max-w-2xl">
+    <div className="grid w-full max-w-2xl gap-3">
       <TryApi
         tabs={TABS}
         value={api}
@@ -26,10 +27,12 @@ export function Product() {
         running={running}
         onRun={() => {
           setRunning(true);
-          setTimeout(() => setRunning(false), 1200);
+          setResult("");
+          setTimeout(() => { setRunning(false); setResult(`Example ${api} response for ${input}: request completed.`); }, 600);
         }}
-        aside={<CardLink href="#">API Playground</CardLink>}
+        aside={<CardLink href="/preview/playground-result-card/Ready">API Playground</CardLink>}
       />
+      <p role="status" className="text-body-sm text-fg-muted empty:hidden">{result}</p>
     </div>
   );
 }

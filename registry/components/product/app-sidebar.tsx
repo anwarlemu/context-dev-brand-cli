@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
-import { Search, type LucideIcon } from "lucide-react";
+import { ChevronDown, Search, type LucideIcon } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useScrollingScrollbars } from "@/hooks/use-scrolling-scrollbars";
@@ -38,6 +38,23 @@ function AppSidebar({
   children: React.ReactNode;
 }) {
   useScrollingScrollbars();
+  const list = React.useRef<HTMLElement | null>(null);
+  const [edges, setEdges] = React.useState({ above: false, below: false });
+  React.useLayoutEffect(() => {
+    const area = list.current;
+    if (!area) return;
+    const measure = () => {
+      const above = area.scrollTop > 1;
+      const below = area.scrollTop + area.clientHeight < area.scrollHeight - 1;
+      setEdges((old) => old.above === above && old.below === below ? old : { above, below });
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(area);
+    for (const child of area.children) observer.observe(child);
+    area.addEventListener("scroll", measure, { passive: true });
+    return () => { observer.disconnect(); area.removeEventListener("scroll", measure); };
+  }, [children]);
   React.useEffect(() => {
     if (!open) return;
     const close = () => onOpenChange?.(false);
@@ -69,11 +86,23 @@ function AppSidebar({
         )}
       >
         {header && <div className="flex shrink-0 items-center gap-0.5 pt-6 pb-2">{header}</div>}
-        <nav ref={navRef} aria-label={navLabel} className="ds-scrollbar -mx-7 flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5">
+        <div className="relative -mx-7 flex min-h-0 flex-1 flex-col">
+        <nav ref={(element) => {
+          list.current = element;
+          if (typeof navRef === "function") return navRef(element);
+          if (navRef) navRef.current = element;
+        }} aria-label={navLabel} data-scroll-above={edges.above || undefined} data-scroll-below={edges.below || undefined} className="ds-scrollbar flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5">
           <div aria-hidden className="min-h-0 flex-1" />
           <div className="relative flex shrink-0 flex-col gap-1.5">{children}</div>
           <div aria-hidden className={cn("min-h-0", listPosition === "high" ? "flex-[2.5]" : "flex-1")} />
         </nav>
+        {edges.above && <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-6 bg-linear-to-b from-canvas to-transparent max-md:from-surface" />}
+        {edges.below && <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-8 items-end justify-center bg-linear-to-t from-canvas to-transparent max-md:from-surface">
+          <button type="button" aria-label="Scroll navigation down" onClick={() => list.current?.scrollBy({ top: list.current.clientHeight * 0.75, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })} className="pointer-events-auto grid size-6 place-items-center rounded-pill bg-surface text-fg-muted shadow-card outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring">
+            <ChevronDown className="size-3.5" strokeWidth={1.75} />
+          </button>
+        </div>}
+        </div>
         {footer && <div className="flex flex-col gap-1.5 pt-2 pb-5.5">{footer}</div>}
       </aside>
     </>

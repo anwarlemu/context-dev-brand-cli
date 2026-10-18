@@ -22,7 +22,7 @@ export function Site() {
             quote: "We replaced our crawler, its proxies and its parsers with one API, and our agents got better context the same day.",
             name: "Raz",
             role: "AI Lead, Similarweb",
-            story: { label: "Read the story", href: "/blog/similarweb-10x-ai-agents-with-context-dev" },
+            story: { label: "Read the story", href: "https://context.dev/blog/similarweb-10x-ai-agents-with-context-dev" },
           }}
           metrics={[
             { value: "10x", label: "more data points for each agent" },
@@ -36,9 +36,9 @@ export function Site() {
         <SectionHeaderRule />
         <UseCaseExampleCards
           items={[
-            { title: "Docs from a repo", description: "Every page of a product's site, crawled into a branded docs site.", href: "/customers/mintlify", credit: "Mintlify" },
-            { title: "Store builder", description: "A shop's pages, crawled to seed an AI store builder with its brand.", href: "/customers/instant", credit: "Instant" },
-            { title: "Agent research", description: "Company sites crawled on demand to answer an agent's questions.", href: "/customers/similarweb", credit: "Similarweb" },
+            { title: "Docs from a repo", description: "Every page of a product's site, crawled into a branded docs site.", href: "https://context.dev/customers/mintlify", credit: "Mintlify" },
+            { title: "Store builder", description: "A shop's pages, crawled to seed an AI store builder with its brand.", href: "https://context.dev/customers/instant", credit: "Instant" },
+            { title: "Agent research", description: "Company sites crawled on demand to answer an agent's questions.", href: "https://context.dev/customers/similarweb", credit: "Similarweb" },
           ]}
         />
       </SiteSection>
@@ -48,9 +48,9 @@ export function Site() {
         <SectionHeaderRule />
         <UseCaseStoryCards
           items={[
-            { customer: "Instant", title: "Switched from Firecrawl in under a day", metric: "< 1 day", metricLabel: "to production", href: "/blog/instant-switches-from-firecrawl-to-context-dev-in-under-a-day" },
-            { customer: "Tinfoil", title: "Added scraping to a private search agent", metric: "5 min", metricLabel: "to integrate", href: "/blog/tinfoil-switches-to-context-dev-for-zero-data-retention-web-scraping" },
-            { customer: "Mastra", title: "Personalized onboarding in an hour", metric: "1 hour", metricLabel: "to an MVP", href: "/blog/mastra-personalizes-onboarding-with-context-dev" },
+            { customer: "Instant", title: "Switched from Firecrawl in under a day", metric: "< 1 day", metricLabel: "to production", href: "https://context.dev/blog/instant-switches-from-firecrawl-to-context-dev-in-under-a-day" },
+            { customer: "Tinfoil", title: "Added scraping to a private search agent", metric: "5 min", metricLabel: "to integrate", href: "https://context.dev/blog/tinfoil-switches-to-context-dev-for-zero-data-retention-web-scraping" },
+            { customer: "Mastra", title: "Personalized onboarding in an hour", metric: "1 hour", metricLabel: "to an MVP", href: "https://context.dev/blog/mastra-personalizes-onboarding-with-context-dev" },
           ]}
         />
       </SiteSection>

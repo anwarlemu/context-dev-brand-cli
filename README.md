@@ -49,6 +49,10 @@ search, preview hydration, and overflow checks. Set `DOCS_URL` to check another 
 `DASHBOARD_REFERENCE_URL` to compare the sidebar's computed styles with a running reference checkout. Set
 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` if Chromium is installed outside Playwright's default location.
 
+Run `npm run check:library` against the same server to exercise validation, overlays, menus, clipboard, keyboard controls, and page actions, then render every example at desktop and phone widths. `LIBRARY_CRAWL=0` runs only the interaction checks. Results are written to `LIBRARY_CHECK_OUTPUT` (default `/private/tmp/context-library-review`).
+
+Every preview runs in its own sandboxed frame so dialogs and menus stay inside the example. Example forms and account actions update local demo state. Product blocks expose navigation through a cancelable `ds:navigate` event; the docs route those actions to other examples.
+
 The docs project's Vercel Toolbar must stay disabled for preview and production deployments. Its injected cookie
 check throws inside the sandboxed example frames and prevents React from starting, including the preview size reporter.
 

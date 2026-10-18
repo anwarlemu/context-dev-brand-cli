@@ -54,20 +54,22 @@ export function Product() {
 }
 
 export function Empty() {
+  const [breakdown, setBreakdown] = useState<"status" | "auth">("status");
+  const [range, setRange] = useState<"7" | "30">("30");
   return (
     <div className="w-full max-w-xl">
       <UsageCard
         breakdowns={BREAKDOWNS}
-        breakdown="status"
-        onBreakdownChange={() => {}}
+        breakdown={breakdown}
+        onBreakdownChange={setBreakdown}
         ranges={RANGES}
-        range="30"
-        onRangeChange={() => {}}
+        range={range}
+        onRangeChange={setRange}
         view={{ buckets: [], series: [], unit: "calls", label: "API calls" }}
         empty={
           <UsageCardEmpty>
             Run one above or in the{" "}
-            <a href="#" className="text-fg-brand hover:underline">
+            <a href="/preview/try-api/Product" className="text-fg-brand hover:underline">
               playground
             </a>{" "}
             and your usage fills in here.

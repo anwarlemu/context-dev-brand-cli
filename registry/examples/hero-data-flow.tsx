@@ -12,7 +12,7 @@ export function Site() {
       description="Ask a question about any company and get an answer that cites every page it read."
       actions={
         <Button asChild variant="pill">
-          <a href="/signup">Start for free</a>
+          <a href="https://context.dev/signup">Start for free</a>
         </Button>
       }
       media={

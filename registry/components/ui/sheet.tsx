@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 
 // A side panel (the dashboard's monitor detail panel): a white panel in a 6px frame floating over the page's edge, no
 // scrim, so opening it never reflows or dims what is behind. It slides 8px in as it fades (200ms, ease-out); reduced
-// motion keeps the fade. Pass `modal={false}` to Sheet to keep the page behind it usable, as the dashboard's list is.
-function Sheet(props: React.ComponentProps<typeof SheetPrimitive.Root>) {
-  return <SheetPrimitive.Root data-slot="sheet" {...props} />;
+// motion keeps the fade. Like the dashboard's list, the page remains usable while the details are open.
+function Sheet({ modal = false, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
+  return <SheetPrimitive.Root data-slot="sheet" modal={modal} {...props} />;
 }
 
 function SheetTrigger(props: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
@@ -23,19 +23,22 @@ function SheetClose(props: React.ComponentProps<typeof SheetPrimitive.Close>) {
 }
 
 const SIDES = {
-  right: "inset-y-4 right-4 w-[min(440px,calc(100vw-2rem))] starting:translate-x-2 data-[state=closed]:animate-sheet-right-out",
-  left: "inset-y-4 left-4 w-[min(440px,calc(100vw-2rem))] starting:-translate-x-2 data-[state=closed]:animate-sheet-left-out",
+  right: "inset-y-4 right-4 w-[min(440px,calc(100%-2rem))] starting:translate-x-2 data-[state=closed]:animate-sheet-right-out",
+  left: "inset-y-4 left-4 w-[min(440px,calc(100%-2rem))] starting:-translate-x-2 data-[state=closed]:animate-sheet-left-out",
   bottom: "inset-x-2 bottom-2 max-h-[85vh] starting:translate-y-2 data-[state=closed]:animate-sheet-bottom-out",
 } as const;
 
-function SheetContent({ className, children, side = "right", ...props }: React.ComponentProps<typeof SheetPrimitive.Content> & { side?: keyof typeof SIDES }) {
+function SheetContent({ className, children, side = "right", onInteractOutside = (event) => event.preventDefault(), onOpenAutoFocus = (event) => event.preventDefault(), ...props }: React.ComponentProps<typeof SheetPrimitive.Content> & { side?: keyof typeof SIDES }) {
   const container = usePortalContainer();
   return (
     <SheetPrimitive.Portal container={container}>
       <SheetPrimitive.Content
         data-slot="sheet-content"
+        onInteractOutside={onInteractOutside}
+        onOpenAutoFocus={onOpenAutoFocus}
         className={cn(
-          "fixed z-50 flex flex-col rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none transition-[opacity,translate] duration-200 ease-emphasized starting:opacity-0 motion-reduce:starting:translate-x-0 motion-reduce:starting:translate-y-0",
+          "z-20 flex flex-col rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none transition-[opacity,translate] duration-200 ease-emphasized starting:opacity-0 motion-reduce:starting:translate-x-0 motion-reduce:starting:translate-y-0",
+          container ? "absolute" : "fixed",
           SIDES[side],
           className,
         )}

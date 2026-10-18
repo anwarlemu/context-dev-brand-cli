@@ -12,7 +12,7 @@ export function Site() {
       description="Monitor any page and get the change the moment it lands."
       actions={
         <Button asChild variant="pill">
-          <a href="/signup">Start for free</a>
+          <a href="https://context.dev/signup">Start for free</a>
         </Button>
       }
     />

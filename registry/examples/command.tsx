@@ -1,3 +1,5 @@
+"use client";
+
 import { BarChart3, Key, Settings } from "lucide-react";
 
 import { Command, CommandEmpty, CommandFooter, CommandGroup, CommandInput, CommandItem, CommandList, CommandShortcut } from "@/components/ui/command";
@@ -10,19 +12,19 @@ export function Product() {
       <CommandList>
         <CommandEmpty>Nothing matches.</CommandEmpty>
         <CommandGroup heading="Go to">
-          <CommandItem>
+          <CommandItem onSelect={() => { window.location.href = "/preview/usage-card/Product"; }}>
             <BarChart3 strokeWidth={1.5} /> Usage
             <CommandShortcut>
               <Kbd>G</Kbd> then <Kbd>U</Kbd>
             </CommandShortcut>
           </CommandItem>
-          <CommandItem>
+          <CommandItem onSelect={() => { window.location.href = "/preview/table-page/Block"; }}>
             <Key strokeWidth={1.5} /> API keys
             <CommandShortcut>
               <Kbd>G</Kbd> then <Kbd>K</Kbd>
             </CommandShortcut>
           </CommandItem>
-          <CommandItem>
+          <CommandItem onSelect={() => { window.location.href = "/preview/settings-page/Block"; }}>
             <Settings strokeWidth={1.5} /> Settings
           </CommandItem>
         </CommandGroup>
@@ -35,9 +37,7 @@ export function Product() {
         <span>
           <Kbd>↵</Kbd> to open
         </span>
-        <span className="ml-auto">
-          <Kbd>esc</Kbd> to close
-        </span>
+
       </CommandFooter>
     </Command>
   );

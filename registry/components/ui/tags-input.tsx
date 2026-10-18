@@ -15,6 +15,7 @@ function TagsInput({
   isTagInvalid,
   bare = false,
   className,
+  ...inputProps
 }: {
   id?: string;
   tags: string[];
@@ -24,7 +25,7 @@ function TagsInput({
   /** Drops the field's own border, for a TagsInput set inside a container that draws one. */
   bare?: boolean;
   className?: string;
-}) {
+} & Pick<React.ComponentProps<"input">, "aria-describedby" | "aria-invalid" | "required" | "disabled">) {
   const [draft, setDraft] = React.useState("");
 
   function commit(value: string) {
@@ -59,13 +60,16 @@ function TagsInput({
         </span>
       ))}
       <input
+        {...inputProps}
         id={id}
+        aria-invalid={inputProps["aria-invalid"] ?? (isTagInvalid && tags.some(isTagInvalid) ? true : undefined)}
         value={draft}
         onChange={(event) => {
-          if (event.target.value.endsWith(",")) commit(event.target.value);
+          if (!(event.nativeEvent as InputEvent).isComposing && event.target.value.endsWith(",")) commit(event.target.value);
           else setDraft(event.target.value);
         }}
         onKeyDown={(event) => {
+          if (event.nativeEvent.isComposing || event.keyCode === 229) return;
           if (event.key === "Enter") {
             event.preventDefault();
             commit(draft);

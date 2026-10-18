@@ -70,7 +70,8 @@ export function SettingsPage({ defaultTab = "personal", referrals }: { defaultTa
 function PersonalPanel() {
   const [editingEmail, setEditingEmail] = React.useState(false);
   const [nextEmail, setNextEmail] = React.useState("");
-  const email = "ian@acme.com";
+  const [email, setEmail] = React.useState("ian@acme.com");
+  const [message, setMessage] = React.useState("");
   const unchanged = nextEmail.trim().toLowerCase() === email;
   return (
     <>
@@ -92,6 +93,8 @@ function PersonalPanel() {
                 className="flex flex-col gap-2"
                 onSubmit={(e) => {
                   e.preventDefault();
+                  setEmail(nextEmail.trim());
+                  setMessage("Email updated in this example.");
                   setEditingEmail(false);
                 }}
               >
@@ -127,6 +130,7 @@ function PersonalPanel() {
           )}
         </SettingsField>
         <PhotoRow initials="IG" shape="circle" />
+        <p role="status" className="text-caption text-fg-muted empty:hidden">{message}</p>
       </section>
 
       <DangerZone
@@ -146,13 +150,18 @@ function PersonalPanel() {
 }
 
 function PhotoRow({ initials, shape }: { initials: string; shape: "circle" | "rounded" }) {
+  const picker = React.useRef<HTMLInputElement>(null);
+  const [image, setImage] = React.useState<string>();
+  const [error, setError] = React.useState("");
   return (
     <div className="flex items-center gap-4">
-      <span className={cn("grid size-16 shrink-0 place-items-center bg-brand text-h5 text-white", shape === "circle" ? "rounded-pill" : "rounded-card")}>{initials}</span>
+      <span className={cn("grid size-16 shrink-0 place-items-center bg-brand text-h5 text-white", shape === "circle" ? "rounded-pill" : "rounded-card")}>{image ? <img src={image} alt="Uploaded avatar" className="size-full rounded-[inherit] object-cover" /> : initials}</span>
       <div className="flex flex-col items-start gap-1.5">
-        <Button variant="outline" size="sm">
+        <input ref={picker} type="file" accept="image/*" aria-label="Upload photo" className="sr-only" onChange={(event) => { const file = event.target.files?.[0]; if (!file) return; if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) { setError("Choose an image smaller than 5 MB."); return; } setError(""); const reader = new FileReader(); reader.onload = () => setImage(String(reader.result)); reader.readAsDataURL(file); }} />
+        <Button variant="outline" size="sm" onClick={() => picker.current?.click()}>
           Upload photo
         </Button>
+        {error && <p role="alert" className="text-caption text-danger">{error}</p>}
         {shape === "rounded" && <span className="text-caption text-fg-subtle">Square images work best.</span>}
       </div>
     </div>
@@ -224,6 +233,8 @@ function DangerZone({
   children?: React.ReactNode;
 }) {
   const [open, setOpen] = React.useState(false);
+  const [deleted, setDeleted] = React.useState(false);
+  if (deleted) return <SettingsSection title="Danger zone"><p role="status" className="text-body-sm">Deleted from this example.</p><Button variant="outline" onClick={() => setDeleted(false)}>Reset example</Button></SettingsSection>;
   return (
     <SettingsSection title="Danger zone">
       <SettingsRow title={title} description={description} action={<SettingsDangerButton onClick={() => setOpen(true)}>{title}</SettingsDangerButton>} />
@@ -238,7 +249,7 @@ function DangerZone({
             <Button variant="ghost" size="sm" onClick={() => setOpen(false)}>
               {keepLabel}
             </Button>
-            <HoldButton label={holdLabel} onConfirm={() => setOpen(false)} />
+            <HoldButton label={holdLabel} onConfirm={() => { setOpen(false); setDeleted(true); }} />
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -247,6 +258,11 @@ function DangerZone({
 }
 
 function BillingPanel() {
+  const [action, setAction] = React.useState<string | null>(null);
+  const [plan, setPlan] = React.useState("Pro");
+  const [card, setCard] = React.useState("4242");
+  const [draftCard, setDraftCard] = React.useState("");
+  const [message, setMessage] = React.useState("");
   const [autoTopup, setAutoTopup] = React.useState(true);
   const [spendAlerts, setSpendAlerts] = React.useState(false);
   const remaining = 41590;
@@ -258,14 +274,14 @@ function BillingPanel() {
         <div className="flex flex-wrap items-center gap-3">
           <GlyphTile name="upgrade" still className="size-10 p-1.5" />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-body-sm text-fg">Pro plan</p>
+            <p className="truncate text-body-sm text-fg">{plan} plan</p>
             <p className="flex flex-wrap items-center gap-x-1 text-body-sm text-fg-subtle tabular-nums">
               <span>Renews Nov 1 ·</span>
               <span>$49/month</span>
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-1">
-            <Button variant="brand" size="sm">
+            <Button variant="brand" size="sm" onClick={() => setAction("Change plan")}>
               Change plan
             </Button>
             <DropdownMenu>
@@ -276,9 +292,9 @@ function BillingPanel() {
                 <Settings2 className="size-4" strokeWidth={1.5} />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Billing portal</DropdownMenuItem>
-                <DropdownMenuItem>Pause plan</DropdownMenuItem>
-                <DropdownMenuItem variant="destructive">Cancel plan</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => setAction("Billing portal")}>Billing portal</DropdownMenuItem>
+                <DropdownMenuItem onSelect={() => { setPlan("Paused"); setMessage("Example plan paused."); }}>Pause plan</DropdownMenuItem>
+                <DropdownMenuItem variant="destructive" onSelect={() => setAction("Cancel plan")}>Cancel plan</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -335,10 +351,10 @@ function BillingPanel() {
             <CreditCard className="size-4" strokeWidth={1.5} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-body-sm text-fg">Visa ···· 4242</p>
+            <p className="text-body-sm text-fg">Visa ···· {card}</p>
             <p className="mt-0.5 text-caption text-fg-subtle tabular-nums">Expires 08/28 · Primary</p>
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={() => setAction("Update card")}>
             Update card
           </Button>
         </div>
@@ -374,7 +390,7 @@ function BillingPanel() {
                 <span className="hidden truncate tabular-nums md:block">{inv.created}</span>
                 <button
                   type="button"
-                  aria-label={`View invoice ${inv.number}`}
+                  onClick={() => setAction(`Invoice ${inv.number}`)} aria-label={`View invoice ${inv.number}`}
                   className="grid size-8 place-items-center justify-self-end rounded-control text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring"
                 >
                   <ExternalLink className="size-4" strokeWidth={1.5} />
@@ -384,7 +400,17 @@ function BillingPanel() {
           </ul>
         </div>
       </SettingsSection>
-
+      <p role="status" className="text-body-sm text-fg-muted empty:hidden">{message}</p>
+      <Dialog open={action !== null} onOpenChange={(open) => { if (!open) setAction(null); }}><DialogContent>
+        <DialogHeader><DialogTitle>{action}</DialogTitle><DialogDescription>Billing controls use example data.</DialogDescription></DialogHeader>
+        <DialogBody className="grid gap-4">
+          {action === "Change plan" && ["Free", "Starter", "Pro"].map((name) => <Button key={name} variant={plan === name ? "brand" : "outline"} onClick={() => { setPlan(name); setMessage(`${name} selected for this example.`); setAction(null); }}>{name}</Button>)}
+          {action === "Cancel plan" && <HoldButton label="Hold to cancel plan" onConfirm={() => { setPlan("Free"); setMessage("Example plan cancelled."); setAction(null); }} />}
+          {action === "Update card" && <form className="grid gap-3" onSubmit={(event) => { event.preventDefault(); setCard(draftCard); setMessage("Example payment method updated."); setAction(null); }}><SettingsField label="Example card's last four digits">{(id) => <Input id={id} value={draftCard} onChange={(event) => setDraftCard(event.target.value)} pattern="[0-9]{4}" maxLength={4} required />}</SettingsField><Button type="submit" variant="brand">Save</Button></form>}
+          {action === "Billing portal" && <><Button onClick={() => setAction("Change plan")}>Change plan</Button><Button onClick={() => setAction("Update card")}>Update card</Button></>}
+          {action?.startsWith("Invoice ") && INVOICES.filter((invoice) => action === `Invoice ${invoice.number}`).map((invoice) => <dl key={invoice.number} className="grid grid-cols-2 gap-3 text-body-sm"><dt>Invoice</dt><dd>{invoice.number}</dd><dt>Status</dt><dd>{invoice.status}</dd><dt>Amount</dt><dd>{invoice.amount}</dd><dt>Created</dt><dd>{invoice.created}</dd></dl>)}
+        </DialogBody>
+      </DialogContent></Dialog>
     </>
   );
 }

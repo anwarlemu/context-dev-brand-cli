@@ -11,7 +11,7 @@ export function Product() {
   const [method, setMethod] = useState<"mcp" | "cli">("mcp");
   return (
     <div className="h-[30rem] w-full max-w-md">
-      <QuickstartCard aside={<CardLink href="#">Manage keys</CardLink>}>
+      <QuickstartCard aside={<CardLink href="/preview/table-page/Block">Manage keys</CardLink>}>
         <QuickstartStep number={1} title="Copy your API key">
           <KeyField secret={KEY} name="Default" />
         </QuickstartStep>

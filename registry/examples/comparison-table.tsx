@@ -1,8 +1,9 @@
+import { SiteSection } from "@/components/site/section";
 import { ComparisonTable } from "@/components/site/comparison-table";
 
 // A use-case page's comparison: answers in words, the alternative first and the brand's column last.
 export function Site() {
-  return (
+  return (<SiteSection>
     <ComparisonTable
       className="w-full"
       caption="Context.dev compared with your own crawler"
@@ -18,12 +19,12 @@ export function Site() {
         { feature: "Cost", alternative: "Servers, proxies, and engineering time", context: "1 credit per page, failed pages are free" },
       ]}
     />
-  );
+  </SiteSection>);
 }
 
 // An alternatives page's full comparison: checks, dashes and short figures under category headings.
 export function Marks() {
-  return (
+  return (<SiteSection>
     <ComparisonTable
       className="w-full"
       variant="marks"
@@ -46,5 +47,5 @@ export function Marks() {
       ]}
       footnote="Prices and features checked May 2026."
     />
-  );
+  </SiteSection>);
 }

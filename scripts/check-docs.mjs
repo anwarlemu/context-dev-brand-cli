@@ -28,8 +28,9 @@ try {
     await page.getByRole('combobox').fill('switch');
     await page.getByRole('option', { name: 'Switch', exact: true }).click();
     await page.waitForURL('**/components/switch');
-    await page.locator('[data-slot="switch"]').first().click();
-    assert.equal(await page.locator('[data-slot="switch"]').first().getAttribute('data-state'), 'unchecked');
+    const switchFrame = page.frameLocator('iframe[src="/preview/switch/Product"]');
+    await switchFrame.locator('[data-slot="switch"]').first().click();
+    assert.equal(await switchFrame.locator('[data-slot="switch"]').first().getAttribute('data-state'), 'unchecked');
     await page.locator('h1').click();
     await page.keyboard.press('Shift+Escape');
     await page.waitForURL('**/components');

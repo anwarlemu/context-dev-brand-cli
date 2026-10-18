@@ -1,3 +1,4 @@
+import { SiteSection } from "@/components/site/section";
 import { WorkflowGrid } from "@/components/site/workflow-grid";
 import { AutofillStory } from "@/components/visuals/stories/autofill-story";
 import { BatchStory } from "@/components/visuals/stories/batch-story";
@@ -8,7 +9,7 @@ import { ScrapeStory } from "@/components/visuals/stories/scrape-story";
 
 // Each workflow with its own dot story in the panel, as on the home page.
 export function Site() {
-  return (
+  return (<SiteSection>
     <WorkflowGrid
       className="w-full"
       items={[
@@ -20,5 +21,5 @@ export function Site() {
         { title: "Autofill onboarding forms", description: "Pre-fill company fields from a work email domain so more users finish signing up.", media: <AutofillStory className="w-full" /> },
       ]}
     />
-  );
+  </SiteSection>);
 }

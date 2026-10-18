@@ -9,6 +9,12 @@ import { CreditsMenu } from "@/components/product/credits-menu";
 import { SidebarAlertCard } from "@/components/product/sidebar-alert-card";
 import { UserMenu } from "@/components/product/user-menu";
 import { WorkspaceSwitcher } from "@/components/product/workspace-switcher";
+import { Button } from "@/components/ui/button";
+import { CommandDialog, CommandInput, CommandList, CommandItem, CommandEmpty } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter } from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { navigate } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
 type NavItem = { title: string; icon: LucideIcon; trailing?: React.ReactNode };
@@ -36,6 +42,8 @@ const NAV: { label?: string; items: NavItem[] }[] = [
   },
 ];
 
+const ROUTES: Record<string, string> = { Overview: "/", "Data APIs": "/playground/scrape", Monitors: "/monitors", Batches: "/batches", "Logo Link": "/logo-link", "API keys": "/api-keys", Usage: "/usage", Team: "/team" };
+
 const WORKSPACES = [
   { id: "acme", name: "Acme", plan: "Pro" },
   { id: "personal", name: "Personal", plan: "Free" },
@@ -62,11 +70,19 @@ function ScrollTopShade({ scrollerRef }: { scrollerRef: React.RefObject<HTMLElem
 // sides, so a centered column sits in the same place whether or not the page is long enough to scroll. It fills its
 // parent: give that the viewport's height (h-dvh).
 export function AppShell({ active = "Overview", paymentFailed = false, className, children }: { active?: string; paymentFailed?: boolean; className?: string; children: React.ReactNode }) {
+  const [workspaces, setWorkspaces] = React.useState(WORKSPACES);
+  const [defaultWorkspace, setDefaultWorkspace] = React.useState("acme");
+  const [createOpen, setCreateOpen] = React.useState(false);
+  const [organizationName, setOrganizationName] = React.useState("");
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [helpOpen, setHelpOpen] = React.useState(false);
+  const [signedOut, setSignedOut] = React.useState(false);
   const [navOpen, setNavOpen] = React.useState(false);
   const [workspace, setWorkspace] = React.useState("acme");
   const [autoTopUp, setAutoTopUp] = React.useState(false);
   const scrollerRef = React.useRef<HTMLDivElement>(null);
   const isActive = (title: string) => title.toLowerCase() === active.toLowerCase();
+  if (signedOut) return <div className="grid h-full place-content-center gap-4"><p role="status">Signed out of this example.</p><Button onClick={() => setSignedOut(false)}>Sign in again</Button></div>;
   return (
     <div data-slot="app-shell" className={cn("ds-product flex h-full min-h-0 overflow-clip bg-canvas text-fg", className)}>
       <AppSidebar
@@ -75,26 +91,26 @@ export function AppShell({ active = "Overview", paymentFailed = false, className
         header={
           <>
             <section aria-label="Workspace" className="min-w-0">
-              <WorkspaceSwitcher workspaces={WORKSPACES} value={workspace} onValueChange={setWorkspace} onMakeDefault={() => {}} onOpenSettings={() => {}} onCreate={() => {}} />
+              <WorkspaceSwitcher workspaces={workspaces} value={workspace} defaultId={defaultWorkspace} onValueChange={setWorkspace} onMakeDefault={setDefaultWorkspace} onOpenSettings={() => { navigate("/settings?tab=organization"); }} onCreate={() => setCreateOpen(true)} />
             </section>
-            <SidebarSearchButton onClick={() => setNavOpen(false)} />
+            <SidebarSearchButton onClick={() => { setNavOpen(false); setSearchOpen(true); }} />
           </>
         }
         footer={
           <>
-            {paymentFailed && <SidebarAlertCard tone="danger" tag="Last payment failed" message="Your payment method is failing." action="Fix issue" pendingAction="Opening..." />}
-            <SidebarButton icon={CircleHelp}>Help</SidebarButton>
-            <SidebarLink href="#" icon={Code} target="_blank" rel="noopener noreferrer" onClick={(e) => e.preventDefault()}>
+            {paymentFailed && <SidebarAlertCard tone="danger" tag="Last payment failed" message="Your payment method is failing." action="Fix issue" pendingAction="Opening..." onClick={() => { navigate("/settings?tab=billing"); }} />}
+            <SidebarButton icon={CircleHelp} onClick={() => setHelpOpen(true)}>Help</SidebarButton>
+            <SidebarLink href="https://docs.context.dev" icon={Code} target="_blank" rel="noopener noreferrer">
               Documentation
             </SidebarLink>
             <UserMenu
               name="Ian Gerado"
               email="ian@acme.com"
               sections={[
-                [{ label: "Settings" }, { label: "Share & get rewards" }, { label: "Talk to a founder" }, { label: "Changelog" }],
-                [{ label: "Terms & conditions" }, { label: "Privacy policy" }],
+                [{ label: "Settings", href: "/settings" }, { label: "Share & get rewards", href: "/settings?tab=referrals" }, { label: "Talk to a founder", href: "https://cal.com/context-dev/30min", external: true }, { label: "Changelog", href: "https://context.dev/changelog", external: true }],
+                [{ label: "Terms & conditions", href: "https://context.dev/terms", external: true }, { label: "Privacy policy", href: "https://context.dev/privacy", external: true }],
               ]}
-              onLogOut={() => {}}
+              onLogOut={() => setSignedOut(true)}
             />
           </>
         }
@@ -102,7 +118,7 @@ export function AppShell({ active = "Overview", paymentFailed = false, className
         {NAV.map((group) => (
           <SidebarGroup key={group.label ?? "main"} label={group.label}>
             {group.items.map((item) => (
-              <SidebarLink key={item.title} href="#" icon={item.icon} trailing={item.trailing} active={isActive(item.title)} onClick={(e) => e.preventDefault()}>
+              <SidebarLink key={item.title} href={ROUTES[item.title]} icon={item.icon} trailing={item.trailing} active={isActive(item.title)} onClick={() => setNavOpen(false)}>
                 {item.title}
               </SidebarLink>
             ))}
@@ -120,9 +136,9 @@ export function AppShell({ active = "Overview", paymentFailed = false, className
             autoTopUp={autoTopUp}
             onAutoTopUpChange={setAutoTopUp}
             autoTopUpDescription="Off. Requests stop when you run out of credits."
-            onUpgrade={() => {}}
+            onUpgrade={() => { navigate("/settings?tab=billing"); }}
             usageAction={
-              <a href="#">
+              <a href="/usage">
                 <Gauge className="size-3.5" strokeWidth={1.5} />
                 View usage
               </a>
@@ -136,6 +152,9 @@ export function AppShell({ active = "Overview", paymentFailed = false, className
           <ScrollTopShade scrollerRef={scrollerRef} />
         </div>
       </main>
+      <CommandDialog open={searchOpen} onOpenChange={setSearchOpen} title="Search the workspace" description="Find a page."><CommandInput placeholder="Search pages" /><CommandList><CommandEmpty>Nothing matches.</CommandEmpty>{Object.entries(ROUTES).map(([title, href]) => <CommandItem key={title} onSelect={() => { navigate(href); }}>{title}</CommandItem>)}</CommandList></CommandDialog>
+      <Dialog open={createOpen} onOpenChange={setCreateOpen}><DialogContent><form onSubmit={(event) => { event.preventDefault(); if (!organizationName.trim()) return; const id = crypto.randomUUID(); setWorkspaces((all) => [...all, { id, name: organizationName.trim(), plan: "Free" }]); setWorkspace(id); setOrganizationName(""); setCreateOpen(false); }}><DialogHeader><DialogTitle>Create organization</DialogTitle><DialogDescription>Add a workspace to this example.</DialogDescription></DialogHeader><DialogBody><Field label="Organization name" required><Input value={organizationName} onChange={(event) => setOrganizationName(event.target.value)} /></Field></DialogBody><DialogFooter><Button onClick={() => setCreateOpen(false)}>Cancel</Button><Button type="submit" variant="brand" disabled={!organizationName.trim()}>Create</Button></DialogFooter></form></DialogContent></Dialog>
+      <Dialog open={helpOpen} onOpenChange={setHelpOpen}><DialogContent><DialogHeader><DialogTitle>Help</DialogTitle><DialogDescription>Contact the team or read the API documentation.</DialogDescription></DialogHeader><DialogBody className="flex flex-wrap gap-3"><Button asChild><a href="mailto:hello@context.dev">Email support</a></Button><Button asChild><a href="https://docs.context.dev" target="_blank" rel="noreferrer">Documentation</a></Button></DialogBody></DialogContent></Dialog>
     </div>
   );
 }

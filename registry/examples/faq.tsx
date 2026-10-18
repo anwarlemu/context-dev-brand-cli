@@ -1,3 +1,4 @@
+import { SiteSection } from "@/components/site/section";
 import { FaqList, FaqPlainList, FaqSection, type FaqCategory } from "@/components/site/faq";
 import { Button } from "@/components/ui/button";
 
@@ -67,7 +68,7 @@ const categories: FaqCategory[] = [
 ];
 
 export function Site() {
-  return (
+  return (<SiteSection>
     <FaqSection
       className="w-full"
       categories={categories}
@@ -78,7 +79,7 @@ export function Site() {
         </Button>
       }
     />
-  );
+  </SiteSection>);
 }
 
 // The scrolling list: fixed at its closed height, an opened answer scrolls inside it and the edges fade where more

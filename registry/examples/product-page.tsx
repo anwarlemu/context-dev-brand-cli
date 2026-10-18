@@ -45,7 +45,7 @@ export function Site() {
         description="Ranked results with clean page content, so your agent reads the sources instead of guessing from links."
         actions={
           <>
-            <ProductPillLink href="/signup">Get API key</ProductPillLink>
+            <ProductPillLink href="https://context.dev/signup">Get API key</ProductPillLink>
             <ProductPillLink variant="secondary" href="https://docs.context.dev" target="_blank" rel="noopener noreferrer">
               View documentation
             </ProductPillLink>
@@ -86,7 +86,7 @@ export function Site() {
         ]}
         links={[
           { label: "Read the API reference", href: "https://docs.context.dev", external: true },
-          { label: "Try in the playground", href: "/playground" },
+          { label: "Try in the playground", href: "https://context.dev/playground" },
         ]}
       />
       <ProductComparison
@@ -103,7 +103,7 @@ export function Site() {
         ]}
         note={
           <>
-            Prices from each provider&apos;s public pricing. <a href="/pricing">See our pricing</a>
+            Prices from each provider&apos;s public pricing. <a href="https://context.dev/pricing">See our pricing</a>
           </>
         }
       />
@@ -128,15 +128,15 @@ export function Site() {
       />
       <ProductRelatedCards
         products={[
-          { name: "Answers", href: "/answers-api", description: "Ask a question and get a structured answer with its sources." },
-          { name: "Scrape", href: "/web-scraping-api", description: "Turn any page into Markdown, HTML, JSON, or a screenshot." },
+          { name: "Answers", href: "https://context.dev/answers-api", description: "Ask a question and get a structured answer with its sources." },
+          { name: "Scrape", href: "https://context.dev/web-scraping-api", description: "Turn any page into Markdown, HTML, JSON, or a screenshot." },
         ]}
       />
       <ProductCtaPanel
         description="One API key for scraping, research, brand data, batches, and monitoring."
         actions={
           <>
-            <ProductPillLink tone="light" href="/signup">
+            <ProductPillLink tone="light" href="https://context.dev/signup">
               Get API key
             </ProductPillLink>
             <ProductPillLink tone="light" variant="secondary" href="https://docs.context.dev">

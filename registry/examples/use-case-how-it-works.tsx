@@ -64,8 +64,8 @@ export function Site() {
             { title: "Answer", description: "Hand the pages to your model with their sources.", code: `const answer = await model.generate({\n  context: page.markdown.data,\n});` },
           ]}
           links={[
-            { label: "Search API", href: "/products/search" },
-            { label: "Scrape API", href: "/products/scrape" },
+            { label: "Search API", href: "https://context.dev/products/search" },
+            { label: "Scrape API", href: "https://context.dev/products/scrape" },
           ]}
         />
       </SiteSection>

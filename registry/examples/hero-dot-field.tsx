@@ -13,7 +13,7 @@ export function Site() {
       actions={
         <>
           <Button asChild variant="pill">
-            <a href="/signup">Start for free</a>
+            <a href="https://context.dev/signup">Start for free</a>
           </Button>
           <Button asChild variant="pill-outline">
             <a href="https://docs.context.dev">Read the docs</a>

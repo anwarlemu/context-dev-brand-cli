@@ -36,7 +36,7 @@ export function Product() {
       <div className="flex flex-col gap-3">
         <Summary />
       </div>
-      <UsageSummaryDialog open={open} onOpenChange={setOpen} description="On the Pro plan, resetting Nov 1." footer={<CardLink href="#">See full usage</CardLink>}>
+      <UsageSummaryDialog open={open} onOpenChange={setOpen} description="On the Pro plan, resetting Nov 1." footer={<CardLink href="/preview/usage-card/Product">See full usage</CardLink>}>
         <Summary />
       </UsageSummaryDialog>
     </div>

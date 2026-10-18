@@ -18,7 +18,7 @@ export function Site() {
           // One to a row, each story beside its text, so the stories have room in this frame.
           layout="rows"
           items={[
-            { title: "Pages", description: "Track one URL for any change to its text, prices or links.", icon: <Globe />, meta: "target: page", tags: ["Exact", "Semantic"], href: "/products/monitor", story: <PageMonitorStory /> },
+            { title: "Pages", description: "Track one URL for any change to its text, prices or links.", icon: <Globe />, meta: "target: page", tags: ["Exact", "Semantic"], href: "https://context.dev/products/monitor", story: <PageMonitorStory /> },
             { title: "Sitemaps", description: "Watch a whole site and hear about every page that is added or removed.", icon: <MapIcon />, meta: "target: sitemap", badge: "New", story: <SitemapMonitorStory /> },
             { title: "Schedules", description: "Check every few minutes or once a day, and get a webhook when something moves.", icon: <Clock />, meta: "schedule: 6 hours", story: <WatchStory /> },
           ]}

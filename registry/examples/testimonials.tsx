@@ -8,7 +8,7 @@ const items: Testimonial[] = [
     highlights: ["we were integrating within 10 minutes"],
     name: "Nick Khami",
     role: "Engineering Manager @ Mintlify",
-    href: "/blog/mintlify-turns-github-repos-into-branded-docs-sites-with-brand-dev",
+    href: "https://context.dev/blog/mintlify-turns-github-repos-into-branded-docs-sites-with-brand-dev",
   },
   {
     id: 1,
@@ -16,7 +16,7 @@ const items: Testimonial[] = [
     highlights: ["Context.dev saves us a lot of time right now"],
     name: "John Acosta",
     role: "Founder @ UsePropane.ai",
-    href: "/blog/propane-ai-streamlines-onboarding-and-delivers-branded-user-interview-experiences-with-brand-dev",
+    href: "https://context.dev/blog/propane-ai-streamlines-onboarding-and-delivers-branded-user-interview-experiences-with-brand-dev",
   },
   {
     id: 16,
@@ -24,7 +24,7 @@ const items: Testimonial[] = [
     highlights: ["Getting started is very simple"],
     name: "Luke Ramsden",
     role: "CPTO @ Architect (tryarchitect.com)",
-    href: "/blog/architect-enhances-product-onboarding-and-sales-gtm-with-brand-dev",
+    href: "https://context.dev/blog/architect-enhances-product-onboarding-and-sales-gtm-with-brand-dev",
   },
   {
     id: 18,
@@ -32,7 +32,7 @@ const items: Testimonial[] = [
     highlights: ["much higher activation rates", "'aha' value moment"],
     name: "Aaron Edwards",
     role: "Founder @ DocsBot",
-    href: "/blog/docsbot-reduces-onboarding-friction-and-boosts-activation-with-brand-dev",
+    href: "https://context.dev/blog/docsbot-reduces-onboarding-friction-and-boosts-activation-with-brand-dev",
   },
   {
     id: 39,
@@ -40,7 +40,7 @@ const items: Testimonial[] = [
     highlights: ["testing with production workloads within an hour"],
     name: "Christopher Price",
     role: "COO @ Sixtyfour",
-    href: "/customers/sixtyfour-tests-production-scraping-workloads-within-an-hour-with-context-dev",
+    href: "https://context.dev/customers/sixtyfour-tests-production-scraping-workloads-within-an-hour-with-context-dev",
   },
   {
     id: 21,
@@ -48,7 +48,7 @@ const items: Testimonial[] = [
     highlights: ["extensive documentation", "dedicated Slack channel"],
     name: "Vlad Veselukha",
     role: "Senior Data Engineer @ Vizzy",
-    href: "/blog/vizzy-beautifies-profiles-and-job-boards-with-brand-dev",
+    href: "https://context.dev/blog/vizzy-beautifies-profiles-and-job-boards-with-brand-dev",
   },
 ];
 

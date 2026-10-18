@@ -46,6 +46,10 @@ export function FramePreview({ src, label, surface, fullPage = true }: { src: st
     const measure = (event: MessageEvent) => {
       if (!frame.current || event.source !== frame.current.contentWindow || event.origin !== "null") return;
       const data = event.data;
+      if (data?.type === "context-preview-shortcut" && (data.action === "search" || data.action === "back")) {
+        window.dispatchEvent(new KeyboardEvent("keydown", data.action === "search" ? { key: "k", metaKey: true } : { key: "Escape", shiftKey: true }));
+        return;
+      }
       if (data?.type !== "context-preview-size" || typeof data.height !== "number" || !Number.isFinite(data.height)) return;
       setPageHeight(Math.max(120, Math.min(MAX_HEIGHT, Math.ceil(data.height))));
     };
@@ -73,7 +77,8 @@ export function FramePreview({ src, label, surface, fullPage = true }: { src: st
               key={device}
               src={src}
               title={label}
-              sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"
+              sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads"
+              allow="clipboard-write *"
               className="block origin-top-left border-0"
               style={{ width, height: pageHeight, transform: `scale(${scale})` }}
             />

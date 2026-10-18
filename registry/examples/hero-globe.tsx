@@ -18,7 +18,7 @@ export function Site() {
       description="Ranked results with clean page content, from every corner of the web."
       actions={
         <Button asChild variant="pill">
-          <a href="/signup">Start for free</a>
+          <a href="https://context.dev/signup">Start for free</a>
         </Button>
       }
     />
