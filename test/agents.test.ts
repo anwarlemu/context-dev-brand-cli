@@ -29,6 +29,7 @@ describe('agent discovery', () => {
     const field = json(cwd, 'inspect', 'field');
     expect(field.api[0].content).toContain('error?: React.ReactNode');
     expect(field.files[0].content).toContain('aria-invalid');
+    expect(field.install).toContain('add field --surface product');
     expect(field.reference.sources[0].repository).toBe('context-dashboard');
     const example = json(cwd, 'inspect', 'user-menu');
     expect(example.exampleFiles.some((file: any) => file.path.endsWith('demo-feedback.tsx'))).toBe(true);
@@ -90,6 +91,17 @@ it('add previews dependencies, reports kept files, and inherits the initialized 
   expect(readFileSync(join(cwd, 'src/_context-ds/brand.css'), 'utf8')).toContain('font-size: 93.75%');
 });
 
+it('explains why add cannot run outside a supported React and Tailwind app', () => {
+  const cwd = fixture({ 'package.json': '{}', 'index.html': '<html><head></head><body></body></html>' });
+  const result = spawnSync(process.execPath, [bin, 'add', 'scroll-area', '--json', '--no-install'], { cwd, encoding: 'utf8' });
+  expect(result.status).toBe(1);
+  const message = JSON.parse(result.stdout).error.message;
+  expect(message).toContain('React not detected');
+  expect(message).toContain('Tailwind CSS not detected');
+  expect(message).toContain('target React 19.2+ and Tailwind 4 app');
+  expect(readdirSync(cwd).sort()).toEqual(['index.html', 'package.json']);
+});
+
 it('publishes complete, consistent text documentation for every registry item', () => {
   const index = JSON.parse(readFileSync(join(root, 'apps/www/public/r/index.json'), 'utf8'));
   for (const item of index.items.filter((i: any) => i.type !== 'theme')) {
@@ -99,6 +111,7 @@ it('publishes complete, consistent text documentation for every registry item', 
     expect(markdown, item.name).toContain(data.api[0].content);
     expect(data.usage, item.name).toBeTruthy();
     expect(data.reference.scope, item.name).toBeTruthy();
+    if (item.surface === 'site' || item.surface === 'product') expect(data.install).toContain(`--surface ${item.surface}`);
   }
 });
 

@@ -24,7 +24,7 @@ npx context-ds add field input button --surface product --json
 npx context-ds check --changed --json
 ```
 
-Use `--surface site` for marketing pages. React components require React 19.2+, Tailwind CSS 4, and an `@/*` alias in TypeScript and the bundler. Connect real application state and routes; examples use local demo state. Run the app's own checks and test keyboard, pointer, validation, overlays, and scrolling in a browser before visual review.
+Run `add` from the target app's root. It copies React components only into React 19.2+ and Tailwind CSS 4 projects with an `@/*` alias in TypeScript and the bundler. Use `--surface product` for an app or `--surface site` for marketing pages. To apply the brand to another framework, run the top-level CLI command instead. Connect real application state and routes; examples use local demo state. Run the app's own checks and test keyboard, pointer, validation, overlays, and scrolling in a browser before visual review.
 
 Agents can read `/llms.txt`, `/llms-full.txt`, `/agents.md`, `/r/index.json`, `/components/{name}.md`, and `/r/{name}.json` on the docs site. Each item includes usage rules, actual TypeScript declarations, complete source, examples with their relative helpers, dependencies, and reference coverage. The CLI bundles the same registry for offline inspection. Check the revision when mixing hosted and bundled versions.
 

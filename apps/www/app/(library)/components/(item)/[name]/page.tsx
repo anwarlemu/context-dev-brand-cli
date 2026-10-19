@@ -71,6 +71,7 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
   const MAIN = ["Block", "Site", "Product"];
   const demos = Object.fromEntries(Object.entries(examples[item.name] ?? {}).sort(([a], [b]) => (MAIN.includes(a) ? MAIN.indexOf(a) : 9) - (MAIN.includes(b) ? MAIN.indexOf(b) : 9)));
   const data = itemMetadata(item.name);
+  const surfaceFlag = item.surface === "site" || item.surface === "product" ? ` --surface ${item.surface}` : "";
   const requires = item.dependencies.filter((d) => d !== "utils");
   const sections = [
     ...(Object.keys(demos).length ? [{ id: "preview", label: "Preview" }] : []),
@@ -86,7 +87,8 @@ export default async function ComponentPage({ params }: { params: Promise<{ name
             <Badge variant="tag">{TYPE_LABEL[item.type]}</Badge>
             {SURFACE_LABEL[item.surface] !== TYPE_LABEL[item.type] && <Badge variant="tag">{SURFACE_LABEL[item.surface]}</Badge>}
           </div>
-          <PageHeader title={item.title} description={<Prose text={item.description} />} action={<InstallCommand command={`${APPLY_COMMAND} add ${item.name}`} />} className="items-start text-left" />
+          <PageHeader title={item.title} description={<Prose text={item.description} />} action={<InstallCommand command={`${APPLY_COMMAND} add ${item.name}${surfaceFlag}`} />} className="items-start text-left" />
+          <p className="mt-2 text-caption text-fg-muted">Run from the target React 19.2+ app root with Tailwind CSS 4 and the <code>@/*</code> source alias.</p>
 
           <p className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-body-sm text-fg-brand"><a href={`/components/${item.name}.md`} className="underline underline-offset-4">Markdown</a><a href={`/r/${item.name}.json`} className="underline underline-offset-4">JSON and source</a><Link href="/agents" className="underline underline-offset-4">Agent instructions</Link></p>
 

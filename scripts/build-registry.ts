@@ -130,6 +130,7 @@ const items = [
 		const exampleText = existsSync(example) ? readFileSync(example, 'utf8') : '';
 		const helperFiles = exampleFiles(REG, d.name);
 		const exampleDeps = importsOf(d.name, helperFiles.map(file => file.path));
+		const surfaceFlag = d.surface === 'site' || d.surface === 'product' ? ` --surface ${d.surface}` : '';
 		if (d.type !== 'lib' && d.type !== 'hook' && !exampleText) problems.push(`${d.name}: no registry/examples/${d.name}.tsx`);
 		index.push({ ...d, dependencies: deps, npm, examples: [...exampleText.matchAll(/export function (\w+)/g)].map((m) => m[1]) });
 		return {
@@ -145,7 +146,7 @@ const items = [
 			avoid: d.never,
 			notes: d.body,
 			documentation: `${brand.registryUrl}/components/${d.name}.md`,
-			install: `npx -y ${brand.source} add ${d.name}`,
+			install: `npx -y ${brand.source} add ${d.name}${surfaceFlag}`,
 			requirements: { react: '>=19.2', tailwindcss: '>=4', alias: '@/* resolves to the source directory' },
 			reference: { source: d.source, audit: `${brand.registryUrl}/reference-audit.json`, scope: coverage?.scope, sources: coverage?.sources },
 			api: d.paths.filter(p => api.has(p)).map(p => ({ path: p.replace(/\.tsx?$/, '.d.ts'), content: api.get(p)! })),

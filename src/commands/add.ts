@@ -34,7 +34,9 @@ export async function add(names: string[], opts: AddOptions) {
 	let reactVersion = deps.react ?? '';
 	try { reactVersion = JSON.parse(readFileSync(join(root, 'node_modules/react/package.json'), 'utf8')).version; } catch {}
 	const react = /([0-9]+)\.([0-9]+)/.exec(reactVersion);
-	if (!react || Number(react[1]) < 19 || (Number(react[1]) === 19 && Number(react[2]) < 2) || (project.tailwindMajor ?? 0) < 4) throw new Error(`Library components need React 19.2+ and Tailwind 4. For any other project, \`${cli()}\` applies the brand by restyling it.`);
+	if (!react || Number(react[1]) < 19 || (Number(react[1]) === 19 && Number(react[2]) < 2) || (project.tailwindMajor ?? 0) < 4) {
+		throw new Error(`Cannot add React components from ${root}: found React ${reactVersion || 'not detected'} and Tailwind CSS ${project.tailwindMajor ? `${project.tailwindMajor}.x` : 'not detected'}. Run this command from the target React 19.2+ and Tailwind 4 app. To restyle another kind of project, run \`${cli()} --dry-run\` there, then run it again without \`--dry-run\`.`);
+	}
 	if (opts.surface && !['site', 'product'].includes(opts.surface)) throw new Error('--surface is site or product.');
 	const warnings = project.hasAlias ? [] : [`Configure @/* in TypeScript and the bundler to resolve to ./${project.srcDir ? 'src/' : ''}*.`];
 	const items = await closure(names);

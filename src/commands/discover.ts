@@ -20,7 +20,7 @@ export async function inspect(names: string[], opts: { json?: boolean }) {
 	if (opts.json) return console.log(JSON.stringify(items.length === 1 ? items[0] : items, null, 2));
 	console.log(items.map(item => [
 		`# ${item.title ?? item.name}`, item.description, `Name: ${item.name}\nType: ${item.type}\nSurface: ${item.surface ?? 'both'}`,
-		`Install: ${cli()} add ${item.name}`, `## Usage\n${item.usage ?? ''}`, ...(item.avoid ?? []).map(x => `Avoid: ${x}`), item.notes,
+		`Install: ${cli()} add ${item.name}${item.surface === 'site' || item.surface === 'product' ? ` --surface ${item.surface}` : ''}`, `## Usage\n${item.usage ?? ''}`, ...(item.avoid ?? []).map(x => `Avoid: ${x}`), item.notes,
 		`Requires: ${(item.requires ?? []).join(', ') || 'none'}\nPackages: ${(item.packages ?? []).join(', ') || 'none'}`,
 		`Reference: ${item.reference?.source ?? 'Design-system infrastructure'}\nDocs: ${item.documentation ?? ''}`,
 		'## API', ...(item.api ?? []).map(f => `### ${f.path}\n\n\`\`\`tsx\n${f.content}\`\`\``),
