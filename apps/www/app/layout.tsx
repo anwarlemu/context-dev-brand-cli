@@ -6,7 +6,7 @@ import { registryName, registryUrl } from "@www/lib/registry";
 import "./globals.css";
 
 const rethinkSans = Rethink_Sans({ subsets: ["latin"], variable: "--font-rethink-sans" });
-const doto = Doto({ subsets: ["latin"], weight: ["400", "500", "800"], variable: "--font-doto" });
+const doto = Doto({ subsets: ["latin"], weight: ["400", "500", "800", "900"], variable: "--font-doto" });
 const plexMono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-ibm-plex-mono" });
 
 export const metadata: Metadata = {

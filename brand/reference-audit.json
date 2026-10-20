@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T17:11:40.585Z",
+  "checkedAt": "2026-10-20T17:26:51.891Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -1278,6 +1278,57 @@
           "sha256": "24a6f8004a111647e72f24a79192ed99fe0451a06bbbfa77c0b6ae41aaaf3837",
           "retained": false,
           "exports": []
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "brand-search-landing-visuals",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/brand-search-landing-visuals.tsx",
+          "sha256": "c69fc89f70d8294aae38016ba5c1d2e0184f0f5804d99d528a8cae43596cd62e"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/brand-search-landing-visuals.tsx",
+          "sha256": "83d8fa6e18cad695b6e5841fc0a2a4dee88694f0f18deec7681c3bdf025bb9a0",
+          "retained": false,
+          "exports": [
+            "BrandSearchHeroDemo",
+            "BrandSearchAutocompletePanel",
+            "BrandSearchResultPanel",
+            "BrandSearchMatchingPanel"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/product-landing-content.tsx",
+          "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+          "retained": false,
+          "exports": [
+            "RelatedProductId",
+            "ProductLandingContent",
+            "scrapeLandingContent",
+            "answersLandingContent",
+            "searchLandingContent",
+            "mapLandingContent",
+            "brandLandingContent",
+            "styleguideLandingContent",
+            "batchesLandingContent",
+            "monitorsLandingContent",
+            "parseLandingContent",
+            "brandSearchLandingContent",
+            "peopleEnrichmentLandingContent",
+            "newsLandingContent"
+          ]
         }
       ],
       "unresolvedHistoricalPaths": [],
@@ -3434,6 +3485,57 @@
       "scope": "Integration helper; no public website counterpart."
     },
     {
+      "name": "news-landing-visuals",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/news-landing-visuals.tsx",
+          "sha256": "38f6901a809c824e65c0289a1e7345dbd4ccb917747042f24bb6782a536d4090"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/news-landing-visuals.tsx",
+          "sha256": "ab4d0171c6fc5902602f125e446977203afe41cde23f67fe73b1379960c28db0",
+          "retained": false,
+          "exports": [
+            "NewsHeroDemo",
+            "NewsEntityPanel",
+            "NewsCoveragePanel",
+            "NewsSourcePanel"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/product-landing-content.tsx",
+          "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+          "retained": false,
+          "exports": [
+            "RelatedProductId",
+            "ProductLandingContent",
+            "scrapeLandingContent",
+            "answersLandingContent",
+            "searchLandingContent",
+            "mapLandingContent",
+            "brandLandingContent",
+            "styleguideLandingContent",
+            "batchesLandingContent",
+            "monitorsLandingContent",
+            "parseLandingContent",
+            "brandSearchLandingContent",
+            "peopleEnrichmentLandingContent",
+            "newsLandingContent"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "overview-page",
       "surface": "product",
       "kind": "dashboard",
@@ -3516,6 +3618,108 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "parse-landing-visuals",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/parse-landing-visuals.tsx",
+          "sha256": "a59592e584f8bee82d3b8f059044f63a573727fc657a19b90b0c17c16af55093"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/parse-landing-visuals.tsx",
+          "sha256": "7bc6603b5887fa319f3afd247e436a05a8ff0ec560752427c514d8e25affc35a",
+          "retained": false,
+          "exports": [
+            "ParseHeroDemo",
+            "ParseFileTypesPanel",
+            "ParseOcrPanel",
+            "ParseOptionsPanel"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/product-landing-content.tsx",
+          "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+          "retained": false,
+          "exports": [
+            "RelatedProductId",
+            "ProductLandingContent",
+            "scrapeLandingContent",
+            "answersLandingContent",
+            "searchLandingContent",
+            "mapLandingContent",
+            "brandLandingContent",
+            "styleguideLandingContent",
+            "batchesLandingContent",
+            "monitorsLandingContent",
+            "parseLandingContent",
+            "brandSearchLandingContent",
+            "peopleEnrichmentLandingContent",
+            "newsLandingContent"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "people-enrichment-landing-visuals",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/people-enrichment-landing-visuals.tsx",
+          "sha256": "6f9c8b04f31402c983e8a0d8f02b8124d3c5ae5a0c5378e934302420eca7f531"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/people-enrichment-landing-visuals.tsx",
+          "sha256": "9d5f424196e29d47e1c15bb63277511dacade352940a4f6c2b9d8b7744cd30aa",
+          "retained": false,
+          "exports": [
+            "PeopleEnrichmentHeroDemo",
+            "PeopleIdentifiersPanel",
+            "PeopleContextPanel",
+            "PeopleMatchPanel"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/product-landing-content.tsx",
+          "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+          "retained": false,
+          "exports": [
+            "RelatedProductId",
+            "ProductLandingContent",
+            "scrapeLandingContent",
+            "answersLandingContent",
+            "searchLandingContent",
+            "mapLandingContent",
+            "brandLandingContent",
+            "styleguideLandingContent",
+            "batchesLandingContent",
+            "monitorsLandingContent",
+            "parseLandingContent",
+            "brandSearchLandingContent",
+            "peopleEnrichmentLandingContent",
+            "newsLandingContent"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "persona-glyph",
@@ -3715,6 +3919,37 @@
           "retained": false,
           "exports": [
             "DashedHairlines"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "product-demo-card",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/product-demo-card.tsx",
+          "sha256": "e89f3c753905257aba6d9dc3353bbc7f3b97da84346b737ee504fdf2e057259a"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/product-demo-card.tsx",
+          "sha256": "1f047b5b1b3207d7b1b1694342a3411a873b9ea238a059e0bb2d73fbd980225a",
+          "retained": false,
+          "exports": [
+            "ProductDemoCard",
+            "FileGlyph",
+            "MarkGlyph",
+            "StatusChip",
+            "DemoRow",
+            "CapabilityPanel",
+            "ParamRow"
           ]
         }
       ],
@@ -5343,6 +5578,73 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "story-fanout",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/visuals/stories/fanout-story.tsx",
+          "sha256": "e320049dfa0da0901f84bdcb61e87f168c8b9c6b0f81f736d2928f4558b5b19c"
+        },
+        {
+          "path": "components/visuals/stories/fanout-story-player.ts",
+          "sha256": "e35db26616142a1ef701a8f285aa9989c32d02f7796d417478ed2e0df53c8884"
+        },
+        {
+          "path": "components/visuals/stories/fanout-story-scenes.ts",
+          "sha256": "b256598bc8222932f5e23c1de1879d6c00721754814548de12b3892fa3c6f98f"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/fanout-story.tsx",
+          "sha256": "125b529504b71b75208d9f9ad68628a1c10d7149b26384797a69dcefe259fe27",
+          "retained": false,
+          "exports": [
+            "FanoutStory"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/fanout-story-player.ts",
+          "sha256": "e1c644d177673827a11efa491c81a5f1cf7a8d10bed4c1402ca367133cdd4f35",
+          "retained": false,
+          "exports": [
+            "createFanoutStoryPlayer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/fanout-story-scenes.ts",
+          "sha256": "2beb0a78f89f869e79ae9a4382377ea701229e4cf05eea2b96c268f93bc09c6a",
+          "retained": false,
+          "exports": [
+            "FANOUT_STORY_GRID",
+            "STEM",
+            "BRANCH_ROW",
+            "DROP",
+            "SEARCHES",
+            "SEARCH_FIELD",
+            "RESULT_ROWS",
+            "QUESTION_ONLY",
+            "FANNED_OUT",
+            "QUESTION_LABEL",
+            "QUESTION",
+            "SEARCH_QUERIES",
+            "FANOUT_LABEL",
+            "PARALLEL_LABEL",
+            "FANOUT_RESTING"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "story-faq-invite",
       "surface": "site",
       "kind": "website",
@@ -5572,6 +5874,70 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "story-highlights",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/visuals/stories/highlights-story.tsx",
+          "sha256": "8a8c23d35951baeec5b8c03e6d45b141255db508f409d362a48a424e06fe646f"
+        },
+        {
+          "path": "components/visuals/stories/highlights-story-player.ts",
+          "sha256": "8e41c699ea9b5b18d8df1938cba09316e2c0aa20fa7f01567509be1c47113d67"
+        },
+        {
+          "path": "components/visuals/stories/highlights-story-scenes.ts",
+          "sha256": "baf542884326bb223beb7b80d6743bed883654a6b3df4c2b4bdcc19df1549986"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/highlights-story.tsx",
+          "sha256": "5b5ce43094445e299ae7cf5c97a9ae5c939b4869719ed597eb5ccb6cc9af1b2e",
+          "retained": false,
+          "exports": [
+            "HighlightsStory"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/highlights-story-player.ts",
+          "sha256": "b3fdf570150d0c31d4c6c21565e4540de9a33245c59f4c347c790e92a478c440",
+          "retained": false,
+          "exports": [
+            "createHighlightsStoryPlayer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/highlights-story-scenes.ts",
+          "sha256": "3e144e978a204aa4e02ece29a35c93adbc5bbe7f32b26f36aa6749108950256e",
+          "retained": false,
+          "exports": [
+            "HIGHLIGHTS_STORY_GRID",
+            "CARD",
+            "PASSAGE_LEFT",
+            "HIGHLIGHTED_LINES",
+            "MARKER",
+            "BLANK",
+            "RESULT_READ",
+            "RESULT_HIGHLIGHTED",
+            "RESULT_TEXTS",
+            "RELEVANCE_LABEL",
+            "HIGHLIGHTS_LABEL",
+            "HIGHLIGHTS_RESTING"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "story-identity",
       "surface": "site",
       "kind": "website",
@@ -5598,6 +5964,71 @@
           "retained": false,
           "exports": [
             "IdentityStory"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "story-mcp",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/visuals/stories/mcp-story.tsx",
+          "sha256": "ca86f5f5a8eb7d2379d5683e43183dc8e54e6e659b4cf6d2fd25780facee3251"
+        },
+        {
+          "path": "components/visuals/stories/mcp-story-player.ts",
+          "sha256": "b8f31c0f07339f1005c898f791e5bae971b6d33bb131a930c8272c845f85af22"
+        },
+        {
+          "path": "components/visuals/stories/mcp-story-scenes.ts",
+          "sha256": "db26807ccec54445757da76e54938198547fd8b669c3a2023c563766211f0cce"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/mcp-story.tsx",
+          "sha256": "e5c142601311f8871103c77cc95775277aff9fba8c7ae24f44fe9a2eb794d233",
+          "retained": false,
+          "exports": [
+            "McpStory"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/mcp-story-player.ts",
+          "sha256": "634ee277a8cf5cb9104d1abbf87b0c44ec1ea9f368c6540d93540650157eab6f",
+          "retained": false,
+          "exports": [
+            "createMcpStoryPlayer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/mcp-story-scenes.ts",
+          "sha256": "d00103bc946924414174de3d42881b7ce08d1afbe9d0b09995eafb8a57fef9dd",
+          "retained": false,
+          "exports": [
+            "MCP_STORY_GRID",
+            "QUESTION_BUBBLE",
+            "REPLY_LINES",
+            "CABLE",
+            "CONNECTOR",
+            "UNPLUGGED",
+            "PLUGGED_IN",
+            "ASKED",
+            "ANSWERED",
+            "ASSISTANT_LABEL",
+            "PROMPT",
+            "CONNECTION_TEXTS",
+            "MCP_RESTING"
           ]
         }
       ],
@@ -5754,6 +6185,10 @@
         {
           "path": "components/visuals/stories/prompt-field.ts",
           "sha256": "7791a2c601b3ed2abf2ea13488f90df81ab9e90f6b33673596994ebf70e9cdb3"
+        },
+        {
+          "path": "components/visuals/stories/story-reveal.ts",
+          "sha256": "265dce5c540ae396c1146b813e529c356ba47b4f3195201689d951aeffa6d944"
         }
       ],
       "sources": [
@@ -5791,6 +6226,19 @@
           "retained": false,
           "exports": [
             "promptField"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/story-reveal.ts",
+          "sha256": "f0345783f3c28dc924beb337771d6d0c2978ba85d35a87f2313f60dceea3edd9",
+          "retained": false,
+          "exports": [
+            "NEVER",
+            "revealSchedule",
+            "paintRevealed",
+            "fadedInAt"
           ]
         }
       ],
@@ -5989,6 +6437,134 @@
           "retained": false,
           "exports": [
             "ScrapeStory"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "story-search-filters",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/visuals/stories/search-filters-story.tsx",
+          "sha256": "669c4f9d607537fe7a4881727fbf51642cd4c6d53cc108facd0ffb373f003610"
+        },
+        {
+          "path": "components/visuals/stories/search-filters-story-player.ts",
+          "sha256": "8eea5012494e47624713039ac62a0e1125e08d24cd5801d15033fe4b315c6908"
+        },
+        {
+          "path": "components/visuals/stories/search-filters-story-scenes.ts",
+          "sha256": "9d21098a8d96ee875fbe84c44dea05449e46ac93fcd6feef8f945031ad437a3a"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/search-filters-story.tsx",
+          "sha256": "50a1e68d07f905435ad145714b1625da4abd53e0d441ffe199bacbd7cc3754ed",
+          "retained": false,
+          "exports": [
+            "SearchFiltersStory"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/search-filters-story-player.ts",
+          "sha256": "420e523a1425a851df7319ab00878a9cf080b5adeed07fdaffddba4daf9ef360",
+          "retained": false,
+          "exports": [
+            "createSearchFiltersStoryPlayer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/search-filters-story-scenes.ts",
+          "sha256": "c9e5cf36c0f39e0452612c71f9c776a0fe7a37126394495fa5e2651201ed88af",
+          "retained": false,
+          "exports": [
+            "SEARCH_FILTERS_STORY_GRID",
+            "DAY_COLUMNS",
+            "LAST_WEEK_ROW",
+            "FILTER_GROUPS",
+            "CALENDAR_ONLY",
+            "LAST_WEEK_PICKED",
+            "FILTERED",
+            "FRESHNESS_LABEL",
+            "FRESHNESS_VALUE",
+            "FILTER_TEXTS",
+            "SEARCH_FILTERS_RESTING"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "story-search-results",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/visuals/stories/search-results-story.tsx",
+          "sha256": "51d04f33d1bbf59ef8a51188f03d865423b052aab3f24b09ae619b210a915d79"
+        },
+        {
+          "path": "components/visuals/stories/search-results-story-player.ts",
+          "sha256": "11fe1995ee2ba4ba518cf9a5fc1e6995bce4d7630529104e81af6b5d9d99c05e"
+        },
+        {
+          "path": "components/visuals/stories/search-results-story-scenes.ts",
+          "sha256": "7a758721153384271018e04faf74f6e605669e1797f3cd3a2ab48bc2f1dd258e"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/search-results-story.tsx",
+          "sha256": "0733ea8212cee3076e6698b023e610a41a5f5c855766184b56ba98a17b7654c6",
+          "retained": false,
+          "exports": [
+            "SearchResultsStory"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/search-results-story-player.ts",
+          "sha256": "e1bac86b1d5f5aae17c0a1795347dee40c3062592826f7ddebc86e696846412d",
+          "retained": false,
+          "exports": [
+            "createSearchResultsStoryPlayer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/search-results-story-scenes.ts",
+          "sha256": "d45417f3b24481ba4b17d0d3c211891f16ba86ca4f1df053fbf3cbe2990c2ad5",
+          "retained": false,
+          "exports": [
+            "SEARCH_RESULTS_STORY_GRID",
+            "PASSAGE",
+            "RESULT_COUNT",
+            "HIGHLIGHTS",
+            "resultTop",
+            "resultAt",
+            "FIELD_ONLY",
+            "RESULTS_FOUND",
+            "RESULTS_HIGHLIGHTED",
+            "QUERY",
+            "FRESHNESS_LABEL",
+            "RESULT_TEXTS",
+            "SEARCH_RESULTS_RESTING"
           ]
         }
       ],
@@ -7207,7 +7783,7 @@
       "library": [
         {
           "path": "lib/utils.ts",
-          "sha256": "d6bba79dc72d9136f450f1d5bc10b58353757946181c24de48723f16f3b88348"
+          "sha256": "14745f1737bcc1a1ca735d999b02072e35dabbbd0b11636a020cd3311b4aa1ca"
         }
       ],
       "sources": [

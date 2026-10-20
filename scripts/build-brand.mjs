@@ -38,7 +38,7 @@ for (const name of Object.keys(t)) {
 const theme = [
 	...Object.entries(color).map(([k, v]) => `\t--color-${k}: var(--ds-color-${v});`),
 	...['sans', 'data', 'mono'].map((k) => `\t--font-${k}: var(--ds-font-${k});`),
-	...['regular', 'medium', 'bold', 'heavy'].map((k) => `\t--font-weight-${k}: var(--ds-font-weight-${k});`),
+	...['regular', 'medium', 'bold', 'heavy', 'score'].map((k) => `\t--font-weight-${k}: var(--ds-font-weight-${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-text-')).map((k) => `\t--text-${k.slice(10)}: var(${k});`),
 	...['body', 'body-lg', 'body-sm', 'caption', 'h5'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-body);`),
 	...['display', 'h3', 'h4'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-${k});`),
