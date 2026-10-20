@@ -5,6 +5,7 @@ import { Globe } from "lucide-react";
 
 import { UseCaseCodeTabs, type UseCaseSample } from "@/components/site/use-case-how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { HeroCirclePatternSurface } from "@/components/visuals/hero-circle-pattern";
 import { patternHole } from "@/components/visuals/hero-pattern-hole";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +13,7 @@ import { cn } from "@/lib/utils";
 // phones), each with its glyph or icon, title and a line of description. One pale brand-tint card (the tabs' own pill)
 // glides between them on a spring to mark the picked one. The right side shows that use case in the code tabs window:
 // a tab per SDK language, the install command as its footer, and one remembered language for the whole page
-// (useCodeLanguage), over an optional backdrop (the site uses its ring pattern). The window keeps one height, so
+// (useCodeLanguage), on the brand's ring pattern, which clears itself around the window. The window keeps one height, so
 // switching never resizes the card. While on screen it steps through the use cases every six seconds, a small donut on
 // the picked one counting down; it holds while the pointer or keyboard focus is inside, and never steps under reduced
 // motion. On phones the strip scrolls to the picked tab, and swiping it picks the tab it settles on.
@@ -87,7 +88,24 @@ function samplesOf(item: UseCaseItem): UseCaseSample[] {
   return [{ language: "code", label: "Code", filename: item.title, code: item.code ?? "", install: null }];
 }
 
-function UseCases({ items, defaultValue, backdrop, className }: { items: UseCaseItem[]; defaultValue?: string; backdrop?: React.ReactNode; className?: string }) {
+const PANEL = "relative isolate flex min-w-0 flex-1 items-center justify-center overflow-hidden px-4 py-12 md:px-6 md:py-16";
+
+// The window's area: on the ring pattern (white under it, so the rings read on any page), or plain.
+function PanelSurface({ pattern, children }: { pattern: boolean; children: React.ReactNode }) {
+  if (!pattern) return <div className={PANEL}>{children}</div>;
+  return (
+    <HeroCirclePatternSurface tone="rings" clusters={false} className={PANEL}>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-surface" />
+      {children}
+    </HeroCirclePatternSurface>
+  );
+}
+
+/**
+ * `pattern` (on by default, as on the site) sets the code window on the brand's ring pattern, which clears itself
+ * around the window. `backdrop` puts your own picture behind the window instead.
+ */
+function UseCases({ items, defaultValue, pattern = true, backdrop, className }: { items: UseCaseItem[]; defaultValue?: string; pattern?: boolean; backdrop?: React.ReactNode; className?: string }) {
   const [value, setValue] = React.useState(defaultValue ?? items[0]?.id ?? "");
   const index = Math.max(0, items.findIndex((item) => item.id === value));
   const reduced = useReducedMotion();
@@ -209,7 +227,7 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
             })}
           </TabsList>
         </div>
-        <div className="relative isolate flex min-w-0 flex-1 items-center justify-center overflow-hidden px-4 py-12 md:px-6 md:py-16">
+        <PanelSurface pattern={pattern && !backdrop}>
           {backdrop && (
             <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
               {backdrop}
@@ -234,7 +252,7 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
               </TabsContent>
             ))}
           </div>
-        </div>
+        </PanelSurface>
       </Tabs>
     </div>
   );

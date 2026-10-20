@@ -53,6 +53,16 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  /* A preview renders as an installed app does: Tailwind's 1.5 body leading (the docs' own reading text runs looser) and
+     the site layer's pretty wrapping of running text. */
+  [data-preview-root] {
+    line-height: var(--ds-leading-normal);
+  }
+
+  [data-preview-root] :where(p, li, blockquote, figcaption, dd, td) {
+    text-wrap: pretty;
+  }
+
   :where(h1, h2, h3, h4) {
     font-weight: var(--ds-font-weight-regular);
     letter-spacing: var(--ds-tracking-tight);
