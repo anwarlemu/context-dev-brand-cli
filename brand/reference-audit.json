@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T17:40:43.532Z",
+  "checkedAt": "2026-10-20T17:47:53.162Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -791,19 +791,79 @@
       "library": [
         {
           "path": "components/site/alternative-sections.tsx",
-          "sha256": "be69ba0ad46e556312419e5f85ec803d52e38dc1de27463b922ffbaca884ec54"
+          "sha256": "fd0458b734d59076ffcdf44ecff282604d86a3a05e158907ae0fb828c6a344b9"
         }
       ],
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/alternatives/alternative-hero.tsx",
-          "sha256": "4e5ac4913f62a92903ee2134b998ab3423bd2d9723aa2b4986e50b3509c7b198",
-          "retained": true,
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-page.tsx",
+          "sha256": "3277ba4f557e5e5c54ffe2eb87f5f2d8553ed02b2d67ce230de0347162864ea7",
+          "retained": false,
           "exports": [
-            "QuickCompareRow",
-            "AlternativeHero"
+            "compareMetadata",
+            "ComparePage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-cost-card.tsx",
+          "sha256": "5f8470b48e9c3e8cfcddafdbe8c82650c64b0fafeb9a8c42a832c9d0c345ddcd",
+          "retained": false,
+          "exports": [
+            "CompareCostCardView"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-request-costs.tsx",
+          "sha256": "8c57e685bc8e67576543977a9cc859f15ef384869979051928a42f3ab490a894",
+          "retained": false,
+          "exports": [
+            "CompareRequestCosts"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-pricing-table.tsx",
+          "sha256": "f814317caebda562d4573f37b3a8972b409a7a09e7cd2ee5e29bbddd5d754454",
+          "retained": false,
+          "exports": [
+            "ComparePricingTable"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-fit-guide.tsx",
+          "sha256": "0070a66464eda86baa081961cb35b1d120456e91997165b6ecf9b7f6a74dd63f",
+          "retained": false,
+          "exports": [
+            "CompareFitGuide"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-related.tsx",
+          "sha256": "b99655169abd9b69c7a85ee5eb7a6c6d4068c0a33726b4f85e5899e271d1752b",
+          "retained": false,
+          "exports": [
+            "CompareRelated"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/alternatives/compare-page/compare-card.tsx",
+          "sha256": "1f603ab2a4a738e7c5d1063f7141cc6979d0e99dbb9fa4c8a77dad070603a11a",
+          "retained": false,
+          "exports": [
+            "ComparisonCard"
           ]
         },
         {
@@ -827,36 +887,6 @@
             "AlternativeComparisonRow",
             "ComparisonSupportCell",
             "AlternativeComparisonTable"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/alternatives/alternative-article.tsx",
-          "sha256": "03b78ef384edb149b69878eb1def0e23fe338d57f2c2c7f68764d6cd07cb24ba",
-          "retained": true,
-          "exports": [
-            "AlternativeArticle"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/alternatives/firecrawl/FirecrawlPricingTable.tsx",
-          "sha256": "511dc5a209bccf6d14a1b9bdd477dcc1f6612f1aa251c1f725546ec5b2052882",
-          "retained": true,
-          "exports": [
-            "FirecrawlPricingTable"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/alternatives/firecrawl/FirecrawlFitGuide.tsx",
-          "sha256": "5c5a3e5ed2e066bedfc093c06d9b9c8d80f0239262c7912a9188624bbec2d2e8",
-          "retained": true,
-          "exports": [
-            "FirecrawlFitGuide"
           ]
         },
         {
@@ -1170,7 +1200,7 @@
       "library": [
         {
           "path": "components/site/blog-cards.tsx",
-          "sha256": "41649ce3959f461878b827e3162769ba71ee20166d4eb196354a8aa6c79ee71f"
+          "sha256": "e0e5a76e0f56409b059d8e355876e9b98d4168d3b1f9a1943cfd0e8a2d110222"
         }
       ],
       "sources": [
@@ -1182,6 +1212,17 @@
           "retained": false,
           "exports": [
             "Blog"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/blog-card.tsx",
+          "sha256": "63f62e522214c3bacd5cb3ef17507e4f6b20f35e61b1cc2af07166b2663ae7b1",
+          "retained": false,
+          "exports": [
+            "BlogCardPost",
+            "BlogCard"
           ]
         },
         {
@@ -1221,7 +1262,11 @@
       "library": [
         {
           "path": "components/site/blog-post.tsx",
-          "sha256": "705ae8b5d92a6492acdc7d2d8d2df2801b9ac4ef773495c0526102c8e5da6457"
+          "sha256": "f490ed33813b6f6f2f6b6570b185556da332810d572093550ded8a1f036e2a82"
+        },
+        {
+          "path": "components/site/blog-code-block.tsx",
+          "sha256": "0c3c0fbb45e97bcf58894cac5ba19c80e2e2b099b98eaf1864bf19dab6065970"
         }
       ],
       "sources": [
@@ -1270,6 +1315,17 @@
         {
           "repository": "brand-dev-webapp",
           "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/blog-card.tsx",
+          "sha256": "63f62e522214c3bacd5cb3ef17507e4f6b20f35e61b1cc2af07166b2663ae7b1",
+          "retained": false,
+          "exports": [
+            "BlogCardPost",
+            "BlogCard"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/blog-author.tsx",
           "sha256": "f6b4250ba5cc02495d2ebd3082613eae13861b9fb9e798590faddf97cde836dd",
           "retained": false,
@@ -1279,12 +1335,14 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/alternatives/alternative-article.tsx",
-          "sha256": "03b78ef384edb149b69878eb1def0e23fe338d57f2c2c7f68764d6cd07cb24ba",
-          "retained": true,
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/lib/code-syntax-theme.ts",
+          "sha256": "5a2f96257a66a2400acab95d0de91ed028d8ae74b72af0c07b49b7111a44b6bd",
+          "retained": false,
           "exports": [
-            "AlternativeArticle"
+            "CODE_SYNTAX_COLORS",
+            "createCodePrismTheme",
+            "createCodeShikiTheme"
           ]
         },
         {
@@ -1600,7 +1658,7 @@
       "library": [
         {
           "path": "components/site/comparison-table.tsx",
-          "sha256": "c62aefab994200d658bc6a6b742dae4df45884dedc871ed44a0c5fd32859a0ac"
+          "sha256": "b957148e649163bca7d0260074577aa107f874745e4dec161a1a9dcd1ddc808a"
         }
       ],
       "sources": [
@@ -1642,7 +1700,7 @@
       "library": [
         {
           "path": "components/site/competitor-charts.tsx",
-          "sha256": "6cc847a19c68549089a10bd1b70e8bd319d030bbd06c566014a9ca7d82e03178"
+          "sha256": "4dd16fcd5ef8ad3452ddfd5722d9882dd27076d096440fbed84e1ac281db2f45"
         }
       ],
       "sources": [
@@ -1676,6 +1734,17 @@
             "ProviderKey",
             "PROVIDERS",
             "BENCHMARKS"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(dashboard)/admin/competitor-comparison/page.tsx",
+          "sha256": "a521893cba6cfe9faa63d7e29d3be8b4cb16b1a33d741295af27f20d150397cb",
+          "retained": false,
+          "exports": [
+            "metadata",
+            "CompetitorComparisonPage"
           ]
         }
       ],
@@ -1856,7 +1925,7 @@
       "library": [
         {
           "path": "components/site/customer-stories.tsx",
-          "sha256": "f1adb78f5bdbe9be1fb72935830f9b18b7b0a2cd87166ba061cbfb1001856137"
+          "sha256": "d8302ab9575010f0aa79a59b9953a4edec35de7db320a08d9886cc06fea8a4fa"
         }
       ],
       "sources": [
@@ -2171,7 +2240,7 @@
       "library": [
         {
           "path": "components/visuals/dot-shader-playground.tsx",
-          "sha256": "34a9c07ea8e11ca73accfef015d996332199cadc317fe1578f52ef7d319c67b9"
+          "sha256": "04cd79788d850346c200dff7e172a692ed3a94899eb1c957daa85daeab018074"
         }
       ],
       "sources": [
@@ -2199,12 +2268,24 @@
         {
           "repository": "brand-dev-webapp",
           "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
-          "path": "src/app/(marketing)/brand/page.tsx",
-          "sha256": "89ab4c0a7fb61b65788391ae04acf30457b343ee85060d96994edc608ddc9efb",
+          "path": "src/components/sections/brand/brand-surface-styles.ts",
+          "sha256": "e85a83701303fa16deea62c109e42bd7be22d8596103b9ce305303e8162189f3",
+          "retained": false,
+          "exports": [
+            "BrandSurface",
+            "SURFACES",
+            "ACTION_PILL_CLASS"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(dashboard)/admin/dot-shader/page.tsx",
+          "sha256": "3ba5d997826cebf86becdae11616b14d73ecfb7f23936e2c9b8cc326fd38785c",
           "retained": false,
           "exports": [
             "metadata",
-            "BrandPage"
+            "DotShaderPage"
           ]
         }
       ],
@@ -3478,7 +3559,7 @@
       "library": [
         {
           "path": "components/site/logo-strip.tsx",
-          "sha256": "ac320f59acfaafc178e85d38a1b241a0cec28916321490e4b10346e6fbf2dfe7"
+          "sha256": "a048c1e2677e36d2c5ce017cc3c75b8fd3f85b400a548adf419761d40bffd8d1"
         }
       ],
       "sources": [
@@ -4386,6 +4467,63 @@
           "exports": [
             "RING_CLEAR_ATTRIBUTE",
             "RingBackdrop"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "scrape-reliability",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/scrape-reliability.tsx",
+          "sha256": "5956ff8d12385ba4194dd8ee9bae42ee53f2613397c5e949b8b144ef58dae70a"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/home/scrape-reliability.tsx",
+          "sha256": "763dc7cefb1bd4224b0ca35273663d4f149af143850c94eb625c4e78ea99de7f",
+          "retained": false,
+          "exports": [
+            "ScrapeReliability"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/dot-window.tsx",
+          "sha256": "b98a28c1071a7d049114d8c315540bb1948210719f7a2e0b0029bbbae34cd414",
+          "retained": false,
+          "exports": [
+            "DOT_WINDOW_PITCH",
+            "DotWindow",
+            "DotRule"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/lib/scrape-reliability.ts",
+          "sha256": "a573c2e971f496dc6b11f18c95c980c1ad37cc8847711957253a476d2ef820dc",
+          "retained": false,
+          "exports": [
+            "SCRAPE_SUCCESS_RATE"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/home/homepage.tsx",
+          "sha256": "a7d664d6c5578916c3cd2b7afc4eb905f49a661756d090469ec2a20828a34f1c",
+          "retained": false,
+          "exports": [
+            "Homepage"
           ]
         }
       ],
@@ -7295,7 +7433,7 @@
       "library": [
         {
           "path": "components/site/trust-strip.tsx",
-          "sha256": "d7d8b7e733cbb414959a7351dcc99eb8f9dcecfa2c47e5ce093ce614556f77a8"
+          "sha256": "3afc05e42c8ea7b66f504b84190b3d2684410c93a2d207b3511d473a7b9f8ff9"
         }
       ],
       "sources": [
@@ -7888,7 +8026,7 @@
       "library": [
         {
           "path": "lib/utils.ts",
-          "sha256": "22cfccfb4ad15d6c2016ff3705f406dfcef1d2b6f8dc48f6c675a8255904d7ef"
+          "sha256": "0b10bf09bfded3f68924e68f5e5963f953f4bbd23e5426725eb8f86ed4807292"
         }
       ],
       "sources": [

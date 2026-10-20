@@ -47,7 +47,7 @@ const RING = "-m-2 rounded-card bg-ring-tint p-2";
 const PANEL = "flex h-full min-w-0 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8";
 const FOCUS = "outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring";
 const OPTION_TILE = cn(
-  "relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-shell transition-shadow duration-200 ease-out motion-reduce:transition-none",
+  "relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-shell ring-1 ring-hairline transition-shadow duration-200 ease-out motion-reduce:transition-none",
   FOCUS,
 );
 const SELECTED_TILE = "ring-2 ring-brand ring-offset-2";
@@ -223,7 +223,7 @@ export function DotShaderPlayground({
   const pillOnSurface = (selected: boolean) => cn(ACTION, selected && "bg-blue-10");
 
   return (
-    <div ref={root} data-slot="dot-shader-playground" className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3", className)}>
+    <div ref={root} data-slot="dot-shader-playground" className={cn("grid grid-cols-1 gap-6 lg:grid-cols-3", className)}>
       <div className={cn(RING, "lg:col-span-2")}>
         <div className="flex flex-col gap-3">
           <div

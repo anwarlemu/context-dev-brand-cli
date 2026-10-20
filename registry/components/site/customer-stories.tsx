@@ -192,9 +192,10 @@ function CustomerStoriesCarousel({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd}
           onPointerCancel={onPointerEnd}
-          className="relative -my-6 w-full overflow-x-auto overflow-y-hidden py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="relative -my-6 w-full overflow-x-auto overflow-y-hidden py-6 [scrollbar-width:none] max-[43.2rem]:snap-x max-[43.2rem]:snap-mandatory [&::-webkit-scrollbar]:hidden"
         >
-          <div className="flex gap-8 pl-(--carousel-inset)">
+          {/* The site's own breakpoints: one card (snapping, tighter gap) on phones, two from 43.2rem, three from 57.6rem. */}
+          <div className="flex gap-4 pl-(--carousel-inset) min-[43.2rem]:gap-8">
             {slides.map((child, i) => (
               <div
                 key={React.isValidElement(child) && child.key != null ? String(child.key) : i}
@@ -202,13 +203,13 @@ function CustomerStoriesCarousel({
                 role="group"
                 aria-roledescription="slide"
                 aria-label={`${i + 1} of ${slides.length}`}
-                className="w-(--carousel-rail) shrink-0 md:w-[calc((var(--carousel-rail)-var(--ds-space-8))/2)] lg:w-[calc((var(--carousel-rail)-2*var(--ds-space-8))/3)]"
+                className="w-(--carousel-rail) shrink-0 snap-center snap-always min-[43.2rem]:w-[calc((var(--carousel-rail)-var(--ds-space-8))/2)] min-[57.6rem]:w-[calc((var(--carousel-rail)-2*var(--ds-space-8))/3)]"
               >
                 {child}
               </div>
             ))}
             {/* Room after the last card so it can rest on the content edge too (padding at the end of a scroller is not reliable). */}
-            <div aria-hidden="true" className="-ml-8 w-(--carousel-inset) shrink-0" />
+            <div aria-hidden="true" className="-ml-4 w-(--carousel-inset) shrink-0 min-[43.2rem]:-ml-8" />
           </div>
         </div>
         {showRules && <div aria-hidden="true" className={cn("absolute bottom-0 left-0 h-px w-full", RULE[tone])} />}

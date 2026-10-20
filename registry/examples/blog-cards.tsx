@@ -34,5 +34,11 @@ export function Site() {
 }
 
 export function Band() {
-  return <BlogSection posts={posts} />;
+  // The home page's band: the "All posts" pill across from the heading, and hidden on phones as the site does.
+  return <BlogSection posts={posts} allHref="https://context.dev/blog" hideOnPhones />;
+}
+
+// A post's related articles: the cards on a white page.
+export function Related() {
+  return <SiteSection><BlogCards posts={posts} tone="light" className="w-full gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3" /></SiteSection>;
 }

@@ -1,7 +1,9 @@
 import * as React from "react";
+import { ArrowRight } from "lucide-react";
 
 import { SectionEdgeLines, SectionHeaderRule } from "@/components/site/section";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { DotGlyph } from "@/components/ui/dot-glyph";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +25,9 @@ type BlogPost = {
   /** The cover art; a ring pattern with a dot glyph when left out. */
   cover?: React.ReactNode;
 };
+
+/** Where the card sits: on the dark Latest updates band, or on a white page (a post's related articles). */
+type BlogCardTone = "dark" | "light";
 
 const TEXT: Record<BlogCardSurface, { date: string; title: string; excerpt: string; tag: string }> = {
   paper: { date: "text-fg-subtle", title: "text-fg", excerpt: "text-fg-nav", tag: "" },
@@ -51,19 +56,25 @@ function BlogCoverPlaceholder({ surface = "paper", className }: { surface?: Blog
   );
 }
 
-function BlogCard({ post, surface = "paper", className }: { post: BlogPost; surface?: BlogCardSurface; className?: string }) {
+/**
+ * One post card. `tone="light"` is the card on a white page (a post's related articles): a hairline ring keeps the white
+ * card off the page and the paper card's date darkens to the nav gray, as the site draws it.
+ */
+function BlogCard({ post, surface = "paper", tone = "dark", className }: { post: BlogPost; surface?: BlogCardSurface; tone?: BlogCardTone; className?: string }) {
   const text = TEXT[surface];
+  const light = tone === "light";
   return (
     // The ring wraps the card (its outer edge keeps the card's radius); the negative margin keeps it out of the layout.
     <a
       href={post.href}
       data-slot="blog-card"
       className={cn(
-        "group -m-2 block rounded-card bg-transparent p-2 outline-none transition-colors duration-300 ease-out hover:bg-white/30 focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-dark motion-reduce:transition-none",
+        "group -m-2 block rounded-card bg-transparent p-2 outline-none transition-colors duration-300 ease-out hover:bg-white/30 focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 motion-reduce:transition-none",
+        light ? "h-full focus-visible:ring-offset-surface" : "focus-visible:ring-offset-dark",
         className,
       )}
     >
-      <article className={cn("relative flex h-104 flex-col overflow-hidden rounded-card sm:h-125", surface === "blue" ? "bg-brand" : "bg-surface")}>
+      <article className={cn("relative flex h-104 flex-col overflow-hidden rounded-card sm:h-125", surface === "blue" ? "bg-brand" : "bg-surface", light && "ring-1 ring-hairline")}>
         <div className="relative min-h-0 flex-1 overflow-hidden">{post.cover ?? <BlogCoverPlaceholder surface={surface} />}</div>
         <div className="relative flex flex-col p-8 pt-6">
           <div className="flex items-center gap-2">
@@ -72,7 +83,7 @@ function BlogCard({ post, surface = "paper", className }: { post: BlogPost; surf
                 {post.tag}
               </Badge>
             )}
-            <time className={cn("text-body-sm leading-snug", text.date)} dateTime={post.dateTime}>
+            <time className={cn("text-body-sm leading-snug", light && surface === "paper" ? "text-fg-nav" : text.date)} dateTime={post.dateTime}>
               {post.date}
             </time>
           </div>
@@ -87,11 +98,11 @@ function BlogCard({ post, surface = "paper", className }: { post: BlogPost; surf
 }
 
 /** The grid: one column, two from md, three from lg, alternating white and blue cards. */
-function BlogCards({ posts, className, ...props }: React.ComponentProps<"div"> & { posts: BlogPost[] }) {
+function BlogCards({ posts, tone, className, ...props }: React.ComponentProps<"div"> & { posts: BlogPost[]; tone?: BlogCardTone }) {
   return (
     <div data-slot="blog-cards" className={cn("grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3", className)} {...props}>
       {posts.map((post, i) => (
-        <BlogCard key={post.href} post={post} surface={i % 2 === 0 ? "paper" : "blue"} />
+        <BlogCard key={post.href} post={post} tone={tone} surface={i % 2 === 0 ? "paper" : "blue"} />
       ))}
     </div>
   );
@@ -104,10 +115,20 @@ const DASH_Y =
 /**
  * The home page's "Latest updates" band: near-black, full bleed, the column's edge lines and header rule in their dark
  * tone, dashed rails down the content edges, a white heading and the cards (six at most) inset from the rails.
+ * `allHref` adds the "All posts" pill across from the heading; `hideOnPhones` drops the band below 768px, as the
+ * site's home page does.
  */
-function BlogSection({ title = "Latest updates.", posts, className, ...props }: Omit<React.ComponentProps<"section">, "title"> & { title?: React.ReactNode; posts: BlogPost[] }) {
+function BlogSection({
+  title = "Latest updates.",
+  posts,
+  allHref,
+  allLabel = "All posts",
+  hideOnPhones = false,
+  className,
+  ...props
+}: Omit<React.ComponentProps<"section">, "title"> & { title?: React.ReactNode; posts: BlogPost[]; allHref?: string; allLabel?: React.ReactNode; hideOnPhones?: boolean }) {
   return (
-    <section id="blog" data-slot="blog-section" className={cn("relative w-full overflow-x-clip bg-dark", className)} {...props}>
+    <section id="blog" data-slot="blog-section" className={cn("relative w-full overflow-x-clip bg-dark", hideOnPhones && "hidden min-[768px]:block", className)} {...props}>
       <SectionEdgeLines tone="dark" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden md:block">
         <div className="mx-auto h-full w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12">
@@ -119,8 +140,15 @@ function BlogSection({ title = "Latest updates.", posts, className, ...props }: 
       </div>
       <div className="relative z-10 mx-auto w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12">
         <div className="relative pt-10 pb-20 md:pt-12">
-          <div className="relative z-10 px-3 sm:px-4 md:px-5 lg:px-6">
+          <div className="relative z-10 flex items-center justify-between gap-3 px-3 sm:px-4 md:px-5 lg:px-6">
             <h2 className="max-w-(--ds-layout-heading) text-h3 leading-display font-normal tracking-tight text-balance text-white md:text-h2">{title}</h2>
+            {allHref && (
+              // The arrow stays put on hover; only the pill's fill answers the pointer.
+              <a href={allHref} className={cn(buttonVariants({ variant: "pill-on-brand" }), "shrink-0 gap-1.5 focus-visible:outline-white")}>
+                {allLabel}
+                <ArrowRight aria-hidden="true" className="size-3.5" />
+              </a>
+            )}
           </div>
           <SectionHeaderRule tone="dark" />
           <BlogCards posts={posts.slice(0, 6)} className="relative z-10 px-3 sm:px-4 md:px-5 lg:px-6" />
@@ -130,4 +158,4 @@ function BlogSection({ title = "Latest updates.", posts, className, ...props }: 
   );
 }
 
-export { BlogCards, BlogCard, BlogSection, BlogCoverPlaceholder, type BlogPost, type BlogCardSurface };
+export { BlogCards, BlogCard, BlogSection, BlogCoverPlaceholder, type BlogPost, type BlogCardSurface, type BlogCardTone };
