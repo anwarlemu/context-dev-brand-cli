@@ -7,8 +7,9 @@ import { extendTailwindMerge } from "tailwind-merge";
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      radius: ["sm", "control", "card", "shell", "panel", "pill"],
+      radius: ["sm", "mark", "control", "card", "shell", "panel", "pill"],
       shadow: ["card", "raised", "floating", "key", "tooltip", "ring-hover"],
+      tracking: ["tight", "title", "snug", "display", "normal", "label"],
     },
     classGroups: {
       "font-weight": [{ font: ["regular", "heavy"] }],

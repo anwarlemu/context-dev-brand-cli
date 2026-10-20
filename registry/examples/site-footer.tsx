@@ -12,7 +12,7 @@ export function Site() {
             <path fill="currentColor" fillRule="evenodd" d="M287.56,0H745.26A27.06,27.06,0,0,1,772.32,27.06V484.77A27.06,27.06,0,0,1,745.26,511.83H284.51A24.01,24.01,0,0,1,260.5,487.82V27.06A27.06,27.06,0,0,1,287.56,0ZM260.5,358.28a153.55,153.55,0,1,0,307.1,0a153.55,153.55,0,1,0,-307.1,0Z" />
             <circle cx="153.55" cy="377.64" r="153.55" fill="currentColor" />
           </svg>
-          <span className="text-h5 leading-none font-medium text-white">Context.dev</span>
+          <span className="text-h5 leading-none text-white">Context.dev</span>
         </a>
       }
       description={
@@ -26,10 +26,16 @@ export function Site() {
           <Mail />
         </a>
       }
-      backedBy={<a href="https://www.ycombinator.com/companies/contextdev">Backed by Y Combinator</a>}
+      backedBy={
+        <a href="https://www.ycombinator.com/companies/contextdev" className="inline-flex items-center gap-1.5">
+          Backed by
+          <img src="https://context.dev/yc-logo.svg" alt="Y Combinator" width={16} height={16} />
+          Combinator
+        </a>
+      }
       asideLinks={[
         <FooterInlineLink key="soc" href="https://trust.context.dev/" target="_blank" rel="noopener noreferrer">
-          SOC 2 Type 1 &amp; Type 2 compliant
+          SOC 2 Type 2 compliant
         </FooterInlineLink>,
         <FooterStatusLink key="status" href="https://status.context.dev" state="operational" />,
       ]}

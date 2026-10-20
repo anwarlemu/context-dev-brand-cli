@@ -3,9 +3,9 @@ name: cta
 title: Call to action
 type: site
 surface: site
-description: "Closing action sections for the home page and product pages."
+description: "The closing call to action that ends every site page."
 kinds: []
-use_for: The last section before the footer. `ClosingCta` on the home page with a `pill-outline` button and a `CtaTextLink`; `Cta` on inner pages with a `CtaButton` `light` and a `CtaButton` `glass`, the water texture as `background`.
-never: [Two call to action bands on one page, Bold headings, More than two actions, A black band without the water]
-source: src/components/sections/home/closing-cta.tsx; src/components/sections/cta.tsx; src/components/sections/shared/cta-background.tsx; src/components/sections/shared/dark-cta-link.tsx
+use_for: The last section before the footer, on every page. `ClosingCta` with a `pill-outline` button and a `CtaTextLink`. `Cta` and `CtaButton` (the water band) are deprecated; the site no longer draws it.
+never: [Two call to action sections on one page, Bold headings, More than two actions, The deprecated water band (Cta) on new pages]
+source: src/components/sections/home/closing-cta.tsx; src/components/sections/shared/dark-cta-link.tsx
 ---

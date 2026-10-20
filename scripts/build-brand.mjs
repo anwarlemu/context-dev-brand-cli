@@ -31,6 +31,7 @@ const color = {
 	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
 	'danger-strong': 'status-danger-strong', 'danger-soft': 'status-danger-soft', 'danger-line': 'status-danger-line',
 	'warning-strong': 'status-warning-strong', 'warning-soft': 'status-warning-soft', 'warning-line': 'status-warning-line',
+	'success-bright': 'status-success-bright', 'warning-bright': 'status-warning-bright', 'danger-bright': 'status-danger-bright',
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
 for (const name of Object.keys(t)) {

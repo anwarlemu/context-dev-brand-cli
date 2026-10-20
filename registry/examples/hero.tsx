@@ -1,19 +1,24 @@
+import { ArrowRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill } from "@/components/site/hero";
+import { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill, HeroPillEmphasis } from "@/components/site/hero";
 import { ScrapeStory } from "@/components/visuals/stories/scrape-story";
 
 export function Site() {
   return (
     <Hero
       size="large"
-      // The large title holds one line on wide screens; wrapTitle breaks it at its own line break to fit this frame.
-      wrapTitle
-      staggerIn
       background={<HeroFrame />}
-      eyebrow={<HeroPill>Backed by Y Combinator</HeroPill>}
-      title={"The web as context\nfor your agents."}
-      accent={["context", "agents"]}
-      description="One API for agents to scrape, search, monitor, and collect data from the web."
+      eyebrow={
+        <HeroPill variant="byline" href="https://context.dev/blog/context-dev-raises-9m-seed-led-by-general-catalyst">
+          We raised a <HeroPillEmphasis>$9M seed</HeroPillEmphasis> led by
+          <img src="https://context.dev/general-catalyst-wordmark.svg" alt="General Catalyst" width={312} height={40} />
+          <ArrowRight aria-hidden="true" />
+        </HeroPill>
+      }
+      title="Give your agents the internet"
+      accent="agents"
+      description="API for agents to scrape, search, monitor, and collect data from the web."
       actions={
         <>
           <HeroAction note="No card required">

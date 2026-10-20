@@ -172,7 +172,7 @@ export function CustomerLogoDots({
         ref={svgRef}
         viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}
         preserveAspectRatio="xMidYMid slice"
-        className={cn("block size-full transition-opacity duration-500 ease-out motion-reduce:transition-none", cells ? "opacity-100" : "opacity-0")}
+        className={cn("block size-full", cells ? "opacity-100" : "opacity-0")}
       >
         {field && (
           <path

@@ -35,8 +35,6 @@ const FULL_STREAM_FIELD_HEIGHT_PX = 900;
 const PULSE_SPEED_PX_PER_S = 320;
 const PULSE_HALF_LENGTH_IN_DOTS = 1.6;
 const PULSE_TICK_MS = 50;
-// Longer than the gap between a staggered entrance's steps (60ms), so their endings count as one.
-const ENTRANCE_SETTLE_MS = 150;
 const PAGE_SETTLE_TIMEOUT_MS = 3000;
 const PULSE_TRANSITION_MS = 120;
 const PULSE_REST_MIN_MS = 5000;
@@ -107,8 +105,12 @@ interface PlacedWord {
   y: number;
 }
 
+type GridOrigin = { x: number; y: number };
+
 interface FieldLayout {
   pitch: number;
+  /** Where the grid's first cell starts: the leftover width and height split evenly, so the grid sits centered. */
+  gridOrigin: GridOrigin;
   radius: number;
   dots: Dot[];
   words: PlacedWord[];
@@ -265,13 +267,16 @@ function cellKey(column: number, row: number) {
 
 // Stamps each stream onto the grid by walking along it and claiming the cells within its width; a cell two streams
 // cross keeps the first.
-function layOutStreams(columns: number, rows: number, width: number, height: number, pitch: number, { curves, widthScale }: StreamSet) {
+function layOutStreams(columns: number, rows: number, width: number, height: number, pitch: number, gridOrigin: GridOrigin, { curves, widthScale }: StreamSet) {
   const progressByCell = new Map<string, { stream: number; progress: number; distance: number }>();
   const entryHalfWidth = Math.max(STREAM_TAIL_HALF_WIDTH_IN_DOTS, STREAM_ENTRY_HALF_WIDTH_IN_DOTS * widthScale);
   curves.forEach((curve, stream) => {
     for (let sample = 0; sample <= STREAM_SAMPLES; sample++) {
       const t = sample / STREAM_SAMPLES;
-      const [x, y] = pointOnCurve(curve, t, width, height);
+      const [curveX, curveY] = pointOnCurve(curve, t, width, height);
+      // The curves are drawn in the field's space; the cells are counted from the centered grid's origin.
+      const x = curveX - gridOrigin.x;
+      const y = curveY - gridOrigin.y;
       const halfWidth = (entryHalfWidth + (STREAM_TAIL_HALF_WIDTH_IN_DOTS - entryHalfWidth) * t) * pitch;
       const reach = Math.ceil(halfWidth / pitch);
       const centerColumn = Math.floor(x / pitch);
@@ -371,7 +376,9 @@ function buildLayout(
   const streamShapes = streamSet(width, height, miniStreams, fillFootOnPhones);
   const columns = Math.floor(width / pitch);
   const rows = Math.floor(height / pitch);
-  const streamCells = streams ? layOutStreams(columns, rows, width, height, pitch, streamShapes) : null;
+  // The grid is centered in the field, so the leftover space splits evenly instead of all landing at the right and foot.
+  const gridOrigin = { x: (width - columns * pitch) / 2, y: (height - rows * pitch) / 2 };
+  const streamCells = streams ? layOutStreams(columns, rows, width, height, pitch, gridOrigin, streamShapes) : null;
   const streamLayouts: StreamLayout[] = streamShapes.curves.map((curve) => ({ dots: [], lengthPx: curveLength(curve, width, height) }));
   const showMark = logoMark && width >= LOGO_MARK.minFieldWidth;
   const markUnitsPerPx = LOGO_MARK_WIDTH / LOGO_MARK.widthPx;
@@ -381,8 +388,8 @@ function buildLayout(
   for (let row = 0; row < rows; row++) {
     for (let column = 0; column < columns; column++) {
       const key = cellKey(column, row);
-      const cx = column * pitch + pitch / 2;
-      const cy = row * pitch + pitch / 2;
+      const cx = gridOrigin.x + column * pitch + pitch / 2;
+      const cy = gridOrigin.y + row * pitch + pitch / 2;
       const inMarkBox = showMark && cx >= markLeft - clearance && cy >= markTop - clearance;
       if (inMarkBox ? isClearedForMark(cx, cy) : isCleared(cx, cy)) {
         clearedCells.add(key);
@@ -412,9 +419,10 @@ function buildLayout(
   }
   return {
     pitch,
+    gridOrigin,
     radius: pitch * DOT_RADIUS_RATIO,
     dots,
-    words: placeWords(words, columns, rows, pitch, dots, clearedCells),
+    words: placeWords(words, columns, rows, pitch, gridOrigin, dots, clearedCells),
     clearedCells,
     markCells,
     streams: streamCells ? streamLayouts.filter((stream) => stream.dots.length > 0) : [],
@@ -424,7 +432,7 @@ function buildLayout(
 // Each word takes a run of open cells, with a cell of open space around it, so it reads as sitting in a gap of the
 // pattern. Each goes to the open spot farthest from those already placed. Their cells are then cleared, so the
 // pointer's trail never scatters dots over them.
-function placeWords(words: string[], columns: number, rows: number, pitch: number, dots: Dot[], clearedCells: Set<string>): PlacedWord[] {
+function placeWords(words: string[], columns: number, rows: number, pitch: number, gridOrigin: GridOrigin, dots: Dot[], clearedCells: Set<string>): PlacedWord[] {
   if (words.length === 0) return [];
   const taken = new Set([...dots.map((dot) => dot.key), ...clearedCells]);
   const isOpen = (column: number, row: number) => column >= 0 && row >= 0 && column < columns && row < rows && !taken.has(cellKey(column, row));
@@ -451,7 +459,7 @@ function placeWords(words: string[], columns: number, rows: number, pitch: numbe
     for (let dx = -WORD_MARGIN_CELLS; dx < span + WORD_MARGIN_CELLS; dx++) {
       for (let dy = -WORD_MARGIN_CELLS; dy <= WORD_MARGIN_CELLS; dy++) clearedCells.add(cellKey(best.column + dx, best.row + dy));
     }
-    placed.push({ word: { text, x: best.column * pitch, y: (best.row + 0.5) * pitch }, column: best.column, row: best.row });
+    placed.push({ word: { text, x: gridOrigin.x + best.column * pitch, y: gridOrigin.y + (best.row + 0.5) * pitch }, column: best.column, row: best.row });
   }
   return placed.map(({ word }) => word);
 }
@@ -601,8 +609,8 @@ function animateField(scope: HTMLElement, field: HTMLElement, svg: SVGSVGElement
       const spawnKey = cellKey(spawnColumn, spawnRow);
       spawnedCells.add(spawnKey);
       const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-      circle.setAttribute("cx", String(spawnColumn * layout.pitch + layout.pitch / 2));
-      circle.setAttribute("cy", String(spawnRow * layout.pitch + layout.pitch / 2));
+      circle.setAttribute("cx", String(layout.gridOrigin.x + spawnColumn * layout.pitch + layout.pitch / 2));
+      circle.setAttribute("cy", String(layout.gridOrigin.y + spawnRow * layout.pitch + layout.pitch / 2));
       circle.setAttribute("r", String(layout.radius - 0.5));
       circle.style.opacity = "0";
       circle.style.transitionDuration = `${TRAIL_TRANSITION_MS}ms`;
@@ -637,7 +645,7 @@ function animateField(scope: HTMLElement, field: HTMLElement, svg: SVGSVGElement
   const onPointerMove = (event: PointerEvent) => {
     if (event.pointerType !== "mouse") return;
     origin ??= field.getBoundingClientRect();
-    const point = { x: event.clientX - origin.left, y: event.clientY - origin.top };
+    const point = { x: event.clientX - origin.left - layout.gridOrigin.x, y: event.clientY - origin.top - layout.gridOrigin.y };
     const from = last ?? point;
     const steps = Math.max(1, Math.ceil(Math.hypot(point.x - from.x, point.y - from.y) / (layout.pitch / 2)));
     let previousCell = "";
@@ -756,51 +764,43 @@ export function HeroDotField({
   const spawnLayerRef = React.useRef<SVGGElement>(null);
   const [layout, setLayout] = React.useState<FieldLayout | null>(null);
 
-  React.useEffect(() => {
+  // The first layout is built before the browser paints, so the field shows with the page rather than fading in after.
+  React.useLayoutEffect(() => {
     const svg = svgRef.current;
     const field = svg?.parentElement;
     if (!svg || !field) return;
     const scope = scopeOf(field);
 
+    const layOut = () =>
+      setLayout(
+        buildLayout(
+          field.clientWidth,
+          field.clientHeight,
+          measureContentHoles(scope, field, svg),
+          wordsKey ? wordsKey.split(" ") : [],
+          fine ? MOBILE_PITCH : undefined,
+          !solidDots ? 0 : lively ? LIVELY_LIT_DOT_SHARE : LIT_DOT_SHARE,
+          logoMark,
+          streams,
+          miniStreams,
+          fillFootOnPhones,
+        ),
+      );
+    layOut();
+
     let frame = 0;
     const relayout = () => {
       cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() =>
-        setLayout(
-          buildLayout(
-            field.clientWidth,
-            field.clientHeight,
-            measureContentHoles(scope, field, svg),
-            wordsKey ? wordsKey.split(" ") : [],
-            fine ? MOBILE_PITCH : undefined,
-            !solidDots ? 0 : lively ? LIVELY_LIT_DOT_SHARE : LIT_DOT_SHARE,
-            logoMark,
-            streams,
-            miniStreams,
-            fillFootOnPhones,
-          ),
-        ),
-      );
+      frame = requestAnimationFrame(layOut);
     };
-
     const observer = new ResizeObserver(relayout);
     observer.observe(field);
     for (const hole of scope.querySelectorAll(`[${HERO_PATTERN_HOLE_ATTRIBUTE}]`)) observer.observe(hole);
     void document.fonts.ready.then(relayout);
-    // An entrance animation moves the content without resizing it, so the holes are measured again once it settles.
-    // Steps end one after another, and each rebuild re-renders every dot, so it waits for the last of them.
-    let settleTimer = 0;
-    const relayoutOnceSettled = () => {
-      window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(relayout, ENTRANCE_SETTLE_MS);
-    };
-    scope.addEventListener("animationend", relayoutOnceSettled);
 
     return () => {
       cancelAnimationFrame(frame);
-      window.clearTimeout(settleTimer);
       observer.disconnect();
-      scope.removeEventListener("animationend", relayoutOnceSettled);
     };
   }, [wordsKey, fine, lively, logoMark, streams, miniStreams, fillFootOnPhones, solidDots]);
 
@@ -825,11 +825,7 @@ export function HeroDotField({
       ref={svgRef}
       aria-hidden="true"
       data-dot-field=""
-      className={cn(
-        "pointer-events-none absolute inset-0 size-full text-brand/60 transition-opacity duration-700 ease-out motion-reduce:transition-none",
-        layout ? "opacity-100" : "opacity-0",
-        className,
-      )}
+      className={cn("pointer-events-none absolute inset-0 size-full text-brand/60", className)}
       style={!streams && lively ? { maskImage: LIVELY_CENTER_FADE, WebkitMaskImage: LIVELY_CENTER_FADE } : undefined}
     >
       <g fill="currentColor" stroke="currentColor" strokeWidth="1" className={DOT_TRANSITION_CLASS}>

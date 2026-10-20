@@ -17,10 +17,19 @@ type NavMenuItem = {
   glyph?: React.ReactNode;
   external?: boolean;
 };
-type NavMobileGroup = { label?: React.ReactNode; links: { label: React.ReactNode; href: string; external?: boolean }[] };
+type NavMobileGroup = {
+  label?: React.ReactNode;
+  links: {
+    label: React.ReactNode;
+    href: string;
+    external?: boolean;
+    /** Before the label: a `MenuGlyph`, held to a 32px tile here, as the site's phone menu draws its glyphs. */
+    icon?: React.ReactNode;
+  }[];
+};
 type NavMenu = {
   label: string;
-  /** The panel's width as a CSS length (the site's Products menu is `min(57.5rem, calc(100vw - 8rem))`). Without it the
+  /** The panel's width as a CSS length (the site's Products menu is `min(920px, calc(100vw - 8rem))`). Without it the
    * panel takes its content's width. */
   width?: string;
   /** Marks the trigger as the current section, so it reads in black. */
@@ -167,7 +176,7 @@ function NavFeaturedCard({
     <a href={href} className={cn("group/featured flex w-68 shrink-0 rounded-card", FOCUS, className)}>
       <NavBlueFrame backdrop={backdrop} className="flex w-full flex-col justify-end p-5 text-on-brand">
         <span className="relative flex flex-col gap-2">
-          <span className="text-h4 leading-7.5 tracking-tight">{title}</span>
+          <span className="text-h4 leading-7.5 tracking-title">{title}</span>
           {description && <span className="text-body-sm text-white/85">{description}</span>}
           {cta && (
             <span className="flex items-center gap-1.5 pt-1.5 text-body-sm font-medium">
@@ -257,7 +266,7 @@ function NavPreviewPanel({
   if (!active) return null;
   return (
     <div className="flex gap-2.5 p-2.5">
-      <div className="flex w-68 shrink-0 flex-col py-1">
+      <div className="flex w-80 shrink-0 flex-col py-1">
         <ul className="flex flex-col gap-0.5">
           {items.map((item) => {
             const isActive = item.id === active.id;
@@ -302,7 +311,7 @@ function NavPreviewPanel({
         </NavBlueFrame>
         <div className="flex items-end justify-between gap-4 px-1.5 pb-1.5">
           <div className="flex min-w-0 flex-col gap-1">
-            <p className="text-h5 leading-snug tracking-tight text-fg">{active.title}</p>
+            <p className="text-h5 leading-question tracking-snug text-fg">{active.title}</p>
             {(active.summary || active.proof) && (
               <p className="text-body-sm text-fg-nav">
                 {active.summary}
@@ -589,7 +598,8 @@ function DesktopNav({
             onPointerLeave={(event) => event.pointerType === "mouse" && scheduleClose()}
             className={cn(
               "absolute top-[calc(100%+var(--ds-space-5))] left-1/2 isolate z-1000 origin-top -translate-x-1/2 rounded-card p-1.5 leading-snug shadow-floating transition-[opacity,translate,scale] duration-300 ease-out motion-reduce:transition-none",
-              surface === "brand" ? "bg-ring-on-brand" : "bg-ring-tint",
+              // A solid blue-10 ring on either surface, as the site's menus hang (never the header card's translucent ring).
+              "bg-tint",
               state.active ? "translate-y-0 scale-100 opacity-100" : "pointer-events-none -translate-y-2 scale-95 opacity-0",
             )}
           >
@@ -664,7 +674,7 @@ function MobileMenuToggle({ open, onClick, controls }: { open: boolean; onClick:
 const MOBILE_ROW =
   "flex min-h-13 w-full cursor-pointer items-center justify-between gap-3 rounded-card px-3 py-2 text-left text-h4 leading-snug font-normal transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-subtle";
 const MOBILE_SUBLINK =
-  "block rounded-card px-3 py-1.5 text-body-lg font-normal text-fg-nav transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-subtle [@media(hover:hover)]:hover:text-fg";
+  "flex items-center gap-3 rounded-card px-3 py-1.5 text-question leading-6.5 font-normal text-fg-nav transition-colors duration-150 ease-out motion-reduce:transition-none [@media(hover:hover)]:hover:bg-subtle [@media(hover:hover)]:hover:text-fg";
 const MOBILE_ACTION =
   "flex min-h-12 items-center justify-center whitespace-nowrap rounded-pill border px-4 py-2 text-body leading-5 font-medium transition-colors duration-150 ease-out motion-reduce:transition-none";
 // The rails down each side of the open menu, 12px in, as one construction frame with the nav row above it.
@@ -708,6 +718,10 @@ function MobileSection({ label, open, onToggle, groups }: { label: string; open:
                 {group.label && <p className="mx-3 mb-1 text-caption font-medium text-fg-nav">{group.label}</p>}
                 {group.links.map((link) => (
                   <a key={link.href} href={link.href} {...linkTarget(link.external)} className={cn(MOBILE_SUBLINK, FOCUS)}>
+                    {/* The glyph keeps still: a persona glyph is held to the 32px tile, a line icon gets one. */}
+                    {link.icon && (
+                      <span className="flex shrink-0 [&>[data-slot=persona-glyph]]:size-8 [&>[data-slot=persona-glyph]]:p-2">{link.icon}</span>
+                    )}
                     {link.label}
                   </a>
                 ))}
@@ -829,7 +843,18 @@ function MobileNavigation({
       <div className="-mx-3">
         {items.map((item) => {
           if (isMenu(item)) {
-            const groups = item.mobile ?? [{ links: (item.items ?? []).map((sub) => ({ label: sub.title, href: sub.href, external: sub.external })) }];
+            const groups = item.mobile ?? [
+              {
+                links: (item.items ?? []).map((sub) => ({
+                  label: sub.title,
+                  href: sub.href,
+                  external: sub.external,
+                  icon:
+                    sub.glyph ??
+                    (sub.icon && <span className="flex size-8 items-center justify-center rounded-control bg-brand p-2 text-on-brand [&>svg]:size-4">{sub.icon}</span>),
+                })),
+              },
+            ];
             return (
               <MobileSection
                 key={item.label}

@@ -2,7 +2,7 @@ import { SiteSection } from "@/components/site/section";
 import { ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { ClosingCta, Cta, CtaButton, CtaTextLink } from "@/components/site/cta";
+import { ClosingCta, CtaTextLink } from "@/components/site/cta";
 
 export function Site() {
   return (<SiteSection>
@@ -24,20 +24,4 @@ export function Site() {
       }
     />
   </SiteSection>);
-}
-
-export function Band() {
-  return (
-    <Cta
-      title="Ship an agent that actually"
-      accent="knows things."
-      description="Free tier, 10-minute integration, and the same API powering agents at Mintlify, daily.dev, and Propane. No credit card to start."
-      primaryAction={<CtaButton href="https://context.dev/signup">Get API Access</CtaButton>}
-      secondaryAction={
-        <CtaButton tone="glass" href="https://cal.com/context-dev/30min">
-          Book a call
-        </CtaButton>
-      }
-    />
-  );
 }

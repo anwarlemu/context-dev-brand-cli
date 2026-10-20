@@ -1,4 +1,4 @@
-import { Building2, Clock, Globe, Layers, MessageSquare, Network, Search } from "lucide-react";
+import { Clock, Globe, Layers, MessageSquare } from "lucide-react";
 
 import {
   NavFeaturedCard,
@@ -10,6 +10,7 @@ import {
   type NavItem,
   type NavPreviewItem,
 } from "@/components/site/site-header";
+import { MenuGlyph, type PersonaGlyphName } from "@/components/visuals/persona-glyph";
 
 function ContextMark() {
   return (
@@ -21,12 +22,12 @@ function ContextMark() {
 }
 
 const products = [
-  { title: "Web search", description: "Search the live web for AI agents and LLM apps.", href: "https://context.dev/search-api", icon: <Search /> },
-  { title: "Map domains", description: "Discover URLs across a website before you scrape.", href: "https://context.dev/map-api", icon: <Network /> },
-  { title: "Run batches", description: "Scrape thousands of URLs or crawl entire websites.", href: "https://context.dev/batches-api", icon: <Layers /> },
-  { title: "Answers from the web", description: "Research questions, structured answers, and sources.", href: "https://context.dev/answers-api", icon: <MessageSquare /> },
-  { title: "Create monitors", description: "Watch the web for changes and receive updates.", href: "https://context.dev/monitors-api", icon: <Clock /> },
-  { title: "Retrieve brand data", description: "Company profile and the website's design system.", href: "https://context.dev/brand-api", icon: <Building2 /> },
+  { title: "Web search", description: "Search the live web for AI agents and LLM apps.", href: "https://context.dev/search-api", glyph: <MenuGlyph name="search" /> },
+  { title: "Map domains", description: "Discover URLs across a website before you scrape.", href: "https://context.dev/map-api", glyph: <MenuGlyph name="map" /> },
+  { title: "Run batches", description: "Scrape thousands of URLs or crawl entire websites.", href: "https://context.dev/batches-api", glyph: <MenuGlyph name="batches" /> },
+  { title: "Answers from the web", description: "Research questions, structured answers, and sources.", href: "https://context.dev/answers-api", glyph: <MenuGlyph name="chat" /> },
+  { title: "Create monitors", description: "Watch the web for changes and receive updates.", href: "https://context.dev/monitors-api", glyph: <MenuGlyph name="monitor" /> },
+  { title: "Retrieve brand data", description: "Company profile and the website's design system.", href: "https://context.dev/brand-api", glyph: <MenuGlyph name="company" /> },
 ];
 
 // The preview's white card would play a short story; a few lines stand in for it here.
@@ -81,6 +82,9 @@ const useCases: NavPreviewItem[] = [
   },
 ];
 
+// The phone menu draws each use case with its persona glyph, as the site does.
+const useCaseGlyphs: Record<string, PersonaGlyphName> = { "web-crawling": "batches", "web-monitoring": "history", "rag-pipeline": "database", "research-agents": "search" };
+
 function StoryMark({ name }: { name: string }) {
   return <div className="flex size-full items-center justify-center text-h4 text-on-brand">{name}</div>;
 }
@@ -88,14 +92,14 @@ function StoryMark({ name }: { name: string }) {
 const items: NavItem[] = [
   {
     label: "Products",
-    width: "min(57.5rem, calc(100vw - 8rem))",
+    width: "min(920px, calc(100vw - 8rem))",
     panel: (
       <NavLinksPanel
         featured={
           <NavFeaturedCard
             href="https://context.dev/web-scraping-api"
             title="Scrape anything"
-            description="Scrape any URL with a 99.96% success rate. Browser rendering and proxy escalation are automatic."
+            description="Scrape any URL with a 99.96% success rate."
             cta="Explore Scrape anything"
           />
         }
@@ -113,26 +117,26 @@ const items: NavItem[] = [
         }
       />
     ),
-    items: [{ title: "Scrape anything", href: "https://context.dev/web-scraping-api" }, ...products],
+    items: [{ title: "Scrape anything", href: "https://context.dev/web-scraping-api", glyph: <MenuGlyph name="scrape" /> }, ...products],
   },
   {
     label: "Use Cases",
-    width: "50rem",
+    width: "min(920px, calc(100vw - 12rem))",
     panel: <NavPreviewPanel items={useCases} footerLink={{ label: "All customer stories", href: "https://context.dev/customers" }} />,
     mobile: [
-      { label: "Scraping & AI agents", links: useCases.map((useCase) => ({ label: useCase.title, href: useCase.href })) },
+      { label: "Scraping & AI agents", links: useCases.map((useCase) => ({ label: useCase.title, href: useCase.href, icon: <MenuGlyph name={useCaseGlyphs[useCase.id]} /> })) },
       {
         label: "Product & brand experiences",
         links: [
-          { label: "Enrich Any Entity", href: "https://context.dev/use-cases/enrich-company-profiles" },
-          { label: "Programmatic Theming", href: "https://context.dev/use-cases/programmatic-theming" },
+          { label: "Enrich Any Entity", href: "https://context.dev/use-cases/enrich-company-profiles", icon: <MenuGlyph name="company" /> },
+          { label: "Programmatic Theming", href: "https://context.dev/use-cases/programmatic-theming", icon: <MenuGlyph name="whitelabel" /> },
         ],
       },
     ],
   },
   {
     label: "Customers",
-    width: "38.125rem",
+    width: "610px",
     panel: (
       <NavStoriesPanel
         viewAll={{ label: "View all stories", href: "https://context.dev/customers" }}
