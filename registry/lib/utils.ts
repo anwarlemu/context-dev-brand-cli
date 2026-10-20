@@ -12,7 +12,7 @@ const twMerge = extendTailwindMerge({
     },
     classGroups: {
       "font-weight": [{ font: ["regular", "heavy"] }],
-      "font-size": [{ text: ["hero", "hero-tablet", "hero-desktop", "display", "h1", "h2", "h3", "h4", "h5", "body-lg", "question", "ask", "body", "body-sm", "caption", "axis"] }],
+      "font-size": [{ text: ["hero", "hero-tablet", "hero-desktop", "display", "h1", "h2", "h3", "h4", "h5", "body-lg", "question", "ask", "body", "body-sm", "pill-sm", "caption", "figure", "figure-lg", "axis"] }],
     },
   },
 });

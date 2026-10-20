@@ -432,7 +432,7 @@ function BenchmarkPanel({ providers, data, link, cycleMs = 6000, className }: { 
         }}
         className="gap-0"
       >
-        <div className="flex items-end gap-4 rounded-t-card border-b border-line bg-subtle px-2 sm:px-4">
+        <div className="flex items-end gap-4 rounded-t-card border-b border-line bg-tab-bar px-2 sm:px-4">
           <div aria-hidden="true" className="hidden shrink-0 items-center gap-1.5 self-center sm:flex">
             <span className="size-2.5 rounded-pill border border-line-strong" />
             <span className="size-2.5 rounded-pill border border-line-strong" />

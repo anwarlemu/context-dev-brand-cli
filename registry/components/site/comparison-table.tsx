@@ -16,7 +16,7 @@ export type ComparisonRow = { feature: string; category?: string; [key: string]:
 
 /** A `marks` cell: a check, an en dash for no, or a short figure. */
 function ComparisonMark({ value, highlight }: { value: ComparisonCellValue | undefined; highlight?: boolean }) {
-  if (typeof value === "string") return <span className={cn("text-body-sm", highlight ? "font-medium text-fg-brand" : "text-fg-nav")}>{value}</span>;
+  if (typeof value === "string") return <span className={cn("text-body-sm", highlight ? "font-normal text-fg-brand" : "text-fg-nav")}>{value}</span>;
   if (value) {
     return (
       <span className="inline-flex justify-center">
@@ -73,7 +73,7 @@ function ComparisonTable({
                     {firstHeader}
                   </th>
                   {columns.map((col) => (
-                    <th key={col.key} scope="col" className={cn("w-36 px-4 py-4 text-center md:w-44", col.highlight ? "bg-brand/4 font-medium text-fg-brand" : "font-normal text-fg")}>
+                    <th key={col.key} scope="col" className={cn("w-36 px-4 py-4 text-center md:w-44", col.highlight ? "bg-brand/4 font-normal text-fg-brand" : "font-normal text-fg")}>
                       {col.header}
                     </th>
                   ))}
@@ -100,7 +100,7 @@ function ComparisonTable({
               <tbody key={group.category ?? "rows"}>
                 {group.category && (
                   <tr className="border-t border-hairline">
-                    <th scope="colgroup" colSpan={columns.length + 1} className="px-5 pt-6 pb-2 text-body-sm font-medium text-fg md:px-8">
+                    <th scope="colgroup" colSpan={columns.length + 1} className="px-5 pt-6 pb-2 text-body-sm font-normal text-fg md:px-8">
                       {group.category}
                     </th>
                   </tr>

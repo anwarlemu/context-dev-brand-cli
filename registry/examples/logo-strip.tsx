@@ -1,6 +1,7 @@
 import { LogoStrip, type StripLogo } from "@/components/site/logo-strip";
 
-const names = ["Super", "Passionfroot", "mintlify", "chatwoot", "similarweb", "Klarna.", "Ferndesk", "DocsBot", "daily.dev", "Sixtyfour", "Comp AI", "Squad"];
+// The site's order. Zero's mark is wide and short, so it is drawn `compact`.
+const names = ["Super", "Passionfroot", "Zero", "mintlify", "chatwoot", "similarweb", "Klarna.", "Ferndesk", "DocsBot", "daily.dev", "Sixtyfour", "Comp AI", "Squad"];
 
 // Logos with a quote show it in a card that glides between them on hover; the rest only take their color.
 const quotes: Partial<Record<string, StripLogo["quote"]>> = {
@@ -25,7 +26,7 @@ export function Site() {
           Powering agents and products with <span className="text-fg-brand">the world&apos;s data.</span>
         </>
       }
-      logos={names.map((name) => ({ name, quote: quotes[name], node: <span className="text-h5 font-medium whitespace-nowrap text-fg">{name}</span> }))}
+      logos={names.map((name) => ({ name, quote: quotes[name], compact: name === "Zero", node: <span className="text-h5 font-medium whitespace-nowrap text-fg">{name}</span> }))}
     />
   );
 }

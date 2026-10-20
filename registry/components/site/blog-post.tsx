@@ -1,7 +1,9 @@
 import * as React from "react";
 import sanitizeHtml from "sanitize-html";
 
-import { SectionHeaderRule, SiteSection } from "@/components/site/section";
+import { BlogCard, type BlogPost as BlogCardPost } from "@/components/site/blog-cards";
+import { BlogCodeBlock } from "@/components/site/blog-code-block";
+import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
 import { cn } from "@/lib/utils";
 
 // A blog post (and the long comparison articles on the compare pages): the post opens in the ruled column under the
@@ -127,8 +129,9 @@ function BlogPost({
 
 // The article's type and blocks, written as descendant rules so it styles HTML from Markdown as well as JSX. Headings
 // regular weight in black, body copy muted at a loose 1.7, bullets as small blue checks, links blue, quotes beside a
-// soft blue bar, inline code on the blue tint, and images and tables as white cards in the soft blue ring. A code
-// sample is best a CodeWindow (its pre carries data-slot, so these rules leave it alone).
+// soft blue bar, inline code on the blue tint, and images and tables as white cards in the soft blue ring (tables
+// scroll sideways on phones). A code sample is a BlogCodeBlock, light as the site's posts draw it (its pre carries
+// data-slot, so these rules leave it alone); a bare pre from Markdown is a plain white card.
 const PROSE = cn(
   "text-fg-nav [&>*:first-child]:mt-0",
   "[&_:is(h1,h2,h3,h4,h5,h6)]:font-normal [&_:is(h1,h2,h3,h4,h5,h6)]:tracking-normal [&_:is(h1,h2,h3,h4,h5,h6)]:text-fg",
@@ -144,12 +147,14 @@ const PROSE = cn(
   "[&_blockquote]:relative [&_blockquote]:my-8 [&_blockquote]:pl-8 [&_blockquote]:before:absolute [&_blockquote]:before:inset-y-0 [&_blockquote]:before:left-0 [&_blockquote]:before:w-2 [&_blockquote]:before:rounded-card [&_blockquote]:before:bg-ring-tint [&_blockquote]:before:ring-1 [&_blockquote]:before:ring-brand/10 [&_blockquote]:before:ring-inset [&_blockquote]:before:content-['']",
   "[&_blockquote_p]:text-h5 [&_blockquote_p]:leading-relaxed [&_blockquote_p]:text-fg",
   "[&_:not(pre)>code]:rounded-sm [&_:not(pre)>code]:bg-tint [&_:not(pre)>code]:px-1.5 [&_:not(pre)>code]:py-0.5 [&_:not(pre)>code]:font-mono [&_:not(pre)>code]:text-body [&_:not(pre)>code]:text-fg-brand",
-  "[&_pre:not([data-slot])]:my-8 [&_pre:not([data-slot])]:overflow-x-auto [&_pre:not([data-slot])]:rounded-card [&_pre:not([data-slot])]:border [&_pre:not([data-slot])]:border-line [&_pre:not([data-slot])]:bg-subtle [&_pre:not([data-slot])]:p-5 [&_pre:not([data-slot])]:font-mono [&_pre:not([data-slot])]:text-body-sm [&_pre:not([data-slot])]:leading-code [&_pre:not([data-slot])]:text-fg",
+  "[&_pre:not([data-slot])]:my-8 [&_pre:not([data-slot])]:overflow-x-auto [&_pre:not([data-slot])]:rounded-card [&_pre:not([data-slot])]:border [&_pre:not([data-slot])]:border-wash-pill [&_pre:not([data-slot])]:bg-surface [&_pre:not([data-slot])]:p-5 [&_pre:not([data-slot])]:font-mono [&_pre:not([data-slot])]:text-body-sm [&_pre:not([data-slot])]:leading-code [&_pre:not([data-slot])]:text-fg",
   "[&_:is(p>img:only-child,figure>img)]:mx-auto [&_:is(p>img:only-child,figure>img)]:my-8 [&_:is(p>img:only-child,figure>img)]:block [&_:is(p>img:only-child,figure>img)]:h-auto [&_:is(p>img:only-child,figure>img)]:w-[calc(100%-var(--ds-space-4))] [&_:is(p>img:only-child,figure>img)]:rounded-card [&_:is(p>img:only-child,figure>img)]:border [&_:is(p>img:only-child,figure>img)]:border-hairline [&_:is(p>img:only-child,figure>img)]:bg-surface [&_:is(p>img:only-child,figure>img)]:p-4 [&_:is(p>img:only-child,figure>img)]:shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
   "[&_p:has(>img:only-child)]:my-0 [&_figure]:my-8 [&_figure>img]:mb-5 [&_figcaption]:text-body-sm [&_figcaption]:leading-relaxed [&_figcaption]:text-fg-muted",
   "[&_table]:mx-auto [&_table]:my-8 [&_table]:w-[calc(100%-var(--ds-space-4))] [&_table]:border-separate [&_table]:border-spacing-0 [&_table]:rounded-card [&_table]:border [&_table]:border-hairline [&_table]:bg-surface [&_table]:text-left [&_table]:shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]",
+  // On phones a wide table scrolls sideways inside its card rather than squeezing its columns.
+  "max-md:[&_table]:block max-md:[&_table]:overflow-x-auto max-md:[&_:is(th,td)]:min-w-32",
   "[&_:is(th,td)]:border-b [&_:is(th,td)]:border-line [&_:is(th,td)]:px-5 [&_:is(th,td)]:py-3.5 [&_:is(th,td)]:align-top [&_tbody_tr:last-child_td]:border-b-0",
-  "[&_th]:text-body-sm [&_th]:leading-normal [&_td]:text-body [&_td]:leading-relaxed [&_td:first-child]:text-fg",
+  "[&_th]:text-body-sm [&_th]:leading-normal [&_td]:text-body [&_td]:leading-snippet [&_td:first-child]:text-fg",
   "[&_hr]:my-12 [&_hr]:border-line",
 );
 
@@ -165,7 +170,31 @@ function BlogProse({ html, className, children, ...props }: React.ComponentProps
 
 export type RelatedPost = { title: React.ReactNode; summary?: React.ReactNode; href: string; date?: { iso: string; label: React.ReactNode }; cover?: React.ReactNode };
 
-/** A related post: a blue card, its texture (`cover`) behind a dark wash, the title, summary and date in white at its foot. */
+/**
+ * A post's related articles, as the site closes a post: a ruled section with "Related articles." and a header rule,
+ * then up to three BlogCards (white and blue in turn) on the white page.
+ */
+function RelatedArticles({ posts, title = "Related", accent = "articles.", className, ...props }: Omit<React.ComponentProps<"section">, "title"> & { posts: BlogCardPost[]; title?: React.ReactNode; accent?: React.ReactNode }) {
+  if (posts.length === 0) return null;
+  return (
+    <SiteSection lines aria-label="Related articles" data-slot="related-articles" className={className} {...props}>
+      <SectionHeading title={title} accent={accent} />
+      <SectionHeaderRule />
+      <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posts.slice(0, 3).map((post, index) => (
+          <li key={post.href}>
+            <BlogCard post={post} tone="light" surface={index % 2 === 0 ? "paper" : "blue"} />
+          </li>
+        ))}
+      </ul>
+    </SiteSection>
+  );
+}
+
+/**
+ * @deprecated The site closes a post with RelatedArticles (white and blue BlogCards in a ruled section). Kept so
+ * existing pages render.
+ */
 function RelatedPostCard({ post, className }: { post: RelatedPost; className?: string }) {
   return (
     <a
@@ -198,7 +227,7 @@ function RelatedPostCard({ post, className }: { post: RelatedPost; className?: s
   );
 }
 
-/** Up to four related posts, two across, under a heading, after the article. */
+/** @deprecated Use RelatedArticles, the site's ruled section of BlogCards. Kept so existing pages render. */
 function RelatedPosts({ posts, title = "Related articles", className }: { posts: RelatedPost[]; title?: React.ReactNode; className?: string }) {
   const titleId = React.useId();
   if (posts.length === 0) return null;
@@ -218,4 +247,4 @@ function RelatedPosts({ posts, title = "Related articles", className }: { posts:
   );
 }
 
-export { BlogPost, BlogAuthor, BlogProse, RelatedPosts, RelatedPostCard };
+export { BlogPost, BlogAuthor, BlogProse, BlogCodeBlock, RelatedArticles, RelatedPosts, RelatedPostCard };

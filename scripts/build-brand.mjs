@@ -24,11 +24,11 @@ const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n
 const t = vars(root.body);
 const color = {
 	brand: 'brand', black: 'black', white: 'white', primary: 'action-primary', 'primary-hover': 'action-primary-hover', 'on-primary': 'action-primary-fg', 'focus-ring': 'focus-ring',
-	surface: 'bg-default', subtle: 'bg-subtle', 'card-hover': 'bg-card-hover', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement',
+	surface: 'bg-default', subtle: 'bg-subtle', 'card-hover': 'bg-card-hover', frame: 'bg-frame', canvas: 'bg-canvas', tint: 'bg-tint', inverse: 'bg-inverse', dark: 'bg-dark', code: 'bg-code', scrim: 'bg-scrim', announcement: 'bg-announcement', 'tab-bar': 'bg-tab-bar',
 	fg: 'text-default', 'fg-secondary': 'text-secondary', 'fg-muted': 'text-muted', 'fg-subtle': 'text-subtle', 'fg-faint': 'text-faint', 'fg-nav': 'text-nav', 'fg-inverse': 'text-inverse', 'fg-brand': 'text-brand', 'on-brand': 'text-on-brand',
 	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',
 	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-announcement': 'wash-announcement', 'wash-control': 'wash-control', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
-	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
+	success: 'status-success', warning: 'status-warning', danger: 'status-danger', caution: 'bg-caution', 'fg-caution': 'text-caution',
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
 for (const name of Object.keys(t)) {

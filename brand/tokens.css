@@ -55,6 +55,8 @@
 	--ds-color-code-light-property: #0550AE;
 	--ds-color-bg-scrim: rgb(0 0 0 / 0.1);
 	--ds-color-bg-announcement: #F7F8FA;
+	/* The benchmark charts' folder-tab bar. */
+	--ds-color-bg-tab-bar: #F6F6F7;
 
 	/* Text: black, and black at 65, 60, 55 and 40 percent on white */
 	--ds-color-text-default: #000000;
@@ -91,6 +93,9 @@
 	--ds-color-status-success: #15803D;
 	--ds-color-status-warning: #B45309;
 	--ds-color-status-danger: #DC2626;
+	/* A cost flag on the compare pages ("25% more", "4x fewer"): a pale amber pill with amber text. */
+	--ds-color-bg-caution: #FFFBEB;
+	--ds-color-text-caution: #BB4D00;
 	--ds-color-focus-ring: #2563EB;
 	--ds-color-chart-series-1: #3B82F6;
 	--ds-color-chart-series-2: #14B8A6;
@@ -151,6 +156,8 @@
 	--ds-text-ask: max(1.0625rem, 16px);
 	--ds-text-body: 1rem;
 	--ds-text-body-sm: 0.875rem;
+	/* A small pill's label, such as the "copy" pill on an article's code block. */
+	--ds-text-pill-sm: 0.8125rem;
 	--ds-text-caption: 0.75rem;
 	/* Chart axis labels (the product's charts). */
 	--ds-text-axis: 11px;
@@ -159,6 +166,9 @@
 	--ds-text-composer: 13.5px;
 	--ds-text-stat: 22px;
 	--ds-text-metric: 26px;
+	/* A headline figure on the site, such as the home page's scrape success rate (larger from md). */
+	--ds-text-figure: 4rem;
+	--ds-text-figure-lg: 5rem;
 	--ds-leading-tight: 1.1;
 	--ds-leading-heading: 1.2;
 	--ds-leading-snug: 1.3;
@@ -182,6 +192,8 @@
 	/* Section headings set in two colors, such as the FAQ's. */
 	--ds-tracking-display: -0.2rem;
 	--ds-tracking-normal: 0;
+	/* A headline figure, set tighter than a heading. */
+	--ds-tracking-figure: -0.045em;
 	--ds-tracking-label: 0.08em;
 
 	/* Space (rem, so it follows the root) */

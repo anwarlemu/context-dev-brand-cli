@@ -18,12 +18,17 @@ type StripLogo = {
   keepColor?: boolean;
   /** Marks drawn in white: they stay dark on hover, since their own colors would vanish on the white strip. */
   whiteArtwork?: boolean;
+  /** Wide, short marks (Zero on the site) sit smaller so they read at the same weight as the rest. */
+  compact?: boolean;
 };
 
 // The whole loop takes 48 seconds, read as ambient rather than something to watch. Under the pointer (or while a quote
-// is open) the row coasts to a stop and eases back up when the pointer leaves, on the strong ease-out.
+// is open) the row coasts to a stop over 900ms and eases back up over 600ms when the pointer leaves, on a cubic
+// ease-out. These are longer than the 300ms UI ceiling on purpose: the site's values, since this is a change of
+// speed in ambient motion rather than a response the pointer waits on.
 const LOOP_MS = 48_000;
-const COAST_MS = 300;
+const SLOW_DOWN_MS = 900;
+const SPEED_UP_MS = 600;
 const MAX_FRAME_MS = 100;
 
 // The quote card: 340px wide, 12px from its logo and from the viewport's edges. A short grace before closing lets the
@@ -57,7 +62,8 @@ function placeCard(anchor: Anchor, card: { width: number; height: number }, stag
 // fades back. Only the logo itself counts as hovered, not the empty space around it in its tile.
 function logoClass(logo: StripLogo) {
   return cn(
-    "max-h-12 w-auto rounded-card object-contain opacity-55 transition-[opacity,filter] duration-200 ease-out will-change-[opacity,filter] group-data-hovered/tile:opacity-100 group-data-hovered/tile:duration-0 motion-reduce:transition-none md:max-h-10",
+    "w-auto rounded-card object-contain opacity-55 transition-[opacity,filter] duration-200 ease-out will-change-[opacity,filter] group-data-hovered/tile:opacity-100 group-data-hovered/tile:duration-0 motion-reduce:transition-none",
+    logo.compact ? "max-h-9 md:max-h-8" : "max-h-12 md:max-h-10",
     !logo.keepColor && "brightness-0 grayscale",
     !logo.keepColor && !logo.whiteArtwork && "group-data-hovered/tile:brightness-100 group-data-hovered/tile:grayscale-0",
   );
@@ -150,7 +156,7 @@ function useEasedMarquee(stripRef: React.RefObject<HTMLDivElement | null>, pause
       const elapsed = lastAt === null ? 0 : Math.min(now - lastAt, MAX_FRAME_MS);
       lastAt = now;
       const wasEasing = motion.rate !== motion.targetRate;
-      const t = Math.min((now - motion.easeStartedAt) / COAST_MS, 1);
+      const t = Math.min((now - motion.easeStartedAt) / (motion.targetRate === 0 ? SLOW_DOWN_MS : SPEED_UP_MS), 1);
       motion.rate = t === 1 ? motion.targetRate : motion.fromRate + (motion.targetRate - motion.fromRate) * (1 - (1 - t) ** 3);
       motion.progress = (motion.progress + (motion.rate * elapsed) / loopMs) % 1;
       for (const row of rows) row.style.transform = `translateX(${-motion.progress * 100}%)`;

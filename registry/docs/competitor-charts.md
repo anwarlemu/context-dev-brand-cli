@@ -5,9 +5,9 @@ type: site
 surface: site
 description: "Tabbed benchmark charts for success rate, latency, and cost."
 kinds: [tabs, card-ring]
-use_for: Benchmarks against competitors. Mark Context.dev's provider with `highlight`; name every provider by logo and label.
+use_for: Benchmarks against competitors. Mark Context.dev's provider with `highlight`; name every provider by logo and label. The live site shows the charts only on a staff preview page (pulled from the home page while its numbers are placeholders).
 never: [A color per competitor, Unverified numbers in production, Charts that move under reduced motion]
-source: src/components/sections/home/competitor-charts.tsx; src/components/sections/home/competitor-comparison.tsx; src/components/sections/home/competitor-benchmark-data.ts
+source: src/components/sections/home/competitor-charts.tsx; src/components/sections/home/competitor-comparison.tsx; src/components/sections/home/competitor-benchmark-data.ts; src/app/(dashboard)/admin/competitor-comparison/page.tsx
 ---
 
 The tabs cycle every `cycleMs` while the card is on screen, a small ring filling on the open tab, and pause while a
