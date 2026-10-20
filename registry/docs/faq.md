@@ -6,9 +6,14 @@ surface: site
 description: "FAQ section with categories, expandable answers, and a contact action."
 kinds: [faq, tabs, card]
 use_for: The FAQ on the home, pricing and product pages. FaqList alone for a single list without tabs, FaqCardGrid for two columns of cards, FaqPlainList for a product page's hairline list in one card.
-never: [Bold questions, Open answers by default in the card stack, Gray card backgrounds, A spread shadow for the ring (it rounds the ring's outer edge too far), Wiring the ask card to a service inside the component]
-source: src/components/sections/faq.tsx; src/components/sections/faq-card.tsx; src/components/sections/faq-cards.tsx; src/components/sections/faq-ask-card.tsx; src/components/sections/faq-toggle-dots.tsx; src/components/sections/faq-home-header.tsx; src/components/sections/use-reserved-faq-height.ts; src/components/sections/products/landing-faq-list.tsx; src/styles/globals.css (details.faq-card, .faq-scroll-fade, .brand-glass-ring)
+never: [Bold or medium-weight questions, Open answers by default in the card stack, Gray card backgrounds, A spread shadow for the ring (it rounds the ring's outer edge too far), Wiring the ask card to a service inside the component]
+source: src/components/sections/faq.tsx; src/components/sections/faq-card.tsx; src/components/sections/faq-cards.tsx; src/components/sections/faq-ask-card.tsx; src/components/sections/faq-toggle-dots.tsx; src/components/sections/faq-home-header.tsx; src/components/sections/faq-demo-invite.tsx; src/components/sections/use-reserved-faq-height.ts; src/components/sections/products/landing-faq-list.tsx; src/styles/globals.css (details.faq-card, .faq-scroll-fade, .brand-glass-ring)
+reference_commit: 1bd8062d
 ---
+
+On the left, the heading ("questions" in brand blue), a line, the Book demo pill and, under them, the invite story:
+an "Ask anything" banner that becomes a paper plane (`FaqInvite`, the default `aside`; pass false to leave it out).
+The category tabs sit in a white pill-shaped track. Questions are regular weight at 17px.
 
 Each card sits in the soft blue glass ring, a wrapper 8px wider than the card so the ring's outer edge keeps the card's
 radius. The whole card turns light gray on hover (only where hovering is real), and opening one closes the others.

@@ -57,15 +57,18 @@
 
 /* The ruled column: hairlines down both edges of the content column from below the hero to the end, a full-bleed rule between
    top-level sections, and a solid node where a rule meets a column edge. The lines sit above section backgrounds (a
-   hero's own fill would hide them) and under anything positioned above them; content keeps inside them. */
+   hero's own fill would hide them) and under anything positioned above them; content keeps inside them. A site surface
+   (.ds-site) re-declares every token, so it takes the column too. */
 @media (min-width: 43.2rem) {
-	:root {
+	:root,
+	.ds-site {
 		--ds-frame-column: 90vw;
 	}
 }
 
 @media (min-width: 57.6rem) {
-	:root {
+	:root,
+	.ds-site {
 		--ds-frame-column: min(85vw, var(--ds-layout-column-wide));
 	}
 }

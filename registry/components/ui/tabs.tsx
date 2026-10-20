@@ -9,8 +9,9 @@ import { cn } from "@/lib/utils";
 
 // The dashboard's tabs: plain labels, with one soft gray pill (no border) that glides to the selected one on a spring.
 // `segmented` sits them on a gray track with a white pill, so the unpicked ones still read as choices. Only the text
-// answers a hover, so nothing fades over the pill gliding in beneath. The site's `pill` tabs are pill-shaped labels, a
-// white pill outlined in brand blue gliding to the selected one (src/components/sections/faq.tsx).
+// answers a hover, so nothing fades over the pill gliding in beneath. The site's `pill` tabs sit in a white pill-shaped
+// track with a hairline edge, a white pill outlined in brand blue gliding to the selected one (src/components/ui/tabs.tsx,
+// the `brand` variant).
 type Variant = "default" | "segmented" | "pill";
 type Size = "sm" | "md";
 
@@ -36,7 +37,7 @@ const tabsTriggerVariants = cva(
       variant: {
         default: "text-fg-subtle transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg",
         segmented: "text-fg-muted transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg",
-        pill: "rounded-pill border border-transparent px-5 py-2.5 text-body leading-snug text-fg-muted transition-[background-color,border-color,color] duration-200 ease-out hover:bg-blue-10 hover:text-fg data-[state=active]:text-fg-brand data-[state=active]:hover:bg-transparent",
+        pill: "rounded-pill border border-transparent px-4 py-1.5 text-body-sm leading-snug text-fg-muted transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg-brand",
       },
       size: { sm: "", md: "" },
     },
@@ -101,7 +102,7 @@ function TabsList({
       data-slot="tabs-list"
       className={cn(
         "relative isolate inline-flex w-fit items-center",
-        variant === "pill" ? "gap-2" : variant === "segmented" ? "gap-0.5 rounded-control bg-neutral-5 p-0.5" : size === "sm" ? "gap-0.5" : "gap-1",
+        variant === "pill" ? "gap-1 rounded-pill border border-neutral-10 bg-surface p-1" : variant === "segmented" ? "gap-0.5 rounded-control bg-neutral-5 p-0.5" : size === "sm" ? "gap-0.5" : "gap-1",
         className,
       )}
       {...props}

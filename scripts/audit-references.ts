@@ -14,11 +14,15 @@ const commits = { website: git(website, 'rev-parse', process.env.WEBSITE_REFEREN
 const trees = Object.fromEntries(Object.entries(commits).map(([key, commit]) => [key, git(key === 'dashboard' ? dashboard : website, 'ls-tree', '-r', '--name-only', commit, 'src').trim().split('\n')]));
 const hash = (text: string) => createHash('sha256').update(text).digest('hex');
 const cache = new Map<string, string>();
-function source(kind: keyof typeof commits, path: string) {
-	const key = `${kind}:${path}`;
-	if (!cache.has(key)) cache.set(key, git(kind === 'dashboard' ? dashboard : website, 'show', `${commits[kind]}:${path}`));
+// An item ported from a later website commit than the pin names it in its docs (`reference_commit`).
+const pinnedTrees = new Map<string, string[]>();
+const treeAt = (commit: string) => pinnedTrees.get(commit) ?? pinnedTrees.set(commit, git(website, 'ls-tree', '-r', '--name-only', commit, 'src').trim().split('\n')).get(commit)!;
+function source(kind: keyof typeof commits, path: string, pinned?: string) {
+	const commit = pinned ?? commits[kind];
+	const key = `${commit}:${path}`;
+	if (!cache.has(key)) cache.set(key, git(kind === 'dashboard' ? dashboard : website, 'show', `${commit}:${path}`));
 	const content = cache.get(key)!;
-	return { repository: kind === 'dashboard' ? 'context-dashboard' : 'brand-dev-webapp', commit: commits[kind], path, sha256: hash(content), retained: kind === 'retainedWebsite' || kind === 'legacyWebsite', exports: [...content.matchAll(/export\s+(?:default\s+)?(?:async\s+)?(?:function|class|const|type|interface)\s+(\w+)/g)].map(m => m[1]) };
+	return { repository: kind === 'dashboard' ? 'context-dashboard' : 'brand-dev-webapp', commit, path, sha256: hash(content), retained: kind === 'retainedWebsite' || kind === 'legacyWebsite', exports: [...content.matchAll(/export\s+(?:default\s+)?(?:async\s+)?(?:function|class|const|type|interface)\s+(\w+)/g)].map(m => m[1]) };
 }
 const knownInfrastructure = new Set(['navigation', 'surface']);
 const records = readdirSync(join(root, 'registry/docs')).filter(f => f.endsWith('.md')).sort().map(file => {
@@ -30,6 +34,7 @@ const records = readdirSync(join(root, 'registry/docs')).filter(f => f.endsWith(
 	const library = paths.map(path => ({ path, sha256: hash(readFileSync(join(root, 'registry', path), 'utf8')) }));
 	const refs = new Map<string, ReturnType<typeof source>>();
 	const missing: string[] = [];
+	const pinned: string | undefined = docs.reference_commit ? git(website, 'rev-parse', String(docs.reference_commit)).trim() : undefined;
 	let repo: keyof typeof commits = /context-dashboard|^dashboard/.test(docs.source ?? '') ? 'dashboard' : 'website';
 	let lastDirectory = '';
 	const chunks: string[] = (docs.source ?? '').split(/;| and the preview in | and |\(\+ /);
@@ -43,6 +48,10 @@ const records = readdirSync(join(root, 'registry/docs')).filter(f => f.endsWith(
 			if (path.includes('/firecrawl/firecrawl/')) path = path.replace('/firecrawl/firecrawl/', '/firecrawl/');
 			lastDirectory = dirname(path);
 			const order: (keyof typeof commits)[] = repo === 'dashboard' ? ['dashboard', 'retainedWebsite', 'legacyWebsite'] : ['website', 'retainedWebsite', 'legacyWebsite'];
+			if (pinned && repo === 'website' && treeAt(pinned).includes(path)) {
+				refs.set(`pinned:${path}`, source('website', path, pinned));
+				continue;
+			}
 			const found = order.find(kind => trees[kind].includes(path));
 			if (found) refs.set(`${found}:${path}`, source(found, path));
 			else missing.push(path);

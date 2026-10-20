@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-18T09:29:39.689Z",
+  "checkedAt": "2026-10-20T16:41:52.728Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
@@ -2223,15 +2223,15 @@
       "library": [
         {
           "path": "components/site/faq.tsx",
-          "sha256": "423d8603a6722b813ceaad4c8380f0d5e064e0e6d5d4aff4055b8f75dbddbc26"
+          "sha256": "daa7b772a7e900a86fbaafc46a2dd3d05cd78c88bcf5eb6bcda8a0dcff964b7c"
         }
       ],
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq.tsx",
-          "sha256": "c2cd483bdf2a01ca2b7a92395536167804619617fc4cef1bf354d27ff2a5eec5",
+          "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
           "retained": false,
           "exports": [
             "Faq"
@@ -2239,9 +2239,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq-card.tsx",
-          "sha256": "0536aaf71a2dc3fe2e55392d92ae7cc82818611612be7c5b3a3730b1dae667c0",
+          "sha256": "e26b45e89581f5f05c52f1de6825b7a60f19e4c9b65fb5ffa4ade428ed90a575",
           "retained": false,
           "exports": [
             "FaqCard"
@@ -2249,7 +2249,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq-cards.tsx",
           "sha256": "662b1262809f1f8ef0ce309e0a9137185817ead975915f58d24148efb417dae2",
           "retained": false,
@@ -2261,9 +2261,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq-ask-card.tsx",
-          "sha256": "1d8ab37f6d6f78015f2bc36e01d3825e97d29d612aa3ddaabf727fbb8b0b4d82",
+          "sha256": "54861ceb0c035b943cede7ecab34afcbd9207beeccad392a4d255c74fcf6cfec",
           "retained": false,
           "exports": [
             "FaqAskCard"
@@ -2271,7 +2271,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq-toggle-dots.tsx",
           "sha256": "7b3221b018eab661da26fa0b34da395279b2f37f37a30f0a6c3099e37fa8abe3",
           "retained": false,
@@ -2281,7 +2281,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq-home-header.tsx",
           "sha256": "1caf00d8644b80e206216d00df4ff4ab6924c201a8806d3aeba21c3cd324360b",
           "retained": false,
@@ -2291,7 +2291,17 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "path": "src/components/sections/faq-demo-invite.tsx",
+          "sha256": "f44ad172b01c7e0f7cc23c2db0fef4dfb2dc8e47fae7fcbbf7eb00af45486fe7",
+          "retained": false,
+          "exports": [
+            "FaqDemoInvite"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/use-reserved-faq-height.ts",
           "sha256": "d7aa82e27d061fed5e09a0c57b02621171d3591ff19a4397e29f1d4423036bd6",
           "retained": false,
@@ -2301,7 +2311,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/products/landing-faq-list.tsx",
           "sha256": "431ebcdfdbe4ebd1b2ec9eca013c695cb9b272b80437e3053fd244002f35a479",
           "retained": false,
@@ -2311,9 +2321,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/styles/globals.css",
-          "sha256": "4feec64648c7d7b6b7acb5e7c9b2502ffff40a19cc1e9fc82f35baba39193929",
+          "sha256": "24a6f8004a111647e72f24a79192ed99fe0451a06bbbfa77c0b6ae41aaaf3837",
           "retained": false,
           "exports": []
         }
@@ -5343,6 +5353,70 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "story-faq-invite",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/visuals/stories/faq-invite-story.tsx",
+          "sha256": "da42e298871c6ae7a5051d662e0be42b26e8402609297550b136e6adf7cc1a2d"
+        },
+        {
+          "path": "components/visuals/stories/faq-invite-story-player.ts",
+          "sha256": "5e82d1de230ed7377bdc6ed8c3a15364c4a5c721443fa5fd35b7650b3d3adb2b"
+        },
+        {
+          "path": "components/visuals/stories/faq-invite-story-scenes.ts",
+          "sha256": "6b6bb867e8877d07e54d4640e5338fad23bd7ccf92eee8a91eb01e4191318a24"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "path": "src/components/sections/faq-demo-invite.tsx",
+          "sha256": "f44ad172b01c7e0f7cc23c2db0fef4dfb2dc8e47fae7fcbbf7eb00af45486fe7",
+          "retained": false,
+          "exports": [
+            "FaqDemoInvite"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "path": "src/components/sections/faq-demo-story-player.ts",
+          "sha256": "07e3de7cdf157b129da57386ed537d1688050389f83dfd7e4d24ea517bc0606b",
+          "retained": false,
+          "exports": [
+            "createFaqDemoStoryPlayer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "path": "src/components/sections/faq-demo-story-scenes.ts",
+          "sha256": "ea6de43dd27f90f155a210f8ca05b43bbefe12e231b241369de3d930a2dceba3",
+          "retained": false,
+          "exports": [
+            "FAQ_DEMO_STORY_GRID",
+            "BANNER_ORIGIN",
+            "BANNER_INSIDE",
+            "BANNER_FILLED",
+            "BANNER_OPEN",
+            "bannerShare",
+            "QUESTION",
+            "PLANE_AT_REST",
+            "EMPTY",
+            "FLIGHT_COLUMNS",
+            "paintFlight",
+            "FAQ_DEMO_RESTING"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "story-free-tools-hero",
       "surface": "site",
       "kind": "website",
@@ -6372,7 +6446,7 @@
       "library": [
         {
           "path": "components/ui/tabs.tsx",
-          "sha256": "a5aedc8bda1a5acac887462f93bcc29953ab654331e520494278fd7efd192136"
+          "sha256": "e68206a97eeb7a32736f39d17e4fa9da8709f348fa558799718fdbd2e6b5ade5"
         }
       ],
       "sources": [
@@ -6389,13 +6463,21 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
           "path": "src/components/sections/faq.tsx",
-          "sha256": "c2cd483bdf2a01ca2b7a92395536167804619617fc4cef1bf354d27ff2a5eec5",
+          "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
           "retained": false,
           "exports": [
             "Faq"
           ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "path": "src/components/ui/tabs.tsx",
+          "sha256": "9d685bb15672b2c27f6dd69da8aacce0d87a1237b2d7827e000217bb81aaf296",
+          "retained": false,
+          "exports": []
         }
       ],
       "unresolvedHistoricalPaths": [],
@@ -7129,7 +7211,7 @@
       "library": [
         {
           "path": "lib/utils.ts",
-          "sha256": "7b8f665f849fcd472347d5e6d573fc9acaefa4d28b6a8c49f1e0afedb6380e00"
+          "sha256": "35583462f78a0456c6b9e6f1118f366a18c59fe78c0368168034dd0a38658e56"
         }
       ],
       "sources": [

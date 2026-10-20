@@ -4,15 +4,18 @@
 
 @source "../../../registry";
 
-/* The brand's ruled column, as the site layer sets it: the header, the sections and the docs pages share it. Outside
-   a layer, after the tokens, so it replaces their full-width default. */
+/* The brand's ruled column, as the site layer sets it: the header, the sections and the docs pages share it, and so does
+   a site surface (.ds-site re-declares every token). Outside a layer, after the tokens, so it replaces their full-width
+   default. */
 @media (min-width: 43.2rem) {
-  :root {
+  :root,
+  .ds-site {
     --ds-frame-column: 90vw;
   }
 }
 @media (min-width: 57.6rem) {
-  :root {
+  :root,
+  .ds-site {
     --ds-frame-column: min(85vw, var(--ds-layout-column-wide));
   }
 }

@@ -8,9 +8,12 @@ import { Accordion, AccordionItem } from "@/components/ui/accordion";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { HeroCirclePatternSurface } from "@/components/visuals/hero-circle-pattern";
+import { patternHole } from "@/components/visuals/hero-pattern-hole";
+import { FaqInviteStory } from "@/components/visuals/stories/faq-invite-story";
 
-// The site's FAQ: the heading, a line and a call to action on the left; category pills and a stack of question cards
-// on the right. Each question is its own white card in the soft blue ring, its answer hanging off a small corner rule,
+// The site's FAQ: the heading, a line, a call to action and the "Ask anything" dot story on the left; category pills and
+// a stack of question cards on the right. Each question is its own white card in the soft blue ring, its answer hanging off a small corner rule,
 // and the last card is an "Ask anything" field. Opening a card closes the others; the answer grows open and fades in.
 // Every category is stacked in one grid cell, so switching tabs never moves the page, and `sizing` decides what an
 // opened answer does: hold room for the tallest one (`reserved`), scroll inside the closed height (`closed`), or grow.
@@ -31,8 +34,8 @@ const CARD = "rounded-card bg-surface shadow-raised";
 // The soft blue glass ring around each card: a wrapper 8px wider on every side rather than a spread shadow, so the ring's
 // outer edge shares the card's radius; the negative margin keeps it from adding size.
 const RING = "-m-2 rounded-card bg-ring-tint p-2";
-// The question's type, shared by the ask field so the two read as one stack.
-const QUESTION = "text-body-lg leading-snug font-medium tracking-tight text-fg";
+// The question's type, shared by the ask field so the two read as one stack: regular weight, untracked.
+const QUESTION = "text-question leading-question font-normal tracking-normal text-fg";
 // The answer's block: a corner rule and the muted text, with room on the right where the toggle sits above.
 const ANSWER = "flex gap-2.5 pr-16 pl-5 text-body-sm leading-relaxed text-fg-muted";
 
@@ -75,7 +78,7 @@ function FaqCard({ item, value, toggle = "plus", className }: { item: FaqItem; v
         value={value}
         data-slot="faq-card"
         // The whole card turns light gray on hover, only where hovering is real.
-        className={cn("group border-b-0 transition-[background-color] duration-200 ease-out [@media(hover:hover)]:hover:bg-subtle motion-reduce:transition-none", CARD, className)}
+        className={cn("group border-b-0 transition-[background-color] duration-200 ease-out [@media(hover:hover)]:hover:bg-card-hover motion-reduce:transition-none", CARD, "pb-4", className)}
       >
         <AccordionPrimitive.Header className="flex">
           <AccordionPrimitive.Trigger className="flex flex-1 cursor-pointer items-center gap-5 rounded-card px-5 py-4 text-left outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
@@ -83,23 +86,25 @@ function FaqCard({ item, value, toggle = "plus", className }: { item: FaqItem; v
             {toggle === "dots" ? (
               <FaqToggleDots className="size-6 shrink-0" />
             ) : (
-              <span aria-hidden="true" className="shrink-0 rounded-pill bg-wash-pill p-2.5 text-fg shadow-key">
+              <span aria-hidden="true" className="shrink-0 rounded-pill bg-neutral-5 p-2.5 text-fg">
                 <Plus className="block size-4 group-data-[state=open]:hidden" strokeWidth={2} />
                 <Minus className="hidden size-4 group-data-[state=open]:block" strokeWidth={2} />
               </span>
             )}
           </AccordionPrimitive.Trigger>
         </AccordionPrimitive.Header>
-        {/* Always mounted so the row track can animate from 0fr to 1fr (the answer's real height) and back, the height on
+        {/* The card's bottom padding is taken back by the track's negative top margin, as the site's question row does
+          (-mb-4 against the card's pb-4): a closed card is the question's height, and an open answer's corner rule
+          hangs from inside the question's row. Always mounted so the row track can animate from 0fr to 1fr (the answer's real height) and back, the height on
           the ease-in-out curve while it moves on screen and the fade a beat shorter; closed answers are invisible, which
           also takes them out of the accessibility tree. Reduced motion keeps only the fade. */}
         <AccordionPrimitive.Content
           forceMount
           data-slot="faq-answer-track"
-          className="grid transition-[grid-template-rows,opacity,visibility] duration-250 ease-in-out data-[state=closed]:invisible data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0 data-[state=open]:grid-rows-[1fr] motion-reduce:transition-[opacity,visibility] motion-reduce:duration-200"
+          className="-mt-4 grid transition-[grid-template-rows,opacity,visibility] duration-250 ease-in-out data-[state=closed]:invisible data-[state=closed]:grid-rows-[0fr] data-[state=closed]:opacity-0 data-[state=open]:grid-rows-[1fr] motion-reduce:transition-[opacity,visibility] motion-reduce:duration-200"
         >
           <div data-slot="faq-answer" className="min-h-0 overflow-hidden">
-            <div className={cn(ANSWER, "pt-1 pb-5")}>
+            <div className={cn(ANSWER, "py-1")}>
               <FaqAnswerRule />
               <div className="flex-1 pt-3">{item.answer}</div>
             </div>
@@ -152,7 +157,7 @@ function FaqAskCard({
             <label htmlFor={id} className="sr-only">
               {placeholder}
             </label>
-            {/* At least 16px, or iOS Safari zooms the page into the field. */}
+            {/* At least 16px (text-ask), or iOS Safari zooms the page into the field. */}
             <input
               id={id}
               name="question"
@@ -162,7 +167,7 @@ function FaqAskCard({
               maxLength={500}
               autoComplete="off"
               placeholder={placeholder}
-              className={cn("min-w-0 flex-1 bg-transparent outline-none placeholder:text-fg-faint", QUESTION)}
+              className={cn("min-w-0 flex-1 bg-transparent outline-none placeholder:text-fg-faint", QUESTION, "text-ask")}
             />
             <button
               type="submit"
@@ -391,7 +396,7 @@ function FaqHeader({ title, description, action, className }: { title: React.Rea
   return (
     <div data-slot="faq-header" className={cn("mb-8 flex flex-col items-center gap-8 text-center lg:items-start lg:text-left", className)}>
       <div className="flex max-w-(--ds-layout-text) flex-col items-center gap-6 lg:items-start">
-        <h2 className="text-h2 leading-none tracking-tight text-fg md:text-h1">{title}</h2>
+        <h2 className="text-hero-tablet leading-none tracking-display text-fg md:text-h1">{title}</h2>
         {description && <p className="text-body-lg leading-6.5 text-fg-nav">{description}</p>}
         {action}
       </div>
@@ -399,9 +404,20 @@ function FaqHeader({ title, description, action, className }: { title: React.Rea
   );
 }
 
+/** The picture under the intro: the "Ask anything" banner that becomes a paper plane, on the soft ring pattern. */
+function FaqInvite({ className }: { className?: string }) {
+  return (
+    <HeroCirclePatternSurface tone="subtle" clusters={false} className={cn("select-none", className)}>
+      <div aria-hidden="true" {...patternHole("cover")} className="relative block">
+        <FaqInviteStory />
+      </div>
+    </HeroCirclePatternSurface>
+  );
+}
+
 /**
- * The whole section: header on the left (with an optional `aside` under it, where the brand puts an illustration),
- * category tabs and the question stack on the right. `ask` ends every category's stack; pass false to leave it out.
+ * The whole section: header on the left with the `aside` under it (the invite story by default; pass false to leave it
+ * out), category tabs and the question stack on the right. `ask` ends every category's stack; pass false to leave it out.
  */
 function FaqSection({
   title = (
@@ -411,7 +427,7 @@ function FaqSection({
   ),
   description,
   action,
-  aside,
+  aside = <FaqInvite />,
   categories,
   defaultCategory,
   ask = <FaqAskCard />,
@@ -422,7 +438,7 @@ function FaqSection({
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: React.ReactNode;
-  aside?: React.ReactNode;
+  aside?: React.ReactNode | false;
   categories: FaqCategory[];
   defaultCategory?: string;
   ask?: React.ReactNode | false;
@@ -451,9 +467,9 @@ function FaqSection({
         {categories.length > 1 && (
           // On phones the pills scroll sideways, the last one fading out to say so.
           <div className="mb-5 overflow-x-auto px-1 pt-1 pb-3 [mask-image:linear-gradient(to_right,var(--ds-color-black)_calc(100%-var(--ds-space-10)),transparent)] sm:[mask-image:none] md:mb-7">
-            <TabsList variant="pill" aria-label="FAQ categories" className="mx-auto w-max gap-0.5 sm:gap-2">
+            <TabsList variant="pill" aria-label="FAQ categories" className="mx-auto w-max gap-0.5 sm:gap-1">
               {categories.map((category) => (
-                <TabsTrigger key={category.value} value={category.value} className="px-2.5 py-1.5 text-caption leading-snug hover:text-fg sm:px-5 sm:py-2.5 sm:text-body">
+                <TabsTrigger key={category.value} value={category.value} className="px-2.5 py-1.5 text-caption sm:px-5 sm:py-2 sm:text-body">
                   {category.label}
                 </TabsTrigger>
               ))}
@@ -478,4 +494,4 @@ function FaqSection({
   );
 }
 
-export { FaqSection, FaqHeader, FaqList, FaqCardGrid, FaqPlainList, FaqCard, FaqAskCard, FaqToggleDots, useFaqSizing, type FaqItem, type FaqCategory, type FaqToggle, type FaqSizing };
+export { FaqSection, FaqHeader, FaqInvite, FaqList, FaqCardGrid, FaqPlainList, FaqCard, FaqAskCard, FaqToggleDots, useFaqSizing, type FaqItem, type FaqCategory, type FaqToggle, type FaqSizing };
