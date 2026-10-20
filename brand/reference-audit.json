@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T17:36:33.615Z",
+  "checkedAt": "2026-10-20T17:39:37.177Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -3799,7 +3799,7 @@
       "library": [
         {
           "path": "components/site/product-hero.tsx",
-          "sha256": "e780f79fb51283c27c31f44234331b7199a5599ec0a7de83d7db3789d82397dc"
+          "sha256": "ae4d1377006f1c3e24c0fc27d000752752148bb22f3ba2cfe15a0bc593912d14"
         }
       ],
       "sources": [
@@ -3811,6 +3811,16 @@
           "retained": false,
           "exports": [
             "ProductHero"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/hero-dot-field.tsx",
+          "sha256": "d37799b73bd6d7c2698cd409ebb2f6e4887121be516448d8e159bef3480fad2d",
+          "retained": false,
+          "exports": [
+            "HeroDotField"
           ]
         },
         {
@@ -3863,26 +3873,6 @@
             "ProductContainer",
             "ProductHeading"
           ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
-          "path": "src/components/sections/shared/hero-background.tsx",
-          "sha256": "7da7b91598eef4bdfc859680ccdde5b9c2995fdf152a0582c4fc9dca34bf8d4c",
-          "retained": false,
-          "exports": [
-            "HeroBackground"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/shared/cta-background.tsx",
-          "sha256": "11c892a6fbb1bdf61d311d2444e85f1737226f2c55e20c04b5b4210facb6cfbb",
-          "retained": true,
-          "exports": [
-            "CTABackground"
-          ]
         }
       ],
       "unresolvedHistoricalPaths": [],
@@ -3895,7 +3885,7 @@
       "library": [
         {
           "path": "components/site/product-landing.tsx",
-          "sha256": "271eb3efb4a5dcfe2d29c96cc546b25c5c4c86fd6205d95e197e65d47c9b9683"
+          "sha256": "26de8c921f47b1dcd50556aa39538fc61c0b0e854ed103e29261dd825634ce2c"
         }
       ],
       "sources": [
@@ -3980,7 +3970,7 @@
       "library": [
         {
           "path": "components/site/product-page.tsx",
-          "sha256": "deca38ea695afdd24ad196201ba81ef43346d45966fc6a0c262edaad33946e3f"
+          "sha256": "26d8207481e064db63ac56cf1b39892fe1a7a07282725f6e3ff67154ca8ee962"
         }
       ],
       "sources": [
@@ -4040,6 +4030,16 @@
         },
         {
           "repository": "brand-dev-webapp",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "path": "src/components/sections/products/product-reliability.tsx",
+          "sha256": "a1f2bd37bf8824789d0a3ae19e0eb28ef624323263150cffe1d899398773c6b8",
+          "retained": true,
+          "exports": [
+            "ProductReliability"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
           "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/product-code-explorer.tsx",
           "sha256": "4f27c224a522a91ce4d603261d997052b6790d719a6486480a909a217367affa",
@@ -4058,16 +4058,6 @@
             "readStoredLanguage",
             "storeLanguage",
             "subscribeToLanguage"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/products/product-reliability.tsx",
-          "sha256": "a1f2bd37bf8824789d0a3ae19e0eb28ef624323263150cffe1d899398773c6b8",
-          "retained": true,
-          "exports": [
-            "ProductReliability"
           ]
         }
       ],
@@ -6879,7 +6869,7 @@
       "library": [
         {
           "path": "components/site/use-case-features.tsx",
-          "sha256": "f530bac079c8a052c5be0ab9b3867116ecfae7beda85f1ecb3d9fdaef6f85dbb"
+          "sha256": "b44dca790a7fe873dc3ca5244f1afe137515fbe349c77bccd521c1c0c33f1fbc"
         }
       ],
       "sources": [
@@ -6954,7 +6944,7 @@
       "library": [
         {
           "path": "components/site/use-case-how-it-works.tsx",
-          "sha256": "6b1f075ec0ff9b6e4102d691af17301712d80869be39cf2e7144a17e2454ce77"
+          "sha256": "e32c0d6227468d3bb52bef5988c28045d9de2bd59165a060a890d4b572bd69cc"
         }
       ],
       "sources": [
@@ -6996,6 +6986,18 @@
             "UseCaseApiExample",
             "UseCaseLandingContent",
             "UseCaseLandingPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/code-language-store.ts",
+          "sha256": "adf7c935fb534c82207f0234030dee7bcadea3378e78af3e4d53319c88439c45",
+          "retained": false,
+          "exports": [
+            "readStoredLanguage",
+            "storeLanguage",
+            "subscribeToLanguage"
           ]
         }
       ],
@@ -7088,7 +7090,7 @@
       "library": [
         {
           "path": "components/site/use-cases.tsx",
-          "sha256": "06d72bec632b78e9dca2ea8d23e5a1581273ec38600f7f0b73099e5c17e615dc"
+          "sha256": "244318adb18dfbd957585af786d47d20d059b7e3c07d7181e3bd38a4b8394dee"
         }
       ],
       "sources": [
@@ -7116,11 +7118,50 @@
         {
           "repository": "brand-dev-webapp",
           "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/use-cases/use-case-code-tabs.tsx",
+          "sha256": "e31b1155aaf02e2e831e6e7c6188951f296b207ec17e3699046de7f991a6dacd",
+          "retained": false,
+          "exports": [
+            "HighlightedUseCaseSample",
+            "InstallCommand",
+            "UseCaseCodeTabs"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/use-tab-glide.ts",
           "sha256": "505dce806ea1106c07f85e6328b38266e848ad6bc8b2019aa24299f38381a2b5",
           "retained": false,
           "exports": [
             "useTabGlide"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "use-code-language",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "hooks/use-code-language.ts",
+          "sha256": "048d66066535c81db251d4ad0427ad5e6b8e74a1a65134aa146dc7b0da205f6e"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/code-language-store.ts",
+          "sha256": "adf7c935fb534c82207f0234030dee7bcadea3378e78af3e4d53319c88439c45",
+          "retained": false,
+          "exports": [
+            "readStoredLanguage",
+            "storeLanguage",
+            "subscribeToLanguage"
           ]
         }
       ],
@@ -7271,7 +7312,7 @@
       "library": [
         {
           "path": "lib/utils.ts",
-          "sha256": "4c8c73ab606c7d4362ae1f5a9c5729f243c6f0adfa92a314f95bbe9e236af7d1"
+          "sha256": "bd6e38b441d7d08d8c0ad30d66986459df0605b057481483ebd75b74901c4245"
         }
       ],
       "sources": [

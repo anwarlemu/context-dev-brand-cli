@@ -1,29 +1,41 @@
 "use client";
 
 import * as React from "react";
+import { Globe } from "lucide-react";
 
-import { CodeBlock, CodeWindow, WindowCopyButton } from "@/components/site/code-window";
+import { UseCaseCodeTabs, type UseCaseSample } from "@/components/site/use-case-how-it-works";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { patternHole } from "@/components/visuals/hero-pattern-hole";
 import { cn } from "@/lib/utils";
 
 // The home page's use case explorer: one card in the soft blue ring, the use cases down the left (a row that scrolls on
-// phones), each with its icon, title and a line of description. One pale brand-tint card (the tabs' own pill) glides between
-// them on a spring to mark the picked one. The right side shows that use case's code in the code window, over an optional backdrop (the site
-// uses its ring pattern). Every window shares one grid cell, so switching never resizes the card. While on screen it
-// steps through the use cases every six seconds, a small donut on the picked one counting down; it holds while the
-// pointer or keyboard focus is inside, and never steps under reduced motion.
+// phones), each with its glyph or icon, title and a line of description. One pale brand-tint card (the tabs' own pill)
+// glides between them on a spring to mark the picked one. The right side shows that use case in the code tabs window:
+// a tab per SDK language, the install command as its footer, and one remembered language for the whole page
+// (useCodeLanguage), over an optional backdrop (the site uses its ring pattern). The window keeps one height, so
+// switching never resizes the card. While on screen it steps through the use cases every six seconds, a small donut on
+// the picked one counting down; it holds while the pointer or keyboard focus is inside, and never steps under reduced
+// motion. On phones the strip scrolls to the picked tab, and swiping it picks the tab it settles on.
 
 export type UseCaseItem = {
   id: string;
   title: string;
   description: string;
+  /** A line icon on a blue tile beside the title, and in the window's label. */
   icon?: React.ReactNode;
-  code: string;
-  /** Extra buttons in the window's chrome bar beside copy (try in an agent, docs). */
-  actions?: React.ReactNode;
+  /** A dot glyph (PersonaGlyph) in place of the icon tile, as the site draws the list. */
+  glyph?: React.ReactNode;
+  /** The code in every SDK language, with each language's install command. */
+  samples?: UseCaseSample[];
+  /** @deprecated One sample with no language tabs; pass `samples`. */
+  code?: string;
+  /** Extra buttons in the window's chrome bar before copy (try in an agent, docs); a function gets the sample showing. */
+  actions?: React.ReactNode | ((sample: UseCaseSample) => React.ReactNode);
 };
 
 const CYCLE_MS = 6000;
+// How long the phone strip must sit still before the tab it settled on is picked.
+const SETTLE_MS = 120;
 
 function CycleDonut({ restartKey, running }: { restartKey: string; running: boolean }) {
   const ref = React.useRef<SVGCircleElement>(null);
@@ -68,6 +80,13 @@ function useReducedMotion() {
   return reduced;
 }
 
+const scrollPaddingLeft = (element: HTMLElement) => Number.parseFloat(getComputedStyle(element).scrollPaddingLeft) || 0;
+
+function samplesOf(item: UseCaseItem): UseCaseSample[] {
+  if (item.samples?.length) return item.samples;
+  return [{ language: "code", label: "Code", filename: item.title, code: item.code ?? "", install: null }];
+}
+
 function UseCases({ items, defaultValue, backdrop, className }: { items: UseCaseItem[]; defaultValue?: string; backdrop?: React.ReactNode; className?: string }) {
   const [value, setValue] = React.useState(defaultValue ?? items[0]?.id ?? "");
   const index = Math.max(0, items.findIndex((item) => item.id === value));
@@ -83,6 +102,11 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
   // Bumped on every pick, even of the one already showing, so the timer and the donut start over.
   const [pick, setPick] = React.useState(0);
   const shown = React.useRef({ index, pick: 0, ms: 0 });
+
+  const choose = React.useCallback((next: string) => {
+    setValue(next);
+    setPick((count) => count + 1);
+  }, []);
 
   React.useEffect(() => {
     const root = rootRef.current;
@@ -104,6 +128,45 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
     };
   }, [index, running, pick, items]);
 
+  // Phones: the strip scrolls the picked tab to its left edge. A scroll the strip makes itself is not a swipe, so its
+  // settling never picks a tab (near the end the strip cannot bring a tab to the edge, and would pick the last).
+  const stripRef = React.useRef<HTMLDivElement>(null);
+  const settleTimer = React.useRef<number | undefined>(undefined);
+  const selfScrolling = React.useRef(false);
+  React.useEffect(() => () => window.clearTimeout(settleTimer.current), []);
+
+  React.useEffect(() => {
+    const strip = stripRef.current;
+    const tab = strip?.querySelector<HTMLElement>(`[role="tab"][data-tab-id="${CSS.escape(value)}"]`);
+    if (!strip || !tab || strip.scrollWidth <= strip.clientWidth) return;
+    const left = Math.min(tab.offsetLeft - scrollPaddingLeft(strip), strip.scrollWidth - strip.clientWidth);
+    if (Math.abs(left - strip.scrollLeft) < 1) return;
+    selfScrolling.current = true;
+    strip.scrollTo({ left, behavior: reduced ? "auto" : "smooth" });
+  }, [value, reduced]);
+
+  const pickSnappedTab = () => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    if (selfScrolling.current) {
+      selfScrolling.current = false;
+      return;
+    }
+    const tabs = Array.from(strip.querySelectorAll<HTMLElement>('[role="tab"]'));
+    if (!tabs.length) return;
+    // The last tabs cannot scroll all the way to the start, so reaching the end of the strip means the last one.
+    const atEnd = strip.scrollLeft >= strip.scrollWidth - strip.clientWidth - 1;
+    const snapLeft = strip.scrollLeft + scrollPaddingLeft(strip);
+    const snapped = atEnd ? tabs.length - 1 : tabs.reduce((closest, tab, i) => (Math.abs(tab.offsetLeft - snapLeft) < Math.abs(tabs[closest].offsetLeft - snapLeft) ? i : closest), 0);
+    const id = tabs[snapped].dataset.tabId;
+    if (id && id !== value) choose(id);
+  };
+
+  const onStripScroll = () => {
+    window.clearTimeout(settleTimer.current);
+    settleTimer.current = window.setTimeout(pickSnappedTab, SETTLE_MS);
+  };
+
   return (
     <div
       ref={rootRef}
@@ -116,16 +179,12 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
       }}
       className={cn("rounded-card bg-ring-tint p-2", className)}
     >
-      <Tabs
-        value={value}
-        onValueChange={(next) => {
-          setValue(next);
-          setPick((count) => count + 1);
-        }}
-        orientation="vertical"
-        className="gap-0 overflow-hidden rounded-card bg-surface ring-1 ring-hairline md:flex-row"
-      >
-        <div className="w-full shrink-0 snap-x snap-mandatory scroll-pl-2.5 overflow-x-auto border-b border-line-subtle bg-surface md:w-auto md:min-w-80 md:scroll-pl-0 md:overflow-visible md:border-r md:border-b-0">
+      <Tabs value={value} onValueChange={choose} orientation="vertical" className="gap-0 overflow-hidden rounded-card bg-surface ring-1 ring-hairline md:flex-row">
+        <div
+          ref={stripRef}
+          onScroll={onStripScroll}
+          className="w-full shrink-0 snap-x snap-mandatory scroll-pl-2.5 overflow-x-auto border-b border-line-subtle bg-surface md:w-auto md:min-w-80 md:scroll-pl-0 md:overflow-visible md:border-r md:border-b-0"
+        >
           {/* The list's own pill, restyled as the pale brand-tint card, glides to the picked tab on a spring. */}
           <TabsList aria-label="Code examples" pillClassName="rounded-card bg-tint" className="w-max flex-row items-stretch gap-0.5 p-2.5 md:grid md:w-auto md:auto-rows-fr md:p-2">
             {items.map((item, i) => {
@@ -141,10 +200,10 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
                 >
                   {active && !reduced && items.length > 1 && <CycleDonut restartKey={`${i}-${pick}`} running={running} />}
                   <span className="flex items-center gap-3">
-                    {item.icon && <span className="grid size-7 shrink-0 place-items-center rounded-control bg-brand p-1.5 text-white [&_svg]:size-4">{item.icon}</span>}
+                    {item.glyph ?? (item.icon && <span className="grid size-7 shrink-0 place-items-center rounded-control bg-brand p-1.5 text-white [&_svg]:size-4">{item.icon}</span>)}
                     <span className="text-body leading-snug font-normal whitespace-nowrap text-fg">{item.title}</span>
                   </span>
-                  <span className={cn("text-body-sm leading-snug whitespace-normal text-fg-muted", item.icon && "pl-10")}>{item.description}</span>
+                  <span className={cn("text-body-sm leading-snug whitespace-normal text-fg-muted", (item.glyph || item.icon) && "pl-10")}>{item.description}</span>
                 </TabsTrigger>
               );
             })}
@@ -156,22 +215,22 @@ function UseCases({ items, defaultValue, backdrop, className }: { items: UseCase
               {backdrop}
             </div>
           )}
-          <div className="grid w-full max-w-3xl grid-cols-[minmax(0,1fr)]">
+          <div {...patternHole("snug-box")} className="relative w-full max-w-3xl">
             {items.map((item) => (
-              <TabsContent key={item.id} value={item.id} forceMount className="col-start-1 row-start-1 data-[state=inactive]:invisible">
-                <CodeWindow
-                  label={item.title}
-                  actions={
+              <TabsContent key={item.id} value={item.id}>
+                <UseCaseCodeTabs
+                  samples={samplesOf(item)}
+                  showInstall={Boolean(item.samples?.length)}
+                  label={
                     <>
-                      {item.actions}
-                      <WindowCopyButton value={item.code} label={`Copy the ${item.title.toLowerCase()} example`} />
+                      <span aria-hidden="true" className="flex shrink-0 text-white/60 [&_svg]:size-3.5">
+                        {item.icon ?? <Globe />}
+                      </span>
+                      <span className="truncate">{item.title}</span>
                     </>
                   }
-                >
-                  <div className="overflow-auto">
-                    <CodeBlock code={item.code} className="p-4" />
-                  </div>
-                </CodeWindow>
+                  actions={item.actions}
+                />
               </TabsContent>
             ))}
           </div>
