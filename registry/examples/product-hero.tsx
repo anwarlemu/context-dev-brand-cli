@@ -1,10 +1,9 @@
 import { ProductLandingSteps } from "@/components/site/product-landing";
 import { ProductHero } from "@/components/site/product-hero";
-import { Card } from "@/components/ui/card";
-import { ParseStory } from "@/components/visuals/stories/parse-story";
+import { ParseHeroDemo } from "@/components/site/parse-landing-visuals";
 
-// context.dev/parse: the white hero with the default pills and the product's demo under the headline. The page's own
-// demo (a ringed input and output card) goes in as children; a dot story stands in for it here.
+// context.dev/parse: the white hero with the default pills and the product's demo (the parse-landing-visuals item)
+// under the headline, passed in as children.
 export function Site() {
   return (
     <div className="w-full">
@@ -13,11 +12,7 @@ export function Site() {
         description="Turn PDFs, office documents, and spreadsheets into readable Markdown, in the same workflows that use your web data."
         docsHref="https://docs.context.dev/api-reference/utility/parse-a-file"
       >
-        <Card variant="ring" className="min-h-88 w-full items-center justify-center">
-          <div className="relative w-full max-w-104">
-            <ParseStory />
-          </div>
-        </Card>
+        <ParseHeroDemo />
       </ProductHero>
     </div>
   );
