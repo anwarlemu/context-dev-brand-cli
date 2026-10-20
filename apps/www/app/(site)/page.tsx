@@ -41,7 +41,6 @@ export default function Home() {
     <main>
       <Hero
         size="large"
-        staggerIn
         contentClassName="min-h-0 gap-8 py-16 sm:pt-20 sm:pb-20 lg:gap-10 lg:py-24"
         background={<HeroDotField fine streams fillFootOnPhones className="text-fg-brand" />}
         title={`${registryName} design system`}

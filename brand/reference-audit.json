@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T17:11:40.585Z",
+  "checkedAt": "2026-10-20T17:35:09.237Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -1686,7 +1686,7 @@
       "library": [
         {
           "path": "components/site/cta.tsx",
-          "sha256": "d6e288f870cc040f75fda5bacc42a4ab8230ad9fec2c4c7a63d9b0dc98466778"
+          "sha256": "40540df1f452bcea3f2c38e5b7a3759c16cff10ced231d038e28d77f965c7936"
         }
       ],
       "sources": [
@@ -1698,26 +1698,6 @@
           "retained": false,
           "exports": [
             "ClosingCTA"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/cta.tsx",
-          "sha256": "6ea07f7dd28f53eaa84ece68632cfe53c3dc296dd238ce243eaffef0e3fc0e66",
-          "retained": true,
-          "exports": [
-            "CTA"
-          ]
-        },
-        {
-          "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
-          "path": "src/components/sections/shared/cta-background.tsx",
-          "sha256": "11c892a6fbb1bdf61d311d2444e85f1737226f2c55e20c04b5b4210facb6cfbb",
-          "retained": true,
-          "exports": [
-            "CTABackground"
           ]
         },
         {
@@ -1741,7 +1721,7 @@
       "library": [
         {
           "path": "components/visuals/customer-logo-dots.tsx",
-          "sha256": "cae961db86af26236f58d5b4ce92b2608092ea56ab46bd8e910ba2912c742795"
+          "sha256": "b85ecc03827e340644d61120200ea70244ca28330b2eab2cd79b7d7aa2a99e27"
         },
         {
           "path": "components/visuals/customer-logo-grid.ts",
@@ -2789,7 +2769,7 @@
       "library": [
         {
           "path": "components/visuals/hero-circle-pattern.tsx",
-          "sha256": "2c735355e6bc55481e573a876fa9c2f0732c1f097b5fd0172981697e387de889"
+          "sha256": "3725112170b17469f935c9db7ae267b4097ab9b2ce768d903ee3d625de71f7e2"
         }
       ],
       "sources": [
@@ -2824,7 +2804,7 @@
       "library": [
         {
           "path": "components/visuals/hero-data-flow.tsx",
-          "sha256": "90fa965f8c0aa7f1b1cfbcb66e31838ffe8c5c323631fdad3993d427fafbb2cc"
+          "sha256": "8d611994da456ab5ae7180f6c6240e7de6557a505742178f0e4af75ce02816ee"
         },
         {
           "path": "components/visuals/hero-data-flow-anchor.ts",
@@ -2854,7 +2834,7 @@
       "library": [
         {
           "path": "components/visuals/hero-dot-field.tsx",
-          "sha256": "c9e0b86c6895b5404ab9c06bb6d9cac39c7cd0f47bf68ec4c281543ec9cdff80"
+          "sha256": "daa84423f047dc9a971f9e42083fc13682ba3f5ad292dd6733cad36d37c6b1e0"
         },
         {
           "path": "components/visuals/hero-dot-logo-shape.ts",
@@ -2870,6 +2850,24 @@
           "retained": false,
           "exports": [
             "HeroDotField"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/hero-dot-field-layout.ts",
+          "sha256": "3217bbfa034d8a5f48ff4e6415e5c0f7eda2d58a41d40907ecf4476dde23d4d1",
+          "retained": false,
+          "exports": [
+            "DotKind",
+            "Rect",
+            "Dot",
+            "PlacedWord",
+            "StreamDot",
+            "StreamLayout",
+            "FieldLayout",
+            "DotFieldOptions",
+            "dotFieldLayoutKit"
           ]
         }
       ],
@@ -3103,7 +3101,7 @@
       "library": [
         {
           "path": "components/site/hero.tsx",
-          "sha256": "50b9221cdf25344f93aebcb5dda811fa06fa9938b773a30da17ffd2066d930c5"
+          "sha256": "d88293f66e6829d209069fc43457bb8a145cc25c5325145d0c863c617baa40dd"
         }
       ],
       "sources": [
@@ -4476,7 +4474,7 @@
       "library": [
         {
           "path": "components/site/site-footer.tsx",
-          "sha256": "f03ceb43efd8f7eccb7078d8c617122e0fc06893b923e17e9fc1aa9d5ce52661"
+          "sha256": "1098c500e5603e799de293cac4cea61e5c4f120dbd57ed4344138d3f29b8a5a3"
         }
       ],
       "sources": [
@@ -4488,6 +4486,16 @@
           "retained": false,
           "exports": [
             "Footer"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/footer-yc-backing.tsx",
+          "sha256": "794046807cfb07dc27d94aa07b4e5386885428e790977f52bd68fd4c8b49eb74",
+          "retained": false,
+          "exports": [
+            "FooterYcBacking"
           ]
         },
         {
@@ -4532,7 +4540,7 @@
       "library": [
         {
           "path": "components/site/site-header.tsx",
-          "sha256": "502dcddea4cd0c4b3047005de79aacb1c96ecf6715bbad362e2e012d5c9f3190"
+          "sha256": "f158f01f95a6b90f31f04e69b91e4e235d5e409bf85cca55eafa60433db4a219"
         }
       ],
       "sources": [
@@ -7207,7 +7215,7 @@
       "library": [
         {
           "path": "lib/utils.ts",
-          "sha256": "d6bba79dc72d9136f450f1d5bc10b58353757946181c24de48723f16f3b88348"
+          "sha256": "4c8c73ab606c7d4362ae1f5a9c5729f243c6f0adfa92a314f95bbe9e236af7d1"
         }
       ],
       "sources": [

@@ -10,7 +10,7 @@ const GLASS_RING = "-m-2 rounded-card bg-ring-tint p-2";
 const CARD = "rounded-card bg-surface ring-1 ring-hairline";
 
 /**
- * The home page's closing call to action: a white card in the soft blue ring, the heading and a line of muted text on
+ * The site's closing call to action, on every page: a white card in the soft blue ring, the heading and a line of muted text on
  * the left, and a smaller ringed card on the right with the offer (a figure, its label, a note) and the actions.
  * `background` sits behind the card's content (the site draws its dot field there).
  */
@@ -107,6 +107,9 @@ const NODE =
  * is the plain dimmed blue), a dashed frame down the column's edges with a white node where a dashed rule crosses them
  * near the foot, a centered heading with its closing words in light blue, a line of text and two actions (a CtaButton
  * `light` and a CtaButton `glass`).
+ *
+ * @deprecated Context.dev removed the water band; every page now closes with `ClosingCta`. Kept so existing pages
+ * still render; use `ClosingCta` for new work.
  */
 function Cta({
   title,
@@ -172,6 +175,8 @@ function Cta({
 /**
  * The band's two buttons, one shape (the brand's button radius, 48px tall): `light` is the white key with a soft white
  * glow (it dims a step on hover); `glass` is the frosted key beside it.
+ *
+ * @deprecated The water band it belongs to is gone from Context.dev; use `ClosingCta` with a `pill-outline` button.
  */
 function CtaButton({ tone = "light", asChild = false, className, ...props }: React.ComponentProps<"a"> & { tone?: "light" | "glass"; asChild?: boolean }) {
   const Comp = asChild ? Slot : "a";

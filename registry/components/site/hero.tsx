@@ -28,16 +28,6 @@ const SURFACES: Record<HeroSurface, { section: string; title: string; accent: st
 
 const HeroContext = React.createContext<HeroSurface>("white");
 
-// Each piece's place in the entrance: it rises and fades in one step after the last. The site plays this at 360ms
-// with a blur; it is held to 300ms here, and reduced motion keeps only the fade (the content-in keyframes).
-function stagger(on: boolean, step: number): { className?: string; style?: React.CSSProperties } {
-  if (!on) return {};
-  return {
-    className: "animate-content-in [animation-duration:var(--ds-duration-slow)] [animation-fill-mode:backwards]",
-    style: { animationDelay: `${step * 60}ms` },
-  };
-}
-
 // Braces are a motif drawn with CSS, so the heading's text (what crawlers index) reads "The web context API" while
 // the page shows "{context}".
 function Braced({ phrase }: { phrase: string }) {
@@ -67,10 +57,13 @@ function AccentedTitle({ title, accent, className }: { title: string; accent: st
 }
 
 /**
- * The small line above the hero title. `plain` is the site's quiet "Backed by" line in muted text (a link underlines
- * on hover and keeps a 44px target); `outline` is a pill outlined in the title's color, for news ("New ...").
+ * The small line above the hero title. `plain` is a quiet line in muted text (a link underlines on hover and keeps a
+ * 44px target); `byline` is the home hero's funding line ("We raised a $9M seed led by" and the investor's wordmark):
+ * muted text with its key words in a `HeroPillEmphasis`, a wordmark image 0.65rem tall, and a 44px target that does
+ * not push the title down; `outline` is a pill outlined in the title's color, for news ("New ..."). An arrow after a
+ * byline stays still on hover.
  */
-function HeroPill({ variant = "plain", href, icon, className, children }: { variant?: "plain" | "outline"; href?: string; icon?: React.ReactNode; className?: string; children: React.ReactNode }) {
+function HeroPill({ variant = "plain", href, icon, className, children }: { variant?: "plain" | "outline" | "byline"; href?: string; icon?: React.ReactNode; className?: string; children: React.ReactNode }) {
   const surface = SURFACES[React.useContext(HeroContext)];
   const Comp = href ? "a" : "span";
   return (
@@ -78,8 +71,12 @@ function HeroPill({ variant = "plain", href, icon, className, children }: { vari
       href={href}
       data-slot="hero-pill"
       className={cn(
-        "inline-flex max-w-full shrink-0 items-center justify-center gap-1.5 text-center text-body-sm leading-snug outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring [&_img]:size-4.5 [&_img]:rounded-sm [&_svg]:size-4",
+        "inline-flex max-w-full shrink-0 items-center justify-center gap-1.5 text-center text-body-sm leading-snug outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring",
+        variant !== "byline" && "[&_img]:size-4.5 [&_img]:rounded-sm [&_svg]:size-4",
         variant === "plain" && surface.muted,
+        // The vertical padding widens the tap target to 44px; the matching negative margin keeps the title where it was.
+        variant === "byline" &&
+          cn("-my-3 gap-1 rounded-pill py-3 [&_img]:ml-0.5 [&_img]:h-[calc(var(--spacing)*2.6)] [&_img]:w-auto [&_svg]:ml-0.5 [&_svg]:size-3.5", surface.muted),
         variant === "plain" && href && "min-h-11 gap-2 underline-offset-4 hover:underline",
         variant === "outline" && cn("gap-2 rounded-pill border border-current px-4 py-2", surface.title),
         className,
@@ -89,6 +86,12 @@ function HeroPill({ variant = "plain", href, icon, className, children }: { vari
       {children}
     </Comp>
   );
+}
+
+/** The byline's key words ("$9M seed"): the title's color at the medium weight. */
+function HeroPillEmphasis({ className, ...props }: React.ComponentProps<"span">) {
+  const surface = SURFACES[React.useContext(HeroContext)];
+  return <span className={cn("font-medium", surface.title, className)} {...props} />;
 }
 
 /** One hero action with a caption under it (the site's "No card required" under its primary pill). */
@@ -122,7 +125,7 @@ function Hero({
   media,
   caption,
   background,
-  staggerIn = false,
+  staggerIn: _staggerIn,
   className,
   contentClassName,
   ...props
@@ -149,7 +152,10 @@ function Hero({
   caption?: React.ReactNode;
   /** Layers behind the content (a dot field, a HeroFrame); it fills the section. */
   background?: React.ReactNode;
-  /** Brings the pieces in one after another on load. */
+  /**
+   * @deprecated A no-op: Context.dev dropped the hero's entrance, so the hero shows at once. Kept so existing pages
+   * still type-check.
+   */
   staggerIn?: boolean;
   /** Adjusts the inner content's spacing and height without changing the background. */
   contentClassName?: string;
@@ -157,7 +163,6 @@ function Hero({
   const tone = SURFACES[surface];
   const large = size === "large";
   const accentList = typeof accent === "string" ? [accent] : (accent ?? (typeof title === "string" ? ["{API}", "{AI}"] : []));
-  const step = (n: number) => stagger(staggerIn, n);
   const titleNeedsMeasure = typeof title === "string" ? !title.includes("\n") : true;
   return (
     <HeroContext.Provider value={surface}>
@@ -185,7 +190,7 @@ function Hero({
         >
           <div className={cn("relative z-10 mx-auto flex w-full shrink-0 flex-col items-center", media ? "gap-3" : "gap-6", large ? "max-w-240" : "max-w-200")}>
             {eyebrow && (
-              <div {...step(0)} className={cn("flex justify-center", step(0).className)}>
+              <div className="flex justify-center">
                 {eyebrow}
               </div>
             )}
@@ -193,7 +198,7 @@ function Hero({
               {pill}
               <div className={cn("flex w-full flex-col items-center text-center", large ? "gap-3" : "gap-6")}>
                 {/* A large title never wraps on wide screens and can outgrow its column; the flex row keeps that overflow centered. */}
-                <div {...step(1)} className={cn("flex w-full justify-center", step(1).className)}>
+                <div className="flex w-full justify-center">
                   <h1
                     className={cn(
                       "w-full font-normal whitespace-pre-line text-balance",
@@ -207,7 +212,7 @@ function Hero({
                   </h1>
                 </div>
                 {description && (
-                  <div {...step(2)} className={cn("w-full", step(2).className)}>
+                  <div className="w-full">
                     <p className={cn("text-balance", tone.muted, large ? "text-h5 leading-snug" : "text-body-lg leading-snug")}>{description}</p>
                   </div>
                 )}
@@ -215,14 +220,14 @@ function Hero({
             </div>
           </div>
           {actions && (
-            <div {...step(3)} className={cn("relative z-10 flex shrink-0 flex-wrap items-start justify-center gap-3", step(3).className)}>
+            <div className="relative z-10 flex shrink-0 flex-wrap items-start justify-center gap-3">
               {actions}
             </div>
           )}
           {media && (
             // min-h-0 down the chain lets the visual shrink to the space left, rather than pushing the hero past the screen.
             <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-225 flex-col items-center gap-3.5">
-              <div {...step(4)} className={cn("flex min-h-0 w-full flex-col items-center", step(4).className)}>
+              <div className="flex min-h-0 w-full flex-col items-center">
                 {media}
               </div>
               {caption && <p className={cn("text-center text-body-sm", tone.title)}>{caption}</p>}
@@ -257,7 +262,9 @@ function HeroMedia({
   panelClassName?: string;
 }) {
   return (
-    <div data-slot="hero-media" className="flex min-h-0 w-full flex-col items-center">
+    // A small panel runs taller than the product monitors (23rem wide, 74 by 64 dots), so from sm up its slot is held
+    // to the monitor's height and the rest runs into the hero's bottom padding, leaving the titles at the same height.
+    <div data-slot="hero-media" className={cn("flex min-h-0 w-full flex-col items-center", size === "small" && "sm:max-h-[calc(var(--spacing)*92*64/74)]")}>
       {/* The panel stacks above the tab, so the tab tucks under its bottom edge. */}
       <div
         className={cn(
@@ -341,4 +348,4 @@ function HeroFrame({ surface = "white", className }: { surface?: HeroSurface; cl
   );
 }
 
-export { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill };
+export { Hero, HeroAction, HeroFrame, HeroMedia, HeroMediaCard, HeroMediaTab, HeroPill, HeroPillEmphasis };

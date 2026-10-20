@@ -578,7 +578,7 @@ export function HeroDataFlow({
       aria-hidden="true"
       data-ready="false"
       className={cn(
-        "pointer-events-none absolute inset-0 size-full font-data text-brand opacity-0 transition-opacity duration-700 ease-out data-[ready=true]:opacity-100 motion-reduce:transition-none",
+        "pointer-events-none absolute inset-0 size-full font-data text-brand opacity-0 data-[ready=true]:opacity-100",
         className,
       )}
     />

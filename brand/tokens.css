@@ -91,6 +91,10 @@
 	--ds-color-status-success: #15803D;
 	--ds-color-status-warning: #B45309;
 	--ds-color-status-danger: #DC2626;
+	/* The footer's service status dot on near black (the site's emerald-400, amber-400 and red-500). */
+	--ds-color-status-success-bright: #00D492;
+	--ds-color-status-warning-bright: #FFB900;
+	--ds-color-status-danger-bright: #FB2C36;
 	--ds-color-focus-ring: #2563EB;
 	--ds-color-chart-series-1: #3B82F6;
 	--ds-color-chart-series-2: #14B8A6;
@@ -179,6 +183,9 @@
 	--ds-leading-type-h3: 1.2;
 	--ds-leading-type-h4: 1.2;
 	--ds-tracking-tight: -0.035em;
+	/* The header menus' titles: the featured product card's name, then the use case preview's name. */
+	--ds-tracking-title: -0.03em;
+	--ds-tracking-snug: -0.02em;
 	/* Section headings set in two colors, such as the FAQ's. */
 	--ds-tracking-display: -0.2rem;
 	--ds-tracking-normal: 0;
@@ -226,6 +233,8 @@
 	--ds-radius-tag: 0.375rem;
 	--ds-radius-icon: 4px;
 	--ds-radius-logo: 5px;
+	/* The footer's small Y Combinator mark. */
+	--ds-radius-mark: 0.1875rem;
 	--ds-radius-snippet: 7px;
 	--ds-radius-control: 0.5rem;
 	--ds-radius-card: 0.5rem;

@@ -1,4 +1,6 @@
-import { Hero, HeroMedia, HeroMediaCard, HeroPill } from "@/components/site/hero";
+import { ArrowRight } from "lucide-react";
+
+import { Hero, HeroMedia, HeroMediaCard, HeroPill, HeroPillEmphasis } from "@/components/site/hero";
 import { Button } from "@/components/ui/button";
 import { HeroDotField } from "@/components/visuals/hero-dot-field";
 
@@ -6,10 +8,17 @@ export function Site() {
   return (
     <Hero
       background={<HeroDotField fine lively streams fillFootOnPhones />}
-      eyebrow={<HeroPill>Backed by Y Combinator</HeroPill>}
-      title="The web {context} API for agents"
-      accent={["{context}", "agents"]}
-      description="One API for agents to scrape, search, monitor, and collect data from the web."
+      size="large"
+      eyebrow={
+        <HeroPill variant="byline" href="https://context.dev/blog/context-dev-raises-9m-seed-led-by-general-catalyst">
+          We raised a <HeroPillEmphasis>$9M seed</HeroPillEmphasis> led by
+          <img src="https://context.dev/general-catalyst-wordmark.svg" alt="General Catalyst" width={312} height={40} />
+          <ArrowRight aria-hidden="true" />
+        </HeroPill>
+      }
+      title="Give your agents the internet"
+      accent="agents"
+      description="API for agents to scrape, search, monitor, and collect data from the web."
       actions={
         <>
           <Button asChild variant="pill">

@@ -271,7 +271,7 @@ export function HeroCirclePatternSurface({
       <svg
         aria-hidden="true"
         className={cn(
-          "pointer-events-none absolute inset-0 size-full transition-opacity duration-700 ease-out motion-reduce:transition-none",
+          "pointer-events-none absolute inset-0 size-full",
           layout ? "opacity-100" : "opacity-0",
         )}
       >
