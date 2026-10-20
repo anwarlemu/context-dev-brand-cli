@@ -1,5 +1,5 @@
 import { CodeBlock, CodeWindow, WindowCopyButton } from "@/components/site/code-window";
-import { ProductFaq, ProductIntegration, ProductStorySection } from "@/components/site/product-landing";
+import { ProductFaq, ProductIntegration, ProductLandingSteps, ProductRelatedCards, ProductStorySection } from "@/components/site/product-landing";
 import { ActionsStory } from "@/components/visuals/stories/actions-story";
 import { BatchStory } from "@/components/visuals/stories/batch-story";
 import { FreshnessStory } from "@/components/visuals/stories/freshness-story";
@@ -59,6 +59,56 @@ export function Site() {
           { question: "Does it render JavaScript?", answer: "Yes. Every request loads in a real browser, so single-page apps come back fully rendered." },
           { question: "What does a scrape cost?", answer: "One credit per page for the base formats. Screenshots and JSON extraction add a few credits." },
           { question: "Can I scrape PDFs?", answer: "Yes. Pass a PDF's URL and get its text back as Markdown." },
+        ]}
+      />
+    </div>
+  );
+}
+
+const PARSE_CODE = `import { createReadStream } from 'node:fs';
+import ContextDev from 'context.dev';
+
+const client = new ContextDev({ apiKey: 'YOUR_API_KEY' });
+
+const document = await client.parse.handle(
+  createReadStream('report.pdf'),
+  { extension: 'pdf', ocr: true },
+);
+
+console.log(document.markdown);
+console.log(document.type);`;
+
+// The Parse page's lower half (context.dev/parse): the code section with the playground pill, the numbered steps and
+// the related products. Its white hero is ProductHero.
+export function Parse() {
+  return (
+    <div className="w-full">
+      <ProductIntegration
+        title="A file goes in."
+        accent="Markdown comes out."
+        description="Send a file stream with an optional extension hint. Read the Markdown and detected file type from the response, then combine it with your web content."
+        install="npm install context.dev"
+        docsHref="https://docs.context.dev"
+        playgroundHref="https://context.dev/playground/parse"
+        code={
+          <CodeWindow label="TypeScript" actions={<WindowCopyButton value={PARSE_CODE} />}>
+            <div className="overflow-x-auto">
+              <CodeBlock code={PARSE_CODE} />
+            </div>
+          </CodeWindow>
+        }
+      />
+      <ProductLandingSteps
+        steps={[
+          { title: "Send the file", description: "Upload the file bytes with the SDK or a POST request. Add an extension hint when needed." },
+          { title: "Choose what to read", description: "Limit PDF pages or enable OCR for scans. Keep the links and image references your application needs." },
+          { title: "Use the content", description: "Chunk and index the Markdown for retrieval, or give it directly to an agent as document context." },
+        ]}
+      />
+      <ProductRelatedCards
+        products={[
+          { name: "Scrape anything", href: "https://context.dev/web-scraping-api", description: "Markdown, HTML, images, screenshots, and structured fields." },
+          { name: "Run batches", href: "https://context.dev/batches-api", description: "Scrape thousands of URLs or crawl entire websites." },
         ]}
       />
     </div>

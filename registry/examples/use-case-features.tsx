@@ -1,10 +1,28 @@
 import { Clock, Globe, Map as MapIcon } from "lucide-react";
 
 import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
-import { BeforeAfterPanel, BeforeAfterPanels, BeforeAfterStats, UseCaseComparisonTable, UseCaseFeatureCards, UseCaseNote } from "@/components/site/use-case-features";
+import { BeforeAfterPanel, BeforeAfterPanels, BeforeAfterStats, UseCaseApiExample, UseCaseComparisonTable, UseCaseFeatureCards, UseCaseNote } from "@/components/site/use-case-features";
 import { DotGlyph } from "@/components/ui/dot-glyph";
 import { PageMonitorStory, SitemapMonitorStory } from "@/components/visuals/stories/monitor-ways-story";
 import { WatchStory } from "@/components/visuals/stories/watch-story";
+
+// The API example as context.dev/use-cases/enrich-transaction-data shows it.
+export function ApiExample() {
+  return (
+    <div className="w-full">
+      <UseCaseApiExample
+        title="Retrieve a brand"
+        accent="from a transaction."
+        description="Illustrative merchant match. Available Brand fields vary by company. These fields are included in the Brand response, together with the other available company details."
+        endpoint="POST /v1/brand/retrieve"
+        request={{ type: "by_transaction", transaction_info: "SQ *BLUE BOTTLE OAK", country_gl: "us" }}
+        response={{ status: "ok", brand: { domain: "bluebottlecoffee.com", title: "Blue Bottle Coffee", description: "Coffee roaster and cafe company." }, code: 200 }}
+        docsHref="https://docs.context.dev/api-reference/brand-api/retrieve-brand-data"
+        playgroundHref="https://context.dev/playground/transaction"
+      />
+    </div>
+  );
+}
 
 const SCRAPE_GLYPH = ["0222220", "2111112", "2122212", "2111112", "2122212", "2111112", "0222220"];
 

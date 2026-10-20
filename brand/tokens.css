@@ -140,12 +140,24 @@
 	--ds-text-hero-tablet: 48px;
 	--ds-text-hero-desktop: 56px;
 	--ds-leading-hero: 1.08;
+	/* The product hero's title from lg (the Parse, News and ChatGPT pages) and the lead under it: set in px on the site,
+	   so they hold their size on the 90% root. The note is the quiet line under the hero's actions. */
+	--ds-text-hero-product: 72px;
+	--ds-leading-hero-product: 79px;
+	--ds-text-lead: 18px;
+	--ds-leading-lead: 26px;
+	--ds-text-lead-lg: 20px;
+	--ds-leading-lead-lg: 28px;
+	--ds-text-note: 14px;
+	--ds-leading-note: 18px;
 	--ds-text-h1: 3.5rem;
 	--ds-text-h2: 2.75rem;
 	--ds-text-h3: 2rem;
 	--ds-text-h4: 1.5rem;
 	--ds-text-h5: 1.25rem;
 	--ds-text-body-lg: 1.125rem;
+	/* A card's description on the landing pages (steps, related products, capability cards), on a 1.5 line. */
+	--ds-text-body-md: 0.9375rem;
 	/* A FAQ question, and the ask field under the questions (never under 16px, or iOS Safari zooms into it). */
 	--ds-text-question: 1.0625rem;
 	--ds-text-ask: max(1.0625rem, 16px);
@@ -220,6 +232,12 @@
 	--ds-layout-parameters: 320px;
 	--ds-layout-parameters-header: 32px;
 	--ds-layout-product-column: 880px;
+	/* The product hero: its headline band's height from md (under the header's), the gap between its lines and the room
+	   under its demo, all in px as the site sets them. */
+	--ds-layout-product-hero: 520px;
+	--ds-layout-product-hero-lead: 640px;
+	--ds-layout-product-hero-gap: 22px;
+	--ds-layout-product-hero-foot: 88px;
 
 	/* Shape */
 	--ds-radius-sm: 0.25rem;
@@ -239,6 +257,8 @@
 	--ds-shadow-tooltip: 0 0 0 1px var(--ds-color-border-hairline), 0 4px 12px rgb(0 0 0 / 0.08);
 	--ds-shadow-ring-hover: 0 0 0 4px var(--ds-color-ring-tint);
 	--ds-shadow-drawer: 0 0 0 1px var(--ds-color-border-hairline), 0 12px 32px rgb(0 0 0 / 0.16);
+	/* A band's own bottom rule, inset so it adds no height (the product hero). */
+	--ds-shadow-rule-bottom: inset 0 -1px 0 rgb(0 0 0 / 0.1);
 
 	/* Motion: fast UI feedback only, no ease-in */
 	--ds-duration-fast: 150ms;

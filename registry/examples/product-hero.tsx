@@ -1,56 +1,46 @@
-import { ArrowRight } from "lucide-react";
+import { ProductLandingSteps } from "@/components/site/product-landing";
+import { ProductHero } from "@/components/site/product-hero";
+import { Card } from "@/components/ui/card";
+import { ParseStory } from "@/components/visuals/stories/parse-story";
 
-import { ProductAction, ProductCallToAction, ProductCompactFaq, ProductCustomerProof, ProductHero, ProductSteps } from "@/components/site/product-hero";
-
-const LOGO = (label: string) => `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="118" height="34"><text x="0" y="24" font-family="sans-serif" font-size="20">${label}</text></svg>`)}`;
-
+// context.dev/parse: the white hero with the default pills and the product's demo under the headline. The page's own
+// demo (a ringed input and output card) goes in as children; a dot story stands in for it here.
 export function Site() {
   return (
     <div className="w-full">
       <ProductHero
-        eyebrow={<span>Backed by Y Combinator</span>}
-        title={["Every way to work", "with the web."]}
-        description="Scrape anything, crawl entire sites, run batches, and monitor changes, plus answers and brand data. Choose the APIs your product needs, with one API key."
-        actions={
-          <>
-            <ProductAction href="https://context.dev/signup">Get API key</ProductAction>
-            <ProductAction tone="frost" href="https://docs.context.dev" target="_blank" rel="noopener noreferrer" className="pr-4">
-              View documentation
-              <ArrowRight aria-hidden="true" />
-            </ProductAction>
-          </>
-        }
+        title={["Your documents.", "Ready for your agent."]}
+        description="Turn PDFs, office documents, and spreadsheets into readable Markdown, in the same workflows that use your web data."
+        docsHref="https://docs.context.dev/api-reference/utility/parse-a-file"
+      >
+        <Card variant="ring" className="min-h-88 w-full items-center justify-center">
+          <div className="relative w-full max-w-104">
+            <ParseStory />
+          </div>
+        </Card>
+      </ProductHero>
+    </div>
+  );
+}
+
+// context.dev/chatgpt: its own actions and a note, no demo, then the steps.
+export function Plugin() {
+  return (
+    <div className="w-full">
+      <ProductHero
+        title={["Give ChatGPT", "the live web."]}
+        description="Install the Context.dev plugin and ask ChatGPT to look something up, read a page, or bring current sources into the chat."
+        docsHref="https://docs.context.dev"
+        note="Sign in with your Context.dev account when ChatGPT asks. Nothing to paste."
       />
-      <ProductCustomerProof label="Teams build with Context.dev" logos={["Mintlify", "daily.dev", "Daydream", "Super.com"].map((name) => ({ name, src: LOGO(name) }))} />
-      <ProductSteps
-        numbered
-        title={["Install it once.", "Then just ask."]}
+      <ProductLandingSteps
+        title="Install it once."
+        accent="Then just ask."
         steps={[
-          { title: "Add the plugin", description: "Find Context.dev in the plugin directory and add it to your workspace." },
-          { title: "Connect your key", description: "Paste your API key once; every chat can use it after that." },
-          { title: "Ask for the web", description: "Ask it to look something up, read a page, or bring current sources into the chat." },
+          { title: "Install the plugin", description: "Open the Context.dev listing in ChatGPT and add it. It takes a minute." },
+          { title: "Sign in when asked", description: "ChatGPT opens a browser window. Sign in to Context.dev there. You don't paste a key into the chat." },
+          { title: "Ask in a new chat", description: "Start a new conversation and ask for what you want, or type @Context.dev to use it directly." },
         ]}
-      />
-      <ProductCompactFaq
-        id="plugin"
-        faqs={[
-          { question: "Does it cost extra?", answer: "Calls use credits from your Context.dev plan, the same as the API." },
-          { question: "Which pages can it read?", answer: "Any public page, rendered in a real browser." },
-        ]}
-      />
-      <ProductCallToAction
-        title="Ask it to look it up."
-        description="Search the web. Read a page. Get the sources in the chat."
-        actions={
-          <>
-            <ProductAction tone="light" href="https://context.dev/signup">
-              Get API key
-            </ProductAction>
-            <ProductAction tone="clear" href="https://docs.context.dev">
-              View documentation
-            </ProductAction>
-          </>
-        }
       />
     </div>
   );

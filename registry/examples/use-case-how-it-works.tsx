@@ -1,5 +1,33 @@
 import { SectionHeaderRule, SectionHeading, SiteSection } from "@/components/site/section";
-import { UseCaseHowItWorks, UseCaseStepCards } from "@/components/site/use-case-how-it-works";
+import { UseCaseCodeTabs, UseCaseHowItWorks, UseCaseInstallCommand, UseCaseSectionLinks, UseCaseStepCards } from "@/components/site/use-case-how-it-works";
+
+import { HOME_USE_CASES } from "./use-case-samples";
+
+const SCRAPE = HOME_USE_CASES[0];
+
+// One remembered language: picking a tab in the window also switches the install command beside it (and every other
+// code sample on the page). The window carries the install command as its footer; the guides close the section.
+export function CodeTabs() {
+  return (
+    <div className="flex w-full flex-col">
+      <SiteSection lines>
+        <SectionHeading title="Scrape any page," accent="in your language." />
+        <SectionHeaderRule />
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
+          <UseCaseInstallCommand samples={SCRAPE.samples} />
+          <UseCaseCodeTabs samples={SCRAPE.samples} showInstall label={SCRAPE.title} />
+        </div>
+        <UseCaseSectionLinks
+          label="Guides for this workflow"
+          links={[
+            { label: "Scrape a page to Markdown", href: "https://docs.context.dev" },
+            { label: "Crawl a whole site", href: "https://docs.context.dev/api-reference/batches/submit" },
+          ]}
+        />
+      </SiteSection>
+    </div>
+  );
+}
 
 const TS = `import ContextDev from 'context.dev';
 

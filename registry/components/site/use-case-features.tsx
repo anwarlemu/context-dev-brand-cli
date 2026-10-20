@@ -1,6 +1,8 @@
 import * as React from "react";
 import { ArrowRight } from "lucide-react";
 
+import { CodeBlock, CodeWindow } from "@/components/site/code-window";
+import { ProductIntegration } from "@/components/site/product-landing";
 import { cn } from "@/lib/utils";
 
 // The use case pages' feature sections: white cards in the soft blue ring, each with an optional marker (an icon on a
@@ -141,8 +143,9 @@ export type UseCaseComparisonColumn = { key: string; header: React.ReactNode; ca
 export type UseCaseComparisonRow = { feature: React.ReactNode } & Record<string, React.ReactNode>;
 
 /**
- * The comparison table: the features down the left, a column per option, the highlighted one (Context.dev) in brand blue
- * on a faint blue wash. It scrolls sideways on narrow screens rather than squeezing the columns.
+ * The comparison table: the features down the left, a column per option, the highlighted one (Context.dev) with its
+ * header in brand blue and its cells on a faint blue wash (the header itself stays white). It scrolls sideways on
+ * narrow screens rather than squeezing the columns.
  */
 function UseCaseComparisonTable({ columns, rows, label = "Comparison", className }: { columns: readonly UseCaseComparisonColumn[]; rows: readonly UseCaseComparisonRow[]; label?: string; className?: string }) {
   return (
@@ -153,7 +156,7 @@ function UseCaseComparisonTable({ columns, rows, label = "Comparison", className
             <tr className="border-b border-hairline align-bottom">
               <td className="w-1/4 px-6 py-5 md:px-8" />
               {columns.map((column) => (
-                <th key={column.key} scope="col" className={cn("px-6 py-5 font-normal md:px-8", column.highlight && "bg-brand/4")}>
+                <th key={column.key} scope="col" className="px-6 py-5 font-normal md:px-8">
                   <span className={cn("block text-h5 leading-snug", column.highlight ? "text-fg-brand" : "text-fg")}>{column.header}</span>
                   {column.caption && <span className="block text-body-sm leading-snug text-fg-subtle">{column.caption}</span>}
                 </th>
@@ -215,4 +218,55 @@ function BeforeAfterStats({ stats, accentIndex = 0, className }: { stats: readon
   );
 }
 
-export { UseCaseFeatureCards, UseCaseFeatureCard, UseCaseIconChip, UseCaseDemoFrame, UseCaseNote, UseCaseComparisonTable, BeforeAfterPanels, BeforeAfterPanel, BeforeAfterStats };
+/**
+ * The API example section: the heading, a line of text and two outline pills (the playground first, then the API
+ * reference) beside a code window labelled with the endpoint, holding the request body and an example response.
+ */
+function UseCaseApiExample({
+  title,
+  accent,
+  description,
+  endpoint,
+  request,
+  response,
+  docsHref,
+  playgroundHref,
+  playgroundLabel = "Try in API Playground",
+  className,
+  ...props
+}: Omit<React.ComponentProps<"section">, "title"> & {
+  title: React.ReactNode;
+  accent?: React.ReactNode;
+  description?: React.ReactNode;
+  /** The window's label, such as "POST /v1/brand/retrieve". */
+  endpoint: string;
+  request: Record<string, unknown>;
+  response: Record<string, unknown>;
+  docsHref: string;
+  playgroundHref?: string;
+  playgroundLabel?: React.ReactNode;
+}) {
+  const code = `// Request body\n${JSON.stringify(request, null, 2)}\n\n// Example response\n${JSON.stringify(response, null, 2)}`;
+  return (
+    <ProductIntegration
+      title={title}
+      accent={accent}
+      description={description}
+      docsHref={docsHref}
+      playgroundHref={playgroundHref}
+      playgroundLabel={playgroundLabel}
+      playgroundFirst
+      className={cn("pt-10 md:pt-12", className)}
+      code={
+        <CodeWindow label={endpoint}>
+          <div tabIndex={0} role="region" aria-label={`${endpoint} example`} className="overflow-x-auto outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring">
+            <CodeBlock code={code} />
+          </div>
+        </CodeWindow>
+      }
+      {...props}
+    />
+  );
+}
+
+export { UseCaseApiExample, UseCaseFeatureCards, UseCaseFeatureCard, UseCaseIconChip, UseCaseDemoFrame, UseCaseNote, UseCaseComparisonTable, BeforeAfterPanels, BeforeAfterPanel, BeforeAfterStats };

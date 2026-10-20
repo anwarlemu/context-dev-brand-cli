@@ -5,12 +5,14 @@ import { ArrowRight, Check, Copy, Minus, Plus } from "lucide-react";
 
 import { useCopy } from "@/components/ui/copy-button";
 import { CodeBlock } from "@/components/site/code-window";
+import { useCodeLanguage } from "@/hooks/use-code-language";
 import { cn } from "@/lib/utils";
 
-// A product page on the stage design (the Search, Brand search, People enrichment, News and Parse pages): a wide
-// column with no ruled frame, a split heading (the first line black, the second brand blue), the product on a blue
-// stage under the hero, and quiet gray panels, hairline lists and a tabbed code explorer below. Everything is data
-// through props; the stage's picture and its glass backdrop are slots.
+// A retained product page design, the stage (context.dev used it for Search, Brand search, People enrichment, News and
+// Parse before those pages moved to the white ProductHero and the product-landing sections): a wide column with no
+// ruled frame, a split heading (the first line black, the second brand blue), the product on a blue stage under the
+// hero, and quiet gray panels, hairline lists and a tabbed code explorer below. Everything is data through props; the
+// stage's picture and its glass backdrop are slots.
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Layout
@@ -230,43 +232,6 @@ export type ProductCodeSample = {
   content?: React.ReactNode;
 };
 
-// Every explorer on the page follows the same language, and the choice is remembered where storage allows.
-const LANGUAGE_KEY = "ds:code-language";
-const LANGUAGE_EVENT = "ds:code-language-change";
-let sessionLanguage: string | null = null;
-
-function readLanguage() {
-  try {
-    return sessionLanguage ?? window.localStorage.getItem(LANGUAGE_KEY);
-  } catch {
-    return sessionLanguage;
-  }
-}
-
-function storeLanguage(language: string) {
-  sessionLanguage = language;
-  try {
-    window.localStorage.setItem(LANGUAGE_KEY, language);
-  } catch {
-    // Storage can be blocked; the session value still keeps this page's explorers in sync.
-  }
-  window.dispatchEvent(new Event(LANGUAGE_EVENT));
-}
-
-function subscribeLanguage(onChange: () => void) {
-  const onStorage = (event: StorageEvent) => {
-    if (event.key !== LANGUAGE_KEY) return;
-    sessionLanguage = event.newValue;
-    onChange();
-  };
-  window.addEventListener(LANGUAGE_EVENT, onChange);
-  window.addEventListener("storage", onStorage);
-  return () => {
-    window.removeEventListener(LANGUAGE_EVENT, onChange);
-    window.removeEventListener("storage", onStorage);
-  };
-}
-
 function InstallCommand({ sample }: { sample: ProductCodeSample }) {
   const { hasCopied, copy } = useCopy();
   if (!sample.install) {
@@ -330,7 +295,8 @@ function ProductCodeExplorer({
   links?: { label: React.ReactNode; href: string; external?: boolean }[];
 }) {
   const baseId = React.useId();
-  const stored = React.useSyncExternalStore(subscribeLanguage, readLanguage, () => null);
+  // Every explorer, code tabs window and install command on the page follows the same language (useCodeLanguage).
+  const [stored, storeLanguage] = useCodeLanguage();
   const active = samples.find((sample) => sample.language === stored) ?? samples[0];
   const { hasCopied, copy } = useCopy();
   const hasTabs = samples.length > 1;

@@ -1,14 +1,24 @@
 import * as React from "react";
 import { Minus, Plus } from "lucide-react";
 
+import { buttonVariants } from "@/components/ui/button";
+import { HeroDotField } from "@/components/visuals/hero-dot-field";
+import { patternHole } from "@/components/visuals/hero-pattern-hole";
 import { cn } from "@/lib/utils";
 
-// The blue water product pages (the ChatGPT plugin page and the API catalog): a full-bleed blue hero whose water fades
-// up into white behind a centered title, a quiet row of customer logos, then plain sections in a narrow column and a
-// blue closing band. The water itself (HeroWater, from the visuals) and the band's texture are slots; without them the
-// hero shows the same white to blue fade in brand tokens.
+// The product pages' hero (context.dev's Parse, Brand search, People enrichment, News and ChatGPT pages): a white,
+// full-width band with an inset rule along its foot, the brand's dot streams running in from its edges, and a centered
+// two-line title (the second line blue), a lead line, the black and outline pills and an optional note, all marked as
+// holes so no dot lands on them. The demo (children) sits under the band's headline in the same column, so it shares
+// its edges with every section below. The rest of the page is the product-landing sections.
+//
+// The blue water design these pages used before is retired: ProductCustomerProof, ProductSteps, ProductCompactFaq,
+// ProductCallToAction and ProductContainer remain for existing pages only.
 
-/** The narrow column these pages set their sections in. */
+/** The ruled column the hero shares with the sections under it. */
+const COLUMN = "relative mx-auto w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12";
+
+/** @deprecated The water pages' narrow column. Product pages now use the site's ruled column (SiteSection). */
 function ProductContainer({ className, ...props }: React.ComponentProps<"div">) {
   return <div data-slot="product-container" className={cn("mx-auto w-full max-w-247.5 px-6 sm:px-8 lg:px-10.5", className)} {...props} />;
 }
@@ -27,82 +37,120 @@ const ACTION =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-body leading-5.5 font-medium shadow-key outline-none transition-[background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:size-4 [&_svg]:shrink-0";
 
 const ACTION_TONES = {
-  /** Black, for the hero. */
+  /** Black. */
   dark: "border border-black bg-primary text-on-primary hover:bg-primary-hover focus-visible:ring-focus-ring",
-  /** Frosted white, for the hero's second action. */
+  /** Frosted white, for the retired water hero's second action. */
   frost: "bg-white/70 text-fg ring-1 ring-white/90 ring-inset hover:bg-white focus-visible:ring-focus-ring",
-  /** White, for the blue band. */
+  /** White, for the retired blue band. */
   light: "border border-hairline bg-white text-fg hover:bg-white/90 focus-visible:ring-white focus-visible:ring-offset-brand",
-  /** Clear, for the blue band's second action. */
+  /** Clear, for the retired blue band's second action. */
   clear: "border border-white/20 bg-white/10 text-white hover:bg-white/20 focus-visible:ring-white focus-visible:ring-offset-brand",
 } as const;
 
-/** The pages' keyed pills: `dark` and `frost` on the hero, `light` and `clear` on the blue band. */
+/**
+ * The water pages' keyed pills. The white ProductHero uses the site's pills (Button `pill` and `pill-outline`); these
+ * remain for pages still on the retired water design.
+ */
 function ProductAction({ tone = "dark", className, ...props }: React.ComponentProps<"a"> & { tone?: keyof typeof ACTION_TONES }) {
   return <a data-slot="product-action" className={cn(ACTION, ACTION_TONES[tone], className)} {...props} />;
 }
 
-// The water's own fade, in brand tokens: white at the top, through the pale blues, to the hero's blue at the foot.
-const FADE = "bg-[linear-gradient(180deg,var(--ds-color-white)_0%,var(--ds-color-blue-10)_22%,var(--ds-color-blue-20)_55%,var(--ds-color-blue-50)_72%,var(--ds-color-blue-80)_100%)]";
+/** The default actions: the black "Get API key" pill and the outline "View documentation" pill, no arrows. */
+function ProductHeroActions({ signupHref, docsHref }: { signupHref: string; docsHref: string }) {
+  return (
+    <>
+      <a href={signupHref} className={cn(buttonVariants({ variant: "pill" }))}>
+        Get API key
+      </a>
+      <a href={docsHref} target="_blank" rel="noopener noreferrer" className={cn(buttonVariants({ variant: "pill-outline" }))}>
+        View documentation
+      </a>
+    </>
+  );
+}
 
 /**
- * The blue water hero: centered, an eyebrow line, the two-line title (the second line blue), a muted line and the
- * actions, with the page's picture under them when there is one (the hero then grows to a screen tall).
+ * The white product hero. `title` is two lines, the second blue; `actions` replaces the default pills (which use
+ * `signupHref` and `docsHref`); `note` is a quiet line under them; `children` is the demo under the headline band.
+ * `background` replaces the dot streams (pass null for none). When the hero sits under a see-through fixed header, set
+ * `--hero-header` on it to the header's height: the band then grows by that much and keeps the content below it.
  */
 function ProductHero({
   title,
   description,
-  eyebrow,
   actions,
+  note,
+  signupHref = "/signup",
+  docsHref = "https://docs.context.dev",
   background,
-  contentHeight = false,
+  eyebrow: _eyebrow,
+  contentHeight: _contentHeight,
   className,
   children,
   ...props
 }: Omit<React.ComponentProps<"section">, "title"> & {
   title: readonly [React.ReactNode, React.ReactNode];
   description?: React.ReactNode;
-  /** Above the title, a quiet line ("Backed by Y Combinator"). */
-  eyebrow?: React.ReactNode;
-  /** ProductAction pills. */
+  /** Pills; defaults to "Get API key" and "View documentation". */
   actions?: React.ReactNode;
-  /** The water (HeroWater) and its texture; replaces the token fade. */
+  /** A quiet line under the actions. */
+  note?: React.ReactNode;
+  signupHref?: string;
+  docsHref?: string;
+  /** Behind the headline band; the dot streams by default, null for none. */
   background?: React.ReactNode;
-  /** With a picture, size to the content instead of a full screen. */
+  /** @deprecated The water hero's eyebrow; the white hero has none, so it is ignored. */
+  eyebrow?: React.ReactNode;
+  /** @deprecated The water hero's height switch; the white hero sizes itself, so it is ignored. */
   contentHeight?: boolean;
 }) {
   const titleId = React.useId();
+  const field = background === undefined ? <HeroDotField fine lively streams className="text-brand/60" /> : background;
   return (
-    <section
-      data-slot="product-hero"
-      aria-labelledby={titleId}
-      className={cn(
-        "relative isolate flex w-full flex-col items-center justify-center overflow-hidden bg-blue-90 px-6 py-14 sm:px-8",
-        children ? (contentHeight ? "sm:py-18" : "sm:min-h-200 sm:py-14") : "sm:min-h-108",
-        className,
-      )}
-      {...props}
-    >
-      <div aria-hidden="true" className={cn("pointer-events-none absolute inset-0 -z-10 overflow-hidden", !background && FADE)}>
-        {background}
-      </div>
-      <div className="relative flex w-full max-w-225 flex-col items-center gap-6">
-        <div className="flex w-full flex-col items-center gap-4 text-center">
-          {eyebrow && <div className="flex items-center gap-1.5 text-body-sm font-medium text-fg-nav [&_img]:size-4.5 [&_img]:shrink-0 [&_img]:rounded-sm">{eyebrow}</div>}
-          <h1 id={titleId} className="text-h2 leading-tight font-normal tracking-tight text-balance text-fg sm:text-h1">
-            {title[0]} <br />
-            <span className="text-fg-brand">{title[1]}</span>
+    <section data-slot="product-hero" aria-labelledby={titleId} className={cn("relative w-full bg-surface shadow-rule-bottom", className)} {...props}>
+      {/* The streams are laid out in shares of their box, so the field covers only the headline band: spanning the demo
+          too would stretch them past it. */}
+      <div className="relative">
+        {field && (
+          <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+            {field}
+          </div>
+        )}
+        <div
+          className={cn(
+            COLUMN,
+            "z-10 flex min-h-[calc(var(--hero-header,0px)+var(--spacing)*104)] flex-col items-center justify-center gap-(--ds-layout-product-hero-gap) pt-[calc(var(--hero-header,0px)+var(--spacing)*14)] pb-14 text-center md:min-h-[calc(var(--hero-header,0px)+var(--ds-layout-product-hero))] md:pt-[var(--hero-header,0px)] md:pb-0",
+          )}
+        >
+          <h1 id={titleId} className="text-hero leading-tight font-normal tracking-tight text-balance text-fg antialiased sm:text-h1 lg:text-hero-product lg:leading-hero-product">
+            <span {...patternHole("text")} className="block">
+              {title[0]}
+            </span>{" "}
+            <span {...patternHole("text")} className="block text-fg-brand">
+              {title[1]}
+            </span>
           </h1>
-          {description && <p className="max-w-170 text-body leading-normal text-pretty text-fg-nav sm:text-body-lg">{description}</p>}
-          {actions && <div className="flex flex-wrap items-center justify-center gap-3 pt-0.5">{actions}</div>}
+          {description && (
+            <p className="max-w-(--ds-layout-product-hero-lead) text-lead leading-lead text-fg-nav md:text-lead-lg md:leading-lead-lg">
+              <span {...patternHole("text")}>{description}</span>
+            </p>
+          )}
+          <div {...patternHole("box")} className="flex flex-wrap items-center justify-center gap-3 pt-1.5">
+            {actions ?? <ProductHeroActions signupHref={signupHref} docsHref={docsHref} />}
+          </div>
+          {note && (
+            <p className="text-note leading-note text-pretty text-fg/50">
+              <span {...patternHole("text")}>{note}</span>
+            </p>
+          )}
         </div>
-        {children}
       </div>
+      {children && <div className={cn(COLUMN, "z-10 pb-16 md:pb-(--ds-layout-product-hero-foot)")}>{children}</div>}
     </section>
   );
 }
 
-/** A centered line and a row of customer logos in gray, under the hero. */
+/** @deprecated The water pages' customer logos; context.dev's product pages use the LogoStrip under the hero. */
 function ProductCustomerProof({ label = "Teams build with us", logos, className }: { label?: React.ReactNode; logos: { name: string; src: string }[]; className?: string }) {
   return (
     <section data-slot="product-customer-proof" aria-label="Customers" className={cn("pt-9 pb-10.5", className)}>
@@ -120,7 +168,7 @@ function ProductCustomerProof({ label = "Teams build with us", logos, className 
   );
 }
 
-/** Three steps in columns under a two-line heading, optionally numbered in blue mono. `children` follows the steps. */
+/** @deprecated The water pages' steps; use ProductLandingSteps (product-landing), the numbered step cards. */
 function ProductSteps({
   steps,
   title = ["From your first request", "to a working feature."],
@@ -160,7 +208,7 @@ function ProductSteps({
   );
 }
 
-/** The narrow FAQ: the split heading and a line on the left, hairline questions on the right, the first open. */
+/** @deprecated The water pages' narrow FAQ; use ProductFaq (product-landing). */
 function ProductCompactFaq({
   id,
   faqs,
@@ -199,7 +247,7 @@ function ProductCompactFaq({
   );
 }
 
-/** The blue closing band: a centered white heading, a line of text and the light actions over the water texture. */
+/** @deprecated The water pages' blue closing band; product pages close with the site's ClosingCta. */
 function ProductCallToAction({
   title = "Start with your next request.",
   description,

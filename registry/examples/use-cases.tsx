@@ -1,26 +1,29 @@
 "use client";
 
-import { BookOpen, Bot, Clock, Globe, Layers, Map as MapIcon, Terminal } from "lucide-react";
+import { BookOpen, Bot, Terminal } from "lucide-react";
 
 import { windowButtonClass } from "@/components/site/code-window";
+import type { UseCaseSample } from "@/components/site/use-case-how-it-works";
 import { UseCases, UseCaseTryIn } from "@/components/site/use-cases";
+import { PersonaGlyph } from "@/components/visuals/persona-glyph";
 
-const CLIENT = `import ContextDev from 'context.dev';
+import { HOME_USE_CASES, type HomeUseCase } from "./use-case-samples";
 
-const client = new ContextDev({ apiKey: 'YOUR_API_KEY' });`;
+const prompt = (useCase: HomeUseCase, sample: UseCaseSample) =>
+  `Please create a ${useCase.title.toLowerCase()} implementation using the Context.dev API like this:\n\n${sample.code}\n\nAPI reference: ${useCase.docsUrl}`;
 
-// The agents' own logos go in the "Try in" chip; these icons stand in for them.
-const docs = (href: string) => (
+// The agents' own logos go in the "Try in" chip; these icons stand in for them. The prompt carries the code showing.
+const tryIn = (useCase: HomeUseCase) => (sample: UseCaseSample) => (
   <>
     <UseCaseTryIn>
-      <button type="button" aria-label="Try in Claude" onClick={() => window.open("https://claude.ai/new", "_blank", "noopener,noreferrer")} className={windowButtonClass}>
+      <button type="button" aria-label="Try in Claude" onClick={() => window.open(`https://claude.ai/new?q=${encodeURIComponent(prompt(useCase, sample))}`, "_blank", "noopener,noreferrer")} className={windowButtonClass}>
         <Bot />
       </button>
-      <button type="button" aria-label="Try in Codex" onClick={() => window.open("https://chatgpt.com/codex", "_blank", "noopener,noreferrer")} className={windowButtonClass}>
+      <button type="button" aria-label="Try in Cursor" onClick={() => window.open(`https://cursor.com/link/prompt?text=${encodeURIComponent(prompt(useCase, sample))}`, "_blank", "noopener,noreferrer")} className={windowButtonClass}>
         <Terminal />
       </button>
     </UseCaseTryIn>
-    <a href={href} aria-label="View documentation" className={windowButtonClass}>
+    <a href={useCase.docsUrl} target="_blank" rel="noopener noreferrer" aria-label="View documentation" className={windowButtonClass}>
       <BookOpen />
     </a>
   </>
@@ -30,82 +33,14 @@ export function Site() {
   return (
     <UseCases
       className="w-full"
-      items={[
-        {
-          id: "scrape",
-          title: "Scrape anything",
-          description: "Get Markdown, HTML, screenshots, images, or structured fields from any URL.",
-          icon: <Globe />,
-          actions: docs("https://docs.context.dev"),
-          code: `${CLIENT}
-
-const page = await client.web.scrape({
-  url: 'https://linear.app',
-  formats: {
-    markdown: true,
-    html: true,
-    screenshot: true,
-  },
-  sharedParams: { mainContentOnly: true },
-});
-
-console.log(page.markdown.data);
-console.log(page.screenshot.data);`,
-        },
-        {
-          id: "map",
-          title: "Map domains",
-          description: "Discover page URLs across a domain, with titles and descriptions when available.",
-          icon: <MapIcon />,
-          code: `${CLIENT}
-
-const { urls } = await client.web.mapUrls({
-  domain: 'stripe.com',
-  includeSubdomains: true,
-  maxLinks: 100,
-});
-
-for (const page of urls) {
-  console.log(page.url, page.title, page.description);
-}`,
-        },
-        {
-          id: "batches",
-          title: "Run batches",
-          description: "Scrape thousands of URLs or crawl a site in the background with one batch job.",
-          icon: <Layers />,
-          code: `${CLIENT}
-
-const batch = await client.batch.submit({
-  input: {
-    mode: 'scrape',
-    data: {
-      format: 'markdown',
-      urls: urls.map((url) => ({ url })),
-    },
-  },
-});
-
-console.log(batch.id, batch.status);`,
-        },
-        {
-          id: "monitors",
-          title: "Create monitors",
-          description: "Watch pages for changes on a schedule and send updates to your webhook.",
-          icon: <Clock />,
-          code: `${CLIENT}
-
-const monitor = await client.monitors.create({
-  name: 'Linear pricing changes',
-  target: { type: 'page', url: 'https://linear.app/pricing' },
-  change_detection: { type: 'exact' },
-  schedule: { type: 'interval', frequency: 6, unit: 'hours' },
-  webhook: { url: 'https://example.com/webhooks/context' },
-});
-
-console.log(monitor.id);`,
-        },
-      ]}
+      items={HOME_USE_CASES.map((useCase, index) => ({
+        id: useCase.id,
+        title: useCase.title,
+        description: useCase.description,
+        glyph: <PersonaGlyph name={useCase.glyph} index={index} className="size-7 rounded-control p-1.5" />,
+        samples: useCase.samples,
+        actions: tryIn(useCase),
+      }))}
     />
   );
 }
