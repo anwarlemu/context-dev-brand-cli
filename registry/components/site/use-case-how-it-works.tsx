@@ -102,7 +102,7 @@ function UseCaseCodeTabs({ samples, language, onLanguageChange, className }: { s
               hidden={sample !== active}
               className="absolute inset-0 overflow-auto outline-none [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring"
             >
-              <CodeBlock code={sample.code} />
+              <CodeBlock code={sample.code} language={sample.language} />
             </div>
           ))}
         </div>

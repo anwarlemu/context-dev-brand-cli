@@ -29,6 +29,8 @@ const color = {
 	line: 'border-default', 'line-subtle': 'border-subtle', 'line-strong': 'border-strong', hairline: 'border-hairline', rule: 'border-rule', node: 'border-node',
 	'ring-tint': 'ring-tint', 'ring-on-brand': 'ring-on-brand', 'wash-hover': 'wash-hover', 'wash-announcement': 'wash-announcement', 'wash-control': 'wash-control', 'wash-pill': 'wash-pill', 'wash-selected': 'wash-selected',
 	success: 'status-success', warning: 'status-warning', danger: 'status-danger',
+	'danger-strong': 'status-danger-strong', 'danger-soft': 'status-danger-soft', 'danger-line': 'status-danger-line',
+	'warning-strong': 'status-warning-strong', 'warning-soft': 'status-warning-soft', 'warning-line': 'status-warning-line',
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
 for (const name of Object.keys(t)) {

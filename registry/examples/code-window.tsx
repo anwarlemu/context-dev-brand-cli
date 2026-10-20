@@ -44,7 +44,7 @@ export function Site() {
     <div className="grid w-full max-w-3xl gap-10">
       <CodeWindow label="scrape.ts" actions={<WindowCopyButton value={SCRAPE} />}>
         <div className="overflow-x-auto">
-          <CodeBlock code={SCRAPE} />
+          <CodeBlock code={SCRAPE} language="typescript" />
         </div>
       </CodeWindow>
       <div className="flex flex-col gap-4">

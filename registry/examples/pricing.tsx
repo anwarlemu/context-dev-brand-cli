@@ -151,14 +151,18 @@ const planFit = [
 
 const DOCS = "https://docs.context.dev";
 const creditCosts = [
-  { title: "Scrape", href: `${DOCS}/scrape`, cost: "From 1 credit per call" },
+  { title: "Scrape", href: `${DOCS}/api-reference/web-scraping/scrape`, cost: "From 1 credit per call" },
   { title: "Scrape with JSON extraction", href: `${DOCS}/scrape/json`, cost: "5 credits per page" },
-  { title: "Crawl", href: `${DOCS}/crawl`, cost: "1 credit per page" },
-  { title: "Search", href: `${DOCS}/search`, cost: "From 1 credit per 10 results" },
-  { title: "Answers", href: `${DOCS}/answers`, cost: "From 10 credits per call" },
-  { title: "Brand", href: `${DOCS}/brand`, cost: "10 credits per call" },
-  { title: "Styleguide", href: `${DOCS}/styleguide`, cost: "10 credits per call" },
-  { title: "Parse", href: `${DOCS}/parse`, cost: "From 1 credit per call" },
+  { title: "Map URLs", href: `${DOCS}/api-reference/web-scraping/map`, cost: "From 1 credit per call" },
+  { title: "Crawl Website", href: `${DOCS}/api-reference/web-scraping/crawl`, cost: "1 credit per page" },
+  { title: "Search Web", href: `${DOCS}/api-reference/web-scraping/search`, cost: "From 1 credit per call" },
+  { title: "Answers", href: `${DOCS}/api-reference/web-extraction/answers`, cost: "From 10 credits per call" },
+  { title: "Retrieve Brand", href: `${DOCS}/api-reference/brand-intelligence/brand`, cost: "10 credits per call" },
+  { title: "Search Brands", href: `${DOCS}/api-reference/brand-intelligence/search`, cost: "1 credit; free on Pro, Growth, and Scale" },
+  { title: "Extract Styleguide", href: `${DOCS}/api-reference/brand-intelligence/styleguide`, cost: "10 credits per call" },
+  { title: "Enrich Person", href: `${DOCS}/api-reference/people/enrich`, cost: "20 credits per match" },
+  { title: "Search News", href: `${DOCS}/api-reference/news/search`, cost: "From 1 credit per call" },
+  { title: "Parse File", href: `${DOCS}/api-reference/utility/parse`, cost: "From 1 credit per call" },
 ];
 
 export function Site() {

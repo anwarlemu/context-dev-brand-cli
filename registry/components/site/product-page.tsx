@@ -302,7 +302,7 @@ function CodeLines({ sample }: { sample: ProductCodeSample }) {
       <pre aria-hidden="true" className="shrink-0 text-right text-white/20 select-none">
         {numbers}
       </pre>
-      <div className="text-white/85 [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:text-[length:inherit] [&_pre]:leading-[inherit]">{sample.content ?? <CodeBlock code={sample.code} />}</div>
+      <div className="text-white/85 [&_pre]:bg-transparent [&_pre]:p-0 [&_pre]:text-[length:inherit] [&_pre]:leading-[inherit]">{sample.content ?? <CodeBlock code={sample.code} language={sample.language} />}</div>
     </div>
   );
 }

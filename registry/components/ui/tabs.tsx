@@ -115,8 +115,23 @@ function TabsList({
 
 function TabsTrigger({ className, value, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
   const { variant, size, isPillPlaced } = React.useContext(ListState);
-  // Until the pill lands (or with no pill), the selected tab draws the surface itself, so the first paint matches.
-  return <TabsPrimitive.Trigger data-slot="tabs-trigger" data-tab-id={value} value={value} className={cn(tabsTriggerVariants({ variant, size }), !isPillPlaced && SELF_SURFACE[variant], className)} {...props} />;
+  // Until the pill lands (or with no pill), the selected tab draws the surface itself, so the first paint matches; a list
+  // styled its own way (the agent window's outline on dark) passes that first-paint surface in its className. Once the
+  // pill is placed it draws the whole surface, so the trigger's own background, border and shadow go, after className.
+  return (
+    <TabsPrimitive.Trigger
+      data-slot="tabs-trigger"
+      data-tab-id={value}
+      value={value}
+      className={cn(
+        tabsTriggerVariants({ variant, size }),
+        !isPillPlaced && SELF_SURFACE[variant],
+        className,
+        isPillPlaced && "data-[state=active]:border-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none",
+      )}
+      {...props}
+    />
+  );
 }
 
 function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Content>) {

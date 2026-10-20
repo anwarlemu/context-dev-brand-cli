@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T17:11:40.585Z",
+  "checkedAt": "2026-10-20T17:33:15.375Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -703,7 +703,7 @@
       "library": [
         {
           "path": "components/ui/accordion.tsx",
-          "sha256": "7d1706da8eb0fa1ac52cf12b1b695e12354be406a7d276d8319cdd35fde9ee54"
+          "sha256": "728f862c7c3c3d0124483f03ef3a51afc632334da8fd056b0ff2fed0e0499532"
         }
       ],
       "sources": [
@@ -712,6 +712,14 @@
           "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/ui/accordion.tsx",
           "sha256": "06bf37dea86694645291645796eaa55876f8d090d2a535f2c3aa6fbb46233241",
+          "retained": false,
+          "exports": []
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/ui/accordion-content.tsx",
+          "sha256": "c9fd99d9592bd81a639f3d538ba052cfa1aa3832b6069bdf6768f4564f789e22",
           "retained": false,
           "exports": []
         },
@@ -736,7 +744,7 @@
       "library": [
         {
           "path": "components/site/agent-setup-window.tsx",
-          "sha256": "ec2cf64042f70e0c265816a50c034db07cd01abd9802900e9cd52ae9e42d8223"
+          "sha256": "177fd23ce113469fdb1f90953c66f07efe8faeee8b8296d9063176083a1d11f4"
         }
       ],
       "sources": [
@@ -763,6 +771,14 @@
             "SETUP_AGENTS",
             "AGENT_MCP_SETUP_PROMPT"
           ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/ui/tabs.tsx",
+          "sha256": "9d685bb15672b2c27f6dd69da8aacce0d87a1237b2d7827e000217bb81aaf296",
+          "retained": false,
+          "exports": []
         }
       ],
       "unresolvedHistoricalPaths": [],
@@ -915,7 +931,7 @@
       "library": [
         {
           "path": "components/blocks/app-shell.tsx",
-          "sha256": "2937fcb0d87c939a494a0329049b92265c6009c133832f22bf53c2b89614adb6"
+          "sha256": "1a0a2fa2e19987969281b216c28f0f598f7ca75c4c891ff2301e670c42ca6492"
         }
       ],
       "sources": [
@@ -1419,7 +1435,7 @@
       "library": [
         {
           "path": "components/site/code-window.tsx",
-          "sha256": "560cff733b460725a185b057693674f95c09cf919a90414a4c394de7529e56f8"
+          "sha256": "39d0052161aa410c33eb76aa4266eb29d2f6b1beabd4216a8625f0f5e9cc283d"
         }
       ],
       "sources": [
@@ -1458,6 +1474,18 @@
             "TERMINAL_CODE_COLORS",
             "terminalPrismTheme",
             "terminalShikiTheme"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/lib/code-syntax-theme.ts",
+          "sha256": "5a2f96257a66a2400acab95d0de91ed028d8ae74b72af0c07b49b7111a44b6bd",
+          "retained": false,
+          "exports": [
+            "CODE_SYNTAX_COLORS",
+            "createCodePrismTheme",
+            "createCodeShikiTheme"
           ]
         }
       ],
@@ -3642,7 +3670,7 @@
       "library": [
         {
           "path": "components/site/pricing.tsx",
-          "sha256": "6ac198e941df7a516efbab2f8602f167b12a9405e7de8ce136495810af00d4e9"
+          "sha256": "5ba7dab17f03988e155d97b20eb8e16dccde09084f807b0b0b7d9079685aeb61"
         }
       ],
       "sources": [
@@ -3954,7 +3982,7 @@
       "library": [
         {
           "path": "components/site/product-page.tsx",
-          "sha256": "3fa085ab18e611e2ecfd87ab42ffefb518f7be17279e3b5bba48db35fd56d3ea"
+          "sha256": "deca38ea695afdd24ad196201ba81ef43346d45966fc6a0c262edaad33946e3f"
         }
       ],
       "sources": [
@@ -4441,10 +4469,20 @@
       "library": [
         {
           "path": "components/product/sidebar-alert-card.tsx",
-          "sha256": "5518d14aff9477243b75ad633d895f37eace56825385c1a9eb0efe2798c0e06d"
+          "sha256": "91ccb04863f4c43b2f544d644c0cb94ce60289464e48d9b7e5548209c2caf1ca"
         }
       ],
       "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sidebar-status-card.tsx",
+          "sha256": "2708c68c2392614baff169c80ba6abab75da0fdd05cc27edeaf53382441d02c8",
+          "retained": false,
+          "exports": [
+            "SidebarStatusCard"
+          ]
+        },
         {
           "repository": "brand-dev-webapp",
           "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -4464,6 +4502,24 @@
           "exports": [
             "SidebarCancellingCard"
           ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sidebar-upgrade-card.tsx",
+          "sha256": "674b52e4d858fefe0331377a02a525f8461ad6fbb61b98c287ef96cff4e7b9ce",
+          "retained": false,
+          "exports": [
+            "SidebarUpgradeCard"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/styles/dashboard-system.css",
+          "sha256": "c11b6d9bff1eda4cd5781763284ace3b2eb1a0bbe3ba14f4cb25ba5b82c80ebc",
+          "retained": false,
+          "exports": []
         }
       ],
       "unresolvedHistoricalPaths": [],
@@ -6436,7 +6492,7 @@
       "library": [
         {
           "path": "components/ui/tabs.tsx",
-          "sha256": "e68206a97eeb7a32736f39d17e4fa9da8709f348fa558799718fdbd2e6b5ade5"
+          "sha256": "300414e51283e118125b6f640001cc3bac07e26fc661617b0077fe9211b1d594"
         }
       ],
       "sources": [
@@ -6890,7 +6946,7 @@
       "library": [
         {
           "path": "components/site/use-case-how-it-works.tsx",
-          "sha256": "f7bd9da70659d8a59d04414670bf48b2f896c6a45955c2b32e42df6a0463a5d5"
+          "sha256": "6b1f075ec0ff9b6e4102d691af17301712d80869be39cf2e7144a17e2454ce77"
         }
       ],
       "sources": [

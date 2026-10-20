@@ -98,7 +98,7 @@ export function AppShell({ active = "Overview", paymentFailed = false, className
         }
         footer={
           <>
-            {paymentFailed && <SidebarAlertCard tone="danger" tag="Last payment failed" message="Your payment method is failing." action="Fix issue" pendingAction="Opening..." onClick={() => { navigate("/settings?tab=billing"); }} />}
+            {paymentFailed && <SidebarAlertCard tone="danger" tag="Payment failed" message="Update your card." action="Update payment" pendingAction="Opening..." onClick={() => { navigate("/settings?tab=billing"); }} />}
             <SidebarButton icon={CircleHelp} onClick={() => setHelpOpen(true)}>Help</SidebarButton>
             <SidebarLink href="https://docs.context.dev" icon={Code} target="_blank" rel="noopener noreferrer">
               Documentation

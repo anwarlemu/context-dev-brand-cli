@@ -34,10 +34,10 @@ function useRevealStyle(order: number, staggerMs: number): React.CSSProperties {
 const chromeButtonClass =
   "inline-flex size-7 shrink-0 items-center justify-center rounded-card outline-none transition-colors duration-150 ease-out hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60 motion-reduce:transition-none";
 
-/** A link-like run inside the window: the one accent color, faintly underlined. */
+/** A link-like run inside the window: the syntax theme's property blue, faintly underlined. */
 function SetupUrl({ children, className, style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <span style={style} className={cn("text-blue-60 underline decoration-white/20 underline-offset-2", className)}>
+    <span style={style} className={cn("text-code-property underline decoration-white/20 underline-offset-2", className)}>
       {children}
     </span>
   );
@@ -198,12 +198,14 @@ function AgentSetupWindow({
         <span aria-hidden="true" className="size-3 shrink-0 rounded-pill bg-window-close" />
         <span aria-hidden="true" className="size-3 shrink-0 rounded-pill bg-window-minimize" />
         <span aria-hidden="true" className="size-3 shrink-0 rounded-pill bg-window-zoom" />
-        <TabsList glide={false} aria-label="Agent setup method" className="ml-2 h-auto gap-0.5 bg-transparent p-0">
+        {/* The site's brand tabs turned for the dark bar: a faint white track, a white outline gliding to the picked
+            method. Until the pill lands the picked trigger draws the same outline itself. */}
+        <TabsList variant="pill" aria-label="Agent setup method" pillClassName="border-white bg-transparent" className="ml-2 gap-0.5 border-white/15 bg-transparent p-0.5 text-white/60">
           {methods.map((method) => (
             <TabsTrigger
               key={method.value}
               value={method.value}
-              className="flex h-auto items-center gap-1.5 rounded-card px-2.5 py-1 text-caption font-medium text-white/45 shadow-none transition-colors duration-200 ease-out hover:text-white/80 focus-visible:ring-white/60 data-[state=active]:bg-white/10 data-[state=active]:text-white data-[state=active]:shadow-none"
+              className="flex h-auto items-center gap-1.5 px-2.5 py-1 text-caption leading-normal font-normal text-white/60 hover:text-white focus-visible:outline-white/60 data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white"
             >
               {method.label}
             </TabsTrigger>

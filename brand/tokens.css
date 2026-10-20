@@ -91,6 +91,13 @@
 	--ds-color-status-success: #15803D;
 	--ds-color-status-warning: #B45309;
 	--ds-color-status-danger: #DC2626;
+	/* A status card's text, fill and edge (the dashboard's sidebar status card, dashboard-system.css). */
+	--ds-color-status-danger-strong: #B91C1C;
+	--ds-color-status-danger-soft: #FEF2F2;
+	--ds-color-status-danger-line: #FECACA;
+	--ds-color-status-warning-strong: #854D0E;
+	--ds-color-status-warning-soft: #FFFBEB;
+	--ds-color-status-warning-line: #F4D46C;
 	--ds-color-focus-ring: #2563EB;
 	--ds-color-chart-series-1: #3B82F6;
 	--ds-color-chart-series-2: #14B8A6;
@@ -173,6 +180,8 @@
 	--ds-leading-field: 1.45;
 	--ds-leading-snippet: 1.6;
 	--ds-leading-code-card: 1.65;
+	/* Code in the site's terminal window: a fixed 22px line at every width (the site sets it in px). */
+	--ds-leading-terminal: 22px;
 	--ds-leading-badge: 14px;
 	--ds-leading-type-body: 1.3;
 	--ds-leading-type-display: 1.625;
@@ -309,6 +318,12 @@
 	--ds-color-status-success: #4ADE80;
 	--ds-color-status-warning: #FBBF24;
 	--ds-color-status-danger: #F87171;
+	--ds-color-status-danger-strong: #F87171;
+	--ds-color-status-danger-soft: #2D1B1D;
+	--ds-color-status-danger-line: #70343B;
+	--ds-color-status-warning-strong: #FBBF24;
+	--ds-color-status-warning-soft: #2B2517;
+	--ds-color-status-warning-line: #6B551D;
 	--ds-color-focus-ring: #7CA1F3;
 	--ds-color-blue-10: #172340;
 	--ds-color-blue-20: #1C2D55;

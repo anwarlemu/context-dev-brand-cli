@@ -177,7 +177,7 @@ function PricingCard({ name, description, price, period, note, noteHighlight, or
           </div>
         )}
         <div className="flex flex-wrap items-baseline justify-center gap-x-1">
-          <span className="font-data text-h2 leading-none font-medium text-fg">{price}</span>
+          <span className="font-data text-h2 leading-none font-heavy text-fg">{price}</span>
           {originalPrice && <span className="text-body-sm font-medium text-fg-faint line-through">{originalPrice}</span>}
           {period && <span className="text-caption text-fg-muted">{period}</span>}
         </div>

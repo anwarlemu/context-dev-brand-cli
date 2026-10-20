@@ -6,8 +6,9 @@ import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
-// The site's FAQ list (the quick view in src/components/sections/faq.tsx): questions in medium weight on light rules, a
-// chevron that turns over when open (or your own icon), the answer in muted body-sm opening in a short ease-out.
+// The site's FAQ list (the bordered quick view in src/components/sections/faq.tsx): questions in regular weight on light
+// rules, a chevron that turns over when open (or your own icon), the answer in the site's muted text (#4D4D4D) at
+// body-sm, opening in a short ease-out.
 function Accordion(props: React.ComponentProps<typeof AccordionPrimitive.Root>) {
   return <AccordionPrimitive.Root data-slot="accordion" {...props} />;
 }
@@ -22,7 +23,7 @@ function AccordionTrigger({ className, children, icon, ...props }: React.Compone
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn(
-          "flex flex-1 items-center justify-between gap-4 py-4 text-left font-medium tracking-normal text-fg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 max-md:gap-3 [&[data-state=open]>svg]:rotate-180",
+          "flex flex-1 items-center justify-between gap-4 py-4 text-left font-normal tracking-normal text-fg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 max-md:gap-3 [&[data-state=open]>svg]:rotate-180",
           className,
         )}
         {...props}
@@ -38,7 +39,7 @@ function AccordionContent({ className, children, ...props }: React.ComponentProp
   return (
     <AccordionPrimitive.Content
       data-slot="accordion-content"
-      className="overflow-hidden text-body-sm leading-5 text-fg-muted data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down motion-reduce:animate-none"
+      className="overflow-hidden text-body-sm leading-5 text-fg-nav data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down motion-reduce:animate-none"
       {...props}
     >
       <div className={cn("pb-4", className)}>{children}</div>
