@@ -84,7 +84,7 @@ export function insertAfterImports(text: string, line: string) {
 function wireNextFonts(w: Writer, project: Project) {
 	const libDir = project.srcDir && !project.appDir?.startsWith('app') ? 'src/lib' : 'lib';
 	const loader = `${libDir}/ds-fonts.${project.typescript ? 'ts' : 'js'}`;
-	w.write(loader, "import { Doto, IBM_Plex_Mono, Rethink_Sans } from 'next/font/google';\n\nconst rethinkSans = Rethink_Sans({ subsets: ['latin'], variable: '--font-rethink-sans' });\nconst doto = Doto({ subsets: ['latin'], weight: ['800'], variable: '--font-doto' });\nconst ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-ibm-plex-mono' });\n\nexport const dsFontVariables = `${rethinkSans.variable} ${doto.variable} ${ibmPlexMono.variable}`;\n");
+	w.write(loader, "import { Doto, IBM_Plex_Mono, Rethink_Sans } from 'next/font/google';\n\nconst rethinkSans = Rethink_Sans({ subsets: ['latin'], variable: '--font-rethink-sans' });\nconst doto = Doto({ subsets: ['latin'], variable: '--font-doto' });\nconst ibmPlexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-ibm-plex-mono' });\n\nexport const dsFontVariables = `${rethinkSans.variable} ${doto.variable} ${ibmPlexMono.variable}`;\n");
 	const layout = project.layouts.find((l) => /\/layout\.(tsx|jsx|js)$/.test(l));
 	if (!layout) return loader;
 	const text = w.read(layout) ?? '';

@@ -41,7 +41,7 @@ for (const name of Object.keys(t)) {
 const theme = [
 	...Object.entries(color).map(([k, v]) => `\t--color-${k}: var(--ds-color-${v});`),
 	...['sans', 'data', 'mono'].map((k) => `\t--font-${k}: var(--ds-font-${k});`),
-	...['regular', 'medium', 'bold', 'heavy'].map((k) => `\t--font-weight-${k}: var(--ds-font-weight-${k});`),
+	...['regular', 'medium', 'bold', 'heavy', 'score'].map((k) => `\t--font-weight-${k}: var(--ds-font-weight-${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-text-')).map((k) => `\t--text-${k.slice(10)}: var(${k});`),
 	...['body', 'body-lg', 'body-sm', 'caption', 'h5'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-body);`),
 	...['display', 'h3', 'h4'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-${k});`),
@@ -190,7 +190,7 @@ const sheetExit = Object.entries({ right: 'var(--ds-space-2) 0', left: 'calc(-1 
   @keyframes ds-sheet-${side}-out { to { opacity: 0; } }
 }`).join('\n');
 const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}\n${sheetExit}\n${scrollbar}`;
-const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@800&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400..500&display=swap");\n`;
+const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@400..900&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400..500&display=swap");\n`;
 
 mkdirSync(new URL('../build', import.meta.url), { recursive: true });
 const write = (p, s) => writeFileSync(new URL(`../build/${p}`, import.meta.url), s);

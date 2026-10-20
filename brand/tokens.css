@@ -147,6 +147,8 @@
 	--ds-font-weight-bold: 600;
 	/* Doto figures set heavy, such as a plan's price. */
 	--ds-font-weight-heavy: 800;
+	/* Doto at its heaviest, for a demo's score figure. */
+	--ds-font-weight-score: 900;
 	--ds-text-hero: 2.5rem;
 	--ds-text-hero-tablet: 48px;
 	--ds-text-hero-desktop: 56px;
@@ -182,6 +184,14 @@
 	--ds-text-composer: 13.5px;
 	--ds-text-stat: 22px;
 	--ds-text-metric: 26px;
+	/* A product page's hero demo and capability panels (the site's product-demo-card), set in fixed px. */
+	--ds-text-demo-glyph: 10px;
+	--ds-text-demo-meta: 12px;
+	--ds-text-demo-code: 13px;
+	--ds-text-demo-label: 14px;
+	--ds-text-demo-row: 15px;
+	--ds-text-demo-title: 17px;
+	--ds-text-demo-score: 56px;
 	--ds-leading-tight: 1.1;
 	--ds-leading-heading: 1.2;
 	--ds-leading-snug: 1.3;
@@ -199,6 +209,11 @@
 	/* Code in the site's terminal window: a fixed 22px line at every width (the site sets it in px). */
 	--ds-leading-terminal: 22px;
 	--ds-leading-badge: 14px;
+	/* The demo card's fixed line heights: a status chip, a label, a row title, and a Doto score. */
+	--ds-leading-demo-chip: 17px;
+	--ds-leading-demo-label: 18px;
+	--ds-leading-demo-title: 22px;
+	--ds-leading-demo-score: 0.8;
 	--ds-leading-type-body: 1.3;
 	--ds-leading-type-display: 1.625;
 	--ds-leading-type-h3: 1.2;
@@ -266,6 +281,8 @@
 	--ds-radius-control: 0.5rem;
 	--ds-radius-card: 0.5rem;
 	--ds-radius-shell: 0.75rem;
+	/* The blue ring around a product page's hero demo: 12px at every root. */
+	--ds-radius-demo: 12px;
 	--ds-radius-panel: 2.5rem;
 	--ds-radius-pill: 9999px;
 	--ds-shadow-card: 0 0 0 1px var(--ds-color-border-hairline);
