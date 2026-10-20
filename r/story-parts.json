@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-parts",
+  "type": "lib",
+  "title": "Story parts",
+  "description": "Shared grids, captions, type specimens, swatches, prompt fields, and reveal timing for dot animations.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Building a new story that sits beside these (a page hero story, a style guide picture or a prompt being typed), so it lines up with the ones already drawn.",
+  "avoid": [
+    "Hex colors in a story (use brand tokens through canvasColor)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-parts.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-parts --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/page-heroes/hero-story-kit.ts; src/components/sections/products/style-guide-parts.ts; src/components/sections/products/prompt-field.ts; src/components/sections/products/story-reveal.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/page-heroes/hero-story-kit.ts",
+        "sha256": "8aff798fe81b2a828df11fefe2321d78cebf75a901137c41c4e96d380c5b3153",
+        "retained": false,
+        "exports": [
+          "HERO_STORY_GRID",
+          "blankScreen",
+          "pictureOfStates",
+          "between",
+          "cellAt",
+          "heroCaption",
+          "stepAt"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/style-guide-parts.ts",
+        "sha256": "ef37d69f7576174df8f6a225b756108824bbc29558f438a8d7fc517c0fdc3a15",
+        "retained": false,
+        "exports": [
+          "typeSpecimen"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/prompt-field.ts",
+        "sha256": "0c5df88638c48da66697aeb9a043b61339f7570632f738d8ffdd3f21e6387de2",
+        "retained": false,
+        "exports": [
+          "promptField"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/story-reveal.ts",
+        "sha256": "f0345783f3c28dc924beb337771d6d0c2978ba85d35a87f2313f60dceea3edd9",
+        "retained": false,
+        "exports": [
+          "NEVER",
+          "revealSchedule",
+          "paintRevealed",
+          "fadedInAt"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/hero-story-kit.d.ts",
+      "content": "import type { DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/** What the page-hero stories share: the hero monitor's 58 by 38 screen, and the caption column beside each picture. */\nexport declare const HERO_STORY_GRID: DotGrid;\nexport declare const blankScreen: () => Uint8Array<ArrayBuffer>;\nexport declare const pictureOfStates: (states: Uint8Array) => StoryPicture;\nexport declare const between: (value: number, from: number, to: number) => boolean;\nexport declare const cellAt: (column: number, row: number) => number;\nexport declare const heroCaption: (label: string, value: string, detail: string) => import(\"../dot-engine/dot-story-player\").DotStoryText[];\n/** Which step of a run a hold has reached: -1 before it starts, then 0 up to `last`. */\nexport declare const stepAt: (heldSeconds: number, { startsAt, everySeconds }: {\n    startsAt: number;\n    everySeconds: number;\n}, last: number) => number;\n"
+    },
+    {
+      "path": "components/visuals/stories/style-guide-parts.d.ts",
+      "content": "import { type DotShape, type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\n/**\n * A type specimen, \"Aa\", `size` rows tall with its top-left corner at `origin`, drawn with strokes `weight` dots\n * either side of their line, so the same letters can be set light or bold.\n */\nexport declare function typeSpecimen(origin: GridPoint, size: number, weight: number): DotShape;\n"
+    },
+    {
+      "path": "components/visuals/stories/prompt-field.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\n/**\n * A wide field for something typed into a story. A field that is only a border has too little in it to melt into or\n * out of, so it comes in two pictures: `empty`, with room for the text, and `filled`, full of rings, which it arrives\n * and leaves as. `along` says how far along the field a dot is, so it can clear and refill from its left.\n */\nexport declare function promptField(grid: DotGrid, box: DotBox): {\n    empty: StoryPicture;\n    filled: StoryPicture;\n    along: (column: number) => number;\n};\n"
+    },
+    {
+      "path": "components/visuals/stories/story-reveal.d.ts",
+      "content": "import type { DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nexport declare const NEVER: number;\nexport declare function revealSchedule({ columns, rows }: DotGrid, revealsAt: (column: number, row: number) => number): Float32Array<ArrayBuffer>;\nexport declare function paintRevealed(states: Uint8Array, revealed: Uint8Array, schedule: Float32Array, heldSeconds: number): void;\nexport declare const fadedInAt: (heldSeconds: number, startsAt: number) => number;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/hero-story-kit.ts",
+      "content": "import { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport type { DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/** What the page-hero stories share: the hero monitor's 58 by 38 screen, and the caption column beside each picture. */\n\n// The monitor's screen has no backdrop pattern to clear, so the dots need no halo of their own.\nexport const HERO_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\nconst CAPTION_COLUMN = 34;\n\nexport const blankScreen = () => new Uint8Array(HERO_STORY_GRID.columns * HERO_STORY_GRID.rows);\nexport const pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(HERO_STORY_GRID, states) });\nexport const between = (value: number, from: number, to: number) => value >= from && value <= to;\nexport const cellAt = (column: number, row: number) => row * HERO_STORY_GRID.columns + column;\nexport const heroCaption = (label: string, value: string, detail: string) => storyCaption(HERO_STORY_GRID, CAPTION_COLUMN, label, value, detail);\n\n/** Which step of a run a hold has reached: -1 before it starts, then 0 up to `last`. */\nexport const stepAt = (heldSeconds: number, { startsAt, everySeconds }: { startsAt: number; everySeconds: number }, last: number) => (heldSeconds < startsAt ? -1 : Math.min(last, Math.floor((heldSeconds - startsAt) / everySeconds)));\n"
+    },
+    {
+      "path": "components/visuals/stories/style-guide-parts.ts",
+      "content": "import { distanceToSegment, type DotShape, type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\n\nconst LETTER = { widthOfHeight: 0.8, crossbarAt: 0.62, gapOfHeight: 0.16, bowlOfHeight: 0.3 };\n\n/**\n * A type specimen, \"Aa\", `size` rows tall with its top-left corner at `origin`, drawn with strokes `weight` dots\n * either side of their line, so the same letters can be set light or bold.\n */\nexport function typeSpecimen(origin: GridPoint, size: number, weight: number): DotShape {\n\tconst width = size * LETTER.widthOfHeight;\n\tconst foot = origin.row + size;\n\tconst apex = { column: origin.column + width / 2, row: origin.row };\n\tconst crossbarRow = origin.row + size * LETTER.crossbarAt;\n\tconst crossbarInset = (width / 2) * (1 - LETTER.crossbarAt);\n\tconst strokes: GridPoint[][] = [\n\t\t[{ column: origin.column, row: foot }, apex],\n\t\t[apex, { column: origin.column + width, row: foot }],\n\t\t[\n\t\t\t{ column: origin.column + crossbarInset, row: crossbarRow },\n\t\t\t{ column: origin.column + width - crossbarInset, row: crossbarRow },\n\t\t],\n\t];\n\tconst bowl = { column: origin.column + width + size * (LETTER.gapOfHeight + LETTER.bowlOfHeight), row: foot - size * LETTER.bowlOfHeight, radius: size * LETTER.bowlOfHeight };\n\tconst stem = [\n\t\t{ column: bowl.column + bowl.radius, row: bowl.row - bowl.radius },\n\t\t{ column: bowl.column + bowl.radius, row: foot },\n\t];\n\treturn (column, row) =>\n\t\tstrokes.some(([from, to]) => distanceToSegment(column, row, from, to) <= weight) ||\n\t\tdistanceToSegment(column, row, stem[0], stem[1]) <= weight ||\n\t\tMath.abs(Math.hypot(column - bowl.column, row - bowl.row) - bowl.radius) <= weight;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/prompt-field.ts",
+      "content": "import { DOT_ABSENT, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, paintShape, roundedBox, type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\n\nconst CORNER_RADIUS = 3;\n\n/**\n * A wide field for something typed into a story. A field that is only a border has too little in it to melt into or\n * out of, so it comes in two pictures: `empty`, with room for the text, and `filled`, full of rings, which it arrives\n * and leaves as. `along` says how far along the field a dot is, so it can clear and refill from its left.\n */\nexport function promptField(grid: DotGrid, box: DotBox) {\n\tconst picture = (isFilled: boolean): StoryPicture => {\n\t\tconst states = paintShape(grid, new Uint8Array(grid.columns * grid.rows), roundedBox(box, CORNER_RADIUS), (column, row) =>\n\t\t\tisFilled || Math.min(column - box.left, box.right - column, row - box.top, box.bottom - row) <= 1 ? DOT_HOLLOW : DOT_ABSENT\n\t\t);\n\t\treturn { states, cells: cellsOfStates(grid, states) };\n\t};\n\treturn { empty: picture(false), filled: picture(true), along: (column: number) => Math.min(1, Math.max(0, (column - box.left) / (box.right - box.left))) };\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/story-reveal.ts",
+      "content": "import type { DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\n\nconst TEXT_FADE_SECONDS = 0.3;\n\nexport const NEVER = Number.POSITIVE_INFINITY;\n\nexport function revealSchedule({ columns, rows }: DotGrid, revealsAt: (column: number, row: number) => number) {\n\tconst schedule = new Float32Array(columns * rows);\n\tfor (let cell = 0; cell < schedule.length; cell++) schedule[cell] = revealsAt(cell % columns, Math.floor(cell / columns));\n\treturn schedule;\n}\n\nexport function paintRevealed(states: Uint8Array, revealed: Uint8Array, schedule: Float32Array, heldSeconds: number) {\n\tfor (let cell = 0; cell < states.length; cell++) {\n\t\tif (heldSeconds >= schedule[cell]) states[cell] = revealed[cell];\n\t}\n}\n\nexport const fadedInAt = (heldSeconds: number, startsAt: number) => clamp01((heldSeconds - startsAt) / TEXT_FADE_SECONDS);\n"
+    }
+  ]
+}

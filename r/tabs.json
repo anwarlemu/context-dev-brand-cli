@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "tabs",
+  "type": "ui",
+  "title": "Tabs",
+  "description": "View tabs with product and site variants and an animated selection indicator.",
+  "surface": "both",
+  "kinds": [
+    "tabs",
+    "app-tabs"
+  ],
+  "usage": "Two to six sibling views. `size=\"sm\"` in dense cards, `pill` on the site, `glide={false}` when your triggers draw their own selected surface.",
+  "avoid": [
+    "Tabs for actions",
+    "Underlined tabs"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/tabs.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add tabs",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/tabs.tsx; website src/components/sections/faq.tsx; src/components/ui/tabs.tsx (site pill tabs, the brand variant)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/tabs.tsx",
+        "sha256": "98fe9ed3a9e0b878305eaee6e61f64e9541785acd56f38a8efdd344f79f1a98a",
+        "retained": false,
+        "exports": [
+          "TabOption",
+          "Tabs"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/faq.tsx",
+        "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
+        "retained": false,
+        "exports": [
+          "Faq"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/tabs.tsx",
+        "sha256": "9d685bb15672b2c27f6dd69da8aacce0d87a1237b2d7827e000217bb81aaf296",
+        "retained": false,
+        "exports": []
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/tabs.d.ts",
+      "content": "import * as React from \"react\";\nimport * as TabsPrimitive from \"@radix-ui/react-tabs\";\ntype Variant = \"default\" | \"segmented\" | \"pill\";\ntype Size = \"sm\" | \"md\";\ndeclare const tabsTriggerVariants: (props?: ({\n    variant?: \"default\" | \"pill\" | \"segmented\" | null | undefined;\n    size?: \"sm\" | \"md\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Tabs({ className, value, defaultValue, onValueChange, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>): React.JSX.Element;\ndeclare function TabsList({ className, variant, size, glide, pillClassName, children, ...props }: React.ComponentProps<typeof TabsPrimitive.List> & {\n    variant?: Variant;\n    size?: Size;\n    /** Off for lists whose triggers draw their own selected surface. */\n    glide?: boolean;\n    /** The gliding pill's surface, for a list styled its own way. */\n    pillClassName?: string;\n}): React.JSX.Element;\ndeclare function TabsTrigger({ className, value, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>): React.JSX.Element;\ndeclare function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Content>): React.JSX.Element;\nexport { Tabs, TabsList, TabsTrigger, TabsContent, tabsTriggerVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/tabs/Product"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/tabs/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/tabs.tsx",
+      "content": "import { Tabs, TabsContent, TabsList, TabsTrigger } from \"@/components/ui/tabs\";\n\nexport function Product() {\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-6\">\n      <Tabs defaultValue=\"all\">\n        <TabsList aria-label=\"Monitors\">\n          <TabsTrigger value=\"all\">All</TabsTrigger>\n          <TabsTrigger value=\"active\">Active</TabsTrigger>\n          <TabsTrigger value=\"paused\">Paused</TabsTrigger>\n        </TabsList>\n        <TabsContent value=\"all\" className=\"text-body-sm text-fg-muted\">Every monitor in this workspace.</TabsContent>\n        <TabsContent value=\"active\" className=\"text-body-sm text-fg-muted\">Monitors checking on schedule.</TabsContent>\n        <TabsContent value=\"paused\" className=\"text-body-sm text-fg-muted\">Monitors you stopped.</TabsContent>\n      </Tabs>\n      <Tabs defaultValue=\"json\">\n        <TabsList variant=\"segmented\" aria-label=\"Output\">\n          <TabsTrigger value=\"json\">JSON</TabsTrigger>\n          <TabsTrigger value=\"markdown\">Markdown</TabsTrigger>\n          <TabsTrigger value=\"html\">HTML</TabsTrigger>\n        </TabsList>\n      </Tabs>\n      <Tabs defaultValue=\"day\">\n        <TabsList size=\"sm\" aria-label=\"Period\">\n          <TabsTrigger value=\"day\">Day</TabsTrigger>\n          <TabsTrigger value=\"week\">Week</TabsTrigger>\n          <TabsTrigger value=\"month\">Month</TabsTrigger>\n        </TabsList>\n      </Tabs>\n    </div>\n  );\n}\n\nexport function Site() {\n  return (\n    <Tabs defaultValue=\"typescript\">\n      <TabsList variant=\"pill\" aria-label=\"Language\">\n        <TabsTrigger value=\"typescript\">TypeScript</TabsTrigger>\n        <TabsTrigger value=\"python\">Python</TabsTrigger>\n        <TabsTrigger value=\"curl\">cURL</TabsTrigger>\n      </TabsList>\n    </Tabs>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "use-tab-glide",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-tabs",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/tabs.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as TabsPrimitive from \"@radix-ui/react-tabs\";\nimport { cva } from \"class-variance-authority\";\n\nimport { useTabGlide } from \"@/hooks/use-tab-glide\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's tabs: plain labels, with one soft gray pill (no border) that glides to the selected one on a spring.\n// `segmented` sits them on a gray track with a white pill, so the unpicked ones still read as choices. Only the text\n// answers a hover, so nothing fades over the pill gliding in beneath. The site's `pill` tabs sit in a white pill-shaped\n// track with a hairline edge, a white pill outlined in brand blue gliding to the selected one (src/components/ui/tabs.tsx,\n// the `brand` variant).\ntype Variant = \"default\" | \"segmented\" | \"pill\";\ntype Size = \"sm\" | \"md\";\n\n// The track's inner corners: the control radius less the track's 2px padding, so the pill sits concentric in it.\nconst INNER_RADIUS = \"rounded-[calc(var(--ds-radius-control)-0.125rem)]\";\nconst SEGMENTED_SURFACE = \"bg-surface shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]\";\nconst PILL_SURFACE: Record<Variant, string> = {\n  default: \"bg-wash-pill\",\n  segmented: SEGMENTED_SURFACE,\n  pill: \"rounded-pill border border-brand bg-surface\",\n};\n// The same surface on the selected trigger, for the first paint before the pill lands (or for a list with no pill).\nconst SELF_SURFACE: Record<Variant, string> = {\n  default: \"data-[state=active]:bg-wash-pill\",\n  segmented: \"data-[state=active]:bg-surface data-[state=active]:shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]\",\n  pill: \"data-[state=active]:border-brand data-[state=active]:bg-surface\",\n};\n\nconst tabsTriggerVariants = cva(\n  \"inline-flex items-center justify-center gap-1.5 whitespace-nowrap outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none [&_svg]:size-4 [&_svg]:shrink-0\",\n  {\n    variants: {\n      variant: {\n        default: \"text-fg-subtle transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg\",\n        segmented: \"text-fg-muted transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg\",\n        pill: \"rounded-pill border border-transparent px-4 py-1.5 text-body-sm leading-snug text-fg-muted transition-[color] duration-200 ease-out hover:text-fg data-[state=active]:text-fg-brand\",\n      },\n      size: { sm: \"\", md: \"\" },\n    },\n    compoundVariants: [\n      { variant: \"default\", size: \"md\", className: \"h-9 rounded-control px-4 text-body-sm\" },\n      { variant: \"default\", size: \"sm\", className: `h-7 px-3 text-caption ${INNER_RADIUS}` },\n      { variant: \"segmented\", size: \"md\", className: `h-8 px-3.5 text-body-sm ${INNER_RADIUS}` },\n      { variant: \"segmented\", size: \"sm\", className: `h-7 px-3 text-caption ${INNER_RADIUS}` },\n    ],\n    defaultVariants: { variant: \"default\", size: \"md\" },\n  },\n);\n\nconst ActiveValue = React.createContext<string | undefined>(undefined);\nconst ListState = React.createContext<{ variant: Variant; size: Size; isPillPlaced: boolean }>({ variant: \"default\", size: \"md\", isPillPlaced: false });\n\n// The active value is mirrored here so the list can move its pill in the same render Radix switches tabs, whether the\n// value is controlled or not.\nfunction Tabs({ className, value, defaultValue, onValueChange, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {\n  const [uncontrolled, setUncontrolled] = React.useState(defaultValue);\n  const active = value ?? uncontrolled;\n  return (\n    <ActiveValue.Provider value={active}>\n      <TabsPrimitive.Root\n        data-slot=\"tabs\"\n        value={active}\n        onValueChange={(next) => {\n          setUncontrolled(next);\n          onValueChange?.(next);\n        }}\n        className={cn(\"flex flex-col gap-4\", className)}\n        {...props}\n      />\n    </ActiveValue.Provider>\n  );\n}\n\nfunction TabsList({\n  className,\n  variant = \"default\",\n  size = \"md\",\n  glide = true,\n  pillClassName,\n  children,\n  ...props\n}: React.ComponentProps<typeof TabsPrimitive.List> & {\n  variant?: Variant;\n  size?: Size;\n  /** Off for lists whose triggers draw their own selected surface. */\n  glide?: boolean;\n  /** The gliding pill's surface, for a list styled its own way. */\n  pillClassName?: string;\n}) {\n  const active = React.useContext(ActiveValue);\n  const pillRef = React.useRef<HTMLSpanElement>(null);\n  const isPlaced = useTabGlide(pillRef, active ?? \"\");\n  const listState = React.useMemo(() => ({ variant, size, isPillPlaced: glide && isPlaced }), [variant, size, glide, isPlaced]);\n  const pillRadius = variant === \"pill\" ? \"\" : variant === \"default\" && size === \"md\" ? \"rounded-control\" : INNER_RADIUS;\n\n  return (\n    <TabsPrimitive.List\n      data-slot=\"tabs-list\"\n      className={cn(\n        \"relative isolate inline-flex w-fit items-center\",\n        variant === \"pill\" ? \"gap-1 rounded-pill border border-neutral-10 bg-surface p-1\" : variant === \"segmented\" ? \"gap-0.5 rounded-control bg-neutral-5 p-0.5\" : size === \"sm\" ? \"gap-0.5\" : \"gap-1\",\n        className,\n      )}\n      {...props}\n    >\n      {glide && <span ref={pillRef} aria-hidden className={cn(\"pointer-events-none absolute top-0 left-0 -z-10\", pillRadius, PILL_SURFACE[variant], pillClassName, !isPlaced && \"invisible\")} />}\n      <ListState.Provider value={listState}>{children}</ListState.Provider>\n    </TabsPrimitive.List>\n  );\n}\n\nfunction TabsTrigger({ className, value, ...props }: React.ComponentProps<typeof TabsPrimitive.Trigger>) {\n  const { variant, size, isPillPlaced } = React.useContext(ListState);\n  // Until the pill lands (or with no pill), the selected tab draws the surface itself, so the first paint matches; a list\n  // styled its own way (the agent window's outline on dark) passes that first-paint surface in its className. Once the\n  // pill is placed it draws the whole surface, so the trigger's own background, border and shadow go, after className.\n  return (\n    <TabsPrimitive.Trigger\n      data-slot=\"tabs-trigger\"\n      data-tab-id={value}\n      value={value}\n      className={cn(\n        tabsTriggerVariants({ variant, size }),\n        !isPillPlaced && SELF_SURFACE[variant],\n        className,\n        isPillPlaced && \"data-[state=active]:border-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none\",\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Content>) {\n  return <TabsPrimitive.Content data-slot=\"tabs-content\" className={cn(\"flex-1 outline-none\", className)} {...props} />;\n}\n\nexport { Tabs, TabsList, TabsTrigger, TabsContent, tabsTriggerVariants };\n"
+    }
+  ]
+}

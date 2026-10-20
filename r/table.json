@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "table",
+  "type": "ui",
+  "title": "Table",
+  "description": "Data table with headers, row separators, and tabular numbers.",
+  "surface": "product",
+  "kinds": [
+    "app-table",
+    "app-th",
+    "app-td"
+  ],
+  "usage": "Lists of records.",
+  "avoid": [
+    "Vertical rules",
+    "Uppercase headers"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/table.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add table --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/api-keys/api-keys-page.tsx; src/components/team/team-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/api-keys/api-keys-page.tsx",
+        "sha256": "a1269c38b4734ba450d4a1d07182df5b52052b717786a3a22d75147029a4a63c",
+        "retained": false,
+        "exports": [
+          "ApiKeysPage",
+          "KeyFormDialog"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/team/team-page.tsx",
+        "sha256": "af2b0b2e2d9b18dd48f98252af751eeb49944d96f94aaa9e2dc8dbe30c4f4f7f",
+        "retained": false,
+        "exports": [
+          "INITIAL_MEMBERS",
+          "ROLE_LABELS",
+          "TeamPage",
+          "InviteDialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/table.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Table({ className, ...props }: React.ComponentProps<\"table\">): React.JSX.Element;\ndeclare function TableHeader({ className, ...props }: React.ComponentProps<\"thead\">): React.JSX.Element;\ndeclare function TableBody({ className, ...props }: React.ComponentProps<\"tbody\">): React.JSX.Element;\ndeclare function TableFooter({ className, ...props }: React.ComponentProps<\"tfoot\">): React.JSX.Element;\ndeclare function TableRow({ className, ...props }: React.ComponentProps<\"tr\">): React.JSX.Element;\ndeclare function TableHead({ className, ...props }: React.ComponentProps<\"th\">): React.JSX.Element;\ndeclare function TableCell({ className, ...props }: React.ComponentProps<\"td\">): React.JSX.Element;\ndeclare function TableCaption({ className, ...props }: React.ComponentProps<\"caption\">): React.JSX.Element;\nexport { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/table/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/table.tsx",
+      "content": "import { Badge } from \"@/components/ui/badge\";\nimport { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from \"@/components/ui/table\";\n\nconst rows = [\n  { name: \"Production\", created: \"Oct 2, 2026\", requests: \"48,210\", status: \"Active\" },\n  { name: \"Staging\", created: \"Sep 14, 2026\", requests: \"1,302\", status: \"Active\" },\n  { name: \"Old key\", created: \"Mar 3, 2026\", requests: \"0\", status: \"Revoked\" },\n];\n\nexport function Product() {\n  return (\n    <div className=\"w-full max-w-2xl\">\n      <Table>\n        <TableHeader>\n          <TableRow>\n            <TableHead>Name</TableHead>\n            <TableHead>Created</TableHead>\n            <TableHead className=\"text-right\">Requests</TableHead>\n            <TableHead>Status</TableHead>\n          </TableRow>\n        </TableHeader>\n        <TableBody>\n          {rows.map((r) => (\n            <TableRow key={r.name}>\n              <TableCell>{r.name}</TableCell>\n              <TableCell className=\"text-fg-muted\">{r.created}</TableCell>\n              <TableCell className=\"text-right\">{r.requests}</TableCell>\n              <TableCell>\n                <Badge variant={r.status === \"Active\" ? \"success\" : \"default\"}>{r.status}</Badge>\n              </TableCell>\n            </TableRow>\n          ))}\n        </TableBody>\n      </Table>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "badge"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/table.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The product's table (API keys, team, batches): on a card with no outer border and no vertical rules; a faint gray\n// header band in sentence case; rows divided by a light line; numbers in tabular figures.\nfunction Table({ className, ...props }: React.ComponentProps<\"table\">) {\n  return (\n    <div data-slot=\"table-container\" className=\"relative w-full overflow-x-auto rounded-card bg-surface shadow-card\">\n      <table data-slot=\"table\" className={cn(\"w-full caption-bottom border-collapse text-left text-body-sm\", className)} {...props} />\n    </div>\n  );\n}\n\nfunction TableHeader({ className, ...props }: React.ComponentProps<\"thead\">) {\n  return <thead data-slot=\"table-header\" className={cn(\"bg-neutral-10/40\", className)} {...props} />;\n}\n\nfunction TableBody({ className, ...props }: React.ComponentProps<\"tbody\">) {\n  return <tbody data-slot=\"table-body\" className={cn(\"divide-y divide-line-subtle\", className)} {...props} />;\n}\n\nfunction TableFooter({ className, ...props }: React.ComponentProps<\"tfoot\">) {\n  return <tfoot data-slot=\"table-footer\" className={cn(\"border-t border-line-subtle\", className)} {...props} />;\n}\n\nfunction TableRow({ className, ...props }: React.ComponentProps<\"tr\">) {\n  return <tr data-slot=\"table-row\" className={cn(\"data-[state=selected]:bg-wash-selected\", className)} {...props} />;\n}\n\nfunction TableHead({ className, ...props }: React.ComponentProps<\"th\">) {\n  return <th data-slot=\"table-head\" className={cn(\"px-3 py-2.5 text-caption font-normal whitespace-nowrap text-fg-subtle\", className)} {...props} />;\n}\n\nfunction TableCell({ className, ...props }: React.ComponentProps<\"td\">) {\n  return <td data-slot=\"table-cell\" className={cn(\"px-3 py-3 text-body-sm text-fg tabular-nums\", className)} {...props} />;\n}\n\nfunction TableCaption({ className, ...props }: React.ComponentProps<\"caption\">) {\n  return <caption data-slot=\"table-caption\" className={cn(\"mt-3 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nexport { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow };\n"
+    }
+  ]
+}

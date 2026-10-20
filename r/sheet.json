@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "sheet",
+  "type": "ui",
+  "title": "Sheet",
+  "description": "Floating side panel for record details, without a background scrim.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Detail panels next to a list (a monitor, a batch).",
+  "avoid": [
+    "Sheets for primary navigation"
+  ],
+  "notes": "Sheets are non-modal by default: the list stays clickable, and selecting another record can update the open panel. Control `open` and `onOpenChange` from the selected record. `SheetContent` stays within a `Surface` when one is present. Use `SheetClose` or Escape to dismiss it.",
+  "documentation": "https://context-ds.vercel.app/components/sheet.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add sheet --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/monitors/monitor-panel.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/monitors/monitor-panel.tsx",
+        "sha256": "3c79d540e450b709c33044a9a4e8bbfe1c3a6a7b16e2ae1de479160bd0578ff6",
+        "retained": false,
+        "exports": [
+          "MonitorPanel"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/sheet.d.ts",
+      "content": "import * as React from \"react\";\nimport * as SheetPrimitive from \"@radix-ui/react-dialog\";\ndeclare function Sheet({ modal, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>): React.JSX.Element;\ndeclare function SheetTrigger(props: React.ComponentProps<typeof SheetPrimitive.Trigger>): React.JSX.Element;\ndeclare function SheetClose(props: React.ComponentProps<typeof SheetPrimitive.Close>): React.JSX.Element;\ndeclare const SIDES: {\n    readonly right: \"inset-y-4 right-4 w-[min(440px,calc(100%-2rem))] starting:translate-x-2 data-[state=closed]:animate-sheet-right-out\";\n    readonly left: \"inset-y-4 left-4 w-[min(440px,calc(100%-2rem))] starting:-translate-x-2 data-[state=closed]:animate-sheet-left-out\";\n    readonly bottom: \"inset-x-2 bottom-2 max-h-[85vh] starting:translate-y-2 data-[state=closed]:animate-sheet-bottom-out\";\n};\ndeclare function SheetContent({ className, children, side, onInteractOutside, onOpenAutoFocus, ...props }: React.ComponentProps<typeof SheetPrimitive.Content> & {\n    side?: keyof typeof SIDES;\n}): React.JSX.Element;\ndeclare function SheetHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function SheetBody({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>): React.JSX.Element;\ndeclare function SheetDescription({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Description>): React.JSX.Element;\nexport { Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/sheet/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/sheet.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Badge } from \"@/components/ui/badge\";\nimport { Button } from \"@/components/ui/button\";\nimport { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from \"@/components/ui/sheet\";\n\nconst MONITORS = [\"acme.com/pricing\", \"acme.com/docs\"];\n\nexport function Product() {\n  const [selected, setSelected] = useState<string | null>(null);\n  const [paused, setPaused] = useState<string[]>([]);\n  const isPaused = selected !== null && paused.includes(selected);\n  return (\n    <div className=\"min-h-96 w-full\">\n      <div className=\"grid max-w-xs gap-3\">\n        <p className=\"text-body-sm text-fg-muted\">Select a monitor to inspect its details.</p>\n        {MONITORS.map((monitor) => <Button key={monitor} variant=\"outline\" className=\"justify-start\" onClick={() => setSelected(monitor)}>{monitor}</Button>)}\n      </div>\n      <Sheet open={selected !== null} onOpenChange={(open) => { if (!open) setSelected(null); }}>\n        <SheetContent>\n          <SheetHeader>\n            <SheetTitle>{selected}</SheetTitle>\n            <SheetDescription>Checked every day at 09:00.</SheetDescription>\n          </SheetHeader>\n          <SheetBody className=\"grid content-start gap-3\">\n            <div className=\"flex items-center justify-between\"><span className=\"text-fg-muted\">Status</span><Badge variant={isPaused ? \"default\" : \"success\"}>{isPaused ? \"paused\" : \"active\"}</Badge></div>\n            <div className=\"flex items-center justify-between\"><span className=\"text-fg-muted\">Last change</span><span>2 days ago</span></div>\n            <div className=\"flex items-center justify-between\"><span className=\"text-fg-muted\">Checks this month</span><span className=\"tabular-nums\">17</span></div>\n            <Button variant=\"outline\" onClick={() => { if (selected) setPaused((all) => isPaused ? all.filter((name) => name !== selected) : [...all, selected]); }}>{isPaused ? \"Resume monitor\" : \"Pause monitor\"}</Button>\n          </SheetBody>\n        </SheetContent>\n      </Sheet>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "badge",
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-dialog",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/sheet.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as SheetPrimitive from \"@radix-ui/react-dialog\";\nimport { X } from \"lucide-react\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// A side panel (the dashboard's monitor detail panel): a white panel in a 6px frame floating over the page's edge, no\n// scrim, so opening it never reflows or dims what is behind. It slides 8px in as it fades (200ms, ease-out); reduced\n// motion keeps the fade. Like the dashboard's list, the page remains usable while the details are open.\nfunction Sheet({ modal = false, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {\n  return <SheetPrimitive.Root data-slot=\"sheet\" modal={modal} {...props} />;\n}\n\nfunction SheetTrigger(props: React.ComponentProps<typeof SheetPrimitive.Trigger>) {\n  return <SheetPrimitive.Trigger data-slot=\"sheet-trigger\" {...props} />;\n}\n\nfunction SheetClose(props: React.ComponentProps<typeof SheetPrimitive.Close>) {\n  return <SheetPrimitive.Close data-slot=\"sheet-close\" {...props} />;\n}\n\nconst SIDES = {\n  right: \"inset-y-4 right-4 w-[min(440px,calc(100%-2rem))] starting:translate-x-2 data-[state=closed]:animate-sheet-right-out\",\n  left: \"inset-y-4 left-4 w-[min(440px,calc(100%-2rem))] starting:-translate-x-2 data-[state=closed]:animate-sheet-left-out\",\n  bottom: \"inset-x-2 bottom-2 max-h-[85vh] starting:translate-y-2 data-[state=closed]:animate-sheet-bottom-out\",\n} as const;\n\nfunction SheetContent({ className, children, side = \"right\", onInteractOutside = (event) => event.preventDefault(), onOpenAutoFocus = (event) => event.preventDefault(), ...props }: React.ComponentProps<typeof SheetPrimitive.Content> & { side?: keyof typeof SIDES }) {\n  const container = usePortalContainer();\n  return (\n    <SheetPrimitive.Portal container={container}>\n      <SheetPrimitive.Content\n        data-slot=\"sheet-content\"\n        onInteractOutside={onInteractOutside}\n        onOpenAutoFocus={onOpenAutoFocus}\n        className={cn(\n          \"z-20 flex flex-col rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none transition-[opacity,translate] duration-200 ease-emphasized starting:opacity-0 motion-reduce:starting:translate-x-0 motion-reduce:starting:translate-y-0\",\n          container ? \"absolute\" : \"fixed\",\n          SIDES[side],\n          className,\n        )}\n        {...props}\n      >\n        <div className=\"relative flex min-h-0 flex-1 flex-col rounded-card bg-surface\">{children}</div>\n        <SheetPrimitive.Close\n          aria-label=\"Close\"\n          className=\"absolute top-5.5 right-5 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 ease-out outline-none hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-4\"\n        >\n          <X strokeWidth={1.5} />\n        </SheetPrimitive.Close>\n      </SheetPrimitive.Content>\n    </SheetPrimitive.Portal>\n  );\n}\n\nfunction SheetHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"sheet-header\" className={cn(\"flex flex-col gap-1.5 px-5 pt-5 pr-14\", className)} {...props} />;\n}\n\nfunction SheetBody({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"sheet-body\" className={cn(\"ds-scrollbar min-h-0 flex-1 overflow-y-auto px-5 pt-5 pb-5 text-body-sm text-fg\", className)} {...props} />;\n}\n\nfunction SheetTitle({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Title>) {\n  return <SheetPrimitive.Title data-slot=\"sheet-title\" className={cn(\"truncate text-h5 leading-snug font-normal tracking-normal text-fg\", className)} {...props} />;\n}\n\nfunction SheetDescription({ className, ...props }: React.ComponentProps<typeof SheetPrimitive.Description>) {\n  return <SheetPrimitive.Description data-slot=\"sheet-description\" className={cn(\"text-body-sm text-fg-muted\", className)} {...props} />;\n}\n\nexport { Sheet, SheetBody, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger };\n"
+    }
+  ]
+}

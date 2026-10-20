@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "settings-section",
+  "type": "product",
+  "title": "Settings section",
+  "description": "Settings sections, rows, fields, notices, and destructive-action buttons.",
+  "surface": "product",
+  "kinds": [
+    "app-card"
+  ],
+  "usage": "Settings pages and panels.",
+  "avoid": [
+    "Bold section titles",
+    "A save button per switch"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/settings-section.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add settings-section --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/settings/settings-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/settings/settings-page.tsx",
+        "sha256": "71b6314133504ed6c34b75261acfeafd875e298dec815f706e8d0c09dfc81757",
+        "retained": false,
+        "exports": [
+          "SettingsPage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/settings-section.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function SettingsSection({ title, aside, className, children }: {\n    title: React.ReactNode;\n    aside?: React.ReactNode;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\ndeclare function SettingsRow({ title, description, action, muted, children }: {\n    title?: React.ReactNode;\n    description?: React.ReactNode;\n    action?: React.ReactNode;\n    muted?: boolean;\n    children?: React.ReactNode;\n}): React.JSX.Element;\n/** A field on a settings card: its label (and an aside such as a \"Change\" link) over the control, given the id. */\ndeclare function SettingsField({ label, aside, children }: {\n    label: React.ReactNode;\n    aside?: React.ReactNode;\n    children: (id: string) => React.ReactNode;\n}): React.JSX.Element;\ndeclare function SettingsNotice({ className, children }: {\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/** The solid red button a danger zone ends on; the confirming dialog then asks for a hold. */\ndeclare function SettingsDangerButton({ className, ...props }: React.ComponentProps<\"button\">): React.JSX.Element;\nexport { SettingsDangerButton, SettingsField, SettingsNotice, SettingsRow, SettingsSection };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/settings-section/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/settings-section.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { SettingsDangerButton, SettingsField, SettingsNotice, SettingsRow, SettingsSection } from \"@/components/product/settings-section\";\nimport { Button } from \"@/components/ui/button\";\nimport { HoldButton } from \"@/components/ui/hold-button\";\nimport { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from \"@/components/ui/dialog\";\nimport { Input } from \"@/components/ui/input\";\nimport { Switch } from \"@/components/ui/switch\";\n\nexport function Product() {\n  const [autoJoin, setAutoJoin] = React.useState(true);\n  const [open, setOpen] = React.useState(false);\n  const [deleted, setDeleted] = React.useState(false);\n  if (deleted) return <div className=\"grid gap-3\"><p role=\"status\">Example organization deleted.</p><Button onClick={() => setDeleted(false)}>Reset example</Button></div>;\n  return (\n    <div className=\"flex w-full max-w-2xl flex-col gap-6\">\n      <SettingsSection title=\"Organization\">\n        <SettingsRow>\n          <SettingsField label=\"Organization name\">{(id) => <Input id={id} defaultValue=\"Acme\" />}</SettingsField>\n        </SettingsRow>\n      </SettingsSection>\n      <SettingsSection title=\"Members\">\n        <SettingsRow\n          title=\"Auto-join by domain\"\n          description={\n            <>\n              Anyone signing up with a verified <span className=\"text-fg\">@acme.com</span> email can join as a Member.\n            </>\n          }\n          action={<Switch checked={autoJoin} onCheckedChange={setAutoJoin} aria-label=\"Auto-join by domain\" />}\n        />\n        <SettingsRow muted title=\"Enterprise SSO\" description=\"Members sign in through your identity provider.\" action={<Switch disabled aria-label=\"Enterprise SSO\" />} />\n      </SettingsSection>\n      <SettingsNotice>Only the Owner can change domain auto-join and Enterprise SSO.</SettingsNotice>\n      <SettingsSection title=\"Danger zone\">\n        <SettingsRow title=\"Delete organization\" description=\"Removes every teammate’s access and disables this organization’s API keys.\" action={<SettingsDangerButton onClick={() => setOpen(true)}>Delete organization</SettingsDangerButton>} />\n      </SettingsSection>\n      <Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogHeader><DialogTitle>Delete organization?</DialogTitle><DialogDescription>This removes the organization from this example.</DialogDescription></DialogHeader><DialogFooter><Button variant=\"outline\" onClick={() => setOpen(false)}>Cancel</Button><HoldButton label=\"Hold to delete\" onConfirm={() => { setOpen(false); setDeleted(true); }} /></DialogFooter></DialogContent></Dialog>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "hold-button",
+    "dialog",
+    "input",
+    "switch"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/product/settings-section.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Settings as the dashboard lays them out: a quiet subtle-gray title just above a card (an aside, such as a link, can\n// sit at its right), rows inside the card divided by a light line, each with a title, muted text and its control at\n// the right (stacked under the text on a phone). Fields stack their label over the control; a notice is a card of\n// muted text for what you can't change here.\nfunction SettingsSection({ title, aside, className, children }: { title: React.ReactNode; aside?: React.ReactNode; className?: string; children: React.ReactNode }) {\n  return (\n    <section data-slot=\"settings-section\" className={cn(\"flex flex-col gap-2\", className)}>\n      <div className=\"flex items-baseline justify-between gap-4 px-1\">\n        <h3 className=\"text-body-sm font-normal tracking-normal text-fg-subtle\">{title}</h3>\n        {aside}\n      </div>\n      <div className=\"divide-y divide-line-subtle rounded-card bg-surface px-5 shadow-card\">{children}</div>\n    </section>\n  );\n}\n\nfunction SettingsRow({ title, description, action, muted = false, children }: { title?: React.ReactNode; description?: React.ReactNode; action?: React.ReactNode; muted?: boolean; children?: React.ReactNode }) {\n  return (\n    <div data-slot=\"settings-row\" className=\"flex flex-col gap-3 py-4\">\n      <div className=\"flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-6\">\n        <div className={cn(\"min-w-0 flex-1\", muted && \"opacity-50\")}>\n          {title && <div className=\"text-body-sm text-fg\">{title}</div>}\n          {description && <div className={cn(\"text-body-sm text-fg-muted\", title && \"mt-1\")}>{description}</div>}\n        </div>\n        {action}\n      </div>\n      {children}\n    </div>\n  );\n}\n\n/** A field on a settings card: its label (and an aside such as a \"Change\" link) over the control, given the id. */\nfunction SettingsField({ label, aside, children }: { label: React.ReactNode; aside?: React.ReactNode; children: (id: string) => React.ReactNode }) {\n  const id = React.useId();\n  return (\n    <div data-slot=\"settings-field\" className=\"flex flex-col gap-2\">\n      <span className=\"flex items-center gap-1.5 text-body-sm text-fg\">\n        <label htmlFor={id}>{label}</label>\n        {aside}\n      </span>\n      {children(id)}\n    </div>\n  );\n}\n\nfunction SettingsNotice({ className, children }: { className?: string; children: React.ReactNode }) {\n  return <div data-slot=\"settings-notice\" className={cn(\"rounded-card bg-surface p-5 text-body-sm text-fg-muted shadow-card\", className)}>{children}</div>;\n}\n\n/** The solid red button a danger zone ends on; the confirming dialog then asks for a hold. */\nfunction SettingsDangerButton({ className, ...props }: React.ComponentProps<\"button\">) {\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"settings-danger-button\"\n      className={cn(\n        \"inline-flex h-9 shrink-0 items-center justify-center rounded-control bg-danger px-4 text-body-sm whitespace-nowrap text-white outline-none transition-[background-color,scale] duration-150 ease-out hover:bg-danger/90 focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { SettingsDangerButton, SettingsField, SettingsNotice, SettingsRow, SettingsSection };\n"
+    }
+  ]
+}

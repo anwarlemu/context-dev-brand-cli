@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "customer-story-page",
+  "type": "site",
+  "title": "Customer story page",
+  "description": "Customer story layout with a back link, title, date, and article column.",
+  "surface": "site",
+  "kinds": [
+    "section",
+    "section-heading"
+  ],
+  "usage": "The page for one customer story (or a case study), followed by the closing call to action. Put the story's prose (the blog's article body) in as children; the dot field goes in `backdrop`.",
+  "avoid": [
+    "A centered title",
+    "A dark hero band on a story page",
+    "Cover images above the title"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/customer-story-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add customer-story-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/(marketing)/customers/[slug]/page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(marketing)/customers/[slug]/page.tsx",
+        "sha256": "b126d636e7bd0557979002f82f7a3f786c1ff0ff35ab0eee6885cd2953023e04",
+        "retained": false,
+        "exports": [
+          "generateStaticParams",
+          "generateMetadata",
+          "CustomerStoryPage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/customer-story-page.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function CustomerStoryPage({ title, accent, date, dateTime, backHref, backLabel, backdrop, className, children, }: {\n    title: React.ReactNode;\n    /** The title's closing words, in brand blue. */\n    accent?: React.ReactNode;\n    date?: string;\n    dateTime?: string;\n    backHref?: string;\n    backLabel?: string;\n    backdrop?: React.ReactNode;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { CustomerStoryPage };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/customer-story-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/customer-story-page.tsx",
+      "content": "import { CustomerStoryPage } from \"@/components/site/customer-story-page\";\n\nexport function Site() {\n  return (\n    <CustomerStoryPage title=\"Mastra personalizes onboarding\" accent=\"with Context.dev\" date=\"September 12, 2026\" dateTime=\"2026-09-12\">\n      <div className=\"flex flex-col gap-5 text-body-lg leading-relaxed text-fg-secondary\">\n        <p>Mastra built an onboarding MVP in an hour, pre-filling names and company details from a work email and tailoring the first screen to each user's goals.</p>\n        <p>Before, new users typed the same details into four fields. Now the form fills itself, and the team ships changes to it in an afternoon.</p>\n      </div>\n    </CustomerStoryPage>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "section",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/customer-story-page.tsx",
+      "content": "import * as React from \"react\";\n\nimport { SectionHeaderRule, SiteSection } from \"@/components/site/section\";\nimport { cn } from \"@/lib/utils\";\n\n// A customer story's page: the first section under the header, its column edge lines starting below the navbar. A back\n// link to all the stories, the title at section-heading size with its closing words in blue, and the date, left aligned\n// in a 48rem column over an optional backdrop (the site runs its fine dot field here, from edge line to edge line and\n// down to the rule). Under the rule, the story itself in the same column (the blog's prose).\n\nfunction CustomerStoryPage({\n  title,\n  accent,\n  date,\n  dateTime,\n  backHref = \"/customers\",\n  backLabel = \"All customer stories\",\n  backdrop,\n  className,\n  children,\n}: {\n  title: React.ReactNode;\n  /** The title's closing words, in brand blue. */\n  accent?: React.ReactNode;\n  date?: string;\n  dateTime?: string;\n  backHref?: string;\n  backLabel?: string;\n  backdrop?: React.ReactNode;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  const titleId = React.useId();\n  return (\n    <SiteSection lines header=\"below\" aria-labelledby={titleId} data-slot=\"customer-story-page\" className={className}>\n      {/* The section's padding is taken back, so the backdrop runs from edge line to edge line and down to the rule. */}\n      <div className=\"relative isolate -mx-6 -mt-10 -mb-10 px-6 pt-10 pb-10 md:-mx-10 md:-mt-12 md:-mb-12 md:px-10 md:pt-12 md:pb-12 lg:-mx-12 lg:px-12\">\n        {backdrop && (\n          <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 -z-10\">\n            {backdrop}\n          </div>\n        )}\n        <header className=\"relative mx-auto flex max-w-3xl flex-col items-start gap-6\">\n          <a href={backHref} className=\"rounded-sm text-body-sm leading-snug text-fg-nav outline-none transition-[color] duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none\">\n            &larr; {backLabel}\n          </a>\n          <h1 id={titleId} className=\"w-full text-h3 leading-heading font-normal tracking-normal text-balance text-fg md:text-h2\">\n            {title}\n            {accent && (\n              <>\n                {\" \"}\n                <span className=\"text-fg-brand\">{accent}</span>\n              </>\n            )}\n          </h1>\n          {date && (\n            <time dateTime={dateTime} className=\"text-body-sm leading-snug text-fg-nav\">\n              {date}\n            </time>\n          )}\n        </header>\n      </div>\n      <SectionHeaderRule />\n      <div className={cn(\"mx-auto max-w-3xl\")}>{children}</div>\n    </SiteSection>\n  );\n}\n\nexport { CustomerStoryPage };\n"
+    }
+  ]
+}

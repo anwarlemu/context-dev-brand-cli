@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-type",
+  "type": "visual",
+  "title": "Type story",
+  "description": "Dot animation demonstrating font weights and color values.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Colors and typography on a site card. Plays only on screen; shows the bold specimen with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-type.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-type --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/type-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/type-story.tsx",
+        "sha256": "ceecbc45150ae751010edd7806e4013a8dac6f22e95d3e1c0cb36eb180a7f7bf",
+        "retained": false,
+        "exports": [
+          "TypeStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/type-story.d.ts",
+      "content": "/**\n * The \"Colors and typography\" card's picture: a type specimen set from light to bold, then the site's colors read\n * one chip at a time. With reduced motion it shows the bold specimen.\n */\nexport declare function TypeStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/type-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createTypeStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/type-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/**\n * The \"Colors and typography\" card's pictures, in the brand dot grid: a type specimen that can be set from light to\n * bold, and the site's colors as a stack of chips from its darkest role to its lightest.\n */\nexport declare const TYPE_STORY_GRID: DotGrid;\n/** The stroke of each weight the specimen is set in, lightest first, and what the site calls it. */\nexport declare const WEIGHTS: {\n    stroke: number;\n    name: string;\n}[];\n/** The specimen set with strokes `stroke` dots either side of their line. */\nexport declare function paintSpecimen(states: Uint8Array, stroke: number): Uint8Array<ArrayBufferLike>;\nexport declare const SPECIMEN_LIGHT: StoryPicture;\nexport declare const SPECIMEN_BOLD: StoryPicture;\n/** The color chips, the one being read (none when negative) pulled out to the right of the stack. */\nexport declare function paintChips(states: Uint8Array, reading: number): Uint8Array<ArrayBufferLike>;\nexport declare const CHIPS_AT_REST: StoryPicture;\nexport declare const ROLE_COUNT: number;\nexport declare const TYPE_CAPTION: import(\"../dot-engine/dot-story-player\").DotStoryText[];\nexport declare const weightDetail: (weight: number) => string;\nexport declare const COLOR_CAPTIONS: import(\"../dot-engine/dot-story-player\").DotStoryText[][];\n/** The bold specimen: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const TYPE_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-type/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-type.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { TypeStory } from \"@/components/visuals/stories/type-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <TypeStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/type-story.tsx",
+      "content": "'use client';\n\nimport { TYPE_RESTING, TYPE_STORY_GRID } from '@/components/visuals/stories/type-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadTypeStory: LoadDotStory = async (stage) => {\n\tconst { createTypeStoryPlayer } = await import('@/components/visuals/stories/type-story-player');\n\treturn createTypeStoryPlayer(stage);\n};\n\n/**\n * The \"Colors and typography\" card's picture: a type specimen set from light to bold, then the site's colors read\n * one chip at a time. With reduced motion it shows the bold specimen.\n */\nexport function TypeStory({ className }: { className?: string }) {\n\treturn <DotStory grid={TYPE_STORY_GRID} resting={TYPE_RESTING} load={loadTypeStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/type-story-player.ts",
+      "content": "import { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { CHIPS_AT_REST, COLOR_CAPTIONS, ROLE_COUNT, SPECIMEN_BOLD, SPECIMEN_LIGHT, TYPE_CAPTION, TYPE_STORY_GRID, WEIGHTS, paintChips, paintSpecimen, weightDetail } from '@/components/visuals/stories/type-story-scenes';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One site's type and color, played as a loop: a specimen is set in each weight the site uses, light to bold, and\n * melts into the site's colors, a stack of chips pulled out one at a time as its hex value and role are read.\n */\n\nconst MELT_SECONDS = 1.1;\nconst WEIGHING = { startsAt: 0.7, everySeconds: 0.8 };\nconst READING = { startsAt: 0.3, everySeconds: 1.1, textSeconds: 0.25 };\nconst BOLD_AT = WEIGHING.startsAt + (WEIGHTS.length - 2) * WEIGHING.everySeconds;\n\nconst stepAt = (heldSeconds: number, { startsAt, everySeconds }: { startsAt: number; everySeconds: number }, last: number) => (heldSeconds < startsAt ? -1 : Math.min(last, Math.floor((heldSeconds - startsAt) / everySeconds)));\nconst weightAt = (heldSeconds: number) => stepAt(heldSeconds, WEIGHING, WEIGHTS.length - 2) + 1;\n\nexport function createTypeStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst [fontLabel, fontName, fontDetail] = TYPE_CAPTION;\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: TYPE_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: BOLD_AT + 0.8 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: SPECIMEN_LIGHT,\n\t\t\t\tdeparture: SPECIMEN_BOLD,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: BOLD_AT + 1.6,\n\t\t\t\tanimate: (states, heldSeconds) => void paintSpecimen(states, WEIGHTS[weightAt(heldSeconds)].stroke),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(fontLabel);\n\t\t\t\t\tpen.text(fontName);\n\t\t\t\t\tpen.text({ ...fontDetail, text: weightDetail(weightAt(heldSeconds)) });\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\t...captionedBeat({ picture: CHIPS_AT_REST, caption: COLOR_CAPTIONS[0], holdSeconds: READING.startsAt + ROLE_COUNT * READING.everySeconds }),\n\t\t\t\t// The last chip slides back in as the hold ends, so the stack melts away as it arrived.\n\t\t\t\tanimate: (states, heldSeconds) => void paintChips(states, heldSeconds > READING.startsAt + ROLE_COUNT * READING.everySeconds - 0.15 ? -1 : stepAt(heldSeconds, READING, ROLE_COUNT - 1)),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tconst reading = stepAt(heldSeconds, READING, ROLE_COUNT - 1);\n\t\t\t\t\tif (reading < 0) return;\n\t\t\t\t\tconst written = clamp01((heldSeconds - READING.startsAt - reading * READING.everySeconds) / READING.textSeconds);\n\t\t\t\t\tCOLOR_CAPTIONS[reading].forEach((text, line) => pen.text(text, line === 0 ? 1 : written));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/type-story-scenes.ts",
+      "content": "import { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport { typeSpecimen } from '@/components/visuals/stories/style-guide-parts';\nimport { DOT_ABSENT, DOT_FILLED, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, paintShape, rings, roundedBox, solid, solidWithSpeckle } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/**\n * The \"Colors and typography\" card's pictures, in the brand dot grid: a type specimen that can be set from light to\n * bold, and the site's colors as a stack of chips from its darkest role to its lightest.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const TYPE_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS } = TYPE_STORY_GRID;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(TYPE_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\n\nconst SPECIMEN = { origin: { column: 4, row: 10 }, size: 17 };\n/** The stroke of each weight the specimen is set in, lightest first, and what the site calls it. */\nexport const WEIGHTS = [\n\t{ stroke: 0.55, name: '400' },\n\t{ stroke: 1, name: '500' },\n\t{ stroke: 1.5, name: '600' },\n];\n\n/** The specimen set with strokes `stroke` dots either side of their line. */\nexport function paintSpecimen(states: Uint8Array, stroke: number) {\n\tconst specimen = typeSpecimen(SPECIMEN.origin, SPECIMEN.size, stroke);\n\tfor (let cell = 0; cell < states.length; cell++) states[cell] = specimen(cell % COLUMNS, Math.floor(cell / COLUMNS)) ? DOT_FILLED : DOT_ABSENT;\n\treturn states;\n}\n\nexport const SPECIMEN_LIGHT = pictureOfStates(paintSpecimen(blank(), WEIGHTS[0].stroke));\nexport const SPECIMEN_BOLD = pictureOfStates(paintSpecimen(blank(), WEIGHTS[WEIGHTS.length - 1].stroke));\n\nconst CHIP = { left: 3, right: 28, rows: 8, top: 5, every: 10, radius: 2, pull: 3 };\n// Copy the captions show (a sample site's colors, read out as hex), not colors this page paints.\nconst SAMPLE_ROLE_HEXES = { text: '222326', primary: '5E6AD2', surface: 'F4F5F8' };\n// Three color roles, darkest to lightest, told apart by how many of their dots are solid.\nconst ROLES = [\n\t{ hex: SAMPLE_ROLE_HEXES.text, role: 'text', tone: solid },\n\t{ hex: SAMPLE_ROLE_HEXES.primary, role: 'primary', tone: solidWithSpeckle },\n\t{ hex: SAMPLE_ROLE_HEXES.surface, role: 'surface', tone: rings },\n];\nconst chipBox = (index: number) => ({ left: CHIP.left, right: CHIP.right, top: CHIP.top + index * CHIP.every, bottom: CHIP.top + index * CHIP.every + CHIP.rows - 1 });\n\n/** The color chips, the one being read (none when negative) pulled out to the right of the stack. */\nexport function paintChips(states: Uint8Array, reading: number) {\n\tstates.fill(DOT_ABSENT);\n\tROLES.forEach(({ tone }, index) => {\n\t\tconst box = chipBox(index);\n\t\tconst pulled = index === reading ? CHIP.pull : 0;\n\t\tpaintShape(TYPE_STORY_GRID, states, roundedBox({ ...box, left: box.left + pulled, right: box.right + pulled }, CHIP.radius), tone);\n\t});\n\treturn states;\n}\n\nexport const CHIPS_AT_REST = pictureOfStates(paintChips(blank(), -1));\nexport const ROLE_COUNT = ROLES.length;\n\nconst caption = (label: string, value: string, detail: string) => storyCaption(TYPE_STORY_GRID, 35, label, value, detail);\nexport const TYPE_CAPTION = caption('font', 'Inter', 'weight 400, 16px / 1.5');\nexport const weightDetail = (weight: number) => `weight ${WEIGHTS[weight].name}, 16px / 1.5`;\nexport const COLOR_CAPTIONS = ROLES.map(({ hex, role }) => caption('color', `#${hex}`, `role: ${role}`));\n\n/** The bold specimen: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const TYPE_RESTING = { ...SPECIMEN_BOLD, texts: [TYPE_CAPTION[0], TYPE_CAPTION[1], { ...TYPE_CAPTION[2], text: weightDetail(WEIGHTS.length - 1) }] };\n"
+    }
+  ]
+}

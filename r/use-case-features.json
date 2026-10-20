@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "use-case-features",
+  "type": "site",
+  "title": "Use case features",
+  "description": "Use-case feature cards, comparison tables, before-and-after panels, and the API example section.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring",
+    "table",
+    "code-window"
+  ],
+  "usage": "The middle of a use case page, inside a `SiteSection` under a `SectionHeading` and `SectionHeaderRule`. Cards three across when they divide by three, two otherwise, or `layout=\"rows\"` with each story beside its text. One highlighted column in a comparison (its header in blue on white, its cells on a faint blue wash). `UseCaseApiExample` is a section of its own (no SiteSection around it) for one endpoint's request and response beside the playground and API reference pills.",
+  "avoid": [
+    "More than one highlighted column",
+    "Colored icon tiles other than brand blue",
+    "Bold feature titles",
+    "Tables that squeeze their columns on phones (they scroll)",
+    "A tinted header cell on the highlighted column"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-case-features.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-case-features --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/usecases/use-case-landing-page.tsx; src/components/sections/use-cases/use-case-sections.tsx; src/components/sections/usecases/before-after-panels.tsx; src/components/sections/home/product-demo-panel.tsx; src/components/sections/home/story-stage.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/usecases/use-case-landing-page.tsx",
+        "sha256": "c79aabd165d9ee77f39acff120444cb2f03aec033d9ada8608e0030834554a88",
+        "retained": false,
+        "exports": [
+          "UseCaseFeature",
+          "UseCaseComparisonTable",
+          "UseCaseApiExample",
+          "UseCaseLandingContent",
+          "UseCaseLandingPage"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/use-cases/use-case-sections.tsx",
+        "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
+        "retained": false,
+        "exports": [
+          "UseCaseProof",
+          "UseCaseHowItWorks",
+          "UseCaseExamples",
+          "UseCaseComparison",
+          "UseCaseStories"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/usecases/before-after-panels.tsx",
+        "sha256": "fc3773913793bbe8922a984048c895a92573b07bf68f9b1d288eb8bf999b665e",
+        "retained": false,
+        "exports": [
+          "BeforeAfterPanel",
+          "BeforeAfterPanels",
+          "BeforeAfterStats"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/product-demo-panel.tsx",
+        "sha256": "2d357ebf89b0f47df047705f6de1a60dd13a13da05c05da077a5dce7c3cf147c",
+        "retained": false,
+        "exports": [
+          "ProductDemoPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/story-stage.tsx",
+        "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
+        "retained": false,
+        "exports": [
+          "StoryStage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/use-case-features.d.ts",
+      "content": "import * as React from \"react\";\nexport type UseCaseFeature = {\n    title: string;\n    description: React.ReactNode;\n    href?: string;\n    /** A line icon, drawn white on a blue tile. */\n    icon?: React.ReactNode;\n    /** A dot glyph in place of the icon (the site's animated persona glyphs). */\n    glyph?: React.ReactNode;\n    badge?: string;\n    tags?: readonly string[];\n    /** A short technical detail shown as a code chip, such as the endpoint or the monitor target. */\n    meta?: string;\n    /** A dot story or demo, framed at the foot of the card (or beside it in rows). */\n    story?: React.ReactNode;\n};\n/** The blue tile a feature's or persona's line icon sits on. */\ndeclare function UseCaseIconChip({ children, className }: {\n    children: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\n/**\n * A card's demo window: a white window in a blue-tint frame with the window's own radius, and the stage inside it where a\n * dot story plays, centered at most 26rem wide. `backdrop` takes the ring pattern the site draws behind the story;\n * `footer` sits under the stage in the same window (the stage then keeps its own height and the footer takes the rest).\n */\ndeclare function UseCaseDemoFrame({ children, backdrop, footer, className }: {\n    children: React.ReactNode;\n    backdrop?: React.ReactNode;\n    footer?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\ndeclare function UseCaseFeatureCard({ feature, row, className }: {\n    feature: UseCaseFeature;\n    row?: boolean;\n    className?: string;\n}): React.JSX.Element;\n/**\n * The cards: three across when they divide by three, two across otherwise, or one to a row (`layout=\"rows\"`) with each\n * card's story beside its text.\n */\ndeclare function UseCaseFeatureCards({ items, layout, className }: {\n    items: readonly UseCaseFeature[];\n    layout?: \"grid\" | \"rows\";\n    className?: string;\n}): React.JSX.Element;\n/** A closing note under the cards, with a small glyph (or icon tile) standing for the API it points to. */\ndeclare function UseCaseNote({ glyph, children, className }: {\n    glyph?: React.ReactNode;\n    children: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\nexport type UseCaseComparisonColumn = {\n    key: string;\n    header: React.ReactNode;\n    caption?: React.ReactNode;\n    highlight?: boolean;\n};\nexport type UseCaseComparisonRow = {\n    feature: React.ReactNode;\n} & Record<string, React.ReactNode>;\n/**\n * The comparison table: the features down the left, a column per option, the highlighted one (Context.dev) with its\n * header in brand blue and its cells on a faint blue wash (the header itself stays white). It scrolls sideways on\n * narrow screens rather than squeezing the columns.\n */\ndeclare function UseCaseComparisonTable({ columns, rows, label, className }: {\n    columns: readonly UseCaseComparisonColumn[];\n    rows: readonly UseCaseComparisonRow[];\n    label?: string;\n    className?: string;\n}): React.JSX.Element;\ndeclare const PANEL_TONES: {\n    readonly before: {\n        readonly label: \"Without Context.dev\";\n        readonly labelClass: \"text-fg-muted ring-1 ring-black/10 ring-inset\";\n    };\n    readonly after: {\n        readonly label: \"With Context.dev\";\n        readonly labelClass: \"bg-brand/10 text-fg-brand\";\n    };\n};\n/** One side of a before and after: a label chip, a title and whatever shows the difference. */\ndeclare function BeforeAfterPanel({ tone, label, title, className, children }: {\n    tone: keyof typeof PANEL_TONES;\n    label?: string;\n    title: React.ReactNode;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\ndeclare function BeforeAfterPanels({ children, className }: {\n    children: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\n/** The numbers under a before and after, one of them in brand blue. */\ndeclare function BeforeAfterStats({ stats, accentIndex, className }: {\n    stats: readonly {\n        label: string;\n        value: string;\n    }[];\n    accentIndex?: number;\n    className?: string;\n}): React.JSX.Element;\n/**\n * The API example section: the heading, a line of text and two outline pills (the playground first, then the API\n * reference) beside a code window labelled with the endpoint, holding the request body and an example response.\n */\ndeclare function UseCaseApiExample({ title, accent, description, endpoint, request, response, docsHref, playgroundHref, playgroundLabel, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title: React.ReactNode;\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    /** The window's label, such as \"POST /v1/brand/retrieve\". */\n    endpoint: string;\n    request: Record<string, unknown>;\n    response: Record<string, unknown>;\n    docsHref: string;\n    playgroundHref?: string;\n    playgroundLabel?: React.ReactNode;\n}): React.JSX.Element;\nexport { UseCaseApiExample, UseCaseFeatureCards, UseCaseFeatureCard, UseCaseIconChip, UseCaseDemoFrame, UseCaseNote, UseCaseComparisonTable, BeforeAfterPanels, BeforeAfterPanel, BeforeAfterStats };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "ApiExample",
+      "url": "https://context-ds.vercel.app/preview/use-case-features/ApiExample"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/use-case-features/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/use-case-features.tsx",
+      "content": "import { Clock, Globe, Map as MapIcon } from \"lucide-react\";\n\nimport { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { BeforeAfterPanel, BeforeAfterPanels, BeforeAfterStats, UseCaseApiExample, UseCaseComparisonTable, UseCaseFeatureCards, UseCaseNote } from \"@/components/site/use-case-features\";\nimport { DotGlyph } from \"@/components/ui/dot-glyph\";\nimport { PageMonitorStory, SitemapMonitorStory } from \"@/components/visuals/stories/monitor-ways-story\";\nimport { WatchStory } from \"@/components/visuals/stories/watch-story\";\n\n// The API example as context.dev/use-cases/enrich-transaction-data shows it.\nexport function ApiExample() {\n  return (\n    <div className=\"w-full\">\n      <UseCaseApiExample\n        title=\"Retrieve a brand\"\n        accent=\"from a transaction.\"\n        description=\"Illustrative merchant match. Available Brand fields vary by company. These fields are included in the Brand response, together with the other available company details.\"\n        endpoint=\"POST /v1/brand/retrieve\"\n        request={{ type: \"by_transaction\", transaction_info: \"SQ *BLUE BOTTLE OAK\", country_gl: \"us\" }}\n        response={{ status: \"ok\", brand: { domain: \"bluebottlecoffee.com\", title: \"Blue Bottle Coffee\", description: \"Coffee roaster and cafe company.\" }, code: 200 }}\n        docsHref=\"https://docs.context.dev/api-reference/brand-api/retrieve-brand-data\"\n        playgroundHref=\"https://context.dev/playground/transaction\"\n      />\n    </div>\n  );\n}\n\nconst SCRAPE_GLYPH = [\"0222220\", \"2111112\", \"2122212\", \"2111112\", \"2122212\", \"2111112\", \"0222220\"];\n\nexport function Site() {\n  return (\n    <div className=\"flex w-full flex-col\">\n      <SiteSection lines>\n        <SectionHeading title=\"Watch the pages\" accent=\"that matter.\" description=\"Point a monitor at a page, a section or a whole site, and get the change, not the whole page, at your webhook.\" />\n        <SectionHeaderRule />\n        <UseCaseFeatureCards\n          // One to a row, each story beside its text, so the stories have room in this frame.\n          layout=\"rows\"\n          items={[\n            { title: \"Pages\", description: \"Track one URL for any change to its text, prices or links.\", icon: <Globe />, meta: \"target: page\", tags: [\"Exact\", \"Semantic\"], href: \"https://context.dev/products/monitor\", story: <PageMonitorStory /> },\n            { title: \"Sitemaps\", description: \"Watch a whole site and hear about every page that is added or removed.\", icon: <MapIcon />, meta: \"target: sitemap\", badge: \"New\", story: <SitemapMonitorStory /> },\n            { title: \"Schedules\", description: \"Check every few minutes or once a day, and get a webhook when something moves.\", icon: <Clock />, meta: \"schedule: 6 hours\", story: <WatchStory /> },\n          ]}\n        />\n        <UseCaseNote glyph={<DotGlyph rows={SCRAPE_GLYPH} className=\"size-9 rounded-control bg-brand p-1.5 text-white\" />}>\n          Every monitor runs on the same scrape API, so the change you get is clean Markdown you can diff or send to a model.\n        </UseCaseNote>\n      </SiteSection>\n\n      <SiteSection lines>\n        <SectionHeading title=\"One API instead of\" accent=\"a scraping stack.\" />\n        <SectionHeaderRule />\n        <UseCaseComparisonTable\n          label=\"Context.dev compared with a scraping stack\"\n          columns={[\n            { key: \"diy\", header: \"Build it yourself\", caption: \"headless browsers and proxies\" },\n            { key: \"context\", header: \"Context.dev\", caption: \"one API key\", highlight: true },\n          ]}\n          rows={[\n            { feature: \"JavaScript pages\", diy: \"Run and scale your own browsers\", context: \"Rendered for you\" },\n            { feature: \"Blocking\", diy: \"Rotate proxies and solve challenges\", context: \"Handled, with retries\" },\n            { feature: \"Output\", diy: \"Raw HTML to clean up\", context: \"Markdown, HTML, JSON or screenshots\" },\n          ]}\n        />\n        <BeforeAfterPanels className=\"mt-10\">\n          <BeforeAfterPanel tone=\"before\" title=\"A week of glue code\">\n            <p className=\"text-body text-fg-secondary\">Browsers, proxies and parsers to keep alive, and a queue for the pages that failed.</p>\n          </BeforeAfterPanel>\n          <BeforeAfterPanel tone=\"after\" title=\"One request\">\n            <p className=\"text-body text-fg-secondary\">Send a URL, get the page as Markdown with its links and images.</p>\n          </BeforeAfterPanel>\n        </BeforeAfterPanels>\n        <BeforeAfterStats\n          accentIndex={2}\n          stats={[\n            { label: \"Setup\", value: \"5 min\" },\n            { label: \"Pages a minute\", value: \"1,000+\" },\n            { label: \"Infrastructure to run\", value: \"None\" },\n          ]}\n        />\n      </SiteSection>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section",
+    "dot-glyph",
+    "story-monitor-ways",
+    "story-watch"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "code-window",
+    "product-landing",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/use-case-features.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowRight } from \"lucide-react\";\n\nimport { CodeBlock, CodeWindow } from \"@/components/site/code-window\";\nimport { ProductIntegration } from \"@/components/site/product-landing\";\nimport { cn } from \"@/lib/utils\";\n\n// The use case pages' feature sections: white cards in the soft blue ring, each with an optional marker (an icon on a\n// blue tile, a dot glyph, a badge), a title that can link, a line of description, tags, a code chip with a technical\n// detail, and a dot story in a demo window at its foot (or beside it, when the cards run one to a row). Then the note\n// card that can close the section, the comparison table with one column highlighted, and the before and after panels.\n\n// The ring is a wrapper rather than a shadow, so its outer edge shares the card's radius. Its negative margin keeps it\n// from adding layout size.\nconst RING = \"-m-2 rounded-card bg-ring-tint p-2\";\nconst CARD = \"flex h-full min-w-0 flex-col gap-4 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\";\nconst FOCUS = \"outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring\";\n\nexport type UseCaseFeature = {\n  title: string;\n  description: React.ReactNode;\n  href?: string;\n  /** A line icon, drawn white on a blue tile. */\n  icon?: React.ReactNode;\n  /** A dot glyph in place of the icon (the site's animated persona glyphs). */\n  glyph?: React.ReactNode;\n  badge?: string;\n  tags?: readonly string[];\n  /** A short technical detail shown as a code chip, such as the endpoint or the monitor target. */\n  meta?: string;\n  /** A dot story or demo, framed at the foot of the card (or beside it in rows). */\n  story?: React.ReactNode;\n};\n\n/** The blue tile a feature's or persona's line icon sits on. */\nfunction UseCaseIconChip({ children, className }: { children: React.ReactNode; className?: string }) {\n  return <span className={cn(\"flex size-11 shrink-0 items-center justify-center rounded-card bg-brand text-white [&_svg]:size-5\", className)}>{children}</span>;\n}\n\n/**\n * A card's demo window: a white window in a blue-tint frame with the window's own radius, and the stage inside it where a\n * dot story plays, centered at most 26rem wide. `backdrop` takes the ring pattern the site draws behind the story;\n * `footer` sits under the stage in the same window (the stage then keeps its own height and the footer takes the rest).\n */\nfunction UseCaseDemoFrame({ children, backdrop, footer, className }: { children: React.ReactNode; backdrop?: React.ReactNode; footer?: React.ReactNode; className?: string }) {\n  const stage = (\n    <div className=\"relative isolate flex min-h-88 flex-1 items-center justify-center px-4 py-8 select-none sm:px-9\">\n      {backdrop && (\n        <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 -z-10\">\n          {backdrop}\n        </div>\n      )}\n      <div className=\"relative w-full max-w-104\">{children}</div>\n    </div>\n  );\n  return (\n    <div className={cn(\"relative mt-auto flex flex-1 flex-col rounded-card bg-brand/10 p-2\", className)}>\n      <div className=\"flex flex-1 flex-col overflow-hidden rounded-card bg-surface\">\n        {footer ? <div className=\"flex flex-col\">{stage}</div> : stage}\n        {footer}\n      </div>\n    </div>\n  );\n}\n\nfunction UseCaseFeatureCard({ feature, row = false, className }: { feature: UseCaseFeature; row?: boolean; className?: string }) {\n  const { title, description, href, icon, glyph, badge, tags, meta, story } = feature;\n  const heading = (\n    <span className=\"flex items-center gap-2\">\n      {title}\n      {href && <ArrowRight aria-hidden=\"true\" className=\"size-4 shrink-0 text-fg-brand\" />}\n    </span>\n  );\n  return (\n    <div data-slot=\"use-case-feature-card\" className={cn(CARD, row && \"lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-center lg:gap-12\", className)}>\n      <div className={cn(\"flex flex-col gap-4\", row ? \"max-w-md\" : \"flex-1\")}>\n        {(icon || glyph || badge) && (\n          <div className=\"flex items-center justify-between gap-4\">\n            {glyph ?? (icon && <UseCaseIconChip>{icon}</UseCaseIconChip>)}\n            {badge && <span className=\"rounded-pill bg-brand/10 px-3 py-1 text-body-sm leading-snug text-fg-brand\">{badge}</span>}\n          </div>\n        )}\n        <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">\n          {href ? (\n            <a href={href} className={cn(\"rounded-sm transition-[color] duration-150 ease-out hover:text-fg-brand motion-reduce:transition-none\", FOCUS)}>\n              {heading}\n            </a>\n          ) : (\n            heading\n          )}\n        </h3>\n        <p className=\"text-body leading-snug text-fg-secondary\">{description}</p>\n        {tags && tags.length > 0 && (\n          <ul className=\"flex flex-wrap gap-1.5\">\n            {tags.map((tag) => (\n              <li key={tag} className=\"rounded-pill px-3 py-1 text-body-sm leading-snug text-fg-nav ring-1 ring-black/10 ring-inset\">\n                {tag}\n              </li>\n            ))}\n          </ul>\n        )}\n        {meta && <code className={cn(\"w-fit rounded-pill bg-wash-hover px-3 py-1.5 font-mono text-body-sm leading-5 text-fg-nav\", !story && \"mt-auto\")}>{meta}</code>}\n      </div>\n      {story && (\n        <div className={cn(\"flex flex-col\", !row && \"mt-4 flex-1\")}>\n          <UseCaseDemoFrame>{story}</UseCaseDemoFrame>\n        </div>\n      )}\n    </div>\n  );\n}\n\n/**\n * The cards: three across when they divide by three, two across otherwise, or one to a row (`layout=\"rows\"`) with each\n * card's story beside its text.\n */\nfunction UseCaseFeatureCards({ items, layout = \"grid\", className }: { items: readonly UseCaseFeature[]; layout?: \"grid\" | \"rows\"; className?: string }) {\n  const rows = layout === \"rows\";\n  return (\n    <ul data-slot=\"use-case-feature-cards\" className={cn(\"grid grid-cols-1 gap-6\", !rows && (items.length % 3 === 0 ? \"lg:grid-cols-3\" : \"md:grid-cols-2\"), className)}>\n      {items.map((feature) => (\n        <li key={feature.title} className={RING}>\n          <UseCaseFeatureCard feature={feature} row={rows} />\n        </li>\n      ))}\n    </ul>\n  );\n}\n\n/** A closing note under the cards, with a small glyph (or icon tile) standing for the API it points to. */\nfunction UseCaseNote({ glyph, children, className }: { glyph?: React.ReactNode; children: React.ReactNode; className?: string }) {\n  return (\n    <div data-slot=\"use-case-note\" className={cn(RING, \"mt-6\", className)}>\n      <div className=\"flex items-center gap-4 rounded-card bg-surface p-6 ring-1 ring-hairline md:px-8\">\n        {glyph}\n        <p className=\"text-body-lg leading-snug text-fg-secondary\">{children}</p>\n      </div>\n    </div>\n  );\n}\n\nexport type UseCaseComparisonColumn = { key: string; header: React.ReactNode; caption?: React.ReactNode; highlight?: boolean };\nexport type UseCaseComparisonRow = { feature: React.ReactNode } & Record<string, React.ReactNode>;\n\n/**\n * The comparison table: the features down the left, a column per option, the highlighted one (Context.dev) with its\n * header in brand blue and its cells on a faint blue wash (the header itself stays white). It scrolls sideways on\n * narrow screens rather than squeezing the columns.\n */\nfunction UseCaseComparisonTable({ columns, rows, label = \"Comparison\", className }: { columns: readonly UseCaseComparisonColumn[]; rows: readonly UseCaseComparisonRow[]; label?: string; className?: string }) {\n  return (\n    <div data-slot=\"use-case-comparison-table\" className={cn(RING, className)}>\n      <div tabIndex={0} role=\"region\" aria-label={label} className={cn(\"overflow-x-auto rounded-card bg-surface ring-1 ring-hairline\", FOCUS)}>\n        <table className=\"w-full min-w-xl border-collapse text-left\">\n          <thead>\n            <tr className=\"border-b border-hairline align-bottom\">\n              <td className=\"w-1/4 px-6 py-5 md:px-8\" />\n              {columns.map((column) => (\n                <th key={column.key} scope=\"col\" className=\"px-6 py-5 font-normal md:px-8\">\n                  <span className={cn(\"block text-h5 leading-snug\", column.highlight ? \"text-fg-brand\" : \"text-fg\")}>{column.header}</span>\n                  {column.caption && <span className=\"block text-body-sm leading-snug text-fg-subtle\">{column.caption}</span>}\n                </th>\n              ))}\n            </tr>\n          </thead>\n          <tbody>\n            {rows.map((row, i) => (\n              <tr key={i} className=\"border-b border-black/6 last:border-0\">\n                <th scope=\"row\" className=\"px-6 py-5 align-top text-body leading-snug font-normal text-fg md:px-8\">\n                  {row.feature}\n                </th>\n                {columns.map((column) => (\n                  <td key={column.key} className={cn(\"px-6 py-5 align-top text-body leading-snug md:px-8\", column.highlight ? \"bg-brand/4 text-fg\" : \"text-fg-secondary\")}>\n                    {row[column.key]}\n                  </td>\n                ))}\n              </tr>\n            ))}\n          </tbody>\n        </table>\n      </div>\n    </div>\n  );\n}\n\nconst PANEL_TONES = {\n  before: { label: \"Without Context.dev\", labelClass: \"text-fg-muted ring-1 ring-black/10 ring-inset\" },\n  after: { label: \"With Context.dev\", labelClass: \"bg-brand/10 text-fg-brand\" },\n} as const;\n\n/** One side of a before and after: a label chip, a title and whatever shows the difference. */\nfunction BeforeAfterPanel({ tone, label, title, className, children }: { tone: keyof typeof PANEL_TONES; label?: string; title: React.ReactNode; className?: string; children: React.ReactNode }) {\n  const preset = PANEL_TONES[tone];\n  return (\n    <section aria-label={label ?? preset.label} data-slot=\"before-after-panel\" className={cn(\"flex min-w-0 flex-col gap-5 rounded-card bg-surface p-5 ring-1 ring-hairline sm:p-6 md:p-7\", className)}>\n      <span className={cn(\"w-fit rounded-pill px-3 py-1 text-body-sm leading-snug\", preset.labelClass)}>{label ?? preset.label}</span>\n      <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{title}</h3>\n      {children}\n    </section>\n  );\n}\n\nfunction BeforeAfterPanels({ children, className }: { children: React.ReactNode; className?: string }) {\n  return <div className={cn(\"grid grid-cols-1 gap-6 lg:grid-cols-2\", className)}>{children}</div>;\n}\n\n/** The numbers under a before and after, one of them in brand blue. */\nfunction BeforeAfterStats({ stats, accentIndex = 0, className }: { stats: readonly { label: string; value: string }[]; accentIndex?: number; className?: string }) {\n  return (\n    <dl className={cn(\"mt-6 grid grid-cols-1 rounded-card bg-surface ring-1 ring-hairline sm:grid-cols-3\", className)}>\n      {stats.map((stat, i) => (\n        <div key={stat.label} className={cn(\"flex flex-col gap-1 px-6 py-5\", i > 0 && \"border-t border-black/6 sm:border-t-0 sm:border-l\")}>\n          <dt className=\"text-body-sm leading-snug text-fg-subtle\">{stat.label}</dt>\n          <dd className={cn(\"text-h3 leading-none tracking-tight\", i === accentIndex ? \"text-fg-brand\" : \"text-fg\")}>{stat.value}</dd>\n        </div>\n      ))}\n    </dl>\n  );\n}\n\n/**\n * The API example section: the heading, a line of text and two outline pills (the playground first, then the API\n * reference) beside a code window labelled with the endpoint, holding the request body and an example response.\n */\nfunction UseCaseApiExample({\n  title,\n  accent,\n  description,\n  endpoint,\n  request,\n  response,\n  docsHref,\n  playgroundHref,\n  playgroundLabel = \"Try in API Playground\",\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode;\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  /** The window's label, such as \"POST /v1/brand/retrieve\". */\n  endpoint: string;\n  request: Record<string, unknown>;\n  response: Record<string, unknown>;\n  docsHref: string;\n  playgroundHref?: string;\n  playgroundLabel?: React.ReactNode;\n}) {\n  const code = `// Request body\\n${JSON.stringify(request, null, 2)}\\n\\n// Example response\\n${JSON.stringify(response, null, 2)}`;\n  return (\n    <ProductIntegration\n      title={title}\n      accent={accent}\n      description={description}\n      docsHref={docsHref}\n      playgroundHref={playgroundHref}\n      playgroundLabel={playgroundLabel}\n      playgroundFirst\n      className={cn(\"pt-10 md:pt-12\", className)}\n      code={\n        <CodeWindow label={endpoint}>\n          <div tabIndex={0} role=\"region\" aria-label={`${endpoint} example`} className=\"overflow-x-auto outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring\">\n            <CodeBlock code={code} />\n          </div>\n        </CodeWindow>\n      }\n      {...props}\n    />\n  );\n}\n\nexport { UseCaseApiExample, UseCaseFeatureCards, UseCaseFeatureCard, UseCaseIconChip, UseCaseDemoFrame, UseCaseNote, UseCaseComparisonTable, BeforeAfterPanels, BeforeAfterPanel, BeforeAfterStats };\n"
+    }
+  ]
+}

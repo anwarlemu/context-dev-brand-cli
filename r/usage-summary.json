@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "usage-summary",
+  "type": "product",
+  "title": "Usage summary",
+  "description": "Usage dialog with remaining credits, daily and monthly totals, and usage by API.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Opening usage over the overview from the credits card.",
+  "avoid": [
+    "Navigating away for a quick look"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/usage-summary.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add usage-summary --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/overview/usage-summary-dialog.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/overview/usage-summary-dialog.tsx",
+        "sha256": "42d6c7b9f25348dafe646247350c7819d67a60dcb18961ba9746790f729f1750",
+        "retained": false,
+        "exports": [
+          "UsageSummaryDialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/usage-summary.d.ts",
+      "content": "import * as React from \"react\";\n/** Credits remaining: the count over its quota, then a row of dots (40 here, 20 on the cards), brand blue for what's left. */\ndeclare function CreditsRemaining({ remaining, total, dots, className }: {\n    remaining: number;\n    total?: number;\n    dots?: number;\n    className?: string;\n}): React.JSX.Element;\n/** \"1,204 used today · 41,880 this month\", the numbers in full text color. */\ndeclare function CreditsUsed({ today, month }: {\n    today: number;\n    month: number;\n}): React.JSX.Element;\n/** A ranked list: each name, a thin bar against the top one, and its count. */\ndeclare function UsageBarList({ title, items, className }: {\n    title?: React.ReactNode;\n    items: {\n        key: string;\n        label: React.ReactNode;\n        value: number;\n    }[];\n    className?: string;\n}): React.JSX.Element;\n/** The window: \"Usage\" over the plan line, the pieces scrolling inside on a short screen, the link out in the footer. */\ndeclare function UsageSummaryDialog({ open, onOpenChange, title, description, footer, children, }: {\n    open: boolean;\n    onOpenChange: (open: boolean) => void;\n    title?: React.ReactNode;\n    description?: React.ReactNode;\n    /** \"See full usage\": your router's link. */\n    footer?: React.ReactNode;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { CreditsRemaining, CreditsUsed, UsageBarList, UsageSummaryDialog };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/usage-summary/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/usage-summary.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { CardLink } from \"@/components/product/glyph-card\";\nimport { CreditsRemaining, CreditsUsed, UsageBarList, UsageSummaryDialog } from \"@/components/product/usage-summary\";\nimport { Button } from \"@/components/ui/button\";\n\nconst TOP_APIS = [\n  { key: \"scrape\", label: \"Scrape\", value: 30410 },\n  { key: \"retrieve\", label: \"Brand retrieval\", value: 15820 },\n  { key: \"search\", label: \"Search\", value: 8960 },\n];\n\nfunction Summary() {\n  return (\n    <>\n      <div className=\"flex flex-wrap items-end justify-between gap-x-6 gap-y-3\">\n        <CreditsRemaining remaining={41590} total={100000} />\n        <CreditsUsed today={2318} month={58410} />\n      </div>\n      <UsageBarList title=\"Top APIs this month\" items={TOP_APIS} className=\"mt-3\" />\n    </>\n  );\n}\n\n// The dialog opens over the overview from the Credits remaining card. Its pieces are shown below the button as they\n// sit inside it: what's left over the long dot meter, today's and this month's use, and the ranked list.\nexport function Product() {\n  const [open, setOpen] = useState(false);\n  return (\n    <div className=\"flex w-full max-w-xl flex-col gap-6\">\n      <Button variant=\"outline\" size=\"sm\" className=\"self-start\" onClick={() => setOpen(true)}>\n        Open the usage summary\n      </Button>\n      <div className=\"flex flex-col gap-3\">\n        <Summary />\n      </div>\n      <UsageSummaryDialog open={open} onOpenChange={setOpen} description=\"On the Pro plan, resetting Nov 1.\" footer={<CardLink href=\"/preview/usage-card/Product\">See full usage</CardLink>}>\n        <Summary />\n      </UsageSummaryDialog>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "glyph-card",
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "stat-card",
+    "dialog",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/product/usage-summary.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { StatFigure, StatMeter } from \"@/components/product/stat-card\";\nimport { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from \"@/components/ui/dialog\";\nimport { cn } from \"@/lib/utils\";\n\n// The usage page at a glance, over the overview rather than away from it (opened from the Credits remaining card):\n// what's left over a long dot meter with today's and this month's use beside it, three centered stat cards (calls,\n// credits, success rate), the day-by-day chart in a glyph card, and the APIs that spent the most this month.\n\nconst compact = (n: number) => n.toLocaleString(\"en-US\", { notation: \"compact\", maximumFractionDigits: 1 });\n\n/** Credits remaining: the count over its quota, then a row of dots (40 here, 20 on the cards), brand blue for what's left. */\nfunction CreditsRemaining({ remaining, total, dots = 40, className }: { remaining: number; total?: number; dots?: number; className?: string }) {\n  return (\n    <div data-slot=\"credits-remaining\" className={cn(\"max-w-md min-w-56 flex-1\", className)}>\n      <p className=\"text-caption text-fg-muted\">Credits remaining</p>\n      <StatFigure suffix={total !== undefined ? `/${compact(total)}` : undefined} className=\"mt-2\">\n        {remaining.toLocaleString(\"en-US\")}\n      </StatFigure>\n      {total !== undefined && <StatMeter value={remaining} max={total} dots={dots} className=\"mt-3\" />}\n    </div>\n  );\n}\n\n/** \"1,204 used today · 41,880 this month\", the numbers in full text color. */\nfunction CreditsUsed({ today, month }: { today: number; month: number }) {\n  return (\n    <p className=\"text-caption text-fg-muted\">\n      <span className=\"text-fg tabular-nums\">{today.toLocaleString(\"en-US\")}</span> used today · <span className=\"text-fg tabular-nums\">{month.toLocaleString(\"en-US\")}</span> this month\n    </p>\n  );\n}\n\n/** A ranked list: each name, a thin bar against the top one, and its count. */\nfunction UsageBarList({ title, items, className }: { title?: React.ReactNode; items: { key: string; label: React.ReactNode; value: number }[]; className?: string }) {\n  const top = items[0]?.value ?? 0;\n  return (\n    <div data-slot=\"usage-bar-list\" className={className}>\n      {title && <p className=\"mb-2 text-caption text-fg-muted\">{title}</p>}\n      <ul className=\"flex flex-col gap-2\">\n        {items.map((item) => (\n          <li key={item.key} className=\"grid grid-cols-[minmax(0,9rem)_1fr_3rem] items-center gap-3 text-body-sm\">\n            <span className=\"truncate\">{item.label}</span>\n            <span className=\"h-1 rounded-pill bg-blue-10\">\n              <span className=\"block h-full rounded-pill bg-brand\" style={{ width: `${top > 0 ? (item.value / top) * 100 : 0}%` }} />\n            </span>\n            <span className=\"text-right text-fg-muted tabular-nums\">{item.value.toLocaleString(\"en-US\")}</span>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n\n/** The window: \"Usage\" over the plan line, the pieces scrolling inside on a short screen, the link out in the footer. */\nfunction UsageSummaryDialog({\n  open,\n  onOpenChange,\n  title = \"Usage\",\n  description,\n  footer,\n  children,\n}: {\n  open: boolean;\n  onOpenChange: (open: boolean) => void;\n  title?: React.ReactNode;\n  description?: React.ReactNode;\n  /** \"See full usage\": your router's link. */\n  footer?: React.ReactNode;\n  children: React.ReactNode;\n}) {\n  return (\n    <Dialog open={open} onOpenChange={onOpenChange}>\n      <DialogContent size=\"lg\">\n        <DialogHeader>\n          <DialogTitle>{title}</DialogTitle>\n          {description && <DialogDescription>{description}</DialogDescription>}\n        </DialogHeader>\n        <DialogBody className=\"@container flex flex-col gap-3\">{children}</DialogBody>\n        {footer && <DialogFooter className=\"justify-start\">{footer}</DialogFooter>}\n      </DialogContent>\n    </Dialog>\n  );\n}\n\nexport { CreditsRemaining, CreditsUsed, UsageBarList, UsageSummaryDialog };\n"
+    }
+  ]
+}

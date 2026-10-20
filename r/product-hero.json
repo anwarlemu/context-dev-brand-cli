@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "product-hero",
+  "type": "site",
+  "title": "Product hero",
+  "description": "White product page hero with dot streams, a two-line title, pills, an optional note, and the product demo under it.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The hero of a product page that leads with its demo (Parse, Brand search, People enrichment, News) and of plugin pages (the ChatGPT page, with its own `actions` and a `note`). Pass the demo as children; follow it with LogoStrip and the product-landing sections. Set `--hero-header` to the header's height when the hero sits under a see-through fixed header. ProductCustomerProof, ProductSteps, ProductCompactFaq, ProductCallToAction and ProductContainer are deprecated (the retired blue water design); use LogoStrip, ProductLandingSteps, ProductFaq and ClosingCta.",
+  "avoid": [
+    "A blue or water background (the design is retired)",
+    "An eyebrow line above the title",
+    "Arrows in the hero's pills",
+    "Centered body copy below the hero",
+    "Bold in the title",
+    "A second dot field in the band"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/product-hero.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add product-hero --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/product-hero.tsx; src/components/sections/shared/hero-dot-field.tsx; retained from website c1cfbca6 for the deprecated parts src/components/sections/products/product-customer-proof.tsx; product-workflows.tsx; product-faq.tsx; product-call-to-action.tsx; product-layout.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-hero.tsx",
+        "sha256": "ea81bc5e4fc05cf4f8473affcaf7dae32a9e540563cb5b7682bd21c909897f19",
+        "retained": false,
+        "exports": [
+          "ProductHero"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/hero-dot-field.tsx",
+        "sha256": "d37799b73bd6d7c2698cd409ebb2f6e4887121be516448d8e159bef3480fad2d",
+        "retained": false,
+        "exports": [
+          "HeroDotField"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+        "path": "src/components/sections/products/product-customer-proof.tsx",
+        "sha256": "82267a69ae04a3143dcb55ccc2d3107c4c37b3f1aea8284160418b35c71da1c5",
+        "retained": true,
+        "exports": [
+          "ProductCustomerProof"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+        "path": "src/components/sections/products/product-workflows.tsx",
+        "sha256": "4d8ad1733545e0ae826ee8093213c2cd9f0625a5be9ebbb3bd810b6148373fc4",
+        "retained": true,
+        "exports": [
+          "ProductSteps"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+        "path": "src/components/sections/products/product-faq.tsx",
+        "sha256": "6699a6a4be72de2cf7fcc0ab26ac7b999e0d6bd3eff4419f814fcdddcb5f0f3d",
+        "retained": true,
+        "exports": [
+          "ProductFaq"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+        "path": "src/components/sections/products/product-call-to-action.tsx",
+        "sha256": "50dccf8f01e5324a0445a6f40cd6fe000cd62bb992ee204c7443fefe797a9af8",
+        "retained": true,
+        "exports": [
+          "ProductCallToAction"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+        "path": "src/components/sections/products/product-layout.tsx",
+        "sha256": "43726a32a570f354f917c523cb7720cf28ab5ed6ce04041b036ffba83a6ce7d7",
+        "retained": true,
+        "exports": [
+          "ProductContainer",
+          "ProductHeading"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/product-hero.d.ts",
+      "content": "import * as React from \"react\";\n/** @deprecated The water pages' narrow column. Product pages now use the site's ruled column (SiteSection). */\ndeclare function ProductContainer({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** The two-line heading: the first line black, a line break, the second brand blue. `split` is the smaller size. */\ndeclare function ProductHeading({ title, size, className, ...props }: Omit<React.ComponentProps<\"h2\">, \"title\"> & {\n    title: readonly [React.ReactNode, React.ReactNode];\n    size?: \"section\" | \"split\";\n}): React.JSX.Element;\ndeclare const ACTION_TONES: {\n    /** Black. */\n    readonly dark: \"border border-black bg-primary text-on-primary hover:bg-primary-hover focus-visible:ring-focus-ring\";\n    /** Frosted white, for the retired water hero's second action. */\n    readonly frost: \"bg-white/70 text-fg ring-1 ring-white/90 ring-inset hover:bg-white focus-visible:ring-focus-ring\";\n    /** White, for the retired blue band. */\n    readonly light: \"border border-hairline bg-white text-fg hover:bg-white/90 focus-visible:ring-white focus-visible:ring-offset-brand\";\n    /** Clear, for the retired blue band's second action. */\n    readonly clear: \"border border-white/20 bg-white/10 text-white hover:bg-white/20 focus-visible:ring-white focus-visible:ring-offset-brand\";\n};\n/**\n * The water pages' keyed pills. The white ProductHero uses the site's pills (Button `pill` and `pill-outline`); these\n * remain for pages still on the retired water design.\n */\ndeclare function ProductAction({ tone, className, ...props }: React.ComponentProps<\"a\"> & {\n    tone?: keyof typeof ACTION_TONES;\n}): React.JSX.Element;\n/**\n * The white product hero. `title` is two lines, the second blue; `actions` replaces the default pills (which use\n * `signupHref` and `docsHref`); `note` is a quiet line under them; `children` is the demo under the headline band.\n * `background` replaces the dot streams (pass null for none). When the hero sits under a see-through fixed header, set\n * `--hero-header` on it to the header's height: the band then grows by that much and keeps the content below it.\n */\ndeclare function ProductHero({ title, description, actions, note, signupHref, docsHref, background, eyebrow: _eyebrow, contentHeight: _contentHeight, className, children, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title: readonly [React.ReactNode, React.ReactNode];\n    description?: React.ReactNode;\n    /** Pills; defaults to \"Get API key\" and \"View documentation\". */\n    actions?: React.ReactNode;\n    /** A quiet line under the actions. */\n    note?: React.ReactNode;\n    signupHref?: string;\n    docsHref?: string;\n    /** Behind the headline band; the dot streams by default, null for none. */\n    background?: React.ReactNode;\n    /** @deprecated The water hero's eyebrow; the white hero has none, so it is ignored. */\n    eyebrow?: React.ReactNode;\n    /** @deprecated The water hero's height switch; the white hero sizes itself, so it is ignored. */\n    contentHeight?: boolean;\n}): React.JSX.Element;\n/** @deprecated The water pages' customer logos; context.dev's product pages use the LogoStrip under the hero. */\ndeclare function ProductCustomerProof({ label, logos, className }: {\n    label?: React.ReactNode;\n    logos: {\n        name: string;\n        src: string;\n    }[];\n    className?: string;\n}): React.JSX.Element;\n/** @deprecated The water pages' steps; use ProductLandingSteps (product-landing), the numbered step cards. */\ndeclare function ProductSteps({ steps, title, numbered, className, children, }: {\n    steps: {\n        title: React.ReactNode;\n        description: React.ReactNode;\n    }[];\n    title?: readonly [React.ReactNode, React.ReactNode];\n    numbered?: boolean;\n    className?: string;\n    children?: React.ReactNode;\n}): React.JSX.Element;\n/** @deprecated The water pages' narrow FAQ; use ProductFaq (product-landing). */\ndeclare function ProductCompactFaq({ id, faqs, title, description, className, }: {\n    id: string;\n    faqs: {\n        question: React.ReactNode;\n        answer: React.ReactNode;\n    }[];\n    title?: readonly [React.ReactNode, React.ReactNode];\n    description?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\n/** @deprecated The water pages' blue closing band; product pages close with the site's ClosingCta. */\ndeclare function ProductCallToAction({ title, description, actions, background, className, }: {\n    title?: React.ReactNode;\n    description?: React.ReactNode;\n    /** ProductAction pills, `light` and `clear`. */\n    actions?: React.ReactNode;\n    /** The water texture, dimmed so the white copy reads. */\n    background?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\nexport { ProductHero, ProductAction, ProductContainer, ProductHeading, ProductCustomerProof, ProductSteps, ProductCompactFaq, ProductCallToAction };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/product-hero/Site"
+    },
+    {
+      "name": "Plugin",
+      "url": "https://context-ds.vercel.app/preview/product-hero/Plugin"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/product-hero.tsx",
+      "content": "import { ProductLandingSteps } from \"@/components/site/product-landing\";\nimport { ProductHero } from \"@/components/site/product-hero\";\nimport { ParseHeroDemo } from \"@/components/site/parse-landing-visuals\";\n\n// context.dev/parse: the white hero with the default pills and the product's demo (the parse-landing-visuals item)\n// under the headline, passed in as children.\nexport function Site() {\n  return (\n    <div className=\"w-full\">\n      <ProductHero\n        title={[\"Your documents.\", \"Ready for your agent.\"]}\n        description=\"Turn PDFs, office documents, and spreadsheets into readable Markdown, in the same workflows that use your web data.\"\n        docsHref=\"https://docs.context.dev/api-reference/utility/parse-a-file\"\n      >\n        <ParseHeroDemo />\n      </ProductHero>\n    </div>\n  );\n}\n\n// context.dev/chatgpt: its own actions and a note, no demo, then the steps.\nexport function Plugin() {\n  return (\n    <div className=\"w-full\">\n      <ProductHero\n        title={[\"Give ChatGPT\", \"the live web.\"]}\n        description=\"Install the Context.dev plugin and ask ChatGPT to look something up, read a page, or bring current sources into the chat.\"\n        docsHref=\"https://docs.context.dev\"\n        note=\"Sign in with your Context.dev account when ChatGPT asks. Nothing to paste.\"\n      />\n      <ProductLandingSteps\n        title=\"Install it once.\"\n        accent=\"Then just ask.\"\n        steps={[\n          { title: \"Install the plugin\", description: \"Open the Context.dev listing in ChatGPT and add it. It takes a minute.\" },\n          { title: \"Sign in when asked\", description: \"ChatGPT opens a browser window. Sign in to Context.dev there. You don't paste a key into the chat.\" },\n          { title: \"Ask in a new chat\", description: \"Start a new conversation and ask for what you want, or type @Context.dev to use it directly.\" },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "product-landing",
+    "parse-landing-visuals"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "button",
+    "hero-dot-field",
+    "hero-pattern-hole",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/product-hero.tsx",
+      "content": "import * as React from \"react\";\nimport { Minus, Plus } from \"lucide-react\";\n\nimport { buttonVariants } from \"@/components/ui/button\";\nimport { HeroDotField } from \"@/components/visuals/hero-dot-field\";\nimport { patternHole } from \"@/components/visuals/hero-pattern-hole\";\nimport { cn } from \"@/lib/utils\";\n\n// The product pages' hero (context.dev's Parse, Brand search, People enrichment, News and ChatGPT pages): a white,\n// full-width band with an inset rule along its foot, the brand's dot streams running in from its edges, and a centered\n// two-line title (the second line blue), a lead line, the black and outline pills and an optional note, all marked as\n// holes so no dot lands on them. The demo (children) sits under the band's headline in the same column, so it shares\n// its edges with every section below. The rest of the page is the product-landing sections.\n//\n// The blue water design these pages used before is retired: ProductCustomerProof, ProductSteps, ProductCompactFaq,\n// ProductCallToAction and ProductContainer remain for existing pages only.\n\n/** The ruled column the hero shares with the sections under it. */\nconst COLUMN = \"relative mx-auto w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12\";\n\n/** @deprecated The water pages' narrow column. Product pages now use the site's ruled column (SiteSection). */\nfunction ProductContainer({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"product-container\" className={cn(\"mx-auto w-full max-w-247.5 px-6 sm:px-8 lg:px-10.5\", className)} {...props} />;\n}\n\n/** The two-line heading: the first line black, a line break, the second brand blue. `split` is the smaller size. */\nfunction ProductHeading({ title, size = \"section\", className, ...props }: Omit<React.ComponentProps<\"h2\">, \"title\"> & { title: readonly [React.ReactNode, React.ReactNode]; size?: \"section\" | \"split\" }) {\n  return (\n    <h2 data-slot=\"product-heading\" className={cn(\"font-normal tracking-tight text-balance text-fg\", size === \"split\" ? \"text-h3 leading-tight sm:text-h2\" : \"text-h2 leading-tight\", className)} {...props}>\n      {title[0]} <br />\n      <span className=\"text-fg-brand\">{title[1]}</span>\n    </h2>\n  );\n}\n\nconst ACTION =\n  \"inline-flex min-h-11 items-center justify-center gap-2 rounded-pill px-6 py-2.5 text-body leading-5.5 font-medium shadow-key outline-none transition-[background-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:size-4 [&_svg]:shrink-0\";\n\nconst ACTION_TONES = {\n  /** Black. */\n  dark: \"border border-black bg-primary text-on-primary hover:bg-primary-hover focus-visible:ring-focus-ring\",\n  /** Frosted white, for the retired water hero's second action. */\n  frost: \"bg-white/70 text-fg ring-1 ring-white/90 ring-inset hover:bg-white focus-visible:ring-focus-ring\",\n  /** White, for the retired blue band. */\n  light: \"border border-hairline bg-white text-fg hover:bg-white/90 focus-visible:ring-white focus-visible:ring-offset-brand\",\n  /** Clear, for the retired blue band's second action. */\n  clear: \"border border-white/20 bg-white/10 text-white hover:bg-white/20 focus-visible:ring-white focus-visible:ring-offset-brand\",\n} as const;\n\n/**\n * The water pages' keyed pills. The white ProductHero uses the site's pills (Button `pill` and `pill-outline`); these\n * remain for pages still on the retired water design.\n */\nfunction ProductAction({ tone = \"dark\", className, ...props }: React.ComponentProps<\"a\"> & { tone?: keyof typeof ACTION_TONES }) {\n  return <a data-slot=\"product-action\" className={cn(ACTION, ACTION_TONES[tone], className)} {...props} />;\n}\n\n/** The default actions: the black \"Get API key\" pill and the outline \"View documentation\" pill, no arrows. */\nfunction ProductHeroActions({ signupHref, docsHref }: { signupHref: string; docsHref: string }) {\n  return (\n    <>\n      <a href={signupHref} className={cn(buttonVariants({ variant: \"pill\" }))}>\n        Get API key\n      </a>\n      <a href={docsHref} target=\"_blank\" rel=\"noopener noreferrer\" className={cn(buttonVariants({ variant: \"pill-outline\" }))}>\n        View documentation\n      </a>\n    </>\n  );\n}\n\n/**\n * The white product hero. `title` is two lines, the second blue; `actions` replaces the default pills (which use\n * `signupHref` and `docsHref`); `note` is a quiet line under them; `children` is the demo under the headline band.\n * `background` replaces the dot streams (pass null for none). When the hero sits under a see-through fixed header, set\n * `--hero-header` on it to the header's height: the band then grows by that much and keeps the content below it.\n */\nfunction ProductHero({\n  title,\n  description,\n  actions,\n  note,\n  signupHref = \"/signup\",\n  docsHref = \"https://docs.context.dev\",\n  background,\n  eyebrow: _eyebrow,\n  contentHeight: _contentHeight,\n  className,\n  children,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: readonly [React.ReactNode, React.ReactNode];\n  description?: React.ReactNode;\n  /** Pills; defaults to \"Get API key\" and \"View documentation\". */\n  actions?: React.ReactNode;\n  /** A quiet line under the actions. */\n  note?: React.ReactNode;\n  signupHref?: string;\n  docsHref?: string;\n  /** Behind the headline band; the dot streams by default, null for none. */\n  background?: React.ReactNode;\n  /** @deprecated The water hero's eyebrow; the white hero has none, so it is ignored. */\n  eyebrow?: React.ReactNode;\n  /** @deprecated The water hero's height switch; the white hero sizes itself, so it is ignored. */\n  contentHeight?: boolean;\n}) {\n  const titleId = React.useId();\n  const field = background === undefined ? <HeroDotField fine lively streams className=\"text-brand/60\" /> : background;\n  return (\n    <section data-slot=\"product-hero\" aria-labelledby={titleId} className={cn(\"relative w-full bg-surface shadow-rule-bottom\", className)} {...props}>\n      {/* The streams are laid out in shares of their box, so the field covers only the headline band: spanning the demo\n          too would stretch them past it. */}\n      <div className=\"relative\">\n        {field && (\n          <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0\">\n            {field}\n          </div>\n        )}\n        <div\n          className={cn(\n            COLUMN,\n            \"z-10 flex min-h-[calc(var(--hero-header,0px)+var(--spacing)*104)] flex-col items-center justify-center gap-(--ds-layout-product-hero-gap) pt-[calc(var(--hero-header,0px)+var(--spacing)*14)] pb-14 text-center md:min-h-[calc(var(--hero-header,0px)+var(--ds-layout-product-hero))] md:pt-[var(--hero-header,0px)] md:pb-0\",\n          )}\n        >\n          <h1 id={titleId} className=\"text-hero leading-tight font-normal tracking-tight text-balance text-fg antialiased sm:text-h1 lg:text-hero-product lg:leading-hero-product\">\n            <span {...patternHole(\"text\")} className=\"block\">\n              {title[0]}\n            </span>{\" \"}\n            <span {...patternHole(\"text\")} className=\"block text-fg-brand\">\n              {title[1]}\n            </span>\n          </h1>\n          {description && (\n            <p className=\"max-w-(--ds-layout-product-hero-lead) text-lead leading-lead text-fg-nav md:text-lead-lg md:leading-lead-lg\">\n              <span {...patternHole(\"text\")}>{description}</span>\n            </p>\n          )}\n          <div {...patternHole(\"box\")} className=\"flex flex-wrap items-center justify-center gap-3 pt-1.5\">\n            {actions ?? <ProductHeroActions signupHref={signupHref} docsHref={docsHref} />}\n          </div>\n          {note && (\n            <p className=\"text-note leading-note text-pretty text-fg/50\">\n              <span {...patternHole(\"text\")}>{note}</span>\n            </p>\n          )}\n        </div>\n      </div>\n      {children && <div className={cn(COLUMN, \"z-10 pb-16 md:pb-(--ds-layout-product-hero-foot)\")}>{children}</div>}\n    </section>\n  );\n}\n\n/** @deprecated The water pages' customer logos; context.dev's product pages use the LogoStrip under the hero. */\nfunction ProductCustomerProof({ label = \"Teams build with us\", logos, className }: { label?: React.ReactNode; logos: { name: string; src: string }[]; className?: string }) {\n  return (\n    <section data-slot=\"product-customer-proof\" aria-label=\"Customers\" className={cn(\"pt-9 pb-10.5\", className)}>\n      <ProductContainer className=\"flex flex-col items-center gap-5\">\n        <p className=\"text-center text-body-sm text-fg-subtle sm:text-body\">{label}</p>\n        <ul role=\"list\" className=\"grid w-full grid-cols-2 items-center justify-center gap-x-4 gap-y-6 sm:flex sm:gap-8.5\">\n          {logos.map((logo) => (\n            <li key={logo.name} className=\"flex h-10.5 min-w-0 items-center justify-center sm:w-45\">\n              <img src={logo.src} alt={logo.name} className=\"h-8.5 w-29.5 object-contain opacity-50 brightness-0 grayscale\" />\n            </li>\n          ))}\n        </ul>\n      </ProductContainer>\n    </section>\n  );\n}\n\n/** @deprecated The water pages' steps; use ProductLandingSteps (product-landing), the numbered step cards. */\nfunction ProductSteps({\n  steps,\n  title = [\"From your first request\", \"to a working feature.\"],\n  numbered = false,\n  className,\n  children,\n}: {\n  steps: { title: React.ReactNode; description: React.ReactNode }[];\n  title?: readonly [React.ReactNode, React.ReactNode];\n  numbered?: boolean;\n  className?: string;\n  children?: React.ReactNode;\n}) {\n  const titleId = React.useId();\n  return (\n    <section data-slot=\"product-steps\" aria-labelledby={titleId} className={cn(\"py-16 sm:py-18\", className)}>\n      <ProductContainer className=\"flex flex-col gap-10\">\n        <h2 id={titleId} className=\"flex flex-col gap-2 text-h3 leading-tight font-normal tracking-tight text-fg sm:text-h2\">\n          <span>{title[0]}</span> <span className=\"text-fg-brand\">{title[1]}</span>\n        </h2>\n        <ol className=\"grid gap-8 md:grid-cols-3\">\n          {steps.map((step, index) => (\n            <li key={index} className=\"flex flex-col gap-3\">\n              {numbered && (\n                <span aria-hidden=\"true\" className=\"font-mono text-body-sm leading-5 text-fg-brand\">\n                  {String(index + 1).padStart(2, \"0\")}\n                </span>\n              )}\n              <h3 className=\"text-h4 leading-normal font-normal tracking-normal text-fg\">{step.title}</h3>\n              <p className=\"text-body-lg leading-normal text-fg-subtle\">{step.description}</p>\n            </li>\n          ))}\n        </ol>\n        {children}\n      </ProductContainer>\n    </section>\n  );\n}\n\n/** @deprecated The water pages' narrow FAQ; use ProductFaq (product-landing). */\nfunction ProductCompactFaq({\n  id,\n  faqs,\n  title = [\"A few things\", \"to know.\"],\n  description = \"More details in the API documentation.\",\n  className,\n}: {\n  id: string;\n  faqs: { question: React.ReactNode; answer: React.ReactNode }[];\n  title?: readonly [React.ReactNode, React.ReactNode];\n  description?: React.ReactNode;\n  className?: string;\n}) {\n  const titleId = React.useId();\n  return (\n    <section data-slot=\"product-compact-faq\" aria-labelledby={titleId} className={cn(\"pt-8 pb-20\", className)}>\n      <ProductContainer className=\"grid gap-10 lg:grid-cols-[17.5rem_minmax(0,1fr)]\">\n        <div className=\"flex flex-col items-start gap-4.5\">\n          <ProductHeading id={titleId} title={title} size=\"split\" />\n          {description && <p className=\"text-body leading-relaxed text-fg-subtle\">{description}</p>}\n        </div>\n        <div className=\"min-w-0\">\n          {faqs.map((faq, index) => (\n            <details key={index} name={`${id}-questions`} open={index === 0} className=\"group border-t border-line py-5 first:border-0 first:pt-0 first:pb-5.5\">\n              <summary className=\"flex min-h-6 cursor-pointer list-none items-center justify-between gap-5 rounded-sm text-body text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-4 sm:text-body-lg [&::-webkit-details-marker]:hidden\">\n                {faq.question}\n                <Plus aria-hidden=\"true\" className=\"size-4 shrink-0 text-fg-faint group-open:hidden\" />\n                <Minus aria-hidden=\"true\" className=\"size-4 shrink-0 text-fg-faint group-not-open:hidden\" />\n              </summary>\n              <div className=\"mt-3 text-body leading-relaxed text-fg-subtle\">{faq.answer}</div>\n            </details>\n          ))}\n        </div>\n      </ProductContainer>\n    </section>\n  );\n}\n\n/** @deprecated The water pages' blue closing band; product pages close with the site's ClosingCta. */\nfunction ProductCallToAction({\n  title = \"Start with your next request.\",\n  description,\n  actions,\n  background,\n  className,\n}: {\n  title?: React.ReactNode;\n  description?: React.ReactNode;\n  /** ProductAction pills, `light` and `clear`. */\n  actions?: React.ReactNode;\n  /** The water texture, dimmed so the white copy reads. */\n  background?: React.ReactNode;\n  className?: string;\n}) {\n  const titleId = React.useId();\n  return (\n    <section data-slot=\"product-call-to-action\" aria-labelledby={titleId} className={cn(\"relative isolate flex w-full items-center overflow-hidden bg-navy-60 py-16 text-center text-white sm:min-h-75\", className)}>\n      {background && (\n        <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 -z-10\">\n          {background}\n        </div>\n      )}\n      <ProductContainer className=\"relative flex flex-col items-center gap-5.5\">\n        <h2 id={titleId} className=\"text-h3 leading-tight font-normal tracking-tight text-balance text-white sm:text-h2\">\n          {title}\n        </h2>\n        {description && <p className=\"max-w-160 text-body leading-7 text-pretty text-white/85 sm:text-body-lg\">{description}</p>}\n        {actions && <div className=\"flex flex-wrap justify-center gap-3 pt-1.5\">{actions}</div>}\n      </ProductContainer>\n    </section>\n  );\n}\n\nexport { ProductHero, ProductAction, ProductContainer, ProductHeading, ProductCustomerProof, ProductSteps, ProductCompactFaq, ProductCallToAction };\n"
+    }
+  ]
+}

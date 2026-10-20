@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "glyph-story",
+  "type": "visual",
+  "title": "Glyph story",
+  "description": "Large product glyph animation in the fine dot pattern. Supports a static state.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Large featured glyphs, like the Browse APIs and Upgrade plan cards. `still` beside a story already playing.",
+  "avoid": [
+    "More than one or two stories on a screen"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/glyph-story.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add glyph-story --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/dots/glyph-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/glyph-story.tsx",
+        "sha256": "cfe7691b0891a179c21b80dd6689c7e77154e0fa21de57e8d82b8d70cc520bf7",
+        "retained": false,
+        "exports": [
+          "GlyphStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/glyph/glyph-story.d.ts",
+      "content": "import { type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\n/**\n * A glyph pair drawn in the blog covers' fine dot pattern, like the Browse APIs and Upgrade plan cards: brand-blue dots\n * on the page, the subject melting into what it gives you on a loop while in view. `still` holds the subject instead,\n * as reduced motion does.\n */\nexport declare function GlyphStory({ name, still, className }: {\n    name: GlyphPairName;\n    still?: boolean;\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/glyph-story/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/glyph-story.tsx",
+      "content": "import { GlyphStory } from \"@/components/visuals/glyph/glyph-story\";\n\nexport function Product() {\n  return (\n    <div className=\"flex items-center justify-center gap-8\">\n      <GlyphStory name=\"search\" className=\"w-28 text-brand\" />\n      <GlyphStory name=\"search\" still className=\"w-28 text-brand\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "glyph-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-story.tsx",
+      "content": "\"use client\";\n\nimport { useMemo } from \"react\";\nimport { DotStory, type LoadDotStory } from \"@/components/visuals/dot-engine/dot-story\";\nimport { cellStates } from \"@/components/visuals/dot-engine/dot-story-cells\";\nimport { GLYPH_GRID, glyphSubject, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { FINE_GRID, fineCellsOf } from \"@/components/visuals/glyph/upgrade-story-fine\";\n\n/**\n * A glyph pair drawn in the blog covers' fine dot pattern, like the Browse APIs and Upgrade plan cards: brand-blue dots\n * on the page, the subject melting into what it gives you on a loop while in view. `still` holds the subject instead,\n * as reduced motion does.\n */\nexport function GlyphStory({ name, still = false, className }: { name: GlyphPairName; still?: boolean; className?: string }) {\n  const resting = useMemo(() => ({ cells: fineCellsOf(cellStates(GLYPH_GRID, glyphSubject(name))) }), [name]);\n  const load = useMemo<LoadDotStory>(\n    () => async (stage) => {\n      const { createGlyphStoryPlayer } = await import(\"@/components/visuals/glyph/glyph-story-player\");\n      return createGlyphStoryPlayer(stage, name);\n    },\n    [name],\n  );\n  return <DotStory grid={FINE_GRID} resting={resting} load={load} still={still} className={className} />;\n}\n"
+    }
+  ]
+}

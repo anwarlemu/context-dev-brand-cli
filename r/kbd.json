@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "kbd",
+  "type": "ui",
+  "title": "Kbd",
+  "description": "Keyboard shortcut label.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Shortcuts in menus and the command palette.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/kbd.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add kbd --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/command-palette.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/command-palette.tsx",
+        "sha256": "6b23d259e1bd93602f965a171930670ebe40d375cef099d7cf1026cd6659f033",
+        "retained": false,
+        "exports": [
+          "CommandPalette"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/kbd.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Kbd({ className, ...props }: React.ComponentProps<\"kbd\">): React.JSX.Element;\nexport { Kbd };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/kbd/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/kbd.tsx",
+      "content": "import { Kbd } from \"@/components/ui/kbd\";\n\nexport function Product() {\n  return (\n    <p className=\"flex items-center gap-1.5 text-body-sm text-fg-muted\">\n      Search with <Kbd>⌘</Kbd>\n      <Kbd>K</Kbd>\n    </p>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/kbd.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A keyboard key in menus and the command palette: 20px, a light border on white, 11px.\nfunction Kbd({ className, ...props }: React.ComponentProps<\"kbd\">) {\n  return (\n    <kbd\n      data-slot=\"kbd\"\n      className={cn(\"inline-grid h-5 min-w-5 place-items-center rounded-[calc(var(--ds-radius-control)-0.125rem)] border border-line bg-surface px-1 font-sans text-axis text-fg-subtle\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { Kbd };\n"
+    }
+  ]
+}

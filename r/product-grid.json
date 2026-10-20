@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "product-grid",
+  "type": "site",
+  "title": "Product grid",
+  "description": "Product cards with a title, description, action, tags, and demo window.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring",
+    "chip",
+    "media-frame"
+  ],
+  "usage": "Presenting the main products, two to four of them, with a row of smaller pills for the rest of the API (`MoreApis`, a marquee on phones). Put the agent setup window beside the section heading when the page offers agent setup.",
+  "avoid": [
+    "Filled chips",
+    "A black pill in every card (Explore is the outline pill)",
+    "Screenshots that ignore the media panel's ring"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/product-grid.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add product-grid --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/product-grid.tsx; src/components/sections/home/product-demo-panel.tsx; src/components/sections/home/story-stage.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/product-grid.tsx",
+        "sha256": "c845eed09fa77a98a03fd569d611dd9042a7f9dd9a916548534827c33301448a",
+        "retained": false,
+        "exports": [
+          "ProductGrid"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/product-demo-panel.tsx",
+        "sha256": "2d357ebf89b0f47df047705f6de1a60dd13a13da05c05da077a5dce7c3cf147c",
+        "retained": false,
+        "exports": [
+          "ProductDemoPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/story-stage.tsx",
+        "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
+        "retained": false,
+        "exports": [
+          "StoryStage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/product-grid.d.ts",
+      "content": "import * as React from \"react\";\nexport type ProductGridItem = {\n    name: string;\n    description: string;\n    tags?: string[];\n    href: string;\n    linkLabel?: string;\n    media?: React.ReactNode;\n};\n/** The demo window at the bottom of a card: a white panel in the ring, its radius repeated so the corners match. */\ndeclare function ProductMedia({ children, className }: {\n    children?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\ndeclare function ProductCard({ name, description, tags, href, linkLabel, media, className }: ProductGridItem & {\n    className?: string;\n}): React.JSX.Element;\n/**\n * The rest of the API as small outline pills beside a label. From tablet up it is one row that scrolls sideways\n * without a scrollbar; on phones it runs as a marquee fading in from just past the label, pausing while it is hovered,\n * pressed or focused. Reduced motion keeps the swipeable row instead.\n */\ndeclare function MoreApis({ items, label, icon, className }: {\n    items: {\n        label: string;\n        href: string;\n    }[];\n    label?: React.ReactNode;\n    icon?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\ndeclare function ProductGrid({ products, more, moreLabel, className, }: {\n    products: ProductGridItem[];\n    /** The rest of the API, as small pills under the grid. */\n    more?: {\n        label: string;\n        href: string;\n    }[];\n    moreLabel?: string;\n    className?: string;\n}): React.JSX.Element;\nexport { ProductGrid, ProductCard, ProductMedia, MoreApis };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/product-grid/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/product-grid.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { DotGlyph } from \"@/components/ui/dot-glyph\";\nimport { ProductGrid } from \"@/components/site/product-grid\";\n\n// Stand-ins for the products' dot stories, which come later.\nconst SEARCH = [\"22222..\", \"2...2..\", \"2...2..\", \"22222..\", \"....22.\", \".....22\", \"......2\"];\nconst PAGE = [\"22222\", \"2...2\", \"2.2.2\", \"2...2\", \"22222\"];\nconst ANSWER = [\"..2..\", \".222.\", \"22222\", \".222.\", \"..2..\"];\nconst WATCH = [\"1.1.1\", \".2.2.\", \"1.2.1\", \".2.2.\", \"1.1.1\"];\n\nexport function Site() {\n  return (<SiteSection>\n    <ProductGrid\n      className=\"w-full\"\n      products={[\n        { name: \"Search\", description: \"Search the web or the news and get ranked results with clean page content, not just links.\", tags: [\"Fresh sources for RAG\", \"Company news\", \"Agent web search\"], href: \"https://context.dev/search\", media: <DotGlyph rows={SEARCH} className=\"size-24 text-brand\" /> },\n        { name: \"Scrape\", description: \"Turn any page or PDF into Markdown, HTML, structured fields, images, or screenshots in one request.\", tags: [\"Scrape to Markdown\", \"Onboarding autofill\", \"PDF parsing\"], href: \"https://context.dev/web-scraping-api\", media: <DotGlyph rows={PAGE} className=\"size-24 text-brand\" /> },\n        { name: \"Research\", description: \"Ask a research question and get a structured answer in your JSON shape, with the sources behind it.\", tags: [\"Company research\", \"Entity enrichment\", \"Cited answers\"], href: \"https://context.dev/research\", media: <DotGlyph rows={ANSWER} className=\"size-24 text-brand\" /> },\n        { name: \"Monitor\", description: \"Watch pages on a schedule and get notified when pricing, content, or pages change.\", tags: [\"Pricing changes\", \"New pages\", \"Webhook updates\"], href: \"https://context.dev/monitors\", media: <DotGlyph rows={WATCH} className=\"size-24 text-brand\" /> },\n      ]}\n      more={[\n        { label: \"Crawl\", href: \"https://context.dev/data/crawl-website-api\" },\n        { label: \"Map URLs\", href: \"https://context.dev/map\" },\n        { label: \"Batches\", href: \"https://context.dev/batches\" },\n        { label: \"HTML scraping\", href: \"https://context.dev/data/web-scrape-html-api\" },\n        { label: \"Screenshots\", href: \"https://context.dev/data/screenshot-api\" },\n        { label: \"Brand data\", href: \"https://context.dev/data/brand-data\" },\n        { label: \"Logos\", href: \"https://context.dev/data/logo-api\" },\n        { label: \"Fonts\", href: \"https://context.dev/data/font-api\" },\n      ]}\n    />\n  </SiteSection>);\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section",
+    "dot-glyph"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "badge",
+    "button",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/product-grid.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowUpRight, Globe } from \"lucide-react\";\n\nimport { Badge } from \"@/components/ui/badge\";\nimport { Button } from \"@/components/ui/button\";\nimport { cn } from \"@/lib/utils\";\n\n// The home page's product cards: a white card in the soft blue ring, the product's name at h3 beside an outline\n// \"Explore\" pill, one line of description, outlined chips for what people build with it, and a demo window (the\n// product's dot story) filling the rest of the card. Two columns from tablet up; a row of smaller pills for the rest\n// of the API underneath, which runs as a marquee on phones.\n\nexport type ProductGridItem = { name: string; description: string; tags?: string[]; href: string; linkLabel?: string; media?: React.ReactNode };\n\n/** The demo window at the bottom of a card: a white panel in the ring, its radius repeated so the corners match. */\nfunction ProductMedia({ children, className }: { children?: React.ReactNode; className?: string }) {\n  return (\n    <div data-slot=\"product-media\" className={cn(\"relative mt-auto flex flex-1 flex-col rounded-card bg-ring-tint p-2\", className)}>\n      <div className=\"relative flex min-h-88 flex-1 flex-col items-center justify-center overflow-hidden rounded-card bg-surface px-4 py-8 select-none sm:px-9\">{children}</div>\n    </div>\n  );\n}\n\nfunction ProductCard({ name, description, tags = [], href, linkLabel = \"Explore\", media, className }: ProductGridItem & { className?: string }) {\n  return (\n    <div data-slot=\"product-card\" className={cn(\"flex rounded-card bg-ring-tint p-2\", className)}>\n      <article className=\"relative flex flex-1 flex-col gap-10 overflow-hidden rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\">\n        <div className=\"flex flex-col gap-3\">\n          <div className=\"mb-2 flex items-center justify-between gap-4\">\n            <h3 className=\"text-h3 leading-heading font-normal tracking-normal text-fg\">{name}</h3>\n            <Button asChild variant=\"pill-outline\" className=\"group/explore\">\n              <a href={href}>\n                {linkLabel}\n                <span className=\"sr-only\"> {name}</span>\n                <ArrowUpRight aria-hidden=\"true\" />\n              </a>\n            </Button>\n          </div>\n          <p className=\"text-body-lg leading-snug text-fg-secondary\">{description}</p>\n          {tags.length > 0 && (\n            <ul aria-label={`What you can build with ${name}`} className=\"flex flex-wrap gap-1.5 leading-snug\">\n              {tags.map((tag) => (\n                <li key={tag}>\n                  <Badge variant=\"chip\">{tag}</Badge>\n                </li>\n              ))}\n            </ul>\n          )}\n        </div>\n        <ProductMedia>{media}</ProductMedia>\n      </article>\n    </div>\n  );\n}\n\nconst MARQUEE_MS = 24000;\n\nfunction MoreApiList({ items, duplicate = false, className }: { items: { label: string; href: string }[]; duplicate?: boolean; className?: string }) {\n  return (\n    <ul aria-hidden={duplicate || undefined} className={cn(\"flex shrink-0 gap-2 pr-2 md:pr-0\", className)}>\n      {items.map((api) => (\n        <li key={api.href}>\n          <a\n            href={api.href}\n            tabIndex={duplicate ? -1 : undefined}\n            className=\"inline-flex w-fit items-center justify-center rounded-pill border border-black/15 px-3 py-1.5 text-body-sm leading-snug whitespace-nowrap text-fg-nav outline-none transition-colors duration-200 ease-out hover:bg-black/3 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none\"\n          >\n            {api.label}\n          </a>\n        </li>\n      ))}\n    </ul>\n  );\n}\n\n/**\n * The rest of the API as small outline pills beside a label. From tablet up it is one row that scrolls sideways\n * without a scrollbar; on phones it runs as a marquee fading in from just past the label, pausing while it is hovered,\n * pressed or focused. Reduced motion keeps the swipeable row instead.\n */\nfunction MoreApis({ items, label = \"Also in the API\", icon, className }: { items: { label: string; href: string }[]; label?: React.ReactNode; icon?: React.ReactNode; className?: string }) {\n  const track = React.useRef<HTMLDivElement>(null);\n  const [marquee, setMarquee] = React.useState(false);\n\n  React.useEffect(() => {\n    const phone = window.matchMedia(\"(max-width: 47.99rem)\");\n    const reduce = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n    const update = () => setMarquee(phone.matches && !reduce.matches);\n    update();\n    phone.addEventListener(\"change\", update);\n    reduce.addEventListener(\"change\", update);\n    return () => {\n      phone.removeEventListener(\"change\", update);\n      reduce.removeEventListener(\"change\", update);\n    };\n  }, []);\n\n  // A constant slide by half the track (one copy of the list), so the loop closes on the duplicate without a jump.\n  React.useEffect(() => {\n    const node = track.current;\n    if (!marquee || !node) return;\n    const animation = node.animate([{ transform: \"translateX(0)\" }, { transform: \"translateX(-50%)\" }], { duration: MARQUEE_MS, iterations: Infinity, easing: \"linear\" });\n    const pause = () => animation.pause();\n    const play = () => {\n      if (!node.matches(\":hover, :focus-within\")) animation.play();\n    };\n    const events: [string, () => void][] = [[\"pointerenter\", pause], [\"pointerdown\", pause], [\"focusin\", pause], [\"pointerleave\", play], [\"pointerup\", play], [\"focusout\", play]];\n    const controller = new AbortController();\n    events.forEach(([name, handler]) => node.addEventListener(name, handler, { signal: controller.signal }));\n    return () => {\n      animation.cancel();\n      controller.abort();\n    };\n  }, [marquee]);\n\n  return (\n    <div data-slot=\"more-apis\" className={cn(\"flex items-center gap-4 md:overflow-x-auto md:[scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden\", className)}>\n      <div className=\"inline-flex shrink-0 items-center gap-2 text-body-sm leading-snug whitespace-nowrap text-fg-secondary\">\n        {icon ?? <Globe aria-hidden=\"true\" className=\"size-4\" />}\n        {label}\n      </div>\n      <div\n        className={cn(\n          \"relative min-w-0 flex-1 md:overflow-visible md:[mask-image:none]\",\n          marquee ? \"overflow-hidden [mask-image:linear-gradient(to_right,transparent,var(--ds-color-black)_var(--ds-space-10))]\" : \"overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden\",\n        )}\n      >\n        <div ref={track} className=\"flex w-max\">\n          <MoreApiList items={items} />\n          {/* The second copy only closes the loop, so it is hidden from assistive tech and the tab order. */}\n          {marquee && <MoreApiList items={items} duplicate />}\n        </div>\n      </div>\n    </div>\n  );\n}\n\nfunction ProductGrid({\n  products,\n  more,\n  moreLabel = \"Also in the API\",\n  className,\n}: {\n  products: ProductGridItem[];\n  /** The rest of the API, as small pills under the grid. */\n  more?: { label: string; href: string }[];\n  moreLabel?: string;\n  className?: string;\n}) {\n  return (\n    <div data-slot=\"product-grid\" className={cn(\"flex flex-col gap-8\", className)}>\n      {/* The ring sits outside each card's footprint: the grid's gap is measured between the cards, not their rings. */}\n      <div className=\"grid grid-cols-1 gap-6 md:grid-cols-2\">\n        {products.map((product) => (\n          <ProductCard key={product.name} className=\"-m-2\" {...product} />\n        ))}\n      </div>\n      {more && more.length > 0 && <MoreApis items={more} label={moreLabel} />}\n    </div>\n  );\n}\n\nexport { ProductGrid, ProductCard, ProductMedia, MoreApis };\n"
+    }
+  ]
+}

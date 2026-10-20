@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-generate",
+  "type": "visual",
+  "title": "Generate story",
+  "description": "Dot animation of company data being used to generate an email, social post, and landing page.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Generative AI use on a site card or page hero. Plays only on screen; shows what it made with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-generate.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-generate --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/generate-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/generate-story.tsx",
+        "sha256": "a0348515280c8b5e7355c96bb2d7e4b14d109314f18393e1ee293832017e5d02",
+        "retained": false,
+        "exports": [
+          "GenerateStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/generate-story.d.ts",
+      "content": "/**\n * The Generative AI page's picture: a prompt naming a company becomes the spark of the model at work, then the email,\n * social post and landing page it makes in that company's brand. With reduced motion it shows what it made.\n */\nexport declare function GenerateStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/generate-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createGenerateStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/generate-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The Generative AI page's pictures, in the brand dot grid: a prompt that names a company, the spark of the model\n * working with that company's brand, and what it makes, an email, a social post and a landing page, each wearing the\n * brand's mark.\n */\nexport declare const GENERATE_STORY_GRID: DotGrid;\nexport declare const PROMPT_FIELD: StoryPicture;\nexport declare const PROMPT_FILLED: StoryPicture;\nexport declare const alongPrompt: (column: number) => number;\nexport declare const PROMPT_TEXT: DotStoryText;\n/** The model at work: a large spark, and the small ones beside it, of which the `lit` one is solid and the other rings. */\nexport declare function paintSpark(states: Uint8Array, lit: number): Uint8Array<ArrayBufferLike>;\nexport declare const SPARK_PICTURE: StoryPicture;\nexport declare const SPARK_LABEL: DotStoryText;\nexport declare const OUTPUTS: StoryPicture;\nexport declare const OUTPUT_TEXTS: DotStoryText[][];\n/** What the model made: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const GENERATE_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-generate/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-generate.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { GenerateStory } from \"@/components/visuals/stories/generate-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <GenerateStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/generate-story.tsx",
+      "content": "'use client';\n\nimport { GENERATE_RESTING, GENERATE_STORY_GRID } from '@/components/visuals/stories/generate-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadGenerateStory: LoadDotStory = async (stage) => {\n\tconst { createGenerateStoryPlayer } = await import('@/components/visuals/stories/generate-story-player');\n\treturn createGenerateStoryPlayer(stage);\n};\n\n/**\n * The Generative AI page's picture: a prompt naming a company becomes the spark of the model at work, then the email,\n * social post and landing page it makes in that company's brand. With reduced motion it shows what it made.\n */\nexport function GenerateStory({ className }: { className?: string }) {\n\treturn <DotStory grid={GENERATE_STORY_GRID} resting={GENERATE_RESTING} load={loadGenerateStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/generate-story-player.ts",
+      "content": "import { GENERATE_STORY_GRID, OUTPUTS, OUTPUT_TEXTS, PROMPT_FIELD, PROMPT_FILLED, PROMPT_TEXT, SPARK_LABEL, SPARK_PICTURE, alongPrompt, paintSpark } from '@/components/visuals/stories/generate-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One generation, played as a loop: a prompt naming a company is typed; its field melts into the spark of the model\n * at work, its small sparks twinkling in turn; and the spark melts into what it made, an email, a social post and a\n * landing page, named one after another.\n */\n\nconst MELT_SECONDS = 1.1;\nconst FIELD_WIPE_SECONDS = 0.45;\nconst TYPING = { startsAt: 0.4, charactersPerSecond: 13 };\n// The small sparks end as they began, so the picture that melts away is the one that arrived.\nconst TWINKLE = { everySeconds: 0.45, times: 4 };\nconst NAMING = { startsAt: 0.2, everySeconds: 0.3, seconds: 0.3 };\n\nexport function createGenerateStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: GENERATE_STORY_GRID,\n\t\tresting: { beat: 4, heldSeconds: 2.4 },\n\t\tbeats: [\n\t\t\t{ picture: PROMPT_FILLED, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 0.1 },\n\t\t\t{\n\t\t\t\tpicture: PROMPT_FIELD,\n\t\t\t\tarrival: { kind: 'builds', seconds: FIELD_WIPE_SECONDS, order: alongPrompt },\n\t\t\t\tholdSeconds: TYPING.startsAt + typingSeconds(PROMPT_TEXT, TYPING.charactersPerSecond) + 0.8,\n\t\t\t\twrite: (pen, heldSeconds) => pen.type(PROMPT_TEXT, heldSeconds, { ...TYPING, cursorLingers: Infinity }),\n\t\t\t},\n\t\t\t{ picture: PROMPT_FILLED, arrival: { kind: 'builds', seconds: FIELD_WIPE_SECONDS, order: alongPrompt }, holdSeconds: 0.1 },\n\t\t\t{\n\t\t\t\tpicture: SPARK_PICTURE,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: TWINKLE.everySeconds * TWINKLE.times,\n\t\t\t\tanimate: (states, heldSeconds) => void paintSpark(states, Math.floor(heldSeconds / TWINKLE.everySeconds) % 2),\n\t\t\t\twrite: (pen) => pen.text(SPARK_LABEL),\n\t\t\t},\n\t\t\t{\n\t\t\t\tpicture: OUTPUTS,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: 3.8,\n\t\t\t\twrite: (pen, heldSeconds) => OUTPUT_TEXTS.forEach((texts, index) => texts.forEach((text) => pen.text(text, clamp01((heldSeconds - NAMING.startsAt - index * NAMING.everySeconds) / NAMING.seconds)))),\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/generate-story-scenes.ts",
+      "content": "import { promptField } from '@/components/visuals/stories/prompt-field';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, isInDotBox, paintShape, roundedBox, solidWithSpeckle, type DotBox, type DotPainter, type DotShape } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The Generative AI page's pictures, in the brand dot grid: a prompt that names a company, the spark of the model\n * working with that company's brand, and what it makes, an email, a social post and a landing page, each wearing the\n * brand's mark.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const GENERATE_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = GENERATE_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(GENERATE_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst PROMPT: DotBox = { left: 4, right: 53, top: 13, bottom: 23 };\nconst FIELD = promptField(GENERATE_STORY_GRID, PROMPT);\nexport const PROMPT_FIELD = FIELD.empty;\nexport const PROMPT_FILLED = FIELD.filled;\nexport const alongPrompt = FIELD.along;\nexport const PROMPT_TEXT: DotStoryText = { text: 'launch email for daily.dev', x: x(PROMPT.left + 4), y: baselineOn((PROMPT.top + PROMPT.bottom) / 2, 21), size: 21, weight: 700 };\n\n// A four-pointed spark: its edge curves in between the points, the sharper the smaller `roundness`.\nconst spark =\n\t(center: { column: number; row: number }, radius: number, roundness = 0.62): DotShape =>\n\t(column, row) =>\n\t\tMath.abs(column - center.column) ** roundness + Math.abs(row - center.row) ** roundness <= radius ** roundness;\nconst SPARK = { center: { column: 28.5, row: 16 }, radius: 14 };\nconst SPARKLES = [\n\t{ center: { column: 45, row: 7 }, radius: 5 },\n\t{ center: { column: 12, row: 26 }, radius: 4 },\n];\n\n/** The model at work: a large spark, and the small ones beside it, of which the `lit` one is solid and the other rings. */\nexport function paintSpark(states: Uint8Array, lit: number) {\n\tstates.fill(DOT_ABSENT);\n\tSPARKLES.forEach((sparkle, index) => paintShape(GENERATE_STORY_GRID, states, spark(sparkle.center, sparkle.radius), () => (index === lit ? DOT_FILLED : DOT_HOLLOW)));\n\treturn paintShape(GENERATE_STORY_GRID, states, spark(SPARK.center, SPARK.radius), solidWithSpeckle);\n}\n\nexport const SPARK_PICTURE = pictureOfStates(paintSpark(blank(), 0));\nexport const SPARK_LABEL: DotStoryText = { text: 'with its logo, colors and voice', x: x(COLUMNS / 2), y: baselineOn(34, 14), size: 14, weight: 700, muted: true, anchor: 'middle' };\n\nconst CARD = { top: 3, bottom: 28, columns: 16, lefts: [2, 21, 40] };\nconst cardBox = (index: number): DotBox => ({ left: CARD.lefts[index], right: CARD.lefts[index] + CARD.columns - 1, top: CARD.top, bottom: CARD.bottom });\n\n// A made-up mark, so no real company's logo is redrawn: a square with a disc over its corner. It is cut out of the\n// solid ground it sits on, in rings.\nconst markAt = (left: number, top: number, size: number): DotShape => (column, row) =>\n\tisInDotBox({ left: left + size * 0.35, right: left + size, top, bottom: top + size * 0.65 }, column, row) || Math.hypot(column - left - size * 0.35, row - top - size * 0.65) <= size * 0.36;\n\n// Each card is drawn from its own top-left corner: `across` and `down` count from just inside its outline.\nconst EMAIL: DotPainter = (across, down) => {\n\tif (between(down, 1, 7)) return markAt(2, 2, 4)(across, down) ? DOT_HOLLOW : DOT_FILLED;\n\tif ([10, 12, 14].includes(down)) return between(across, 2, down === 14 ? 8 : 11) ? DOT_HOLLOW : DOT_ABSENT;\n\treturn between(down, 18, 20) && between(across, 2, 9) ? DOT_FILLED : DOT_ABSENT;\n};\nconst POST: DotPainter = (across, down) => {\n\tif (between(down, 2, 15) && between(across, 1, 12)) return markAt(3, 5, 7)(across, down) ? DOT_HOLLOW : DOT_FILLED;\n\tif ([18, 20].includes(down)) return between(across, 1, down === 18 ? 11 : 7) ? DOT_HOLLOW : DOT_ABSENT;\n\treturn down === 23 && [1, 3, 5].includes(across) ? DOT_FILLED : DOT_ABSENT;\n};\nconst LANDING: DotPainter = (across, down) => {\n\tif (between(down, 1, 3)) return markAt(1, 1, 2)(across, down) ? DOT_FILLED : down === 2 && [8, 9, 11, 12].includes(across) ? DOT_HOLLOW : DOT_ABSENT;\n\tif (between(down, 6, 7)) return between(across, 1, 10) ? DOT_FILLED : DOT_ABSENT;\n\tif ([10, 12].includes(down)) return between(across, 1, down === 10 ? 12 : 8) ? DOT_HOLLOW : DOT_ABSENT;\n\tif (between(down, 15, 17)) return between(across, 1, 6) ? DOT_FILLED : DOT_ABSENT;\n\treturn between(down, 20, 23) && between(across, 1, 12) ? solidWithSpeckle(across, down) : DOT_ABSENT;\n};\nconst CONTENTS = [EMAIL, POST, LANDING];\n\nconst outputStates = blank();\nCONTENTS.forEach((content, index) => {\n\tconst box = cardBox(index);\n\tpaintShape(GENERATE_STORY_GRID, outputStates, roundedBox(box, 2), (column, row) => content(column - box.left - 1, row - box.top - 1));\n});\nexport const OUTPUTS = pictureOfStates(outputStates);\n\nconst OUTPUT_NAMES = ['Email', 'Social post', 'Landing page'];\nexport const OUTPUT_TEXTS: DotStoryText[][] = OUTPUT_NAMES.map((name, index) => [\n\t{ text: name, x: x(CARD.lefts[index]), y: baselineOn(CARD.bottom + 3, 15), size: 15, weight: 800 },\n\t{ text: 'on brand', x: x(CARD.lefts[index]), y: baselineOn(CARD.bottom + 5.5, 12), size: 12, weight: 700, muted: true },\n]);\n\n/** What the model made: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const GENERATE_RESTING = { ...OUTPUTS, texts: OUTPUT_TEXTS.flat() };\n\n"
+    }
+  ]
+}

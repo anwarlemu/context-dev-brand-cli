@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "card",
+  "type": "ui",
+  "title": "Card",
+  "description": "Content container with product and site variants.",
+  "surface": "both",
+  "kinds": [
+    "card",
+    "app-card"
+  ],
+  "usage": "Grouping related content. `default` in the product, `ring` on the site.",
+  "avoid": [
+    "Gray card backgrounds",
+    "Heavy drop shadows",
+    "Cards inside cards"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/card.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add card",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/app/globals.css; website src/styles/globals.css (.brand-glass-ring); src/components/sections/home/product-grid.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/app/globals.css",
+        "sha256": "9b05824c96294781b01c4f00fc8200822b3317ca0d81b0777b5f591168a33b7a",
+        "retained": false,
+        "exports": []
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/styles/globals.css",
+        "sha256": "24a6f8004a111647e72f24a79192ed99fe0451a06bbbfa77c0b6ae41aaaf3837",
+        "retained": false,
+        "exports": []
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/product-grid.tsx",
+        "sha256": "c845eed09fa77a98a03fd569d611dd9042a7f9dd9a916548534827c33301448a",
+        "retained": false,
+        "exports": [
+          "ProductGrid"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/card.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const cardVariants: (props?: ({\n    variant?: \"ring\" | \"default\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Card({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof cardVariants>): React.JSX.Element;\ndeclare function CardHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function CardTitle({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function CardDescription({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function CardAction({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function CardContent({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function CardFooter({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent, cardVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/card/Product"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/card/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/card.tsx",
+      "content": "import { Button } from \"@/components/ui/button\";\nimport { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from \"@/components/ui/card\";\n\nexport function Product() {\n  return (\n    <Card className=\"w-full max-w-sm\">\n      <CardHeader>\n        <CardTitle>API usage</CardTitle>\n        <CardDescription>Requests this billing period.</CardDescription>\n        <CardAction>\n          <Button variant=\"ghost\" size=\"sm\" asChild><a href=\"/preview/usage-card/Product\">Details</a></Button>\n        </CardAction>\n      </CardHeader>\n      <CardContent>\n        <p className=\"font-data text-h4 tabular-nums\">48,210</p>\n      </CardContent>\n    </Card>\n  );\n}\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"w-full max-w-md\">\n      <CardTitle className=\"text-h4\">Search</CardTitle>\n      <CardDescription className=\"text-body\">Search the web or the news and get ranked results with clean page content, not just links.</CardDescription>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/card.tsx",
+      "content": "import * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The product's card (.glass-card): white, its hairline drawn into the shadow. The site's card sits in a soft blue ring (the ring is\n// a spread shadow, so it adds no layout size).\nconst cardVariants = cva(\"flex flex-col bg-surface text-fg\", {\n  variants: {\n    variant: {\n      default: \"gap-4 rounded-card px-5 py-4 shadow-card\",\n      ring: \"gap-4 rounded-card p-6 shadow-[0_0_0_1px_var(--ds-color-border-hairline),0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)] md:p-8\",\n    },\n  },\n  defaultVariants: { variant: \"default\" },\n});\n\nfunction Card({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof cardVariants>) {\n  return <div data-slot=\"card\" className={cn(cardVariants({ variant }), className)} {...props} />;\n}\n\nfunction CardHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"card-header\" className={cn(\"grid auto-rows-min grid-rows-[auto_auto] items-start gap-1 has-data-[slot=card-action]:grid-cols-[1fr_auto]\", className)} {...props} />;\n}\n\nfunction CardTitle({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"card-title\" className={cn(\"text-h5 leading-snug font-normal text-fg\", className)} {...props} />;\n}\n\nfunction CardDescription({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"card-description\" className={cn(\"text-body-sm leading-relaxed text-fg-muted\", className)} {...props} />;\n}\n\nfunction CardAction({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"card-action\" className={cn(\"col-start-2 row-span-2 row-start-1 self-start justify-self-end\", className)} {...props} />;\n}\n\nfunction CardContent({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"card-content\" className={cn(\"text-body-sm text-fg\", className)} {...props} />;\n}\n\nfunction CardFooter({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"card-footer\" className={cn(\"flex items-center gap-2\", className)} {...props} />;\n}\n\nexport { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent, cardVariants };\n"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-brand-kit",
+  "type": "visual",
+  "title": "Brand kit story",
+  "description": "Dot animation of a domain resolving to logo, color, typography, and company data.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "A brand kit page hero or card on the site. Plays only on screen; shows the unpacked kit with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-brand-kit.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-brand-kit --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/brand-kit-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/brand-kit-story.tsx",
+        "sha256": "5564c9fb665c8a9e7000cd92f891e88dce4c78e311ff81a81b4fba5ae3fa0b41",
+        "retained": false,
+        "exports": [
+          "BrandKitStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/brand-kit-story.d.ts",
+      "content": "/**\n * The Brand kit page's picture: a typed domain becomes a kit box, then the logo, colors, typeface and company details\n * unpacked from it. With reduced motion it shows the unpacked kit.\n */\nexport declare function BrandKitStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/brand-kit-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createBrandKitStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/brand-kit-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The Brand kit page's pictures, in the brand dot grid: a domain typed into a field, the kit it comes back as, a\n * box tied with a band, and the box unpacked into what is in it, a logo, colors, a typeface and the company's details.\n */\nexport declare const BRAND_KIT_GRID: DotGrid;\nexport declare const DOMAIN_FIELD: {\n    empty: StoryPicture;\n    filled: StoryPicture;\n    along: (column: number) => number;\n};\nexport declare const DOMAIN: DotStoryText;\nexport declare const KIT_BOX: StoryPicture;\nexport declare const KIT_LABEL: DotStoryText;\nexport declare const KIT_PACKED: StoryPicture;\nexport declare const KIT_UNPACKED: StoryPicture;\n/** How far through the unpacking a dot is reached: the tiles in order, left to right. */\nexport declare const unpackingOrder: (column: number) => number;\nexport declare const KIT_TEXTS: DotStoryText[][];\n/** The unpacked kit: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const BRAND_KIT_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-brand-kit/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-brand-kit.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { BrandKitStory } from \"@/components/visuals/stories/brand-kit-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <BrandKitStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/brand-kit-story.tsx",
+      "content": "'use client';\n\nimport { BRAND_KIT_RESTING, BRAND_KIT_GRID } from '@/components/visuals/stories/brand-kit-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadBrandKitStory: LoadDotStory = async (stage) => {\n\tconst { createBrandKitStoryPlayer } = await import('@/components/visuals/stories/brand-kit-story-player');\n\treturn createBrandKitStoryPlayer(stage);\n};\n\n/**\n * The Brand kit page's picture: a typed domain becomes a kit box, then the logo, colors, typeface and company details\n * unpacked from it. With reduced motion it shows the unpacked kit.\n */\nexport function BrandKitStory({ className }: { className?: string }) {\n\treturn <DotStory grid={BRAND_KIT_GRID} resting={BRAND_KIT_RESTING} load={loadBrandKitStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/brand-kit-story-player.ts",
+      "content": "import { BRAND_KIT_GRID, DOMAIN, DOMAIN_FIELD, KIT_BOX, KIT_LABEL, KIT_PACKED, KIT_TEXTS, KIT_UNPACKED, unpackingOrder } from '@/components/visuals/stories/brand-kit-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One brand kit, played as a loop: a domain is typed; its field melts into the kit, a box tied with a band; and the\n * box melts into its contents, four tiles unpacked from the left and named one after another.\n */\n\nconst MELT_SECONDS = 1.1;\nconst FIELD_WIPE_SECONDS = 0.45;\nconst TYPING = { startsAt: 0.4, charactersPerSecond: 9 };\nconst UNPACKING_SECONDS = 1.2;\nconst NAMING = { everySeconds: 0.25, seconds: 0.3 };\n\nexport function createBrandKitStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: BRAND_KIT_GRID,\n\t\tresting: { beat: 5, heldSeconds: 2.4 },\n\t\tbeats: [\n\t\t\t{ picture: DOMAIN_FIELD.filled, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 0.1 },\n\t\t\t{\n\t\t\t\tpicture: DOMAIN_FIELD.empty,\n\t\t\t\tarrival: { kind: 'builds', seconds: FIELD_WIPE_SECONDS, order: DOMAIN_FIELD.along },\n\t\t\t\tholdSeconds: TYPING.startsAt + typingSeconds(DOMAIN, TYPING.charactersPerSecond) + 0.8,\n\t\t\t\twrite: (pen, heldSeconds) => pen.type(DOMAIN, heldSeconds, { ...TYPING, cursorLingers: Infinity }),\n\t\t\t},\n\t\t\t{ picture: DOMAIN_FIELD.filled, arrival: { kind: 'builds', seconds: FIELD_WIPE_SECONDS, order: DOMAIN_FIELD.along }, holdSeconds: 0.1 },\n\t\t\t{ picture: KIT_BOX, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 1.8, write: (pen) => pen.text(KIT_LABEL) },\n\t\t\t{ picture: KIT_PACKED, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 0.2 },\n\t\t\t{\n\t\t\t\tpicture: KIT_UNPACKED,\n\t\t\t\tarrival: { kind: 'builds', seconds: UNPACKING_SECONDS, order: unpackingOrder },\n\t\t\t\tholdSeconds: 3.6,\n\t\t\t\twrite: (pen, heldSeconds) => KIT_TEXTS.forEach((texts, index) => texts.forEach((text) => pen.text(text, clamp01((heldSeconds - index * NAMING.everySeconds) / NAMING.seconds)))),\n\t\t\t},\n\t\t\t{ picture: KIT_PACKED, arrival: { kind: 'builds', seconds: 0.5, order: unpackingOrder }, holdSeconds: 0.1 },\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/brand-kit-story-scenes.ts",
+      "content": "import { promptField } from '@/components/visuals/stories/prompt-field';\nimport { typeSpecimen } from '@/components/visuals/stories/style-guide-parts';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, isInDotBox, paintShape, roundedBox, solidWithSpeckle, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The Brand kit page's pictures, in the brand dot grid: a domain typed into a field, the kit it comes back as, a\n * box tied with a band, and the box unpacked into what is in it, a logo, colors, a typeface and the company's details.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const BRAND_KIT_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = BRAND_KIT_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(BRAND_KIT_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst FIELD_BOX: DotBox = { left: 9, right: 48, top: 13, bottom: 23 };\nexport const DOMAIN_FIELD = promptField(BRAND_KIT_GRID, FIELD_BOX);\nexport const DOMAIN: DotStoryText = { text: 'super.com', x: x(FIELD_BOX.left + 4), y: baselineOn((FIELD_BOX.top + FIELD_BOX.bottom) / 2, 24), size: 24, weight: 800 };\n\nconst BOX = { left: 16, right: 41, top: 12, bottom: 32, lid: { left: 14, right: 43, top: 6, bottom: 11 }, band: { left: 27, right: 30 } };\n// A made-up mark, so no real company's logo is redrawn: a square with a disc over its corner.\nconst isMark = (across: number, down: number, size: number) => isInDotBox({ left: size * 0.35, right: size, top: 0, bottom: size * 0.65 }, across, down) || Math.hypot(across - size * 0.35, down - size * 0.65) <= size * 0.36;\n\nconst kitStates = blank();\n// The box and its lid are solid card, tied with a band of rings; the lid's seal carries the mark.\npaintShape(BRAND_KIT_GRID, kitStates, (column, row) => isInDotBox(BOX, column, row), (column, row) => (between(column, BOX.band.left, BOX.band.right) ? DOT_HOLLOW : solidWithSpeckle(column, row)));\npaintShape(BRAND_KIT_GRID, kitStates, roundedBox(BOX.lid, 1), (column) => (between(column, BOX.band.left, BOX.band.right) ? DOT_HOLLOW : DOT_FILLED));\npaintShape(BRAND_KIT_GRID, kitStates, roundedBox({ left: 23, right: 34, top: 17, bottom: 27 }, 2), (column, row) => (isMark(column - 25, row - 19, 7) ? DOT_FILLED : DOT_ABSENT));\nexport const KIT_BOX = pictureOfStates(kitStates);\nexport const KIT_LABEL: DotStoryText = { text: 'one API call, one brand kit', x: x(COLUMNS / 2), y: baselineOn(35, 14), size: 14, weight: 700, muted: true, anchor: 'middle' };\n\nconst TILE = { top: 6, bottom: 22, columns: 12, lefts: [2, 16, 30, 44] };\nconst tileBox = (index: number): DotBox => ({ left: TILE.lefts[index], right: TILE.lefts[index] + TILE.columns - 1, top: TILE.top, bottom: TILE.bottom });\nconst SPECIMEN = typeSpecimen({ column: TILE.lefts[2] + 2, row: TILE.top + 5 }, 5.6, 0.7);\n\n// What is in the kit, one tile each: the logo, four colors from dark to light, the typeface and the company's details.\nconst CONTENTS: DotPainter[] = [\n\t(column, row) => (isMark(column - TILE.lefts[0] - 2.5, row - TILE.top - 5, 7) ? DOT_FILLED : DOT_ABSENT),\n\t(column, row) => {\n\t\tconst stripe = Math.floor((row - TILE.top - 2) / 3.5);\n\t\tif (!between(column, TILE.lefts[1] + 2, TILE.lefts[1] + 9) || !between(stripe, 0, 3) || (row - TILE.top - 2) % 3.5 >= 2.5) return DOT_ABSENT;\n\t\treturn stripe === 0 ? DOT_FILLED : stripe === 1 ? solidWithSpeckle(column, row) : stripe === 2 ? (solidWithSpeckle(column, row) === DOT_FILLED ? DOT_HOLLOW : DOT_FILLED) : DOT_HOLLOW;\n\t},\n\t(column, row) => (SPECIMEN(column, row) ? DOT_FILLED : row === TILE.bottom - 3 && between(column, TILE.lefts[2] + 2, TILE.lefts[2] + 9) ? DOT_HOLLOW : DOT_ABSENT),\n\t(column, row) => {\n\t\tconst across = column - TILE.lefts[3];\n\t\tconst down = row - TILE.top;\n\t\tif (between(down, 3, 4)) return between(across, 2, 7) ? DOT_FILLED : DOT_ABSENT;\n\t\treturn [7, 9, 11, 13].includes(down) && between(across, 2, down === 11 ? 6 : 9) ? DOT_HOLLOW : DOT_ABSENT;\n\t},\n];\n\nconst contentsOf = (isPacked: boolean) => {\n\tconst states = blank();\n\tCONTENTS.forEach((content, index) => paintShape(BRAND_KIT_GRID, states, roundedBox(tileBox(index), 2), isPacked ? () => DOT_HOLLOW : content));\n\treturn pictureOfStates(states);\n};\n// A tile that is only an outline has too little in it to melt into, so the tiles arrive full of rings and are then unpacked.\nexport const KIT_PACKED = contentsOf(true);\nexport const KIT_UNPACKED = contentsOf(false);\n/** How far through the unpacking a dot is reached: the tiles in order, left to right. */\nexport const unpackingOrder = (column: number) => Math.min(1, Math.max(0, column / COLUMNS));\n\nconst NAMES = ['Logo', 'Colors', 'Fonts', 'Company'];\nconst DETAILS = ['SVG, PNG', '4 roles', 'Inter', 'Software'];\nexport const KIT_TEXTS: DotStoryText[][] = NAMES.map((name, index) => [\n\t{ text: name, x: x(TILE.lefts[index]), y: baselineOn(TILE.bottom + 3, 15), size: 15, weight: 800 },\n\t{ text: DETAILS[index], x: x(TILE.lefts[index]), y: baselineOn(TILE.bottom + 5.5, 12), size: 12, weight: 700, muted: true },\n]);\n\n/** The unpacked kit: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const BRAND_KIT_RESTING = { ...KIT_UNPACKED, texts: KIT_TEXTS.flat() };\n"
+    }
+  ]
+}

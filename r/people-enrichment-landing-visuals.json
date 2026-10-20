@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "people-enrichment-landing-visuals",
+  "type": "site",
+  "title": "People enrichment page visuals",
+  "description": "The People enrichment page's hero demo and capability panels: a work email in and a candidate profile with its match score out.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The People enrichment product page (context.dev/people-enrichment): PeopleEnrichmentHeroDemo under the hero, and PeopleIdentifiersPanel, PeopleContextPanel, PeopleMatchPanel as the pictures in its three capability cards (ProductStorySection), in that order.",
+  "avoid": [
+    "A dot story and a panel in the same card",
+    "Bold names or titles",
+    "Syntax colors in the output"
+  ],
+  "notes": "PeopleEnrichmentHeroDemo is a ProductDemoCard with a work email in and a candidate profile with its match score out. The panels show the identifiers a lookup starts from, the profile context, and the two match outcomes. Each takes its example values as\nprops where a page would change them, and keeps the site's illustrative ones by default.",
+  "documentation": "https://context-ds.vercel.app/components/people-enrichment-landing-visuals.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add people-enrichment-landing-visuals --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/people-enrichment-landing-visuals.tsx; src/components/sections/products/product-landing-content.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/people-enrichment-landing-visuals.tsx",
+        "sha256": "9d5f424196e29d47e1c15bb63277511dacade352940a4f6c2b9d8b7744cd30aa",
+        "retained": false,
+        "exports": [
+          "PeopleEnrichmentHeroDemo",
+          "PeopleIdentifiersPanel",
+          "PeopleContextPanel",
+          "PeopleMatchPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-content.tsx",
+        "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+        "retained": false,
+        "exports": [
+          "RelatedProductId",
+          "ProductLandingContent",
+          "scrapeLandingContent",
+          "answersLandingContent",
+          "searchLandingContent",
+          "mapLandingContent",
+          "brandLandingContent",
+          "styleguideLandingContent",
+          "batchesLandingContent",
+          "monitorsLandingContent",
+          "parseLandingContent",
+          "brandSearchLandingContent",
+          "peopleEnrichmentLandingContent",
+          "newsLandingContent"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/people-enrichment-landing-visuals.d.ts",
+      "content": "export type DemoPerson = {\n    name: string;\n    initials: string;\n    email: string;\n    role: string;\n};\nexport declare function PeopleEnrichmentHeroDemo({ person, score, output }: {\n    person?: DemoPerson;\n    score?: number;\n    output?: string;\n}): import(\"react\").JSX.Element;\nexport declare function PeopleIdentifiersPanel(): import(\"react\").JSX.Element;\nexport declare function PeopleContextPanel(): import(\"react\").JSX.Element;\nexport declare function PeopleMatchPanel(): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/people-enrichment-landing-visuals/Site"
+    },
+    {
+      "name": "Capabilities",
+      "url": "https://context-ds.vercel.app/preview/people-enrichment-landing-visuals/Capabilities"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/people-enrichment-landing-visuals.tsx",
+      "content": "import { PeopleContextPanel, PeopleEnrichmentHeroDemo, PeopleIdentifiersPanel, PeopleMatchPanel } from \"@/components/site/people-enrichment-landing-visuals\";\nimport { ProductStorySection } from \"@/components/site/product-landing\";\n\nexport function Site() {\n  return (\n    <div className=\"mx-auto w-full max-w-[var(--ds-layout-column-wide)] px-6 py-12 sm:px-8 md:px-10 lg:px-12\">\n      <PeopleEnrichmentHeroDemo />\n    </div>\n  );\n}\n\nexport function Capabilities() {\n  return (\n    <div className=\"w-full\">\n      <ProductStorySection\n        title=\"Start with an identifier.\"\n        accent=\"Get context you can check.\"\n        description=\"Send what you know about a person and get back the available profile details, with a match status and score to review.\"\n        items={[\n          { title: \"Start with what you know\", description: \"Use an email or social profile URL, or combine a name with company, education, or location details.\", story: <PeopleIdentifiersPanel /> },\n          { title: \"Keep the useful context\", description: \"Get available profile details such as a current role, work history, education, location, and social links.\", story: <PeopleContextPanel /> },\n          { title: \"Inspect the match\", description: \"Use the returned candidate status and match score to decide how your application handles the profile.\", story: <PeopleMatchPanel /> },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "product-landing"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "product-demo-card"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/people-enrichment-landing-visuals.tsx",
+      "content": "import { CapabilityPanel, DemoRow, MarkGlyph, ProductDemoCard, StatusChip } from \"@/components/site/product-demo-card\";\n\n// The People enrichment page's hero demo (a work email in, a candidate profile and match score out) and its three\n// capability panels: the identifiers a lookup starts from, the profile context, and the two match outcomes.\n\nexport type DemoPerson = { name: string; initials: string; email: string; role: string };\n\nconst PERSON: DemoPerson = { name: \"Alex Taylor\", initials: \"AT\", email: \"alex@example.com\", role: \"Product engineer at Example\" };\nconst MATCH_SCORE = 92;\n\nconst MATCH_RESPONSE = `{\n  \"match\": {\n    \"status\": \"candidate\",\n    \"score\": ${MATCH_SCORE},\n    \"person\": {\n      \"name\": { \"full\": \"${PERSON.name}\" },\n      \"current_role\": {\n        \"title\": \"Product engineer\",\n        \"organization\": { \"domain\": \"example.com\" }\n      },\n      \"current_role_status\": \"present\"\n    }\n  }\n}`;\n\nfunction PersonSummary({ person, detail }: { person: DemoPerson; detail: string }) {\n  return (\n    <div className=\"flex items-center gap-3.5\">\n      <MarkGlyph round>{person.initials}</MarkGlyph>\n      <span className=\"flex min-w-0 flex-col\">\n        <span className=\"text-demo-title leading-demo-title text-fg\">{person.name}</span>\n        <span className=\"truncate text-demo-code leading-demo-label text-black/50\">{detail}</span>\n      </span>\n    </div>\n  );\n}\n\nexport function PeopleEnrichmentHeroDemo({ person = PERSON, score = MATCH_SCORE, output = MATCH_RESPONSE }: { person?: DemoPerson; score?: number; output?: string }) {\n  return (\n    <ProductDemoCard\n      label=\"Illustrative candidate profile\"\n      inputLabel=\"Identity\"\n      input={\n        <>\n          <DemoRow glyph={<MarkGlyph>@</MarkGlyph>} title={person.email} detail=\"Work email\" status={<StatusChip>Candidate</StatusChip>} />\n          <div className=\"flex flex-1 flex-col justify-center gap-5 px-1\">\n            <PersonSummary person={person} detail={person.role} />\n            <p className=\"flex items-end gap-3 border-t border-black/10 pt-5\">\n              <span className=\"font-data text-demo-score leading-demo-score font-score text-brand\">{score}</span>\n              <span className=\"text-demo-label leading-demo-label text-black/50\">match score, out of 100</span>\n            </p>\n          </div>\n        </>\n      }\n      outputLabel=\"JSON response\"\n      filename=\"match.json\"\n      output={output}\n    />\n  );\n}\n\nconst IDENTIFIERS = [\n  { label: \"Email\", value: PERSON.email },\n  { label: \"Social URL\", value: \"x.com/alextaylor\" },\n  { label: \"Name and company\", value: `${PERSON.name}, Example` },\n];\n\nexport function PeopleIdentifiersPanel() {\n  return (\n    <CapabilityPanel label=\"Examples of identifiers a lookup can start from\">\n      <ul className=\"flex flex-col gap-2\">\n        {IDENTIFIERS.map((identifier) => (\n          <li key={identifier.label} className=\"flex flex-col gap-0.5 rounded-card border border-black/10 px-3.5 py-2.5\">\n            <span className=\"text-demo-meta leading-4 text-black/50\">{identifier.label}</span>\n            <span className=\"truncate text-demo-label leading-5 text-fg\">{identifier.value}</span>\n          </li>\n        ))}\n      </ul>\n    </CapabilityPanel>\n  );\n}\n\nconst PROFILE_FIELDS = [\n  { label: \"Role\", value: \"Product engineer\" },\n  { label: \"Experience\", value: \"3 roles\" },\n  { label: \"Education\", value: \"1 school\" },\n  { label: \"Profile links\", value: \"2 links\" },\n];\n\nexport function PeopleContextPanel() {\n  return (\n    <CapabilityPanel label=\"Illustrative profile context\">\n      <PersonSummary person={PERSON} detail=\"example.com\" />\n      <dl className=\"flex flex-col\">\n        {PROFILE_FIELDS.map((field) => (\n          <div key={field.label} className=\"flex items-center justify-between gap-3 border-t border-hairline py-2.5 text-demo-label leading-5\">\n            <dt className=\"text-black/50\">{field.label}</dt>\n            <dd className=\"text-fg\">{field.value}</dd>\n          </div>\n        ))}\n      </dl>\n    </CapabilityPanel>\n  );\n}\n\nconst MATCH_OUTCOMES = [\n  { status: \"candidate\", score: String(MATCH_SCORE), next: \"Use the profile\", isMatch: true },\n  { status: \"not_found\", score: \"null\", next: \"Ask for more context\", isMatch: false },\n];\n\nexport function PeopleMatchPanel() {\n  return (\n    <CapabilityPanel label=\"Illustrative match results\">\n      {MATCH_OUTCOMES.map((outcome) => (\n        <div key={outcome.status} className=\"flex flex-col gap-2 rounded-card border border-black/10 px-3.5 py-3\">\n          <div className=\"flex items-center justify-between gap-3\">\n            <StatusChip tone={outcome.isMatch ? \"blue\" : \"neutral\"}>{outcome.status}</StatusChip>\n            <code className=\"font-mono text-demo-code leading-5 text-black/60\">score {outcome.score}</code>\n          </div>\n          <p className=\"text-demo-code leading-demo-label text-black/50\">{outcome.next}</p>\n        </div>\n      ))}\n    </CapabilityPanel>\n  );\n}\n"
+    }
+  ]
+}

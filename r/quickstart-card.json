@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "quickstart-card",
+  "type": "product",
+  "title": "Quickstart card",
+  "description": "Onboarding card with numbered steps, a masked API key, setup snippets, and copy actions.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Dashboard onboarding steps for making the first API call.",
+  "avoid": [
+    "Showing the full key by default",
+    "Snippets that change the box's height"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/quickstart-card.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add quickstart-card --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/overview/quickstart-card.tsx; src/components/overview/setup-parts.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/overview/quickstart-card.tsx",
+        "sha256": "ddad2cde2f4c33f45e76e920d304eb87f561735ba9734f9114edaac131532f57",
+        "retained": false,
+        "exports": [
+          "QuickstartCard"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/overview/setup-parts.tsx",
+        "sha256": "805b89f05edf294dfdbc1d23bab15264a674d313458e7b56de9cb8731e17dbd5",
+        "retained": false,
+        "exports": [
+          "Step",
+          "KeyField",
+          "CopyPill",
+          "AgentMark",
+          "SetupSnippet"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/quickstart-card.d.ts",
+      "content": "import * as React from \"react\";\nimport type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\ndeclare function QuickstartCard({ title, glyph, aside, className, children }: {\n    title?: React.ReactNode;\n    glyph?: GlyphPairName;\n    aside?: React.ReactNode;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/** One numbered step: the number in a small outlined square, the title, then the step's control. */\ndeclare function QuickstartStep({ number, title, aside, children }: {\n    number: number;\n    title: React.ReactNode;\n    aside?: React.ReactNode;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/** A bordered copy pill that turns green with a check once copied; `compact` keeps the icon alone. */\ndeclare function CopyPill({ value, label, compact }: {\n    value: string;\n    label: string;\n    compact?: boolean;\n}): React.JSX.Element;\n/** The API key, masked to its first characters, with show and a copy pill; revealing it never changes the width. */\ndeclare function KeyField({ secret, name, visibleChars }: {\n    secret: string;\n    name?: string;\n    visibleChars?: number;\n}): React.JSX.Element;\nexport type Snippet<T extends string> = {\n    value: T;\n    label: string;\n    code: string;\n    copy?: string;\n    note?: React.ReactNode;\n};\n/**\n * Ways to do one thing as tabs over one snippet, its copy pill and anything else after them. Every snippet shares one\n * cell, so the box keeps the tallest one's height and switching never moves what's around it; the picked one fades and\n * settles in (300ms) while the others fade out faster (150ms).\n */\ndeclare function SnippetBox<T extends string>({ label, snippets, value, onValueChange, aside }: {\n    label: string;\n    snippets: Snippet<T>[];\n    value: T;\n    onValueChange: (value: T) => void;\n    aside?: React.ReactNode;\n}): React.JSX.Element;\nexport { CopyPill, KeyField, QuickstartCard, QuickstartStep, SnippetBox };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/quickstart-card/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/quickstart-card.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { CardLink } from \"@/components/product/glyph-card\";\nimport { CopyPill, KeyField, QuickstartCard, QuickstartStep, SnippetBox } from \"@/components/product/quickstart-card\";\n\nconst KEY = \"ctx_live_9f2c41b7e0a84d6c3b5e\";\n\nexport function Product() {\n  const [method, setMethod] = useState<\"mcp\" | \"cli\">(\"mcp\");\n  return (\n    <div className=\"h-[30rem] w-full max-w-md\">\n      <QuickstartCard aside={<CardLink href=\"/preview/table-page/Block\">Manage keys</CardLink>}>\n        <QuickstartStep number={1} title=\"Copy your API key\">\n          <KeyField secret={KEY} name=\"Default\" />\n        </QuickstartStep>\n        <QuickstartStep number={2} title=\"Onboard your agent\">\n          <SnippetBox\n            label=\"Setup method\"\n            value={method}\n            onValueChange={setMethod}\n            snippets={[\n              { value: \"mcp\", label: \"MCP\", code: \"claude mcp add --transport http context-dev https://mcp.context.dev/mcp\", note: \"Sign in when the browser opens.\" },\n              { value: \"cli\", label: \"CLI\", code: \"npm i -g @context-dev/cli && context login\" },\n            ]}\n          />\n        </QuickstartStep>\n        <QuickstartStep number={3} title=\"Prompt\" aside={<CopyPill value=\"Use the context-dev MCP server for live web data.\" label=\"Copy prompt\" />}>\n          <p className=\"rounded-control border border-line px-3 py-2.5 text-body-sm leading-relaxed text-fg\">Use the context-dev MCP server for live web data.</p>\n        </QuickstartStep>\n      </QuickstartCard>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "glyph-card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "glyph-card",
+    "glide-tabs",
+    "copy-button",
+    "secret-field",
+    "scroll-area",
+    "tooltip",
+    "glyph-engine",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/quickstart-card.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Copy, Eye, EyeOff } from \"lucide-react\";\n\nimport { GlyphCard } from \"@/components/product/glyph-card\";\nimport { GlideTabs } from \"@/components/product/glide-tabs\";\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { maskSecret } from \"@/components/ui/secret-field\";\nimport { ScrollArea } from \"@/components/ui/scroll-area\";\nimport { Tooltip, TooltipContent, TooltipTrigger } from \"@/components/ui/tooltip\";\nimport type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { cn } from \"@/lib/utils\";\n\n// The overview's quickstart: the shortest way from signing up to a working call, as numbered steps in a glyph card\n// (copy the key, connect the agent, paste one prompt, explore the rest). The steps scroll inside the card when they\n// run longer than the space beside them. Built from KeyField, SnippetBox and CopyPill.\n\nfunction QuickstartCard({ title = \"Quickstart\", glyph = \"apiKeys\", aside, className, children }: { title?: React.ReactNode; glyph?: GlyphPairName; aside?: React.ReactNode; className?: string; children: React.ReactNode }) {\n  return (\n    <GlyphCard glyph={glyph} title={title} aside={aside} className={cn(\"h-full min-h-0\", className)}>\n      {/* It reaches 4px past the card's content on each side, so the ring a hovered control draws isn't clipped. */}\n      <div className=\"-mx-1 flex min-h-0 flex-1 flex-col border-t border-line-subtle\">\n        <ScrollArea className=\"flex flex-col gap-4 px-1 pt-3 pb-1\">{children}</ScrollArea>\n      </div>\n    </GlyphCard>\n  );\n}\n\n/** One numbered step: the number in a small outlined square, the title, then the step's control. */\nfunction QuickstartStep({ number, title, aside, children }: { number: number; title: React.ReactNode; aside?: React.ReactNode; children: React.ReactNode }) {\n  return (\n    <section data-slot=\"quickstart-step\" className=\"flex flex-col gap-2\">\n      <div className=\"flex min-h-7 items-center gap-2\">\n        <span className=\"grid size-5 shrink-0 place-items-center rounded-tag border border-line text-axis text-fg-muted tabular-nums\">{number}</span>\n        <h4 className=\"flex-1 text-body-sm font-normal tracking-normal\">{title}</h4>\n        {aside}\n      </div>\n      {children}\n    </section>\n  );\n}\n\n// Each icon and word shares a cell with its pair, so they cross-fade in place (with a little blur to blend them) and\n// the pill never changes width.\nconst SWAP = \"col-start-1 row-start-1 transition-[opacity,scale,filter] duration-200 ease-out motion-reduce:transition-none\";\nconst SWAP_HIDDEN = \"scale-50 opacity-0 blur-[2px]\";\n\n/** A bordered copy pill that turns green with a check once copied; `compact` keeps the icon alone. */\nfunction CopyPill({ value, label, compact = false }: { value: string; label: string; compact?: boolean }) {\n  const { hasCopied, copy } = useCopy();\n  return (\n    <button\n      type=\"button\"\n      onClick={() => copy(value)}\n      aria-label={hasCopied ? \"Copied\" : label}\n      className={cn(\n        \"flex h-7 shrink-0 items-center gap-1.5 rounded-tag border bg-surface text-caption outline-none transition-[color,border-color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.96] motion-reduce:active:scale-100\",\n        compact ? \"px-2\" : \"px-2.5\",\n        hasCopied ? \"border-success/40 text-success\" : \"border-line text-fg-muted hover:border-line-strong hover:text-fg\",\n      )}\n    >\n      <span aria-hidden className=\"grid size-3.5 place-items-center\">\n        <Copy className={cn(SWAP, \"size-3.5\", hasCopied && SWAP_HIDDEN)} strokeWidth={1.5} />\n        <Check className={cn(SWAP, \"size-3.5\", !hasCopied && SWAP_HIDDEN)} strokeWidth={1.75} />\n      </span>\n      {!compact && (\n        <span aria-hidden className=\"grid justify-items-center\">\n          <span className={cn(SWAP, hasCopied && \"opacity-0 blur-[2px]\")}>Copy</span>\n          <span className={cn(SWAP, !hasCopied && \"opacity-0 blur-[2px]\")}>Copied</span>\n        </span>\n      )}\n    </button>\n  );\n}\n\n/** The API key, masked to its first characters, with show and a copy pill; revealing it never changes the width. */\nfunction KeyField({ secret, name = \"key\", visibleChars = 14 }: { secret: string; name?: string; visibleChars?: number }) {\n  const [revealed, setRevealed] = React.useState(false);\n  return (\n    <div data-slot=\"key-field\" className=\"flex h-10 items-center gap-1 rounded-control border border-line pr-1 pl-3\">\n      <code className=\"relative min-w-0 flex-1 font-mono text-caption text-fg-muted\">\n        <span className={cn(\"block truncate\", revealed && \"invisible\")} aria-hidden={revealed}>\n          {maskSecret(secret, visibleChars)}\n        </span>\n        {revealed && <span className=\"absolute inset-0 truncate\">{secret}</span>}\n      </code>\n      <Tooltip>\n        <TooltipTrigger asChild>\n          <button\n            type=\"button\"\n            onClick={() => setRevealed((r) => !r)}\n            aria-label={revealed ? `Hide ${name}` : `Show ${name}`}\n            className=\"grid size-7 shrink-0 place-items-center rounded-tag text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-control hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring\"\n          >\n            {revealed ? <EyeOff className=\"size-3.5\" strokeWidth={1.5} /> : <Eye className=\"size-3.5\" strokeWidth={1.5} />}\n          </button>\n        </TooltipTrigger>\n        <TooltipContent side=\"top\">{revealed ? \"Hide\" : \"Show\"}</TooltipContent>\n      </Tooltip>\n      <CopyPill value={secret} label={`Copy ${name}`} />\n    </div>\n  );\n}\n\nexport type Snippet<T extends string> = { value: T; label: string; code: string; copy?: string; note?: React.ReactNode };\n\n/**\n * Ways to do one thing as tabs over one snippet, its copy pill and anything else after them. Every snippet shares one\n * cell, so the box keeps the tallest one's height and switching never moves what's around it; the picked one fades and\n * settles in (300ms) while the others fade out faster (150ms).\n */\nfunction SnippetBox<T extends string>({ label, snippets, value, onValueChange, aside }: { label: string; snippets: Snippet<T>[]; value: T; onValueChange: (value: T) => void; aside?: React.ReactNode }) {\n  const shown = snippets.find((s) => s.value === value) ?? snippets[0];\n  return (\n    <div data-slot=\"snippet-box\" className=\"rounded-control border border-line\">\n      <div className=\"flex h-10 items-center gap-2 border-b border-line-subtle pr-1 pl-1.5\">\n        <GlideTabs role=\"tab\" className=\"[&>button]:px-3\" label={label} value={shown.value} onValueChange={onValueChange} options={snippets.map((s) => ({ value: s.value, label: s.label }))} />\n        <span className=\"ml-auto flex items-center gap-1.5\">\n          <CopyPill value={shown.copy ?? shown.code} label={`Copy ${label.toLowerCase()} snippet`} compact />\n          {aside}\n        </span>\n      </div>\n      <div className=\"grid overflow-hidden rounded-b-snippet bg-neutral-5\">\n        {snippets.map((s) => {\n          const isShown = s.value === shown.value;\n          return (\n            <div\n              key={s.value}\n              aria-hidden={!isShown || undefined}\n              inert={!isShown || undefined}\n              className={cn(\n                \"col-start-1 row-start-1 flex flex-col transition-[opacity,translate,filter] ease-out motion-reduce:transition-none\",\n                isShown ? \"translate-y-0 opacity-100 blur-none duration-300\" : \"pointer-events-none translate-y-1 opacity-0 blur-[2px] duration-150\",\n              )}\n            >\n              <pre className=\"px-3 py-2.5 font-mono text-axis leading-snippet wrap-anywhere whitespace-pre-wrap text-fg-muted\">{s.code}</pre>\n              {s.note && <p className=\"border-t border-line-subtle px-3 py-2 text-caption text-fg-subtle\">{s.note}</p>}\n            </div>\n          );\n        })}\n      </div>\n    </div>\n  );\n}\n\nexport { CopyPill, KeyField, QuickstartCard, QuickstartStep, SnippetBox };\n"
+    }
+  ]
+}

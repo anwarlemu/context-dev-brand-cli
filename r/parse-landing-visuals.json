@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "parse-landing-visuals",
+  "type": "site",
+  "title": "Parse page visuals",
+  "description": "The Parse page's hero demo and capability panels: a PDF in and Markdown out, with the parse story under the file.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The Parse product page (context.dev/parse): ParseHeroDemo under the hero, and ParseFileTypesPanel, ParseOcrPanel, ParseOptionsPanel as the pictures in its three capability cards (ProductStorySection), in that order.",
+  "avoid": [
+    "A dot story and a panel in the same card",
+    "Bold names or titles",
+    "Syntax colors in the output"
+  ],
+  "notes": "ParseHeroDemo is a ProductDemoCard with a PDF in and Markdown out, with the parse story under the file. The panels show the file types it reads, OCR on scanned pages, and the options a request takes. Each takes its example values as\nprops where a page would change them, and keeps the site's illustrative ones by default.",
+  "documentation": "https://context-ds.vercel.app/components/parse-landing-visuals.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add parse-landing-visuals --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/parse-landing-visuals.tsx; src/components/sections/products/product-landing-content.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/parse-landing-visuals.tsx",
+        "sha256": "7bc6603b5887fa319f3afd247e436a05a8ff0ec560752427c514d8e25affc35a",
+        "retained": false,
+        "exports": [
+          "ParseHeroDemo",
+          "ParseFileTypesPanel",
+          "ParseOcrPanel",
+          "ParseOptionsPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-content.tsx",
+        "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+        "retained": false,
+        "exports": [
+          "RelatedProductId",
+          "ProductLandingContent",
+          "scrapeLandingContent",
+          "answersLandingContent",
+          "searchLandingContent",
+          "mapLandingContent",
+          "brandLandingContent",
+          "styleguideLandingContent",
+          "batchesLandingContent",
+          "monitorsLandingContent",
+          "parseLandingContent",
+          "brandSearchLandingContent",
+          "peopleEnrichmentLandingContent",
+          "newsLandingContent"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/parse-landing-visuals.d.ts",
+      "content": "export declare function ParseHeroDemo({ output }: {\n    output?: string;\n}): import(\"react\").JSX.Element;\nexport declare function ParseFileTypesPanel({ types }: {\n    types?: string[];\n}): import(\"react\").JSX.Element;\nexport declare function ParseOcrPanel({ pages }: {\n    pages?: {\n        number: number;\n        layer: string;\n        hasText: boolean;\n    }[];\n}): import(\"react\").JSX.Element;\nexport declare function ParseOptionsPanel(): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/parse-landing-visuals/Site"
+    },
+    {
+      "name": "Capabilities",
+      "url": "https://context-ds.vercel.app/preview/parse-landing-visuals/Capabilities"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/parse-landing-visuals.tsx",
+      "content": "import { ParseFileTypesPanel, ParseHeroDemo, ParseOcrPanel, ParseOptionsPanel } from \"@/components/site/parse-landing-visuals\";\nimport { ProductStorySection } from \"@/components/site/product-landing\";\n\nexport function Site() {\n  return (\n    <div className=\"mx-auto w-full max-w-[var(--ds-layout-column-wide)] px-6 py-12 sm:px-8 md:px-10 lg:px-12\">\n      <ParseHeroDemo />\n    </div>\n  );\n}\n\nexport function Capabilities() {\n  return (\n    <div className=\"w-full\">\n      <ProductStorySection\n        title=\"Documents, spreadsheets, scans.\"\n        accent=\"One readable format.\"\n        description=\"Send the file bytes you already have and get Markdown back, with OCR for scanned pages and control over what comes through.\"\n        items={[\n          { title: \"Bring your own files\", description: \"Send file bytes directly. Parse supports documents, spreadsheets, presentations, text, code, and supported image formats.\", story: <ParseFileTypesPanel /> },\n          { title: \"Read scanned PDFs\", description: \"Enable OCR to recover selected PDF pages without a usable text layer. Pages that already contain text keep it.\", story: <ParseOcrPanel /> },\n          { title: \"Control the output\", description: \"Choose a PDF page range, preserve links, and include image references when your workflow needs them.\", story: <ParseOptionsPanel /> },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "product-landing"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "product-demo-card",
+    "story-parse"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/parse-landing-visuals.tsx",
+      "content": "import { CapabilityPanel, DemoRow, FileGlyph, ParamRow, ProductDemoCard, StatusChip } from \"@/components/site/product-demo-card\";\nimport { ParseStory } from \"@/components/visuals/stories/parse-story\";\n\n// The Parse page's hero demo (a PDF in, Markdown out, with the parse story under the file) and its three capability\n// panels: the file types it reads, OCR on scanned pages, and the options a request takes.\n\nconst MARKDOWN_OUTPUT = `# Product research\n\nFindings from customer interviews\nand public documentation.\n\n## What we learned\n\n- Keep context with its source\n- Refresh content when it changes\n- Cite the page an answer came from`;\n\nexport function ParseHeroDemo({ output = MARKDOWN_OUTPUT }: { output?: string }) {\n  return (\n    <ProductDemoCard\n      label=\"Illustrative document conversion\"\n      inputLabel=\"Document input\"\n      input={\n        <>\n          <DemoRow glyph={<FileGlyph type=\"PDF\" />} title=\"report.pdf\" detail=\"12 pages · 2.4 MB\" status={<StatusChip>Parsed</StatusChip>} />\n          <div className=\"mx-auto mt-auto w-full max-w-[22.75rem]\">\n            <ParseStory />\n          </div>\n        </>\n      }\n      outputLabel=\"Markdown output\"\n      filename=\"report.md\"\n      output={output}\n    />\n  );\n}\n\nconst SUPPORTED_FILES = [\"PDF\", \"DOCX\", \"XLSX\", \"PPTX\", \"CSV\", \"HTML\", \"MD\", \"PY\", \"PNG\"];\n\nexport function ParseFileTypesPanel({ types = SUPPORTED_FILES }: { types?: string[] }) {\n  return (\n    <CapabilityPanel label=\"Examples of supported file types\">\n      <ul className=\"grid grid-cols-3 gap-x-3 gap-y-4 py-1\">\n        {types.map((type) => (\n          <li key={type} className=\"flex justify-center\">\n            <FileGlyph type={type} />\n            <span className=\"sr-only\">{type}</span>\n          </li>\n        ))}\n      </ul>\n    </CapabilityPanel>\n  );\n}\n\nconst SCANNED_PAGES = [\n  { number: 1, layer: \"Text layer\", hasText: true },\n  { number: 2, layer: \"Scanned\", hasText: false },\n  { number: 3, layer: \"Scanned\", hasText: false },\n];\n\nexport function ParseOcrPanel({ pages = SCANNED_PAGES }: { pages?: { number: number; layer: string; hasText: boolean }[] }) {\n  return (\n    <CapabilityPanel label=\"Illustrative OCR result for a scanned PDF\">\n      <ParamRow name=\"ocr\" value=\"true\" />\n      <ul className=\"flex flex-col gap-2\">\n        {pages.map(({ number, layer, hasText }) => (\n          <li key={number} className=\"flex items-center justify-between gap-3 rounded-card border border-black/10 px-3 py-2.5\">\n            <span className=\"flex min-w-0 flex-col\">\n              <span className=\"text-demo-label leading-5 text-fg\">Page {number}</span>\n              <span className=\"text-demo-meta leading-4 text-black/50\">{layer}</span>\n            </span>\n            {hasText ? <StatusChip tone=\"neutral\">Kept</StatusChip> : <StatusChip>OCR</StatusChip>}\n          </li>\n        ))}\n      </ul>\n    </CapabilityPanel>\n  );\n}\n\nexport function ParseOptionsPanel() {\n  return (\n    <CapabilityPanel label=\"Example parse options\">\n      <ParamRow name=\"pdf.start\" value=\"1\" />\n      <ParamRow name=\"pdf.end\" value=\"4\" />\n      <ParamRow name=\"includeLinks\" value=\"true\" />\n      <ParamRow name=\"includeImages\" value=\"true\" />\n    </CapabilityPanel>\n  );\n}\n"
+    }
+  ]
+}

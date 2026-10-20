@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "tooltip",
+  "type": "ui",
+  "title": "Tooltip",
+  "description": "Short label shown on hover or keyboard focus, with a shared delay between adjacent controls.",
+  "surface": "product",
+  "kinds": [
+    "app-tooltip"
+  ],
+  "usage": "Naming icon buttons and explaining truncated values; `wrap` for a sentence-long label.",
+  "avoid": [
+    "Essential information only in a tooltip",
+    "Long paragraphs"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/tooltip.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add tooltip --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/tooltip.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/tooltip.tsx",
+        "sha256": "8f942596f3b04e5638748b169a890e30c2f541d8e214c56369448a17dd6cc745",
+        "retained": false,
+        "exports": [
+          "Tooltip"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/tooltip.d.ts",
+      "content": "import * as React from \"react\";\nimport * as TooltipPrimitive from \"@radix-ui/react-tooltip\";\nimport { TooltipProvider } from \"@/lib/tooltip-provider\";\ndeclare function Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>): React.JSX.Element;\ndeclare function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trigger>): React.JSX.Element;\ndeclare function TooltipContent({ className, side, sideOffset, wrap, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content> & {\n    wrap?: boolean;\n}): React.JSX.Element;\nexport { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/tooltip/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/tooltip.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { Copy, Info } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Tooltip, TooltipContent, TooltipTrigger } from \"@/components/ui/tooltip\";\n\n// A one-line label naming an icon button, and a `wrap` label explaining a value. They wait a beat\n// on hover or focus, then the neighbors appear at once.\nexport function Product() {\n  const { copy, hasCopied } = useCopy();\n  const [open, setOpen] = useState(false);\n  return (\n    <div className=\"flex items-center gap-16 pt-8 pb-4\">\n      <Tooltip>\n        <TooltipTrigger asChild>\n          <Button variant=\"ghost\" size=\"icon\" aria-label={hasCopied ? \"Copied\" : \"Copy key\"} onClick={() => copy(\"ctx_example_key\")}>\n            <Copy strokeWidth={1.5} />\n          </Button>\n        </TooltipTrigger>\n        <TooltipContent side=\"top\">{hasCopied ? \"Copied\" : \"Copy key\"}</TooltipContent>\n      </Tooltip>\n      <Tooltip open={open} onOpenChange={setOpen}>\n        <TooltipTrigger asChild>\n          <Button variant=\"ghost\" size=\"icon\" aria-label=\"About credits\" onClick={(event) => { event.preventDefault(); setOpen(true); }}>\n            <Info strokeWidth={1.5} />\n          </Button>\n        </TooltipTrigger>\n        <TooltipContent side=\"right\" wrap>\n          Credits reset on the first of each month. Unused credits do not roll over.\n        </TooltipContent>\n      </Tooltip>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "copy-button",
+    "button"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "surface",
+    "tooltip-provider",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-tooltip"
+  ],
+  "files": [
+    {
+      "path": "components/ui/tooltip.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as TooltipPrimitive from \"@radix-ui/react-tooltip\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { TooltipProvider, useTooltipScope } from \"@/lib/tooltip-provider\";\nimport { cn } from \"@/lib/utils\";\n\n// Hovering waits a beat before the label appears, so passing over a control doesn't flash it; once one is showing,\n// the next one within the warm window appears at once (Radix's skip delay), so sweeping a row of icons doesn't wait.\nfunction Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {\n  const shared = useTooltipScope();\n  if (shared) return <TooltipPrimitive.Root data-slot=\"tooltip\" {...props} />;\n  return (\n    <TooltipProvider>\n      <TooltipPrimitive.Root data-slot=\"tooltip\" {...props} />\n    </TooltipProvider>\n  );\n}\n\nfunction TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {\n  return <TooltipPrimitive.Trigger data-slot=\"tooltip-trigger\" {...props} />;\n}\n\n// The dashboard's label: white, control corners, 11px on a hairline and a soft shadow, on one line unless `wrap`, 6px\n// above (or 8px beside) its trigger. The first one hovered grows from its trigger in a short ease-out pop; the next ones\n// in the warm window (Radix's instant open) appear at once. Reduced motion keeps only the fade.\nfunction TooltipContent({ className, side = \"right\", sideOffset, wrap = false, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Content> & { wrap?: boolean }) {\n  return (\n    <TooltipPrimitive.Portal container={usePortalContainer()}>\n      <TooltipPrimitive.Content\n        data-slot=\"tooltip-content\"\n        side={side}\n        sideOffset={sideOffset ?? (side === \"left\" || side === \"right\" ? 8 : 6)}\n        className={cn(\n          \"z-50 origin-(--radix-tooltip-content-transform-origin) rounded-control bg-surface px-2 py-1 text-axis leading-4 text-fg shadow-tooltip data-[state=delayed-open]:animate-pop-in\",\n          wrap ? \"w-max max-w-64 text-pretty\" : \"whitespace-nowrap\",\n          className,\n        )}\n        {...props}\n      >\n        {children}\n      </TooltipPrimitive.Content>\n    </TooltipPrimitive.Portal>\n  );\n}\n\nexport { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };\n"
+    }
+  ]
+}

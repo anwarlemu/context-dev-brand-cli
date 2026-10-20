@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "announcement-bar",
+  "type": "site",
+  "title": "Announcement bar",
+  "description": "A plain, light-gray linked announcement strip above the site header.",
+  "surface": "site",
+  "kinds": [
+    "announcement"
+  ],
+  "usage": "One short, centered message on a plain light-gray strip above the header (a launch, a referral discount). `SiteHeader` draws it from its `announcement` prop; use it alone above a header of your own.",
+  "avoid": [
+    "Dots or decorative patterns",
+    "Animated backgrounds",
+    "A blue or dark announcement band",
+    "More than one line of copy on desktop",
+    "A close button",
+    "Two announcement bars"
+  ],
+  "notes": "The current Context.dev announcement is text-only. Use `AnnouncementBar` directly or the `SiteHeader` announcement prop. Do not add a dot animation or another visual layer.",
+  "documentation": "https://context-ds.vercel.app/components/announcement-bar.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add announcement-bar --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/shared/header.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/header.tsx",
+        "sha256": "a7a5825f70934ce0e55c80bc75f791b1a4823827e875a687df11e6fdab971273",
+        "retained": false,
+        "exports": [
+          "Header"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/announcement-bar.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * The one-line strip above the site's header: a cool gray band with a hairline under it, the message centered. As a\n * link, hover lays a neutral wash over the band rather than swapping its color, so the band keeps its hue.\n */\ndeclare function AnnouncementBar({ href, external, className, children, }: {\n    /** Makes the whole strip a link. */\n    href?: string;\n    /** Opens the link in a new tab. */\n    external?: boolean;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { AnnouncementBar };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/announcement-bar/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/announcement-bar.tsx",
+      "content": "import { AnnouncementBar } from \"@/components/site/announcement-bar\";\n\nexport function Site() {\n  return (\n    <AnnouncementBar href=\"https://context.dev/blog/introducing-context-highlights\" external>\n      Introducing Highlights: the context that matters\n    </AnnouncementBar>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/announcement-bar.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst BAR =\n  \"group/announcement relative isolate flex min-h-11.5 w-full flex-wrap items-center justify-center gap-x-2 gap-y-0.5 overflow-hidden border-b border-wash-pill px-4 py-1 text-center text-caption leading-snug text-fg outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:text-body-sm\";\n\n/**\n * The one-line strip above the site's header: a cool gray band with a hairline under it, the message centered. As a\n * link, hover lays a neutral wash over the band rather than swapping its color, so the band keeps its hue.\n */\nfunction AnnouncementBar({\n  href,\n  external = false,\n  className,\n  children,\n}: {\n  /** Makes the whole strip a link. */\n  href?: string;\n  /** Opens the link in a new tab. */\n  external?: boolean;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  const content = (\n    <>\n      <span aria-hidden=\"true\" data-slot=\"announcement-bar-surface\" className=\"pointer-events-none absolute inset-0 -z-10 bg-announcement\" />\n      {href && (\n        <span\n          aria-hidden=\"true\"\n          className=\"pointer-events-none absolute inset-0 -z-10 bg-wash-announcement opacity-0 transition-opacity duration-150 ease-out group-hover/announcement:opacity-100 motion-reduce:transition-none\"\n        />\n      )}\n      <span data-slot=\"announcement-bar-text\" className=\"min-w-0\">\n        {children}\n      </span>\n    </>\n  );\n  return (\n    <div data-slot=\"announcement-bar\" className={cn(\"relative z-70 min-h-11.5 shrink-0 overflow-hidden\", className)}>\n      {href ? (\n        <a href={href} target={external ? \"_blank\" : undefined} rel={external ? \"noopener noreferrer\" : undefined} className={BAR}>\n          {content}\n        </a>\n      ) : (\n        <div className={BAR}>{content}</div>\n      )}\n    </div>\n  );\n}\n\nexport { AnnouncementBar };\n"
+    }
+  ]
+}

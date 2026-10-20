@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "dropdown-menu",
+  "type": "ui",
+  "title": "Dropdown menu",
+  "description": "Action menu with labels, separators, selection states, and hold-to-confirm actions.",
+  "surface": "product",
+  "kinds": [
+    "app-menu"
+  ],
+  "usage": "Overflow actions at the end of a row, account menus.",
+  "avoid": [
+    "Destructive actions without a hold or a confirm"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/dropdown-menu.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add dropdown-menu --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/dropdown-menu.d.ts",
+      "content": "import * as React from \"react\";\nimport * as DropdownMenuPrimitive from \"@radix-ui/react-dropdown-menu\";\ndeclare function DropdownMenu({ open, defaultOpen, onOpenChange, modal, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>): React.JSX.Element;\ndeclare function DropdownMenuTrigger(props: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>): React.JSX.Element;\ndeclare function DropdownMenuContent({ className, sideOffset, align, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>): React.JSX.Element;\ndeclare function DropdownMenuGroup(props: React.ComponentProps<typeof DropdownMenuPrimitive.Group>): React.JSX.Element;\ndeclare function DropdownMenuItem({ className, variant, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {\n    variant?: \"default\" | \"destructive\";\n}): React.JSX.Element;\n/** A row that fires only after being held (destructive by default), its fill running across as the hint. The fill runs\n * at a constant rate while held and snaps back in 150ms ease-out on release. */\ndeclare function DropdownMenuHoldItem({ holdMs, onConfirm, variant, children, className, ...props }: Omit<React.ComponentProps<typeof DropdownMenuPrimitive.Item>, \"onSelect\"> & {\n    holdMs?: number;\n    onConfirm: () => void;\n    variant?: \"default\" | \"destructive\";\n}): React.JSX.Element;\ndeclare function DropdownMenuCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>): React.JSX.Element;\ndeclare function DropdownMenuRadioGroup(props: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>): React.JSX.Element;\ndeclare function DropdownMenuRadioItem({ className, children, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>): React.JSX.Element;\ndeclare function DropdownMenuLabel({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Label>): React.JSX.Element;\ndeclare function DropdownMenuSeparator({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>): React.JSX.Element;\ndeclare function DropdownMenuShortcut({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function DropdownMenuSub(props: React.ComponentProps<typeof DropdownMenuPrimitive.Sub>): React.JSX.Element;\ndeclare function DropdownMenuSubTrigger({ className, children, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger>): React.JSX.Element;\ndeclare function DropdownMenuSubContent({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>): React.JSX.Element;\nexport { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuHoldItem, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuSubTrigger, DropdownMenuTrigger, };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/dropdown-menu/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/dropdown-menu.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { MoreVertical, Pencil, Copy, Trash2 } from \"lucide-react\";\nimport { Button } from \"@/components/ui/button\";\nimport { DropdownMenu, DropdownMenuContent, DropdownMenuHoldItem, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from \"@/components/ui/dropdown-menu\";\nimport { ExampleMessage, ExampleNameDialog } from \"./demo-feedback\";\n\nexport function Product() {\n  const [keys, setKeys] = useState([{ id: \"production\", name: \"Production key\" }]);\n  const [editing, setEditing] = useState<number | null>(null);\n  const [message, setMessage] = useState(\"\");\n  return <div className=\"grid w-full max-w-md gap-3\">\n    {keys.map(({ name, id }, index) => <div key={id} className=\"flex items-center justify-between rounded-card bg-surface py-2 pr-2 pl-4 text-body-sm text-fg shadow-card\">\n      {name}\n      <DropdownMenu modal={false}><DropdownMenuTrigger asChild><Button variant=\"ghost\" size=\"icon\" aria-label={`Actions for ${name}`}><MoreVertical strokeWidth={1.5} /></Button></DropdownMenuTrigger>\n        <DropdownMenuContent><DropdownMenuLabel>{name}</DropdownMenuLabel>\n          <DropdownMenuItem onSelect={() => setEditing(index)}><Pencil strokeWidth={1.5} />Rename</DropdownMenuItem>\n          <DropdownMenuItem onSelect={() => { setKeys((all) => [...all, { id: crypto.randomUUID(), name: `${name} copy` }]); setMessage(\"Key duplicated.\"); }}><Copy strokeWidth={1.5} />Duplicate</DropdownMenuItem>\n          <DropdownMenuSeparator />\n          <DropdownMenuHoldItem onConfirm={() => { setKeys((all) => all.filter((_, i) => i !== index)); setMessage(`${name} deleted.`); }}><Trash2 strokeWidth={1.5} />Delete</DropdownMenuHoldItem>\n        </DropdownMenuContent>\n      </DropdownMenu>\n    </div>)}\n    <ExampleMessage>{message}</ExampleMessage>\n    {!keys.length && <Button variant=\"outline\" onClick={() => { setKeys([{ id: \"production\", name: \"Production key\" }]); setMessage(\"\"); }}>Reset example</Button>}\n    <ExampleNameDialog title=\"Rename key\" open={editing !== null} onOpenChange={(open) => { if (!open) setEditing(null); }} initial={editing === null ? \"\" : keys[editing]?.name} onSave={(name) => { setKeys((all) => all.map((key, i) => i === editing ? { ...key, name } : key)); setMessage(\"Key renamed.\"); }} />\n  </div>;\n}\n"
+    },
+    {
+      "path": "examples/demo-feedback.tsx",
+      "content": "\"use client\";\n\nimport { useState, type ReactNode } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from \"@/components/ui/dialog\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nexport function ExampleMessage({ children }: { children: ReactNode }) {\n  return <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{children}</p>;\n}\n\nexport function ExampleNameDialog({ title, open, onOpenChange, initial = \"\", label = \"Name\", submitLabel = \"Save\", onSave }: { title: string; open: boolean; onOpenChange: (open: boolean) => void; initial?: string; label?: string; submitLabel?: string; onSave: (name: string) => void }) {\n  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><NameForm key={`${open}-${initial}`} title={title} initial={initial} label={label} submitLabel={submitLabel} onSave={(name) => { onSave(name); onOpenChange(false); }} onCancel={() => onOpenChange(false)} /></DialogContent></Dialog>;\n}\n\nfunction NameForm({ title, initial, label, submitLabel, onSave, onCancel }: { title: string; initial: string; label: string; submitLabel: string; onSave: (name: string) => void; onCancel: () => void }) {\n  const [name, setName] = useState(initial);\n  return <form onSubmit={(event) => { event.preventDefault(); if (name.trim()) onSave(name.trim()); }}>\n    <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>Changes apply to this example.</DialogDescription></DialogHeader>\n    <DialogBody><Field label={label} required><Input value={name} onChange={(event) => setName(event.target.value)} /></Field></DialogBody>\n    <DialogFooter><Button variant=\"outline\" onClick={onCancel}>Cancel</Button><Button type=\"submit\" variant=\"brand\" disabled={!name.trim()}>{submitLabel}</Button></DialogFooter>\n  </form>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "dialog",
+    "field",
+    "input"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "use-hold",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-dropdown-menu",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/dropdown-menu.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as DropdownMenuPrimitive from \"@radix-ui/react-dropdown-menu\";\nimport { Check, ChevronRight } from \"lucide-react\";\n\nimport { useHold } from \"@/hooks/use-hold\";\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's menus: one panel whose 6px padding lets a hovered row's wash come close to the edge, roomy rows\n// 10px in from the sides, section labels on the rows' grid, separators edge to edge. Destructive rows can require a\n// hold (DropdownMenuHoldItem) so a stray click can't delete anything.\nconst ROW = \"relative flex w-full cursor-default items-center gap-2 rounded-control px-2.5 py-1.5 text-body-sm leading-5 text-fg-muted outline-none select-none transition-colors duration-150 data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg [&_svg]:size-3.5 [&_svg]:shrink-0\";\n\nconst CloseMenuContext = React.createContext<(() => void) | null>(null);\n\nfunction DropdownMenu({ open, defaultOpen = false, onOpenChange, modal = false, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {\n  const [internalOpen, setInternalOpen] = React.useState(defaultOpen);\n  const changeOpen = (next: boolean) => {\n    if (open === undefined) setInternalOpen(next);\n    onOpenChange?.(next);\n  };\n  return <CloseMenuContext.Provider value={() => changeOpen(false)}><DropdownMenuPrimitive.Root data-slot=\"dropdown-menu\" open={open ?? internalOpen} onOpenChange={changeOpen} modal={modal} {...props} /></CloseMenuContext.Provider>;\n}\n\nfunction DropdownMenuTrigger(props: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {\n  return <DropdownMenuPrimitive.Trigger data-slot=\"dropdown-menu-trigger\" {...props} />;\n}\n\nfunction DropdownMenuContent({ className, sideOffset = 6, align = \"end\", ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {\n  return (\n    <DropdownMenuPrimitive.Portal container={usePortalContainer()}>\n      <DropdownMenuPrimitive.Content\n        data-slot=\"dropdown-menu-content\"\n        sideOffset={sideOffset}\n        align={align}\n        collisionPadding={8}\n        className={cn(\"ds-scrollbar z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0\", className)}\n        {...props}\n      />\n    </DropdownMenuPrimitive.Portal>\n  );\n}\n\nfunction DropdownMenuGroup(props: React.ComponentProps<typeof DropdownMenuPrimitive.Group>) {\n  return <DropdownMenuPrimitive.Group data-slot=\"dropdown-menu-group\" {...props} />;\n}\n\nfunction DropdownMenuItem({ className, variant = \"default\", ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & { variant?: \"default\" | \"destructive\" }) {\n  return (\n    <DropdownMenuPrimitive.Item\n      data-slot=\"dropdown-menu-item\"\n      className={cn(ROW, variant === \"destructive\" && \"text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger\", className)}\n      {...props}\n    />\n  );\n}\n\n/** A row that fires only after being held (destructive by default), its fill running across as the hint. The fill runs\n * at a constant rate while held and snaps back in 150ms ease-out on release. */\nfunction DropdownMenuHoldItem({\n  holdMs = 1500,\n  onConfirm,\n  variant = \"destructive\",\n  children,\n  className,\n  ...props\n}: Omit<React.ComponentProps<typeof DropdownMenuPrimitive.Item>, \"onSelect\"> & { holdMs?: number; onConfirm: () => void; variant?: \"default\" | \"destructive\" }) {\n  const close = React.useContext(CloseMenuContext);\n  const { isHolding, handlers } = useHold(holdMs, () => { onConfirm(); close?.(); });\n  const danger = variant === \"destructive\";\n  return (\n    <DropdownMenuPrimitive.Item\n      data-slot=\"dropdown-menu-hold-item\"\n      onSelect={(event) => event.preventDefault()}\n      {...handlers}\n      className={cn(ROW, \"overflow-hidden\", danger && \"text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger\", className)}\n      {...props}\n    >\n      <span\n        aria-hidden\n        className={cn(\"absolute inset-0 origin-left transition-transform motion-reduce:transition-none\", danger ? \"bg-danger/12\" : \"bg-wash-pill\", isHolding ? \"scale-x-100 ease-linear\" : \"scale-x-0 duration-150 ease-out\")}\n        style={isHolding ? { transitionDuration: `${holdMs}ms` } : undefined}\n      />\n      <span className=\"relative flex flex-1 items-center gap-2\">{isHolding ? \"Keep holding…\" : children}</span>\n      <span className=\"relative ml-4 text-caption text-fg-subtle\">Hold {holdMs / 1000}s</span>\n    </DropdownMenuPrimitive.Item>\n  );\n}\n\nfunction DropdownMenuCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.CheckboxItem>) {\n  return (\n    <DropdownMenuPrimitive.CheckboxItem data-slot=\"dropdown-menu-checkbox-item\" checked={checked} className={cn(ROW, \"pr-8\", className)} {...props}>\n      {children}\n      <DropdownMenuPrimitive.ItemIndicator className=\"absolute right-2.5 text-brand\">\n        <Check strokeWidth={1.75} />\n      </DropdownMenuPrimitive.ItemIndicator>\n    </DropdownMenuPrimitive.CheckboxItem>\n  );\n}\n\nfunction DropdownMenuRadioGroup(props: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>) {\n  return <DropdownMenuPrimitive.RadioGroup data-slot=\"dropdown-menu-radio-group\" {...props} />;\n}\n\nfunction DropdownMenuRadioItem({ className, children, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioItem>) {\n  return (\n    <DropdownMenuPrimitive.RadioItem data-slot=\"dropdown-menu-radio-item\" className={cn(ROW, \"pr-8 data-[state=checked]:text-fg\", className)} {...props}>\n      {children}\n      <DropdownMenuPrimitive.ItemIndicator className=\"absolute right-2.5 text-brand\">\n        <Check strokeWidth={1.75} />\n      </DropdownMenuPrimitive.ItemIndicator>\n    </DropdownMenuPrimitive.RadioItem>\n  );\n}\n\nfunction DropdownMenuLabel({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Label>) {\n  return <DropdownMenuPrimitive.Label data-slot=\"dropdown-menu-label\" className={cn(\"px-2.5 pt-1 pb-1.5 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nfunction DropdownMenuSeparator({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Separator>) {\n  return <DropdownMenuPrimitive.Separator data-slot=\"dropdown-menu-separator\" className={cn(\"-mx-1.5 my-1 h-px bg-line-subtle\", className)} {...props} />;\n}\n\nfunction DropdownMenuShortcut({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"dropdown-menu-shortcut\" className={cn(\"ml-auto text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nfunction DropdownMenuSub(props: React.ComponentProps<typeof DropdownMenuPrimitive.Sub>) {\n  return <DropdownMenuPrimitive.Sub data-slot=\"dropdown-menu-sub\" {...props} />;\n}\n\nfunction DropdownMenuSubTrigger({ className, children, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubTrigger>) {\n  return (\n    <DropdownMenuPrimitive.SubTrigger data-slot=\"dropdown-menu-sub-trigger\" className={cn(ROW, \"data-[state=open]:bg-wash-hover\", className)} {...props}>\n      {children}\n      <ChevronRight className=\"ml-auto\" strokeWidth={1.5} />\n    </DropdownMenuPrimitive.SubTrigger>\n  );\n}\n\nfunction DropdownMenuSubContent({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {\n  return (\n    <DropdownMenuPrimitive.Portal container={usePortalContainer()}>\n      <DropdownMenuPrimitive.SubContent\n        data-slot=\"dropdown-menu-sub-content\"\n        collisionPadding={8}\n        className={cn(\"ds-scrollbar z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating [&>*]:shrink-0\", className)}\n        {...props}\n      />\n    </DropdownMenuPrimitive.Portal>\n  );\n}\n\nexport {\n  DropdownMenu,\n  DropdownMenuCheckboxItem,\n  DropdownMenuContent,\n  DropdownMenuGroup,\n  DropdownMenuHoldItem,\n  DropdownMenuItem,\n  DropdownMenuLabel,\n  DropdownMenuRadioGroup,\n  DropdownMenuRadioItem,\n  DropdownMenuSeparator,\n  DropdownMenuShortcut,\n  DropdownMenuSub,\n  DropdownMenuSubContent,\n  DropdownMenuSubTrigger,\n  DropdownMenuTrigger,\n};\n"
+    }
+  ]
+}

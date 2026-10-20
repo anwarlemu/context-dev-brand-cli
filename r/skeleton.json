@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "skeleton",
+  "type": "ui",
+  "title": "Skeleton",
+  "description": "Loading placeholder with a shimmer animation.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Loading placeholders shaped like the content.",
+  "avoid": [
+    "Spinners where the layout is known"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/skeleton.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add skeleton --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/skeleton.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/skeleton.tsx",
+        "sha256": "8ba92bcd099b12b2bebb2aa8008808c66b2f502c4f2bebc9d93c1e3ea2da2980",
+        "retained": false,
+        "exports": [
+          "Skeleton"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/skeleton.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Skeleton({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Skeleton };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/skeleton/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/skeleton.tsx",
+      "content": "import { Skeleton } from \"@/components/ui/skeleton\";\n\nexport function Product() {\n  return (\n    <div className=\"grid w-full max-w-sm gap-3\">\n      <Skeleton className=\"h-5 w-1/3\" />\n      <Skeleton className=\"h-24 w-full rounded-card\" />\n      <Skeleton className=\"h-4 w-2/3\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/skeleton.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's skeleton: a pale block with a sheen sliding across it on transform (constant motion, so linear); with\n// reduced motion, the block alone.\nfunction Skeleton({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      aria-hidden\n      data-slot=\"skeleton\"\n      className={cn(\n        \"relative overflow-hidden rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-neutral-5 after:absolute after:inset-0 after:animate-shimmer after:bg-linear-to-r after:from-transparent after:via-skeleton-shine after:to-transparent after:[animation-duration:1.4s] after:[animation-timing-function:linear] motion-reduce:after:hidden\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Skeleton };\n"
+    }
+  ]
+}

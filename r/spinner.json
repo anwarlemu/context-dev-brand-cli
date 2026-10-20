@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "spinner",
+  "type": "ui",
+  "title": "Spinner",
+  "description": "Loading indicator that uses the surrounding text color.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Buttons and inline waits under a second or two.",
+  "avoid": [
+    "Full-page spinners"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/spinner.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add spinner --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/dashboard/PausePlanModal.tsx (Loader2 animate-spin)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/dashboard/PausePlanModal.tsx",
+        "sha256": "b3d24eec6292352ed15278b6474793df64470c912120a5b6b0118aef92c4af62",
+        "retained": false,
+        "exports": [
+          "PausePlanContent",
+          "PausePlanModal"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/spinner.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Spinner({ className, ...props }: React.ComponentProps<\"svg\">): React.JSX.Element;\nexport { Spinner };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/spinner/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/spinner.tsx",
+      "content": "import { Button } from \"@/components/ui/button\";\nimport { Spinner } from \"@/components/ui/spinner\";\n\nexport function Product() {\n  return (\n    <div className=\"flex items-center gap-4\">\n      <Spinner className=\"text-fg-subtle\" />\n      <Button variant=\"brand\" disabled>\n        <Spinner className=\"size-3.5\" /> Running\n      </Button>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/spinner.tsx",
+      "content": "import * as React from \"react\";\nimport { Loader2 } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's spinner: a thin ring turning once a second, in the color of the text around it.\nfunction Spinner({ className, ...props }: React.ComponentProps<\"svg\">) {\n  return <Loader2 role=\"status\" aria-label=\"Loading\" data-slot=\"spinner\" className={cn(\"size-4 animate-spin\", className)} strokeWidth={1.5} {...props} />;\n}\n\nexport { Spinner };\n"
+    }
+  ]
+}

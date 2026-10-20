@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "ring-backdrop",
+  "type": "visual",
+  "title": "Ring backdrop",
+  "description": "Ring-pattern background that excludes marked content and avoids clipping rings at rounded edges.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The hero's blue panel (as `HeroMedia`'s `backdrop`, in white at 0.22), nav and feature cards on blue, and blog covers on white (brand blue at 0.14). It takes the text color.",
+  "avoid": [
+    "Rings behind body text",
+    "Rings at full opacity"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/ring-backdrop.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add ring-backdrop --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/shared/ring-backdrop.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/ring-backdrop.tsx",
+        "sha256": "498c6b7f3bd56a37defcf1c34eef1ca61691c11c7d732f5c7c3364bcbabcc9ce",
+        "retained": false,
+        "exports": [
+          "RING_CLEAR_ATTRIBUTE",
+          "RingBackdrop"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/ring-backdrop.d.ts",
+      "content": "export declare const RING_CLEAR_ATTRIBUTE = \"data-ring-clear\";\n/**\n * A faint grid of rings, spaced evenly like a `space`-repeated tile, that leaves out every ring something would cut:\n * this element's own rounded corners, those of the nearest clipping ancestor (a card with rounded corners), and the\n * edges of any sibling content marked with RING_CLEAR_ATTRIBUTE that sits on top of it. The rings take the text color\n * (white on the hero's blue panel, brand blue on white) at `opacity`: 0.22 on blue, 0.14 on white, as on the site.\n */\nexport declare function RingBackdrop({ opacity, pitch, ringRadius, className }: {\n    opacity?: number;\n    pitch?: number;\n    ringRadius?: number;\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/ring-backdrop/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/ring-backdrop.tsx",
+      "content": "import { RingBackdrop } from \"@/components/visuals/ring-backdrop\";\n\nexport function Site() {\n  return (\n    <div className=\"relative mx-auto h-56 w-full max-w-xl overflow-hidden rounded-panel bg-brand\">\n      <RingBackdrop className=\"inset-3 rounded-[calc(var(--ds-radius-panel)-var(--ds-space-3))] text-white\" />\n      <div data-ring-clear=\"\" className=\"absolute inset-x-12 top-1/2 h-16 -translate-y-1/2 rounded-card bg-surface\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/ring-backdrop.tsx",
+      "content": "\"use client\";\n\nimport { cn } from \"@/lib/utils\";\nimport { useEffect, useRef, useState } from \"react\";\n\nconst DEFAULT_PITCH = 14;\nconst DEFAULT_RING_RADIUS = 3.5;\nconst RING_STROKE = 1;\n// Opaque content inside the backdrop that should have whole rings around it rather than rings sliced by its edges.\nexport const RING_CLEAR_ATTRIBUTE = \"data-ring-clear\";\n\ninterface Ring {\n  cx: number;\n  cy: number;\n}\n\ninterface ClipShape {\n  left: number;\n  top: number;\n  right: number;\n  bottom: number;\n  radius: number;\n}\n\n// A ring is kept only when all of it, stroke included, lies inside the rounded box, so no ring is ever sliced by a corner.\nfunction fitsInside(ring: Ring, clip: ClipShape, ringRadius: number) {\n  const reach = ringRadius + RING_STROKE / 2;\n  const left = clip.left + reach;\n  const right = clip.right - reach;\n  const top = clip.top + reach;\n  const bottom = clip.bottom - reach;\n  if (ring.cx < left || ring.cx > right || ring.cy < top || ring.cy > bottom) return false;\n  const corner = Math.max(0, clip.radius - reach);\n  const nearestX = Math.min(Math.max(ring.cx, left + corner), right - corner);\n  const nearestY = Math.min(Math.max(ring.cy, top + corner), bottom - corner);\n  return Math.hypot(ring.cx - nearestX, ring.cy - nearestY) <= corner;\n}\n\n// The nearest ancestor that clips, whose rounded outline the rings have to stay inside.\nfunction clippingAncestor(element: HTMLElement) {\n  let node = element.parentElement;\n  while (node && getComputedStyle(node).overflow === \"visible\") node = node.parentElement;\n  return node;\n}\n\nconst overlaps = (ring: Ring, box: ClipShape, reach: number) => ring.cx + reach > box.left && ring.cx - reach < box.right && ring.cy + reach > box.top && ring.cy - reach < box.bottom;\n\n/**\n * A faint grid of rings, spaced evenly like a `space`-repeated tile, that leaves out every ring something would cut:\n * this element's own rounded corners, those of the nearest clipping ancestor (a card with rounded corners), and the\n * edges of any sibling content marked with RING_CLEAR_ATTRIBUTE that sits on top of it. The rings take the text color\n * (white on the hero's blue panel, brand blue on white) at `opacity`: 0.22 on blue, 0.14 on white, as on the site.\n */\nexport function RingBackdrop({ opacity = 0.22, pitch = DEFAULT_PITCH, ringRadius = DEFAULT_RING_RADIUS, className }: { opacity?: number; pitch?: number; ringRadius?: number; className?: string }) {\n  const boxRef = useRef<HTMLDivElement>(null);\n  const [rings, setRings] = useState<Ring[]>([]);\n\n  useEffect(() => {\n    const element = boxRef.current;\n    if (!element) return;\n    const layout = () => {\n      const box = element.getBoundingClientRect();\n      const columns = Math.floor(box.width / pitch);\n      const rows = Math.floor(box.height / pitch);\n      if (columns < 1 || rows < 1) return setRings([]);\n      const gapX = (box.width - columns * pitch) / columns;\n      const gapY = (box.height - rows * pitch) / rows;\n      const ownRadius = parseFloat(getComputedStyle(element).borderTopLeftRadius) || 0;\n      const clips: ClipShape[] = [{ left: 0, top: 0, right: box.width, bottom: box.height, radius: ownRadius }];\n      const ancestor = clippingAncestor(element);\n      if (ancestor) {\n        const outer = ancestor.getBoundingClientRect();\n        clips.push({ left: outer.left - box.left, top: outer.top - box.top, right: outer.right - box.left, bottom: outer.bottom - box.top, radius: parseFloat(getComputedStyle(ancestor).borderTopLeftRadius) || 0 });\n      }\n      const covers = Array.from(element.parentElement?.querySelectorAll(`[${RING_CLEAR_ATTRIBUTE}]`) ?? [], (cover) => {\n        const rect = cover.getBoundingClientRect();\n        return { left: rect.left - box.left, top: rect.top - box.top, right: rect.right - box.left, bottom: rect.bottom - box.top, radius: 0 };\n      });\n      const reach = ringRadius + RING_STROKE / 2 + 1;\n      const next: Ring[] = [];\n      for (let row = 0; row < rows; row++) {\n        for (let column = 0; column < columns; column++) {\n          const ring = { cx: column * (pitch + gapX) + (pitch + gapX) / 2, cy: row * (pitch + gapY) + (pitch + gapY) / 2 };\n          if (clips.every((clip) => fitsInside(ring, clip, ringRadius)) && !covers.some((cover) => overlaps(ring, cover, reach))) next.push(ring);\n        }\n      }\n      setRings(next);\n    };\n    layout();\n    const observer = new ResizeObserver(layout);\n    observer.observe(element);\n    for (const cover of element.parentElement?.querySelectorAll(`[${RING_CLEAR_ATTRIBUTE}]`) ?? []) observer.observe(cover);\n    return () => observer.disconnect();\n  }, [pitch, ringRadius]);\n\n  const path = rings.map((ring) => `M${ring.cx + ringRadius} ${ring.cy}a${ringRadius} ${ringRadius} 0 1 0 ${-2 * ringRadius} 0a${ringRadius} ${ringRadius} 0 1 0 ${2 * ringRadius} 0`).join(\"\");\n  return (\n    <div ref={boxRef} aria-hidden=\"true\" className={cn(\"pointer-events-none absolute\", className)}>\n      <svg className=\"absolute inset-0 size-full\">\n        <path d={path} fill=\"none\" stroke=\"currentColor\" strokeOpacity={opacity} strokeWidth={RING_STROKE} />\n      </svg>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "user-menu",
+  "type": "product",
+  "title": "User menu",
+  "description": "Sidebar account menu with links, theme selection, and sign-out action.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "The sidebar footer.",
+  "avoid": [
+    "Settings as a sidebar link (it lives here)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/user-menu.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add user-menu --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/user-menu.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/user-menu.tsx",
+        "sha256": "9024bc50588065ca1fd342856be17dd5562b0730fd49660c9e74283cf21b2811",
+        "retained": false,
+        "exports": [
+          "UserMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/user-menu.d.ts",
+      "content": "import * as React from \"react\";\nexport type UserMenuLink = {\n    label: string;\n    href?: string;\n    external?: boolean;\n    onSelect?: () => void;\n};\nexport declare function initialsOf(name: string, email?: string): string;\n/** A round photo, or the initials on brand blue. */\nexport declare function UserAvatar({ image, initials, size }: {\n    image?: string;\n    initials: string;\n    size?: \"sm\" | \"md\";\n}): React.JSX.Element;\ndeclare function UserMenu({ name, email, image, sections, onLogOut, }: {\n    name: string;\n    email?: string;\n    image?: string;\n    sections?: UserMenuLink[][];\n    onLogOut?: () => void;\n}): React.JSX.Element;\nexport { UserMenu };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/user-menu/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/user-menu.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { UserMenu } from \"@/components/product/user-menu\";\nimport { Button } from \"@/components/ui/button\";\nimport { ExampleMessage, ExampleNameDialog } from \"./demo-feedback\";\n\nexport function Product() {\n  const [name, setName] = useState(\"Ian Gerado\");\n  const [settings, setSettings] = useState(false);\n  const [loggedOut, setLoggedOut] = useState(false);\n  return <div className=\"grid w-64 gap-4\">\n    {loggedOut ? <><ExampleMessage>Signed out of this example.</ExampleMessage><Button variant=\"outline\" onClick={() => setLoggedOut(false)}>Sign in again</Button></> : <UserMenu name={name} email=\"ian@acme.com\" sections={[\n      [{ label: \"Settings\", onSelect: () => setSettings(true) }, { label: \"Share & get rewards\", href: \"https://context.dev/referrals\", external: true }, { label: \"Changelog\", href: \"https://context.dev/changelog\", external: true }],\n      [{ label: \"Terms & conditions\", href: \"https://context.dev/terms\", external: true }, { label: \"Privacy policy\", href: \"https://context.dev/privacy\", external: true }],\n    ]} onLogOut={() => setLoggedOut(true)} />}\n    <ExampleNameDialog title=\"Profile settings\" label=\"Full name\" open={settings} onOpenChange={setSettings} initial={name} onSave={setName} />\n  </div>;\n}\n"
+    },
+    {
+      "path": "examples/demo-feedback.tsx",
+      "content": "\"use client\";\n\nimport { useState, type ReactNode } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from \"@/components/ui/dialog\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nexport function ExampleMessage({ children }: { children: ReactNode }) {\n  return <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{children}</p>;\n}\n\nexport function ExampleNameDialog({ title, open, onOpenChange, initial = \"\", label = \"Name\", submitLabel = \"Save\", onSave }: { title: string; open: boolean; onOpenChange: (open: boolean) => void; initial?: string; label?: string; submitLabel?: string; onSave: (name: string) => void }) {\n  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><NameForm key={`${open}-${initial}`} title={title} initial={initial} label={label} submitLabel={submitLabel} onSave={(name) => { onSave(name); onOpenChange(false); }} onCancel={() => onOpenChange(false)} /></DialogContent></Dialog>;\n}\n\nfunction NameForm({ title, initial, label, submitLabel, onSave, onCancel }: { title: string; initial: string; label: string; submitLabel: string; onSave: (name: string) => void; onCancel: () => void }) {\n  const [name, setName] = useState(initial);\n  return <form onSubmit={(event) => { event.preventDefault(); if (name.trim()) onSave(name.trim()); }}>\n    <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>Changes apply to this example.</DialogDescription></DialogHeader>\n    <DialogBody><Field label={label} required><Input value={name} onChange={(event) => setName(event.target.value)} /></Field></DialogBody>\n    <DialogFooter><Button variant=\"outline\" onClick={onCancel}>Cancel</Button><Button type=\"submit\" variant=\"brand\" disabled={!name.trim()}>{submitLabel}</Button></DialogFooter>\n  </form>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "dialog",
+    "field",
+    "input"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dropdown-menu",
+    "tooltip",
+    "theme-store",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/user-menu.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ChevronsUpDown, type LucideIcon, Monitor, Moon, Sun } from \"lucide-react\";\n\nimport { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from \"@/components/ui/dropdown-menu\";\nimport { Tooltip, TooltipContent, TooltipTrigger } from \"@/components/ui/tooltip\";\nimport { setTheme, type Theme, useTheme } from \"@/lib/theme\";\nimport { cn } from \"@/lib/utils\";\n\nconst THEMES: { value: Theme; label: string; icon: LucideIcon }[] = [\n  { value: \"light\", label: \"Light\", icon: Sun },\n  { value: \"system\", label: \"System\", icon: Monitor },\n  { value: \"dark\", label: \"Dark\", icon: Moon },\n];\n\nexport type UserMenuLink = { label: string; href?: string; external?: boolean; onSelect?: () => void };\n\nexport function initialsOf(name: string, email = \"\") {\n  const words = (name.trim() || email).split(/[\\s@._-]+/).filter(Boolean);\n  return words\n    .slice(0, 2)\n    .map((w) => w[0])\n    .join(\"\")\n    .toUpperCase();\n}\n\n/** A round photo, or the initials on brand blue. */\nexport function UserAvatar({ image, initials, size = \"sm\" }: { image?: string; initials: string; size?: \"sm\" | \"md\" }) {\n  const sizeClass = size === \"sm\" ? \"size-5 text-initial\" : \"size-8 text-axis\";\n  if (image) return <img src={image} alt=\"\" referrerPolicy=\"no-referrer\" className={cn(\"shrink-0 rounded-pill object-cover\", sizeClass)} />;\n  return <span className={cn(\"grid shrink-0 place-items-center rounded-pill bg-brand text-on-brand\", sizeClass)}>{initials}</span>;\n}\n\n// The account at the foot of the sidebar: avatar, name (or the email when there is no name) and the same up-down\n// chevrons as the workspace switcher, since it opens a menu and nothing about it moves. The menu opens upward: who you\n// are on a gray card, your links in groups, the theme switch (light, system, dark), then Log out in red.\nfunction UserMenu({\n  name,\n  email = \"\",\n  image,\n  sections = [],\n  onLogOut,\n}: {\n  name: string;\n  email?: string;\n  image?: string;\n  sections?: UserMenuLink[][];\n  onLogOut?: () => void;\n}) {\n  const theme = useTheme();\n  const displayName = name.trim();\n  const hasName = displayName !== \"\" && displayName !== email;\n  const shownName = hasName ? displayName : email || \"User\";\n  const initials = initialsOf(name, email);\n  return (\n    <DropdownMenu>\n      <DropdownMenuTrigger asChild>\n        <button\n          type=\"button\"\n          aria-label=\"Account menu\"\n          className=\"group flex h-9 w-full items-center gap-2.5 rounded-control px-3 text-body-sm text-fg outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring data-[state=open]:bg-wash-hover\"\n        >\n          <UserAvatar image={image} initials={initials} />\n          <span className=\"flex-1 truncate text-left\">{shownName}</span>\n          <ChevronsUpDown className=\"size-3.5 shrink-0 text-fg-subtle transition-colors duration-150 group-hover:text-fg-muted\" strokeWidth={1.5} />\n        </button>\n      </DropdownMenuTrigger>\n      <DropdownMenuContent side=\"top\" align=\"start\" className=\"w-60 gap-0\">\n        <div className=\"flex items-center gap-2.5 rounded-control bg-neutral-5 px-2.5 py-2\">\n          <UserAvatar image={image} initials={initials} size=\"md\" />\n          <div className=\"min-w-0\">\n            <p className=\"truncate text-body-sm text-fg\">{shownName}</p>\n            {hasName && email && <p className=\"truncate text-caption text-fg-subtle\">{email}</p>}\n          </div>\n        </div>\n        {sections.map((section) => (\n          <React.Fragment key={section.map((item) => item.href ?? item.label).join(\"|\")}>\n            <DropdownMenuSeparator />\n            <DropdownMenuGroup className=\"flex flex-col gap-0.5\">\n              {section.map((item) => (\n                <DropdownMenuItem key={item.label} onSelect={item.onSelect} asChild={!!item.href}>\n                  {item.href ? (\n                    <a href={item.href} target={item.external ? \"_blank\" : undefined} rel={item.external ? \"noopener noreferrer\" : undefined}>\n                      {item.label}\n                    </a>\n                  ) : (\n                    item.label\n                  )}\n                </DropdownMenuItem>\n              ))}\n            </DropdownMenuGroup>\n          </React.Fragment>\n        ))}\n        <DropdownMenuSeparator />\n        <div className=\"flex items-center justify-between py-0.5 pr-0.5 pl-2.5\">\n          <span className=\"text-body-sm text-fg-muted\">Theme</span>\n          <div className=\"flex rounded-control border border-line p-0.5\" role=\"radiogroup\" aria-label=\"Theme\">\n            {THEMES.map(({ value, label, icon: Icon }) => (\n              <Tooltip key={value}>\n                <TooltipTrigger asChild>\n                  <button\n                    type=\"button\"\n                    role=\"radio\"\n                    aria-checked={theme === value}\n                    aria-label={label}\n                    onClick={() => setTheme(value)}\n                    className={cn(\n                      \"grid size-6 place-items-center rounded-tag outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring\",\n                      theme === value ? \"bg-blue-10 text-fg-brand\" : \"text-fg-subtle hover:text-fg\",\n                    )}\n                  >\n                    <Icon className=\"size-3.5\" strokeWidth={1.5} />\n                  </button>\n                </TooltipTrigger>\n                <TooltipContent side=\"top\">{label}</TooltipContent>\n              </Tooltip>\n            ))}\n          </div>\n        </div>\n        {onLogOut && (\n          <>\n            <DropdownMenuSeparator />\n            <DropdownMenuItem variant=\"destructive\" onSelect={onLogOut}>\n              Log out\n            </DropdownMenuItem>\n          </>\n        )}\n      </DropdownMenuContent>\n    </DropdownMenu>\n  );\n}\n\nexport { UserMenu };\n"
+    }
+  ]
+}

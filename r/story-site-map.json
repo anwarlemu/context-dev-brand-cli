@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-site-map",
+  "type": "visual",
+  "title": "Site map story",
+  "description": "Dot animation of a domain's page tree and page selection.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Site mapping on a site card or product hero. Plays only on screen; shows the tree with its pages picked with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-site-map.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-site-map --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/site-map-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/site-map-story.tsx",
+        "sha256": "3b5e15ecc617d0a6294e043deccef3906cf6cf33959ed07c90f2ea30164f6e2e",
+        "retained": false,
+        "exports": [
+          "SiteMapStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/site-map-story.d.ts",
+      "content": "/**\n * The Map page's picture: a domain typed under a paper map becomes the site as a tree of its pages, and the pages to\n * scrape are picked. With reduced motion it shows the tree with its pages picked.\n */\nexport declare function SiteMapStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/site-map-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createSiteMapStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/site-map-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The Map page's pictures, in the brand dot grid: a folded paper map with a pin in it, and what mapping a domain\n * returns, the site as a tree of its sections and their pages, with the pages chosen for scraping picked out.\n */\nexport declare const SITE_MAP_STORY_GRID: DotGrid;\nexport declare const PAPER_MAP: StoryPicture;\nexport declare const DOMAIN: DotStoryText;\nexport declare const SITE_FOUND: StoryPicture;\nexport declare const SITE_CHOSEN: StoryPicture;\nexport declare const CHOSEN_COUNT: number;\n/** Picks the first `count` of the chosen pages. */\nexport declare function paintChosen(states: Uint8Array, count: number): Uint8Array<ArrayBufferLike>;\nexport declare const TREE_LABELS: DotStoryText[];\nexport declare const FOUND_COUNT: DotStoryText;\nexport declare const chosenCountText: (count: number) => DotStoryText;\n/** The mapped site with its pages chosen: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const SITE_MAP_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-site-map/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-site-map.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { SiteMapStory } from \"@/components/visuals/stories/site-map-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <SiteMapStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/site-map-story.tsx",
+      "content": "'use client';\n\nimport { SITE_MAP_RESTING, SITE_MAP_STORY_GRID } from '@/components/visuals/stories/site-map-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadSiteMapStory: LoadDotStory = async (stage) => {\n\tconst { createSiteMapStoryPlayer } = await import('@/components/visuals/stories/site-map-story-player');\n\treturn createSiteMapStoryPlayer(stage);\n};\n\n/**\n * The Map page's picture: a domain typed under a paper map becomes the site as a tree of its pages, and the pages to\n * scrape are picked. With reduced motion it shows the tree with its pages picked.\n */\nexport function SiteMapStory({ className }: { className?: string }) {\n\treturn <DotStory grid={SITE_MAP_STORY_GRID} resting={SITE_MAP_RESTING} load={loadSiteMapStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/site-map-story-player.ts",
+      "content": "import { CHOSEN_COUNT, DOMAIN, FOUND_COUNT, PAPER_MAP, SITE_CHOSEN, SITE_FOUND, SITE_MAP_STORY_GRID, TREE_LABELS, chosenCountText, paintChosen } from '@/components/visuals/stories/site-map-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One mapping, played as a loop: a domain is typed under a folded paper map; the map melts into the site itself, a\n * tree of its sections and their pages; then the pages to scrape are picked, one after another.\n */\n\nconst MELT_SECONDS = 1.1;\nconst TYPING = { startsAt: 0.4, charactersPerSecond: 9 };\nconst TYPED_AT = TYPING.startsAt + typingSeconds(DOMAIN, TYPING.charactersPerSecond);\nconst CHOOSING = { startsAt: 1.1, everySeconds: 0.4 };\nconst CHOSEN_AT = CHOOSING.startsAt + (CHOSEN_COUNT - 1) * CHOOSING.everySeconds;\nconst LABEL_FADE_SECONDS = 0.3;\n\nconst chosenAt = (heldSeconds: number) => (heldSeconds < CHOOSING.startsAt ? 0 : Math.min(CHOSEN_COUNT, Math.floor((heldSeconds - CHOOSING.startsAt) / CHOOSING.everySeconds) + 1));\n\nexport function createSiteMapStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: SITE_MAP_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: CHOSEN_AT + 1 },\n\t\tbeats: [\n\t\t\t{ picture: PAPER_MAP, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: TYPED_AT + 1, write: (pen, heldSeconds) => pen.type(DOMAIN, heldSeconds, { ...TYPING, cursorLingers: Infinity }) },\n\t\t\t{\n\t\t\t\tpicture: SITE_FOUND,\n\t\t\t\tdeparture: SITE_CHOSEN,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: CHOSEN_AT + 3.2,\n\t\t\t\tanimate: (states, heldSeconds) => void paintChosen(states, chosenAt(heldSeconds)),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tTREE_LABELS.forEach((label) => pen.text(label));\n\t\t\t\t\tpen.text(FOUND_COUNT);\n\t\t\t\t\tpen.text(chosenCountText(Math.max(1, chosenAt(heldSeconds))), clamp01((heldSeconds - CHOOSING.startsAt) / LABEL_FADE_SECONDS));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/site-map-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, paintedStates, polygon, ringsWithSpeckle, type DotPainter, type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The Map page's pictures, in the brand dot grid: a folded paper map with a pin in it, and what mapping a domain\n * returns, the site as a tree of its sections and their pages, with the pages chosen for scraping picked out.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const SITE_MAP_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, pitch: PITCH } = SITE_MAP_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst SHEET = { left: 8, right: 50, folds: [22, 36], top: 2, bottom: 26, rise: 4 };\nconst PIN = { center: { column: 29, row: 13 }, radius: 4.3, hole: 1.5, tip: { column: 29, row: 22 }, moat: 1.6 };\nconst ROUTE: GridPoint[] = [{ column: 11, row: 26 }, { column: 17, row: 20 }, { column: 23, row: 26 }, { column: 29, row: 25 }];\nconst ROUTE_WIDTH = { line: 0.6, clearing: 1.5 };\nconst BLOCKS = [\n\t{ left: 40, right: 46, top: 8, bottom: 12 },\n\t{ left: 11, right: 16, top: 9, bottom: 13 },\n\t{ left: 39, right: 44, top: 19, bottom: 23 },\n];\n\n// How far a dot is inside the pin: its round head, or the taper from the head down to the tip. Negative is outside.\nconst insidePin = (column: number, row: number) => {\n\tconst fromHead = Math.hypot(column - PIN.center.column, row - PIN.center.row);\n\tconst down = (row - PIN.center.row) / (PIN.tip.row - PIN.center.row);\n\tconst taper = between(down, 0, 1) ? PIN.radius * (1 - down) - Math.abs(column - PIN.center.column) : -Infinity;\n\treturn Math.max(PIN.radius - fromHead, taper);\n};\n\n// A map folded in three, its panels tilting alternately; on it a few city blocks, a route, and the pin it leads to.\nconst foldedMap = polygon(\n\t[\n\t\t{ column: SHEET.left, row: SHEET.top + SHEET.rise },\n\t\t{ column: SHEET.folds[0], row: SHEET.top },\n\t\t{ column: SHEET.folds[1], row: SHEET.top + SHEET.rise },\n\t\t{ column: SHEET.right, row: SHEET.top },\n\t\t{ column: SHEET.right, row: SHEET.bottom },\n\t\t{ column: SHEET.folds[1], row: SHEET.bottom + SHEET.rise },\n\t\t{ column: SHEET.folds[0], row: SHEET.bottom },\n\t\t{ column: SHEET.left, row: SHEET.bottom + SHEET.rise },\n\t],\n\t(column, row) => {\n\t\tconst pin = insidePin(column, row);\n\t\tif (pin >= 0) return Math.hypot(column - PIN.center.column, row - PIN.center.row) <= PIN.hole ? DOT_HOLLOW : DOT_FILLED;\n\t\tif (pin > -PIN.moat) return DOT_ABSENT;\n\t\tif (SHEET.folds.includes(column)) return DOT_FILLED;\n\t\tconst fromRoute = Math.min(...ROUTE.slice(1).map((point, index) => distanceToSegment(column, row, ROUTE[index], point)));\n\t\tif (fromRoute < ROUTE_WIDTH.line) return DOT_FILLED;\n\t\tif (fromRoute < ROUTE_WIDTH.clearing) return DOT_ABSENT;\n\t\tif (BLOCKS.some((block) => between(column, block.left, block.right) && between(row, block.top, block.bottom))) return ringsWithSpeckle(column, row) === DOT_FILLED ? DOT_HOLLOW : DOT_FILLED;\n\t\treturn DOT_HOLLOW;\n\t}\n);\n\nexport const PAPER_MAP = pictureOf(SITE_MAP_STORY_GRID, foldedMap);\n\nconst DOMAIN_SIZE = 20;\nconst DOMAIN_NAME = 'stripe.com';\n// Doto is monospaced, each letter three fifths of its size wide; typed text is set from its left so the cursor can follow it.\nexport const DOMAIN: DotStoryText = { text: DOMAIN_NAME, x: x(COLUMNS / 2) - (DOMAIN_NAME.length * 0.6 * DOMAIN_SIZE) / 2, y: baselineOn(34, DOMAIN_SIZE), size: DOMAIN_SIZE, weight: 800 };\n\nconst ROOT = { left: 18, right: 38, top: 1, bottom: 6, center: 28 };\nconst BRANCH_ROW = 10;\nconst SECTION = { columns: 17, top: 13, bottom: 18 };\nconst SECTIONS = [\n\t{ left: 0, path: '/pricing' },\n\t{ left: 20, path: '/docs' },\n\t{ left: 40, path: '/blog' },\n];\nconst TILE = { columns: 5, rows: 5, every: 6, tops: [22, 29], perRow: 3 };\nconst centerOf = (left: number) => left + (SECTION.columns - 1) / 2;\n\ninterface Tile {\n\tleft: number;\n\ttop: number;\n}\nconst TILES: Tile[] = SECTIONS.flatMap(({ left }) => TILE.tops.flatMap((top) => Array.from({ length: TILE.perRow }, (_, index) => ({ left: left + index * TILE.every, top }))));\n/** The pages picked for scraping, in the order they are picked. */\nconst CHOSEN_TILES = [1, 3, 8, 10, 12, 16];\nconst tileAt = (column: number, row: number) => TILES.findIndex(({ left, top }) => between(column, left, left + TILE.columns - 1) && between(row, top, top + TILE.rows - 1));\n\nconst isBoxEdge = (column: number, row: number, box: { left: number; right: number; top: number; bottom: number }) =>\n\tbetween(column, box.left, box.right) && between(row, box.top, box.bottom) && (column === box.left || column === box.right || row === box.top || row === box.bottom);\n\n// The site as a tree: the domain at the root, a branch to each section, and under each section its pages. A page\n// that has been found is an outline full of rings; one chosen for scraping is solid.\nconst tree = (isChosen: (tile: number) => boolean): DotPainter => (column, row) => {\n\tif (isBoxEdge(column, row, ROOT)) return DOT_FILLED;\n\tif (column === ROOT.center && between(row, ROOT.bottom, BRANCH_ROW)) return DOT_FILLED;\n\tif (row === BRANCH_ROW && between(column, centerOf(SECTIONS[0].left), centerOf(SECTIONS[SECTIONS.length - 1].left))) return DOT_FILLED;\n\tconst section = SECTIONS.find(({ left }) => between(column, left, left + SECTION.columns - 1));\n\tif (!section) return DOT_ABSENT;\n\tif (column === centerOf(section.left) && (between(row, BRANCH_ROW, SECTION.top) || between(row, SECTION.bottom, TILE.tops[0] - 1))) return DOT_FILLED;\n\tif (isBoxEdge(column, row, { left: section.left, right: section.left + SECTION.columns - 1, top: SECTION.top, bottom: SECTION.bottom })) return DOT_FILLED;\n\tconst tile = tileAt(column, row);\n\tif (tile < 0) return DOT_ABSENT;\n\tconst isEdge = column === TILES[tile].left || column === TILES[tile].left + TILE.columns - 1 || row === TILES[tile].top || row === TILES[tile].top + TILE.rows - 1;\n\treturn isEdge || isChosen(tile) ? DOT_FILLED : DOT_HOLLOW;\n};\n\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(SITE_MAP_STORY_GRID, states) });\nexport const SITE_FOUND = pictureOfStates(paintedStates(SITE_MAP_STORY_GRID, tree(() => false)));\nexport const SITE_CHOSEN = pictureOfStates(paintedStates(SITE_MAP_STORY_GRID, tree((tile) => CHOSEN_TILES.includes(tile))));\nexport const CHOSEN_COUNT = CHOSEN_TILES.length;\n\n/** Picks the first `count` of the chosen pages. */\nexport function paintChosen(states: Uint8Array, count: number) {\n\tfor (let cell = 0; cell < states.length; cell++) {\n\t\tconst tile = tileAt(cell % COLUMNS, Math.floor(cell / COLUMNS));\n\t\tif (tile >= 0 && CHOSEN_TILES.indexOf(tile) < count) states[cell] = SITE_CHOSEN.states[cell];\n\t}\n\treturn states;\n}\n\nexport const TREE_LABELS: DotStoryText[] = [\n\t{ text: DOMAIN_NAME, x: x(ROOT.center + 0.5), y: baselineOn((ROOT.top + ROOT.bottom) / 2, 16), size: 16, weight: 800, anchor: 'middle' },\n\t...SECTIONS.map(({ left, path }): DotStoryText => ({ text: path, x: x(centerOf(left) + 0.5), y: baselineOn((SECTION.top + SECTION.bottom) / 2, 15), size: 15, weight: 700, anchor: 'middle' })),\n];\nconst COUNT_LEFT = x(ROOT.right + 3);\nexport const FOUND_COUNT: DotStoryText = { text: `${TILES.length} pages found`, x: COUNT_LEFT, y: baselineOn(2, 13), size: 13, weight: 700, muted: true };\nexport const chosenCountText = (count: number): DotStoryText => ({ text: `${count} to scrape`, x: COUNT_LEFT, y: baselineOn(4.6, 13), size: 13, weight: 800 });\n\n/** The mapped site with its pages chosen: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const SITE_MAP_RESTING = { ...SITE_CHOSEN, texts: [...TREE_LABELS, FOUND_COUNT, chosenCountText(CHOSEN_COUNT)] };\n"
+    }
+  ]
+}

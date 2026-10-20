@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "hero-globe",
+  "type": "visual",
+  "title": "Hero globe",
+  "description": "Wireframe globe with animated paths and optional connected statistics on wide screens.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "A Hero's `background`: `<HeroGlobe />`, plus `<HeroGlobeStats />` on screens 90rem and wider. Give the hero room at its foot for the crown (about 15rem).",
+  "avoid": [
+    "A globe and a dot field in one hero",
+    "More than four stats",
+    "Stats over the demo"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/hero-globe.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add hero-globe --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/shared/hero-globe.tsx; src/components/sections/shared/hero-globe-geometry.ts; src/components/sections/shared/hero-globe-stats.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/hero-globe.tsx",
+        "sha256": "099f865ce57199c7fa151d857146bfff7cd0a53ac690da8a3a7fb677f693f0e4",
+        "retained": false,
+        "exports": [
+          "HERO_GLOBE_RISE_CLASS",
+          "HeroGlobe"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/hero-globe-geometry.ts",
+        "sha256": "475de3d951c4bcec6627aaac2db7025ec6ca6745a6292fa6b84b4db797ac878b",
+        "retained": false,
+        "exports": [
+          "RADIUS",
+          "VIEWBOX_SIZE",
+          "WIDTH",
+          "GLOBE_PATH",
+          "GridPoint",
+          "TRACE_SHAPES",
+          "NODES",
+          "heroGlobePointPlacement"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/hero-globe-stats.tsx",
+        "sha256": "744a0f73f3c7c3dce222600f5a9993d8a015b0a2ec857529be15864dd383d6df",
+        "retained": false,
+        "exports": [
+          "HeroGlobeStats"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/hero-globe.d.ts",
+      "content": "import * as React from \"react\";\nimport { HERO_GLOBE_RISE_CLASS } from \"./hero-globe-geometry\";\nexport { HERO_GLOBE_RISE_CLASS };\n/**\n * A hairline wireframe globe rising from the bottom of the hero; the hero's edge cuts it to a dome. Comets run along\n * its grid lines from node to node and the node they reach pulses. It draws in `currentColor`, pauses off screen, and\n * holds a still frame (the grid and its traces) under reduced motion.\n */\nexport declare function HeroGlobe({ className }: {\n    className?: string;\n}): React.JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/hero-globe-geometry.d.ts",
+      "content": "export declare const RADIUS = 100;\nexport declare const VIEWBOX_SIZE: number;\nexport declare const WIDTH = \"min(106rem,200vw)\";\n/**\n * How high the globe's crown rises into the hero. Set on the hero (or anything around the globe and its stats) to place\n * other layers against the crown; HeroGlobe and HeroGlobeStats carry it themselves by default.\n */\nexport declare const HERO_GLOBE_RISE_CLASS = \"[--hero-globe-rise:11rem] sm:[--hero-globe-rise:15rem]\";\ninterface Projected {\n    x: number;\n    y: number;\n    facing: boolean;\n}\nexport declare const GLOBE_PATH: string;\nexport interface GridPoint {\n    latitude: number;\n    longitude: number;\n}\nexport declare const TRACE_SHAPES: {\n    path: string;\n    from: Projected;\n    to: Projected;\n}[];\nexport declare const NODES: Projected[];\n/** Where a grid point lands in the hero: its distance in from the hero's center line and up from the hero's foot. */\nexport declare function heroGlobePointPlacement(point: GridPoint): {\n    fromCenter: string;\n    fromFoot: string;\n};\nexport {};\n"
+    },
+    {
+      "path": "components/visuals/hero-globe-stats.d.ts",
+      "content": "import type * as React from \"react\";\nimport { type GridPoint } from \"./hero-globe-geometry\";\ntype Side = \"left\" | \"right\";\ntype Tier = \"upper\" | \"lower\";\nexport interface HeroGlobeStat {\n    value: string;\n    label: string;\n    side: Side;\n    /** `upper` stands level with the demo, beside it; `lower` sits below it, near the hero's foot. */\n    tier: Tier;\n    /** The globe node its hairline runs to. */\n    node: GridPoint;\n}\n/**\n * Four stat windows flanking the globe's crown, each wired to a node on the globe by an elbowed hairline. Shown only on\n * screens 90rem and wider, where they clear a centered demo. The lines take `currentColor`.\n */\nexport declare function HeroGlobeStats({ stats, label, className }: {\n    stats?: HeroGlobeStat[];\n    label?: string;\n    className?: string;\n}): React.JSX.Element;\nexport {};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/hero-globe/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/hero-globe.tsx",
+      "content": "import { Hero } from \"@/components/site/hero\";\nimport { Button } from \"@/components/ui/button\";\nimport { HeroGlobe } from \"@/components/visuals/hero-globe\";\nimport { HeroGlobeStats } from \"@/components/visuals/hero-globe-stats\";\n\nexport function Site() {\n  return (\n    <Hero\n      className=\"min-h-160 pb-60\"\n      background={\n        <>\n          <HeroGlobe />\n          <HeroGlobeStats />\n        </>\n      }\n      title=\"Search the whole {web}\"\n      accent=\"{web}\"\n      description=\"Ranked results with clean page content, from every corner of the web.\"\n      actions={\n        <Button asChild variant=\"pill\">\n          <a href=\"https://context.dev/signup\">Start for free</a>\n        </Button>\n      }\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "hero",
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/hero-globe.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nimport { GLOBE_PATH, HERO_GLOBE_RISE_CLASS, NODES, RADIUS, TRACE_SHAPES, VIEWBOX_SIZE, WIDTH } from \"./hero-globe-geometry\";\n\nexport { HERO_GLOBE_RISE_CLASS };\n\nconst TRACE_CYCLE_MS = 4800;\nconst TRACE_STAGGER_MS = 900;\n// Head position along the trace, from its start node (0) to its end node (1); the comet's tail trails this far behind.\nconst COMET_TAIL = 0.45;\nconst COMET_EXIT = 1 + COMET_TAIL;\nconst COMET_TRAVEL_SHARE = 0.4;\n// When the head reaches the end node (1 of COMET_EXIT) within the eased travel: the end node pulses from here.\nconst ARRIVAL_SHARE = 0.25;\n// The comet's travel: an ease-out spline, fast off its node and settling into the next.\nconst EASE_OUT = \"0.45 0 0.25 1\";\n\n/**\n * A hairline wireframe globe rising from the bottom of the hero; the hero's edge cuts it to a dome. Comets run along\n * its grid lines from node to node and the node they reach pulses. It draws in `currentColor`, pauses off screen, and\n * holds a still frame (the grid and its traces) under reduced motion.\n */\nexport function HeroGlobe({ className }: { className?: string }) {\n  const svgRef = React.useRef<SVGSVGElement>(null);\n  const id = React.useId().replace(/:/g, \"\");\n\n  // SMIL keeps ticking (and repainting) whether or not anyone can see it, so the SVG pauses while off screen.\n  React.useEffect(() => {\n    const svg = svgRef.current;\n    if (!svg) return;\n    const reducedMotion = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n    let onScreen = false;\n    const sync = () => {\n      if (onScreen && !reducedMotion.matches) svg.unpauseAnimations();\n      else svg.pauseAnimations();\n    };\n    sync();\n    const observer = new IntersectionObserver(([entry]) => {\n      onScreen = entry.isIntersecting;\n      sync();\n    });\n    observer.observe(svg);\n    reducedMotion.addEventListener(\"change\", sync);\n    return () => {\n      observer.disconnect();\n      reducedMotion.removeEventListener(\"change\", sync);\n    };\n  }, []);\n\n  return (\n    <div aria-hidden=\"true\" data-slot=\"hero-globe\" className={cn(\"pointer-events-none absolute inset-0 overflow-hidden text-brand\", HERO_GLOBE_RISE_CLASS, className)}>\n      <svg\n        ref={svgRef}\n        viewBox={`${-RADIUS - 1} ${-RADIUS - 1} ${VIEWBOX_SIZE} ${VIEWBOX_SIZE}`}\n        style={{ width: WIDTH }}\n        className=\"absolute top-full left-1/2 -translate-x-1/2 -translate-y-(--hero-globe-rise)\"\n      >\n        <circle r={RADIUS} fill=\"none\" stroke=\"currentColor\" strokeOpacity={0.35} vectorEffect=\"non-scaling-stroke\" />\n        <path d={GLOBE_PATH} fill=\"none\" stroke=\"currentColor\" strokeOpacity={0.2} vectorEffect=\"non-scaling-stroke\" />\n        <defs>\n          {TRACE_SHAPES.map(({ from, to }, index) => (\n            <linearGradient key={`base-${index}`} id={`${id}-trace-${index}`} gradientUnits=\"userSpaceOnUse\" x1={from.x} y1={from.y} x2={to.x} y2={to.y}>\n              <stop offset=\"0\" stopColor=\"currentColor\" stopOpacity=\"0\" />\n              <stop offset=\"1\" stopColor=\"currentColor\" stopOpacity=\"0.55\" />\n            </linearGradient>\n          ))}\n          {TRACE_SHAPES.map(({ from, to }, index) => {\n            const timing = {\n              dur: `${TRACE_CYCLE_MS}ms`,\n              begin: `${index * TRACE_STAGGER_MS}ms`,\n              repeatCount: \"indefinite\",\n              calcMode: \"spline\",\n              keyTimes: `0;${COMET_TRAVEL_SHARE};1`,\n              keySplines: `${EASE_OUT};0 0 1 1`,\n            };\n            return (\n              <linearGradient key={`comet-${index}`} id={`${id}-comet-${index}`} gradientUnits=\"userSpaceOnUse\" x1={from.x} y1={from.y} x2={to.x} y2={to.y}>\n                <stop offset=\"0\" stopColor=\"currentColor\" stopOpacity=\"0\">\n                  <animate attributeName=\"offset\" values={`${-COMET_TAIL};1;1`} {...timing} />\n                </stop>\n                <stop offset=\"0\" stopColor=\"currentColor\" stopOpacity=\"1\">\n                  <animate attributeName=\"offset\" values={`0;${COMET_EXIT};${COMET_EXIT}`} {...timing} />\n                </stop>\n                <stop offset=\"0\" stopColor=\"currentColor\" stopOpacity=\"0\">\n                  <animate attributeName=\"offset\" values={`0;${COMET_EXIT};${COMET_EXIT}`} {...timing} />\n                </stop>\n              </linearGradient>\n            );\n          })}\n        </defs>\n        {TRACE_SHAPES.map(({ path }, index) => (\n          <path key={`base-${index}`} d={path} fill=\"none\" stroke={`url(#${id}-trace-${index})`} strokeWidth={1} vectorEffect=\"non-scaling-stroke\" />\n        ))}\n        <g>\n          {TRACE_SHAPES.map(({ path }, index) => (\n            <path key={`comet-${index}`} d={path} fill=\"none\" stroke={`url(#${id}-comet-${index})`} strokeWidth={2} strokeLinecap=\"round\" vectorEffect=\"non-scaling-stroke\" />\n          ))}\n          {TRACE_SHAPES.map(({ to }, index) => {\n            const timing = {\n              dur: `${TRACE_CYCLE_MS}ms`,\n              begin: `${index * TRACE_STAGGER_MS}ms`,\n              repeatCount: \"indefinite\",\n              keyTimes: `0;${ARRIVAL_SHARE};${ARRIVAL_SHARE + 0.18};1`,\n            };\n            return (\n              <circle key={`pulse-${index}`} cx={to.x} cy={to.y} r={0.45} fill=\"none\" stroke=\"currentColor\" strokeWidth={1} strokeOpacity={0} vectorEffect=\"non-scaling-stroke\">\n                <animate attributeName=\"r\" values=\"0.45;0.45;2.6;2.6\" {...timing} />\n                <animate attributeName=\"stroke-opacity\" values=\"0;0.9;0;0\" {...timing} />\n              </circle>\n            );\n          })}\n        </g>\n        {NODES.map((node, index) => (\n          <circle key={index} cx={node.x} cy={node.y} r={0.45} fill=\"currentColor\" />\n        ))}\n      </svg>\n    </div>\n  );\n}\n"
+    },
+    {
+      "path": "components/visuals/hero-globe-geometry.ts",
+      "content": "export const RADIUS = 100;\nconst MERIDIAN_STEP_DEGREES = 15;\n// Only the crown shows under the hero, so the parallels are listed for it rather than stepped round the whole sphere.\nconst PARALLEL_LATITUDES = [75, 60, 50];\nconst SAMPLES = 96;\nexport const VIEWBOX_SIZE = RADIUS * 2 + 2;\nexport const WIDTH = \"min(106rem,200vw)\";\n\n/**\n * How high the globe's crown rises into the hero. Set on the hero (or anything around the globe and its stats) to place\n * other layers against the crown; HeroGlobe and HeroGlobeStats carry it themselves by default.\n */\nexport const HERO_GLOBE_RISE_CLASS = \"[--hero-globe-rise:11rem] sm:[--hero-globe-rise:15rem]\";\n\ninterface Projected {\n  x: number;\n  y: number;\n  facing: boolean;\n}\n\n// Orthographic projection seen side-on at the equator: the pole sits on the silhouette's crown, the meridians arc down\n// from it and the parallels flatten into straight lines.\nfunction project(latitude: number, longitude: number): Projected {\n  const x = RADIUS * Math.cos(latitude) * Math.sin(longitude);\n  const y = -RADIUS * Math.sin(latitude);\n  return { x, y, facing: Math.cos(longitude) >= 0 };\n}\n\n// Only the side facing the viewer is drawn; each run of visible samples becomes its own subpath.\nfunction visiblePath(points: Projected[]) {\n  let path = \"\";\n  let drawing = false;\n  for (const point of points) {\n    if (!point.facing) {\n      drawing = false;\n      continue;\n    }\n    path += `${drawing ? \"L\" : \"M\"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`;\n    drawing = true;\n  }\n  return path;\n}\n\nfunction degrees(value: number) {\n  return (value * Math.PI) / 180;\n}\n\nfunction sample(count: number, from: number, to: number) {\n  return Array.from({ length: count + 1 }, (_, index) => from + ((to - from) * index) / count);\n}\n\nconst MERIDIANS = sample(360 / MERIDIAN_STEP_DEGREES - 1, 0, 360 - MERIDIAN_STEP_DEGREES).map((longitude) =>\n  visiblePath(sample(SAMPLES, -90, 90).map((latitude) => project(degrees(latitude), degrees(longitude)))),\n);\n\nconst PARALLELS = PARALLEL_LATITUDES.map((latitude) => visiblePath(sample(SAMPLES * 2, -180, 180).map((longitude) => project(degrees(latitude), degrees(longitude)))));\n\nexport const GLOBE_PATH = [...MERIDIANS, ...PARALLELS].join(\"\");\n\nexport interface GridPoint {\n  latitude: number;\n  longitude: number;\n}\n\n// Each trace runs along one grid line, from its first point to its last, so it lies on the wireframe the whole way.\nconst TRACES: GridPoint[][] = [\n  [\n    { latitude: 90, longitude: -15 },\n    { latitude: 60, longitude: -15 },\n  ],\n  [\n    { latitude: 60, longitude: -45 },\n    { latitude: 60, longitude: -15 },\n  ],\n  [\n    { latitude: 60, longitude: 0 },\n    { latitude: 50, longitude: 0 },\n  ],\n  [\n    { latitude: 60, longitude: 45 },\n    { latitude: 50, longitude: 45 },\n  ],\n  [\n    { latitude: 50, longitude: -45 },\n    { latitude: 60, longitude: -45 },\n  ],\n  [\n    { latitude: 60, longitude: 0 },\n    { latitude: 60, longitude: 45 },\n  ],\n];\n\nfunction pointOnGlobe({ latitude, longitude }: GridPoint) {\n  return project(degrees(latitude), degrees(longitude));\n}\n\nfunction tracePath([from, to]: GridPoint[]) {\n  const points = sample(SAMPLES / 2, 0, 1).map((t) =>\n    pointOnGlobe({ latitude: from.latitude + (to.latitude - from.latitude) * t, longitude: from.longitude + (to.longitude - from.longitude) * t }),\n  );\n  return points.map((point, index) => `${index === 0 ? \"M\" : \"L\"}${point.x.toFixed(2)} ${point.y.toFixed(2)}`).join(\"\");\n}\n\nexport const TRACE_SHAPES = TRACES.map((trace) => ({ path: tracePath(trace), from: pointOnGlobe(trace[0]), to: pointOnGlobe(trace[1]) }));\n\nexport const NODES = Array.from(new Map(TRACES.flat().map((point) => [`${point.latitude === 90 ? 90 : `${point.latitude}:${point.longitude}`}`, pointOnGlobe(point)])).values());\n\n/** Where a grid point lands in the hero: its distance in from the hero's center line and up from the hero's foot. */\nexport function heroGlobePointPlacement(point: GridPoint) {\n  const { x, y } = pointOnGlobe(point);\n  const unit = `(${WIDTH} / ${VIEWBOX_SIZE})`;\n  return {\n    fromCenter: `(${Math.abs(x).toFixed(2)} * ${unit})`,\n    fromFoot: `(var(--hero-globe-rise) - ${(y + RADIUS + 1).toFixed(2)} * ${unit})`,\n  };\n}\n"
+    },
+    {
+      "path": "components/visuals/hero-globe-stats.tsx",
+      "content": "import type * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nimport { type GridPoint, HERO_GLOBE_RISE_CLASS, heroGlobePointPlacement } from \"./hero-globe-geometry\";\n\ntype Side = \"left\" | \"right\";\ntype Tier = \"upper\" | \"lower\";\n\nexport interface HeroGlobeStat {\n  value: string;\n  label: string;\n  side: Side;\n  /** `upper` stands level with the demo, beside it; `lower` sits below it, near the hero's foot. */\n  tier: Tier;\n  /** The globe node its hairline runs to. */\n  node: GridPoint;\n}\n\nconst DEFAULT_STATS: HeroGlobeStat[] = [\n  { value: \"76.0%\", label: \"WebCode groundedness, highest of six tools\", side: \"left\", tier: \"upper\", node: { latitude: 60, longitude: -45 } },\n  { value: \"68%\", label: \"Fewer tokens than Zilliz, at higher accuracy\", side: \"left\", tier: \"lower\", node: { latitude: 50, longitude: -45 } },\n  { value: \"99.9%\", label: \"Uptime SLA on Enterprise\", side: \"right\", tier: \"upper\", node: { latitude: 60, longitude: 45 } },\n  { value: \"1,000\", label: \"Free credits every month\", side: \"right\", tier: \"lower\", node: { latitude: 50, longitude: 45 } },\n];\n\n// How far the frame's inner verticals sit in from the screen edge (the ruled column is min(85vw, column-wide) on wide\n// screens), and how much further out its outer verticals sit.\nconst FRAME_GEOMETRY_CLASS =\n  \"[--hero-frame-gutter:calc((100vw_-_min(85vw,var(--ds-layout-column-wide)))_/_2)] [--hero-frame-chamfer:clamp(1.5rem,var(--hero-frame-gutter)_-_1rem,5rem)]\";\n\nconst WINDOW_WIDTH = \"13rem\";\n// The upper windows stand level with the demo card, so they keep clear of its half-width (28.125rem) by a gap.\nconst UPPER_INNER_EDGE = \"30.125rem\";\nconst UPPER_FOOT = \"11rem\";\nconst LOWER_FOOT = \"0.75rem\";\n// The lower windows sit below the demo card, so they can straddle the frame's outer verticals.\nconst LOWER_INSET = `max(1rem, var(--hero-frame-gutter) - var(--hero-frame-chamfer) - ${WINDOW_WIDTH} / 2)`;\nconst RING_RADIUS = \"0.3125rem\";\nconst RISER_HEIGHT = \"1.25rem\";\n\nfunction fromSide(side: Side, value: string): React.CSSProperties {\n  return side === \"left\" ? { left: value } : { right: value };\n}\n\nfunction windowPlacement({ side, tier }: HeroGlobeStat): React.CSSProperties {\n  const inset = tier === \"upper\" ? `calc(50% - ${UPPER_INNER_EDGE} - ${WINDOW_WIDTH})` : LOWER_INSET;\n  return { ...fromSide(side, inset), bottom: tier === \"upper\" ? UPPER_FOOT : LOWER_FOOT };\n}\n\nfunction Leader({ stat }: { stat: HeroGlobeStat }) {\n  const { fromCenter, fromFoot } = heroGlobePointPlacement(stat.node);\n  const ringTop = `(${fromFoot} + ${RING_RADIUS} - 1px)`;\n  const elbow = `(${ringTop} + ${RISER_HEIGHT})`;\n  const ring = (\n    <>\n      <span\n        className=\"absolute size-2.5 rounded-full border border-current\"\n        style={{ ...fromSide(stat.side, `calc(50% - ${fromCenter} - ${RING_RADIUS})`), bottom: `calc(${fromFoot} - ${RING_RADIUS})` }}\n      />\n      <span className=\"absolute w-px bg-current/50\" style={{ ...fromSide(stat.side, `calc(50% - ${fromCenter} - 0.5px)`), bottom: `calc${ringTop}`, height: RISER_HEIGHT }} />\n    </>\n  );\n\n  if (stat.tier === \"lower\") {\n    const windowEdge = `(${LOWER_INSET} + ${WINDOW_WIDTH})`;\n    return (\n      <>\n        <span\n          className=\"absolute h-px bg-current/50\"\n          style={{ ...fromSide(stat.side, `calc${windowEdge}`), width: `calc(50% - ${fromCenter} - ${windowEdge} + 0.5px)`, bottom: `calc${elbow}` }}\n        />\n        {ring}\n      </>\n    );\n  }\n\n  const anchorFromCenter = `(${UPPER_INNER_EDGE} + ${WINDOW_WIDTH} / 2)`;\n  return (\n    <>\n      <span\n        className={cn(\"absolute border-b border-current/50\", stat.side === \"left\" ? \"border-l\" : \"border-r\")}\n        style={{\n          ...fromSide(stat.side, `calc(50% - ${anchorFromCenter})`),\n          width: `calc(${anchorFromCenter} - ${fromCenter} + 0.5px)`,\n          bottom: `calc${elbow}`,\n          height: `calc(${UPPER_FOOT} - ${elbow})`,\n        }}\n      />\n      {ring}\n    </>\n  );\n}\n\n/**\n * Four stat windows flanking the globe's crown, each wired to a node on the globe by an elbowed hairline. Shown only on\n * screens 90rem and wider, where they clear a centered demo. The lines take `currentColor`.\n */\nexport function HeroGlobeStats({ stats = DEFAULT_STATS, label = \"Context.dev in numbers\", className }: { stats?: HeroGlobeStat[]; label?: string; className?: string }) {\n  return (\n    <div\n      data-slot=\"hero-globe-stats\"\n      className={cn(\"pointer-events-none absolute inset-0 hidden overflow-hidden text-brand min-[90rem]:block\", HERO_GLOBE_RISE_CLASS, FRAME_GEOMETRY_CLASS, className)}\n    >\n      <div aria-hidden=\"true\">\n        {stats.map((stat) => (\n          <Leader key={stat.value} stat={stat} />\n        ))}\n      </div>\n      <ul aria-label={label}>\n        {stats.map((stat) => (\n          <li key={stat.value} className=\"absolute\" style={{ ...windowPlacement(stat), width: WINDOW_WIDTH }}>\n            <div className=\"flex flex-col items-center gap-2 rounded-card bg-surface p-3.5 text-center text-fg-brand shadow-[0_0_0_var(--ds-space-2)_var(--ds-color-ring-tint)]\">\n              <span className=\"font-data text-h2 leading-none font-medium tabular-nums\">{stat.value}</span>\n              <span className=\"text-body-sm text-fg-muted\">{stat.label}</span>\n            </div>\n          </li>\n        ))}\n      </ul>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

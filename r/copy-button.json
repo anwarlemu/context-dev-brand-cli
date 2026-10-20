@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "copy-button",
+  "type": "ui",
+  "title": "Copy button",
+  "description": "Copy action with a temporary success indicator.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Keys, snippets, IDs.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/copy-button.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add copy-button --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/copy-button.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/copy-button.tsx",
+        "sha256": "59c0905ec7324585f481eb483659e5f8993d272d85d9f7b14fc089907387bf35",
+        "retained": false,
+        "exports": [
+          "useCopy",
+          "CopyButton"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/copy-button.d.ts",
+      "content": "import * as React from \"react\";\n/** Copies text and reports it for a moment, so the button can say so. */\nexport declare function useCopy(): {\n    hasCopied: boolean;\n    copy: (text: string) => Promise<void>;\n};\ndeclare function CopyButton({ value, label, className }: {\n    value: string;\n    label?: string;\n    className?: string;\n}): React.JSX.Element;\nexport { CopyButton };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/copy-button/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/copy-button.tsx",
+      "content": "import { CopyButton } from \"@/components/ui/copy-button\";\n\nexport function Product() {\n  return (\n    <div className=\"flex w-fit items-center gap-2 rounded-control bg-neutral-5 py-1 pr-1 pl-3 font-mono text-caption text-fg-muted\">\n      npm install context.dev\n      <CopyButton value=\"npm install context.dev\" label=\"Copy command\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "tooltip",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/copy-button.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Copy } from \"lucide-react\";\n\nimport { Tooltip, TooltipContent, TooltipTrigger } from \"@/components/ui/tooltip\";\nimport { cn } from \"@/lib/utils\";\n\nconst COPIED_MS = 1500;\n\n/** Copies text and reports it for a moment, so the button can say so. */\nexport function useCopy() {\n  const [hasCopied, setHasCopied] = React.useState(false);\n  const timeout = React.useRef<ReturnType<typeof setTimeout>>(undefined);\n  React.useEffect(() => () => clearTimeout(timeout.current), []);\n  const copy = React.useCallback(async (text: string) => {\n    try {\n      await navigator.clipboard.writeText(text);\n    } catch {\n      return;\n    }\n    setHasCopied(true);\n    clearTimeout(timeout.current);\n    timeout.current = setTimeout(() => setHasCopied(false), COPIED_MS);\n  }, []);\n  return { hasCopied, copy };\n}\n\n// A small icon button that turns into a green check for a moment once copied.\nfunction CopyButton({ value, label = \"Copy\", className }: { value: string; label?: string; className?: string }) {\n  const { hasCopied, copy } = useCopy();\n  return (\n    <Tooltip>\n      <TooltipTrigger asChild>\n        <button\n          type=\"button\"\n          data-slot=\"copy-button\"\n          onClick={() => copy(value)}\n          aria-label={hasCopied ? \"Copied\" : label}\n          className={cn(\n            \"grid size-7 shrink-0 place-items-center rounded-control outline-none transition-colors duration-150 ease-out hover:bg-wash-control focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-3.5\",\n            hasCopied ? \"text-success\" : \"text-fg-subtle hover:text-fg\",\n            className,\n          )}\n        >\n          {hasCopied ? <Check strokeWidth={1.75} /> : <Copy strokeWidth={1.5} />}\n        </button>\n      </TooltipTrigger>\n      <TooltipContent side=\"top\">{hasCopied ? \"Copied\" : label}</TooltipContent>\n    </Tooltip>\n  );\n}\n\nexport { CopyButton };\n"
+    }
+  ]
+}

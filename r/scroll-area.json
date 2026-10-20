@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "scroll-area",
+  "type": "ui",
+  "title": "Scroll area",
+  "description": "Scrollable content with edge fades and a button to scroll down.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Long lists inside panels.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/scroll-area.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add scroll-area --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/scroll-area.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/scroll-area.tsx",
+        "sha256": "bf066bb2b4b60d5d2af4b3c5442bd3999e7cf4d53cd748486a15aee265ed5f85",
+        "retained": false,
+        "exports": [
+          "ScrollArea"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/scroll-area.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * The dashboard's scroll area, which says when there's more: no scrollbar taking room on one side (so the padding stays\n * even), the content fading out at whichever edge has more past it, and while there's more below, a small chevron at\n * the bottom that scrolls the rest into view. The chevron fades and rises in 200ms ease-out.\n */\ndeclare function ScrollArea({ className, children, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { ScrollArea };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/scroll-area/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/scroll-area.tsx",
+      "content": "import { ScrollArea } from \"@/components/ui/scroll-area\";\n\nexport function Product() {\n  return (\n    <div className=\"flex h-48 w-64 flex-col rounded-card bg-surface shadow-card\">\n      <ScrollArea className=\"px-3 py-2 text-body-sm\">\n        {Array.from({ length: 20 }, (_, i) => (\n          <p key={i} className=\"py-1 text-fg-muted\">\n            Request {i + 1}\n          </p>\n        ))}\n      </ScrollArea>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/scroll-area.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ChevronDown } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\nconst EDGE_FADE_PX = 28;\n\n/**\n * The dashboard's scroll area, which says when there's more: no scrollbar taking room on one side (so the padding stays\n * even), the content fading out at whichever edge has more past it, and while there's more below, a small chevron at\n * the bottom that scrolls the rest into view. The chevron fades and rises in 200ms ease-out.\n */\nfunction ScrollArea({ className, children, ...props }: React.ComponentProps<\"div\">) {\n  const ref = React.useRef<HTMLDivElement>(null);\n  const [edges, setEdges] = React.useState({ more: false, above: false, below: false });\n\n  React.useLayoutEffect(() => {\n    const area = ref.current;\n    if (!area) return;\n    const measure = () => {\n      const more = area.scrollHeight > area.clientHeight + 1;\n      const above = more && area.scrollTop > 1;\n      const below = more && area.scrollTop + area.clientHeight < area.scrollHeight - 1;\n      setEdges((previous) => (previous.more === more && previous.above === above && previous.below === below ? previous : { more, above, below }));\n    };\n    measure();\n    const observer = new ResizeObserver(measure);\n    observer.observe(area);\n    for (const child of Array.from(area.children)) observer.observe(child);\n    area.addEventListener(\"scroll\", measure, { passive: true });\n    return () => {\n      observer.disconnect();\n      area.removeEventListener(\"scroll\", measure);\n    };\n  }, []);\n\n  const mask = `linear-gradient(to bottom, ${edges.above ? \"transparent\" : \"black\"}, black ${EDGE_FADE_PX}px, black calc(100% - ${EDGE_FADE_PX}px), ${edges.below ? \"transparent\" : \"black\"})`;\n\n  return (\n    <div data-slot=\"scroll-area\" className=\"relative flex min-h-0 flex-1 flex-col\">\n      <div\n        ref={ref}\n        data-slot=\"scroll-area-viewport\"\n        className={cn(\"min-h-0 flex-1 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden\", className)}\n        style={edges.more ? { maskImage: mask, WebkitMaskImage: mask } : undefined}\n        {...props}\n      >\n        {children}\n      </div>\n      <button\n        type=\"button\"\n        tabIndex={-1}\n        aria-hidden\n        onClick={() => ref.current?.scrollBy({ top: ref.current.clientHeight * 0.8, behavior: \"smooth\" })}\n        className={cn(\n          \"absolute bottom-1 left-1/2 grid size-6 -translate-x-1/2 place-items-center rounded-pill bg-surface text-fg-muted shadow-card transition-[opacity,translate] duration-200 ease-out hover:text-fg motion-reduce:transition-[opacity]\",\n          edges.below ? \"opacity-100\" : \"pointer-events-none translate-y-1 opacity-0\",\n        )}\n      >\n        <ChevronDown className=\"size-3.5\" strokeWidth={1.75} />\n      </button>\n    </div>\n  );\n}\n\nexport { ScrollArea };\n"
+    }
+  ]
+}

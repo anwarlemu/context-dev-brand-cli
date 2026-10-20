@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "popover",
+  "type": "ui",
+  "title": "Popover",
+  "description": "Floating panel anchored to a trigger, for short forms and additional details.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Small forms and details anchored to a control.",
+  "avoid": [
+    "Essential content only in a popover"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/popover.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add popover --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/popover.d.ts",
+      "content": "import * as React from \"react\";\nimport * as PopoverPrimitive from \"@radix-ui/react-popover\";\ndeclare function Popover(props: React.ComponentProps<typeof PopoverPrimitive.Root>): React.JSX.Element;\ndeclare function PopoverTrigger(props: React.ComponentProps<typeof PopoverPrimitive.Trigger>): React.JSX.Element;\ndeclare function PopoverContent({ className, align, sideOffset, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>): React.JSX.Element;\ndeclare function PopoverAnchor(props: React.ComponentProps<typeof PopoverPrimitive.Anchor>): React.JSX.Element;\nexport { Popover, PopoverAnchor, PopoverContent, PopoverTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/popover/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/popover.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\nimport { Popover, PopoverContent, PopoverTrigger } from \"@/components/ui/popover\";\n\nexport function Product() {\n  const [name, setName] = useState(\"Acme\");\n  const [draft, setDraft] = useState(name);\n  const [open, setOpen] = useState(false);\n  return (\n    <div className=\"grid justify-items-start gap-3\">\n      <p role=\"status\" className=\"text-body-sm\">Workspace: {name}</p>\n      <Popover open={open} onOpenChange={setOpen}>\n        <PopoverTrigger asChild><Button variant=\"outline\" onClick={() => setDraft(name)}>Rename</Button></PopoverTrigger>\n        <PopoverContent><form className=\"grid gap-3\" onSubmit={(event) => { event.preventDefault(); if (!draft.trim()) return; setName(draft.trim()); setOpen(false); }}>\n          <Field label=\"Workspace name\" htmlFor=\"ws-name\" required><Input id=\"ws-name\" value={draft} onChange={(event) => setDraft(event.target.value)} /></Field>\n          <Button type=\"submit\" variant=\"primary\" size=\"sm\" disabled={!draft.trim()} className=\"justify-self-end\">Save</Button>\n        </form></PopoverContent>\n      </Popover>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "field",
+    "input"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-popover"
+  ],
+  "files": [
+    {
+      "path": "components/ui/popover.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as PopoverPrimitive from \"@radix-ui/react-popover\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's floating panel: shell corners, a hairline in the shadow, 6px off its trigger, growing out of the\n// corner nearest the trigger.\nfunction Popover(props: React.ComponentProps<typeof PopoverPrimitive.Root>) {\n  return <PopoverPrimitive.Root data-slot=\"popover\" {...props} />;\n}\n\nfunction PopoverTrigger(props: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {\n  return <PopoverPrimitive.Trigger data-slot=\"popover-trigger\" {...props} />;\n}\n\nfunction PopoverContent({ className, align = \"start\", sideOffset = 6, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>) {\n  return (\n    <PopoverPrimitive.Portal container={usePortalContainer()}>\n      <PopoverPrimitive.Content\n        data-slot=\"popover-content\"\n        align={align}\n        sideOffset={sideOffset}\n        collisionPadding={8}\n        className={cn(\"ds-scrollbar z-50 max-h-(--radix-popover-content-available-height) w-72 max-w-[calc(100vw-1rem)] origin-(--radix-popover-content-transform-origin) animate-pop-in overflow-y-auto rounded-shell bg-surface p-3 text-body-sm text-fg shadow-floating outline-none\", className)}\n        {...props}\n      />\n    </PopoverPrimitive.Portal>\n  );\n}\n\nfunction PopoverAnchor(props: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {\n  return <PopoverPrimitive.Anchor data-slot=\"popover-anchor\" {...props} />;\n}\n\nexport { Popover, PopoverAnchor, PopoverContent, PopoverTrigger };\n"
+    }
+  ]
+}

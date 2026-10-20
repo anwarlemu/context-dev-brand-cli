@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "page",
+  "type": "product",
+  "title": "Page",
+  "description": "Dashboard page column, centered header, sections, and card entrance animation.",
+  "surface": "product",
+  "kinds": [
+    "app-page-column",
+    "app-page-header",
+    "app-page-title"
+  ],
+  "usage": "Every product page.",
+  "avoid": [
+    "Left-aligned page titles",
+    "Bold titles"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add page --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/app/globals.css; src/components/api-keys/api-keys-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/app/globals.css",
+        "sha256": "9b05824c96294781b01c4f00fc8200822b3317ca0d81b0777b5f591168a33b7a",
+        "retained": false,
+        "exports": []
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/api-keys/api-keys-page.tsx",
+        "sha256": "a1269c38b4734ba450d4a1d07182df5b52052b717786a3a22d75147029a4a63c",
+        "retained": false,
+        "exports": [
+          "ApiKeysPage",
+          "KeyFormDialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/page.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function PageColumn({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function PageHeader({ title, description, action, className }: {\n    title: React.ReactNode;\n    description?: React.ReactNode;\n    action?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\n/** A titled group of cards on a page: the title in body text, an action (a link or a button) at the right. */\ndeclare function PageSection({ title, action, className, children }: {\n    title?: React.ReactNode;\n    action?: React.ReactNode;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/**\n * Cards rise in one after another, 50ms apart, on the page's first render (the brand's content-in: a short rise and a\n * fade, ease-out); cards that mount later, after the page has entered, should render without it. Reduced motion\n * keeps the fade only.\n */\ndeclare function PageRise({ index, className, children }: {\n    index?: number;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { PageColumn, PageHeader, PageRise, PageSection };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/page/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/page.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { ExampleNameDialog } from \"./demo-feedback\";\nimport { PageColumn, PageHeader, PageRise, PageSection } from \"@/components/product/page\";\nimport { Button } from \"@/components/ui/button\";\nimport { Card } from \"@/components/ui/card\";\n\nexport function Product() {\n  const [open, setOpen] = useState(false);\n  const [monitors, setMonitors] = useState<string[]>([]);\n  return (\n    <PageColumn className=\"w-full\">\n      <PageHeader title=\"Monitors\" description=\"Watch pages and get told when they change.\" action={<Button variant=\"brand\" size=\"sm\" onClick={() => setOpen(true)}>New monitor</Button>} />\n      <PageSection title=\"Active\">\n        <PageRise index={0}>\n          <Card className=\"text-body-sm text-fg-muted\">{3 + monitors.length} monitors checking on schedule.</Card>\n        </PageRise>\n      </PageSection>\n      {monitors.map((name) => <Card key={name}>{name}</Card>)}\n      <ExampleNameDialog title=\"New monitor\" open={open} onOpenChange={setOpen} onSave={(name) => setMonitors((all) => [...all, name])} submitLabel=\"Create\" />\n    </PageColumn>\n  );\n}\n"
+    },
+    {
+      "path": "examples/demo-feedback.tsx",
+      "content": "\"use client\";\n\nimport { useState, type ReactNode } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from \"@/components/ui/dialog\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nexport function ExampleMessage({ children }: { children: ReactNode }) {\n  return <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{children}</p>;\n}\n\nexport function ExampleNameDialog({ title, open, onOpenChange, initial = \"\", label = \"Name\", submitLabel = \"Save\", onSave }: { title: string; open: boolean; onOpenChange: (open: boolean) => void; initial?: string; label?: string; submitLabel?: string; onSave: (name: string) => void }) {\n  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><NameForm key={`${open}-${initial}`} title={title} initial={initial} label={label} submitLabel={submitLabel} onSave={(name) => { onSave(name); onOpenChange(false); }} onCancel={() => onOpenChange(false)} /></DialogContent></Dialog>;\n}\n\nfunction NameForm({ title, initial, label, submitLabel, onSave, onCancel }: { title: string; initial: string; label: string; submitLabel: string; onSave: (name: string) => void; onCancel: () => void }) {\n  const [name, setName] = useState(initial);\n  return <form onSubmit={(event) => { event.preventDefault(); if (name.trim()) onSave(name.trim()); }}>\n    <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>Changes apply to this example.</DialogDescription></DialogHeader>\n    <DialogBody><Field label={label} required><Input value={name} onChange={(event) => setName(event.target.value)} /></Field></DialogBody>\n    <DialogFooter><Button variant=\"outline\" onClick={onCancel}>Cancel</Button><Button type=\"submit\" variant=\"brand\" disabled={!name.trim()}>{submitLabel}</Button></DialogFooter>\n  </form>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "card",
+    "dialog",
+    "field",
+    "input"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/product/page.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Every product page's column: 880px at most, balanced between the sidebar and what floats at the right (the support\n// button) rather than the bare edges, so beside the sidebar it sits 80px left of the middle of its space, or as much\n// of that as the room allows. Below 768px the sidebar is a drawer and the column simply centers. It is an @container,\n// so cards inside lay out by the page's width. The header is centered at the top (h4 title at weight 450, one muted\n// line under it, then the page's main action).\nfunction PageColumn({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"page-column\"\n      data-page-column\n      className={cn(\"@container mx-auto flex w-full max-w-(--ds-layout-product-column) flex-col gap-6 px-8 pt-8 pb-10 max-md:px-4 md:ml-[max(0px,calc((100%-var(--ds-layout-product-column))/2-80px))]\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction PageHeader({ title, description, action, className }: { title: React.ReactNode; description?: React.ReactNode; action?: React.ReactNode; className?: string }) {\n  return (\n    <header data-slot=\"page-header\" className={cn(\"flex flex-col items-center gap-3 text-center\", className)}>\n      <div>\n        <h1 className=\"text-h4 leading-title font-[450] tracking-normal text-fg\">{title}</h1>\n        {description && <p className=\"mt-1 text-body-sm text-balance text-fg-muted\">{description}</p>}\n      </div>\n      {action}\n    </header>\n  );\n}\n\n/** A titled group of cards on a page: the title in body text, an action (a link or a button) at the right. */\nfunction PageSection({ title, action, className, children }: { title?: React.ReactNode; action?: React.ReactNode; className?: string; children: React.ReactNode }) {\n  return (\n    <section data-slot=\"page-section\" className={cn(\"flex flex-col gap-3\", className)}>\n      {(title || action) && (\n        <div className=\"flex items-center justify-between gap-3\">\n          {title && <h2 className=\"text-body-sm font-normal tracking-normal text-fg\">{title}</h2>}\n          {action}\n        </div>\n      )}\n      {children}\n    </section>\n  );\n}\n\n/**\n * Cards rise in one after another, 50ms apart, on the page's first render (the brand's content-in: a short rise and a\n * fade, ease-out); cards that mount later, after the page has entered, should render without it. Reduced motion\n * keeps the fade only.\n */\nfunction PageRise({ index = 0, className, children }: { index?: number; className?: string; children: React.ReactNode }) {\n  return (\n    <div data-slot=\"page-rise\" className={cn(\"grid animate-content-in\", className)} style={{ animationDelay: `${index * 50}ms`, animationFillMode: \"backwards\" }}>\n      {children}\n    </div>\n  );\n}\n\nexport { PageColumn, PageHeader, PageRise, PageSection };\n"
+    }
+  ]
+}

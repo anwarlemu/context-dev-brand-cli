@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-crawl",
+  "type": "visual",
+  "title": "Crawl story",
+  "description": "Dot animation of a sitemap expanding into a crawl graph.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Crawling a whole site on a site card. Plays only on screen; shows the whole web with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-crawl.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-crawl --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/crawl-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/crawl-story.tsx",
+        "sha256": "f9d874ecd1cb94786e9330c4026b2b7ba9f7b27c9746bbb244cdee7e3cef720a",
+        "retained": false,
+        "exports": [
+          "CrawlStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/crawl-story.d.ts",
+      "content": "/**\n * The \"Full-site collection\" card's picture: a sitemap becomes a web, spun outwards a ring of links at a time to\n * the scope that was set. With reduced motion it shows the whole web.\n */\nexport declare function CrawlStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/crawl-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createCrawlStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/crawl-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/**\n * The \"Full-site collection\" card's pictures, in the brand dot grid: the sitemap a crawl can start from, and the\n * crawl itself, a web spun outwards from the start one ring of links at a time, as far as its scope allows.\n */\nexport declare const CRAWL_STORY_GRID: DotGrid;\nexport declare const SITEMAP: StoryPicture;\n/** How many links deep the crawl can go: one ring of the web for each. */\nexport declare const MAX_DEPTH: number;\n/** The web spun `depth` rings out from the start: what the crawl has reached is solid, what is still out of reach rings. */\nexport declare function paintWeb(states: Uint8Array, depth: number): Uint8Array<ArrayBufferLike>;\nexport declare const WEB_UNSPUN: StoryPicture;\nexport declare const WEB_SPUN: StoryPicture;\nexport declare const SITEMAP_CAPTION: import(\"../dot-engine/dot-story-player\").DotStoryText[];\nexport declare const DEPTH_CAPTIONS: import(\"../dot-engine/dot-story-player\").DotStoryText[][];\n/** The whole web: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const CRAWL_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-crawl/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-crawl.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { CrawlStory } from \"@/components/visuals/stories/crawl-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <CrawlStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/crawl-story.tsx",
+      "content": "'use client';\n\nimport { CRAWL_RESTING, CRAWL_STORY_GRID } from '@/components/visuals/stories/crawl-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadCrawlStory: LoadDotStory = async (stage) => {\n\tconst { createCrawlStoryPlayer } = await import('@/components/visuals/stories/crawl-story-player');\n\treturn createCrawlStoryPlayer(stage);\n};\n\n/**\n * The \"Full-site collection\" card's picture: a sitemap becomes a web, spun outwards a ring of links at a time to\n * the scope that was set. With reduced motion it shows the whole web.\n */\nexport function CrawlStory({ className }: { className?: string }) {\n\treturn <DotStory grid={CRAWL_STORY_GRID} resting={CRAWL_RESTING} load={loadCrawlStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/crawl-story-player.ts",
+      "content": "import { CRAWL_STORY_GRID, DEPTH_CAPTIONS, MAX_DEPTH, SITEMAP, SITEMAP_CAPTION, WEB_SPUN, WEB_UNSPUN, paintWeb } from '@/components/visuals/stories/crawl-story-scenes';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One crawl, played as a loop: the sitemap it starts from melts into a web, and the web is spun outwards a ring of\n * links at a time, the depth counting up until it reaches the scope that was set.\n */\n\nconst SPINNING = { startsAt: 0.7, everySeconds: 0.8 };\nconst SPUN_AT = SPINNING.startsAt + (MAX_DEPTH - 1) * SPINNING.everySeconds;\n\nconst depthAt = (heldSeconds: number) => (heldSeconds < SPINNING.startsAt ? 0 : Math.min(MAX_DEPTH, Math.floor((heldSeconds - SPINNING.startsAt) / SPINNING.everySeconds) + 1));\n\nexport function createCrawlStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: CRAWL_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: SPUN_AT + 1 },\n\t\tbeats: [\n\t\t\tcaptionedBeat({ picture: SITEMAP, caption: SITEMAP_CAPTION, holdSeconds: 2.4, isTyped: true }),\n\t\t\t{\n\t\t\t\t...captionedBeat({ picture: WEB_UNSPUN, departure: WEB_SPUN, caption: DEPTH_CAPTIONS[0], holdSeconds: SPUN_AT + 2.8, animate: (states, heldSeconds) => void paintWeb(states, depthAt(heldSeconds)) }),\n\t\t\t\twrite: (pen, heldSeconds) => DEPTH_CAPTIONS[depthAt(heldSeconds)].forEach((text) => pen.text(text)),\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/crawl-story-scenes.ts",
+      "content": "import { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, paintShape, roundedBox, type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/**\n * The \"Full-site collection\" card's pictures, in the brand dot grid: the sitemap a crawl can start from, and the\n * crawl itself, a web spun outwards from the start one ring of links at a time, as far as its scope allows.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const CRAWL_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS } = CRAWL_STORY_GRID;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(CRAWL_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst SHEET: DotBox = { left: 6, right: 26, top: 3, bottom: 34 };\n// The sitemap's entries: a section is a solid line, the pages under it indented lines of rings.\nconst ENTRIES = [\n\t{ row: 7, indent: 0, to: 16 },\n\t{ row: 10, indent: 3, to: 22 },\n\t{ row: 13, indent: 3, to: 19 },\n\t{ row: 17, indent: 0, to: 14 },\n\t{ row: 20, indent: 3, to: 23 },\n\t{ row: 23, indent: 3, to: 20 },\n\t{ row: 26, indent: 3, to: 22 },\n\t{ row: 30, indent: 0, to: 17 },\n];\nconst ENTRY_LEFT = 9;\n\nexport const SITEMAP = pictureOfStates(\n\tpaintShape(CRAWL_STORY_GRID, blank(), roundedBox(SHEET, 2), (column, row) => {\n\t\tconst entry = ENTRIES.find((candidate) => candidate.row === row);\n\t\tif (!entry || !between(column, ENTRY_LEFT + entry.indent, entry.to)) return DOT_ABSENT;\n\t\treturn entry.indent === 0 ? DOT_FILLED : DOT_HOLLOW;\n\t})\n);\n\nconst WEB = { center: { column: 16, row: 19 }, hub: 1.7, rings: [4.6, 9.2, 13.8], ringWidth: 0.55, spokes: 8, spokeWidth: 0.06 };\n/** How many links deep the crawl can go: one ring of the web for each. */\nexport const MAX_DEPTH = WEB.rings.length;\n\n/** The web spun `depth` rings out from the start: what the crawl has reached is solid, what is still out of reach rings. */\nexport function paintWeb(states: Uint8Array, depth: number) {\n\tconst reached = depth > 0 ? WEB.rings[depth - 1] + WEB.ringWidth : WEB.hub;\n\tfor (let row = 0; row < ROWS; row++) {\n\t\tfor (let column = 0; column < COLUMNS / 2 + 3; column++) {\n\t\t\tconst across = column - WEB.center.column;\n\t\t\tconst down = row - WEB.center.row;\n\t\t\tconst fromCenter = Math.hypot(across, down);\n\t\t\tconst spoke = (Math.atan2(down, across) / (Math.PI * 2)) * WEB.spokes;\n\t\t\tconst isOnSpoke = fromCenter <= WEB.rings[WEB.rings.length - 1] + WEB.ringWidth && Math.abs(spoke - Math.round(spoke)) * fromCenter < WEB.spokeWidth * WEB.spokes * 1.4;\n\t\t\tconst isOnRing = WEB.rings.some((ring) => Math.abs(fromCenter - ring) < WEB.ringWidth);\n\t\t\tconst cell = row * COLUMNS + column;\n\t\t\tif (fromCenter <= WEB.hub) states[cell] = DOT_FILLED;\n\t\t\telse if (isOnSpoke || isOnRing) states[cell] = fromCenter <= reached ? DOT_FILLED : DOT_HOLLOW;\n\t\t\telse states[cell] = DOT_ABSENT;\n\t\t}\n\t}\n\treturn states;\n}\n\nexport const WEB_UNSPUN = pictureOfStates(paintWeb(blank(), 0));\nexport const WEB_SPUN = pictureOfStates(paintWeb(blank(), MAX_DEPTH));\n\nconst caption = (label: string, value: string, detail: string) => storyCaption(CRAWL_STORY_GRID, 34, label, value, detail);\nexport const SITEMAP_CAPTION = caption('start from', 'sitemap', 'or any URL on the site');\nexport const DEPTH_CAPTIONS = Array.from({ length: MAX_DEPTH + 1 }, (_, depth) => caption('crawl depth', String(depth), depth === MAX_DEPTH ? 'the scope you set' : 'following links'));\n\n/** The whole web: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const CRAWL_RESTING = { ...WEB_SPUN, texts: DEPTH_CAPTIONS[MAX_DEPTH] };\n"
+    }
+  ]
+}

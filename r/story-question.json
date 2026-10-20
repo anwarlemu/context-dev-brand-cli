@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-question",
+  "type": "visual",
+  "title": "Question story",
+  "description": "Dot animation of pages being searched to answer a question.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Starting research from a question on a site card. Plays only on screen; shows the question with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-question.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-question --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/question-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/question-story.tsx",
+        "sha256": "f9bb1be73ff9ad189f67ebb13105cce895b9db1f0f638797841762906e8a69e3",
+        "retained": false,
+        "exports": [
+          "QuestionStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/question-story.d.ts",
+      "content": "/**\n * The \"Start with a question\" card's picture: a pile of pages becomes the question asked instead, then the\n * magnifier that reads for you. With reduced motion it shows the question.\n */\nexport declare function QuestionStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/question-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createQuestionStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/question-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/**\n * The \"Start with a question\" card's pictures, in the brand dot grid: the pile of pages a research task used to\n * mean gathering by hand, the question that replaces it, and the magnifier that reads the pages for you.\n */\nexport declare const QUESTION_STORY_GRID: DotGrid;\nexport declare const PAGES: StoryPicture;\nexport declare const QUESTION_MARK: StoryPicture;\n/** The magnifier, with the lines of the page under its glass moved `read` rows up it. */\nexport declare function paintMagnifier(states: Uint8Array, read: number): Uint8Array<ArrayBufferLike>;\nexport declare const MAGNIFIER_AT_REST: StoryPicture;\n/** How far the page moves under the glass before it looks the same again. */\nexport declare const READING_REPEATS_EVERY: number;\nexport declare const CAPTIONS: {\n    byHand: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    ask: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    read: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n};\n/** The question: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const QUESTION_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-question/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-question.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { QuestionStory } from \"@/components/visuals/stories/question-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <QuestionStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/question-story.tsx",
+      "content": "'use client';\n\nimport { QUESTION_RESTING, QUESTION_STORY_GRID } from '@/components/visuals/stories/question-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadQuestionStory: LoadDotStory = async (stage) => {\n\tconst { createQuestionStoryPlayer } = await import('@/components/visuals/stories/question-story-player');\n\treturn createQuestionStoryPlayer(stage);\n};\n\n/**\n * The \"Start with a question\" card's picture: a pile of pages becomes the question asked instead, then the\n * magnifier that reads for you. With reduced motion it shows the question.\n */\nexport function QuestionStory({ className }: { className?: string }) {\n\treturn <DotStory grid={QUESTION_STORY_GRID} resting={QUESTION_RESTING} load={loadQuestionStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/question-story-player.ts",
+      "content": "import { CAPTIONS, MAGNIFIER_AT_REST, PAGES, QUESTION_MARK, QUESTION_STORY_GRID, READING_REPEATS_EVERY, paintMagnifier } from '@/components/visuals/stories/question-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds, type StoryBeat } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One research task, played as a loop: the pile of pages it would take by hand is counted up, melts into the\n * question that is asked instead, and the question melts into a magnifier with the pages going by under its glass.\n */\n\nconst MELT_SECONDS = 1.1;\nconst COUNTING = { startsAt: 0.2, seconds: 1.2, pages: 9 };\nconst TYPING = { startsAt: 0.15, charactersPerSecond: 12 };\nconst DETAIL_FADE_SECONDS = 0.3;\n// The page under the glass is back where it started as the magnifier melts away.\nconst READING_SECONDS = 3;\n\nconst melts: StoryBeat['arrival'] = { kind: 'melts', seconds: MELT_SECONDS };\n\nexport function createQuestionStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst [byHandLabel, byHandCount, byHandDetail] = CAPTIONS.byHand;\n\tconst [askLabel, ask, question] = CAPTIONS.ask;\n\tconst [readLabel, reads, readDetail] = CAPTIONS.read;\n\tconst askedAt = TYPING.startsAt + typingSeconds(ask, TYPING.charactersPerSecond);\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: QUESTION_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: 2 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: PAGES,\n\t\t\t\tarrival: melts,\n\t\t\t\tholdSeconds: 2.4,\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tconst counted = Math.max(1, Math.ceil(clamp01((heldSeconds - COUNTING.startsAt) / COUNTING.seconds) * COUNTING.pages));\n\t\t\t\t\tpen.text(byHandLabel);\n\t\t\t\t\tpen.text({ ...byHandCount, text: `${counted} ${counted === 1 ? 'page' : 'pages'}` });\n\t\t\t\t\tpen.text(byHandDetail, clamp01((heldSeconds - COUNTING.startsAt - COUNTING.seconds) / DETAIL_FADE_SECONDS));\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\tpicture: QUESTION_MARK,\n\t\t\t\tarrival: melts,\n\t\t\t\tholdSeconds: 2.8,\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(askLabel);\n\t\t\t\t\tpen.type(ask, heldSeconds, TYPING);\n\t\t\t\t\tpen.text(question, clamp01((heldSeconds - askedAt) / DETAIL_FADE_SECONDS));\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\tpicture: MAGNIFIER_AT_REST,\n\t\t\t\tarrival: melts,\n\t\t\t\tholdSeconds: READING_SECONDS,\n\t\t\t\tanimate: (states, heldSeconds) => void paintMagnifier(states, (heldSeconds / READING_SECONDS) * READING_REPEATS_EVERY),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(readLabel);\n\t\t\t\t\tpen.text(reads);\n\t\t\t\t\tpen.text(readDetail, clamp01((heldSeconds - 0.4) / DETAIL_FADE_SECONDS));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/question-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, paintShape, ringsWithSpeckle, solidWithSpeckle, type DotPainter, type DotShape, type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\nimport { storyCaption } from '@/components/visuals/dot-engine/story-caption';\n\n/**\n * The \"Start with a question\" card's pictures, in the brand dot grid: the pile of pages a research task used to\n * mean gathering by hand, the question that replaces it, and the magnifier that reads the pages for you.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const QUESTION_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS } = QUESTION_STORY_GRID;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(QUESTION_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\n// Every picture stands in the same place, left of the words that say what it means.\nconst CENTER = 16;\n\nconst SHEET = { columns: 18, rows: 22 };\n// Back to front, each sheet lower and further right than the one behind it.\nconst PILE = [\n\t{ left: 2, top: 3, paper: solidWithSpeckle },\n\t{ left: 7, top: 8, paper: ringsWithSpeckle },\n\t{ left: 12, top: 13, paper: null },\n];\n\n// The top sheet is the only one that can be read: a heading and lines of copy.\nconst writing: DotPainter = (across, down) => {\n\tif (between(down, 3, 4)) return between(across, 3, 11) ? DOT_FILLED : DOT_ABSENT;\n\tif (down >= 7 && down <= 17 && down % 2 === 1) return between(across, 3, down % 3 === 0 ? 10 : 14) ? DOT_HOLLOW : DOT_ABSENT;\n\treturn DOT_ABSENT;\n};\n\n// Each sheet covers the ones behind it, so its empty paper hides them rather than letting them show through.\nconst pile: DotPainter = (column, row) => {\n\tconst sheet = PILE.findLast(({ left, top }) => between(column, left, left + SHEET.columns - 1) && between(row, top, top + SHEET.rows - 1));\n\tif (!sheet) return DOT_ABSENT;\n\tconst across = column - sheet.left;\n\tconst down = row - sheet.top;\n\tif (across === 0 || down === 0 || across === SHEET.columns - 1 || down === SHEET.rows - 1) return DOT_FILLED;\n\treturn sheet.paper ? sheet.paper(column, row) : writing(across, down);\n};\n\nexport const PAGES = pictureOf(QUESTION_STORY_GRID, pile);\n\nconst MARK = { hook: { center: { column: CENTER, row: 11 }, radius: 6.2, from: -1.05, to: 0.42, steps: 24 }, stem: { column: CENTER, from: 19.5, to: 23.5 }, stroke: 2.3, dot: { center: { column: CENTER, row: 30.5 }, radius: 2.3 } };\nconst hookPoint = (step: number): GridPoint => {\n\tconst angle = Math.PI * (MARK.hook.from + ((MARK.hook.to - MARK.hook.from) * step) / MARK.hook.steps);\n\treturn { column: MARK.hook.center.column + MARK.hook.radius * Math.cos(angle), row: MARK.hook.center.row + MARK.hook.radius * Math.sin(angle) };\n};\n// The stroke of the mark: round the hook, back in under it, and straight down the stem.\nconst MARK_STROKE: GridPoint[] = [...Array.from({ length: MARK.hook.steps + 1 }, (_, step) => hookPoint(step)), { column: MARK.stem.column, row: MARK.stem.from }, { column: MARK.stem.column, row: MARK.stem.to }];\nconst isQuestionMark: DotShape = (column, row) =>\n\tMath.hypot(column - MARK.dot.center.column, row - MARK.dot.center.row) <= MARK.dot.radius || MARK_STROKE.some((point, index) => index > 0 && distanceToSegment(column, row, MARK_STROKE[index - 1], point) <= MARK.stroke);\n\nexport const QUESTION_MARK = pictureOfStates(paintShape(QUESTION_STORY_GRID, blank(), isQuestionMark, solidWithSpeckle));\n\nconst LENS = { center: { column: 13, row: 15 }, radius: 11.4, rim: 2 };\nconst HANDLE = { from: { column: 21.5, row: 23.5 }, to: { column: 28, row: 30 }, width: 2.2 };\nconst READING = { every: 3, left: -7, right: 7, lines: 3, word: { columns: 4, step: 4, from: -6 } };\nconst isMagnifier: DotShape = (column, row) => Math.hypot(column - LENS.center.column, row - LENS.center.row) <= LENS.radius || distanceToSegment(column, row, HANDLE.from, HANDLE.to) <= HANDLE.width;\n\n/** The magnifier, with the lines of the page under its glass moved `read` rows up it. */\nexport function paintMagnifier(states: Uint8Array, read: number) {\n\tstates.fill(DOT_ABSENT);\n\treturn paintShape(QUESTION_STORY_GRID, states, isMagnifier, (column, row) => {\n\t\tconst fromCenter = Math.hypot(column - LENS.center.column, row - LENS.center.row);\n\t\tif (fromCenter > LENS.radius) return DOT_FILLED;\n\t\tif (fromCenter > LENS.radius - 1 - LENS.rim) return DOT_HOLLOW;\n\t\tconst line = row + Math.floor(read);\n\t\tconst across = column - LENS.center.column;\n\t\tif (line % READING.every !== 0 || !between(across, READING.left, READING.right)) return DOT_ABSENT;\n\t\t// Every third line is short, and one word in each is solid: it reads as copy going by, not as stripes.\n\t\tconst lineNumber = line / READING.every;\n\t\tconst lineOfThree = ((lineNumber % READING.lines) + READING.lines) % READING.lines;\n\t\tif (lineOfThree === 0 && across > 2) return DOT_ABSENT;\n\t\tconst wordFrom = READING.word.from + lineOfThree * READING.word.step;\n\t\treturn between(across, wordFrom, wordFrom + READING.word.columns - 1) ? DOT_FILLED : DOT_HOLLOW;\n\t});\n}\n\nexport const MAGNIFIER_AT_REST = pictureOfStates(paintMagnifier(blank(), 0));\n/** How far the page moves under the glass before it looks the same again. */\nexport const READING_REPEATS_EVERY = READING.every * READING.lines;\n\nexport const CAPTIONS = {\n\tbyHand: storyCaption(QUESTION_STORY_GRID, 34, 'by hand', '9 pages', 'to find, open and read'),\n\task: storyCaption(QUESTION_STORY_GRID, 34, 'instead', 'ask', '\"What does Linear cost?\"'),\n\tread: storyCaption(QUESTION_STORY_GRID, 34, 'then it', 'reads', 'the pages that answer it'),\n};\n\n/** The question: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const QUESTION_RESTING = { ...QUESTION_MARK, texts: CAPTIONS.ask };\n"
+    }
+  ]
+}

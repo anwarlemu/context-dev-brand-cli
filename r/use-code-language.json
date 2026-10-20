@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "use-code-language",
+  "type": "hook",
+  "title": "useCodeLanguage",
+  "description": "One remembered code language shared by every code sample on the page.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Code tabs, install commands and code explorers that should all switch together when the visitor picks a language (UseCaseCodeTabs, UseCaseInstallCommand, UseCases and ProductCodeExplorer use it). The pick is kept in storage where allowed and followed across tabs.",
+  "avoid": [
+    "A per-window language state on a page with more than one code sample",
+    "Reading storage during render on the server (the hook returns null there)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-code-language.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-code-language --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/code-language-store.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/code-language-store.ts",
+        "sha256": "adf7c935fb534c82207f0234030dee7bcadea3378e78af3e4d53319c88439c45",
+        "retained": false,
+        "exports": [
+          "readStoredLanguage",
+          "storeLanguage",
+          "subscribeToLanguage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "hooks/use-code-language.d.ts",
+      "content": "/** The picked language, or null when the visitor has not picked one yet. */\nexport declare function readCodeLanguage(): string | null;\n/** Picks a language for every code sample on the page and remembers it. */\nexport declare function storeCodeLanguage(language: string): void;\n/** Calls `onChange` when the language changes here or in another tab; returns the unsubscribe. */\nexport declare function subscribeCodeLanguage(onChange: () => void): () => void;\n/** The page's remembered language (null on the server and before a pick) and the setter every sample shares. */\nexport declare function useCodeLanguage(): [string | null, (language: string) => void];\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "hooks/use-code-language.ts",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\n// One remembered code language for the whole page: every code tabs window, install command and code explorer follows\n// the visitor's last pick, and the choice is kept where storage allows (other tabs follow through the storage event).\nconst LANGUAGE_KEY = \"ds:code-language\";\nconst LANGUAGE_EVENT = \"ds:code-language-change\";\nlet sessionLanguage: string | null = null;\n\n/** The picked language, or null when the visitor has not picked one yet. */\nexport function readCodeLanguage(): string | null {\n  try {\n    return sessionLanguage ?? window.localStorage.getItem(LANGUAGE_KEY);\n  } catch {\n    return sessionLanguage;\n  }\n}\n\n/** Picks a language for every code sample on the page and remembers it. */\nexport function storeCodeLanguage(language: string) {\n  sessionLanguage = language;\n  try {\n    window.localStorage.setItem(LANGUAGE_KEY, language);\n  } catch {\n    // Storage can be blocked (private browsing); the session value still keeps this page's code samples in sync.\n  }\n  window.dispatchEvent(new Event(LANGUAGE_EVENT));\n}\n\n/** Calls `onChange` when the language changes here or in another tab; returns the unsubscribe. */\nexport function subscribeCodeLanguage(onChange: () => void) {\n  const onStorage = (event: StorageEvent) => {\n    if (event.key !== LANGUAGE_KEY) return;\n    sessionLanguage = event.newValue;\n    onChange();\n  };\n  window.addEventListener(LANGUAGE_EVENT, onChange);\n  window.addEventListener(\"storage\", onStorage);\n  return () => {\n    window.removeEventListener(LANGUAGE_EVENT, onChange);\n    window.removeEventListener(\"storage\", onStorage);\n  };\n}\n\n/** The page's remembered language (null on the server and before a pick) and the setter every sample shares. */\nexport function useCodeLanguage(): [string | null, (language: string) => void] {\n  const language = React.useSyncExternalStore(subscribeCodeLanguage, readCodeLanguage, () => null);\n  return [language, storeCodeLanguage];\n}\n"
+    }
+  ]
+}

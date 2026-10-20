@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "tooltip-provider",
+  "type": "lib",
+  "title": "Tooltip provider",
+  "description": "Shared tooltip timing: a 1000ms hover delay and a 300ms window for immediate subsequent tooltips.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "A common tooltip timing scope for product controls. Surface includes it automatically.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/tooltip-provider.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add tooltip-provider --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard src/components/ui/tooltip.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/tooltip.tsx",
+        "sha256": "8f942596f3b04e5638748b169a890e30c2f541d8e214c56369448a17dd6cc745",
+        "retained": false,
+        "exports": [
+          "Tooltip"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "lib/tooltip-provider.d.ts",
+      "content": "import * as React from \"react\";\nimport * as TooltipPrimitive from \"@radix-ui/react-tooltip\";\n/** Share the dashboard's warm window across every tooltip in a surface. */\nexport declare function TooltipProvider({ delayDuration, skipDelayDuration, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>): React.JSX.Element;\nexport declare function useTooltipScope(): boolean;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [],
+  "packages": [
+    "@radix-ui/react-tooltip"
+  ],
+  "files": [
+    {
+      "path": "lib/tooltip-provider.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as TooltipPrimitive from \"@radix-ui/react-tooltip\";\n\nconst TooltipScope = React.createContext(false);\n\n/** Share the dashboard's warm window across every tooltip in a surface. */\nexport function TooltipProvider({ delayDuration = 1000, skipDelayDuration = 300, children, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {\n  return (\n    <TooltipScope.Provider value>\n      <TooltipPrimitive.Provider delayDuration={delayDuration} skipDelayDuration={skipDelayDuration} {...props}>\n        {children}\n      </TooltipPrimitive.Provider>\n    </TooltipScope.Provider>\n  );\n}\n\nexport function useTooltipScope() {\n  return React.useContext(TooltipScope);\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "tag-filter",
+  "type": "ui",
+  "title": "Tag filter",
+  "description": "Tag filter with removable chips and a searchable selection menu.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Filtering a list (monitors, keys, batches) by one or more tags in its toolbar.",
+  "avoid": [
+    "Single-choice filters (use Select)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/tag-filter.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add tag-filter --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/dashboard-ui/tag-filter.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/dashboard-ui/tag-filter.tsx",
+        "sha256": "b5ddbf78e8f824c1ab4aa789b65fb4289e45b5aaf5f348dcef561fe72c839c4c",
+        "retained": false,
+        "exports": [
+          "TagFilter"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/tag-filter.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function TagFilter({ tags, tagOptions, onAddTag, onRemoveTag, className, }: {\n    tags: string[];\n    tagOptions: string[];\n    onAddTag: (tag: string) => void;\n    onRemoveTag: (tag: string) => void;\n    className?: string;\n}): React.JSX.Element;\nexport { TagFilter };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/tag-filter/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/tag-filter.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { TagFilter } from \"@/components/ui/tag-filter\";\n\nexport function Product() {\n  const [tags, setTags] = useState([\"pricing\"]);\n  return (\n    <TagFilter\n      tags={tags}\n      tagOptions={[\"pricing\", \"docs\", \"careers\", \"blog\", \"changelog\"]}\n      onAddTag={(tag) => setTags((current) => [...current, tag])}\n      onRemoveTag={(tag) => setTags((current) => current.filter((t) => t !== tag))}\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "popover",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/tag-filter.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, ChevronsUpDown, Tag, X } from \"lucide-react\";\n\nimport { Popover, PopoverContent, PopoverTrigger } from \"@/components/ui/popover\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's tag filter: the picked tags as small blue chips (each clears itself), then a bordered Tags button that\n// opens a searchable list, each row checked in blue when picked.\nfunction TagFilter({\n  tags,\n  tagOptions,\n  onAddTag,\n  onRemoveTag,\n  className,\n}: {\n  tags: string[];\n  tagOptions: string[];\n  onAddTag: (tag: string) => void;\n  onRemoveTag: (tag: string) => void;\n  className?: string;\n}) {\n  const [open, setOpen] = React.useState(false);\n  const [query, setQuery] = React.useState(\"\");\n  const options = [...new Set([...tags, ...tagOptions])].filter((tag) => tag.toLowerCase().includes(query.trim().toLowerCase()));\n  const selected = new Set(tags);\n\n  return (\n    <div data-slot=\"tag-filter\" className={cn(\"flex flex-wrap items-center gap-1.5\", className)}>\n      {tags.map((tag) => (\n        <button\n          key={tag}\n          type=\"button\"\n          onClick={() => onRemoveTag(tag)}\n          aria-label={`Clear tag filter ${tag}`}\n          className=\"flex h-7 items-center gap-1 rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-blue-10 pr-1.5 pl-2.5 text-caption text-fg-brand outline-none transition-colors duration-150 ease-out hover:bg-blue-20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\"\n        >\n          {tag}\n          <X className=\"size-3\" strokeWidth={1.75} />\n        </button>\n      ))}\n      <Popover open={open} onOpenChange={setOpen}>\n        <PopoverTrigger\n          aria-label=\"Filter by tags\"\n          className=\"flex h-8 items-center gap-1.5 rounded-control border border-line px-3 text-body-sm whitespace-nowrap text-fg-muted outline-none transition-colors duration-150 ease-out hover:border-line-strong hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring data-[state=open]:border-line-strong data-[state=open]:text-fg\"\n        >\n          <Tag className=\"size-3.5 text-fg-subtle\" strokeWidth={1.5} />\n          Tags\n          <ChevronsUpDown className=\"size-3.5 text-fg-subtle\" strokeWidth={1.5} />\n        </PopoverTrigger>\n        <PopoverContent align=\"end\" sideOffset={8} className=\"w-56 p-3\">\n          <input\n            value={query}\n            onChange={(event) => setQuery(event.target.value)}\n            placeholder=\"Search tags\"\n            aria-label=\"Search tags\"\n            className=\"mb-1 h-8 w-full rounded-control bg-neutral-5 px-2.5 text-body-sm text-fg outline-none placeholder:text-fg-subtle\"\n          />\n          <ul className=\"max-h-64 overflow-y-auto\">\n            {options.length === 0 && <li className=\"px-2.5 py-2 text-body-sm text-fg-subtle\">{tagOptions.length === 0 ? \"No tags yet\" : \"No matching tags\"}</li>}\n            {options.map((tag) => {\n              const isSelected = selected.has(tag);\n              return (\n                <li key={tag}>\n                  <button\n                    type=\"button\"\n                    aria-pressed={isSelected}\n                    onClick={() => (isSelected ? onRemoveTag(tag) : onAddTag(tag))}\n                    className={cn(\n                      \"flex h-9 w-full items-center gap-2.5 rounded-control px-2.5 text-left text-body-sm outline-none transition-colors duration-150 ease-out hover:bg-wash-hover focus-visible:bg-wash-hover\",\n                      isSelected ? \"text-fg\" : \"text-fg-muted\",\n                    )}\n                  >\n                    <span className=\"min-w-0 flex-1 truncate\">{tag}</span>\n                    <Check className={cn(\"size-3.5 shrink-0 text-brand\", !isSelected && \"invisible\")} strokeWidth={1.75} />\n                  </button>\n                </li>\n              );\n            })}\n          </ul>\n        </PopoverContent>\n      </Popover>\n    </div>\n  );\n}\n\nexport { TagFilter };\n"
+    }
+  ]
+}

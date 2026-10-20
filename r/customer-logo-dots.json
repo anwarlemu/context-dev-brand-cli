@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "customer-logo-dots",
+  "type": "visual",
+  "title": "Customer logo dots",
+  "description": "Customer logo rendered as dots, with an arrow transition on hover or focus.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The picture of a customer story card (`tone=\"onBlue\"` on the blue card, `onWhite` on a white panel). Remote logos need CORS or a same-origin `resolveSrc`.",
+  "avoid": [
+    "Logos in their own colors on a story card",
+    "A dot logo without a link around it"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/customer-logo-dots.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add customer-logo-dots --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/shared/customer-logo-dots.tsx; src/components/sections/shared/customer-logo-grid.ts; src/components/sections/shared/customer-logo-morph.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/customer-logo-dots.tsx",
+        "sha256": "299418859564ff2802890ba8b3180e1f884897416374942cbb74e6ab1d2413a8",
+        "retained": false,
+        "exports": [
+          "CustomerLogoDots"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/customer-logo-grid.ts",
+        "sha256": "a8369dae2a4aba4a571a7e716f938b361bdb758d0330677f6d97fd2f038772d8",
+        "retained": false,
+        "exports": [
+          "LOGO_CELLS",
+          "LOGO_GRID",
+          "LOGO_LEFT",
+          "LOGO_TOP"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/customer-logo-morph.ts",
+        "sha256": "1403b61819f18d520877e961295715edc6d5e1e7ae4c855d4f2f860bb7de573d",
+        "retained": false,
+        "exports": [
+          "createCustomerLogoMorph"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/customer-logo-dots.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * A customer's logo redrawn in the brand dot grid, over a faint backdrop of rings that stays clear of it. Inside a link\n * (or an element marked `data-hover-morph`), hovering or focusing it melts the logo into an arrow. `onBlue` draws white\n * dots for a blue card, `onWhite` brand blue dots for a white one. A logo that cannot be sampled shows as a plain image.\n */\nexport declare function CustomerLogoDots({ src, background, resolveSrc, className, tone, }: {\n    /** The logo image. A remote one must allow CORS, or pass `resolveSrc`. */\n    src: string;\n    /** A color painted behind the logo before sampling, for logos drawn on a tile. */\n    background?: string;\n    /** Maps the logo's URL to one the canvas may read (a same-origin proxy). */\n    resolveSrc?: (src: string) => string;\n    className?: string;\n    tone?: \"onBlue\" | \"onWhite\";\n}): React.JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/customer-logo-grid.d.ts",
+      "content": "import type { DotGrid } from \"@/components/visuals/dot-engine/dot-morph-dots\";\nexport declare const LOGO_CELLS = 28;\nexport declare const LOGO_GRID: DotGrid;\nexport declare const LOGO_LEFT: number;\nexport declare const LOGO_TOP: number;\n"
+    },
+    {
+      "path": "components/visuals/customer-logo-morph.d.ts",
+      "content": "import type { DotPalette } from \"@/components/visuals/dot-engine/dot-morph-dots\";\nimport { type DotMorphPlayer } from \"@/components/visuals/dot-engine/dot-morph-player\";\nimport type { LogoCell } from \"@/components/visuals/logo-dot-sampling\";\ninterface CustomerLogoMorphOptions {\n    canvas: HTMLCanvasElement;\n    cells: LogoCell[];\n    /** The backdrop rings left out around the logo, as grid cell indices. */\n    clearedBackdrop: {\n        cells: number[];\n        opacity: number;\n    };\n    palette: DotPalette;\n    onPlayingChange: (isPlaying: boolean) => void;\n}\nexport declare function createCustomerLogoMorph({ canvas, cells, clearedBackdrop, palette, onPlayingChange }: CustomerLogoMorphOptions): DotMorphPlayer;\nexport {};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/customer-logo-dots/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/customer-logo-dots.tsx",
+      "content": "import { CustomerLogoDots } from \"@/components/visuals/customer-logo-dots\";\n\n// A logo as a data URI, so the example samples without a network request or CORS.\nconst LOGO = `data:image/svg+xml,${encodeURIComponent('<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><path d=\"M20 80V20h18l24 36V20h18v60H62L38 44v36z\"/></svg>')}`;\n\nexport function Site() {\n  return (\n    <a href=\"https://context.dev/customers/northwind\" className=\"group mx-auto flex w-full max-w-sm flex-col overflow-hidden rounded-card bg-brand text-on-brand outline-none focus-visible:ring-2 focus-visible:ring-focus-ring\">\n      <div className=\"relative h-60\">\n        <CustomerLogoDots src={LOGO} className=\"absolute inset-0 size-full\" />\n      </div>\n      <div className=\"flex flex-col gap-1 p-6\">\n        <span className=\"text-h5\">Northwind</span>\n        <span className=\"text-body-sm text-on-brand/80\">Branded docs for every customer, built on brand context.</span>\n      </div>\n    </a>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils",
+    "logo-dot-sampling",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/customer-logo-dots.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { useHoverDotMorph, type LoadDotMorph } from \"./use-hover-dot-morph\";\nimport { cn } from \"@/lib/utils\";\n\nimport { LOGO_CELLS, LOGO_GRID, LOGO_LEFT, LOGO_TOP } from \"./customer-logo-grid\";\nimport { type LogoCell, sampleLogoCells } from \"@/components/visuals/logo-dot-sampling\";\n\nconst { columns: GRID_COLUMNS, rows: GRID_ROWS, pitch: DOT_PITCH, dotRadius: DOT_RADIUS, ringStroke: RING_STROKE } = LOGO_GRID;\n// The backdrop uses every other cell at low opacity so it reads as texture, and keeps this many cells clear of the\n// logo's dots so the logo keeps a clean silhouette.\nconst FIELD_STEP = 2;\nconst FIELD_CLEARANCE = 2;\nconst FIELD_OPACITY = 0.22;\nconst VIEW_WIDTH = GRID_COLUMNS * DOT_PITCH;\nconst VIEW_HEIGHT = GRID_ROWS * DOT_PITCH;\n// Rings stay this far inside the visible edge, so the card never slices one in half.\nconst FIELD_EDGE_MARGIN = DOT_PITCH / 2;\n\ninterface ViewBounds {\n  left: number;\n  top: number;\n  right: number;\n  bottom: number;\n}\n\ninterface FieldCell {\n  column: number;\n  row: number;\n}\n\nconst center = (index: number) => (index + 0.5) * DOT_PITCH;\n\n/** Many same-sized dots as one SVG path, each a closed pair of arcs, rather than hundreds of circles. */\nfunction dotsPath(centers: Iterable<{ cx: number; cy: number }>, radius: number) {\n  const diameter = +(radius * 2).toFixed(2);\n  const r = +radius.toFixed(2);\n  let path = \"\";\n  for (const { cx, cy } of centers) path += `M${+(cx - radius).toFixed(2)} ${+cy.toFixed(2)}a${r} ${r} 0 1 0 ${diameter} 0a${r} ${r} 0 1 0 ${-diameter} 0`;\n  return path;\n}\n\n// The part of the viewBox that `slice` actually shows for this element's size, in viewBox units.\nfunction visibleBounds(width: number, height: number): ViewBounds {\n  const scale = Math.max(width / VIEW_WIDTH, height / VIEW_HEIGHT);\n  const visibleWidth = width / scale;\n  const visibleHeight = height / scale;\n  const left = (VIEW_WIDTH - visibleWidth) / 2;\n  const top = (VIEW_HEIGHT - visibleHeight) / 2;\n  return { left, top, right: left + visibleWidth, bottom: top + visibleHeight };\n}\n\n// The backdrop's rings, split into the ones drawn and the ones left out because they sit too near the logo.\nfunction fieldCells(logoCells: LogoCell[], bounds: ViewBounds) {\n  const nearLogo = new Set<string>();\n  for (const cell of logoCells) {\n    for (let dy = -FIELD_CLEARANCE; dy <= FIELD_CLEARANCE; dy++) {\n      for (let dx = -FIELD_CLEARANCE; dx <= FIELD_CLEARANCE; dx++) nearLogo.add(`${cell.column + LOGO_LEFT + dx}:${cell.row + LOGO_TOP + dy}`);\n    }\n  }\n  const shown: FieldCell[] = [];\n  const cleared: FieldCell[] = [];\n  for (let row = 0; row < GRID_ROWS; row += FIELD_STEP) {\n    for (let column = 0; column < GRID_COLUMNS; column += FIELD_STEP) {\n      const cx = center(column);\n      const cy = center(row);\n      const fitsInView =\n        cx - DOT_RADIUS - FIELD_EDGE_MARGIN >= bounds.left &&\n        cx + DOT_RADIUS + FIELD_EDGE_MARGIN <= bounds.right &&\n        cy - DOT_RADIUS - FIELD_EDGE_MARGIN >= bounds.top &&\n        cy + DOT_RADIUS + FIELD_EDGE_MARGIN <= bounds.bottom;\n      if (fitsInView) (nearLogo.has(`${column}:${row}`) ? cleared : shown).push({ column, row });\n    }\n  }\n  return { shown, cleared };\n}\n\n/**\n * A customer's logo redrawn in the brand dot grid, over a faint backdrop of rings that stays clear of it. Inside a link\n * (or an element marked `data-hover-morph`), hovering or focusing it melts the logo into an arrow. `onBlue` draws white\n * dots for a blue card, `onWhite` brand blue dots for a white one. A logo that cannot be sampled shows as a plain image.\n */\nexport function CustomerLogoDots({\n  src,\n  background,\n  resolveSrc,\n  className,\n  tone = \"onBlue\",\n}: {\n  /** The logo image. A remote one must allow CORS, or pass `resolveSrc`. */\n  src: string;\n  /** A color painted behind the logo before sampling, for logos drawn on a tile. */\n  background?: string;\n  /** Maps the logo's URL to one the canvas may read (a same-origin proxy). */\n  resolveSrc?: (src: string) => string;\n  className?: string;\n  tone?: \"onBlue\" | \"onWhite\";\n}) {\n  const [cells, setCells] = React.useState<LogoCell[] | null>(null);\n  const [samplingFailed, setSamplingFailed] = React.useState(false);\n  const [bounds, setBounds] = React.useState<ViewBounds | null>(null);\n  const svgRef = React.useRef<SVGSVGElement>(null);\n  const canvasRef = React.useRef<HTMLCanvasElement>(null);\n  const field = React.useMemo(() => (cells && bounds ? fieldCells(cells, bounds) : null), [cells, bounds]);\n  const loadMorph = React.useCallback<LoadDotMorph>(\n    async (canvas, onPlayingChange) => {\n      if (!cells || !field) return null;\n      const surface = canvas.closest(\"article, [data-dot-surface]\");\n      const { createCustomerLogoMorph } = await import(\"./customer-logo-morph\");\n      return createCustomerLogoMorph({\n        canvas,\n        cells,\n        clearedBackdrop: { cells: field.cleared.map((cell) => cell.row * GRID_COLUMNS + cell.column), opacity: FIELD_OPACITY },\n        palette: { dots: getComputedStyle(canvas).color, background: surface ? getComputedStyle(surface).backgroundColor : \"transparent\" },\n        onPlayingChange,\n      });\n    },\n    [cells, field],\n  );\n  const isMorphing = useHoverDotMorph(canvasRef, loadMorph);\n\n  React.useEffect(() => {\n    const svg = svgRef.current;\n    if (!svg) return;\n    const observer = new ResizeObserver(([entry]) => setBounds(visibleBounds(entry.contentRect.width, entry.contentRect.height)));\n    observer.observe(svg);\n    return () => observer.disconnect();\n  }, []);\n\n  // Sampling fetches and decodes the logo, so it waits until the card is nearly on screen.\n  const resolveRef = React.useRef(resolveSrc);\n  React.useEffect(() => {\n    resolveRef.current = resolveSrc;\n  }, [resolveSrc]);\n  React.useEffect(() => {\n    const svg = svgRef.current;\n    if (!svg) return;\n    let cancelled = false;\n    setSamplingFailed(false);\n    const nearView = new IntersectionObserver(\n      ([entry]) => {\n        if (!entry.isIntersecting) return;\n        nearView.disconnect();\n        sampleLogoCells(src, { background, cellsPerSide: LOGO_CELLS, resolveSrc: resolveRef.current })\n          .then((sampled) => {\n            if (cancelled) return;\n            if (sampled.length === 0) throw new Error(`No logo pixels found in ${src}`);\n            setCells(sampled);\n          })\n          // A logo that can't be sampled into dots falls back to the plain image, so the card is never left blank.\n          .catch(() => {\n            if (!cancelled) setSamplingFailed(true);\n          });\n      },\n      { rootMargin: \"600px\" },\n    );\n    nearView.observe(svg);\n    return () => {\n      cancelled = true;\n      nearView.disconnect();\n    };\n  }, [src, background]);\n\n  const ringRadius = DOT_RADIUS - RING_STROKE / 2;\n  const logoCell = (cell: LogoCell) => ({ cx: center(cell.column + LOGO_LEFT), cy: center(cell.row + LOGO_TOP) });\n\n  return (\n    <div data-slot=\"customer-logo-dots\" className={cn(\"relative\", tone === \"onWhite\" ? \"text-brand\" : \"text-white\", className)} aria-hidden=\"true\">\n      <svg\n        ref={svgRef}\n        viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`}\n        preserveAspectRatio=\"xMidYMid slice\"\n        className={cn(\"block size-full\", cells ? \"opacity-100\" : \"opacity-0\")}\n      >\n        {field && (\n          <path\n            fill=\"none\"\n            stroke=\"currentColor\"\n            strokeWidth={RING_STROKE}\n            opacity={FIELD_OPACITY}\n            d={dotsPath(\n              field.shown.map((cell) => ({ cx: center(cell.column), cy: center(cell.row) })),\n              ringRadius,\n            )}\n          />\n        )}\n        {cells && (\n          <g className={cn(isMorphing && \"invisible\")}>\n            <path fill=\"none\" stroke=\"currentColor\" strokeWidth={RING_STROKE} d={dotsPath(cells.filter((cell) => !cell.filled).map(logoCell), ringRadius)} />\n            <path fill=\"currentColor\" d={dotsPath(cells.filter((cell) => cell.filled).map(logoCell), DOT_RADIUS)} />\n          </g>\n        )}\n      </svg>\n      <canvas ref={canvasRef} className={cn(\"absolute inset-0 size-full\", !isMorphing && \"invisible\")} />\n      {samplingFailed && (\n        <span className=\"absolute inset-0 flex items-center justify-center\">\n          <img src={src} alt=\"\" className=\"size-24 rounded-shell object-contain\" style={{ background }} />\n        </span>\n      )}\n    </div>\n  );\n}\n"
+    },
+    {
+      "path": "components/visuals/customer-logo-grid.ts",
+      "content": "import type { DotGrid } from \"@/components/visuals/dot-engine/dot-morph-dots\";\n\nexport const LOGO_CELLS = 28;\n// The art fills its whole area (slice), so the grid runs past the logo on every side; the logo sits in its middle.\nexport const LOGO_GRID: DotGrid = { columns: 76, rows: 54, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 16 };\nexport const LOGO_LEFT = (LOGO_GRID.columns - LOGO_CELLS) / 2;\nexport const LOGO_TOP = (LOGO_GRID.rows - LOGO_CELLS) / 2;\n"
+    },
+    {
+      "path": "components/visuals/customer-logo-morph.ts",
+      "content": "import { LOGO_CELLS, LOGO_GRID, LOGO_LEFT, LOGO_TOP } from \"./customer-logo-grid\";\nimport { createGlyphShader, glyphRestingDots, type GlyphMorph } from \"@/components/visuals/dot-engine/dot-glyph-morph\";\nimport type { DotPalette } from \"@/components/visuals/dot-engine/dot-morph-dots\";\nimport { createDotMorphPlayer, type DotMorphFrame, type DotMorphPlayer } from \"@/components/visuals/dot-engine/dot-morph-player\";\nimport type { LogoCell } from \"@/components/visuals/logo-dot-sampling\";\n\n/** On hover a customer's logo melts into an arrow pointing up and to the right: the card is a link, and the arrow says where it goes. */\n\nconst LOGO_CENTER = (LOGO_CELLS * LOGO_GRID.pitch) / 2;\n// The arrow is drawn about its own middle, as wide as its head: a short shaft tucked under a broad corner.\nconst ARROW_WEIGHT = 44;\nconst ARROW_REACH = 82;\nconst ARROW_TIP_INSET = 11;\nconst ARROW_RUN_UP = 46;\nconst ARROW_NUDGE = 7;\nconst NUDGES_PER_SECOND = 0.5;\nconst MORPH_IN_SECONDS = 0.75;\n\nconst clamp01 = (value: number) => Math.min(1, Math.max(0, value));\nconst phase = (morph: number, start: number, end: number) => clamp01((morph - start) / (end - start));\nconst easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);\nconst easeOutBack = (t: number) => 1 + 2.70158 * (t - 1) ** 3 + 1.70158 * (t - 1) ** 2;\n\nfunction drawArrow(context: CanvasRenderingContext2D, { morph, spin }: DotMorphFrame) {\n  const runUp = ARROW_RUN_UP * (1 - easeOutBack(phase(morph, 0.35, 0.95)));\n  const nudge = ARROW_NUDGE * easeInOut(phase(morph, 0.85, 1)) * (1 - Math.cos(spin)) * 0.5;\n  const travel = nudge - runUp;\n  context.translate(LOGO_CENTER + travel, LOGO_CENTER - travel);\n  context.strokeStyle = \"#000\";\n  context.lineWidth = ARROW_WEIGHT;\n  context.lineJoin = \"miter\";\n  context.beginPath();\n  context.moveTo(-ARROW_REACH, -ARROW_REACH);\n  context.lineTo(ARROW_REACH, -ARROW_REACH);\n  context.lineTo(ARROW_REACH, ARROW_REACH);\n  context.moveTo(-ARROW_REACH, ARROW_REACH);\n  context.lineTo(ARROW_REACH - ARROW_TIP_INSET, -ARROW_REACH + ARROW_TIP_INSET);\n  context.stroke();\n}\n\ninterface CustomerLogoMorphOptions {\n  canvas: HTMLCanvasElement;\n  cells: LogoCell[];\n  /** The backdrop rings left out around the logo, as grid cell indices. */\n  clearedBackdrop: { cells: number[]; opacity: number };\n  palette: DotPalette;\n  onPlayingChange: (isPlaying: boolean) => void;\n}\n\nexport function createCustomerLogoMorph({ canvas, cells, clearedBackdrop, palette, onPlayingChange }: CustomerLogoMorphOptions): DotMorphPlayer {\n  const glyph: GlyphMorph = { grid: LOGO_GRID, box: { left: LOGO_LEFT, top: LOGO_TOP, cellsPerSide: LOGO_CELLS }, cells, drawTarget: drawArrow };\n  return createDotMorphPlayer({\n    canvas,\n    palette,\n    onPlayingChange,\n    source: {\n      grid: LOGO_GRID,\n      fit: \"cover\",\n      restingDots: glyphRestingDots(glyph),\n      spinSpeed: NUDGES_PER_SECOND * Math.PI * 2,\n      spinPeriod: Math.PI * 2,\n      sample: createGlyphShader(glyph),\n      backdrop: clearedBackdrop,\n      morphInSeconds: MORPH_IN_SECONDS,\n    },\n  });\n}\n"
+    }
+  ]
+}

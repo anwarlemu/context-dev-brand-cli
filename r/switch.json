@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "switch",
+  "type": "ui",
+  "title": "Switch",
+  "description": "Toggle for settings that apply immediately, with on, off, and disabled states.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Settings that apply at once.",
+  "avoid": [
+    "Switches that need a save button"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/switch.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add switch --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/switch.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/switch.tsx",
+        "sha256": "9cd971f01727ebbb36ea4976e025859fd631ea6edc016ba7bf8ec9ca6ece371d",
+        "retained": false,
+        "exports": [
+          "Switch"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/switch.d.ts",
+      "content": "import * as React from \"react\";\nimport * as SwitchPrimitive from \"@radix-ui/react-switch\";\ndeclare function Switch({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>): React.JSX.Element;\nexport { Switch };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/switch/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/switch.tsx",
+      "content": "import { Label } from \"@/components/ui/label\";\nimport { Switch } from \"@/components/ui/switch\";\n\n// On, off and disabled, each named by its label.\nexport function Product() {\n  return (\n    <div className=\"grid gap-4\">\n      <div className=\"flex items-center gap-3\">\n        <Switch id=\"switch-top-up\" defaultChecked />\n        <Label htmlFor=\"switch-top-up\">Auto top-up</Label>\n      </div>\n      <div className=\"flex items-center gap-3\">\n        <Switch id=\"switch-digest\" />\n        <Label htmlFor=\"switch-digest\">Weekly usage email</Label>\n      </div>\n      <div className=\"flex items-center gap-3\">\n        <Switch id=\"switch-sso\" disabled />\n        <Label htmlFor=\"switch-sso\">Require SSO</Label>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "label"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-switch"
+  ],
+  "files": [
+    {
+      "path": "components/ui/switch.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as SwitchPrimitive from \"@radix-ui/react-switch\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The thumb sits 3/16 rem inside the track on every side, so it reads as held by the track. Off, a hairline gives the\n// pale track an edge; on, the brand blue needs none. Measured in rem so the travel scales with the root size.\nfunction Switch({ className, ...props }: React.ComponentProps<typeof SwitchPrimitive.Root>) {\n  return (\n    <SwitchPrimitive.Root\n      data-slot=\"switch\"\n      className={cn(\n        \"peer inline-flex h-5 w-9 shrink-0 items-center rounded-pill transition-[background-color,box-shadow] duration-200 ease-out outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-brand data-[state=unchecked]:bg-neutral-10 data-[state=unchecked]:shadow-[inset_0_0_0_1px_var(--ds-color-wash-hover)] motion-reduce:transition-none\",\n        className,\n      )}\n      {...props}\n    >\n      <SwitchPrimitive.Thumb\n        data-slot=\"switch-thumb\"\n        className=\"pointer-events-none block size-3.5 rounded-pill bg-white shadow-[0_1px_2px_rgb(0_0_0/0.12)] transition-transform duration-200 ease-out data-[state=checked]:translate-x-[1.1875rem] data-[state=unchecked]:translate-x-[0.1875rem] motion-reduce:transition-none\"\n      />\n    </SwitchPrimitive.Root>\n  );\n}\n\nexport { Switch };\n"
+    }
+  ]
+}

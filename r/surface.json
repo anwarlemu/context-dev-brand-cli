@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "surface",
+  "type": "lib",
+  "title": "Surface",
+  "description": "Applies site or product tokens to an area and its portaled overlays.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Product screens inside a marketing site, or previews of one surface inside the other.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/surface.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add surface",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-ds",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Integration helper; no public website counterpart.",
+    "sources": []
+  },
+  "api": [
+    {
+      "path": "lib/surface.d.ts",
+      "content": "import * as React from \"react\";\nexport declare function Surface({ kind, className, children, ...props }: React.ComponentProps<\"div\"> & {\n    kind: \"site\" | \"product\";\n}): React.JSX.Element;\n/** Where overlays render: the nearest Surface, else the page body. */\nexport declare function usePortalContainer(): HTMLElement | undefined;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "utils",
+    "tooltip-provider",
+    "use-scrolling-scrollbars"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "lib/surface.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\nimport { TooltipProvider } from \"@/lib/tooltip-provider\";\nimport { useScrollingScrollbars } from \"@/hooks/use-scrolling-scrollbars\";\n\n// A product area on a site page (or a site area in a product): its class sets the scale, and dialogs, menus and\n// tooltips opened inside it render inside it too, so they keep that scale instead of the page's. A product area also\n// takes the dashboard's base line height. Its named text sizes supply their own compact line heights.\nconst PortalContainer = React.createContext<HTMLElement | null>(null);\n\nexport function Surface({ kind, className, children, ...props }: React.ComponentProps<\"div\"> & { kind: \"site\" | \"product\" }) {\n  useScrollingScrollbars();\n  const [element, setElement] = React.useState<HTMLDivElement | null>(null);\n  return (\n    <div ref={setElement} data-surface={kind} className={cn(\"relative\", kind === \"product\" ? \"ds-product text-body leading-normal\" : \"ds-site\", className)} {...props}>\n      <PortalContainer.Provider value={element}><TooltipProvider>{children}</TooltipProvider></PortalContainer.Provider>\n    </div>\n  );\n}\n\n/** Where overlays render: the nearest Surface, else the page body. */\nexport function usePortalContainer() {\n  return React.useContext(PortalContainer) ?? undefined;\n}\n"
+    }
+  ]
+}

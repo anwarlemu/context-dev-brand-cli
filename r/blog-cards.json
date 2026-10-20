@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "blog-cards",
+  "type": "site",
+  "title": "Blog cards",
+  "description": "Post cards with a cover, date, title, and summary, plus the Latest updates section.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "chip"
+  ],
+  "usage": "The latest posts on the home page (`BlogSection`, six at most; `allHref` adds the \"All posts\" pill and `hideOnPhones` hides the band below 768px, as the home page does), a blog index or a related-posts row (`BlogCards`, `tone=\"light\"` on a white page). Pass the dot-art cover as `cover`.",
+  "avoid": [
+    "Photo covers with their own colors",
+    "Gray card backgrounds",
+    "Moving cards on hover",
+    "More than two lines of title or summary"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/blog-cards.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add blog-cards --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/blog.tsx; src/components/blog-card.tsx; src/components/sections/home/blog-card-palettes.ts; src/components/sections/home/blog-cover-art.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/blog.tsx",
+        "sha256": "ce20f18766518bc6a5455bc1597f3590155e703a9af436946301abc87057af52",
+        "retained": false,
+        "exports": [
+          "Blog"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/blog-card.tsx",
+        "sha256": "63f62e522214c3bacd5cb3ef17507e4f6b20f35e61b1cc2af07166b2663ae7b1",
+        "retained": false,
+        "exports": [
+          "BlogCardPost",
+          "BlogCard"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/blog-card-palettes.ts",
+        "sha256": "08940fcedd6585fb3c225f41e33ad0ca989d5e292158c7524a71d1478e76d0cd",
+        "retained": false,
+        "exports": [
+          "BlogCardSurface",
+          "BLOG_CARD_PALETTES",
+          "blogCardSurface",
+          "BACKDROP_RING_OPACITY",
+          "backdropTile"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/blog-cover-art.tsx",
+        "sha256": "e6c9882edea181900fccd2c007fd4d3b783803b2ffbb2ca584c47a813f2d0ed2",
+        "retained": false,
+        "exports": [
+          "BlogCoverMotif",
+          "BlogCover",
+          "BlogCoverArt"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/blog-cards.d.ts",
+      "content": "import * as React from \"react\";\ntype BlogCardSurface = \"paper\" | \"blue\";\ntype BlogPost = {\n    title: string;\n    excerpt?: string;\n    /** The date as shown, e.g. \"October 8, 2026\". */\n    date: string;\n    /** Machine-readable date for the time element, e.g. \"2026-10-08\". */\n    dateTime?: string;\n    tag?: string;\n    href: string;\n    /** The cover art; a ring pattern with a dot glyph when left out. */\n    cover?: React.ReactNode;\n};\n/** Where the card sits: on the dark Latest updates band, or on a white page (a post's related articles). */\ntype BlogCardTone = \"dark\" | \"light\";\n/** A stand-in cover: a faint ring tile with a dot glyph in the middle, in the card's own colors. */\ndeclare function BlogCoverPlaceholder({ surface, className }: {\n    surface?: BlogCardSurface;\n    className?: string;\n}): React.JSX.Element;\n/**\n * One post card. `tone=\"light\"` is the card on a white page (a post's related articles): a hairline ring keeps the white\n * card off the page and the paper card's date darkens to the nav gray, as the site draws it.\n */\ndeclare function BlogCard({ post, surface, tone, className }: {\n    post: BlogPost;\n    surface?: BlogCardSurface;\n    tone?: BlogCardTone;\n    className?: string;\n}): React.JSX.Element;\n/** The grid: one column, two from md, three from lg, alternating white and blue cards. */\ndeclare function BlogCards({ posts, tone, className, ...props }: React.ComponentProps<\"div\"> & {\n    posts: BlogPost[];\n    tone?: BlogCardTone;\n}): React.JSX.Element;\n/**\n * The home page's \"Latest updates\" band: near-black, full bleed, the column's edge lines and header rule in their dark\n * tone, dashed rails down the content edges, a white heading and the cards (six at most) inset from the rails.\n * `allHref` adds the \"All posts\" pill across from the heading; `hideOnPhones` drops the band below 768px, as the\n * site's home page does.\n */\ndeclare function BlogSection({ title, posts, allHref, allLabel, hideOnPhones, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title?: React.ReactNode;\n    posts: BlogPost[];\n    allHref?: string;\n    allLabel?: React.ReactNode;\n    hideOnPhones?: boolean;\n}): React.JSX.Element;\nexport { BlogCards, BlogCard, BlogSection, BlogCoverPlaceholder, type BlogPost, type BlogCardSurface, type BlogCardTone };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/blog-cards/Site"
+    },
+    {
+      "name": "Band",
+      "url": "https://context-ds.vercel.app/preview/blog-cards/Band"
+    },
+    {
+      "name": "Related",
+      "url": "https://context-ds.vercel.app/preview/blog-cards/Related"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/blog-cards.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { BlogCards, BlogSection, type BlogPost } from \"@/components/site/blog-cards\";\n\n// Recent posts from the blog; the covers fall back to the ring-and-dots placeholder until the cover art is ported.\nconst posts: BlogPost[] = [\n  {\n    title: \"Headless Scraping at Scale: Playwright, Browserless, Zyte, and Context.dev\",\n    excerpt: \"Compare Playwright, Browserless, Zyte, and Context.dev for stateless scraping at scale, with guidance on rendering, queues, retries, and structured output.\",\n    date: \"October 8, 2026\",\n    dateTime: \"2026-10-08\",\n    tag: \"Guide\",\n    href: \"https://context.dev/blog/headless-scraping-at-scale\",\n  },\n  {\n    title: \"Browser Fingerprinting Explained: Headless Browsers and Anti-Detect Profiles\",\n    excerpt: \"Learn how browser fingerprinting exposes automation, what anti-detect profiles solve, and when a managed scraping API fits your workflow.\",\n    date: \"September 27, 2026\",\n    dateTime: \"2026-09-27\",\n    tag: \"Deep dive\",\n    href: \"https://context.dev/blog/browser-fingerprinting-explained\",\n  },\n  {\n    title: \"How to Set Up Context.dev MCP in Cursor and Claude\",\n    excerpt: \"Connect Context.dev to Cursor, Claude, and Claude Code with OAuth, then verify live web search, JavaScript-rendered Markdown, and structured extraction.\",\n    date: \"September 21, 2026\",\n    dateTime: \"2026-09-21\",\n    tag: \"Deep dive\",\n    href: \"https://context.dev/blog/how-to-set-up-context-dev-mcp-in-cursor-and-claude\",\n  },\n];\n\nexport function Site() {\n  return <SiteSection><BlogCards posts={posts} className=\"w-full\" /></SiteSection>;\n}\n\nexport function Band() {\n  // The home page's band: the \"All posts\" pill across from the heading, and hidden on phones as the site does.\n  return <BlogSection posts={posts} allHref=\"https://context.dev/blog\" hideOnPhones />;\n}\n\n// A post's related articles: the cards on a white page.\nexport function Related() {\n  return <SiteSection><BlogCards posts={posts} tone=\"light\" className=\"w-full gap-6 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3\" /></SiteSection>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "section",
+    "badge",
+    "button",
+    "dot-glyph",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/blog-cards.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowRight } from \"lucide-react\";\n\nimport { SectionEdgeLines, SectionHeaderRule } from \"@/components/site/section\";\nimport { Badge } from \"@/components/ui/badge\";\nimport { buttonVariants } from \"@/components/ui/button\";\nimport { DotGlyph } from \"@/components/ui/dot-glyph\";\nimport { cn } from \"@/lib/utils\";\n\n// The home page's \"Latest updates\": tall cards in the soft blue ring, cover art on top and the date, title and summary\n// below. The grid alternates white and brand-blue cards, so three columns read as a checkerboard. The ring is clear\n// until hover, when a translucent white ring frames the card on the dark Latest updates band; nothing moves.\n\ntype BlogCardSurface = \"paper\" | \"blue\";\n\ntype BlogPost = {\n  title: string;\n  excerpt?: string;\n  /** The date as shown, e.g. \"October 8, 2026\". */\n  date: string;\n  /** Machine-readable date for the time element, e.g. \"2026-10-08\". */\n  dateTime?: string;\n  tag?: string;\n  href: string;\n  /** The cover art; a ring pattern with a dot glyph when left out. */\n  cover?: React.ReactNode;\n};\n\n/** Where the card sits: on the dark Latest updates band, or on a white page (a post's related articles). */\ntype BlogCardTone = \"dark\" | \"light\";\n\nconst TEXT: Record<BlogCardSurface, { date: string; title: string; excerpt: string; tag: string }> = {\n  paper: { date: \"text-fg-subtle\", title: \"text-fg\", excerpt: \"text-fg-nav\", tag: \"\" },\n  blue: { date: \"text-on-brand/70\", title: \"text-on-brand\", excerpt: \"text-on-brand/80\", tag: \"text-on-brand ring-ring-on-brand\" },\n};\n\n// The brand's dot language: a small square of dots, solid along a diagonal, rings elsewhere.\nconst PLACEHOLDER_GLYPH = [\"21111\", \"12111\", \"11211\", \"11121\", \"11112\"];\n\n/** A stand-in cover: a faint ring tile with a dot glyph in the middle, in the card's own colors. */\nfunction BlogCoverPlaceholder({ surface = \"paper\", className }: { surface?: BlogCardSurface; className?: string }) {\n  return (\n    <div\n      aria-hidden=\"true\"\n      data-slot=\"blog-cover-placeholder\"\n      className={cn(\n        \"flex size-full items-center justify-center [background-size:var(--ds-space-4)_var(--ds-space-4)] [background-position:center]\",\n        surface === \"blue\"\n          ? \"bg-[radial-gradient(circle,transparent_var(--ds-space-1),var(--ds-color-ring-on-brand)_var(--ds-space-1),transparent_calc(var(--ds-space-1)+var(--ds-space-px)))] text-on-brand\"\n          : \"bg-[radial-gradient(circle,transparent_var(--ds-space-1),var(--ds-color-ring-tint)_var(--ds-space-1),transparent_calc(var(--ds-space-1)+var(--ds-space-px)))] text-fg-brand\",\n        className,\n      )}\n    >\n      <DotGlyph rows={PLACEHOLDER_GLYPH} className=\"size-20\" />\n    </div>\n  );\n}\n\n/**\n * One post card. `tone=\"light\"` is the card on a white page (a post's related articles): a hairline ring keeps the white\n * card off the page and the paper card's date darkens to the nav gray, as the site draws it.\n */\nfunction BlogCard({ post, surface = \"paper\", tone = \"dark\", className }: { post: BlogPost; surface?: BlogCardSurface; tone?: BlogCardTone; className?: string }) {\n  const text = TEXT[surface];\n  const light = tone === \"light\";\n  return (\n    // The ring wraps the card (its outer edge keeps the card's radius); the negative margin keeps it out of the layout.\n    <a\n      href={post.href}\n      data-slot=\"blog-card\"\n      className={cn(\n        \"group -m-2 block rounded-card bg-transparent p-2 outline-none transition-colors duration-300 ease-out hover:bg-white/30 focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 motion-reduce:transition-none\",\n        light ? \"h-full focus-visible:ring-offset-surface\" : \"focus-visible:ring-offset-dark\",\n        className,\n      )}\n    >\n      <article className={cn(\"relative flex h-104 flex-col overflow-hidden rounded-card sm:h-125\", surface === \"blue\" ? \"bg-brand\" : \"bg-surface\", light && \"ring-1 ring-hairline\")}>\n        <div className=\"relative min-h-0 flex-1 overflow-hidden\">{post.cover ?? <BlogCoverPlaceholder surface={surface} />}</div>\n        <div className=\"relative flex flex-col p-8 pt-6\">\n          <div className=\"flex items-center gap-2\">\n            {post.tag && (\n              <Badge variant=\"chip\" className={cn(\"px-2.5 py-0.5 text-caption leading-snug\", text.tag)}>\n                {post.tag}\n              </Badge>\n            )}\n            <time className={cn(\"text-body-sm leading-snug\", light && surface === \"paper\" ? \"text-fg-nav\" : text.date)} dateTime={post.dateTime}>\n              {post.date}\n            </time>\n          </div>\n          <h3 className={cn(\"mt-2 line-clamp-2 text-h4 leading-snug font-normal tracking-normal\", text.title)} title={post.title}>\n            {post.title}\n          </h3>\n          {post.excerpt && <p className={cn(\"mt-3 line-clamp-2 text-body leading-snug\", text.excerpt)}>{post.excerpt}</p>}\n        </div>\n      </article>\n    </a>\n  );\n}\n\n/** The grid: one column, two from md, three from lg, alternating white and blue cards. */\nfunction BlogCards({ posts, tone, className, ...props }: React.ComponentProps<\"div\"> & { posts: BlogPost[]; tone?: BlogCardTone }) {\n  return (\n    <div data-slot=\"blog-cards\" className={cn(\"grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3\", className)} {...props}>\n      {posts.map((post, i) => (\n        <BlogCard key={post.href} post={post} tone={tone} surface={i % 2 === 0 ? \"paper\" : \"blue\"} />\n      ))}\n    </div>\n  );\n}\n\n// The band's inner rails: dashed hairlines down the content box's edges, beside the column's solid edge lines.\nconst DASH_Y =\n  \"bg-[repeating-linear-gradient(to_bottom,color-mix(in_srgb,var(--ds-color-white)_15%,transparent)_0_var(--ds-space-1),transparent_var(--ds-space-1)_var(--ds-space-2))]\";\n\n/**\n * The home page's \"Latest updates\" band: near-black, full bleed, the column's edge lines and header rule in their dark\n * tone, dashed rails down the content edges, a white heading and the cards (six at most) inset from the rails.\n * `allHref` adds the \"All posts\" pill across from the heading; `hideOnPhones` drops the band below 768px, as the\n * site's home page does.\n */\nfunction BlogSection({\n  title = \"Latest updates.\",\n  posts,\n  allHref,\n  allLabel = \"All posts\",\n  hideOnPhones = false,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & { title?: React.ReactNode; posts: BlogPost[]; allHref?: string; allLabel?: React.ReactNode; hideOnPhones?: boolean }) {\n  return (\n    <section id=\"blog\" data-slot=\"blog-section\" className={cn(\"relative w-full overflow-x-clip bg-dark\", hideOnPhones && \"hidden min-[768px]:block\", className)} {...props}>\n      <SectionEdgeLines tone=\"dark\" />\n      <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 hidden md:block\">\n        <div className=\"mx-auto h-full w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12\">\n          <div className=\"relative h-full\">\n            <div className={cn(\"absolute inset-y-0 left-0 w-px\", DASH_Y)} />\n            <div className={cn(\"absolute inset-y-0 right-0 w-px\", DASH_Y)} />\n          </div>\n        </div>\n      </div>\n      <div className=\"relative z-10 mx-auto w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12\">\n        <div className=\"relative pt-10 pb-20 md:pt-12\">\n          <div className=\"relative z-10 flex items-center justify-between gap-3 px-3 sm:px-4 md:px-5 lg:px-6\">\n            <h2 className=\"max-w-(--ds-layout-heading) text-h3 leading-display font-normal tracking-tight text-balance text-white md:text-h2\">{title}</h2>\n            {allHref && (\n              // The arrow stays put on hover; only the pill's fill answers the pointer.\n              <a href={allHref} className={cn(buttonVariants({ variant: \"pill-on-brand\" }), \"shrink-0 gap-1.5 focus-visible:outline-white\")}>\n                {allLabel}\n                <ArrowRight aria-hidden=\"true\" className=\"size-3.5\" />\n              </a>\n            )}\n          </div>\n          <SectionHeaderRule tone=\"dark\" />\n          <BlogCards posts={posts.slice(0, 6)} className=\"relative z-10 px-3 sm:px-4 md:px-5 lg:px-6\" />\n        </div>\n      </div>\n    </section>\n  );\n}\n\nexport { BlogCards, BlogCard, BlogSection, BlogCoverPlaceholder, type BlogPost, type BlogCardSurface, type BlogCardTone };\n"
+    }
+  ]
+}

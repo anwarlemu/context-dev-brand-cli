@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-watch",
+  "type": "visual",
+  "title": "Watch story",
+  "description": "Dot animation of scheduled page checks and change notifications.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Monitoring on a site card. Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-watch.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-watch --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/home/watch-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/watch-story.tsx",
+        "sha256": "8968430516e543c19a6abc80a6a447948bcc3850060eedfe36dd971207fe1433",
+        "retained": false,
+        "exports": [
+          "WatchStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/watch-story.d.ts",
+      "content": "/**\n * The Monitor card's picture: a clock checks the page on its schedule until a check finds a change, then becomes a\n * bell that rings beside the notice of what changed. With reduced motion it shows the bell and its notice.\n */\nexport declare function WatchStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/watch-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createWatchStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/watch-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { type Region } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The Monitor card's pictures, in the brand dot grid: a clock that checks the page on its schedule, and the bell\n * that rings, with what changed beside it, when a check finds something.\n */\nexport declare const WATCH_STORY_GRID: DotGrid;\n/** The clock with its minute hand `turns` of the way round; the hour hand follows a twelfth as fast. */\nexport declare function paintClock(states: Uint8Array, turns: number): Uint8Array<ArrayBufferLike>;\nexport declare const CLOCK_AT_REST: StoryPicture;\nexport declare const CHECKS: {\n    time: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n    };\n    result: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n        muted: boolean;\n    };\n}[];\nexport declare const SCHEDULE: DotStoryText;\nexport declare const BELL_EDGE: number;\n/** The bell, swung `swing` columns at its rim, with a ring of sound `sound` columns out from it (none when 0). */\nexport declare function paintBell(states: Uint8Array, swing: number, sound: number): Uint8Array<ArrayBufferLike>;\nexport declare const BELL_AT_REST: StoryPicture;\nexport declare const NOTICE: Region;\nexport declare const paintNotice: (states: Uint8Array) => Uint8Array<ArrayBufferLike>;\nexport declare const BELL_AND_NOTICE: StoryPicture;\nexport declare const NOTICE_TEXTS: DotStoryText[];\n/** The bell with its notice: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const WATCH_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-watch/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-watch.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { WatchStory } from \"@/components/visuals/stories/watch-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <WatchStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/watch-story.tsx",
+      "content": "'use client';\n\nimport { WATCH_RESTING, WATCH_STORY_GRID } from '@/components/visuals/stories/watch-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadWatchStory: LoadDotStory = async (stage) => {\n\tconst { createWatchStoryPlayer } = await import('@/components/visuals/stories/watch-story-player');\n\treturn createWatchStoryPlayer(stage);\n};\n\n/**\n * The Monitor card's picture: a clock checks the page on its schedule until a check finds a change, then becomes a\n * bell that rings beside the notice of what changed. With reduced motion it shows the bell and its notice.\n */\nexport function WatchStory({ className }: { className?: string }) {\n\treturn <DotStory grid={WATCH_STORY_GRID} resting={WATCH_RESTING} load={loadWatchStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/watch-story-player.ts",
+      "content": "import { BELL_AND_NOTICE, BELL_AT_REST, CHECKS, CLOCK_AT_REST, NOTICE, NOTICE_TEXTS, SCHEDULE, WATCH_STORY_GRID, paintBell, paintClock, paintNotice } from '@/components/visuals/stories/watch-story-scenes';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One day of watching, played as a loop: the clock's hand goes round once, a check landing at each quarter; the\n * last check finds a change, and the clock melts into a bell that rings while the notice of what changed is\n * written out beside it.\n */\n\nconst DAY = { startsAt: 0.4, seconds: 3.2, textSeconds: 0.3 };\nconst RING = { swings: 3, columns: 2.2, secondsEach: 0.42, sound: { from: 13, to: 19 } };\nconst RINGING_SECONDS = RING.swings * RING.secondsEach;\nconst MELT_SECONDS = 1.1;\nconst NOTICE_LINE = { everySeconds: 0.35, seconds: 0.3 };\n\nconst turnsAt = (heldSeconds: number) => clamp01((heldSeconds - DAY.startsAt) / DAY.seconds);\n\n// Each swing is smaller than the one before, and sends a ring of sound out to either side.\nfunction ring(states: Uint8Array, heldSeconds: number) {\n\tconst rung = heldSeconds / RINGING_SECONDS;\n\tif (rung >= 1) return;\n\tconst swing = Math.round(RING.columns * (1 - rung) * Math.sin(rung * RING.swings * Math.PI * 2));\n\tpaintBell(states, swing, RING.sound.from + ((heldSeconds / RING.secondsEach) % 1) * (RING.sound.to - RING.sound.from));\n}\n\nexport function createWatchStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: WATCH_STORY_GRID,\n\t\tresting: { beat: 2, heldSeconds: 2.8 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: CLOCK_AT_REST,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: DAY.startsAt + DAY.seconds + 0.5,\n\t\t\t\tanimate: (states, heldSeconds) => void paintClock(states, turnsAt(heldSeconds)),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(SCHEDULE);\n\t\t\t\t\tCHECKS.forEach(({ time, result }, index) => {\n\t\t\t\t\t\tconst checked = clamp01((turnsAt(heldSeconds) * DAY.seconds - ((index + 1) / CHECKS.length) * DAY.seconds + DAY.textSeconds) / DAY.textSeconds);\n\t\t\t\t\t\tpen.text(time, checked);\n\t\t\t\t\t\tpen.text(result, checked);\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\t\t\t{ picture: BELL_AT_REST, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: RINGING_SECONDS, animate: ring },\n\t\t\t{\n\t\t\t\tpicture: BELL_AND_NOTICE,\n\t\t\t\t// The notice draws itself from the bell's side outwards.\n\t\t\t\tarrival: { kind: 'builds', seconds: 0.6, order: (column) => clamp01((column - NOTICE.left) / NOTICE.columns) },\n\t\t\t\tholdSeconds: 4,\n\t\t\t\tanimate(states, heldSeconds) {\n\t\t\t\t\tif (heldSeconds > RINGING_SECONDS) return;\n\t\t\t\t\tring(states, heldSeconds);\n\t\t\t\t\tpaintNotice(states);\n\t\t\t\t},\n\t\t\t\twrite: (pen, heldSeconds) => NOTICE_TEXTS.forEach((text, index) => pen.text(text, clamp01((heldSeconds - index * NOTICE_LINE.everySeconds) / NOTICE_LINE.seconds))),\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/watch-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, isFilledAmongSolids, outlineCells, type Region } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The Monitor card's pictures, in the brand dot grid: a clock that checks the page on its schedule, and the bell\n * that rings, with what changed beside it, when a check finds something.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const WATCH_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = WATCH_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(WATCH_STORY_GRID, states) });\n\nconst CLOCK = { center: { column: 19, row: 18.5 }, radius: 16, band: 2, ticks: 12.5, hub: 1.3, hand: { minute: 11, hour: 7, width: 0.75 } };\nconst HOURS = 12;\nconst TURN = Math.PI * 2;\n\nconst handTip = (turns: number, length: number) => ({ column: CLOCK.center.column + length * Math.sin(turns * TURN), row: CLOCK.center.row - length * Math.cos(turns * TURN) });\n\n/** The clock with its minute hand `turns` of the way round; the hour hand follows a twelfth as fast. */\nexport function paintClock(states: Uint8Array, turns: number) {\n\tconst minute = handTip(turns, CLOCK.hand.minute);\n\tconst hour = handTip(turns / HOURS + 0.5, CLOCK.hand.hour);\n\tfor (let row = 0; row < ROWS; row++) {\n\t\tfor (let column = 0; column < COLUMNS; column++) {\n\t\t\tconst cell = row * COLUMNS + column;\n\t\t\tconst fromCenter = Math.hypot(column - CLOCK.center.column, row - CLOCK.center.row);\n\t\t\tif (fromCenter > CLOCK.radius) states[cell] = DOT_ABSENT;\n\t\t\telse if (fromCenter > CLOCK.radius - 1) states[cell] = DOT_FILLED;\n\t\t\telse if (fromCenter > CLOCK.radius - 1 - CLOCK.band) states[cell] = DOT_HOLLOW;\n\t\t\telse {\n\t\t\t\tconst hourMark = (Math.atan2(column - CLOCK.center.column, CLOCK.center.row - row) / TURN) * HOURS;\n\t\t\t\tconst isTick = Math.abs(fromCenter - CLOCK.ticks) < 0.8 && Math.abs(hourMark - Math.round(hourMark)) < 0.17;\n\t\t\t\tconst isHand = Math.min(distanceToSegment(column, row, CLOCK.center, minute), distanceToSegment(column, row, CLOCK.center, hour)) < CLOCK.hand.width;\n\t\t\t\tstates[cell] = isTick || isHand || fromCenter < CLOCK.hub ? DOT_FILLED : DOT_ABSENT;\n\t\t\t}\n\t\t}\n\t}\n\treturn states;\n}\n\nexport const CLOCK_AT_REST = pictureOfStates(paintClock(new Uint8Array(COLUMNS * ROWS), 0));\n\nconst CHECK_LEFT = x(CLOCK.center.column + CLOCK.radius + 4);\nexport const CHECKS = ['06:00', '12:00', '18:00', '00:00'].map((time, index) => ({\n\ttime: { text: time, x: CHECK_LEFT, y: baselineOn(9 + index * 6, 20), size: 20, weight: 800 } satisfies DotStoryText,\n\tresult: { text: index === 3 ? 'Price changed' : 'No changes', x: CHECK_LEFT, y: baselineOn(11.4 + index * 6, 13), size: 13, weight: 700, muted: index !== 3 } satisfies DotStoryText,\n}));\nexport const SCHEDULE: DotStoryText = { text: 'every 6h', x: CHECK_LEFT, y: baselineOn(4, 13), size: 13, weight: 700, muted: true };\n\nconst BELL = { center: 13, crown: 4, cap: 2.5, shoulder: 8, lip: 25, rim: 27, clapper: { row: 30, radius: 1.7 }, knob: 1.6, wide: 7.5, taper: 0.45, roundness: 2.2, flareFrom: 0.68, flare: 3.5, rimWidth: 11.5, shine: { from: -5, to: -4, top: 12, bottom: 21 } };\nconst SOUND = { row: 17, spread: 0.62, width: 0.6 };\nexport const BELL_EDGE = BELL.center + BELL.rimWidth;\n\n// A rounded crown, a body that swells quickly and a lip that flares: a straight flare read as a tree, not a bell.\nconst bellHalfWidth = (row: number) => {\n\tif (row >= BELL.lip) return BELL.rimWidth;\n\tif (row < BELL.shoulder) return BELL.wide * (1 - BELL.taper) * Math.sqrt(Math.max(0, 1 - ((BELL.shoulder - row) / BELL.cap) ** 2));\n\tconst down = (row - BELL.shoulder) / (BELL.lip - BELL.shoulder);\n\tconst dome = BELL.wide * (1 - BELL.taper * (1 - down) ** BELL.roundness);\n\treturn dome + Math.max(0, (down - BELL.flareFrom) / (1 - BELL.flareFrom)) * BELL.flare;\n};\n\nfunction isInBell(column: number, row: number, swing: number) {\n\tif (Math.hypot(column - BELL.center, row - BELL.crown - 1) <= BELL.knob) return true;\n\t// The bell hangs from its crown, so the further down, the further it swings; the clapper lags the other way.\n\tconst across = column - BELL.center - swing * ((row - BELL.crown) / (BELL.rim - BELL.crown));\n\tif (Math.hypot(across + swing * 1.6, row - BELL.clapper.row) <= BELL.clapper.radius) return true;\n\treturn row > BELL.shoulder - BELL.cap && row <= BELL.rim && Math.abs(across) <= bellHalfWidth(row);\n}\n\n/** The bell, swung `swing` columns at its rim, with a ring of sound `sound` columns out from it (none when 0). */\nexport function paintBell(states: Uint8Array, swing: number, sound: number) {\n\tfor (let row = 0; row < ROWS; row++) {\n\t\tfor (let column = 0; column <= BELL_EDGE + 2; column++) {\n\t\t\tconst cell = row * COLUMNS + column;\n\t\t\tif (isInBell(column, row, swing)) {\n\t\t\t\tconst isEdge = !isInBell(column - 1, row, swing) || !isInBell(column + 1, row, swing) || !isInBell(column, row - 1, swing) || !isInBell(column, row + 1, swing);\n\t\t\t\tconst across = column - BELL.center;\n\t\t\t\tconst isShine = across >= BELL.shine.from && across <= BELL.shine.to && row >= BELL.shine.top && row <= BELL.shine.bottom;\n\t\t\t\tstates[cell] = isEdge || (!isShine && isFilledAmongSolids(column, row)) ? DOT_FILLED : DOT_HOLLOW;\n\t\t\t\tcontinue;\n\t\t\t}\n\t\t\tconst fromBell = Math.hypot(column - BELL.center, row - SOUND.row);\n\t\t\tconst isAside = Math.abs(row - SOUND.row) < Math.abs(column - BELL.center) * SOUND.spread;\n\t\t\tstates[cell] = sound > 0 && isAside && Math.abs(fromBell - sound) < SOUND.width ? DOT_HOLLOW : DOT_ABSENT;\n\t\t}\n\t}\n\treturn states;\n}\n\nexport const BELL_AT_REST = pictureOfStates(paintBell(new Uint8Array(COLUMNS * ROWS), 0, 0));\n\nexport const NOTICE: Region = { left: 29, top: 4, columns: 29, rows: 30 };\nconst NOTICE_RULE_ROW = NOTICE.top + 9;\nconst SENT = { column: NOTICE.left + 3, row: NOTICE.top + 25 };\nconst noticeCells = [...outlineCells(NOTICE), ...Array.from({ length: NOTICE.columns - 4 }, (_, step) => ({ column: NOTICE.left + 2 + step, row: NOTICE_RULE_ROW, filled: false })), { ...SENT, filled: true }];\n\nconst withNotice = (states: Uint8Array) => {\n\tfor (const cell of noticeCells) states[cell.row * COLUMNS + cell.column] = cell.filled ? DOT_FILLED : DOT_HOLLOW;\n\treturn states;\n};\nexport const paintNotice = withNotice;\nexport const BELL_AND_NOTICE = pictureOfStates(withNotice(paintBell(new Uint8Array(COLUMNS * ROWS), 0, 0)));\n\nconst NOTICE_LEFT = x(NOTICE.left + 3);\nexport const NOTICE_TEXTS: DotStoryText[] = [\n\t{ text: 'Change detected', x: NOTICE_LEFT, y: baselineOn(NOTICE.top + 3, 17), size: 17, weight: 800 },\n\t{ text: 'atlas.example/pricing', x: NOTICE_LEFT, y: baselineOn(NOTICE.top + 6, 12), size: 12, weight: 700, muted: true },\n\t{ text: 'Team plan', x: NOTICE_LEFT, y: baselineOn(NOTICE.top + 12.5, 14), size: 14, weight: 700, muted: true },\n\t{ text: '$49 -> $59', x: NOTICE_LEFT, y: baselineOn(NOTICE.top + 17, 30), size: 30, weight: 900 },\n\t{ text: 'per month', x: NOTICE_LEFT, y: baselineOn(NOTICE.top + 20.5, 13), size: 13, weight: 700, muted: true },\n\t{ text: 'Webhook sent', x: x(SENT.column + 2), y: baselineOn(SENT.row, 14), size: 14, weight: 700 },\n];\n\n/** The bell with its notice: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const WATCH_RESTING = { ...BELL_AND_NOTICE, texts: NOTICE_TEXTS };\n"
+    }
+  ]
+}

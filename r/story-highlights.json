@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-highlights",
+  "type": "visual",
+  "title": "Highlights story",
+  "description": "Dot animation of a search result whose most relevant passage is highlighted.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Result highlights on a search product card (second of the Search page capabilities). Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "A result card builds from the top with its source, title and a high relevance chip, then a marker runs down beside the middle of the passage and its three lines fill in, one after another.",
+  "documentation": "https://context-ds.vercel.app/components/story-highlights.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-highlights --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/highlights-story.tsx; src/components/sections/products/highlights-story-player.ts; src/components/sections/products/highlights-story-scenes.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/highlights-story.tsx",
+        "sha256": "5b5ce43094445e299ae7cf5c97a9ae5c939b4869719ed597eb5ccb6cc9af1b2e",
+        "retained": false,
+        "exports": [
+          "HighlightsStory"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/highlights-story-player.ts",
+        "sha256": "b3fdf570150d0c31d4c6c21565e4540de9a33245c59f4c347c790e92a478c440",
+        "retained": false,
+        "exports": [
+          "createHighlightsStoryPlayer"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/highlights-story-scenes.ts",
+        "sha256": "3e144e978a204aa4e02ece29a35c93adbc5bbe7f32b26f36aa6749108950256e",
+        "retained": false,
+        "exports": [
+          "HIGHLIGHTS_STORY_GRID",
+          "CARD",
+          "PASSAGE_LEFT",
+          "HIGHLIGHTED_LINES",
+          "MARKER",
+          "BLANK",
+          "RESULT_READ",
+          "RESULT_HIGHLIGHTED",
+          "RESULT_TEXTS",
+          "RELEVANCE_LABEL",
+          "HIGHLIGHTS_LABEL",
+          "HIGHLIGHTS_RESTING"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/highlights-story.d.ts",
+      "content": "export declare function HighlightsStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/highlights-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createHighlightsStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/highlights-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare const HIGHLIGHTS_STORY_GRID: DotGrid;\nexport declare const CARD: DotBox;\nexport declare const PASSAGE_LEFT = 10;\nexport declare const HIGHLIGHTED_LINES: {\n    row: number;\n    right: number;\n}[];\nexport declare const MARKER: {\n    column: number;\n    top: number;\n    bottom: number;\n};\nexport declare const BLANK: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULT_READ: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULT_HIGHLIGHTED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULT_TEXTS: DotStoryText[];\nexport declare const RELEVANCE_LABEL: DotStoryText;\nexport declare const HIGHLIGHTS_LABEL: DotStoryText;\nexport declare const HIGHLIGHTS_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-highlights/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-highlights.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { HighlightsStory } from \"@/components/visuals/stories/highlights-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <HighlightsStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/highlights-story.tsx",
+      "content": "'use client';\n\nimport { HIGHLIGHTS_RESTING, HIGHLIGHTS_STORY_GRID } from '@/components/visuals/stories/highlights-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadHighlightsStory: LoadDotStory = async (stage) => {\n\tconst { createHighlightsStoryPlayer } = await import('@/components/visuals/stories/highlights-story-player');\n\treturn createHighlightsStoryPlayer(stage);\n};\n\nexport function HighlightsStory({ className }: { className?: string }) {\n\treturn <DotStory grid={HIGHLIGHTS_STORY_GRID} resting={HIGHLIGHTS_RESTING} load={loadHighlightsStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/highlights-story-player.ts",
+      "content": "import { BLANK, CARD, HIGHLIGHTED_LINES, HIGHLIGHTS_LABEL, HIGHLIGHTS_STORY_GRID, MARKER, PASSAGE_LEFT, RELEVANCE_LABEL, RESULT_HIGHLIGHTED, RESULT_READ, RESULT_TEXTS } from '@/components/visuals/stories/highlights-story-scenes';\nimport { NEVER, fadedInAt, paintRevealed, revealSchedule } from '@/components/visuals/stories/story-reveal';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\nconst CLEAR_SECONDS = 0.8;\nconst RESULT = { startsAt: 0.2, buildSeconds: 0.8, textsAt: 0.6, relevanceAt: 0.9 };\nconst HIGHLIGHT = { startsAt: 1.8, everyLineSeconds: 0.35, sweepSeconds: 0.5, markerSecondsPerRow: 0.08 };\nconst HOLD_SECONDS = HIGHLIGHT.startsAt + HIGHLIGHTED_LINES.length * HIGHLIGHT.everyLineSeconds + HIGHLIGHT.sweepSeconds + 2.6;\n\nconst { rows } = HIGHLIGHTS_STORY_GRID;\n\nconst READ_AT = revealSchedule(HIGHLIGHTS_STORY_GRID, (_, row) => RESULT.startsAt + ((row - CARD.top) / (CARD.bottom - CARD.top)) * RESULT.buildSeconds);\n\nconst HIGHLIGHTED_AT = revealSchedule(HIGHLIGHTS_STORY_GRID, (column, row) => {\n\tif (column === MARKER.column && row >= MARKER.top && row <= MARKER.bottom) return HIGHLIGHT.startsAt + (row - MARKER.top) * HIGHLIGHT.markerSecondsPerRow;\n\tconst line = HIGHLIGHTED_LINES.findIndex((candidate) => candidate.row === row);\n\tif (line < 0) return NEVER;\n\treturn HIGHLIGHT.startsAt + line * HIGHLIGHT.everyLineSeconds + ((column - PASSAGE_LEFT) / (HIGHLIGHTED_LINES[line].right - PASSAGE_LEFT)) * HIGHLIGHT.sweepSeconds;\n});\n\nexport function createHighlightsStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: HIGHLIGHTS_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: HOLD_SECONDS },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: BLANK,\n\t\t\t\tdeparture: RESULT_HIGHLIGHTED,\n\t\t\t\tarrival: { kind: 'builds', seconds: CLEAR_SECONDS, order: (_, row) => row / rows },\n\t\t\t\tholdSeconds: HOLD_SECONDS,\n\t\t\t\tanimate(states, heldSeconds) {\n\t\t\t\t\tpaintRevealed(states, RESULT_READ.states, READ_AT, heldSeconds);\n\t\t\t\t\tpaintRevealed(states, RESULT_HIGHLIGHTED.states, HIGHLIGHTED_AT, heldSeconds);\n\t\t\t\t},\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tRESULT_TEXTS.forEach((text) => pen.text(text, fadedInAt(heldSeconds, RESULT.textsAt)));\n\t\t\t\t\tpen.text(RELEVANCE_LABEL, fadedInAt(heldSeconds, RESULT.relevanceAt));\n\t\t\t\t\tpen.text(HIGHLIGHTS_LABEL, fadedInAt(heldSeconds, HIGHLIGHT.startsAt + 0.2));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/highlights-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clear, rectangle, solid, stack, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\nexport const HIGHLIGHTS_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { pitch: PITCH } = HIGHLIGHTS_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst centerOf = (left: number, right: number) => ((left + right + 1) / 2) * PITCH;\n\nexport const CARD: DotBox = { left: 3, right: 54, top: 2, bottom: 33 };\nconst FAVICON: DotBox = { left: 6, right: 8, top: 5, bottom: 7 };\nconst CHIP: DotBox = { left: 42, right: 51, top: 5, bottom: 9 };\nconst DIVIDER = { row: 11, left: 4, right: 53 };\nexport const PASSAGE_LEFT = 10;\nconst PASSAGE_LINES = [\n\t{ row: 14, right: 50 },\n\t{ row: 16, right: 46 },\n\t{ row: 19, right: 49 },\n\t{ row: 21, right: 51 },\n\t{ row: 23, right: 41 },\n\t{ row: 26, right: 48 },\n\t{ row: 28, right: 44 },\n];\nexport const HIGHLIGHTED_LINES = PASSAGE_LINES.filter(({ row }) => row >= 19 && row <= 23);\nexport const MARKER = { column: 7, top: HIGHLIGHTED_LINES[0].row, bottom: HIGHLIGHTED_LINES[HIGHLIGHTED_LINES.length - 1].row };\n\nfunction passages(isHighlighted: boolean): DotPainter {\n\treturn (column, row) => {\n\t\tif (isHighlighted && column === MARKER.column && row >= MARKER.top && row <= MARKER.bottom) return DOT_FILLED;\n\t\tconst line = PASSAGE_LINES.find((candidate) => candidate.row === row);\n\t\tif (!line || column < PASSAGE_LEFT || column > line.right) return DOT_ABSENT;\n\t\treturn isHighlighted && HIGHLIGHTED_LINES.includes(line) ? DOT_FILLED : DOT_HOLLOW;\n\t};\n}\n\nconst divider: DotPainter = (column, row) => (row === DIVIDER.row && column >= DIVIDER.left && column <= DIVIDER.right ? DOT_HOLLOW : DOT_ABSENT);\nconst card = (isHighlighted: boolean) => stack(rectangle(FAVICON, solid), rectangle(CHIP, clear), divider, passages(isHighlighted), rectangle(CARD, clear));\n\nexport const BLANK = pictureOf(HIGHLIGHTS_STORY_GRID, clear);\nexport const RESULT_READ = pictureOf(HIGHLIGHTS_STORY_GRID, card(false));\nexport const RESULT_HIGHLIGHTED = pictureOf(HIGHLIGHTS_STORY_GRID, card(true));\n\nexport const RESULT_TEXTS: DotStoryText[] = [\n\t{ text: 'arxiv.org/abs/2404.07220', x: x(11), y: baselineOn(5, 12), size: 12, weight: 700, muted: true },\n\t{ text: 'Hybrid search for RAG', x: x(11), y: baselineOn(7.6, 15), size: 15, weight: 700 },\n\t{ text: 'high', x: centerOf(CHIP.left, CHIP.right), y: baselineOn(7, 12), size: 12, weight: 700, anchor: 'middle' },\n];\nexport const RELEVANCE_LABEL: DotStoryText = { text: 'relevance: high', x: x(CARD.right), y: baselineOn(35.5, 12), size: 12, weight: 700, muted: true, anchor: 'end' };\nexport const HIGHLIGHTS_LABEL: DotStoryText = { text: 'highlights', x: x(CARD.left + 1), y: baselineOn(35.5, 12), size: 12, weight: 700, muted: true };\n\nexport const HIGHLIGHTS_RESTING = { ...RESULT_HIGHLIGHTED, texts: [...RESULT_TEXTS, RELEVANCE_LABEL, HIGHLIGHTS_LABEL] };\n"
+    }
+  ]
+}

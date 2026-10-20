@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "use-hover-dot-morph",
+  "type": "lib",
+  "title": "Hover dot morph",
+  "description": "Runs a dot animation while its parent card is hovered or focused.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "A dot picture that changes when its card is pointed at (CustomerLogoDots, PagesCover, GlyphMelt). Pass a lazy `load` that returns a player from `createDotMorphPlayer`.",
+  "avoid": [
+    "A hover morph with no link",
+    "button or data-hover-morph around it",
+    "Playing under reduced motion"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-hover-dot-morph.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-hover-dot-morph",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "website src/components/sections/shared/use-hover-dot-morph.ts; context-dashboard c0ddf7a src/components/dots/use-hover-dot-morph.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/use-hover-dot-morph.ts",
+        "sha256": "9247ccd2a5a0aae86519baa121142fbb3741161e4c365be65e0af7110673c574",
+        "retained": false,
+        "exports": [
+          "LoadDotMorph",
+          "useHoverDotMorph"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/use-hover-dot-morph.ts",
+        "sha256": "83e04af2d4a6d5f1d6029d5be6e4034c19747606e86ec251c8a89841c154d5e1",
+        "retained": false,
+        "exports": [
+          "LoadDotMorph",
+          "useHoverDotMorph"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/use-hover-dot-morph.d.ts",
+      "content": "import type { DotMorphPlayer } from \"@/components/visuals/dot-engine/dot-morph-player\";\nimport { type RefObject } from \"react\";\n/** Resolves to null when the art isn't ready to morph yet, so the next hover tries again. */\nexport type LoadDotMorph = (canvas: HTMLCanvasElement, onPlayingChange: (isPlaying: boolean) => void) => Promise<DotMorphPlayer | null>;\n/**\n * Plays a dot morph on the canvas while the card around it is hovered or holds keyboard focus, and, with\n * `playOnView`, on a loop while the card is in view, so it also plays where there is no hover. The card is the\n * nearest link or button, or the nearest element marked `data-hover-morph` when the card is neither.\n * Returns whether the canvas is currently standing in for the static art.\n */\nexport declare function useHoverDotMorph(canvasRef: RefObject<HTMLCanvasElement | null>, load: LoadDotMorph, { playOnView }?: {\n    playOnView?: boolean;\n}): boolean;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/use-hover-dot-morph.ts",
+      "content": "\"use client\";\n\nimport type { DotMorphPlayer } from \"@/components/visuals/dot-engine/dot-morph-player\";\nimport { useEffect, useState, type RefObject } from \"react\";\n\n/** Resolves to null when the art isn't ready to morph yet, so the next hover tries again. */\nexport type LoadDotMorph = (canvas: HTMLCanvasElement, onPlayingChange: (isPlaying: boolean) => void) => Promise<DotMorphPlayer | null>;\n\n/** While in view the morph loops: it plays, then rests long enough to ease fully back to the art before the next go. */\nconst VIEW_PLAY_MS = 2600;\nconst VIEW_REST_MS = 1400;\n\n/**\n * Plays a dot morph on the canvas while the card around it is hovered or holds keyboard focus, and, with\n * `playOnView`, on a loop while the card is in view, so it also plays where there is no hover. The card is the\n * nearest link or button, or the nearest element marked `data-hover-morph` when the card is neither.\n * Returns whether the canvas is currently standing in for the static art.\n */\nexport function useHoverDotMorph(canvasRef: RefObject<HTMLCanvasElement | null>, load: LoadDotMorph, { playOnView = false }: { playOnView?: boolean } = {}) {\n  const [isPlaying, setIsPlaying] = useState(false);\n\n  useEffect(() => {\n    const canvas = canvasRef.current;\n    const card = canvas?.closest<HTMLElement>(\"[data-hover-morph], a, button\");\n    if (!canvas || !card) return;\n    if (window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return;\n\n    let player: DotMorphPlayer | null = null;\n    let isLoading = false;\n    let isDisposed = false;\n    let isPointerOver = false;\n    let isFocused = false;\n    let isPlayingForView = false;\n    let viewPlayTimer = 0;\n\n    // The morph's code only downloads once a card is first hovered; if that fails, the static art simply stays.\n    const start = async () => {\n      isLoading = true;\n      try {\n        const loaded = await load(canvas, setIsPlaying);\n        if (isDisposed) {\n          loaded?.destroy();\n          return;\n        }\n        player = loaded;\n        player?.setHovering(isPointerOver || isFocused || isPlayingForView);\n      } catch {\n        player = null;\n      } finally {\n        isLoading = false;\n      }\n    };\n\n    const update = () => {\n      const isActive = isPointerOver || isFocused || isPlayingForView;\n      if (player) player.setHovering(isActive);\n      else if (isActive && !isLoading) void start();\n    };\n    const handlePointerEnter = (event: PointerEvent) => {\n      // A touch reports a hover it never really has; the tap is already on its way to the link.\n      if (event.pointerType === \"touch\") return;\n      isPointerOver = true;\n      update();\n    };\n    const handlePointerLeave = () => {\n      isPointerOver = false;\n      update();\n    };\n    const handleFocusIn = (event: FocusEvent) => {\n      isFocused = event.target instanceof Element && event.target.matches(\":focus-visible\");\n      update();\n    };\n    const handleFocusOut = () => {\n      isFocused = false;\n      update();\n    };\n\n    card.addEventListener(\"pointerenter\", handlePointerEnter);\n    card.addEventListener(\"pointerleave\", handlePointerLeave);\n    card.addEventListener(\"focusin\", handleFocusIn);\n    card.addEventListener(\"focusout\", handleFocusOut);\n    const resizeObserver = new ResizeObserver(() => player?.resize());\n    resizeObserver.observe(canvas);\n    const viewObserver = playOnView\n      ? new IntersectionObserver(\n          ([entry]) => {\n            window.clearTimeout(viewPlayTimer);\n            const loop = (play: boolean) => {\n              isPlayingForView = play;\n              update();\n              viewPlayTimer = window.setTimeout(() => loop(!play), play ? VIEW_PLAY_MS : VIEW_REST_MS);\n            };\n            if (entry.isIntersecting) {\n              loop(true);\n            } else {\n              isPlayingForView = false;\n              update();\n            }\n          },\n          { threshold: 0.6 },\n        )\n      : null;\n    viewObserver?.observe(card);\n\n    return () => {\n      isDisposed = true;\n      card.removeEventListener(\"pointerenter\", handlePointerEnter);\n      card.removeEventListener(\"pointerleave\", handlePointerLeave);\n      card.removeEventListener(\"focusin\", handleFocusIn);\n      card.removeEventListener(\"focusout\", handleFocusOut);\n      resizeObserver.disconnect();\n      viewObserver?.disconnect();\n      window.clearTimeout(viewPlayTimer);\n      player?.destroy();\n      setIsPlaying(false);\n    };\n  }, [canvasRef, load, playOnView]);\n\n  return isPlaying;\n}\n"
+    }
+  ]
+}

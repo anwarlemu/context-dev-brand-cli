@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "product-landing",
+  "type": "site",
+  "title": "Product page (landing)",
+  "description": "Product landing sections with capability cards, workflow cards, code examples, steps, related products, and an FAQ.",
+  "surface": "site",
+  "kinds": [
+    "demo-panel"
+  ],
+  "usage": "The product pages. Scrape, Map, Batches, Monitors, Answers, Brand and Style guide open with the site's Hero; Parse, Brand search, People enrichment, News and the ChatGPT page open with the white ProductHero (its demo as children). Then LogoStrip, ProductStorySection (capabilities), ProductIntegration (`playgroundHref` adds the playground pill beside the API reference), ProductStorySection columns={2} (workflows), ProductLandingSteps (three numbered steps), ProductFaq, ProductRelatedCards (two related products), and close with ClosingCta. The alternatives pages reuse ProductFaq; the use case pages build their API example on ProductIntegration.",
+  "avoid": [
+    "Cards without the soft blue ring",
+    "A black pill in the code section (the docs and playground links are outline pills)",
+    "Opening every FAQ answer",
+    "Centered section headings",
+    "An arrow that moves when a related product card is hovered",
+    "More than three steps in ProductLandingSteps"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/product-landing.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add product-landing --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/product-landing-page.tsx (+ product-landing-content.ts, landing-faq-list.tsx); src/components/sections/home/product-demo-panel.tsx; src/components/sections/home/story-stage.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-page.tsx",
+        "sha256": "b9eea159d7f9a850c9a884c71d84af4ff2fd41ba96abcfe965e16ce3d59f4110",
+        "retained": false,
+        "exports": [
+          "SECTION_CLASS",
+          "INTRO_SECTION_CLASS",
+          "CARD_CLASS",
+          "SectionIntro",
+          "LandingIntegration",
+          "LandingFaq",
+          "LandingSteps",
+          "ProductLandingPage"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-content.tsx",
+        "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+        "retained": false,
+        "exports": [
+          "RelatedProductId",
+          "ProductLandingContent",
+          "scrapeLandingContent",
+          "answersLandingContent",
+          "searchLandingContent",
+          "mapLandingContent",
+          "brandLandingContent",
+          "styleguideLandingContent",
+          "batchesLandingContent",
+          "monitorsLandingContent",
+          "parseLandingContent",
+          "brandSearchLandingContent",
+          "peopleEnrichmentLandingContent",
+          "newsLandingContent"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/landing-faq-list.tsx",
+        "sha256": "431ebcdfdbe4ebd1b2ec9eca013c695cb9b272b80437e3053fd244002f35a479",
+        "retained": false,
+        "exports": [
+          "LandingFaqList"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/product-demo-panel.tsx",
+        "sha256": "2d357ebf89b0f47df047705f6de1a60dd13a13da05c05da077a5dce7c3cf147c",
+        "retained": false,
+        "exports": [
+          "ProductDemoPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/story-stage.tsx",
+        "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
+        "retained": false,
+        "exports": [
+          "StoryStage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/product-landing.d.ts",
+      "content": "import * as React from \"react\";\nexport type ProductStoryCardItem = {\n    title: string;\n    description: React.ReactNode;\n    story?: React.ReactNode;\n};\n/** A capability or workflow card: the title at h4, a line of muted text, and the demo window filling the rest. */\ndeclare function ProductStoryCard({ title, description, story, className }: ProductStoryCardItem & {\n    className?: string;\n}): React.JSX.Element;\n/**\n * A section of story cards under a heading: three across for capabilities, two for workflows. `title` and `accent`\n * read as one sentence, the accent in brand blue.\n */\ndeclare function ProductStorySection({ title, accent, description, items, columns, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title: React.ReactNode;\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    items: ProductStoryCardItem[];\n    columns?: 2 | 3;\n}): React.JSX.Element;\n/** The install command as a hairline pill: a faint prompt and the command in mono. */\ndeclare function InstallChip({ command, className }: {\n    command: string;\n    className?: string;\n}): React.JSX.Element;\n/**\n * The code section: the heading, a line of muted text, the install command and the docs pill on the left; the code\n * sample (a CodeWindow) on the right. With `playgroundHref` a second outline pill opens the playground beside the docs\n * one (after it, or first with `playgroundFirst`, as the use case pages' API example sets them).\n */\ndeclare function ProductIntegration({ title, accent, description, install, docsHref, docsLabel, playgroundHref, playgroundLabel, playgroundFirst, code, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title: React.ReactNode;\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    /** The install command, shown as a pill (\"npm install context.dev\"). */\n    install?: string;\n    docsHref?: string;\n    docsLabel?: React.ReactNode;\n    /** The API playground for this request; adds a second outline pill. */\n    playgroundHref?: string;\n    playgroundLabel?: React.ReactNode;\n    /** Puts the playground pill before the docs pill. */\n    playgroundFirst?: boolean;\n    /** The code sample: a CodeWindow or CodeTabs. */\n    code: React.ReactNode;\n}): React.JSX.Element;\nexport type ProductFaqItem = {\n    question: string;\n    answer: React.ReactNode;\n};\n/**\n * The questions as one white card in the soft blue ring, hairlines between them, the first one open. Native details\n * share a `name`, so opening one closes the others with no script.\n */\ndeclare function ProductFaqList({ id, faqs, className }: {\n    id: string;\n    faqs: ProductFaqItem[];\n    className?: string;\n}): React.JSX.Element;\n/** The FAQ section: the heading and a docs line on the left, the ringed question card on the right. */\ndeclare function ProductFaq({ id, faqs, title, accent, description, docsHref, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\" | \"id\"> & {\n    id: string;\n    faqs: ProductFaqItem[];\n    title?: React.ReactNode;\n    accent?: React.ReactNode;\n    /** Under the heading. Defaults to a line pointing at `docsHref`. */\n    description?: React.ReactNode;\n    docsHref?: string;\n}): React.JSX.Element;\nexport type ProductLandingStep = {\n    title: React.ReactNode;\n    description: React.ReactNode;\n};\n/**\n * Three numbered steps from a first request to a working feature: the heading (no description) over the header rule,\n * then a ringed card per step with its number in blue mono. `children` (a pill, a note) sits under the cards.\n */\ndeclare function ProductLandingSteps({ steps, title, accent, className, children, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    steps: readonly ProductLandingStep[];\n    title?: React.ReactNode;\n    accent?: React.ReactNode;\n}): React.JSX.Element;\nexport type ProductRelatedItem = {\n    name: React.ReactNode;\n    href: string;\n    description: React.ReactNode;\n};\n/**\n * Links to the related products, two across: a ringed card each, the name with a still blue arrow and a line under it.\n * A card answers a hover with a pale blue wash and a blue ring; the arrow never moves.\n */\ndeclare function ProductRelatedCards({ products, label, className, ...props }: React.ComponentProps<\"section\"> & {\n    products: readonly ProductRelatedItem[];\n    label?: string;\n}): React.JSX.Element;\nexport { ProductStorySection, ProductStoryCard, ProductIntegration, InstallChip, ProductFaq, ProductFaqList, ProductLandingSteps, ProductRelatedCards };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/product-landing/Site"
+    },
+    {
+      "name": "Parse",
+      "url": "https://context-ds.vercel.app/preview/product-landing/Parse"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/product-landing.tsx",
+      "content": "import { CodeBlock, CodeWindow, WindowCopyButton } from \"@/components/site/code-window\";\nimport { ProductFaq, ProductIntegration, ProductLandingSteps, ProductRelatedCards, ProductStorySection } from \"@/components/site/product-landing\";\nimport { ActionsStory } from \"@/components/visuals/stories/actions-story\";\nimport { BatchStory } from \"@/components/visuals/stories/batch-story\";\nimport { FreshnessStory } from \"@/components/visuals/stories/freshness-story\";\nimport { OutputStory } from \"@/components/visuals/stories/output-story\";\nimport { RagStory } from \"@/components/visuals/stories/rag-story\";\n\nconst CODE = `import ContextDev from 'context.dev';\n\nconst client = new ContextDev({ apiKey: process.env.CONTEXT_DEV_API_KEY });\n\nconst page = await client.web.scrape({\n  url: 'https://linear.app',\n  formats: { markdown: true, screenshot: true },\n});`;\n\nexport function Site() {\n  return (\n    <div className=\"w-full\">\n      <ProductStorySection\n        title=\"Any page, any format.\"\n        accent=\"One request.\"\n        description=\"Choose the outputs your product needs and get them back together, from clean Markdown to a full-page screenshot.\"\n        items={[\n          { title: \"Every output format\", description: \"Markdown, HTML, links, images, JSON, and screenshots from the same request.\", story: <OutputStory className=\"w-full\" /> },\n          { title: \"Browser actions\", description: \"Click, scroll, or wait for a selector before the page is captured.\", story: <ActionsStory className=\"w-full\" /> },\n          { title: \"Fresh or cached\", description: \"Read the live page, or reuse a recent copy when speed matters more.\", story: <FreshnessStory className=\"w-full\" /> },\n        ]}\n      />\n      <ProductIntegration\n        title=\"Scrape your first page\"\n        accent=\"in a few lines.\"\n        description=\"Install the SDK, pass a URL and the formats you want, and get everything back in one response.\"\n        install=\"npm install context.dev\"\n        docsHref=\"https://docs.context.dev\"\n        code={\n          <CodeWindow label=\"TypeScript\" actions={<WindowCopyButton value={CODE} />}>\n            <div className=\"overflow-x-auto\">\n              <CodeBlock code={CODE} />\n            </div>\n          </CodeWindow>\n        }\n      />\n      <ProductStorySection\n        columns={2}\n        title=\"From a single page\"\n        accent=\"to your next feature.\"\n        description=\"Feed your knowledge pipeline, or collect pages across a much larger job with the same API key.\"\n        items={[\n          { title: \"Ground RAG in fresh content\", description: \"Crawl a sitemap, convert every page to clean Markdown, and send it straight into your embeddings.\", story: <RagStory className=\"w-full\" /> },\n          { title: \"Run batches at scale\", description: \"Scrape thousands of URLs in one job, then collect the results when the batch completes.\", story: <BatchStory className=\"w-full\" /> },\n        ]}\n      />\n      <ProductFaq\n        id=\"scrape\"\n        docsHref=\"https://docs.context.dev\"\n        faqs={[\n          { question: \"Does it render JavaScript?\", answer: \"Yes. Every request loads in a real browser, so single-page apps come back fully rendered.\" },\n          { question: \"What does a scrape cost?\", answer: \"One credit per page for the base formats. Screenshots and JSON extraction add a few credits.\" },\n          { question: \"Can I scrape PDFs?\", answer: \"Yes. Pass a PDF's URL and get its text back as Markdown.\" },\n        ]}\n      />\n    </div>\n  );\n}\n\nconst PARSE_CODE = `import { createReadStream } from 'node:fs';\nimport ContextDev from 'context.dev';\n\nconst client = new ContextDev({ apiKey: 'YOUR_API_KEY' });\n\nconst document = await client.parse.handle(\n  createReadStream('report.pdf'),\n  { extension: 'pdf', ocr: true },\n);\n\nconsole.log(document.markdown);\nconsole.log(document.type);`;\n\n// The Parse page's lower half (context.dev/parse): the code section with the playground pill, the numbered steps and\n// the related products. Its white hero is ProductHero.\nexport function Parse() {\n  return (\n    <div className=\"w-full\">\n      <ProductIntegration\n        title=\"A file goes in.\"\n        accent=\"Markdown comes out.\"\n        description=\"Send a file stream with an optional extension hint. Read the Markdown and detected file type from the response, then combine it with your web content.\"\n        install=\"npm install context.dev\"\n        docsHref=\"https://docs.context.dev\"\n        playgroundHref=\"https://context.dev/playground/parse\"\n        code={\n          <CodeWindow label=\"TypeScript\" actions={<WindowCopyButton value={PARSE_CODE} />}>\n            <div className=\"overflow-x-auto\">\n              <CodeBlock code={PARSE_CODE} />\n            </div>\n          </CodeWindow>\n        }\n      />\n      <ProductLandingSteps\n        steps={[\n          { title: \"Send the file\", description: \"Upload the file bytes with the SDK or a POST request. Add an extension hint when needed.\" },\n          { title: \"Choose what to read\", description: \"Limit PDF pages or enable OCR for scans. Keep the links and image references your application needs.\" },\n          { title: \"Use the content\", description: \"Chunk and index the Markdown for retrieval, or give it directly to an agent as document context.\" },\n        ]}\n      />\n      <ProductRelatedCards\n        products={[\n          { name: \"Scrape anything\", href: \"https://context.dev/web-scraping-api\", description: \"Markdown, HTML, images, screenshots, and structured fields.\" },\n          { name: \"Run batches\", href: \"https://context.dev/batches-api\", description: \"Scrape thousands of URLs or crawl entire websites.\" },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "code-window",
+    "story-actions",
+    "story-batch",
+    "story-freshness",
+    "story-output",
+    "story-rag"
+  ],
+  "examplePackages": [
+    "context.dev",
+    "node:fs"
+  ],
+  "requires": [
+    "theme",
+    "button",
+    "product-grid",
+    "section",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/product-landing.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowRight, Minus, Plus } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { ProductMedia } from \"@/components/site/product-grid\";\nimport { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { cn } from \"@/lib/utils\";\n\n// A product's landing page on the home page's design (Scrape, Map, Batches, Monitors, Answers, Brand, Style guide, and,\n// under the white ProductHero, Parse, Brand search, People enrichment, News and the ChatGPT page): the hero, the logo\n// strip, then these sections in the ruled column. Each opens with the site's section heading over a header rule, and\n// every card is white in the soft blue ring, a capability or workflow card with a demo window at its foot. Numbered\n// steps and related product cards can close the page before the site's ClosingCta.\n\nexport type ProductStoryCardItem = { title: string; description: React.ReactNode; story?: React.ReactNode };\n\n/** A capability or workflow card: the title at h4, a line of muted text, and the demo window filling the rest. */\nfunction ProductStoryCard({ title, description, story, className }: ProductStoryCardItem & { className?: string }) {\n  return (\n    <li data-slot=\"product-story-card\" className={cn(\"-m-2 flex rounded-card bg-ring-tint p-2\", className)}>\n      <div className=\"flex h-full min-w-0 flex-1 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\">\n        <div className=\"flex flex-col gap-3\">\n          <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{title}</h3>\n          <p className=\"text-body-md leading-normal text-fg-secondary\">{description}</p>\n        </div>\n        <ProductMedia className=\"[&>div]:px-4 [&>div]:py-8 sm:[&>div]:px-9\">{story}</ProductMedia>\n      </div>\n    </li>\n  );\n}\n\n/**\n * A section of story cards under a heading: three across for capabilities, two for workflows. `title` and `accent`\n * read as one sentence, the accent in brand blue.\n */\nfunction ProductStorySection({\n  title,\n  accent,\n  description,\n  items,\n  columns = 3,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode;\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  items: ProductStoryCardItem[];\n  columns?: 2 | 3;\n}) {\n  return (\n    <SiteSection lines className={className} {...props}>\n      <SectionHeading title={title} accent={accent} description={description} />\n      <SectionHeaderRule />\n      <ul className={cn(\"grid grid-cols-1 gap-6\", columns === 3 ? \"lg:grid-cols-3\" : \"md:grid-cols-2\")}>\n        {items.map((item) => (\n          <ProductStoryCard key={item.title} {...item} />\n        ))}\n      </ul>\n    </SiteSection>\n  );\n}\n\n/** The install command as a hairline pill: a faint prompt and the command in mono. */\nfunction InstallChip({ command, className }: { command: string; className?: string }) {\n  return (\n    <div data-slot=\"install-chip\" className={cn(\"flex items-center gap-2 rounded-pill px-4 py-2 font-mono text-body-sm leading-5 text-fg-nav ring-1 ring-line-strong ring-inset\", className)}>\n      <span aria-hidden=\"true\" className=\"text-fg-faint\">\n        $\n      </span>\n      <code>{command}</code>\n    </div>\n  );\n}\n\n/**\n * The code section: the heading, a line of muted text, the install command and the docs pill on the left; the code\n * sample (a CodeWindow) on the right. With `playgroundHref` a second outline pill opens the playground beside the docs\n * one (after it, or first with `playgroundFirst`, as the use case pages' API example sets them).\n */\nfunction ProductIntegration({\n  title,\n  accent,\n  description,\n  install,\n  docsHref,\n  docsLabel = \"Read the API reference\",\n  playgroundHref,\n  playgroundLabel = \"Try in the playground\",\n  playgroundFirst = false,\n  code,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode;\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  /** The install command, shown as a pill (\"npm install context.dev\"). */\n  install?: string;\n  docsHref?: string;\n  docsLabel?: React.ReactNode;\n  /** The API playground for this request; adds a second outline pill. */\n  playgroundHref?: string;\n  playgroundLabel?: React.ReactNode;\n  /** Puts the playground pill before the docs pill. */\n  playgroundFirst?: boolean;\n  /** The code sample: a CodeWindow or CodeTabs. */\n  code: React.ReactNode;\n}) {\n  const docs = docsHref && (\n    <Button key=\"docs\" asChild variant=\"pill-outline\">\n      <a href={docsHref} target=\"_blank\" rel=\"noopener noreferrer\">\n        {docsLabel}\n      </a>\n    </Button>\n  );\n  const playground = playgroundHref && (\n    <Button key=\"playground\" asChild variant=\"pill-outline\">\n      <a href={playgroundHref}>{playgroundLabel}</a>\n    </Button>\n  );\n  return (\n    <SiteSection lines className={cn(\"pt-16 md:pt-20\", className)} {...props}>\n      <div className=\"grid items-center gap-10 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-16\">\n        <SectionHeading title={title} accent={accent} description={description} className=\"min-w-0 gap-6\">\n          {install && <InstallChip command={install} />}\n          {playground ? <div className=\"flex flex-wrap gap-3\">{playgroundFirst ? [playground, docs] : [docs, playground]}</div> : docs}\n        </SectionHeading>\n        <div className=\"min-w-0\">{code}</div>\n      </div>\n    </SiteSection>\n  );\n}\n\nexport type ProductFaqItem = { question: string; answer: React.ReactNode };\n\n/**\n * The questions as one white card in the soft blue ring, hairlines between them, the first one open. Native details\n * share a `name`, so opening one closes the others with no script.\n */\nfunction ProductFaqList({ id, faqs, className }: { id: string; faqs: ProductFaqItem[]; className?: string }) {\n  return (\n    <div data-slot=\"product-faq-list\" className={cn(\"-m-2 min-w-0 rounded-card bg-ring-tint p-2\", className)}>\n      <div className=\"rounded-card bg-surface px-6 ring-1 ring-hairline md:px-8\">\n        {faqs.map((faq, index) => (\n          <details key={faq.question} name={`${id}-questions`} open={index === 0} className=\"group border-t border-hairline py-5 first:border-0 md:py-6\">\n            <summary className=\"flex cursor-pointer list-none items-center justify-between gap-5 rounded-sm text-body-lg leading-snug text-fg outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden\">\n              {faq.question}\n              <Plus aria-hidden=\"true\" className=\"size-4 shrink-0 text-fg-brand group-open:hidden\" />\n              <Minus aria-hidden=\"true\" className=\"size-4 shrink-0 text-fg-brand group-not-open:hidden\" />\n            </summary>\n            <div className=\"mt-3 text-body leading-relaxed text-fg-secondary\">{faq.answer}</div>\n          </details>\n        ))}\n      </div>\n    </div>\n  );\n}\n\n/** The FAQ section: the heading and a docs line on the left, the ringed question card on the right. */\nfunction ProductFaq({\n  id,\n  faqs,\n  title = \"A few things\",\n  accent = \"to know.\",\n  description,\n  docsHref,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\" | \"id\"> & {\n  id: string;\n  faqs: ProductFaqItem[];\n  title?: React.ReactNode;\n  accent?: React.ReactNode;\n  /** Under the heading. Defaults to a line pointing at `docsHref`. */\n  description?: React.ReactNode;\n  docsHref?: string;\n}) {\n  const line =\n    description ??\n    (docsHref ? (\n      <>\n        More details in the{\" \"}\n        <a href={docsHref} target=\"_blank\" rel=\"noopener noreferrer\" className=\"rounded-sm text-fg-brand underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring\">\n          API documentation\n        </a>\n        .\n      </>\n    ) : undefined);\n  return (\n    <SiteSection lines className={cn(\"pt-16 md:pt-20\", className)} {...props}>\n      <div className=\"grid gap-10 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16\">\n        <SectionHeading title={title} accent={accent} description={line} className=\"gap-6\" />\n        <ProductFaqList id={id} faqs={faqs} />\n      </div>\n    </SiteSection>\n  );\n}\n\nconst CARD_RING = \"-m-2 rounded-card bg-ring-tint p-2\";\nconst CARD = \"flex h-full min-w-0 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\";\n\nexport type ProductLandingStep = { title: React.ReactNode; description: React.ReactNode };\n\n/**\n * Three numbered steps from a first request to a working feature: the heading (no description) over the header rule,\n * then a ringed card per step with its number in blue mono. `children` (a pill, a note) sits under the cards.\n */\nfunction ProductLandingSteps({\n  steps,\n  title = \"From your first request\",\n  accent = \"to a working feature.\",\n  className,\n  children,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & { steps: readonly ProductLandingStep[]; title?: React.ReactNode; accent?: React.ReactNode }) {\n  return (\n    <SiteSection lines className={className} {...props}>\n      <SectionHeading title={title} accent={accent} />\n      <SectionHeaderRule />\n      <ol className=\"grid grid-cols-1 gap-6 md:grid-cols-3\">\n        {steps.map((step, index) => (\n          <li key={index} className={CARD_RING}>\n            <div className={CARD}>\n              <span aria-hidden=\"true\" className=\"font-mono text-body-sm text-fg-brand\">\n                {String(index + 1).padStart(2, \"0\")}\n              </span>\n              <div className=\"flex flex-col gap-3\">\n                <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{step.title}</h3>\n                <p className=\"text-body-md leading-normal text-fg-secondary\">{step.description}</p>\n              </div>\n            </div>\n          </li>\n        ))}\n      </ol>\n      {children && <div className=\"mt-10 flex\">{children}</div>}\n    </SiteSection>\n  );\n}\n\nexport type ProductRelatedItem = { name: React.ReactNode; href: string; description: React.ReactNode };\n\n/**\n * Links to the related products, two across: a ringed card each, the name with a still blue arrow and a line under it.\n * A card answers a hover with a pale blue wash and a blue ring; the arrow never moves.\n */\nfunction ProductRelatedCards({ products, label = \"Related products\", className, ...props }: React.ComponentProps<\"section\"> & { products: readonly ProductRelatedItem[]; label?: string }) {\n  return (\n    <SiteSection lines className={cn(\"pt-16 md:pt-20\", className)} {...props}>\n      <nav aria-label={label}>\n        <ul className=\"grid grid-cols-1 gap-6 md:grid-cols-2\">\n          {products.map((product) => (\n            <li key={product.href} className={CARD_RING}>\n              <a\n                href={product.href}\n                className=\"flex h-full flex-col gap-3 rounded-card bg-surface p-6 ring-1 ring-hairline outline-none transition-[background-color,box-shadow] duration-200 ease-out hover:bg-blue-10 hover:ring-brand/30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none md:p-8\"\n              >\n                <span className=\"flex items-center justify-between gap-4 text-h4 leading-snug text-fg\">\n                  {product.name}\n                  <ArrowRight aria-hidden=\"true\" className=\"size-4 shrink-0 text-fg-brand\" />\n                </span>\n                <span className=\"text-body-md leading-normal text-fg-secondary\">{product.description}</span>\n              </a>\n            </li>\n          ))}\n        </ul>\n      </nav>\n    </SiteSection>\n  );\n}\n\nexport { ProductStorySection, ProductStoryCard, ProductIntegration, InstallChip, ProductFaq, ProductFaqList, ProductLandingSteps, ProductRelatedCards };\n"
+    }
+  ]
+}

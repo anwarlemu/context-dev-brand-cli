@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-components",
+  "type": "visual",
+  "title": "Components story",
+  "description": "Dot animation of component shapes and theme changes.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Component styles and themes on a site card. Plays only on screen; shows the card with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-components.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-components --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/components-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/components-story.tsx",
+        "sha256": "dc2b095992b8e206b110b6340f08670e93deedabee7202323b36c9f74a4742b1",
+        "retained": false,
+        "exports": [
+          "ComponentsStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/components-story.d.ts",
+      "content": "/**\n * The \"Component details\" card's picture: a button rounds to the site's radius and becomes a card, then the sun\n * and moon of its light and dark themes. With reduced motion it shows the card.\n */\nexport declare function ComponentsStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/components-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createComponentsStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/components-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/**\n * The \"Component details\" card's pictures, in the brand dot grid: a button whose corners round to the site's\n * radius, a card built the way the site builds them, and the theme the site is in, a sun for light and a moon for dark.\n */\nexport declare const COMPONENTS_STORY_GRID: DotGrid;\n/** The button's corner, in dots, at the site's radius: between square and a full pill. */\nexport declare const SITE_RADIUS = 3;\n/** The button with its corners rounded to `radius` dots; its label is cut out of it in rings. */\nexport declare function paintButton(states: Uint8Array, radius: number): Uint8Array<ArrayBufferLike>;\nexport declare const BUTTON_SQUARE: StoryPicture;\nexport declare const BUTTON_ROUNDED: StoryPicture;\nexport declare const CARD_PICTURE: StoryPicture;\n/** How far the sun's rays turn before it looks the same again: from one ray to the next. */\nexport declare const SUN_TURN: number;\n/** The light theme's sun, its rays turned `turned` radians. */\nexport declare function paintSun(states: Uint8Array, turned: number): Uint8Array<ArrayBufferLike>;\nexport declare const SUN_AT_REST: StoryPicture;\n/** The dark theme's crescent moon, with its first `stars` stars out: each a small cross. */\nexport declare function paintMoon(states: Uint8Array, stars: number): Uint8Array<ArrayBufferLike>;\nexport declare const STAR_COUNT: number;\nexport declare const MOON_AT_REST: StoryPicture;\nexport declare const MOON_WITH_STARS: StoryPicture;\nexport declare const SITE_RADIUS_PX = 8;\nexport declare const CAPTIONS: {\n    button: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    card: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    light: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    dark: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n};\n/** The card: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const COMPONENTS_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-components/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-components.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { ComponentsStory } from \"@/components/visuals/stories/components-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <ComponentsStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/components-story.tsx",
+      "content": "'use client';\n\nimport { COMPONENTS_RESTING, COMPONENTS_STORY_GRID } from '@/components/visuals/stories/components-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadComponentsStory: LoadDotStory = async (stage) => {\n\tconst { createComponentsStoryPlayer } = await import('@/components/visuals/stories/components-story-player');\n\treturn createComponentsStoryPlayer(stage);\n};\n\n/**\n * The \"Component details\" card's picture: a button rounds to the site's radius and becomes a card, then the sun\n * and moon of its light and dark themes. With reduced motion it shows the card.\n */\nexport function ComponentsStory({ className }: { className?: string }) {\n\treturn <DotStory grid={COMPONENTS_STORY_GRID} resting={COMPONENTS_RESTING} load={loadComponentsStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/components-story-player.ts",
+      "content": "import { BUTTON_ROUNDED, BUTTON_SQUARE, CAPTIONS, CARD_PICTURE, COMPONENTS_STORY_GRID, MOON_AT_REST, MOON_WITH_STARS, SITE_RADIUS, SITE_RADIUS_PX, STAR_COUNT, SUN_AT_REST, SUN_TURN, paintButton, paintMoon, paintSun } from '@/components/visuals/stories/components-story-scenes';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01, easeOut } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One site's components, played as a loop: a square button's corners round to the site's radius as it is read, and\n * it melts into a card; the card melts into the sun of the light theme, its rays turning, and the sun into the\n * crescent of the dark one, its stars coming out.\n */\n\nconst ROUNDING = { startsAt: 0.5, seconds: 0.9 };\n// The rays are back where they started as the sun melts away.\nconst SUN = { seconds: 3, turns: 2 };\nconst STARS = { startsAt: 0.6, everySeconds: 0.5 };\n\nconst roundedAt = (heldSeconds: number) => easeOut(clamp01((heldSeconds - ROUNDING.startsAt) / ROUNDING.seconds));\n\nexport function createComponentsStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst [radiusLabel, radius, radiusDetail] = CAPTIONS.button;\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: COMPONENTS_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: 1.5 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\t...captionedBeat({ picture: BUTTON_SQUARE, departure: BUTTON_ROUNDED, caption: CAPTIONS.button, holdSeconds: ROUNDING.startsAt + ROUNDING.seconds + 1.4, animate: (states, heldSeconds) => void paintButton(states, roundedAt(heldSeconds) * SITE_RADIUS) }),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(radiusLabel);\n\t\t\t\t\tpen.text({ ...radius, text: `${Math.round(roundedAt(heldSeconds) * SITE_RADIUS_PX)}px` });\n\t\t\t\t\tpen.text(radiusDetail, clamp01((heldSeconds - ROUNDING.startsAt - ROUNDING.seconds) / 0.3));\n\t\t\t\t},\n\t\t\t},\n\t\t\tcaptionedBeat({ picture: CARD_PICTURE, caption: CAPTIONS.card, holdSeconds: 2.4, isTyped: true }),\n\t\t\tcaptionedBeat({ picture: SUN_AT_REST, caption: CAPTIONS.light, holdSeconds: SUN.seconds, isTyped: true, animate: (states, heldSeconds) => void paintSun(states, (heldSeconds / SUN.seconds) * SUN.turns * SUN_TURN) }),\n\t\t\tcaptionedBeat({\n\t\t\t\tpicture: MOON_AT_REST,\n\t\t\t\tdeparture: MOON_WITH_STARS,\n\t\t\t\tcaption: CAPTIONS.dark,\n\t\t\t\tholdSeconds: 2.8,\n\t\t\t\tisTyped: true,\n\t\t\t\tanimate: (states, heldSeconds) => void paintMoon(states, heldSeconds < STARS.startsAt ? 0 : Math.min(STAR_COUNT, Math.floor((heldSeconds - STARS.startsAt) / STARS.everySeconds) + 1)),\n\t\t\t}),\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/components-story-scenes.ts",
+      "content": "import { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, isFilledAmongSolids, paintShape, roundedBox, solidWithSpeckle, type DotBox, type DotShape } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/**\n * The \"Component details\" card's pictures, in the brand dot grid: a button whose corners round to the site's\n * radius, a card built the way the site builds them, and the theme the site is in, a sun for light and a moon for dark.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const COMPONENTS_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS } = COMPONENTS_STORY_GRID;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(COMPONENTS_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\nconst CENTER = { column: 16, row: 19 };\n\nconst BUTTON: DotBox = { left: 3, right: 29, top: 13, bottom: 24 };\nconst BUTTON_LABEL = { rows: [18, 19], left: 10, right: 22 };\n/** The button's corner, in dots, at the site's radius: between square and a full pill. */\nexport const SITE_RADIUS = 3;\n\n/** The button with its corners rounded to `radius` dots; its label is cut out of it in rings. */\nexport function paintButton(states: Uint8Array, radius: number) {\n\tstates.fill(DOT_ABSENT);\n\treturn paintShape(COMPONENTS_STORY_GRID, states, roundedBox(BUTTON, radius), (column, row) => (BUTTON_LABEL.rows.includes(row) && between(column, BUTTON_LABEL.left, BUTTON_LABEL.right) ? DOT_HOLLOW : DOT_FILLED));\n}\n\nexport const BUTTON_SQUARE = pictureOfStates(paintButton(blank(), 0));\nexport const BUTTON_ROUNDED = pictureOfStates(paintButton(blank(), SITE_RADIUS));\n\nconst CARD: DotBox = { left: 5, right: 27, top: 4, bottom: 33 };\nconst CARD_PARTS = { radius: 3, media: { top: 6, bottom: 16 }, inset: 3, title: { rows: [19, 20], right: 19 }, lines: [{ row: 23, right: 23 }, { row: 25, right: 20 }], action: { top: 28, bottom: 30, right: 15 } };\n\n// A card as the site builds them: a picture, a title, two lines of copy and an action.\nexport const CARD_PICTURE = pictureOfStates(\n\tpaintShape(COMPONENTS_STORY_GRID, blank(), roundedBox(CARD, CARD_PARTS.radius), (column, row) => {\n\t\tconst isInset = between(column, CARD.left + CARD_PARTS.inset, CARD.right - CARD_PARTS.inset);\n\t\tif (!isInset) return DOT_ABSENT;\n\t\tif (between(row, CARD_PARTS.media.top, CARD_PARTS.media.bottom)) return solidWithSpeckle(column, row);\n\t\tif (CARD_PARTS.title.rows.includes(row)) return column <= CARD_PARTS.title.right ? DOT_FILLED : DOT_ABSENT;\n\t\tif (CARD_PARTS.lines.some((line) => line.row === row && column <= line.right)) return DOT_HOLLOW;\n\t\treturn between(row, CARD_PARTS.action.top, CARD_PARTS.action.bottom) && column <= CARD_PARTS.action.right ? DOT_FILLED : DOT_ABSENT;\n\t})\n);\n\nconst SUN = { radius: 6.2, rays: 8, rayFrom: 8.6, rayTo: 12.4, rayWidth: 0.8 };\nconst isSunDisc: DotShape = (column, row) => Math.hypot(column - CENTER.column, row - CENTER.row) <= SUN.radius;\nconst isRay = (column: number, row: number, turned: number) =>\n\tArray.from({ length: SUN.rays }, (_, ray) => turned + (ray / SUN.rays) * Math.PI * 2).some(\n\t\t(angle) =>\n\t\t\tdistanceToSegment(column, row, { column: CENTER.column + SUN.rayFrom * Math.cos(angle), row: CENTER.row + SUN.rayFrom * Math.sin(angle) }, { column: CENTER.column + SUN.rayTo * Math.cos(angle), row: CENTER.row + SUN.rayTo * Math.sin(angle) }) < SUN.rayWidth\n\t);\n/** How far the sun's rays turn before it looks the same again: from one ray to the next. */\nexport const SUN_TURN = (Math.PI * 2) / SUN.rays;\n\n/** The light theme's sun, its rays turned `turned` radians. */\nexport function paintSun(states: Uint8Array, turned: number) {\n\tfor (let row = 0; row < ROWS; row++) {\n\t\tfor (let column = 0; column < COLUMNS / 2 + 2; column++) states[row * COLUMNS + column] = isRay(column, row, turned) ? DOT_FILLED : DOT_ABSENT;\n\t}\n\treturn paintShape(COMPONENTS_STORY_GRID, states, isSunDisc, (column, row) => (isFilledAmongSolids(column, row) ? DOT_FILLED : DOT_HOLLOW));\n}\n\nexport const SUN_AT_REST = pictureOfStates(paintSun(blank(), 0));\n\nconst MOON = { radius: 11.5, bite: { across: 6, up: 4.5, radius: 10 }, stars: [{ column: 25, row: 9 }, { column: 28, row: 17 }] };\nconst isMoon: DotShape = (column, row) =>\n\tMath.hypot(column - CENTER.column + 2, row - CENTER.row) <= MOON.radius && Math.hypot(column - CENTER.column + 2 - MOON.bite.across, row - CENTER.row + MOON.bite.up) > MOON.bite.radius;\n\n/** The dark theme's crescent moon, with its first `stars` stars out: each a small cross. */\nexport function paintMoon(states: Uint8Array, stars: number) {\n\tstates.fill(DOT_ABSENT);\n\tMOON.stars.slice(0, stars).forEach(({ column, row }) => {\n\t\tfor (const [across, down] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) states[(row + down) * COLUMNS + column + across] = DOT_FILLED;\n\t});\n\treturn paintShape(COMPONENTS_STORY_GRID, states, isMoon, solidWithSpeckle);\n}\n\nexport const STAR_COUNT = MOON.stars.length;\nexport const MOON_AT_REST = pictureOfStates(paintMoon(blank(), 0));\nexport const MOON_WITH_STARS = pictureOfStates(paintMoon(blank(), STAR_COUNT));\n\nconst caption = (label: string, value: string, detail: string) => storyCaption(COMPONENTS_STORY_GRID, 35, label, value, detail);\nexport const SITE_RADIUS_PX = 8;\nexport const CAPTIONS = {\n\tbutton: caption('button radius', `${SITE_RADIUS_PX}px`, 'padding 8px 16px'),\n\tcard: caption('component', 'card', 'radius, border, shadow'),\n\tlight: caption('theme', 'light', 'as the site renders it'),\n\tdark: caption('theme', 'dark', 'fonts linked, too'),\n};\n/** The card: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const COMPONENTS_RESTING = { ...CARD_PICTURE, texts: CAPTIONS.card };\n"
+    }
+  ]
+}

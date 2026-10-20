@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "collapse",
+  "type": "ui",
+  "title": "Collapse",
+  "description": "Expandable content with height and opacity transitions.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Advanced settings, optional fields and details shown on demand.",
+  "avoid": [
+    "Hiding content people need to finish a task"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/collapse.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add collapse --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/dashboard-ui/collapse.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/dashboard-ui/collapse.tsx",
+        "sha256": "1a4ba7e37cefb4bea4421844c4aab8d4309fd84420dcc8a19df58291ecc12559",
+        "retained": false,
+        "exports": [
+          "Collapse"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/collapse.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * Grows from nothing to its content's height and back (300ms ease-out on the grid's rows, with a fade), so whatever\n * sits below glides rather than jumps. Stays mounted while closed (inert, so nothing inside takes focus), and clips only\n * until it has fully opened, so menus inside can still spill out of it. Reduced motion opens and closes at once.\n */\ndeclare function Collapse({ open, id, className, children }: {\n    open: boolean;\n    id?: string;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { Collapse };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/collapse/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/collapse.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Collapse } from \"@/components/ui/collapse\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nexport function Product() {\n  const [open, setOpen] = useState(true);\n  return (\n    <div className=\"flex w-full max-w-sm flex-col gap-3\">\n      <Button variant=\"ghost\" size=\"sm\" className=\"self-start\" aria-expanded={open} aria-controls=\"advanced\" onClick={() => setOpen((o) => !o)}>\n        {open ? \"Hide advanced settings\" : \"Show advanced settings\"}\n      </Button>\n      <Collapse open={open} id=\"advanced\" className=\"flex flex-col gap-4 pt-1\">\n        <Field label=\"Timeout\" htmlFor=\"timeout\" help=\"Seconds before a request gives up.\">\n          <Input id=\"timeout\" defaultValue=\"30\" />\n        </Field>\n      </Collapse>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "field",
+    "input"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/collapse.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n/**\n * Grows from nothing to its content's height and back (300ms ease-out on the grid's rows, with a fade), so whatever\n * sits below glides rather than jumps. Stays mounted while closed (inert, so nothing inside takes focus), and clips only\n * until it has fully opened, so menus inside can still spill out of it. Reduced motion opens and closes at once.\n */\nfunction Collapse({ open, id, className, children }: { open: boolean; id?: string; className?: string; children: React.ReactNode }) {\n  const [isFullyOpen, setFullyOpen] = React.useState(open);\n  if (!open && isFullyOpen) setFullyOpen(false);\n\n  const handleTransitionEnd = (event: React.TransitionEvent<HTMLDivElement>) => {\n    if (open && event.target === event.currentTarget && event.propertyName === \"grid-template-rows\") setFullyOpen(true);\n  };\n\n  return (\n    <div\n      id={id}\n      data-slot=\"collapse\"\n      data-state={open ? \"open\" : \"closed\"}\n      inert={!open}\n      onTransitionEnd={handleTransitionEnd}\n      className={cn(\"grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none\", open ? \"grid-rows-[1fr] opacity-100\" : \"grid-rows-[0fr] opacity-0\")}\n    >\n      <div className={cn(\"min-h-0\", !isFullyOpen && \"overflow-hidden\", open && \"motion-reduce:overflow-visible\")}>\n        <div className={className}>{children}</div>\n      </div>\n    </div>\n  );\n}\n\nexport { Collapse };\n"
+    }
+  ]
+}

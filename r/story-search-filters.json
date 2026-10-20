@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "story-search-filters",
+  "type": "visual",
+  "title": "Search filters story",
+  "description": "Dot animation of a freshness calendar and domain and country filters.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Search filters on a search product card (third of the Search page capabilities). Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "The last week of a calendar fills in while `last_week` is typed under it, then the filters beside it arrive in turn: the domains to include, one to exclude (crossed out), and a country.",
+  "documentation": "https://context-ds.vercel.app/components/story-search-filters.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-search-filters --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/search-filters-story.tsx; src/components/sections/products/search-filters-story-player.ts; src/components/sections/products/search-filters-story-scenes.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/search-filters-story.tsx",
+        "sha256": "50a1e68d07f905435ad145714b1625da4abd53e0d441ffe199bacbd7cc3754ed",
+        "retained": false,
+        "exports": [
+          "SearchFiltersStory"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/search-filters-story-player.ts",
+        "sha256": "420e523a1425a851df7319ab00878a9cf080b5adeed07fdaffddba4daf9ef360",
+        "retained": false,
+        "exports": [
+          "createSearchFiltersStoryPlayer"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/search-filters-story-scenes.ts",
+        "sha256": "c9e5cf36c0f39e0452612c71f9c776a0fe7a37126394495fa5e2651201ed88af",
+        "retained": false,
+        "exports": [
+          "SEARCH_FILTERS_STORY_GRID",
+          "DAY_COLUMNS",
+          "LAST_WEEK_ROW",
+          "FILTER_GROUPS",
+          "CALENDAR_ONLY",
+          "LAST_WEEK_PICKED",
+          "FILTERED",
+          "FRESHNESS_LABEL",
+          "FRESHNESS_VALUE",
+          "FILTER_TEXTS",
+          "SEARCH_FILTERS_RESTING"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/search-filters-story.d.ts",
+      "content": "export declare function SearchFiltersStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/search-filters-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createSearchFiltersStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/search-filters-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare const SEARCH_FILTERS_STORY_GRID: DotGrid;\nexport declare const DAY_COLUMNS: number[];\nexport declare const LAST_WEEK_ROW: number;\nexport declare const FILTER_GROUPS: {\n    labelRow: number;\n    top: number;\n    bottom: number;\n}[];\nexport declare const CALENDAR_ONLY: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const LAST_WEEK_PICKED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const FILTERED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const FRESHNESS_LABEL: DotStoryText;\nexport declare const FRESHNESS_VALUE: DotStoryText;\nexport declare const FILTER_TEXTS: DotStoryText[][];\nexport declare const SEARCH_FILTERS_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-search-filters/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-search-filters.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { SearchFiltersStory } from \"@/components/visuals/stories/search-filters-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <SearchFiltersStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/search-filters-story.tsx",
+      "content": "'use client';\n\nimport { SEARCH_FILTERS_RESTING, SEARCH_FILTERS_STORY_GRID } from '@/components/visuals/stories/search-filters-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadSearchFiltersStory: LoadDotStory = async (stage) => {\n\tconst { createSearchFiltersStoryPlayer } = await import('@/components/visuals/stories/search-filters-story-player');\n\treturn createSearchFiltersStoryPlayer(stage);\n};\n\nexport function SearchFiltersStory({ className }: { className?: string }) {\n\treturn <DotStory grid={SEARCH_FILTERS_STORY_GRID} resting={SEARCH_FILTERS_RESTING} load={loadSearchFiltersStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/search-filters-story-player.ts",
+      "content": "import { CALENDAR_ONLY, DAY_COLUMNS, FILTERED, FILTER_GROUPS, FILTER_TEXTS, FRESHNESS_LABEL, FRESHNESS_VALUE, LAST_WEEK_PICKED, LAST_WEEK_ROW, SEARCH_FILTERS_STORY_GRID } from '@/components/visuals/stories/search-filters-story-scenes';\nimport { NEVER, fadedInAt, paintRevealed, revealSchedule } from '@/components/visuals/stories/story-reveal';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\nconst CLEAR_SECONDS = 0.8;\nconst TYPING = { startsAt: 0.4, charactersPerSecond: 14 };\nconst PICK = { startsAt: 0.5, everyDaySeconds: 0.12 };\nconst FILTERS = { startsAt: PICK.startsAt + DAY_COLUMNS.length * PICK.everyDaySeconds + 0.5, everyGroupSeconds: 0.5, textDelay: 0.1 };\nconst HOLD_SECONDS = FILTERS.startsAt + FILTER_GROUPS.length * FILTERS.everyGroupSeconds + 2.4;\n\nconst { columns } = SEARCH_FILTERS_STORY_GRID;\nconst groupStartsAt = (index: number) => FILTERS.startsAt + index * FILTERS.everyGroupSeconds;\n\nconst PICKED_AT = revealSchedule(SEARCH_FILTERS_STORY_GRID, (column, row) => {\n\tconst day = DAY_COLUMNS.indexOf(column);\n\treturn row === LAST_WEEK_ROW && day >= 0 ? PICK.startsAt + day * PICK.everyDaySeconds : NEVER;\n});\n\nconst FILTERED_AT = revealSchedule(SEARCH_FILTERS_STORY_GRID, (_, row) => {\n\tconst group = FILTER_GROUPS.findIndex(({ top, bottom }) => row >= top && row <= bottom);\n\treturn group < 0 ? NEVER : groupStartsAt(group);\n});\n\nexport function createSearchFiltersStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: SEARCH_FILTERS_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: HOLD_SECONDS },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: CALENDAR_ONLY,\n\t\t\t\tdeparture: FILTERED,\n\t\t\t\tarrival: { kind: 'builds', seconds: CLEAR_SECONDS, order: (column) => 1 - column / columns },\n\t\t\t\tholdSeconds: HOLD_SECONDS,\n\t\t\t\tanimate(states, heldSeconds) {\n\t\t\t\t\tpaintRevealed(states, LAST_WEEK_PICKED.states, PICKED_AT, heldSeconds);\n\t\t\t\t\tpaintRevealed(states, FILTERED.states, FILTERED_AT, heldSeconds);\n\t\t\t\t},\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(FRESHNESS_LABEL);\n\t\t\t\t\tpen.type(FRESHNESS_VALUE, heldSeconds, TYPING);\n\t\t\t\t\tFILTER_TEXTS.forEach((texts, index) => texts.forEach((text) => pen.text(text, fadedInAt(heldSeconds, groupStartsAt(index) + FILTERS.textDelay))));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/search-filters-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clear, isInDotBox, rectangle, solid, stack, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\nexport const SEARCH_FILTERS_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { pitch: PITCH } = SEARCH_FILTERS_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\n\nconst CALENDAR: DotBox = { left: 3, right: 25, top: 6, bottom: 30 };\nconst HEADER_ROWS = 3;\nconst POSTS: DotBox[] = [\n\t{ left: 8, right: 9, top: 4, bottom: 5 },\n\t{ left: 19, right: 20, top: 4, bottom: 5 },\n];\nexport const DAY_COLUMNS = [5, 8, 11, 14, 17, 20, 23];\nconst DAY_ROWS = [12, 15, 18, 21, 24, 27];\nexport const LAST_WEEK_ROW = DAY_ROWS[DAY_ROWS.length - 1];\n\nconst BULLET_COLUMNS = { left: 30, right: 31 };\nexport const FILTER_GROUPS = [\n\t{ labelRow: 6, top: 9, bottom: 14 },\n\t{ labelRow: 19, top: 21, bottom: 24 },\n\t{ labelRow: 28, top: 31, bottom: 32 },\n];\nconst INCLUDED_ROWS = [9, 13];\nconst COUNTRY_ROW = 31;\nconst EXCLUDE_MARK = { left: 29, top: 21, size: 4 };\n\nfunction calendar(isLastWeekPicked: boolean): DotPainter {\n\tconst header = rectangle({ ...CALENDAR, bottom: CALENDAR.top + HEADER_ROWS - 1 }, solid);\n\tconst posts: DotPainter = (column, row) => (POSTS.some((post) => isInDotBox(post, column, row)) ? DOT_FILLED : DOT_ABSENT);\n\tconst days: DotPainter = (column, row) => {\n\t\tif (!DAY_COLUMNS.includes(column) || !DAY_ROWS.includes(row)) return DOT_ABSENT;\n\t\treturn isLastWeekPicked && row === LAST_WEEK_ROW ? DOT_FILLED : DOT_HOLLOW;\n\t};\n\treturn stack(header, posts, days, rectangle(CALENDAR, clear));\n}\n\nconst isBullet = (column: number, row: number, top: number) => column >= BULLET_COLUMNS.left && column <= BULLET_COLUMNS.right && (row === top || row === top + 1);\n\nconst domainFilters: DotPainter = (column, row) => {\n\tif (INCLUDED_ROWS.some((top) => isBullet(column, row, top)) || isBullet(column, row, COUNTRY_ROW)) return DOT_FILLED;\n\tconst across = column - EXCLUDE_MARK.left;\n\tconst down = row - EXCLUDE_MARK.top;\n\tconst isOnMark = across >= 0 && across < EXCLUDE_MARK.size && down >= 0 && down < EXCLUDE_MARK.size && (across === down || across === EXCLUDE_MARK.size - 1 - down);\n\treturn isOnMark ? DOT_FILLED : DOT_ABSENT;\n};\n\nexport const CALENDAR_ONLY = pictureOf(SEARCH_FILTERS_STORY_GRID, calendar(false));\nexport const LAST_WEEK_PICKED = pictureOf(SEARCH_FILTERS_STORY_GRID, calendar(true));\nexport const FILTERED = pictureOf(SEARCH_FILTERS_STORY_GRID, stack(calendar(true), domainFilters));\n\nexport const FRESHNESS_LABEL: DotStoryText = { text: 'freshness', x: x(CALENDAR.left), y: baselineOn(2, 12), size: 12, weight: 700, muted: true };\nexport const FRESHNESS_VALUE: DotStoryText = { text: 'last_week', x: x(CALENDAR.left), y: baselineOn(34, 14), size: 14, weight: 700 };\nexport const FILTER_TEXTS: DotStoryText[][] = [\n\t[\n\t\t{ text: 'include', x: x(BULLET_COLUMNS.left), y: baselineOn(FILTER_GROUPS[0].labelRow, 12), size: 12, weight: 700, muted: true },\n\t\t{ text: 'arxiv.org', x: x(33), y: baselineOn(INCLUDED_ROWS[0] + 0.5, 14), size: 14, weight: 700 },\n\t\t{ text: 'github.com', x: x(33), y: baselineOn(INCLUDED_ROWS[1] + 0.5, 14), size: 14, weight: 700 },\n\t],\n\t[\n\t\t{ text: 'exclude', x: x(BULLET_COLUMNS.left), y: baselineOn(FILTER_GROUPS[1].labelRow, 12), size: 12, weight: 700, muted: true },\n\t\t{ text: 'pinterest.com', x: x(34), y: baselineOn(EXCLUDE_MARK.top + 1.5, 14), size: 14, weight: 700, muted: true },\n\t],\n\t[\n\t\t{ text: 'country', x: x(BULLET_COLUMNS.left), y: baselineOn(FILTER_GROUPS[2].labelRow, 12), size: 12, weight: 700, muted: true },\n\t\t{ text: 'US', x: x(33), y: baselineOn(COUNTRY_ROW + 0.5, 14), size: 14, weight: 700 },\n\t],\n];\n\nexport const SEARCH_FILTERS_RESTING = { ...FILTERED, texts: [FRESHNESS_LABEL, FRESHNESS_VALUE, ...FILTER_TEXTS.flat()] };\n"
+    }
+  ]
+}

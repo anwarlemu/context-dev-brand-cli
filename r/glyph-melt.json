@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "glyph-melt",
+  "type": "visual",
+  "title": "Glyph melt",
+  "description": "Product glyph that transitions on hover, focus, or while its parent card is visible.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Link or button cards whose glyph should answer the hover. The card is the nearest link, button or data-hover-morph.",
+  "avoid": [
+    "Melts outside a link",
+    "button or data-hover-morph card"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/glyph-melt.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add glyph-melt --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard src/components/dots/glyph-melt.tsx (the site has no melt glyph)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/glyph-melt.tsx",
+        "sha256": "d897de0a81aa473ef3b6cba60c59d33c8986a6f223dfd4d0553a55245c2b3b4a",
+        "retained": false,
+        "exports": [
+          "GlyphMelt"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/glyph/glyph-melt.d.ts",
+      "content": "import { type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\ntype GlyphMeltProps = {\n    name: GlyphPairName;\n    /** The color repainted around the dots; defaults to the surface token. */\n    surfaceColor?: string;\n    className?: string;\n};\n/**\n * A page glyph that melts into what it gives you, as the blog covers do: on a loop while its card is in view, and\n * for as long as the card is hovered or keyboard-focused. The card is the nearest link, button or `data-hover-morph`.\n * At rest, and with reduced motion, it is the still glyph.\n */\nexport declare function GlyphMelt({ name, surfaceColor, className }: GlyphMeltProps): import(\"react\").JSX.Element;\nexport {};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/glyph-melt/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/glyph-melt.tsx",
+      "content": "import { Card, CardDescription, CardTitle } from \"@/components/ui/card\";\nimport { GlyphMelt } from \"@/components/visuals/glyph/glyph-melt\";\n\nexport function Product() {\n  return (\n    <Card data-hover-morph className=\"mx-auto w-full max-w-xs items-start\">\n      <GlyphMelt name=\"dataApis\" className=\"w-16\" />\n      <CardTitle>Data APIs</CardTitle>\n      <CardDescription>Scrape, crawl, search and enrich from one key.</CardDescription>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "glyph-engine",
+    "glyph-tile",
+    "use-hover-dot-morph",
+    "theme-store",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-melt.tsx",
+      "content": "\"use client\";\n\nimport { useCallback, useRef } from \"react\";\nimport { GLYPH_GRID, GLYPH_MELT_MARGIN, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { StillGlyph } from \"@/components/visuals/glyph/glyph-tile\";\nimport { resolveColor, SURFACE_COLOR } from \"@/components/visuals/glyph/surface-color\";\nimport { type LoadDotMorph, useHoverDotMorph } from \"@/components/visuals/use-hover-dot-morph\";\nimport { useResolvedTheme } from \"@/lib/theme\";\nimport { cn } from \"@/lib/utils\";\n\ntype GlyphMeltProps = {\n  name: GlyphPairName;\n  /** The color repainted around the dots; defaults to the surface token. */\n  surfaceColor?: string;\n  className?: string;\n};\n\nconst percent = (share: number) => `${share * 100}%`;\n// The canvas reaches the melt's margin past the glyph on every side, so its dots land on the still glyph's.\nconst SPILL = GLYPH_MELT_MARGIN / GLYPH_GRID.columns;\nconst CANVAS_BOX = { left: percent(-SPILL), top: percent(-SPILL), width: percent(1 + SPILL * 2), height: percent(1 + SPILL * 2) };\n\n/**\n * A page glyph that melts into what it gives you, as the blog covers do: on a loop while its card is in view, and\n * for as long as the card is hovered or keyboard-focused. The card is the nearest link, button or `data-hover-morph`.\n * At rest, and with reduced motion, it is the still glyph.\n */\nexport function GlyphMelt({ name, surfaceColor = SURFACE_COLOR, className }: GlyphMeltProps) {\n  const theme = useResolvedTheme();\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const load = useCallback<LoadDotMorph>(\n    async (canvas, onPlayingChange) => {\n      const { createGlyphMelt } = await import(\"@/components/visuals/glyph/glyph-melt-engine\");\n      return createGlyphMelt({\n        canvas,\n        name,\n        palette: { dots: getComputedStyle(canvas).color, background: resolveColor(canvas, surfaceColor) },\n        onPlayingChange,\n      });\n    },\n    // `theme` reloads the morph so it repaints in the new surface color.\n    // eslint-disable-next-line react-hooks/exhaustive-deps\n    [name, surfaceColor, theme],\n  );\n  const isPlaying = useHoverDotMorph(canvasRef, load, { playOnView: true });\n\n  return (\n    <span aria-hidden=\"true\" className={cn(\"relative block text-brand\", className)}>\n      <StillGlyph name={name} className={cn(\"block w-full\", isPlaying && \"invisible\")} />\n      <canvas ref={canvasRef} className={cn(\"absolute\", !isPlaying && \"invisible\")} style={CANVAS_BOX} />\n    </span>\n  );\n}\n"
+    }
+  ]
+}

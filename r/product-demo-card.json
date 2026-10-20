@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "product-demo-card",
+  "type": "site",
+  "title": "Product demo card",
+  "description": "A product page's hero demo: the input on the left and the API's output on the right, in a blue-10 ring, with the rows, chips and panels the demos are built from.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Under the hero of a product page whose demo is a request and its response (Parse, News, Brand search, People enrichment). CapabilityPanel is the picture in a capability card when no dot story fits; ParamRow, StatusChip, FileGlyph, MarkGlyph and DemoRow fill it. The per-product demos are parse-landing-visuals, news-landing-visuals, brand-search-landing-visuals and people-enrichment-landing-visuals.",
+  "avoid": [
+    "Syntax colors in the output (it is plain black mono)",
+    "A second blue ring inside the card",
+    "Bold titles in a row",
+    "Icons that move on hover"
+  ],
+  "notes": "The ring is 12px at every root (`rounded-demo`) around a white card with an 8px corner. From `lg` the input column is 420px wide\nbeside the output, which opens with a 52px header (its label and the file name in brand blue) over the response in 13px\nmono (14px from `sm`). The demo's type is fixed px (`text-demo-*`, `leading-demo-*`), as on the site, so it reads the\nsame at the 90% desktop root and on phones. The output is focusable so it can scroll by keyboard.",
+  "documentation": "https://context-ds.vercel.app/components/product-demo-card.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add product-demo-card --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/product-demo-card.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-demo-card.tsx",
+        "sha256": "1f047b5b1b3207d7b1b1694342a3411a873b9ea238a059e0bb2d73fbd980225a",
+        "retained": false,
+        "exports": [
+          "ProductDemoCard",
+          "FileGlyph",
+          "MarkGlyph",
+          "StatusChip",
+          "DemoRow",
+          "CapabilityPanel",
+          "ParamRow"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/product-demo-card.d.ts",
+      "content": "import * as React from \"react\";\ninterface ProductDemoCardProps {\n    label: string;\n    inputLabel: string;\n    input: React.ReactNode;\n    outputLabel: string;\n    filename: string;\n    output: string;\n    className?: string;\n}\n/** A product page's hero demo: what goes into the API on the left and what comes back on the right, in a blue-10 ring. */\nexport declare function ProductDemoCard({ label, inputLabel, input, outputLabel, filename, output, className }: ProductDemoCardProps): React.JSX.Element;\n/** An outline file icon with its type set along the bottom edge. */\nexport declare function FileGlyph({ type, className }: {\n    type: string;\n    className?: string;\n}): React.JSX.Element;\n/** An outline mark for a row: a company's initial, a person's initials, or a small icon. */\nexport declare function MarkGlyph({ children, round, className }: {\n    children: React.ReactNode;\n    round?: boolean;\n    className?: string;\n}): React.JSX.Element;\n/** A request's state as an outline pill with a dot: blue for the outcome shown, neutral for the rest. */\nexport declare function StatusChip({ children, tone }: {\n    children: React.ReactNode;\n    tone?: \"blue\" | \"neutral\";\n}): React.JSX.Element;\n/** The thing sent to the API, as a hairline row: its mark, what it is, and how the request went. */\nexport declare function DemoRow({ glyph, title, detail, status }: {\n    glyph: React.ReactNode;\n    title: React.ReactNode;\n    detail: React.ReactNode;\n    status?: React.ReactNode;\n}): React.JSX.Element;\n/** A capability card's picture when no dot story fits it: a small white panel of example values. */\nexport declare function CapabilityPanel({ label, children, className }: {\n    label: string;\n    children: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\n/** One request parameter and the value it is set to. */\nexport declare function ParamRow({ name, value }: {\n    name: string;\n    value: string;\n}): React.JSX.Element;\nexport {};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/product-demo-card/Site"
+    },
+    {
+      "name": "Panel",
+      "url": "https://context-ds.vercel.app/preview/product-demo-card/Panel"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/product-demo-card.tsx",
+      "content": "import { CapabilityPanel, DemoRow, FileGlyph, MarkGlyph, ParamRow, ProductDemoCard, StatusChip } from \"@/components/site/product-demo-card\";\n\nconst OUTPUT = `{\n  \"status\": \"ready\",\n  \"pages\": 12,\n  \"markdown\": \"# Product research\\\\n...\"\n}`;\n\nexport function Site() {\n  return (\n    <div className=\"mx-auto w-full max-w-[var(--ds-layout-column-wide)] px-6 py-12 sm:px-8 md:px-10 lg:px-12\">\n      <ProductDemoCard\n        label=\"Illustrative request and response\"\n        inputLabel=\"Document input\"\n        input={\n          <>\n            <DemoRow glyph={<FileGlyph type=\"PDF\" />} title=\"report.pdf\" detail=\"12 pages · 2.4 MB\" status={<StatusChip>Parsed</StatusChip>} />\n            <DemoRow glyph={<MarkGlyph>@</MarkGlyph>} title=\"alex@example.com\" detail=\"Work email\" status={<StatusChip tone=\"neutral\">Queued</StatusChip>} />\n          </>\n        }\n        outputLabel=\"JSON response\"\n        filename=\"result.json\"\n        output={OUTPUT}\n      />\n    </div>\n  );\n}\n\nexport function Panel() {\n  return (\n    <div className=\"w-full max-w-60\">\n      <CapabilityPanel label=\"Example request options\">\n        <ParamRow name=\"pdf.start\" value=\"1\" />\n        <ParamRow name=\"pdf.end\" value=\"4\" />\n        <ParamRow name=\"includeLinks\" value=\"true\" />\n      </CapabilityPanel>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/product-demo-card.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A product page's hero demo (Parse, News, Brand search, People enrichment): what goes into the API on the left and\n// what comes back on the right, in a blue-10 ring, plus the small parts its rows and capability panels are built from.\n// The type is set in fixed px, as on the site, so it reads the same at the 90% desktop root and on phones.\n\ninterface ProductDemoCardProps {\n  label: string;\n  inputLabel: string;\n  input: React.ReactNode;\n  outputLabel: string;\n  filename: string;\n  output: string;\n  className?: string;\n}\n\n/** A product page's hero demo: what goes into the API on the left and what comes back on the right, in a blue-10 ring. */\nexport function ProductDemoCard({ label, inputLabel, input, outputLabel, filename, output, className }: ProductDemoCardProps) {\n  return (\n    <figure data-slot=\"product-demo-card\" aria-label={label} className={cn(\"rounded-demo bg-blue-10 p-1.5\", className)}>\n      <div className=\"flex flex-col overflow-hidden rounded-card border border-black/6 bg-surface lg:min-h-[420px] lg:flex-row\">\n        <div className=\"flex min-w-0 shrink-0 flex-col gap-5 border-b border-black/10 p-5 text-left sm:p-7 lg:w-[420px] lg:border-r lg:border-b-0\">\n          <p className=\"text-demo-label leading-demo-label text-black/50\">{inputLabel}</p>\n          {input}\n        </div>\n        <div className=\"flex min-w-0 flex-1 flex-col text-left\">\n          <div className=\"flex h-[52px] shrink-0 items-center justify-between gap-4 border-b border-black/10 px-5 sm:px-6\">\n            <p className=\"text-demo-label leading-demo-label text-black/50\">{outputLabel}</p>\n            <p className=\"truncate font-mono text-demo-code leading-demo-label text-brand\">{filename}</p>\n          </div>\n          <pre\n            tabIndex={0}\n            aria-label={`${filename} example`}\n            className=\"min-h-0 flex-1 overflow-x-auto p-5 font-mono text-demo-code leading-6 text-fg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:p-6 sm:text-demo-label\"\n          >\n            <code>{output}</code>\n          </pre>\n        </div>\n      </div>\n    </figure>\n  );\n}\n\n/** An outline file icon with its type set along the bottom edge. */\nexport function FileGlyph({ type, className }: { type: string; className?: string }) {\n  return (\n    <span\n      aria-hidden=\"true\"\n      className={cn(\"flex h-12 w-10 shrink-0 items-end justify-center rounded-icon border border-brand bg-surface pb-1.5 font-mono text-demo-glyph leading-3 text-brand\", className)}\n    >\n      {type}\n    </span>\n  );\n}\n\n/** An outline mark for a row: a company's initial, a person's initials, or a small icon. */\nexport function MarkGlyph({ children, round = false, className }: { children: React.ReactNode; round?: boolean; className?: string }) {\n  return (\n    <span\n      aria-hidden=\"true\"\n      className={cn(\"flex size-10 shrink-0 items-center justify-center border border-brand bg-surface text-demo-row leading-none text-brand\", round ? \"rounded-pill\" : \"rounded-card\", className)}\n    >\n      {children}\n    </span>\n  );\n}\n\n/** A request's state as an outline pill with a dot: blue for the outcome shown, neutral for the rest. */\nexport function StatusChip({ children, tone = \"blue\" }: { children: React.ReactNode; tone?: \"blue\" | \"neutral\" }) {\n  return (\n    <span\n      className={cn(\n        \"inline-flex shrink-0 items-center gap-1.5 rounded-pill border px-3 py-1 text-demo-code leading-demo-chip\",\n        tone === \"blue\" ? \"border-brand text-brand\" : \"border-black/20 text-black/60\",\n      )}\n    >\n      <span aria-hidden=\"true\" className={cn(\"size-[7px] shrink-0 rounded-pill\", tone === \"blue\" ? \"bg-brand\" : \"border border-current\")} />\n      {children}\n    </span>\n  );\n}\n\n/** The thing sent to the API, as a hairline row: its mark, what it is, and how the request went. */\nexport function DemoRow({ glyph, title, detail, status }: { glyph: React.ReactNode; title: React.ReactNode; detail: React.ReactNode; status?: React.ReactNode }) {\n  return (\n    <div className=\"flex items-center gap-3.5 rounded-card border border-black/10 p-4\">\n      {glyph}\n      <div className=\"flex min-w-0 flex-1 flex-col gap-0.5\">\n        <p className=\"truncate text-demo-title leading-demo-title text-fg\">{title}</p>\n        <p className=\"truncate text-demo-label leading-demo-label text-black/50\">{detail}</p>\n      </div>\n      {status}\n    </div>\n  );\n}\n\n/** A capability card's picture when no dot story fits it: a small white panel of example values. */\nexport function CapabilityPanel({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {\n  return (\n    <figure aria-label={label} className={cn(\"flex w-full flex-col gap-3 rounded-card bg-surface p-4 text-left ring-1 ring-hairline\", className)}>\n      {children}\n    </figure>\n  );\n}\n\n/** One request parameter and the value it is set to. */\nexport function ParamRow({ name, value }: { name: string; value: string }) {\n  return (\n    <div className=\"flex items-center justify-between gap-3 border-t border-hairline pt-3 first:border-0 first:pt-0\">\n      <code className=\"min-w-0 truncate font-mono text-demo-code leading-5 text-black/60\">{name}</code>\n      <code className=\"shrink-0 rounded-pill border border-brand px-2.5 py-0.5 font-mono text-demo-meta leading-4 text-brand\">{value}</code>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

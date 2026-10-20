@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "revision": "3c185fe7c8530f27eda88fca1cfeb97a7981282f",
+  "name": "use-tab-glide",
+  "type": "hook",
+  "title": "useTabGlide",
+  "description": "Moves the selection indicator between tabs with a spring animation.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "A row of tabs or options with one shared selected surface (Tabs and SegmentedControl use it).",
+  "avoid": [
+    "Animating the pill with a timed transition"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-tab-glide.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-tab-glide",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/hooks/use-tab-glide.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/hooks/use-tab-glide.ts",
+        "sha256": "59b7c9dc6db470f3c214756506013653e66533697f538cbd7a708162a74492b2",
+        "retained": false,
+        "exports": [
+          "useTabGlide"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "hooks/use-tab-glide.d.ts",
+      "content": "import { type RefObject } from \"react\";\n/**\n * Glides one pill to the tab marked `data-tab-id={activeId}` inside the pill's parent. Returns whether the pill has\n * been placed; until then the active tab draws its own surface, so the first paint matches the server render. With\n * reduced motion the pill jumps.\n */\nexport declare function useTabGlide(pillRef: RefObject<HTMLElement | null>, activeId: string): boolean;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "hooks/use-tab-glide.ts",
+      "content": "\"use client\";\n\nimport { type RefObject, useLayoutEffect, useRef, useState } from \"react\";\n\n// SwiftUI's spring(response: 0.34, dampingFraction: 0.82) as the stiffness and damping of a unit mass: quick to arrive\n// with the faintest overshoot. A spring rather than a timed curve, so switching tabs mid-glide keeps its velocity.\nconst RESPONSE_S = 0.34;\nconst DAMPING_FRACTION = 0.82;\nconst STIFFNESS = ((2 * Math.PI) / RESPONSE_S) ** 2;\nconst DAMPING = (4 * Math.PI * DAMPING_FRACTION) / RESPONSE_S;\nconst STEP_S = 1 / 240;\n\ntype Box = { x: number; y: number; width: number; height: number };\n\nconst mix = (from: number, to: number, t: number) => from + (to - from) * t;\n\n// In the container's own pixels: screen boxes divided by its scale, so the pill lands on its tab inside a scaled\n// ancestor too (a dialog mid pop-in, a preview drawn small).\nfunction boxWithin(element: HTMLElement, container: HTMLElement): Box {\n  const rect = element.getBoundingClientRect();\n  const containerRect = container.getBoundingClientRect();\n  const scale = container.offsetWidth ? containerRect.width / container.offsetWidth : 1;\n  return { x: (rect.left - containerRect.left) / scale, y: (rect.top - containerRect.top) / scale, width: rect.width / scale, height: rect.height / scale };\n}\n\nfunction paintPill(pill: HTMLElement, box: Box) {\n  pill.style.translate = `${box.x}px ${box.y}px`;\n  pill.style.width = `${box.width}px`;\n  pill.style.height = `${box.height}px`;\n}\n\n/**\n * Glides one pill to the tab marked `data-tab-id={activeId}` inside the pill's parent. Returns whether the pill has\n * been placed; until then the active tab draws its own surface, so the first paint matches the server render. With\n * reduced motion the pill jumps.\n */\nexport function useTabGlide(pillRef: RefObject<HTMLElement | null>, activeId: string) {\n  const [isPlaced, setPlaced] = useState(false);\n  const motion = useRef({ activeId, progress: 1, velocity: 0, frame: 0, lastTime: 0, box: null as Box | null, fromBox: null as Box | null });\n\n  // Lands the pill on the active tab, and keeps it there when the row resizes (fonts loading, viewport).\n  useLayoutEffect(() => {\n    const pill = pillRef.current;\n    const container = pill?.parentElement;\n    if (!pill || !container) return;\n    const place = () => {\n      const state = motion.current;\n      if (state.frame) return;\n      const tab = container.querySelector<HTMLElement>(`[data-tab-id=\"${CSS.escape(state.activeId)}\"]`);\n      if (!tab) return;\n      state.box = boxWithin(tab, container);\n      paintPill(pill, state.box);\n    };\n    place();\n    setPlaced(true);\n    const observer = new ResizeObserver(place);\n    observer.observe(container);\n    return () => observer.disconnect();\n  }, [pillRef]);\n\n  useLayoutEffect(() => {\n    const state = motion.current;\n    const pill = pillRef.current;\n    const container = pill?.parentElement;\n    if ((activeId === state.activeId && !state.frame) || !pill || !container) return;\n\n    const reducedMotion = window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\n    // Starts from wherever the pill is now, which is mid-glide when tabs are switched quickly.\n    state.fromBox = state.box;\n    state.activeId = activeId;\n    state.progress = reducedMotion ? 1 : 0;\n    state.velocity = 0;\n    state.lastTime = 0;\n\n    const tick = (now: number) => {\n      // Real time even at a low frame rate; the cap only stops a leap after the tab was in the background.\n      const elapsed = state.lastTime ? Math.min(0.1, (now - state.lastTime) / 1000) : 1 / 60;\n      state.lastTime = now;\n      for (let t = 0; t < elapsed; t += STEP_S) {\n        const h = Math.min(STEP_S, elapsed - t);\n        state.velocity += (-STIFFNESS * (state.progress - 1) - DAMPING * state.velocity) * h;\n        state.progress += state.velocity * h;\n      }\n      const settled = reducedMotion || (Math.abs(state.progress - 1) < 0.001 && Math.abs(state.velocity) < 0.01);\n      if (settled) state.progress = 1;\n\n      const tab = container.querySelector<HTMLElement>(`[data-tab-id=\"${CSS.escape(activeId)}\"]`);\n      if (tab) {\n        const to = boxWithin(tab, container);\n        const from = state.fromBox ?? to;\n        // Unclamped, so the pill keeps the spring's slight overshoot.\n        state.box = {\n          x: mix(from.x, to.x, state.progress),\n          y: mix(from.y, to.y, state.progress),\n          width: mix(from.width, to.width, state.progress),\n          height: mix(from.height, to.height, state.progress),\n        };\n        paintPill(pill, state.box);\n      }\n      if (settled) {\n        state.frame = 0;\n        return;\n      }\n      state.frame = requestAnimationFrame(tick);\n    };\n\n    cancelAnimationFrame(state.frame);\n    // The first step runs before paint, so the row never shows a frame of the new tab without its pill.\n    tick(performance.now());\n    return () => cancelAnimationFrame(state.frame);\n  }, [activeId, pillRef]);\n\n  return isPlaced;\n}\n"
+    }
+  ]
+}
