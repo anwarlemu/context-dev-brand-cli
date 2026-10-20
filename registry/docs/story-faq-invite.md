@@ -8,7 +8,6 @@ kinds: []
 use_for: "Under the FAQ section's intro, on the ring pattern (FaqSection shows it by default). Plays only on screen; shows the banner with reduced motion."
 never: [Stories as the main content of a page]
 source: site src/components/sections/faq-demo-invite.tsx; src/components/sections/faq-demo-story-player.ts; src/components/sections/faq-demo-story-scenes.ts
-reference_commit: 1bd8062d
 files: [components/visuals/stories/faq-invite-story.tsx, components/visuals/stories/faq-invite-story-player.ts, components/visuals/stories/faq-invite-story-scenes.ts]
 ---
 

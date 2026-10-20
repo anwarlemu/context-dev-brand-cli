@@ -1,4 +1,5 @@
-// Rebuild source coverage from read-only, pinned reference commits. Run after changing registry source.
+// Rebuild source coverage from read-only, pinned reference commits. Run after changing registry source. The website pin
+// is production (the website's main); WEBSITE_REFERENCE points at any clone that has the pinned commits.
 // Source mapping is evidence of provenance, not a claim of pixel or behavioral identity.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -10,7 +11,7 @@ const root = new URL('..', import.meta.url).pathname;
 const website = process.env.WEBSITE_REFERENCE ?? join(root, '../brand-dev-webapp');
 const dashboard = process.env.DASHBOARD_REFERENCE ?? join(root, '../context-dashboard');
 const git = (repo: string, ...args: string[]) => execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
-const commits = { website: git(website, 'rev-parse', process.env.WEBSITE_REFERENCE_COMMIT ?? '59e4273e').trim(), retainedWebsite: git(website, 'rev-parse', 'c1cfbca6').trim(), legacyWebsite: git(website, 'rev-parse', '3ae05ca3').trim(), dashboard: git(dashboard, 'rev-parse', process.env.DASHBOARD_REFERENCE_COMMIT ?? 'c0ddf7a').trim() };
+const commits = { website: git(website, 'rev-parse', process.env.WEBSITE_REFERENCE_COMMIT ?? '2f4c4559').trim(), retainedWebsite: git(website, 'rev-parse', 'c1cfbca6').trim(), legacyWebsite: git(website, 'rev-parse', '3ae05ca3').trim(), dashboard: git(dashboard, 'rev-parse', process.env.DASHBOARD_REFERENCE_COMMIT ?? 'c0ddf7a').trim() };
 const trees = Object.fromEntries(Object.entries(commits).map(([key, commit]) => [key, git(key === 'dashboard' ? dashboard : website, 'ls-tree', '-r', '--name-only', commit, 'src').trim().split('\n')]));
 const hash = (text: string) => createHash('sha256').update(text).digest('hex');
 const cache = new Map<string, string>();

@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T16:41:52.728Z",
+  "checkedAt": "2026-10-20T17:11:40.585Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
-    "website": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+    "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
     "retainedWebsite": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
     "legacyWebsite": "3ae05ca3c6d898558a05ab0a968dc5c88cc6fbca",
     "dashboard": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204"
@@ -709,7 +709,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/ui/accordion.tsx",
           "sha256": "06bf37dea86694645291645796eaa55876f8d090d2a535f2c3aa6fbb46233241",
           "retained": false,
@@ -717,9 +717,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq.tsx",
-          "sha256": "c2cd483bdf2a01ca2b7a92395536167804619617fc4cef1bf354d27ff2a5eec5",
+          "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
           "retained": false,
           "exports": [
             "Faq"
@@ -742,9 +742,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/agent-setup-window.tsx",
-          "sha256": "71a5388965a32f9767708dd23ecaa0fb5e2853528e6c4c3559fc5514a649b89a",
+          "sha256": "581a4230084eb53fc56538fbd53af3c909fb4b97d4cb974ea6acfb176695272c",
           "retained": false,
           "exports": [
             "AgentSetupWindow"
@@ -752,15 +752,16 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/agent-setup-prompt.ts",
-          "sha256": "404e4d7373ed6f4981f74749517b8dbc2095fcd1ba89886ab8e5c08d4a9f8844",
+          "sha256": "3e2b893dd70a72e25376fd77b2d6986d06ef976f6848936ae01c1b0c2198f063",
           "retained": false,
           "exports": [
             "AgentSetupPromptSegment",
             "AGENT_SETUP_PROMPT_SEGMENTS",
             "AGENT_SETUP_PROMPT",
-            "SETUP_AGENTS"
+            "SETUP_AGENTS",
+            "AGENT_MCP_SETUP_PROMPT"
           ]
         }
       ],
@@ -780,10 +781,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/alternatives/alternative-hero.tsx",
           "sha256": "4e5ac4913f62a92903ee2134b998ab3423bd2d9723aa2b4986e50b3509c7b198",
-          "retained": false,
+          "retained": true,
           "exports": [
             "QuickCompareRow",
             "AlternativeHero"
@@ -791,7 +792,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/alternatives/alternative-reasons.tsx",
           "sha256": "82d9d446f51c7c66e004372069494a8085f7f6bba9cda2109b80edfb937262c9",
           "retained": false,
@@ -801,9 +802,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/alternatives/alternative-comparison-table.tsx",
-          "sha256": "7d15aa8aa892c7ef017738b3476b8e060c94be65afeefd830c0c70d593172f62",
+          "sha256": "f7ded287c768f55e544cd276e4fbab903c976d475ad9f61285fbaa05ae9da880",
           "retained": false,
           "exports": [
             "ComparisonSupport",
@@ -814,20 +815,20 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/alternatives/alternative-article.tsx",
-          "sha256": "b76c313b2cbd031168639cdf9536d9673f34032ed824efa65ac09eddf21dc2bd",
-          "retained": false,
+          "sha256": "03b78ef384edb149b69878eb1def0e23fe338d57f2c2c7f68764d6cd07cb24ba",
+          "retained": true,
           "exports": [
             "AlternativeArticle"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/alternatives/firecrawl/FirecrawlPricingTable.tsx",
-          "sha256": "7f8e9b1144fbb6e3fc4a44058f44c733bbf767cdf66b777d7c78ac349f614485",
-          "retained": false,
+          "sha256": "511dc5a209bccf6d14a1b9bdd477dcc1f6612f1aa251c1f725546ec5b2052882",
+          "retained": true,
           "exports": [
             "FirecrawlPricingTable"
           ]
@@ -844,9 +845,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/app/(marketing)/compare/the-top-firecrawl-alternative/page.tsx",
-          "sha256": "4a33821eb6d7135f67e8ba2d70a00d2ca40d014326add68df1a20394a2eda81a",
+          "sha256": "728e367226a302ae6711f6e61feaef000fa686db3db099c0b8272644cbc3027c",
           "retained": false,
           "exports": [
             "metadata",
@@ -870,9 +871,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/header.tsx",
-          "sha256": "b06882dbcd97e4112b677339bf57de2e94e4899a28633243ce2bfc2278c6fe4a",
+          "sha256": "a7a5825f70934ce0e55c80bc75f791b1a4823827e875a687df11e6fdab971273",
           "retained": false,
           "exports": [
             "Header"
@@ -1071,7 +1072,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/product-grid.tsx",
           "sha256": "c845eed09fa77a98a03fd569d611dd9042a7f9dd9a916548534827c33301448a",
           "retained": false,
@@ -1096,10 +1097,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/dashboard-ui/banner.tsx",
           "sha256": "838054533e72d1c773d317d189759ac7d439efa44f0270e92583c9471a785aa8",
-          "retained": true,
+          "retained": false,
           "exports": [
             "Banner"
           ]
@@ -1159,9 +1160,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/blog.tsx",
-          "sha256": "6eb1487e24e64c38c73af814ff74700c614820c9bec872693fe8524fc33ce5c4",
+          "sha256": "ce20f18766518bc6a5455bc1597f3590155e703a9af436946301abc87057af52",
           "retained": false,
           "exports": [
             "Blog"
@@ -1169,10 +1170,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/blog-card-palettes.ts",
           "sha256": "08940fcedd6585fb3c225f41e33ad0ca989d5e292158c7524a71d1478e76d0cd",
-          "retained": true,
+          "retained": false,
           "exports": [
             "BlogCardSurface",
             "BLOG_CARD_PALETTES",
@@ -1183,18 +1184,13 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/blog-cover-art.tsx",
-          "sha256": "a4a83c42e7c221d2137d691937bc32f6bad4dd9269ec59e0318e499f508ebf27",
+          "sha256": "e6c9882edea181900fccd2c007fd4d3b783803b2ffbb2ca584c47a813f2d0ed2",
           "retained": false,
           "exports": [
             "BlogCoverMotif",
             "BlogCover",
-            "BlogCardSurface",
-            "BLOG_CARD_PALETTES",
-            "blogCardSurface",
-            "BACKDROP_RING_OPACITY",
-            "backdropTile",
             "BlogCoverArt"
           ]
         }
@@ -1215,9 +1211,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/app/(marketing)/blog/[slug]/page.tsx",
-          "sha256": "04b7b7e57f7c4d5aee585df118ee618c561d8d33a758a501bc2102ea544c8e1e",
+          "sha256": "802a78ae9903384f45056f6813c063846f894738354a0aa0966b520df53def23",
           "retained": false,
           "exports": [
             "generateStaticParams",
@@ -1227,9 +1223,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/blog/BlogProseArticle.tsx",
-          "sha256": "a8d0039f547c26af75e2b591243d356aecfbc89e8784356ccee670a0727691f5",
+          "sha256": "c241c00bfae802bba583420fd562d0cbecde27f4dc30af7479b559761cc64a3b",
           "retained": false,
           "exports": [
             "BlogProseArticle"
@@ -1237,9 +1233,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/blog/BlogCodeBlock.tsx",
-          "sha256": "94a835d07b56f1f0a89a257bd2e9dc81caecaa845a9ab83345b4215f5fb42cfc",
+          "sha256": "f2a3e215ed0365b12934e30f7ae005a2de99987315d94da8ffc4ea61ed8ea258",
           "retained": false,
           "exports": [
             "BlogCodeBlock"
@@ -1247,19 +1243,19 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/blog/related-posts.tsx",
-          "sha256": "78dc2734904318ba330c62be3fe9dc1ef3ddeb392fe1f2fe87b4349b2b88fe43",
-          "retained": true,
+          "sha256": "71a36853b4b13e2caf4b2ff11a598505477cfcec1fc02cf770a00634f47b35fa",
+          "retained": false,
           "exports": [
             "RelatedPosts"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/blog-author.tsx",
-          "sha256": "fd5cd09e1ee04cc59ba889584904bf8e047805a6749727c7de8ddf0aac17f3d0",
+          "sha256": "f6b4250ba5cc02495d2ebd3082613eae13861b9fb9e798590faddf97cde836dd",
           "retained": false,
           "exports": [
             "Author"
@@ -1267,19 +1263,19 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/alternatives/alternative-article.tsx",
-          "sha256": "b76c313b2cbd031168639cdf9536d9673f34032ed824efa65ac09eddf21dc2bd",
-          "retained": false,
+          "sha256": "03b78ef384edb149b69878eb1def0e23fe338d57f2c2c7f68764d6cd07cb24ba",
+          "retained": true,
           "exports": [
             "AlternativeArticle"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/styles/globals.css",
-          "sha256": "4feec64648c7d7b6b7acb5e7c9b2502ffff40a19cc1e9fc82f35baba39193929",
+          "sha256": "24a6f8004a111647e72f24a79192ed99fe0451a06bbbfa77c0b6ae41aaaf3837",
           "retained": false,
           "exports": []
         }
@@ -1311,7 +1307,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/brand-outline-pill.ts",
           "sha256": "b78b3e57bc75cc7dd5c90c6d04063507112e7d2fa354bb5e463475d10bc71c5c",
           "retained": false,
@@ -1346,15 +1342,15 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/styles/globals.css",
-          "sha256": "4feec64648c7d7b6b7acb5e7c9b2502ffff40a19cc1e9fc82f35baba39193929",
+          "sha256": "24a6f8004a111647e72f24a79192ed99fe0451a06bbbfa77c0b6ae41aaaf3837",
           "retained": false,
           "exports": []
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/product-grid.tsx",
           "sha256": "c845eed09fa77a98a03fd569d611dd9042a7f9dd9a916548534827c33301448a",
           "retained": false,
@@ -1379,13 +1375,12 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/ui/dot-checkbox.tsx",
-          "sha256": "dc1daa3eff91c37d1764823cad99b591840b133dd31754fdb42960ac75133efe",
+          "sha256": "29da3317a4f52b8754956550e831c92fd083973ee8f36a2d2150fe20d786e7e4",
           "retained": false,
           "exports": [
-            "DotCheckbox",
-            "dotCheckboxMarkup"
+            "DotCheckbox"
           ]
         }
       ],
@@ -1430,7 +1425,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/code-frame.tsx",
           "sha256": "204ee7a516440edbe0a28d4037c2804445d73f1d126ad7bd408f0eb3c526c926",
           "retained": false,
@@ -1443,10 +1438,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-code-tabs.tsx",
-          "sha256": "3022e964ac8443eb3a64aa54bfa2c869937187f5a531e34ce56572d3553298f3",
-          "retained": true,
+          "sha256": "e31b1155aaf02e2e831e6e7c6188951f296b207ec17e3699046de7f991a6dacd",
+          "retained": false,
           "exports": [
             "HighlightedUseCaseSample",
             "InstallCommand",
@@ -1455,9 +1450,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/terminal-code-theme.ts",
-          "sha256": "e4fb452c5fb563fdfc63783bcec9d6fb4a3bbda1d2355427e2de0a5f83525d50",
+          "sha256": "77ea86eb778a7d9768b4b0f28239e4c0692156f1e742f9a5495deadc197db2c7",
           "retained": false,
           "exports": [
             "TERMINAL_CODE_COLORS",
@@ -1482,10 +1477,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "3ae05ca3c6d898558a05ab0a968dc5c88cc6fbca",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/dashboard-ui/collapse.tsx",
           "sha256": "1a4ba7e37cefb4bea4421844c4aab8d4309fd84420dcc8a19df58291ecc12559",
-          "retained": true,
+          "retained": false,
           "exports": [
             "Collapse"
           ]
@@ -1532,10 +1527,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-sections.tsx",
           "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
-          "retained": true,
+          "retained": false,
           "exports": [
             "UseCaseProof",
             "UseCaseHowItWorks",
@@ -1546,9 +1541,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/alternatives/alternative-comparison-table.tsx",
-          "sha256": "7d15aa8aa892c7ef017738b3476b8e060c94be65afeefd830c0c70d593172f62",
+          "sha256": "f7ded287c768f55e544cd276e4fbab903c976d475ad9f61285fbaa05ae9da880",
           "retained": false,
           "exports": [
             "ComparisonSupport",
@@ -1574,9 +1569,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/competitor-charts.tsx",
-          "sha256": "addde95d11e0d9a67a9419854ab5583968db3d39ad465b4c70f4310f6aba10d0",
+          "sha256": "16037937e8430444039d9cc52443776c3421cd1c665010464042f7d1112495e4",
           "retained": false,
           "exports": [
             "BenchmarkPanel"
@@ -1584,9 +1579,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/competitor-comparison.tsx",
-          "sha256": "c97e6d21c4f3c2cb2274ecb4ac91df7d063eb1d329c85a553c244fa4f8bde632",
+          "sha256": "2fed255ec8acf11d198e1e2c2731df99e7b707e7116ab2986804e9bc5c03658e",
           "retained": false,
           "exports": [
             "CompetitorComparison"
@@ -1594,9 +1589,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/competitor-benchmark-data.ts",
-          "sha256": "077247b89faa9753918cf87b9cc834a5018baa5e48e5c31e3a544eb55f2ab6f5",
+          "sha256": "09cca447053c7857ef7f0184ec36d8ec9d1552967169f9b935f82f957279ad85",
           "retained": false,
           "exports": [
             "ProviderKey",
@@ -1647,7 +1642,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/credits-dot-number.tsx",
           "sha256": "dab2ae3e1cec14b4e199dc905643f8eb4153e743b17bbfd037d8ea98870d0c49",
           "retained": false,
@@ -1697,7 +1692,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/closing-cta.tsx",
           "sha256": "d72fe1e9ada38ba06e33707a5bda0ae39d96956bdac96632f4173902bd6b5838",
           "retained": false,
@@ -1707,29 +1702,29 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/cta.tsx",
           "sha256": "6ea07f7dd28f53eaa84ece68632cfe53c3dc296dd238ce243eaffef0e3fc0e66",
-          "retained": false,
+          "retained": true,
           "exports": [
             "CTA"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/shared/cta-background.tsx",
           "sha256": "11c892a6fbb1bdf61d311d2444e85f1737226f2c55e20c04b5b4210facb6cfbb",
-          "retained": false,
+          "retained": true,
           "exports": [
             "CTABackground"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/dark-cta-link.tsx",
-          "sha256": "36c09a7f32507d3ff19e88d583527c2ba7700850c8e98e1ee3d029b392756b42",
+          "sha256": "2d21e80fb388f649a3b9a993f2680769cce3688f1ead34923ca342c873adbfa6",
           "retained": false,
           "exports": [
             "DarkCtaLink"
@@ -1760,9 +1755,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/customer-logo-dots.tsx",
-          "sha256": "877614c451bab7f4fdd861906ac8a1b4d9c428c5dba3d215b7fd125f03ae05f4",
+          "sha256": "299418859564ff2802890ba8b3180e1f884897416374942cbb74e6ab1d2413a8",
           "retained": false,
           "exports": [
             "CustomerLogoDots"
@@ -1770,7 +1765,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/customer-logo-grid.ts",
           "sha256": "a8369dae2a4aba4a571a7e716f938b361bdb758d0330677f6d97fd2f038772d8",
           "retained": false,
@@ -1783,7 +1778,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/customer-logo-morph.ts",
           "sha256": "1403b61819f18d520877e961295715edc6d5e1e7ae4c855d4f2f860bb7de573d",
           "retained": false,
@@ -1808,9 +1803,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/CustomerStoriesCarousel.tsx",
-          "sha256": "3bdd33ffaf574cba2bb446525475f4fac872f7c09a933b2b26f40716dd302c97",
+          "sha256": "825299bcc2a9a78a09ea414e7a4adc0321aa8fd53c00a79c9f618f67fd5b5b3d",
           "retained": false,
           "exports": [
             "CustomerStoriesCarousel"
@@ -1818,9 +1813,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/CustomerStoryCard.tsx",
-          "sha256": "552a5b8844a7d1e0ca87fa3fad006cd7d83e04c4cebcf08c81d2f4970018e412",
+          "sha256": "25abe99e11abb81c88c8e7815f47e9c8041a968113f6e21139747dda36e1042d",
           "retained": false,
           "exports": [
             "CustomerStoryCardProps",
@@ -1829,9 +1824,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/CustomerStories.tsx",
-          "sha256": "d8037ddb39ff12a85749d3ec92eeb2d2a34f5913b268f4bd6edd930b3c82dfaf",
+          "sha256": "a82b623dfb4ef555527aa22c15d8ea184f5256a0343d6bc11901e5cd88822c8b",
           "retained": false,
           "exports": [
             "CustomerStories"
@@ -1854,9 +1849,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/app/(marketing)/customers/[slug]/page.tsx",
-          "sha256": "978f85a7138523c4dbf71976a78655698fb8d6e492c653787031a347aaf13ec9",
+          "sha256": "b126d636e7bd0557979002f82f7a3f786c1ff0ff35ab0eee6885cd2953023e04",
           "retained": false,
           "exports": [
             "generateStaticParams",
@@ -1932,10 +1927,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "3ae05ca3c6d898558a05ab0a968dc5c88cc6fbca",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/dashboard-ui/docs-link.tsx",
           "sha256": "278e86df16b2242d6b977a3355d87e4d53a9ea897e71ce30bb0642c6ae07ef82",
-          "retained": true,
+          "retained": false,
           "exports": [
             "DocsLink"
           ]
@@ -2009,9 +2004,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/dot-story.tsx",
-          "sha256": "4511c42dc3418758b8e546df4f8073030e92795dd7ea9186517193d5b0d208f3",
+          "sha256": "ed09e6cb114895419d5cc318bf95db26f40ddb6ac946f8387377c35e854f0475",
           "retained": false,
           "exports": [
             "LoadDotStory",
@@ -2020,7 +2015,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/pause-when-offscreen.tsx",
           "sha256": "e54692131f216836e6aaa2af37313d3e82ec05f2a3c640fdd6785ffdccf62610",
           "retained": false,
@@ -2030,7 +2025,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/story-caption.ts",
           "sha256": "c859f3eb7a3acc8b9e19d901ee99cfafb380d9a8685b0552829b2ef8fd572f92",
           "retained": false,
@@ -2083,10 +2078,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/brand/image-dot-shader.ts",
           "sha256": "0d977620a101d46798a8610fa828dbf4915eb45c416399cff04430e81535b563",
-          "retained": true,
+          "retained": false,
           "exports": [
             "SHADER_WIDTH",
             "SHADER_HEIGHT",
@@ -2098,10 +2093,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/brand/dot-shader-playground.tsx",
           "sha256": "870a4824c81a0e780b7555dae6f85dd15af1c37c6bf8a50a2db9c24c28033953",
-          "retained": true,
+          "retained": false,
           "exports": [
             "DotShaderPlayground"
           ]
@@ -2123,20 +2118,20 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/brand/dot-shader-playground.tsx",
           "sha256": "870a4824c81a0e780b7555dae6f85dd15af1c37c6bf8a50a2db9c24c28033953",
-          "retained": true,
+          "retained": false,
           "exports": [
             "DotShaderPlayground"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/brand/dot-shader-samples.ts",
           "sha256": "dc2dd70bcc96c6c6728c3f0009f405859023b6602a601565ee847f04b01abe78",
-          "retained": true,
+          "retained": false,
           "exports": [
             "DotShaderSample",
             "readDotShaderSamples"
@@ -2144,9 +2139,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/app/(marketing)/brand/page.tsx",
-          "sha256": "3d1b0dca4c8b2918b39e856d1e31d98749e023b3a3e673cd9f0e5d61dcc14e28",
+          "sha256": "89ab4c0a7fb61b65788391ae04acf30457b343ee85060d96994edc608ddc9efb",
           "retained": false,
           "exports": [
             "metadata",
@@ -2229,7 +2224,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq.tsx",
           "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
           "retained": false,
@@ -2239,7 +2234,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-card.tsx",
           "sha256": "e26b45e89581f5f05c52f1de6825b7a60f19e4c9b65fb5ffa4ade428ed90a575",
           "retained": false,
@@ -2249,7 +2244,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-cards.tsx",
           "sha256": "662b1262809f1f8ef0ce309e0a9137185817ead975915f58d24148efb417dae2",
           "retained": false,
@@ -2261,7 +2256,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-ask-card.tsx",
           "sha256": "54861ceb0c035b943cede7ecab34afcbd9207beeccad392a4d255c74fcf6cfec",
           "retained": false,
@@ -2271,7 +2266,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-toggle-dots.tsx",
           "sha256": "7b3221b018eab661da26fa0b34da395279b2f37f37a30f0a6c3099e37fa8abe3",
           "retained": false,
@@ -2281,7 +2276,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-home-header.tsx",
           "sha256": "1caf00d8644b80e206216d00df4ff4ab6924c201a8806d3aeba21c3cd324360b",
           "retained": false,
@@ -2291,7 +2286,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-demo-invite.tsx",
           "sha256": "f44ad172b01c7e0f7cc23c2db0fef4dfb2dc8e47fae7fcbbf7eb00af45486fe7",
           "retained": false,
@@ -2301,7 +2296,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-reserved-faq-height.ts",
           "sha256": "d7aa82e27d061fed5e09a0c57b02621171d3591ff19a4397e29f1d4423036bd6",
           "retained": false,
@@ -2311,7 +2306,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/landing-faq-list.tsx",
           "sha256": "431ebcdfdbe4ebd1b2ec9eca013c695cb9b272b80437e3053fd244002f35a479",
           "retained": false,
@@ -2321,7 +2316,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/styles/globals.css",
           "sha256": "24a6f8004a111647e72f24a79192ed99fe0451a06bbbfa77c0b6ae41aaaf3837",
           "retained": false,
@@ -2377,9 +2372,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/footer-watermark.tsx",
-          "sha256": "6c30300e389593237e2de43b438e4678158d7964f5856fa4497cd00530621927",
+          "sha256": "546fd99e891050d15829214d820492ce1f9209d8002b2f20eca286c8134f0591",
           "retained": false,
           "exports": [
             "FooterWatermark"
@@ -2387,7 +2382,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/footer-watermark-dots.ts",
           "sha256": "fd935dbc1aa43b35c034f7ad5f35830ae9419425604dcb5f3c8265c43b4b4dd9",
           "retained": false,
@@ -2400,9 +2395,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/CursorClickIcon.tsx",
-          "sha256": "4931a7f0acc1cb586a6cbfed3799ffdfe01b2869da90f4ede1077464af74f45f",
+          "sha256": "4688304644f52be078c116a8025f8bab3e67cc96efe3da4150ccce24c72e0fac",
           "retained": false,
           "exports": [
             "CursorClickIcon"
@@ -2800,9 +2795,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-circle-pattern.tsx",
-          "sha256": "a54f83922b58a4e2e0dbcafcbffa29a1995c06ec5bd2e11bbe8aa3c55391f685",
+          "sha256": "d9a78c6eebea32aa602b39b6f9579e68086647b40a313ee684daa277455dc46b",
           "retained": false,
           "exports": [
             "HeroCirclePatternSurface"
@@ -2810,7 +2805,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/story-stage.tsx",
           "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
           "retained": false,
@@ -2839,9 +2834,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-data-flow.tsx",
-          "sha256": "3af67119d1ab3089cc754c6e60d66743c0a4459c93d7140d30c28f6d1cc0e6db",
+          "sha256": "c1784e25f92c827ba3d6c8bd151eeb0f44ff3b90c87bee3acf72e9e6e89845aa",
           "retained": false,
           "exports": [
             "HeroDataFlowVariant",
@@ -2869,9 +2864,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-dot-field.tsx",
-          "sha256": "eacfe67115a6550af156092163aa6a754271ff36f1c7adba828c41c74e4d8bd3",
+          "sha256": "d37799b73bd6d7c2698cd409ebb2f6e4887121be516448d8e159bef3480fad2d",
           "retained": false,
           "exports": [
             "HeroDotField"
@@ -2902,23 +2897,21 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-globe.tsx",
-          "sha256": "3b24b7ade1d669ff852fd99fc8c7c89de6b95e41d7a08a158efc1fdf92940a2b",
+          "sha256": "099f865ce57199c7fa151d857146bfff7cd0a53ac690da8a3a7fb677f693f0e4",
           "retained": false,
           "exports": [
-            "GridPoint",
-            "heroGlobePointPlacement",
             "HERO_GLOBE_RISE_CLASS",
             "HeroGlobe"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-globe-geometry.ts",
           "sha256": "475de3d951c4bcec6627aaac2db7025ec6ca6745a6292fa6b84b4db797ac878b",
-          "retained": true,
+          "retained": false,
           "exports": [
             "RADIUS",
             "VIEWBOX_SIZE",
@@ -2932,9 +2925,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-globe-stats.tsx",
-          "sha256": "eeb44134e74dbcb86af3e6a528c14c7310b955b5d585dcaa921ecf31d6213437",
+          "sha256": "744a0f73f3c7c3dce222600f5a9993d8a015b0a2ec857529be15864dd383d6df",
           "retained": false,
           "exports": [
             "HeroGlobeStats"
@@ -2957,7 +2950,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-monitor.tsx",
           "sha256": "f5d3f2deb8901e5a7d2c4d249d347c0f1cf672c0e53684a359bd51671c302584",
           "retained": false,
@@ -2982,7 +2975,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-pattern-hole.ts",
           "sha256": "03793f305b86a4a3f4bb6ccf5108c375651c6a044e45bc21a5f3438594e26d4d",
           "retained": false,
@@ -3012,7 +3005,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-stat-morphs.tsx",
           "sha256": "12724ac0183ad9a7aea249d6f3537e64d729a4f2793197ae46c0221e787cec60",
           "retained": false,
@@ -3022,7 +3015,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-stat-shapes.ts",
           "sha256": "8cda97800b1aeecbd2d8dfa2b855a9e7bed6ec7313da8e88ad983eaff5876e5a",
           "retained": false,
@@ -3061,9 +3054,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-water.tsx",
-          "sha256": "e0ecdec99e2e3395645cb457a1455a7ed12e6c53e17c8b381ddd362fa1eb01cc",
+          "sha256": "6b941de84a86770adf3a72537ec5811282eab6e4395e9d3f8bbbff9597c84666",
           "retained": false,
           "exports": [
             "HeroWater"
@@ -3071,9 +3064,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-water-renderer.ts",
-          "sha256": "d804301b51ce081cf4b2a180f76e6061bb06f7d953a1494e96d768ebb6d13cf0",
+          "sha256": "592fa55e640ac5c534823f950fbf8f830e4468ad27b0cf0a25247b07d0438497",
           "retained": false,
           "exports": [
             "createHeroWater"
@@ -3081,7 +3074,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-water-simulation.ts",
           "sha256": "883b64ecfc2febdbd008976d3d35824832c38235fa914251e5efa7df84707b7b",
           "retained": false,
@@ -3091,7 +3084,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-background.tsx",
           "sha256": "7da7b91598eef4bdfc859680ccdde5b9c2995fdf152a0582c4fc9dca34bf8d4c",
           "retained": false,
@@ -3116,9 +3109,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero.tsx",
-          "sha256": "5cdd8f0722f7539c40db101e345c84d53984d7229c9d64c598921790185ea801",
+          "sha256": "7dcb26af84dab46a100991f24c26baae450c9b2b636642b09435fa9e21e7564b",
           "retained": false,
           "exports": [
             "Hero"
@@ -3126,17 +3119,17 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/homepage-hero.tsx",
-          "sha256": "10d3cc9d574a2be7e9f24d6a021305e13305decd5de1316691d651465810e4bd",
-          "retained": true,
+          "sha256": "94c275fb11cde9f3ad1ec336b10b363c8f011c0efa97045d61d81357302c0593",
+          "retained": false,
           "exports": [
             "HomepageHero"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-frame.tsx",
           "sha256": "6bc0f31e09f2f0a404a62d4f024b3c3bdf4f02ad6a4f99735e2ed1d50c07e398",
           "retained": false,
@@ -3147,7 +3140,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/demo-footer-tab.tsx",
           "sha256": "1beddc7c9b53028bc3753bb80d6c48111f27b19e3265662d65f8eb05c7e230a1",
           "retained": false,
@@ -3157,7 +3150,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/brand-outline-pill.ts",
           "sha256": "b78b3e57bc75cc7dd5c90c6d04063507112e7d2fa354bb5e463475d10bc71c5c",
           "retained": false,
@@ -3209,10 +3202,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/brand/image-dot-shader.ts",
           "sha256": "0d977620a101d46798a8610fa828dbf4915eb45c416399cff04430e81535b563",
-          "retained": true,
+          "retained": false,
           "exports": [
             "SHADER_WIDTH",
             "SHADER_HEIGHT",
@@ -3224,7 +3217,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/blog-cover-dot-shader.ts",
           "sha256": "d3aff630d1d9820deaa74725faac5aff0d64e339c52f106eeb80307dbfb2d6d5",
           "retained": false,
@@ -3388,7 +3381,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/logo-dot-sampling.ts",
           "sha256": "9940c94a217f21626333d21c0e14a4ac21232129397e9e7af4a969023fe541ea",
           "retained": false,
@@ -3414,9 +3407,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/featured-logos.tsx",
-          "sha256": "51ac76099f7f103f5be30879543ee49d0f505ca3d4163f296c42960f11c5949e",
+          "sha256": "61ddcceab3992b27e6ae050b5c0d215cf08a03fa9ba7d9ae8810e93e3e32006a",
           "retained": false,
           "exports": [
             "FeaturedLogos"
@@ -3545,12 +3538,13 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/persona-glyph.tsx",
-          "sha256": "74741f637b113e1489ca9cf54eef60a021a3b31e8fe18390d061c6a5a01d9988",
+          "sha256": "888b7bec32193b3020997fbe2b4494d520145f915cb1bc33b7b9ce36ac6eb10b",
           "retained": false,
           "exports": [
-            "PersonaGlyph"
+            "PersonaGlyph",
+            "HoverPersonaGlyph"
           ]
         }
       ],
@@ -3654,9 +3648,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/pricing/PricingConcepts.tsx",
-          "sha256": "1cd1e44904bc221485c6dd3fe8f89ae17ccb4d2b9273e5b0545e71e5a28d77cf",
+          "sha256": "2f1d9479ac544559dc709f2dab8b3981daf4ad16c0c98b785ae1f748adeecb55",
           "retained": false,
           "exports": [
             "EnterprisePricingCard",
@@ -3665,27 +3659,24 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/pricing/MarketingPricingCard.tsx",
-          "sha256": "1938530ea750235d53d1c399237b5a06a0133c188770bab7db891ee9b95d54b7",
+          "sha256": "f02096673b2ffb59bd3379092618e1c4f66fdf612fded2a825d61af09866e704",
           "retained": false,
           "exports": [
-            "PRICING_ACCENT",
-            "PRICING_CARD_STYLES",
-            "PRICE_ABOVE_BUTTON_CLASS",
-            "PricingCardStyles",
             "HighlightedFeatureText",
             "PricingCardBox",
+            "BrandPricingCardHeader",
             "MarketingPricingCard",
             "PriceNotePill"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/pricing/marketing-pricing-card-styles.ts",
           "sha256": "caf4c4e9fda729bd466c4bce12c0b026c4ccc85cfe5e56ead5bc0a14872a04be",
-          "retained": true,
+          "retained": false,
           "exports": [
             "PRICING_ACCENT",
             "FEATURE_HIGHLIGHT_REGEX",
@@ -3698,9 +3689,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/pricing/ApiCreditCostsTable.tsx",
-          "sha256": "e48a19a8b75c70775d985e109a9f753bcff2cbbd2baa61e062b12d427c1d39c3",
+          "sha256": "af625e36ca3601cabf0e5c8ce26b9386e89856dfa91eb9d11422b322966c48dc",
           "retained": false,
           "exports": [
             "ApiCreditCostsTable"
@@ -3708,9 +3699,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/pricing/PricingPageContent.tsx",
-          "sha256": "c95a8745e8e894ba7bfb20565e34651b1d9378072b724e87e2bdf33606340fc0",
+          "sha256": "852bea3bd9d1771e327a7b8a4092a226c011255e7825de3122e8c1aaa94a5e03",
           "retained": false,
           "exports": [
             "PricingPageContent"
@@ -3718,7 +3709,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/pricing/DashedHairlines.tsx",
           "sha256": "dc87da266e69ebc2b4663740a2776c67a0321fd953e5ae129f63fb11f0d86402",
           "retained": false,
@@ -3743,7 +3734,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/product-grid.tsx",
           "sha256": "c845eed09fa77a98a03fd569d611dd9042a7f9dd9a916548534827c33301448a",
           "retained": false,
@@ -3753,7 +3744,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/product-demo-panel.tsx",
           "sha256": "2d357ebf89b0f47df047705f6de1a60dd13a13da05c05da077a5dce7c3cf147c",
           "retained": false,
@@ -3763,7 +3754,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/story-stage.tsx",
           "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
           "retained": false,
@@ -3788,9 +3779,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/product-hero.tsx",
-          "sha256": "c3a481fb8b2291d13dc202abb4055a13c001e25c0eed361c69025d176c32325e",
+          "sha256": "ea81bc5e4fc05cf4f8473affcaf7dae32a9e540563cb5b7682bd21c909897f19",
           "retained": false,
           "exports": [
             "ProductHero"
@@ -3798,60 +3789,58 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/products/product-customer-proof.tsx",
           "sha256": "82267a69ae04a3143dcb55ccc2d3107c4c37b3f1aea8284160418b35c71da1c5",
-          "retained": false,
+          "retained": true,
           "exports": [
             "ProductCustomerProof"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/products/product-workflows.tsx",
-          "sha256": "8142836dfd6011c2617d841e9e2af1ee870fb720440c666fbf5093fe8227979e",
-          "retained": false,
+          "sha256": "4d8ad1733545e0ae826ee8093213c2cd9f0625a5be9ebbb3bd810b6148373fc4",
+          "retained": true,
           "exports": [
-            "ProductWorkflows",
             "ProductSteps"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/products/product-faq.tsx",
-          "sha256": "3ef04fa58374f842bc7aa3ea7887ae9a58bb3027fd089ab9fc211165d0b3ed0b",
-          "retained": false,
+          "sha256": "6699a6a4be72de2cf7fcc0ab26ac7b999e0d6bd3eff4419f814fcdddcb5f0f3d",
+          "retained": true,
           "exports": [
             "ProductFaq"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/products/product-call-to-action.tsx",
-          "sha256": "ed470ee2ce778ed3d042b0f03c9188dda7cd498acdfbff1b7350fdd00230a488",
-          "retained": false,
+          "sha256": "50dccf8f01e5324a0445a6f40cd6fe000cd62bb992ee204c7443fefe797a9af8",
+          "retained": true,
           "exports": [
             "ProductCallToAction"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/products/product-layout.tsx",
-          "sha256": "e3ea77f3edc387db972f2168a567c51d4a8a2b91bec2bd6e6b8b99d310e6a336",
-          "retained": false,
+          "sha256": "43726a32a570f354f917c523cb7720cf28ab5ed6ce04041b036ffba83a6ce7d7",
+          "retained": true,
           "exports": [
             "ProductContainer",
-            "ProductHeading",
-            "ProductCapabilities"
+            "ProductHeading"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/hero-background.tsx",
           "sha256": "7da7b91598eef4bdfc859680ccdde5b9c2995fdf152a0582c4fc9dca34bf8d4c",
           "retained": false,
@@ -3861,10 +3850,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/shared/cta-background.tsx",
           "sha256": "11c892a6fbb1bdf61d311d2444e85f1737226f2c55e20c04b5b4210facb6cfbb",
-          "retained": false,
+          "retained": true,
           "exports": [
             "CTABackground"
           ]
@@ -3886,9 +3875,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/product-landing-page.tsx",
-          "sha256": "5f9c7ff18eb6d2fcd762b314da3d7346900ec565af4f71b80e662b2c63ec982d",
+          "sha256": "b9eea159d7f9a850c9a884c71d84af4ff2fd41ba96abcfe965e16ce3d59f4110",
           "retained": false,
           "exports": [
             "SECTION_CLASS",
@@ -3897,29 +3886,36 @@
             "SectionIntro",
             "LandingIntegration",
             "LandingFaq",
+            "LandingSteps",
             "ProductLandingPage"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/product-landing-content.tsx",
-          "sha256": "60967272e1174a33d451944c34ea8b1764bf65470413ed51c6699d47d4cfc549",
+          "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
           "retained": false,
           "exports": [
+            "RelatedProductId",
             "ProductLandingContent",
             "scrapeLandingContent",
             "answersLandingContent",
+            "searchLandingContent",
             "mapLandingContent",
             "brandLandingContent",
             "styleguideLandingContent",
             "batchesLandingContent",
-            "monitorsLandingContent"
+            "monitorsLandingContent",
+            "parseLandingContent",
+            "brandSearchLandingContent",
+            "peopleEnrichmentLandingContent",
+            "newsLandingContent"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/landing-faq-list.tsx",
           "sha256": "431ebcdfdbe4ebd1b2ec9eca013c695cb9b272b80437e3053fd244002f35a479",
           "retained": false,
@@ -3929,7 +3925,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/product-demo-panel.tsx",
           "sha256": "2d357ebf89b0f47df047705f6de1a60dd13a13da05c05da077a5dce7c3cf147c",
           "retained": false,
@@ -3939,7 +3935,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/story-stage.tsx",
           "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
           "retained": false,
@@ -3964,10 +3960,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
           "path": "src/components/sections/products/product-page.tsx",
-          "sha256": "3726a6975657f49742908e8ff7ae17b1f6d94ddaee489acf8ce950693121a4a4",
-          "retained": false,
+          "sha256": "0cce37d3eac3d8481ea3c75182c5240f4c0657277fd2dda39a4b6b2e4c514035",
+          "retained": true,
           "exports": [
             "ProductPage"
           ]
@@ -4018,23 +4014,20 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/product-code-explorer.tsx",
-          "sha256": "8a4a8c9eade59490e5f089db24b704b07ca395570c0f4bf97cdf9737d6290f94",
-          "retained": true,
+          "sha256": "4f27c224a522a91ce4d603261d997052b6790d719a6486480a909a217367affa",
+          "retained": false,
           "exports": [
-            "ProductCodeSample",
-            "HighlightedCodeSample",
-            "useCopyFeedback",
-            "ProductCodeExplorer"
+            "useCopyFeedback"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/code-language-store.ts",
           "sha256": "adf7c935fb534c82207f0234030dee7bcadea3378e78af3e4d53319c88439c45",
-          "retained": true,
+          "retained": false,
           "exports": [
             "readStoredLanguage",
             "storeLanguage",
@@ -4135,7 +4128,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/ring-backdrop.tsx",
           "sha256": "498c6b7f3bd56a37defcf1c34eef1ca61691c11c7d732f5c7c3364bcbabcc9ce",
           "retained": false,
@@ -4213,7 +4206,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/section-grid-lines.tsx",
           "sha256": "f4bf7894d33ab45cf65aedc44cf975a6f3967d9c10835ca0a600e4bd7eb919bf",
           "retained": false,
@@ -4224,7 +4217,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/home-design.ts",
           "sha256": "453086596ac101daa92f679569f9265e2085576cb6a7fc7ffda762776e4837ce",
           "retained": false,
@@ -4238,7 +4231,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/section-divider.tsx",
           "sha256": "7931b90cad41f40559f89d4d926158faaf751512019ec67a61ca912f51de9cf9",
           "retained": false,
@@ -4454,9 +4447,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sidebar-payment-failed-card.tsx",
-          "sha256": "1f2f1b77e7ca39c384c64a4fa6883580fd4f9e6d58679d09e044eae1bd14ad58",
+          "sha256": "0c3f0874144cb59af88393400d3307d1a92618414d24369509c0d57f8b59af98",
           "retained": false,
           "exports": [
             "SidebarPaymentFailedCard"
@@ -4464,9 +4457,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sidebar-cancelling-card.tsx",
-          "sha256": "0b8a2e09ff774e8c094544c92f07245dc420f8dfe2cefb108b34c035c875e035",
+          "sha256": "de44c53afea232ffcd3d69c86d7de74249fb2811d3b846a053c1ba117b9617d9",
           "retained": false,
           "exports": [
             "SidebarCancellingCard"
@@ -4489,9 +4482,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/footer.tsx",
-          "sha256": "36b53e58abae5ed3fb7691cc4d4e49d57bb68bbe91ce6509e1f4a295a01c5720",
+          "sha256": "c0a8f1bfc27e7e4ab965f215f818bf9bfa8a653a776bdb1500a1bd2ba972825c",
           "retained": false,
           "exports": [
             "Footer"
@@ -4499,19 +4492,19 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "3ae05ca3c6d898558a05ab0a968dc5c88cc6fbca",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/footer-service-status-link.tsx",
           "sha256": "5cdd8f0faa9891e827f386994ddafd81dddfd4a757ec2b7cb244513d1a14c743",
-          "retained": true,
+          "retained": false,
           "exports": [
             "FooterServiceStatusLink"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/footer-copy-prompt-button.tsx",
-          "sha256": "dc3d7732a2fad356fb28bb1e379be5d10ed0c43656505d9a97b0100c3c954dcc",
+          "sha256": "8614229bc2003474c753eb5188ce11ba76aafec9c8ed1158a0fa00927f5472a4",
           "retained": false,
           "exports": [
             "FooterCopyPromptButton"
@@ -4519,7 +4512,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/section-grid-lines.tsx",
           "sha256": "f4bf7894d33ab45cf65aedc44cf975a6f3967d9c10835ca0a600e4bd7eb919bf",
           "retained": false,
@@ -4545,9 +4538,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/header.tsx",
-          "sha256": "b06882dbcd97e4112b677339bf57de2e94e4899a28633243ce2bfc2278c6fe4a",
+          "sha256": "a7a5825f70934ce0e55c80bc75f791b1a4823827e875a687df11e6fdab971273",
           "retained": false,
           "exports": [
             "Header"
@@ -4555,10 +4548,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/nav-menu-panels.tsx",
-          "sha256": "a27bd32779fe8b788a46215142074b53c0d3766753856463d80f151a1c5e0c36",
-          "retained": true,
+          "sha256": "ed42dbe2966b42ae52ea30635780fd26ab4e68ad6e087a97d3eaead2cedf6493",
+          "retained": false,
           "exports": [
             "MenuIconChip",
             "ProductsPanel",
@@ -4567,7 +4560,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/marketing-header-frame.tsx",
           "sha256": "60dc1b480f55b6fb527f5cb9908206851afbbeb7388b13a3e2284c5922801b61",
           "retained": false,
@@ -4577,7 +4570,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/marketing-header-frame.module.css",
           "sha256": "fdcca9fe52782b11df64f792b8c1c810f9272a20583196ac17b6878312bdbc11",
           "retained": false,
@@ -4585,9 +4578,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/mobile-navigation.tsx",
-          "sha256": "6c7efc513f9f4abf140f68a5bdc19f837de9839843d350e4f4f19f191d673fb4",
+          "sha256": "0ccabe656c84a4926306faf16e8b8c10ce23596d53b0cd391fa2462d0f5f68e6",
           "retained": false,
           "exports": [
             "MARKETING_DESKTOP_QUERY",
@@ -4597,30 +4590,27 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/mobile-navigation.module.css",
-          "sha256": "8e20d5ad98421ab4b6010b645e35a46f90e33be6b792c79ab506b136e795741a",
+          "sha256": "97f5b88895a069b41fb507a8526a98d5fa850e746c535d4251fefa328fc80a2e",
           "retained": false,
           "exports": []
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/ui/glide-hover.tsx",
-          "sha256": "baac02976eb39f4909f27d5b15f3c6aba667cfcf78b2c3a6c65f840ac0ad57cd",
+          "sha256": "4af7b836a06459a81493ed9247f240061c1453aca203043a33977502c04e6748",
           "retained": false,
           "exports": [
-            "SPRING_GLIDE_TRANSITION",
-            "HighlightBox",
-            "boxWithin",
             "GlideHover"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/dark-cta-link.tsx",
-          "sha256": "36c09a7f32507d3ff19e88d583527c2ba7700850c8e98e1ee3d029b392756b42",
+          "sha256": "2d21e80fb388f649a3b9a993f2680769cce3688f1ead34923ca342c873adbfa6",
           "retained": false,
           "exports": [
             "DarkCtaLink"
@@ -4668,7 +4658,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/ui/sonner.tsx",
           "sha256": "54bbbe94b195997395b236584057642dc58482a87cef127722f58c7d0b5c428e",
           "retained": false,
@@ -4691,9 +4681,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/dashboard/PausePlanModal.tsx",
-          "sha256": "9c338ae1a63b62e05d684c7b6f2b1eb056bab0a04caa7f4f98662b39200fbec0",
+          "sha256": "b3d24eec6292352ed15278b6474793df64470c912120a5b6b0118aef92c4af62",
           "retained": false,
           "exports": [
             "PausePlanContent",
@@ -4717,10 +4707,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-sections.tsx",
           "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
-          "retained": true,
+          "retained": false,
           "exports": [
             "UseCaseProof",
             "UseCaseHowItWorks",
@@ -4779,7 +4769,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/actions-story.tsx",
           "sha256": "bced7b0f597d27e1d144d08e765f2ae01ce210680ed94be3cce9a4454d6f9a88",
           "retained": false,
@@ -4812,7 +4802,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/answer-story.tsx",
           "sha256": "94086442fa11f30cf5d95a1784f4945ee32b4ebcd346a7b77dac327ff82d84e1",
           "retained": false,
@@ -4845,7 +4835,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/assets-story.tsx",
           "sha256": "34701d64be11440e526b4ffdce231972055ece0caa75fdb7dbc162f983ad4733",
           "retained": false,
@@ -4878,7 +4868,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/autofill-story.tsx",
           "sha256": "aa3789e71a0e15fd1972965e6e116ad2e08165fc02d23acea178ddb9178d9d66",
           "retained": false,
@@ -4911,7 +4901,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/batch-story.tsx",
           "sha256": "7d13282cb2d802c2ab2d1322b57cd301fbf22c216c6d88dbe9188766ea8a3c03",
           "retained": false,
@@ -4977,7 +4967,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/blog-hero-story.tsx",
           "sha256": "974288b26fc4dbbeba13803330e3418b526ffa4e532db1a33353985e2b261fdb",
           "retained": false,
@@ -5010,7 +5000,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/brand-kit-story.tsx",
           "sha256": "5564c9fb665c8a9e7000cd92f891e88dce4c78e311ff81a81b4fba5ae3fa0b41",
           "retained": false,
@@ -5043,7 +5033,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/collect-story.tsx",
           "sha256": "00aa59adc2fa01b9c6250b78d568d7089a689dd58299f19775b0ceafd375a68a",
           "retained": false,
@@ -5076,7 +5066,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/compare-hero-story.tsx",
           "sha256": "cddc4f10bfcd00e05b641b764fe92f3a5bd034c45527272323023c15cb3507df",
           "retained": false,
@@ -5109,7 +5099,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/components-story.tsx",
           "sha256": "dc2b095992b8e206b110b6340f08670e93deedabee7202323b36c9f74a4742b1",
           "retained": false,
@@ -5142,7 +5132,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/context-story.tsx",
           "sha256": "217d2db7850fed94a62ef2d65a5b78360e2d244fb0fd95f4079c03a582383fc4",
           "retained": false,
@@ -5175,7 +5165,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/crawl-story.tsx",
           "sha256": "f9d874ecd1cb94786e9330c4026b2b7ba9f7b27c9746bbb244cdee7e3cef720a",
           "retained": false,
@@ -5208,7 +5198,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/datasets-hero-story.tsx",
           "sha256": "cf683430c70ef478d11f9f99c4fd5def0bc2fb19c10ee0cd4c25f2c0f1747572",
           "retained": false,
@@ -5241,7 +5231,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/design-system-story.tsx",
           "sha256": "86b9db08835b4995a468220d059d586218516dd840b61e309dba219997897f15",
           "retained": false,
@@ -5274,7 +5264,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/discover-story.tsx",
           "sha256": "7d95c4077a87fed583a81fa8878db82744b79b0b74c68de9af2317926bfa3493",
           "retained": false,
@@ -5307,7 +5297,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/enrich-story.tsx",
           "sha256": "d3cc266d63dc34422a28d37c12c0c204e78ef5af0f96f92fd84dad501f35e2a7",
           "retained": false,
@@ -5340,7 +5330,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/extract-story.tsx",
           "sha256": "1dd237f8576b2efb07488b7595e6c8c4e3885b1ea3d1bde08e5c9e93743f7fff",
           "retained": false,
@@ -5373,7 +5363,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-demo-invite.tsx",
           "sha256": "f44ad172b01c7e0f7cc23c2db0fef4dfb2dc8e47fae7fcbbf7eb00af45486fe7",
           "retained": false,
@@ -5383,7 +5373,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-demo-story-player.ts",
           "sha256": "07e3de7cdf157b129da57386ed537d1688050389f83dfd7e4d24ea517bc0606b",
           "retained": false,
@@ -5393,7 +5383,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq-demo-story-scenes.ts",
           "sha256": "ea6de43dd27f90f155a210f8ca05b43bbefe12e231b241369de3d930a2dceba3",
           "retained": false,
@@ -5437,7 +5427,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/free-tools-hero-story.tsx",
           "sha256": "c0d06b3525bf6dbfb25a942b29d7c98e83c540ab99a10fddb9c8668f6d9e444e",
           "retained": false,
@@ -5470,7 +5460,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/freshness-story.tsx",
           "sha256": "495dc14f56ae5f988abfbce0f7d7b3eb6db4ccead4c877245d4e0919b6b2fa74",
           "retained": false,
@@ -5503,7 +5493,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/generate-story.tsx",
           "sha256": "a0348515280c8b5e7355c96bb2d7e4b14d109314f18393e1ee293832017e5d02",
           "retained": false,
@@ -5536,7 +5526,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/glossary-hero-story.tsx",
           "sha256": "2c900dbeafd2709c851aef2cfa53b9a00187760026ab32684f5d51ba29d46c8e",
           "retained": false,
@@ -5569,7 +5559,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/grants-hero-story.tsx",
           "sha256": "9749f01a8f5beb3000dc2bc0a914e56b59ba3e6314324017cc26c3c719bdee9b",
           "retained": false,
@@ -5602,7 +5592,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/identity-story.tsx",
           "sha256": "99f818659fb1acc313afd1d81a7efb99066f736f8c427246507ea04d7e5e9296",
           "retained": false,
@@ -5635,7 +5625,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/metadata-story.tsx",
           "sha256": "ea2c4fd5c5adb0271aeaaf917af45b6babd704073d011f57835b653b7e8b0451",
           "retained": false,
@@ -5668,7 +5658,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/monitor-ways-story.tsx",
           "sha256": "e380c0c10fbadfc97fe276939148d1560b1ae1f3f2a5a8dd4028165b2375b9ff",
           "retained": false,
@@ -5703,7 +5693,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/output-story.tsx",
           "sha256": "8ce8f5f721a02867b28a08b0ea90a5b8b52f32c7f064ae97a46ec293c327f163",
           "retained": false,
@@ -5736,7 +5726,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/parse-story.tsx",
           "sha256": "42ade6c25ed7d2854bdbfb5e5e3de33c02919d161e13b822bc42354c079f0981",
           "retained": false,
@@ -5769,7 +5759,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/page-heroes/hero-story-kit.ts",
           "sha256": "8aff798fe81b2a828df11fefe2321d78cebf75a901137c41c4e96d380c5b3153",
           "retained": false,
@@ -5785,7 +5775,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/style-guide-parts.ts",
           "sha256": "ef37d69f7576174df8f6a225b756108824bbc29558f438a8d7fc517c0fdc3a15",
           "retained": false,
@@ -5795,7 +5785,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/prompt-field.ts",
           "sha256": "0c5df88638c48da66697aeb9a043b61339f7570632f738d8ffdd3f21e6387de2",
           "retained": false,
@@ -5828,7 +5818,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/persona-story.tsx",
           "sha256": "d87f59f54f04bfa592b81ce4cd58e6d54ac221c56497ed592d96ad66f716be30",
           "retained": false,
@@ -5861,7 +5851,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/question-story.tsx",
           "sha256": "f9bb1be73ff9ad189f67ebb13105cce895b9db1f0f638797841762906e8a69e3",
           "retained": false,
@@ -5894,7 +5884,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/rag-story.tsx",
           "sha256": "dce21860ed7237d235157aba906f94285016ba9c7616037a3f400400a6c426f9",
           "retained": false,
@@ -5927,7 +5917,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/research-story.tsx",
           "sha256": "b66cb59bb32cc4f25c4bd12d3aa0f8f0e15337e8e859ac06dda905cdfa3b40ea",
           "retained": false,
@@ -5960,7 +5950,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/scope-story.tsx",
           "sha256": "3d5d0b4342fc7825decf21514b0b456e82074a445a65d8a115c1cdbe3616c1d3",
           "retained": false,
@@ -5993,7 +5983,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/scrape-story.tsx",
           "sha256": "84dc74e1e745a610c4125fe2d1506fdd1461ab99cfbe10c2a68529f246464744",
           "retained": false,
@@ -6026,7 +6016,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/search-story.tsx",
           "sha256": "9d3090319f80d4979fc05e1f2ea491f531313a4c5f029c2bde0f59f16cc257af",
           "retained": false,
@@ -6059,7 +6049,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/setup-story.tsx",
           "sha256": "8f0e09aa6270278c298be0085d646c7240595f9db252a44bd214cafdab69d784",
           "retained": false,
@@ -6092,7 +6082,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/site-map-story.tsx",
           "sha256": "3b5e15ecc617d0a6294e043deccef3906cf6cf33959ed07c90f2ea30164f6e2e",
           "retained": false,
@@ -6125,7 +6115,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/sources-story.tsx",
           "sha256": "5186aa395f90455cd03cc995d0b6675c9e427c5ec9a4afcda0599fa7f6387095",
           "retained": false,
@@ -6158,7 +6148,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/spacing-story.tsx",
           "sha256": "76d97613f966f3cb86b37418277ae4a3f98ec0239da02eabca12be1862d91177",
           "retained": false,
@@ -6191,7 +6181,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/structure-story.tsx",
           "sha256": "bdf1df3e4bf09c79bb8039c88b6ee70aeb3ed85dfdf343d998519fdadd8d55db",
           "retained": false,
@@ -6224,7 +6214,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/tenant-theme-story.tsx",
           "sha256": "9d764577ae330f49279f957a815e97b98fc43c1863255b1088fce5f2c774350e",
           "retained": false,
@@ -6257,7 +6247,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/type-story.tsx",
           "sha256": "ceecbc45150ae751010edd7806e4013a8dac6f22e95d3e1c0cb36eb180a7f7bf",
           "retained": false,
@@ -6290,7 +6280,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/products/url-list-story.tsx",
           "sha256": "f4c5248616ad8404238a35479caa2bc7a969b7517dbdd13e3805868dce62d96c",
           "retained": false,
@@ -6323,7 +6313,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/watch-story.tsx",
           "sha256": "8968430516e543c19a6abc80a6a447948bcc3850060eedfe36dd971207fe1433",
           "retained": false,
@@ -6463,7 +6453,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/faq.tsx",
           "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
           "retained": false,
@@ -6473,7 +6463,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "1bd8062d8277803b7ed8cecfcfeff26fcb737bd4",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/ui/tabs.tsx",
           "sha256": "9d685bb15672b2c27f6dd69da8aacce0d87a1237b2d7827e000217bb81aaf296",
           "retained": false,
@@ -6496,10 +6486,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/dashboard-ui/tag-filter.tsx",
           "sha256": "b5ddbf78e8f824c1ab4aa789b65fb4289e45b5aaf5f348dcef561fe72c839c4c",
-          "retained": true,
+          "retained": false,
           "exports": [
             "TagFilter"
           ]
@@ -6550,7 +6540,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/testimonials.tsx",
           "sha256": "ba95f8265e2abf37d8e82f2abb27f373f6624f47dca368f9e0cb59550db3f212",
           "retained": false,
@@ -6681,9 +6671,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/trust-strip.tsx",
-          "sha256": "51529bee4aa1db5d3e22e9bb509389973d3a2b30fad2d4963afb91eb062fd245",
+          "sha256": "c31ecffa1fdc6ad54c0e8686831b9aa783f035c6a6dff4628d95bee45bde0c27",
           "retained": false,
           "exports": [
             "TrustStrip"
@@ -6691,7 +6681,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/trust-mark.tsx",
           "sha256": "5e87ebbac403b5cce7dfcfa85a6338a6ce3a91bca26532f75a75abc6215b1631",
           "retained": false,
@@ -6701,9 +6691,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/trust-marks.ts",
-          "sha256": "f0ebd310bd31f2b00d9eb0922900c6c455dc88581b9a3102faebff88d9083156",
+          "sha256": "f71a97f5674f44f9a7dbdf84e00acdd142ef16225425c0d97a0c87bbdaabc16e",
           "retained": false,
           "exports": [
             "TrustMarkId",
@@ -6831,22 +6821,24 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/use-case-landing-page.tsx",
-          "sha256": "d0660084eefff4ba153ec21257953ec434eb254ef6966f017ffc60eba42182ed",
+          "sha256": "c79aabd165d9ee77f39acff120444cb2f03aec033d9ada8608e0030834554a88",
           "retained": false,
           "exports": [
             "UseCaseFeature",
+            "UseCaseComparisonTable",
+            "UseCaseApiExample",
             "UseCaseLandingContent",
             "UseCaseLandingPage"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-sections.tsx",
           "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
-          "retained": true,
+          "retained": false,
           "exports": [
             "UseCaseProof",
             "UseCaseHowItWorks",
@@ -6857,10 +6849,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/before-after-panels.tsx",
           "sha256": "fc3773913793bbe8922a984048c895a92573b07bf68f9b1d288eb8bf999b665e",
-          "retained": true,
+          "retained": false,
           "exports": [
             "BeforeAfterPanel",
             "BeforeAfterPanels",
@@ -6869,7 +6861,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/product-demo-panel.tsx",
           "sha256": "2d357ebf89b0f47df047705f6de1a60dd13a13da05c05da077a5dce7c3cf147c",
           "retained": false,
@@ -6879,7 +6871,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/story-stage.tsx",
           "sha256": "64e15761b051c9fa6647e23860ded5f4ba29b5a515f02922c94140a339a22718",
           "retained": false,
@@ -6904,10 +6896,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-sections.tsx",
           "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
-          "retained": true,
+          "retained": false,
           "exports": [
             "UseCaseProof",
             "UseCaseHowItWorks",
@@ -6918,10 +6910,10 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-code-tabs.tsx",
-          "sha256": "3022e964ac8443eb3a64aa54bfa2c869937187f5a531e34ce56572d3553298f3",
-          "retained": true,
+          "sha256": "e31b1155aaf02e2e831e6e7c6188951f296b207ec17e3699046de7f991a6dacd",
+          "retained": false,
           "exports": [
             "HighlightedUseCaseSample",
             "InstallCommand",
@@ -6930,12 +6922,14 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/use-case-landing-page.tsx",
-          "sha256": "d0660084eefff4ba153ec21257953ec434eb254ef6966f017ffc60eba42182ed",
+          "sha256": "c79aabd165d9ee77f39acff120444cb2f03aec033d9ada8608e0030834554a88",
           "retained": false,
           "exports": [
             "UseCaseFeature",
+            "UseCaseComparisonTable",
+            "UseCaseApiExample",
             "UseCaseLandingContent",
             "UseCaseLandingPage"
           ]
@@ -6957,19 +6951,21 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/use-case-landing-page.tsx",
-          "sha256": "d0660084eefff4ba153ec21257953ec434eb254ef6966f017ffc60eba42182ed",
+          "sha256": "c79aabd165d9ee77f39acff120444cb2f03aec033d9ada8608e0030834554a88",
           "retained": false,
           "exports": [
             "UseCaseFeature",
+            "UseCaseComparisonTable",
+            "UseCaseApiExample",
             "UseCaseLandingContent",
             "UseCaseLandingPage"
           ]
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/persona-story-window.tsx",
           "sha256": "97f5953fce8e55b07b8452cfef78f46b5c1709e24b1851573173cedebb0b823a",
           "retained": false,
@@ -6979,9 +6975,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/usecases/use-case-personas.tsx",
-          "sha256": "eb3add194bcab3e69b763c61d0dee349c4e3c931ad70a259c3e22799f70ff6d0",
+          "sha256": "74dc2b8ced136f9c17c0d9b417b11ac2682f4f1245259b86765827f1cc4805b0",
           "retained": false,
           "exports": [
             "UseCasePersona",
@@ -7005,10 +7001,10 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "c1cfbca67fd1c24a8bd1d0656c6b916f6edb1fcb",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/use-cases/use-case-sections.tsx",
           "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
-          "retained": true,
+          "retained": false,
           "exports": [
             "UseCaseProof",
             "UseCaseHowItWorks",
@@ -7034,9 +7030,9 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/use-cases.tsx",
-          "sha256": "107de0e1833e588d55bcb4ff64e1f9a77790edf9646beaecff7f8e4066e468e5",
+          "sha256": "ce67e69913b5e2c9b79f72da0d6becab68b659dfa1e51ec8ffd149489e1622e3",
           "retained": false,
           "exports": [
             "UseCases"
@@ -7044,9 +7040,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/feature-selector.tsx",
-          "sha256": "cc9f0d4da6e335abf513c78014e69e01248ba61aa38a440675fd173a693c4ba0",
+          "sha256": "5986ac8bdc0ae80b02f8030afb44a6fa32f767f51269f61614447d641ccd166a",
           "retained": false,
           "exports": [
             "FeatureOption",
@@ -7055,9 +7051,9 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/use-tab-glide.ts",
-          "sha256": "a65814d9356c8bf50fff6455fc4d1024eaf8921e74a720f0508ac850bc772a9b",
+          "sha256": "505dce806ea1106c07f85e6328b38266e848ad6bc8b2019aa24299f38381a2b5",
           "retained": false,
           "exports": [
             "useTabGlide"
@@ -7105,7 +7101,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/shared/use-hover-dot-morph.ts",
           "sha256": "9247ccd2a5a0aae86519baa121142fbb3741161e4c365be65e0af7110673c574",
           "retained": false,
@@ -7211,15 +7207,15 @@
       "library": [
         {
           "path": "lib/utils.ts",
-          "sha256": "35583462f78a0456c6b9e6f1118f366a18c59fe78c0368168034dd0a38658e56"
+          "sha256": "d6bba79dc72d9136f450f1d5bc10b58353757946181c24de48723f16f3b88348"
         }
       ],
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/lib/utils.ts",
-          "sha256": "d6e13f6a128ce78005cb9bec831cef03da1435e7b4add054d4302eede08a672c",
+          "sha256": "d94995500e74ae0158e99e72448af06bdbe1aee2b9c16702b30f6b5c9e18a6e5",
           "retained": false,
           "exports": [
             "cn",
@@ -7243,7 +7239,7 @@
       "sources": [
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/workflow-grid.tsx",
           "sha256": "c86bae82b231f92573273a396e406c3956c736bb4e2eb662b1ff146437d57ae7",
           "retained": false,
@@ -7253,7 +7249,7 @@
         },
         {
           "repository": "brand-dev-webapp",
-          "commit": "59e4273efc0c7f0dad1be747bf502d3be2186cf1",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
           "path": "src/components/sections/home/home-design.ts",
           "sha256": "453086596ac101daa92f679569f9265e2085576cb6a7fc7ffda762776e4837ce",
           "retained": false,

@@ -9,13 +9,16 @@ const root = blocks.find((b) => b.selector === ':root');
 const product = blocks.find((b) => b.selector === '.ds-product');
 const dark = blocks.find((b) => b.selector.includes('dark'));
 if (!root || !product || !dark) throw new Error('brand/tokens.css needs :root, .ds-product and a dark block');
+// Doto's own weights, after the product block so they hold inside it too.
+const dataWeights = blocks.find((b) => b.selector === '.font-data');
+const data = dataWeights ? `\n\n.font-data {${dataWeights.body}}` : '';
 const vars = (body) => Object.fromEntries([...body.matchAll(/(--ds-[\w-]+)\s*:\s*([^;]+);/g)].map((m) => [m[1], m[2].trim()]));
 
 const header = '/* Written by context-ds from its brand files. Do not edit; run the CLI again to update. */\n';
 // A site may also hold product screens (an app behind the marketing pages): they opt in with the ds-product class.
-const site = `${header}:root, .ds-site {${root.body}}\n\n.ds-product {${product.body}}\n\n.dark .ds-product,\n[data-theme="dark"] .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n\n${read('site.css')}`;
+const site = `${header}:root, .ds-site {${root.body}}\n\n.ds-product {${product.body}}\n\n.dark .ds-product,\n[data-theme="dark"] .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}${data}\n\n${read('site.css')}`;
 // A product project is a product everywhere, so its values apply at the root; its dark theme follows the app's own switch.
-const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n:root:is(.dark, [data-theme="dark"]),\n.dark .ds-product,\n[data-theme="dark"] .ds-product {${dark.body}}\n\n${read('product.css')}`;
+const productCss = `${header}:root {${root.body}}\n\n:root {${product.body}}\n\n:root:is(.dark, [data-theme="dark"]),\n.dark .ds-product,\n[data-theme="dark"] .ds-product {${dark.body}}${data}\n\n${read('product.css')}`;
 
 // Tailwind 4: theme names that read the brand variables, so classes like bg-surface or text-fg-muted work.
 const t = vars(root.body);
@@ -29,12 +32,13 @@ const color = {
 	'window-close': 'window-close', 'window-minimize': 'window-minimize', 'window-zoom': 'window-zoom',
 };
 for (const name of Object.keys(t)) {
-	const m = name.match(/^--ds-color-((?:blue|navy|neutral)-\d+|chart-series-\d|chart-[\w-]+|alert(?:-\w+)?|skeleton-shine)$/);
+	const m = name.match(/^--ds-color-((?:blue|navy|neutral)-\d+|chart-series-\d|chart-[\w-]+|code-[\w-]+|alert(?:-\w+)?|skeleton-shine)$/);
 	if (m) color[m[1].replace(/^chart-(series-\d)$/, '$1')] = m[1];
 }
 const theme = [
 	...Object.entries(color).map(([k, v]) => `\t--color-${k}: var(--ds-color-${v});`),
 	...['sans', 'data', 'mono'].map((k) => `\t--font-${k}: var(--ds-font-${k});`),
+	...['regular', 'medium', 'bold', 'heavy'].map((k) => `\t--font-weight-${k}: var(--ds-font-weight-${k});`),
 	...Object.keys(t).filter((k) => k.startsWith('--ds-text-')).map((k) => `\t--text-${k.slice(10)}: var(${k});`),
 	...['body', 'body-lg', 'body-sm', 'caption', 'h5'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-body);`),
 	...['display', 'h3', 'h4'].map((k) => `\t--text-${k}--line-height: var(--ds-leading-type-${k});`),
@@ -189,7 +193,7 @@ mkdirSync(new URL('../build', import.meta.url), { recursive: true });
 const write = (p, s) => writeFileSync(new URL(`../build/${p}`, import.meta.url), s);
 write('site.css', site);
 // Tokens alone (site at the root, product under .ds-product, both darks), for the component library and its docs.
-write('tokens.css', `${header}:root, .ds-site {${root.body}}\n\n.ds-product {${product.body}}\n\n:is(.dark, [data-theme="dark"]) .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}\n`);
+write('tokens.css', `${header}:root, .ds-site {${root.body}}\n\n.ds-product {${product.body}}\n\n:is(.dark, [data-theme="dark"]) .ds-product,\n.ds-product:is(.dark, [data-theme="dark"]) {${dark.body}}${data}\n`);
 write('product.css', productCss);
 write('theme.css', themeCss);
 write('fonts.css', fonts);

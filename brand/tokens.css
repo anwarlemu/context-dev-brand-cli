@@ -36,6 +36,23 @@
 	--ds-color-bg-inverse: #000000;
 	--ds-color-bg-dark: #1A1A1A;
 	--ds-color-bg-code: #0D1117;
+	/* Syntax colors (the site's GitHub-style theme): on the dark code window, then on light code blocks in articles. */
+	--ds-color-code-text: #E6EDF3;
+	--ds-color-code-comment: #919BA6;
+	--ds-color-code-punctuation: #B1BAC4;
+	--ds-color-code-keyword: #D2A8FF;
+	--ds-color-code-string: #A5D6FF;
+	--ds-color-code-function: #7EE787;
+	--ds-color-code-number: #FFA657;
+	--ds-color-code-property: #79C0FF;
+	--ds-color-code-light-text: #24292F;
+	--ds-color-code-light-comment: #656D76;
+	--ds-color-code-light-punctuation: #57606A;
+	--ds-color-code-light-keyword: #8250DF;
+	--ds-color-code-light-string: #0A3069;
+	--ds-color-code-light-function: #116329;
+	--ds-color-code-light-number: #953800;
+	--ds-color-code-light-property: #0550AE;
 	--ds-color-bg-scrim: rgb(0 0 0 / 0.1);
 	--ds-color-bg-announcement: #F7F8FA;
 
@@ -111,9 +128,14 @@
 	/* Type */
 	--ds-font-sans: var(--font-rethink-sans, "Rethink Sans"), system-ui, sans-serif;
 	--ds-font-data: var(--font-doto, "Doto"), ui-monospace, monospace;
-	--ds-font-mono: var(--font-ibm-plex-mono, "IBM Plex Mono"), ui-monospace, monospace;
+	/* The site sets code and labels in Rethink Sans too (font-mono on context.dev); the product keeps IBM Plex Mono. */
+	--ds-font-mono: var(--font-rethink-sans, "Rethink Sans"), system-ui, sans-serif;
 	--ds-font-weight-regular: 400;
-	--ds-font-weight-medium: 500;
+	/* The site's medium is 450 (500 in the product, and for Doto, which keeps 500 and 700). */
+	--ds-font-weight-medium: 450;
+	--ds-font-weight-bold: 600;
+	/* Doto figures set heavy, such as a plan's price. */
+	--ds-font-weight-heavy: 800;
 	--ds-text-hero: 2.5rem;
 	--ds-text-hero-tablet: 48px;
 	--ds-text-hero-desktop: 56px;
@@ -229,6 +251,8 @@
 
 /* The product (dashboard, admin, any app people work in): canvas page, white cards, compact type. */
 .ds-product {
+	--ds-font-mono: var(--font-ibm-plex-mono, "IBM Plex Mono"), ui-monospace, monospace;
+	--ds-font-weight-medium: 500;
 	--ds-color-bg-default: #FFFFFF;
 	--ds-color-text-muted: #4D4D4D;
 	--ds-color-text-subtle: #707070;
@@ -305,4 +329,10 @@
 	--ds-color-alert-soft: #7A3A3E;
 	--ds-color-chart-rate-limited: #8A70D6;
 	--ds-color-skeleton-shine: #262629;
+}
+
+/* Doto keeps its own weights: medium 500 and bold 700, not the site's 450 and 600 (the site's font-data utility). */
+.font-data {
+	--ds-font-weight-medium: 500;
+	--ds-font-weight-bold: 700;
 }
