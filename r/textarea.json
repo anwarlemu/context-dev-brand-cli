@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "textarea",
+  "type": "ui",
+  "title": "Textarea",
+  "description": "Multi-line text input with hover, focus, invalid, and disabled states.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Notes, prompts, messages.",
+  "avoid": [
+    "Fixed tiny heights"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/textarea.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add textarea",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/form.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/textarea.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Textarea({ className, ...props }: React.ComponentProps<\"textarea\">): React.JSX.Element;\nexport { Textarea };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/textarea/Product"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/textarea/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/textarea.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Label } from \"@/components/ui/label\";\nimport { Textarea } from \"@/components/ui/textarea\";\n\nexport function Product() {\n  const [schema, setSchema] = useState(\"{ plans: [\");\n  let valid = true;\n  try { JSON.parse(schema); } catch { valid = false; }\n  return (\n    <div className=\"grid w-full max-w-sm gap-5\">\n      <div className=\"grid gap-2\">\n        <Label htmlFor=\"example-prompt\">Prompt</Label>\n        <Textarea id=\"example-prompt\" placeholder=\"Find the pricing page and list every plan.\" />\n      </div>\n      <div className=\"grid gap-2\">\n        <Label htmlFor=\"example-schema\">Schema</Label>\n        <Textarea id=\"example-schema\" value={schema} onChange={(event) => setSchema(event.target.value)} aria-invalid={!valid} aria-describedby=\"schema-help\" />\n        <p id=\"schema-help\" aria-live=\"polite\" className={`text-caption ${valid ? \"text-fg-subtle\" : \"text-danger\"}`}>{valid ? \"Valid JSON.\" : \"This isn't valid JSON yet.\"}</p>\n      </div>\n    </div>\n  );\n}\n\nexport function Site() {\n  return (\n    <div className=\"grid w-full max-w-sm gap-2\">\n      <Label htmlFor=\"example-message\">How can we help?</Label>\n      <Textarea id=\"example-message\" placeholder=\"Tell us what you're building.\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "label"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/textarea.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's multi-line field (TEXTAREA_CLASS): the input's border and states, fixed in size.\nfunction Textarea({ className, ...props }: React.ComponentProps<\"textarea\">) {\n  return (\n    <textarea\n      data-slot=\"textarea\"\n      className={cn(\n        \"flex w-full resize-none rounded-control border border-line bg-surface px-3.5 py-2.5 text-body-sm leading-field text-fg transition-[border-color,box-shadow] duration-150 ease-out outline-none placeholder:text-fg-subtle hover:border-line-strong focus:border-brand disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-danger motion-reduce:transition-none\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { Textarea };\n"
+    }
+  ]
+}

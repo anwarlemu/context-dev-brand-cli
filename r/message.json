@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "message",
+  "type": "ui",
+  "title": "Message",
+  "description": "One message in a conversation: a round 28px avatar, the sender and time, its bubbles and a caption footer.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Build a conversation from Message rows inside a MessageGroup: MessageAvatar (an initial or a picture), MessageContent with MessageHeader (the name, then a time element) and the Bubble pieces, and an optional MessageFooter (Delivered, Seen). Set align end for the person's own messages; the row mirrors.",
+  "avoid": [
+    "Square avatars",
+    "A bold sender name",
+    "Times darker than the subtle gray"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/message.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add message",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/support-chat.tsx; src/components/team/team-page.tsx (avatars)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/support-chat.tsx",
+        "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+        "retained": false,
+        "exports": [
+          "SupportChat"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/team/team-page.tsx",
+        "sha256": "af2b0b2e2d9b18dd48f98252af751eeb49944d96f94aaa9e2dc8dbe30c4f4f7f",
+        "retained": false,
+        "exports": [
+          "INITIAL_MEMBERS",
+          "ROLE_LABELS",
+          "TeamPage",
+          "InviteDialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/message.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function MessageGroup({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function Message({ className, align, ...props }: React.ComponentProps<\"div\"> & {\n    align?: \"start\" | \"end\";\n}): React.JSX.Element;\ndeclare function MessageAvatar({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function MessageContent({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function MessageHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function MessageFooter({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/message/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/message/Product"
+    },
+    {
+      "name": "Delivered",
+      "url": "https://context-ds.vercel.app/preview/message/Delivered"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/message.tsx",
+      "content": "import { Check, CheckCheck } from \"lucide-react\";\n\nimport { Bubble, BubbleContent, BubbleGroup } from \"@/components/ui/bubble\";\nimport { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader } from \"@/components/ui/message\";\n\nexport function Site() {\n  return (\n    <MessageGroup className=\"mx-auto w-full max-w-lg\">\n      <Message>\n        <MessageAvatar>AL</MessageAvatar>\n        <MessageContent>\n          <MessageHeader>\n            Ana Lopez <time dateTime=\"2026-10-24T14:02\">2:02 PM</time>\n          </MessageHeader>\n          <Bubble variant=\"secondary\">\n            <BubbleContent>Does Context.dev respect robots.txt?</BubbleContent>\n          </Bubble>\n        </MessageContent>\n      </Message>\n      <Message align=\"end\">\n        <MessageAvatar>CD</MessageAvatar>\n        <MessageContent>\n          <MessageHeader>\n            Context.dev <time dateTime=\"2026-10-24T14:03\">2:03 PM</time>\n          </MessageHeader>\n          <Bubble align=\"end\">\n            <BubbleContent>By default, yes. You can change it per request.</BubbleContent>\n          </Bubble>\n        </MessageContent>\n      </Message>\n    </MessageGroup>\n  );\n}\n\nexport function Product() {\n  return (\n    <MessageGroup className=\"mx-auto w-full max-w-lg\">\n      <Message>\n        <MessageAvatar>S</MessageAvatar>\n        <MessageContent>\n          <MessageHeader>\n            Support <time dateTime=\"2026-10-24T09:41\">9:41 AM</time>\n          </MessageHeader>\n          <Bubble variant=\"secondary\">\n            <BubbleContent>Thanks, that is with the team. Someone will reply here, usually within a few minutes.</BubbleContent>\n          </Bubble>\n        </MessageContent>\n      </Message>\n      <Message align=\"end\">\n        <MessageAvatar>AL</MessageAvatar>\n        <MessageContent>\n          <MessageHeader>\n            You <time dateTime=\"2026-10-24T09:43\">9:43 AM</time>\n          </MessageHeader>\n          <BubbleGroup>\n            <Bubble align=\"end\">\n              <BubbleContent>The batch from this morning shows 3 failed URLs.</BubbleContent>\n            </Bubble>\n            <Bubble align=\"end\">\n              <BubbleContent>Can you check why?</BubbleContent>\n            </Bubble>\n          </BubbleGroup>\n          <MessageFooter>\n            <CheckCheck /> Seen\n          </MessageFooter>\n        </MessageContent>\n      </Message>\n    </MessageGroup>\n  );\n}\n\nexport function Delivered() {\n  return (\n    <Message align=\"end\" className=\"mx-auto max-w-lg\">\n      <MessageAvatar>AL</MessageAvatar>\n      <MessageContent>\n        <Bubble align=\"end\">\n          <BubbleContent>Upgrading to Growth now.</BubbleContent>\n        </Bubble>\n        <MessageFooter>\n          <Check /> Delivered\n        </MessageFooter>\n      </MessageContent>\n    </Message>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "bubble"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/message.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// One message in a conversation, as the dashboard's support chat and team table set people: a 28px round avatar (the\n// initial in white on brand blue, at 11px, or a picture), the sender in body-sm ink with the time in the subtle gray,\n// the bubbles, and a caption footer (Delivered, Seen) in the subtle gray. The person's own messages (align end) mirror\n// to the right.\nfunction MessageGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"message-group\" className={cn(\"flex min-w-0 flex-col gap-3\", className)} {...props} />;\n}\n\nfunction Message({ className, align = \"start\", ...props }: React.ComponentProps<\"div\"> & { align?: \"start\" | \"end\" }) {\n  return <div data-slot=\"message\" data-align={align} className={cn(\"group/message relative flex w-full min-w-0 gap-2.5 data-[align=end]:flex-row-reverse\", className)} {...props} />;\n}\n\nfunction MessageAvatar({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"message-avatar\"\n      className={cn(\n        \"flex size-7 shrink-0 items-center justify-center self-end overflow-hidden rounded-pill bg-brand text-axis text-on-brand group-has-data-[slot=message-footer]/message:-translate-y-5 *:[img]:size-full *:[img]:object-cover\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction MessageContent({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"message-content\" className={cn(\"flex w-full min-w-0 flex-col gap-1.5 [overflow-wrap:anywhere] group-data-[align=end]/message:items-end\", className)} {...props} />;\n}\n\nfunction MessageHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"message-header\"\n      className={cn(\"flex max-w-full min-w-0 items-baseline gap-2 px-1 text-body-sm leading-snug text-fg group-data-[align=end]/message:flex-row-reverse [&_time]:text-caption [&_time]:text-fg-subtle group-has-data-[variant=ghost]/message:px-0\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction MessageFooter({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"message-footer\"\n      className={cn(\"flex max-w-full min-w-0 items-center gap-1 px-1 text-caption leading-snug text-fg-subtle group-data-[align=end]/message:justify-end group-has-data-[variant=ghost]/message:px-0 [&_svg:not([class*='size-'])]:size-3\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader };\n"
+    }
+  ]
+}

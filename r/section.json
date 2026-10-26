@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "section",
+  "type": "site",
+  "title": "Section",
+  "description": "Site section layout with column rules, a heading, and an optional divider.",
+  "surface": "site",
+  "kinds": [
+    "section",
+    "section-heading",
+    "section-description"
+  ],
+  "usage": "Every site section after the hero. `SectionHeading` opens it, `SectionHeaderRule` divides the heading from the content, `lines` draws the column's edges where the base layer does not (a dark band).",
+  "avoid": [
+    "Centered section headings",
+    "Bold headings",
+    "Gray section backgrounds",
+    "Shadows or colored bands between sections"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/section.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add section --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/shared/section-grid-lines.tsx; src/components/sections/home/home-design.ts; src/components/sections/shared/section-divider.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/section-grid-lines.tsx",
+        "sha256": "f4bf7894d33ab45cf65aedc44cf975a6f3967d9c10835ca0a600e4bd7eb919bf",
+        "retained": false,
+        "exports": [
+          "SectionEdgeLines",
+          "SectionHeaderRule"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/home-design.ts",
+        "sha256": "453086596ac101daa92f679569f9265e2085576cb6a7fc7ffda762776e4837ce",
+        "retained": false,
+        "exports": [
+          "HOME_HEADING",
+          "HOME_DESCRIPTION",
+          "HOME_WATER_CARD",
+          "HOME_DEMO_RING",
+          "HOME_DEMO_PANEL"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/section-divider.tsx",
+        "sha256": "7931b90cad41f40559f89d4d926158faaf751512019ec67a61ca912f51de9cf9",
+        "retained": false,
+        "exports": [
+          "SectionDivider"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/section.d.ts",
+      "content": "import * as React from \"react\";\ntype GridTone = \"light\" | \"dark\";\n/**\n * The content column's two edges as hairlines down the whole section, and a full-bleed rule along its top with a node\n * on each corner. It overlays the section (which must be `relative`) and draws a column-width box inside it, so it\n * lines up whether the section is the column itself or a full-bleed band around it.\n */\ndeclare function SectionEdgeLines({ tone, header, className }: {\n    tone?: GridTone;\n    header?: \"below\" | \"under\";\n    className?: string;\n}): React.JSX.Element;\n/**\n * A full-bleed rule between a section's heading and its content, with a node where it crosses each column edge. It\n * sits in the column's content box, so the nodes step back out by the column's gutter to land on the edge lines. Its top\n * margin is smaller than the section's top padding, so a heading sits closer to its own content than to the section\n * above. `standalone` builds the column box itself, for headings that span the full width.\n */\ndeclare function SectionHeaderRule({ tone, standalone, className }: {\n    tone?: GridTone;\n    standalone?: boolean;\n    className?: string;\n}): React.JSX.Element;\n/**\n * A full-bleed band with the content in the ruled column. The site's base layer already draws the page's column lines\n * and the rule between top-level sections; `lines` draws them on the section itself (a dark band, or a page without the\n * base layer). It clips sideways, so the nodes on a full-width column never widen the page.\n */\ndeclare function SiteSection({ tone, lines, header, className, columnClassName, children, ...props }: React.ComponentProps<\"section\"> & {\n    tone?: GridTone;\n    lines?: boolean;\n    header?: \"below\" | \"under\";\n    columnClassName?: string;\n}): React.JSX.Element;\n/**\n * The site's section heading: left aligned, regular weight, tight, its closing words (`accent`) in brand blue, and one\n * or two lines of muted description under it.\n */\ndeclare function SectionHeading({ title, accent, description, as: Heading, className, children, }: {\n    title: React.ReactNode;\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    as?: \"h1\" | \"h2\" | \"h3\";\n    className?: string;\n    children?: React.ReactNode;\n}): React.JSX.Element;\n/** A plain full-bleed rule between two blocks that are not sections of their own (no nodes). */\ndeclare function SectionDivider({ className }: {\n    className?: string;\n}): React.JSX.Element;\nexport { SiteSection, SectionDivider, SectionEdgeLines, SectionHeaderRule, SectionHeading };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/section/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/section.tsx",
+      "content": "import { Card, CardDescription, CardTitle } from \"@/components/ui/card\";\nimport { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\n\nexport function Site() {\n  return (\n    <SiteSection lines>\n      <SectionHeading\n        title=\"Web infrastructure that powers agents\"\n        accent=\"at any scale.\"\n        description=\"Scrape any page, map and crawl entire websites, run batches of thousands of URLs, get sourced answers, and monitor changes through one API.\"\n      />\n      <SectionHeaderRule />\n      <div className=\"grid gap-6 md:grid-cols-2\">\n        <Card variant=\"ring\">\n          <CardTitle className=\"text-h4\">Search</CardTitle>\n          <CardDescription className=\"text-body\">Search the web or the news and get ranked results with clean page content, not just links.</CardDescription>\n        </Card>\n        <Card variant=\"ring\">\n          <CardTitle className=\"text-h4\">Scrape</CardTitle>\n          <CardDescription className=\"text-body\">Turn any page or PDF into Markdown, HTML, structured fields, images, or screenshots in one request.</CardDescription>\n        </Card>\n      </div>\n    </SiteSection>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/section.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\ntype GridTone = \"light\" | \"dark\";\n\n// Nodes are solid, never translucent: a node straddles the section's edge, so half of it can sit over the neighboring\n// section's color, and the line beneath must not show through it. A dark section's edge nodes straddle the white\n// section above it, so they are split in the negative of each side: dark over the white, light over the black.\nconst TONES: Record<GridTone, { line: string; node: string; edgeNode: string }> = {\n  light: { line: \"bg-rule\", node: \"bg-node\", edgeNode: \"bg-node\" },\n  dark: {\n    line: \"bg-white/15\",\n    node: \"bg-neutral-60\",\n    edgeNode: \"bg-[linear-gradient(to_bottom,var(--ds-color-neutral-70)_50%,var(--ds-color-neutral-40)_50%)]\",\n  },\n};\n\nconst NODE = \"absolute size-2 rounded-pill\";\nconst COLUMN = \"w-full max-w-(--ds-frame-column) mx-auto\";\n\n/**\n * The content column's two edges as hairlines down the whole section, and a full-bleed rule along its top with a node\n * on each corner. It overlays the section (which must be `relative`) and draws a column-width box inside it, so it\n * lines up whether the section is the column itself or a full-bleed band around it.\n */\nfunction SectionEdgeLines({ tone = \"light\", header, className }: { tone?: GridTone; header?: \"below\" | \"under\"; className?: string }) {\n  const colors = TONES[tone];\n  return (\n    // Every line is centered on its edge, like the nodes, so each node sits on the exact crossing. Under the header the\n    // top rule has no nodes, so none sit against the navbar.\n    <div aria-hidden=\"true\" data-slot=\"section-edge-lines\" className={cn(\"pointer-events-none absolute inset-x-0 top-0 bottom-0 z-10 flex justify-center\", className)}>\n      <div className={cn(\"relative h-full\", COLUMN)}>\n        <div className={cn(\"absolute inset-y-0 left-0 w-px -translate-x-1/2\", colors.line)} />\n        <div className={cn(\"absolute inset-y-0 right-0 w-px translate-x-1/2\", colors.line)} />\n        <div className={cn(\"absolute top-0 left-1/2 h-px w-screen -translate-x-1/2 -translate-y-1/2\", colors.line)} />\n        {!header && (\n          <>\n            <span className={cn(NODE, colors.edgeNode, \"top-0 left-0 -translate-x-1/2 -translate-y-1/2\")} />\n            <span className={cn(NODE, colors.edgeNode, \"top-0 right-0 translate-x-1/2 -translate-y-1/2\")} />\n          </>\n        )}\n      </div>\n    </div>\n  );\n}\n\n/**\n * A full-bleed rule between a section's heading and its content, with a node where it crosses each column edge. It\n * sits in the column's content box, so the nodes step back out by the column's gutter to land on the edge lines. Its top\n * margin is smaller than the section's top padding, so a heading sits closer to its own content than to the section\n * above. `standalone` builds the column box itself, for headings that span the full width.\n */\nfunction SectionHeaderRule({ tone = \"light\", standalone = false, className }: { tone?: GridTone; standalone?: boolean; className?: string }) {\n  const colors = TONES[tone];\n  const rule = (\n    <div aria-hidden=\"true\" data-slot=\"section-header-rule\" className={cn(\"pointer-events-none relative z-20 mt-10 mb-8 h-px md:mt-12\", className)}>\n      <div className={cn(\"absolute top-0 left-1/2 h-px w-screen -translate-x-1/2\", colors.line)} />\n      <span className={cn(NODE, colors.node, \"top-1/2 -left-6 -translate-x-1/2 -translate-y-1/2 sm:-left-8 md:-left-10 lg:-left-12\")} />\n      <span className={cn(NODE, colors.node, \"top-1/2 -right-6 translate-x-1/2 -translate-y-1/2 sm:-right-8 md:-right-10 lg:-right-12\")} />\n    </div>\n  );\n  if (!standalone) return rule;\n  return <div className={cn(COLUMN, \"px-6 sm:px-8 md:px-10 lg:px-12\")}>{rule}</div>;\n}\n\n/**\n * A full-bleed band with the content in the ruled column. The site's base layer already draws the page's column lines\n * and the rule between top-level sections; `lines` draws them on the section itself (a dark band, or a page without the\n * base layer). It clips sideways, so the nodes on a full-width column never widen the page.\n */\nfunction SiteSection({\n  tone = \"light\",\n  lines = false,\n  header,\n  className,\n  columnClassName,\n  children,\n  ...props\n}: React.ComponentProps<\"section\"> & { tone?: GridTone; lines?: boolean; header?: \"below\" | \"under\"; columnClassName?: string }) {\n  return (\n    <section\n      data-slot=\"site-section\"\n      className={cn(\"relative w-full overflow-x-clip pt-10 pb-16 md:pt-12 md:pb-20\", tone === \"dark\" ? \"bg-inverse text-white\" : \"bg-surface text-fg\", className)}\n      {...props}\n    >\n      {lines && <SectionEdgeLines tone={tone} header={header} />}\n      <div data-slot=\"site-section-column\" className={cn(\"relative\", COLUMN, \"px-6 sm:px-8 md:px-10 lg:px-12\", columnClassName)}>\n        {children}\n      </div>\n    </section>\n  );\n}\n\n/**\n * The site's section heading: left aligned, regular weight, tight, its closing words (`accent`) in brand blue, and one\n * or two lines of muted description under it.\n */\nfunction SectionHeading({\n  title,\n  accent,\n  description,\n  as: Heading = \"h2\",\n  className,\n  children,\n}: {\n  title: React.ReactNode;\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  as?: \"h1\" | \"h2\" | \"h3\";\n  className?: string;\n  children?: React.ReactNode;\n}) {\n  return (\n    <div data-slot=\"section-heading\" className={cn(\"flex flex-col items-start gap-6\", className)}>\n      <Heading className=\"max-w-(--ds-layout-heading) text-left text-h3 font-normal tracking-tight text-balance text-fg leading-display md:text-h2\">\n        {title}\n        {accent && (\n          <>\n            {\" \"}\n            <span className=\"text-fg-brand\">{accent}</span>\n          </>\n        )}\n      </Heading>\n      {description && <p className=\"max-w-(--ds-layout-text) text-body leading-relaxed text-fg-muted md:text-body-lg\">{description}</p>}\n      {children}\n    </div>\n  );\n}\n\n/** A plain full-bleed rule between two blocks that are not sections of their own (no nodes). */\nfunction SectionDivider({ className }: { className?: string }) {\n  return <div aria-hidden=\"true\" data-slot=\"section-divider\" className={cn(\"relative left-1/2 h-px w-screen -translate-x-1/2 bg-rule\", className)} />;\n}\n\nexport { SiteSection, SectionDivider, SectionEdgeLines, SectionHeaderRule, SectionHeading };\n"
+    }
+  ]
+}

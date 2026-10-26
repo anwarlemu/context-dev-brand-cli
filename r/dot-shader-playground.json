@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "dot-shader-playground",
+  "type": "visual",
+  "title": "Dot shader playground",
+  "description": "Interactive dot-shader preview with image upload, sample images, and SVG or PNG export.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "A tool page that lets people shade their own image into brand dots. `samples` (id, label and the `src` of a shader SVG, or any image) and `defaultSample` come from the app. The live site no longer shows it on the brand page; it lives on a staff-only Dot Shader page.",
+  "avoid": [
+    "Uploading the visitor's image anywhere (it stays in the browser)",
+    "More than one playground on a page (paste goes to every one)"
+  ],
+  "notes": "On the site's Dot Shader page it sits under the page title, two columns of preview beside the panel on large screens,\nthe two columns stretched to the same height. Every option tile (the surfaces, the samples, your image and the upload\ntile) carries the hairline ring; the selected one takes the blue ring. Downloads and the copied SVG carry plain colors\nread from the brand tokens when they are made, so the files work outside the page. Samples that are shader SVGs are\nread straight back into dots; any other image is shaded.",
+  "documentation": "https://context-ds.vercel.app/components/dot-shader-playground.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add dot-shader-playground --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/brand/dot-shader-playground.tsx; src/components/sections/brand/dot-shader-samples.ts; src/components/sections/brand/brand-surface-styles.ts; src/app/(dashboard)/admin/dot-shader/page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/brand/dot-shader-playground.tsx",
+        "sha256": "870a4824c81a0e780b7555dae6f85dd15af1c37c6bf8a50a2db9c24c28033953",
+        "retained": false,
+        "exports": [
+          "DotShaderPlayground"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/brand/dot-shader-samples.ts",
+        "sha256": "dc2dd70bcc96c6c6728c3f0009f405859023b6602a601565ee847f04b01abe78",
+        "retained": false,
+        "exports": [
+          "DotShaderSample",
+          "readDotShaderSamples"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/brand/brand-surface-styles.ts",
+        "sha256": "e85a83701303fa16deea62c109e42bd7be22d8596103b9ce305303e8162189f3",
+        "retained": false,
+        "exports": [
+          "BrandSurface",
+          "SURFACES",
+          "ACTION_PILL_CLASS"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(dashboard)/admin/dot-shader/page.tsx",
+        "sha256": "3ba5d997826cebf86becdae11616b14d73ecfb7f23936e2c9b8cc326fd38785c",
+        "retained": false,
+        "exports": [
+          "metadata",
+          "DotShaderPage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/dot-shader-playground.d.ts",
+      "content": "import * as React from \"react\";\nimport { type DotShaderSurface } from \"@/components/visuals/image-dot-shader\";\n/**\n * The brand page's \"Shader Graphics\" playground: a large preview of the picked picture on a white, blue or black\n * surface, with copy SVG and SVG or PNG downloads under it, and a panel to switch the surface, pick a sample or shade\n * your own image (upload, drop it on the preview or paste it). Everything is shaded in the browser.\n */\nexport type DotShaderSample = {\n    id: string;\n    label: string;\n    /** An SVG the shader wrote (its `filled` and `hollow` paths are read back), or any image to shade. */\n    src?: string;\n    /** The SVG's text, instead of fetching `src`. */\n    svg?: string;\n};\nexport declare function DotShaderPlayground({ samples, defaultSample, defaultSurface, title, description, className, }: {\n    samples: DotShaderSample[];\n    /** The sample shown first (its id); the first sample by default. */\n    defaultSample?: string;\n    defaultSurface?: DotShaderSurface;\n    title?: string;\n    description?: string;\n    className?: string;\n}): React.JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/dot-shader-playground/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/dot-shader-playground.tsx",
+      "content": "import { DotShaderPlayground, type DotShaderSample } from \"@/components/visuals/dot-shader-playground\";\n\n// The brand page's samples: shader SVGs the playground reads back into dots.\nconst SAMPLES: DotShaderSample[] = [\n  { id: \"logomark\", label: \"Logomark\", src: \"/dot-shader/logomark.svg\" },\n  { id: \"orbit\", label: \"Orbit\", src: \"/dot-shader/orbit.svg\" },\n  { id: \"extract\", label: \"Extract\", src: \"/dot-shader/extract.svg\" },\n  { id: \"pages\", label: \"Pages\", src: \"/dot-shader/pages.svg\" },\n  { id: \"integration\", label: \"Integration\", src: \"/dot-shader/integration.svg\" },\n];\n\nexport function Site() {\n  return <DotShaderPlayground samples={SAMPLES} defaultSample=\"integration\" className=\"w-full\" />;\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "button",
+    "copy-button",
+    "utils",
+    "dot-shader-image",
+    "image-dot-shader"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/visuals/dot-shader-playground.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Copy, Download, ImagePlus } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { cn } from \"@/lib/utils\";\nimport { DotShaderImage } from \"@/components/visuals/dot-shader-image\";\nimport {\n  countDots,\n  type DotShaderSurface,\n  type DotStates,\n  dotsSvg,\n  loadShaderImage,\n  parseShadedDots,\n  resolveSurfaceColors,\n  SHADER_HEIGHT,\n  SHADER_WIDTH,\n  shadeImage,\n  shadeImageSrc,\n} from \"@/components/visuals/image-dot-shader\";\n\n/**\n * The brand page's \"Shader Graphics\" playground: a large preview of the picked picture on a white, blue or black\n * surface, with copy SVG and SVG or PNG downloads under it, and a panel to switch the surface, pick a sample or shade\n * your own image (upload, drop it on the preview or paste it). Everything is shaded in the browser.\n */\nexport type DotShaderSample = {\n  id: string;\n  label: string;\n  /** An SVG the shader wrote (its `filled` and `hollow` paths are read back), or any image to shade. */\n  src?: string;\n  /** The SVG's text, instead of fetching `src`. */\n  svg?: string;\n};\n\nconst SURFACE_OPTIONS: { surface: DotShaderSurface; label: string }[] = [\n  { surface: \"white\", label: \"White\" },\n  { surface: \"blue\", label: \"Blue\" },\n  { surface: \"black\", label: \"Black\" },\n];\n\nconst TILE: Record<DotShaderSurface, string> = { white: \"bg-white ring-1 ring-hairline\", blue: \"bg-brand\", black: \"bg-black\" };\nconst ON_SURFACE_TEXT: Record<DotShaderSurface, string> = { white: \"text-fg-brand\", blue: \"text-on-brand\", black: \"text-white\" };\nconst RING = \"-m-2 rounded-card bg-ring-tint p-2\";\nconst PANEL = \"flex h-full min-w-0 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\";\nconst FOCUS = \"outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\";\nconst OPTION_TILE = cn(\n  \"relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-shell ring-1 ring-hairline transition-shadow duration-200 ease-out motion-reduce:transition-none\",\n  FOCUS,\n);\nconst SELECTED_TILE = \"ring-2 ring-brand ring-offset-2\";\nconst ACTION = \"h-10 min-w-0 gap-2 px-3 [&_svg]:size-4\";\n\nconst UPLOAD = \"upload\";\nconst PNG_SCALE = 2;\n\nconst svgDataUrl = (svg: string) => `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;\n\nfunction readAsDataUrl(file: File) {\n  return new Promise<string>((resolve, reject) => {\n    const reader = new FileReader();\n    reader.onload = () => resolve(String(reader.result));\n    reader.onerror = () => reject(reader.error ?? new Error(\"unreadable file\"));\n    reader.readAsDataURL(file);\n  });\n}\n\nfunction saveBlob(blob: Blob, filename: string) {\n  const url = URL.createObjectURL(blob);\n  const link = document.createElement(\"a\");\n  link.href = url;\n  link.download = filename;\n  // Safari ignores a programmatic click on an <a download> that is not in the document.\n  document.body.append(link);\n  link.click();\n  link.remove();\n  // Safari and Firefox start the download after click() returns, so revoking straight away can cancel it.\n  window.setTimeout(() => URL.revokeObjectURL(url), 1000);\n}\n\nasync function svgToPngBlob(svg: string) {\n  const image = await loadShaderImage(svgDataUrl(svg));\n  const canvas = document.createElement(\"canvas\");\n  canvas.width = SHADER_WIDTH * PNG_SCALE;\n  canvas.height = SHADER_HEIGHT * PNG_SCALE;\n  canvas.getContext(\"2d\")?.drawImage(image, 0, 0, canvas.width, canvas.height);\n  return new Promise<Blob>((resolve, reject) => canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error(\"png export failed\"))), \"image/png\"));\n}\n\nfunction baseName(filename: string) {\n  return (\n    filename\n      .replace(/\\.[^.]+$/, \"\")\n      .toLowerCase()\n      .replace(/[^a-z0-9]+/g, \"-\")\n      .replace(/^-|-$/g, \"\") || \"image\"\n  );\n}\n\nfunction firstImageFile(files: Iterable<File> | ArrayLike<File> | null | undefined) {\n  return Array.from(files ?? []).find((file) => file.type.startsWith(\"image/\"));\n}\n\n// Safari and Firefox often leave clipboardData.files empty for copied screenshots and page images, and only expose\n// them as items.\nfunction clipboardFiles(clipboard: DataTransfer | null) {\n  const itemFiles = Array.from(clipboard?.items ?? [])\n    .flatMap((item) => (item.kind === \"file\" ? [item.getAsFile()] : []))\n    .filter((file): file is File => file !== null);\n  return [...Array.from(clipboard?.files ?? []), ...itemFiles];\n}\n\n// A sample is an SVG the shader wrote, read straight back into dots; anything else is shaded like an upload.\nasync function loadSample(sample: DotShaderSample): Promise<DotStates | null> {\n  const text = sample.svg ?? (sample.src && /\\.svg(\\?|#|$)/i.test(sample.src) ? await fetch(sample.src).then((response) => (response.ok ? response.text() : \"\")) : \"\");\n  const parsed = text ? parseShadedDots(text) : null;\n  if (parsed && countDots(parsed) > 0) return parsed;\n  return sample.src ? shadeImageSrc(sample.src) : null;\n}\n\nexport function DotShaderPlayground({\n  samples,\n  defaultSample,\n  defaultSurface = \"blue\",\n  title = \"Shade your own image\",\n  description = \"Start from a sample or upload a logo, icon or product shot, then download it for a post or deck.\",\n  className,\n}: {\n  samples: DotShaderSample[];\n  /** The sample shown first (its id); the first sample by default. */\n  defaultSample?: string;\n  defaultSurface?: DotShaderSurface;\n  title?: string;\n  description?: string;\n  className?: string;\n}) {\n  const root = React.useRef<HTMLDivElement>(null);\n  const fileInput = React.useRef<HTMLInputElement>(null);\n  const latestShade = React.useRef(0);\n  const [sampleDots, setSampleDots] = React.useState<Record<string, DotStates>>({});\n  const [upload, setUpload] = React.useState<{ name: string; states: DotStates } | null>(null);\n  const [selection, setSelection] = React.useState(defaultSample ?? samples[0]?.id ?? UPLOAD);\n  const [surface, setSurface] = React.useState<DotShaderSurface>(defaultSurface);\n  const [isDragging, setIsDragging] = React.useState(false);\n  const [message, setMessage] = React.useState<string | null>(null);\n  const { hasCopied, copy } = useCopy();\n\n  // Keyed on the samples' content, so a parent that passes a new array each render does not refetch them.\n  const sampleKey = samples.map((sample) => `${sample.id}:${sample.src ?? \"\"}:${sample.svg?.length ?? 0}`).join(\"|\");\n  const latestSamples = React.useRef(samples);\n  React.useEffect(() => {\n    latestSamples.current = samples;\n  }, [samples]);\n  React.useEffect(() => {\n    let current = true;\n    for (const sample of latestSamples.current) {\n      loadSample(sample)\n        .then((states) => current && states && setSampleDots((loaded) => ({ ...loaded, [sample.id]: states })))\n        .catch(() => {\n          if (current) setMessage(\"A sample image could not be loaded. Try another sample or upload an image.\");\n        });\n    }\n    return () => {\n      current = false;\n    };\n  }, [sampleKey]);\n\n  const selectedStates = selection === UPLOAD ? upload?.states : sampleDots[selection];\n  const selectedName = selection === UPLOAD ? (upload?.name ?? \"image\") : (samples.find((sample) => sample.id === selection)?.label ?? selection);\n  const filename = `${baseName(selection === UPLOAD ? selectedName : selection)}-dots-on-${surface}`;\n  // A file leaves the page, so it carries plain colors read from the brand tokens at the moment it is made.\n  const fileSvg = () => (selectedStates ? dotsSvg(selectedStates, resolveSurfaceColors(surface, root.current ?? document.body)) : null);\n\n  const shadeFile = React.useCallback(async (file: File | undefined) => {\n    if (!file) {\n      setMessage(\"Choose a PNG, JPG, SVG or WebP image.\");\n      return;\n    }\n    const request = ++latestShade.current;\n    try {\n      const image = await loadShaderImage(await readAsDataUrl(file));\n      if (request !== latestShade.current) return;\n      const states = shadeImage(image, image.naturalWidth || SHADER_WIDTH, image.naturalHeight || SHADER_HEIGHT);\n      setMessage(countDots(states) === 0 ? \"Nothing to shade. Try an image with a clear subject.\" : null);\n      setUpload({ name: file.name, states });\n      setSelection(UPLOAD);\n    } catch {\n      if (request === latestShade.current) setMessage(\"That image could not be read.\");\n    }\n  }, []);\n\n  React.useEffect(() => {\n    const shadePastedImage = (event: ClipboardEvent) => {\n      const file = firstImageFile(clipboardFiles(event.clipboardData));\n      if (file) void shadeFile(file);\n    };\n    window.addEventListener(\"paste\", shadePastedImage);\n    return () => window.removeEventListener(\"paste\", shadePastedImage);\n  }, [shadeFile]);\n\n  const downloadSvg = () => {\n    const svg = fileSvg();\n    if (svg) saveBlob(new Blob([svg], { type: \"image/svg+xml\" }), `${filename}.svg`);\n  };\n\n  const downloadPng = async () => {\n    const svg = fileSvg();\n    if (!svg) return;\n    try {\n      saveBlob(await svgToPngBlob(svg), `${filename}.png`);\n    } catch {\n      setMessage(\"The PNG could not be exported.\");\n    }\n  };\n\n  const copySvg = () => {\n    const svg = fileSvg();\n    if (svg) void copy(svg);\n  };\n\n  const pillOnSurface = (selected: boolean) => cn(ACTION, selected && \"bg-blue-10\");\n\n  return (\n    <div ref={root} data-slot=\"dot-shader-playground\" className={cn(\"grid grid-cols-1 gap-6 lg:grid-cols-3\", className)}>\n      <div className={cn(RING, \"lg:col-span-2\")}>\n        <div className=\"flex flex-col gap-3\">\n          <div\n            onDragOver={(event) => {\n              event.preventDefault();\n              setIsDragging(true);\n            }}\n            onDragLeave={(event) => {\n              if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsDragging(false);\n            }}\n            onDrop={(event) => {\n              event.preventDefault();\n              setIsDragging(false);\n              void shadeFile(firstImageFile(event.dataTransfer.files));\n            }}\n            className={cn(\n              \"relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-card transition-shadow duration-200 ease-out motion-reduce:transition-none\",\n              TILE[surface],\n              isDragging && \"ring-2 ring-brand ring-offset-2\",\n            )}\n          >\n            <DotShaderImage states={selectedStates ?? null} surface={surface} alt={selectedStates ? `${selectedName} drawn in dots` : undefined} className=\"pointer-events-none size-full\" />\n            {isDragging && <span className={cn(\"pointer-events-none absolute text-body\", ON_SURFACE_TEXT[surface])}>Drop to shade your image</span>}\n          </div>\n          <div className=\"grid grid-cols-3 gap-2\">\n            <Button variant=\"pill-outline\" size=\"sm\" onClick={copySvg} disabled={!selectedStates} aria-label=\"Copy SVG code\" className={ACTION}>\n              {hasCopied ? <Check aria-hidden /> : <Copy aria-hidden />}\n              <span aria-live=\"polite\">{hasCopied ? \"Copied\" : \"Copy SVG\"}</span>\n            </Button>\n            <Button variant=\"pill-outline\" size=\"sm\" onClick={downloadSvg} disabled={!selectedStates} aria-label=\"Download as SVG\" className={ACTION}>\n              <Download aria-hidden />\n              SVG\n            </Button>\n            <Button variant=\"pill-outline\" size=\"sm\" onClick={downloadPng} disabled={!selectedStates} aria-label=\"Download as PNG\" className={ACTION}>\n              <Download aria-hidden />\n              PNG\n            </Button>\n          </div>\n        </div>\n      </div>\n      <div className={RING}>\n        <div className={PANEL}>\n          <div className=\"flex flex-col gap-2\">\n            <h3 className=\"text-h4 font-normal text-fg\">{title}</h3>\n            <p className=\"text-body-sm text-fg-muted\">{description}</p>\n          </div>\n          <fieldset>\n            <legend className=\"mb-3 text-body-sm text-fg-muted\">Background</legend>\n            <div className=\"grid grid-cols-3 gap-2\">\n              {SURFACE_OPTIONS.map((option) => (\n                <Button\n                  key={option.surface}\n                  variant=\"pill-outline\"\n                  size=\"sm\"\n                  aria-pressed={surface === option.surface}\n                  onClick={() => setSurface(option.surface)}\n                  className={pillOnSurface(surface === option.surface)}\n                >\n                  {option.label}\n                </Button>\n              ))}\n            </div>\n          </fieldset>\n          <fieldset>\n            <legend className=\"mb-3 text-body-sm text-fg-muted\">Image</legend>\n            <div className=\"grid grid-cols-3 gap-2\">\n              {samples.map((sample) => (\n                <button\n                  key={sample.id}\n                  type=\"button\"\n                  aria-pressed={selection === sample.id}\n                  aria-label={sample.label}\n                  title={sample.label}\n                  onClick={() => setSelection(sample.id)}\n                  className={cn(OPTION_TILE, TILE[surface], selection === sample.id && SELECTED_TILE)}\n                >\n                  <DotShaderImage states={sampleDots[sample.id] ?? null} surface={surface} className=\"size-full\" />\n                </button>\n              ))}\n              {upload && (\n                <button\n                  type=\"button\"\n                  aria-pressed={selection === UPLOAD}\n                  aria-label={upload.name}\n                  title={upload.name}\n                  onClick={() => setSelection(UPLOAD)}\n                  className={cn(OPTION_TILE, TILE[surface], selection === UPLOAD && SELECTED_TILE)}\n                >\n                  <DotShaderImage states={upload.states} surface={surface} className=\"size-full\" />\n                </button>\n              )}\n              <button\n                type=\"button\"\n                onClick={() => fileInput.current?.click()}\n                className={cn(OPTION_TILE, \"flex-col gap-1 bg-white text-fg-brand ring-1 ring-hairline transition-[background-color,box-shadow] hover:bg-blue-10\")}\n              >\n                <ImagePlus className=\"size-5\" aria-hidden />\n                <span className=\"text-caption\">{upload ? \"Upload another\" : \"Upload\"}</span>\n              </button>\n            </div>\n          </fieldset>\n          <div className=\"mt-auto flex flex-col gap-2\">\n            {message && (\n              <p role=\"status\" className=\"text-body-sm text-fg\">\n                {message}\n              </p>\n            )}\n            <p className=\"text-caption text-fg-subtle\">Drop an image on the preview or paste one. It stays in your browser. A PNG with a transparent background works best.</p>\n          </div>\n          <input\n            ref={fileInput}\n            tabIndex={-1}\n            aria-hidden=\"true\"\n            type=\"file\"\n            accept=\"image/*\"\n            className=\"sr-only\"\n            onChange={(event) => {\n              void shadeFile(firstImageFile(event.target.files));\n              event.target.value = \"\";\n            }}\n          />\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ]
+}

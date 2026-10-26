@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "hover-card",
+  "type": "ui",
+  "title": "Hover Card",
+  "description": "A preview on hover in the dashboard's floating panel, opening after half a second and growing from its trigger.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Preview something a link points to without leaving the page: a workspace member, a domain's brand, an API key's last use. Keep it to what helps decide whether to follow the link, and never put the only copy of an action inside it (it is unreachable on touch).",
+  "avoid": [
+    "Actions only reachable in the card",
+    "Opening at once on hover",
+    "Long content that needs scrolling"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/hover-card.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add hover-card",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx (the floating panel and its pop)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/hover-card.d.ts",
+      "content": "import * as React from \"react\";\nimport * as HoverCardPrimitive from \"@radix-ui/react-hover-card\";\ndeclare function HoverCard({ openDelay, closeDelay, ...props }: React.ComponentProps<typeof HoverCardPrimitive.Root>): React.JSX.Element;\ndeclare function HoverCardTrigger(props: React.ComponentProps<typeof HoverCardPrimitive.Trigger>): React.JSX.Element;\ndeclare function HoverCardContent({ className, align, sideOffset, ...props }: React.ComponentProps<typeof HoverCardPrimitive.Content>): React.JSX.Element;\nexport { HoverCard, HoverCardContent, HoverCardTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/hover-card/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/hover-card/Product"
+    },
+    {
+      "name": "Open",
+      "url": "https://context-ds.vercel.app/preview/hover-card/Open"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/hover-card.tsx",
+      "content": "import { HoverCard, HoverCardContent, HoverCardTrigger } from \"@/components/ui/hover-card\";\n\nfunction Member() {\n  return (\n    <div className=\"flex gap-3\">\n      <span className=\"grid size-9 shrink-0 place-items-center rounded-pill bg-blue-10 text-body-sm text-fg-brand\">MS</span>\n      <div className=\"grid gap-0.5\">\n        <p className=\"text-body-sm text-fg\">Maya Singh</p>\n        <p className=\"text-caption text-fg-subtle\">Admin · joined Mar 2026</p>\n        <p className=\"mt-1.5 text-body-sm text-fg-muted\">Created 12 API keys and 4 monitors in this workspace.</p>\n      </div>\n    </div>\n  );\n}\n\nexport function Site() {\n  return (\n    <p className=\"max-w-md text-body-sm text-fg-muted\">\n      Brand data for{\" \"}\n      <HoverCard>\n        <HoverCardTrigger href=\"#stripe\" className=\"text-fg-brand underline-offset-4 hover:underline\">\n          stripe.com\n        </HoverCardTrigger>\n        <HoverCardContent>\n          <p className=\"text-body-sm text-fg\">Stripe</p>\n          <p className=\"mt-0.5 text-caption text-fg-subtle\">stripe.com · Financial services</p>\n          <p className=\"mt-2 text-body-sm text-fg-muted\">Logo, colors, fonts and 14 social profiles found in 380ms.</p>\n        </HoverCardContent>\n      </HoverCard>{\" \"}\n      comes back as one JSON object.\n    </p>\n  );\n}\n\nexport function Product() {\n  return (\n    <p className=\"text-body-sm text-fg-muted\">\n      Key created by{\" \"}\n      <HoverCard>\n        <HoverCardTrigger href=\"#maya\" className=\"text-fg underline-offset-4 hover:underline\">\n          Maya Singh\n        </HoverCardTrigger>\n        <HoverCardContent>\n          <Member />\n        </HoverCardContent>\n      </HoverCard>\n    </p>\n  );\n}\n\nexport function Open() {\n  return (\n    <HoverCard defaultOpen>\n      <HoverCardTrigger href=\"#maya\" className=\"text-body-sm text-fg underline-offset-4 hover:underline\">\n        Maya Singh\n      </HoverCardTrigger>\n      <HoverCardContent side=\"bottom\">\n        <Member />\n      </HoverCardContent>\n    </HoverCard>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-hover-card"
+  ],
+  "files": [
+    {
+      "path": "components/ui/hover-card.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as HoverCardPrimitive from \"@radix-ui/react-hover-card\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// A preview on hover, drawn as the dashboard's floating panel (the popover): shell corners, a hairline in the shadow,\n// 12px inside, 6px off its trigger, growing out of the corner nearest it in a short ease-out pop. It waits half a\n// second before opening, so a pointer passing over a link doesn't flash it, and closes a beat after the pointer leaves.\n// Keyboard focus on the trigger opens it too.\nfunction HoverCard({ openDelay = 500, closeDelay = 150, ...props }: React.ComponentProps<typeof HoverCardPrimitive.Root>) {\n  return <HoverCardPrimitive.Root data-slot=\"hover-card\" openDelay={openDelay} closeDelay={closeDelay} {...props} />;\n}\n\nfunction HoverCardTrigger(props: React.ComponentProps<typeof HoverCardPrimitive.Trigger>) {\n  return <HoverCardPrimitive.Trigger data-slot=\"hover-card-trigger\" {...props} />;\n}\n\nfunction HoverCardContent({ className, align = \"start\", sideOffset = 6, ...props }: React.ComponentProps<typeof HoverCardPrimitive.Content>) {\n  return (\n    <HoverCardPrimitive.Portal container={usePortalContainer()}>\n      <HoverCardPrimitive.Content\n        data-slot=\"hover-card-content\"\n        align={align}\n        sideOffset={sideOffset}\n        collisionPadding={8}\n        className={cn(\"z-50 w-72 max-w-[calc(100vw-1rem)] origin-(--radix-hover-card-content-transform-origin) animate-pop-in rounded-shell bg-surface p-3 text-body-sm text-fg shadow-floating outline-none\", className)}\n        {...props}\n      />\n    </HoverCardPrimitive.Portal>\n  );\n}\n\nexport { HoverCard, HoverCardContent, HoverCardTrigger };\n"
+    }
+  ]
+}

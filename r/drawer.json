@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "drawer",
+  "type": "ui",
+  "title": "Drawer",
+  "description": "A panel pulled from an edge as the dashboard's phone drawer: white with shell corners over the scrim, a grip handle, and drag to dismiss.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Short tasks and choices on phones, opened from the bottom: picking a plan, filtering a list, confirming a payment method. Keep the content short enough to read without scrolling, and put the main action last in DrawerFooter. On a desktop prefer Dialog or Sheet.",
+  "avoid": [
+    "Long forms",
+    "Drawers on top of drawers",
+    "Removing the handle on a bottom drawer"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/drawer.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add drawer",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/sidebar.tsx (the phone drawer)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/sidebar.tsx",
+        "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+        "retained": false,
+        "exports": [
+          "Sidebar"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/drawer.d.ts",
+      "content": "import * as React from \"react\";\nimport * as DrawerPrimitive from \"@radix-ui/react-dialog\";\ntype Direction = \"bottom\" | \"top\" | \"left\" | \"right\";\ndeclare function Drawer({ open: openProp, defaultOpen, onOpenChange, direction, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root> & {\n    direction?: Direction;\n}): React.JSX.Element;\ndeclare function DrawerTrigger(props: React.ComponentProps<typeof DrawerPrimitive.Trigger>): React.JSX.Element;\ndeclare function DrawerPortal(props: React.ComponentProps<typeof DrawerPrimitive.Portal>): React.JSX.Element;\ndeclare function DrawerClose(props: React.ComponentProps<typeof DrawerPrimitive.Close>): React.JSX.Element;\ndeclare function DrawerOverlay({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Overlay>): React.JSX.Element;\ndeclare function DrawerContent({ className, children, ...props }: React.ComponentProps<typeof DrawerPrimitive.Content>): React.JSX.Element;\ndeclare function DrawerHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function DrawerFooter({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function DrawerTitle({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Title>): React.JSX.Element;\ndeclare function DrawerDescription({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Description>): React.JSX.Element;\nexport { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle, DrawerTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/drawer/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/drawer/Product"
+    },
+    {
+      "name": "Directions",
+      "url": "https://context-ds.vercel.app/preview/drawer/Directions"
+    },
+    {
+      "name": "Open",
+      "url": "https://context-ds.vercel.app/preview/drawer/Open"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/drawer.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from \"@/components/ui/drawer\";\n\nconst PLANS = [\n  { id: \"starter\", name: \"Starter\", price: \"$49 a month\", credits: \"10,000 credits\" },\n  { id: \"growth\", name: \"Growth\", price: \"$149 a month\", credits: \"50,000 credits\" },\n  { id: \"scale\", name: \"Scale\", price: \"$399 a month\", credits: \"200,000 credits\" },\n];\n\nfunction PlanPicker() {\n  const [plan, setPlan] = React.useState(\"growth\");\n  return (\n    <>\n      <DrawerHeader>\n        <DrawerTitle>Choose a plan</DrawerTitle>\n        <DrawerDescription>Change it any time; unused credits carry over.</DrawerDescription>\n      </DrawerHeader>\n      <div role=\"radiogroup\" aria-label=\"Plan\" className=\"grid gap-1.5 px-5 pb-5\">\n        {PLANS.map((p) => (\n          <button\n            key={p.id}\n            type=\"button\"\n            role=\"radio\"\n            aria-checked={plan === p.id}\n            onClick={() => setPlan(p.id)}\n            className=\"flex items-center justify-between rounded-card border border-line px-4 py-3 text-left outline-none transition-colors duration-150 ease-out hover:border-line-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring aria-checked:border-brand motion-reduce:transition-none\"\n          >\n            <span className=\"grid gap-0.5\">\n              <span className=\"text-body-sm text-fg\">{p.name}</span>\n              <span className=\"text-caption text-fg-subtle\">{p.credits}</span>\n            </span>\n            <span className=\"text-body-sm text-fg-muted tabular-nums\">{p.price}</span>\n          </button>\n        ))}\n      </div>\n      <DrawerFooter>\n        <DrawerClose asChild>\n          <Button variant=\"brand\">Continue with {PLANS.find((p) => p.id === plan)?.name}</Button>\n        </DrawerClose>\n        <DrawerClose asChild>\n          <Button variant=\"outline\">Cancel</Button>\n        </DrawerClose>\n      </DrawerFooter>\n    </>\n  );\n}\n\nexport function Site() {\n  return (\n    <Drawer>\n      <DrawerTrigger asChild>\n        <Button variant=\"pill\">See plans</Button>\n      </DrawerTrigger>\n      <DrawerContent>\n        <div className=\"mx-auto w-full max-w-md\">\n          <PlanPicker />\n        </div>\n      </DrawerContent>\n    </Drawer>\n  );\n}\n\nexport function Product() {\n  return (\n    <Drawer>\n      <DrawerTrigger asChild>\n        <Button variant=\"outline\">Change plan</Button>\n      </DrawerTrigger>\n      <DrawerContent>\n        <div className=\"mx-auto w-full max-w-md\">\n          <PlanPicker />\n        </div>\n      </DrawerContent>\n    </Drawer>\n  );\n}\n\nexport function Directions() {\n  return (\n    <div className=\"flex flex-wrap justify-center gap-2\">\n      {([\"left\", \"right\", \"top\"] as const).map((direction) => (\n        <Drawer key={direction} direction={direction}>\n          <DrawerTrigger asChild>\n            <Button variant=\"outline\" size=\"sm\">\n              From the {direction}\n            </Button>\n          </DrawerTrigger>\n          <DrawerContent>\n            <DrawerHeader>\n              <DrawerTitle>Filters</DrawerTitle>\n              <DrawerDescription>Show monitors by status and schedule.</DrawerDescription>\n            </DrawerHeader>\n            <div className=\"grid gap-1 px-5 pb-5 text-body-sm text-fg-muted\">\n              <p>Live · 18</p>\n              <p>Paused · 3</p>\n              <p>Failing · 1</p>\n            </div>\n          </DrawerContent>\n        </Drawer>\n      ))}\n    </div>\n  );\n}\n\nexport function Open() {\n  return (\n    <Drawer defaultOpen>\n      <DrawerTrigger asChild>\n        <Button variant=\"outline\">Change plan</Button>\n      </DrawerTrigger>\n      <DrawerContent>\n        <div className=\"mx-auto w-full max-w-md\">\n          <PlanPicker />\n        </div>\n      </DrawerContent>\n    </Drawer>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-dialog"
+  ],
+  "files": [
+    {
+      "path": "components/ui/drawer.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as DrawerPrimitive from \"@radix-ui/react-dialog\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// A drawer pulled from an edge, drawn as the dashboard's phone drawer (the app sidebar below 768px): a white panel with\n// shell corners and the drawer shadow, held 8px off the window's edges over the scrim, with a 40 by 4px handle in the\n// line gray. It slides its full size in (250ms, the strong ease-out) and leaves with the sheet's short slide and fade.\n// It can be dragged away: a flick faster than 0.11px per ms, or a pull past a third of its size, closes it; a shorter\n// pull springs back; pulling the other way meets growing resistance instead of a wall. The drag follows the pointer off\n// the panel (pointer capture) and ignores a second finger. Mark a scrolling area inside with data-drawer-no-drag.\ntype Direction = \"bottom\" | \"top\" | \"left\" | \"right\";\n\nconst DrawerContext = React.createContext<{ direction: Direction; setOpen: (open: boolean) => void }>({ direction: \"bottom\", setOpen: () => {} });\n\nfunction Drawer({ open: openProp, defaultOpen = false, onOpenChange, direction = \"bottom\", ...props }: React.ComponentProps<typeof DrawerPrimitive.Root> & { direction?: Direction }) {\n  const [uncontrolled, setUncontrolled] = React.useState(defaultOpen);\n  const open = openProp ?? uncontrolled;\n  const setOpen = React.useCallback(\n    (next: boolean) => {\n      if (openProp === undefined) setUncontrolled(next);\n      onOpenChange?.(next);\n    },\n    [openProp, onOpenChange],\n  );\n  return (\n    <DrawerContext.Provider value={{ direction, setOpen }}>\n      <DrawerPrimitive.Root data-slot=\"drawer\" open={open} onOpenChange={setOpen} {...props} />\n    </DrawerContext.Provider>\n  );\n}\n\nfunction DrawerTrigger(props: React.ComponentProps<typeof DrawerPrimitive.Trigger>) {\n  return <DrawerPrimitive.Trigger data-slot=\"drawer-trigger\" {...props} />;\n}\n\nfunction DrawerPortal(props: React.ComponentProps<typeof DrawerPrimitive.Portal>) {\n  const container = usePortalContainer();\n  return <DrawerPrimitive.Portal data-slot=\"drawer-portal\" container={container} {...props} />;\n}\n\nfunction DrawerClose(props: React.ComponentProps<typeof DrawerPrimitive.Close>) {\n  return <DrawerPrimitive.Close data-slot=\"drawer-close\" {...props} />;\n}\n\nfunction DrawerOverlay({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Overlay>) {\n  return <DrawerPrimitive.Overlay data-slot=\"drawer-overlay\" className={cn(\"fixed inset-0 z-50 animate-fade-in bg-scrim\", className)} {...props} />;\n}\n\nconst PLACE: Record<Direction, string> = {\n  bottom: \"inset-x-2 bottom-2 max-h-[85dvh] flex-col starting:translate-y-[calc(100%+0.5rem)] data-[state=closed]:animate-sheet-bottom-out\",\n  top: \"inset-x-2 top-2 max-h-[85dvh] flex-col-reverse starting:-translate-y-[calc(100%+0.5rem)]\",\n  right: \"inset-y-2 right-2 w-[min(24rem,calc(100%-3rem))] flex-row-reverse starting:translate-x-[calc(100%+0.5rem)] data-[state=closed]:animate-sheet-right-out\",\n  left: \"inset-y-2 left-2 w-[min(24rem,calc(100%-3rem))] flex-row starting:-translate-x-[calc(100%+0.5rem)] data-[state=closed]:animate-sheet-left-out\",\n};\n\n// Where a pull closes the drawer: toward its own edge (positive for bottom and right).\nconst AXIS: Record<Direction, { axis: \"x\" | \"y\"; sign: 1 | -1 }> = { bottom: { axis: \"y\", sign: 1 }, top: { axis: \"y\", sign: -1 }, right: { axis: \"x\", sign: 1 }, left: { axis: \"x\", sign: -1 } };\nconst VELOCITY = 0.11;\nconst SKIP = \"button, a, input, textarea, select, [role=slider], [contenteditable=true], [data-drawer-no-drag]\";\n\nfunction useDrag(direction: Direction, close: () => void) {\n  const panel = React.useRef<HTMLDivElement>(null);\n  const drag = React.useRef<{ id: number; start: number; at: number; time: number } | null>(null);\n  const { axis, sign } = AXIS[direction];\n  const translate = (px: number) => (axis === \"y\" ? `translateY(${px}px)` : `translateX(${px}px)`);\n\n  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {\n    if (drag.current || event.button !== 0) return; // one pointer only\n    if ((event.target as Element).closest(SKIP)) return;\n    if (window.getSelection()?.toString()) return;\n    const start = axis === \"y\" ? event.clientY : event.clientX;\n    drag.current = { id: event.pointerId, start, at: 0, time: performance.now() };\n    event.currentTarget.setPointerCapture(event.pointerId);\n    if (panel.current) panel.current.style.transition = \"none\";\n  };\n\n  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {\n    const d = drag.current;\n    if (!d || d.id !== event.pointerId || !panel.current) return;\n    const raw = (axis === \"y\" ? event.clientY : event.clientX) - d.start;\n    const toward = raw * sign;\n    // Toward the edge it follows the pointer; away from it, resistance grows with distance.\n    const moved = toward >= 0 ? toward : -Math.sqrt(-toward) * 2;\n    d.at = moved;\n    panel.current.style.transform = translate(moved * sign);\n  };\n\n  const end = (event: React.PointerEvent<HTMLDivElement>) => {\n    const d = drag.current;\n    if (!d || d.id !== event.pointerId || !panel.current) return;\n    drag.current = null;\n    const el = panel.current;\n    const size = axis === \"y\" ? el.offsetHeight : el.offsetWidth;\n    const velocity = Math.abs(d.at) / Math.max(1, performance.now() - d.time);\n    if (d.at > 0 && (d.at > size / 3 || velocity > VELOCITY)) {\n      el.style.transition = \"\";\n      close();\n      return;\n    }\n    el.style.transition = \"transform 300ms var(--ds-easing-out)\";\n    el.style.transform = \"\";\n    const reset = () => {\n      el.style.transition = \"\";\n      el.removeEventListener(\"transitionend\", reset);\n    };\n    el.addEventListener(\"transitionend\", reset);\n  };\n\n  return { panel, handlers: { onPointerDown, onPointerMove, onPointerUp: end, onPointerCancel: end } };\n}\n\nfunction DrawerContent({ className, children, ...props }: React.ComponentProps<typeof DrawerPrimitive.Content>) {\n  const { direction, setOpen } = React.useContext(DrawerContext);\n  const { panel, handlers } = useDrag(direction, () => setOpen(false));\n  const vertical = direction === \"bottom\" || direction === \"top\";\n  return (\n    <DrawerPortal>\n      <DrawerOverlay />\n      <DrawerPrimitive.Content\n        ref={panel}\n        data-slot=\"drawer-content\"\n        data-direction={direction}\n        className={cn(\n          \"group/drawer fixed z-50 flex touch-none rounded-shell bg-surface text-fg shadow-drawer outline-none transition-[translate] duration-250 ease-emphasized motion-reduce:transition-none motion-reduce:starting:translate-0\",\n          PLACE[direction],\n          className,\n        )}\n        {...handlers}\n        {...props}\n      >\n        <div aria-hidden data-slot=\"drawer-handle\" className={cn(\"shrink-0 rounded-pill bg-line\", vertical ? \"mx-auto my-2.5 h-1 w-10\" : \"mx-2.5 my-auto h-10 w-1\")} />\n        <div className=\"ds-scrollbar flex min-h-0 min-w-0 flex-1 touch-auto flex-col overflow-auto\">{children}</div>\n      </DrawerPrimitive.Content>\n    </DrawerPortal>\n  );\n}\n\nfunction DrawerHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"drawer-header\" className={cn(\"flex flex-col gap-1.5 px-5 pt-2 pb-4 group-data-[direction=left]/drawer:pt-5 group-data-[direction=right]/drawer:pt-5\", className)} {...props} />;\n}\n\nfunction DrawerFooter({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"drawer-footer\" className={cn(\"mt-auto flex flex-col gap-2 border-t border-line-subtle px-5 py-3.5\", className)} {...props} />;\n}\n\nfunction DrawerTitle({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Title>) {\n  return <DrawerPrimitive.Title data-slot=\"drawer-title\" className={cn(\"text-h5 leading-snug font-normal tracking-normal text-fg\", className)} {...props} />;\n}\n\nfunction DrawerDescription({ className, ...props }: React.ComponentProps<typeof DrawerPrimitive.Description>) {\n  return <DrawerPrimitive.Description data-slot=\"drawer-description\" className={cn(\"text-body-sm text-fg-muted\", className)} {...props} />;\n}\n\nexport { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerOverlay, DrawerPortal, DrawerTitle, DrawerTrigger };\n"
+    }
+  ]
+}

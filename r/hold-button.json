@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "hold-button",
+  "type": "ui",
+  "title": "Hold button",
+  "description": "Destructive action that requires a sustained pointer or key press, with a progress indicator.",
+  "surface": "product",
+  "kinds": [
+    "app-button-danger"
+  ],
+  "usage": "Deleting keys, workspaces, monitors.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/hold-button.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add hold-button --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/hold-button.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/hold-button.tsx",
+        "sha256": "284c0b184ec96f9765dae3d32d8e469f4ca6db8a9b85f79bc6094c78a0e92535",
+        "retained": false,
+        "exports": [
+          "HoldButton"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/hold-button.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function HoldButton({ label, onConfirm, holdMs, className }: {\n    label: string;\n    onConfirm: () => void;\n    holdMs?: number;\n    className?: string;\n}): React.JSX.Element;\nexport { HoldButton };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/hold-button/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/hold-button.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { HoldButton } from \"@/components/ui/hold-button\";\n\nexport function Product() {\n  const [deleted, setDeleted] = useState(false);\n  return <div className=\"grid justify-items-start gap-3\">{deleted ? <><p role=\"status\" className=\"text-body-sm\">Example workspace deleted.</p><Button variant=\"outline\" onClick={() => setDeleted(false)}>Reset example</Button></> : <HoldButton label=\"Delete workspace\" onConfirm={() => setDeleted(true)} />}</div>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "use-hold",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/hold-button.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { useHold } from \"@/hooks/use-hold\";\nimport { cn } from \"@/lib/utils\";\n\n// Hold to confirm a destructive action: an outlined red button that fills red while held. The fill carries a white copy\n// of the label and is revealed by clip-path from the left, so the label reads red on white ahead of the fill and white\n// on red behind it at every moment (the site's version turned the whole label white at once, leaving it white on white\n// until the fill arrived). The reveal runs at a constant rate while held and snaps back in 150ms ease-out on release.\nfunction HoldButton({ label, onConfirm, holdMs = 1200, className }: { label: string; onConfirm: () => void; holdMs?: number; className?: string }) {\n  const { isHolding, handlers } = useHold(holdMs, onConfirm);\n  const text = isHolding ? \"Keep holding…\" : label;\n  return (\n    <button\n      type=\"button\"\n      data-slot=\"hold-button\"\n      {...handlers}\n      className={cn(\n        \"relative inline-flex h-8 shrink-0 items-center justify-center overflow-hidden rounded-control border border-danger px-3.5 text-body-sm whitespace-nowrap text-danger outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\",\n        className,\n      )}\n    >\n      <span>{text}</span>\n      <span\n        aria-hidden\n        className={cn(\n          \"absolute inset-0 flex items-center justify-center bg-danger text-white transition-[clip-path] motion-reduce:transition-none\",\n          isHolding ? \"[clip-path:inset(0_0_0_0)] ease-linear\" : \"[clip-path:inset(0_100%_0_0)] duration-150 ease-out\",\n        )}\n        style={isHolding ? { transitionDuration: `${holdMs}ms` } : undefined}\n      >\n        {text}\n      </span>\n    </button>\n  );\n}\n\nexport { HoldButton };\n"
+    }
+  ]
+}

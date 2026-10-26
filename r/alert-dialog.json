@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "alert-dialog",
+  "type": "ui",
+  "title": "Alert Dialog",
+  "description": "A confirmation in the dashboard's framed dialog: a title, a muted line, and Cancel beside the blue or red action over a light line.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Ask before something that cannot be undone or costs money: revoking a key, deleting a monitor, changing a plan. Say what happens in the title (Revoke this key?) and the consequence in the description; name the action with its verb (Revoke key), never Yes or OK. Use variant destructive on the action when it removes something. Use size sm for a short yes-or-no with an icon in AlertDialogMedia.",
+  "avoid": [
+    "A close glyph (the person answers it)",
+    "Yes and No as the action labels",
+    "More than two actions",
+    "A long form inside (use Dialog)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/alert-dialog.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add alert-dialog",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/dialog.tsx (frame, title and footer); src/components/settings/settings-page.tsx (the danger zone)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/dialog.tsx",
+        "sha256": "45b7c747c0394dd24e601005ace7294c31bfaff09aa44b988da1e20b448f66f1",
+        "retained": false,
+        "exports": [
+          "Dialog"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/settings/settings-page.tsx",
+        "sha256": "71b6314133504ed6c34b75261acfeafd875e298dec815f706e8d0c09dfc81757",
+        "retained": false,
+        "exports": [
+          "SettingsPage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/alert-dialog.d.ts",
+      "content": "import * as React from \"react\";\nimport * as AlertDialogPrimitive from \"@radix-ui/react-alert-dialog\";\ndeclare function AlertDialog(props: React.ComponentProps<typeof AlertDialogPrimitive.Root>): React.JSX.Element;\ndeclare function AlertDialogTrigger(props: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>): React.JSX.Element;\ndeclare function AlertDialogPortal(props: React.ComponentProps<typeof AlertDialogPrimitive.Portal>): React.JSX.Element;\ndeclare function AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>): React.JSX.Element;\ndeclare const WIDTHS: {\n    readonly default: \"max-w-lg\";\n    readonly sm: \"max-w-sm\";\n};\ndeclare function AlertDialogContent({ className, children, size, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content> & {\n    size?: keyof typeof WIDTHS;\n}): React.JSX.Element;\ndeclare function AlertDialogHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function AlertDialogFooter({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** A 40px tile above a small dialog's title: a hairline square holding one 16px icon. */\ndeclare function AlertDialogMedia({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function AlertDialogTitle({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Title>): React.JSX.Element;\ndeclare function AlertDialogDescription({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Description>): React.JSX.Element;\ndeclare function AlertDialogAction({ className, variant, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Action> & {\n    variant?: \"default\" | \"destructive\";\n}): React.JSX.Element;\ndeclare function AlertDialogCancel({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>): React.JSX.Element;\nexport { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogOverlay, AlertDialogPortal, AlertDialogTitle, AlertDialogTrigger, };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/alert-dialog/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/alert-dialog/Product"
+    },
+    {
+      "name": "Small",
+      "url": "https://context-ds.vercel.app/preview/alert-dialog/Small"
+    },
+    {
+      "name": "Open",
+      "url": "https://context-ds.vercel.app/preview/alert-dialog/Open"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/alert-dialog.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { KeyRound, Trash2 } from \"lucide-react\";\n\nimport { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogMedia, AlertDialogTitle, AlertDialogTrigger } from \"@/components/ui/alert-dialog\";\nimport { Button } from \"@/components/ui/button\";\n\nexport function Site() {\n  return (\n    <AlertDialog>\n      <AlertDialogTrigger asChild>\n        <Button variant=\"pill\">Upgrade to Scale</Button>\n      </AlertDialogTrigger>\n      <AlertDialogContent>\n        <AlertDialogHeader>\n          <AlertDialogTitle>Switch to the Scale plan?</AlertDialogTitle>\n          <AlertDialogDescription>Your card is charged $399 today, prorated for this month. Unused credits carry over.</AlertDialogDescription>\n        </AlertDialogHeader>\n        <AlertDialogFooter>\n          <AlertDialogCancel>Not now</AlertDialogCancel>\n          <AlertDialogAction>Upgrade</AlertDialogAction>\n        </AlertDialogFooter>\n      </AlertDialogContent>\n    </AlertDialog>\n  );\n}\n\nexport function Product() {\n  const [revoked, setRevoked] = React.useState(false);\n  return (\n    <div className=\"grid justify-items-center gap-3\">\n      <AlertDialog>\n        <AlertDialogTrigger asChild>\n          <Button variant=\"outline\" disabled={revoked}>\n            Revoke key\n          </Button>\n        </AlertDialogTrigger>\n        <AlertDialogContent>\n          <AlertDialogHeader>\n            <AlertDialogTitle>Revoke the Production key?</AlertDialogTitle>\n            <AlertDialogDescription>Requests signed with it fail at once. Apps using it stop working until you give them a new key.</AlertDialogDescription>\n          </AlertDialogHeader>\n          <AlertDialogFooter>\n            <AlertDialogCancel>Cancel</AlertDialogCancel>\n            <AlertDialogAction variant=\"destructive\" onClick={() => setRevoked(true)}>\n              Revoke key\n            </AlertDialogAction>\n          </AlertDialogFooter>\n        </AlertDialogContent>\n      </AlertDialog>\n      <p role=\"status\" className=\"text-body-sm text-fg-muted\">\n        {revoked ? \"The Production key is revoked in this example.\" : \"Production key, created Oct 2\"}\n      </p>\n    </div>\n  );\n}\n\nexport function Small() {\n  return (\n    <AlertDialog>\n      <AlertDialogTrigger asChild>\n        <Button variant=\"outline\">\n          <Trash2 strokeWidth={1.5} />\n          Delete monitor\n        </Button>\n      </AlertDialogTrigger>\n      <AlertDialogContent size=\"sm\">\n        <AlertDialogHeader>\n          <AlertDialogMedia>\n            <Trash2 strokeWidth={1.5} />\n          </AlertDialogMedia>\n          <AlertDialogTitle>Delete this monitor?</AlertDialogTitle>\n          <AlertDialogDescription>Its history of 412 checks is deleted with it.</AlertDialogDescription>\n        </AlertDialogHeader>\n        <AlertDialogFooter>\n          <AlertDialogCancel>Cancel</AlertDialogCancel>\n          <AlertDialogAction variant=\"destructive\">Delete</AlertDialogAction>\n        </AlertDialogFooter>\n      </AlertDialogContent>\n    </AlertDialog>\n  );\n}\n\nexport function Open() {\n  return (\n    <AlertDialog defaultOpen>\n      <AlertDialogTrigger asChild>\n        <Button variant=\"outline\">\n          <KeyRound strokeWidth={1.5} />\n          Rotate key\n        </Button>\n      </AlertDialogTrigger>\n      <AlertDialogContent>\n        <AlertDialogHeader>\n          <AlertDialogTitle>Rotate the Staging key?</AlertDialogTitle>\n          <AlertDialogDescription>The old key keeps working for 24 hours, then stops.</AlertDialogDescription>\n        </AlertDialogHeader>\n        <AlertDialogFooter>\n          <AlertDialogCancel>Cancel</AlertDialogCancel>\n          <AlertDialogAction>Rotate key</AlertDialogAction>\n        </AlertDialogFooter>\n      </AlertDialogContent>\n    </AlertDialog>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "button",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-alert-dialog"
+  ],
+  "files": [
+    {
+      "path": "components/ui/alert-dialog.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as AlertDialogPrimitive from \"@radix-ui/react-alert-dialog\";\n\nimport { buttonVariants } from \"@/components/ui/button\";\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// A confirmation drawn as the dashboard's dialog (context-dashboard src/components/ui/dialog.tsx): a white panel in a\n// 6px frame on a hairline and a soft shadow over the scrim, rising 4px as it fades in, held in the upper part of the\n// window. The title is h5 at weight 400, the description muted body-sm, 20px in; the actions sit right-aligned over a\n// light line, Cancel outlined and the action blue (outlined red when it destroys something, as the dashboard's danger\n// zone does). `size=\"sm\"` centers the title under an optional media tile and splits the footer in two. It has no close\n// glyph and ignores clicks outside it: the person answers it (Escape cancels).\nfunction AlertDialog(props: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {\n  return <AlertDialogPrimitive.Root data-slot=\"alert-dialog\" {...props} />;\n}\n\nfunction AlertDialogTrigger(props: React.ComponentProps<typeof AlertDialogPrimitive.Trigger>) {\n  return <AlertDialogPrimitive.Trigger data-slot=\"alert-dialog-trigger\" {...props} />;\n}\n\nfunction AlertDialogPortal(props: React.ComponentProps<typeof AlertDialogPrimitive.Portal>) {\n  const container = usePortalContainer();\n  return <AlertDialogPrimitive.Portal data-slot=\"alert-dialog-portal\" container={container} {...props} />;\n}\n\nfunction AlertDialogOverlay({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {\n  return <AlertDialogPrimitive.Overlay data-slot=\"alert-dialog-overlay\" className={cn(\"fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overscroll-contain bg-scrim px-4 pt-[12vh] pb-6 max-md:pt-4\", className)} {...props} />;\n}\n\nconst WIDTHS = { default: \"max-w-lg\", sm: \"max-w-sm\" } as const;\n\nfunction AlertDialogContent({ className, children, size = \"default\", ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Content> & { size?: keyof typeof WIDTHS }) {\n  return (\n    <AlertDialogPortal>\n      <AlertDialogOverlay>\n        <AlertDialogPrimitive.Content\n          data-slot=\"alert-dialog-content\"\n          data-size={size}\n          className={cn(\"group/alert-dialog relative z-50 w-full shrink-0 animate-content-in rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none\", WIDTHS[size], className)}\n          {...props}\n        >\n          <div className=\"relative rounded-shell bg-surface\">{children}</div>\n        </AlertDialogPrimitive.Content>\n      </AlertDialogOverlay>\n    </AlertDialogPortal>\n  );\n}\n\nfunction AlertDialogHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"alert-dialog-header\" className={cn(\"flex flex-col gap-1.5 px-5 pt-5 pb-5 group-data-[size=sm]/alert-dialog:items-center group-data-[size=sm]/alert-dialog:text-center\", className)} {...props} />;\n}\n\nfunction AlertDialogFooter({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"alert-dialog-footer\"\n      className={cn(\"flex flex-col-reverse gap-2 border-t border-line-subtle px-5 py-3.5 sm:flex-row sm:items-center sm:justify-end group-data-[size=sm]/alert-dialog:grid group-data-[size=sm]/alert-dialog:grid-cols-2 group-data-[size=sm]/alert-dialog:[&>*]:w-full\", className)}\n      {...props}\n    />\n  );\n}\n\n/** A 40px tile above a small dialog's title: a hairline square holding one 16px icon. */\nfunction AlertDialogMedia({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"alert-dialog-media\" className={cn(\"mb-1.5 grid size-10 place-items-center rounded-control border border-line text-fg-muted [&_svg:not([class*='size-'])]:size-4\", className)} {...props} />;\n}\n\nfunction AlertDialogTitle({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {\n  return <AlertDialogPrimitive.Title data-slot=\"alert-dialog-title\" className={cn(\"text-h5 leading-snug font-normal tracking-normal text-fg\", className)} {...props} />;\n}\n\nfunction AlertDialogDescription({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {\n  return <AlertDialogPrimitive.Description data-slot=\"alert-dialog-description\" className={cn(\"text-body-sm text-fg-muted\", className)} {...props} />;\n}\n\nconst DESTRUCTIVE = \"border-danger text-danger hover:border-danger hover:bg-danger/6\";\n\nfunction AlertDialogAction({ className, variant = \"default\", ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Action> & { variant?: \"default\" | \"destructive\" }) {\n  return (\n    <AlertDialogPrimitive.Action\n      data-slot=\"alert-dialog-action\"\n      className={cn(buttonVariants({ variant: variant === \"destructive\" ? \"outline\" : \"brand\" }), variant === \"destructive\" && DESTRUCTIVE, className)}\n      {...props}\n    />\n  );\n}\n\nfunction AlertDialogCancel({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {\n  return <AlertDialogPrimitive.Cancel data-slot=\"alert-dialog-cancel\" className={cn(buttonVariants({ variant: \"outline\" }), className)} {...props} />;\n}\n\nexport {\n  AlertDialog,\n  AlertDialogAction,\n  AlertDialogCancel,\n  AlertDialogContent,\n  AlertDialogDescription,\n  AlertDialogFooter,\n  AlertDialogHeader,\n  AlertDialogMedia,\n  AlertDialogOverlay,\n  AlertDialogPortal,\n  AlertDialogTitle,\n  AlertDialogTrigger,\n};\n"
+    }
+  ]
+}

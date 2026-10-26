@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "slider",
+  "type": "ui",
+  "title": "Slider",
+  "description": "A value along a 4px track filled brand blue, with a white 16px thumb; two thumbs pick a range.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Choose a number where the rough position matters more than the exact value (a monthly budget, a crawl depth, a confidence threshold). Show the value beside it in a label, and give it an aria-label or a labelled heading. Pass two values for a range.",
+  "avoid": [
+    "A slider for exact numbers (use an input)",
+    "A slider without its value shown",
+    "Animating the thumb to its position"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/slider.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add slider",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from context-dashboard c0ddf7a src/components/ui/switch.tsx (the pale off track, the brand blue and the white thumb)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/switch.tsx",
+        "sha256": "9cd971f01727ebbb36ea4976e025859fd631ea6edc016ba7bf8ec9ca6ece371d",
+        "retained": false,
+        "exports": [
+          "Switch"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/slider.d.ts",
+      "content": "import * as React from \"react\";\nimport * as SliderPrimitive from \"@radix-ui/react-slider\";\ndeclare function Slider({ className, defaultValue, value, min, max, ...props }: React.ComponentProps<typeof SliderPrimitive.Root>): React.JSX.Element;\nexport { Slider };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/slider/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/slider/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/slider.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { Slider } from \"@/components/ui/slider\";\n\n// On the pricing page: an estimate from monthly requests.\nexport function Site() {\n  const [requests, setRequests] = useState([50]);\n  return (\n    <div className=\"grid w-full max-w-sm gap-3\">\n      <div className=\"flex items-baseline justify-between\">\n        <span id=\"requests-label\" className=\"text-body text-fg\">Requests a month</span>\n        <span className=\"text-body text-fg tabular-nums\">{requests[0]}k</span>\n      </div>\n      <Slider value={requests} onValueChange={setRequests} min={5} max={500} step={5} aria-labelledby=\"requests-label\" />\n    </div>\n  );\n}\n\n// In a crawl's settings: depth, a range of page sizes and a disabled limit.\nexport function Product() {\n  const [depth, setDepth] = useState([3]);\n  const [size, setSize] = useState([10, 400]);\n  return (\n    <div className=\"grid w-full max-w-sm gap-6\">\n      <div className=\"grid gap-3\">\n        <div className=\"flex items-baseline justify-between text-body-sm\">\n          <span id=\"depth-label\" className=\"text-fg\">Crawl depth</span>\n          <span className=\"text-fg-muted tabular-nums\">{depth[0]} links</span>\n        </div>\n        <Slider value={depth} onValueChange={setDepth} min={1} max={10} aria-labelledby=\"depth-label\" />\n      </div>\n      <div className=\"grid gap-3\">\n        <div className=\"flex items-baseline justify-between text-body-sm\">\n          <span id=\"size-label\" className=\"text-fg\">Page size</span>\n          <span className=\"text-fg-muted tabular-nums\">{size[0]} to {size[1]} KB</span>\n        </div>\n        <Slider value={size} onValueChange={setSize} min={0} max={1000} step={10} aria-labelledby=\"size-label\" />\n      </div>\n      <div className=\"grid gap-3\">\n        <span id=\"concurrency-label\" className=\"text-body-sm text-fg\">Concurrency (on Pro)</span>\n        <Slider defaultValue={[2]} max={10} disabled aria-labelledby=\"concurrency-label\" />\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slider"
+  ],
+  "files": [
+    {
+      "path": "components/ui/slider.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as SliderPrimitive from \"@radix-ui/react-slider\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A value along a line, extrapolated from the switch: a 4px pale track (the switch's off fill) filled brand blue up to\n// the value, and a 16px white thumb with the key's soft drop and a hairline. Under the pointer or keyboard focus the\n// thumb takes the blue hover ring; it never animates its position (it follows the pointer). Pass two values for a range.\nfunction Slider({ className, defaultValue, value, min = 0, max = 100, ...props }: React.ComponentProps<typeof SliderPrimitive.Root>) {\n  const values = React.useMemo(() => (Array.isArray(value) ? value : Array.isArray(defaultValue) ? defaultValue : [min, max]), [value, defaultValue, min, max]);\n  return (\n    <SliderPrimitive.Root\n      data-slot=\"slider\"\n      defaultValue={defaultValue}\n      value={value}\n      min={min}\n      max={max}\n      className={cn(\n        \"relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-40 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col\",\n        className,\n      )}\n      {...props}\n    >\n      <SliderPrimitive.Track\n        data-slot=\"slider-track\"\n        className=\"relative grow overflow-hidden rounded-pill bg-neutral-10 data-[orientation=horizontal]:h-1 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1\"\n      >\n        <SliderPrimitive.Range data-slot=\"slider-range\" className=\"absolute bg-brand data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full\" />\n      </SliderPrimitive.Track>\n      {Array.from({ length: values.length }, (_, index) => (\n        <SliderPrimitive.Thumb\n          data-slot=\"slider-thumb\"\n          key={index}\n          aria-label={props[\"aria-label\"] ? undefined : values.length > 1 ? (index === 0 ? \"Minimum\" : \"Maximum\") : undefined}\n          className=\"block size-4 shrink-0 cursor-grab rounded-pill bg-white shadow-[var(--ds-shadow-key),0_0_0_1px_var(--ds-color-border-hairline)] outline-none transition-[box-shadow] duration-150 ease-out hover:shadow-[var(--ds-shadow-key),var(--ds-shadow-ring-hover)] focus-visible:shadow-[var(--ds-shadow-key),var(--ds-shadow-ring-hover)] active:cursor-grabbing disabled:pointer-events-none motion-reduce:transition-none\"\n        />\n      ))}\n    </SliderPrimitive.Root>\n  );\n}\n\nexport { Slider };\n"
+    }
+  ]
+}

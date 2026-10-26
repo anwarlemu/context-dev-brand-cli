@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "use-scrolling-scrollbars",
+  "type": "hook",
+  "title": "useScrollingScrollbars",
+  "description": "Shows scrollbars during scrolling and for 900ms afterward.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Product navigation and content scrollers with the ds-scrollbar class.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-scrolling-scrollbars.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-scrolling-scrollbars --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/hooks/use-scrolling-scrollbars.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/hooks/use-scrolling-scrollbars.ts",
+        "sha256": "b388370f64a00324dda65af291392686b808192eeb94f7ae7242494f448c2614",
+        "retained": false,
+        "exports": [
+          "useScrollingScrollbars"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "hooks/use-scrolling-scrollbars.d.ts",
+      "content": "/**\n * Marks a thin-scrollbar scroller with `data-scrolling` while it's being scrolled and for a moment after, so its\n * scrollbar shows only then, the way overlay scrollbars behave. Scroll events don't bubble, so one listener catches\n * them all on the way down.\n */\nexport declare function useScrollingScrollbars(): void;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "hooks/use-scrolling-scrollbars.ts",
+      "content": "\"use client\";\n\nimport { useEffect } from \"react\";\n\nconst HIDE_AFTER_MS = 900;\nlet users = 0;\nlet disconnect: (() => void) | undefined;\n\n/**\n * Marks a thin-scrollbar scroller with `data-scrolling` while it's being scrolled and for a moment after, so its\n * scrollbar shows only then, the way overlay scrollbars behave. Scroll events don't bubble, so one listener catches\n * them all on the way down.\n */\nexport function useScrollingScrollbars() {\n  useEffect(() => {\n    users += 1;\n    const release = () => {\n      users -= 1;\n      if (users === 0) {\n        disconnect?.();\n        disconnect = undefined;\n      }\n    };\n    if (disconnect) return release;\n    const timers = new Map<HTMLElement, ReturnType<typeof setTimeout>>();\n    function handleScroll(event: Event) {\n      const scroller = event.target;\n      if (!(scroller instanceof HTMLElement) || !scroller.classList.contains(\"ds-scrollbar\")) return;\n      scroller.dataset.scrolling = \"\";\n      clearTimeout(timers.get(scroller));\n      timers.set(\n        scroller,\n        setTimeout(() => {\n          delete scroller.dataset.scrolling;\n          timers.delete(scroller);\n        }, HIDE_AFTER_MS),\n      );\n    }\n    document.addEventListener(\"scroll\", handleScroll, { capture: true, passive: true });\n    disconnect = () => {\n      document.removeEventListener(\"scroll\", handleScroll, { capture: true });\n      timers.forEach((timer, element) => { clearTimeout(timer); delete element.dataset.scrolling; });\n    };\n    return release;\n  }, []);\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "navigation-menu",
+  "type": "ui",
+  "title": "Navigation Menu",
+  "description": "The site header's menus: pill triggers in medium body-sm with a turning chevron, panels in the blue-10 ring around a white card of rows with blue icon tiles.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Top navigation where a section has several destinations (Products, Use cases, Resources). Give each link a title and one line of description, and lead with the blue tile icon when the rows are products. Plain links sit in the same list with navigationMenuTriggerStyle.",
+  "avoid": [
+    "Actions in the panels (they are for going places)",
+    "More than about eight rows in one panel",
+    "Hover-only panels with no click or keyboard way in"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/navigation-menu.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add navigation-menu",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/shared/header.tsx; src/components/sections/shared/nav-menu-panels.tsx (the site header menus)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/header.tsx",
+        "sha256": "a7a5825f70934ce0e55c80bc75f791b1a4823827e875a687df11e6fdab971273",
+        "retained": false,
+        "exports": [
+          "Header"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/nav-menu-panels.tsx",
+        "sha256": "ed42dbe2966b42ae52ea30635780fd26ab4e68ad6e087a97d3eaead2cedf6493",
+        "retained": false,
+        "exports": [
+          "MenuIconChip",
+          "ProductsPanel",
+          "UseCasesPanel"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/navigation-menu.d.ts",
+      "content": "import * as React from \"react\";\nimport * as NavigationMenuPrimitive from \"@radix-ui/react-navigation-menu\";\ndeclare function NavigationMenu({ className, children, viewport, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {\n    viewport?: boolean;\n}): React.JSX.Element;\ndeclare function NavigationMenuList({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.List>): React.JSX.Element;\ndeclare function NavigationMenuItem({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Item>): React.JSX.Element;\ndeclare const navigationMenuTriggerStyle: (props?: import(\"class-variance-authority/types\").ClassProp | undefined) => string;\ndeclare function NavigationMenuTrigger({ className, children, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>): React.JSX.Element;\ndeclare function NavigationMenuContent({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Content>): React.JSX.Element;\ndeclare function NavigationMenuViewport({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>): React.JSX.Element;\ndeclare function NavigationMenuLink({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>): React.JSX.Element;\n/** The blue tile the site's menu rows lead with: a 36px square in brand blue holding one white 16px line icon. */\ndeclare function NavigationMenuIcon({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function NavigationMenuIndicator({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>): React.JSX.Element;\nexport { NavigationMenu, NavigationMenuContent, NavigationMenuIcon, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, NavigationMenuViewport, navigationMenuTriggerStyle, };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/navigation-menu/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/navigation-menu/Product"
+    },
+    {
+      "name": "Open",
+      "url": "https://context-ds.vercel.app/preview/navigation-menu/Open"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/navigation-menu.tsx",
+      "content": "\"use client\";\n\nimport { Building2, FileSearch, Globe, Radar } from \"lucide-react\";\n\nimport {\n  NavigationMenu,\n  NavigationMenuContent,\n  NavigationMenuIcon,\n  NavigationMenuItem,\n  NavigationMenuLink,\n  NavigationMenuList,\n  NavigationMenuTrigger,\n  navigationMenuTriggerStyle,\n} from \"@/components/ui/navigation-menu\";\n\nconst PRODUCTS = [\n  { title: \"Brand API\", description: \"Logos, colors and fonts for any domain.\", icon: Building2, href: \"#brand\" },\n  { title: \"Scrape API\", description: \"Clean markdown from any page, JavaScript and all.\", icon: FileSearch, href: \"#scrape\" },\n  { title: \"Monitor API\", description: \"Know when a page changes, with a diff.\", icon: Radar, href: \"#monitor\" },\n  { title: \"Crawl API\", description: \"Every page of a site, mapped and fetched.\", icon: Globe, href: \"#crawl\" },\n];\n\nconst RESOURCES = [\n  { title: \"Documentation\", description: \"Guides and the API reference.\", href: \"#docs\" },\n  { title: \"Changelog\", description: \"What shipped this month.\", href: \"#changelog\" },\n  { title: \"Status\", description: \"Uptime and incidents.\", href: \"#status\" },\n];\n\nfunction Menu({ defaultValue }: { defaultValue?: string }) {\n  return (\n    <NavigationMenu defaultValue={defaultValue}>\n      <NavigationMenuList>\n        <NavigationMenuItem value=\"products\">\n          <NavigationMenuTrigger>Products</NavigationMenuTrigger>\n          <NavigationMenuContent>\n            <ul className=\"grid w-[min(36rem,calc(100vw-3rem))] gap-0.5 sm:grid-cols-2\">\n              {PRODUCTS.map(({ title, description, icon: Icon, href }) => (\n                <li key={title}>\n                  <NavigationMenuLink href={href}>\n                    <NavigationMenuIcon>\n                      <Icon strokeWidth={1.75} />\n                    </NavigationMenuIcon>\n                    <span className=\"grid gap-0.5\">\n                      <span className=\"text-body font-medium text-fg\">{title}</span>\n                      <span>{description}</span>\n                    </span>\n                  </NavigationMenuLink>\n                </li>\n              ))}\n            </ul>\n          </NavigationMenuContent>\n        </NavigationMenuItem>\n        <NavigationMenuItem value=\"resources\">\n          <NavigationMenuTrigger>Resources</NavigationMenuTrigger>\n          <NavigationMenuContent>\n            <ul className=\"grid w-[min(18rem,calc(100vw-3rem))] gap-0.5\">\n              {RESOURCES.map(({ title, description, href }) => (\n                <li key={title}>\n                  <NavigationMenuLink href={href} className=\"flex-col gap-0.5\">\n                    <span className=\"text-body font-medium text-fg\">{title}</span>\n                    <span>{description}</span>\n                  </NavigationMenuLink>\n                </li>\n              ))}\n            </ul>\n          </NavigationMenuContent>\n        </NavigationMenuItem>\n        <NavigationMenuItem>\n          <NavigationMenuLink href=\"#pricing\" className={navigationMenuTriggerStyle()}>\n            Pricing\n          </NavigationMenuLink>\n        </NavigationMenuItem>\n      </NavigationMenuList>\n    </NavigationMenu>\n  );\n}\n\nexport function Site() {\n  return (\n    <div className=\"flex min-h-96 w-full justify-center\">\n      <Menu />\n    </div>\n  );\n}\n\nexport function Product() {\n  return (\n    <div className=\"flex min-h-80 w-full justify-center\">\n      <Menu />\n    </div>\n  );\n}\n\nexport function Open() {\n  return (\n    <div className=\"flex min-h-96 w-full justify-center\">\n      <Menu defaultValue=\"products\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-navigation-menu",
+    "lucide-react",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/navigation-menu.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as NavigationMenuPrimitive from \"@radix-ui/react-navigation-menu\";\nimport { ChevronDown } from \"lucide-react\";\nimport { cva } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Navigation with panels, drawn as the site header's menus (website src/components/layout/navbar.tsx; the library's\n// site-header): pill triggers in medium body-sm, nav gray turning brand blue under the pointer and black while open, a\n// 16px chevron that turns over (200ms ease-out). The panel hangs below in the site's ring: a solid blue-10 band around a\n// white card with card corners and the floating shadow, growing from its trigger in a short pop and resizing to each\n// panel. Links inside are the menu's rows: card corners, 12px in, a medium title over a nav-gray line, with an optional\n// blue tile icon, washing gray under the pointer.\nfunction NavigationMenu({ className, children, viewport = true, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & { viewport?: boolean }) {\n  return (\n    <NavigationMenuPrimitive.Root data-slot=\"navigation-menu\" data-viewport={viewport} className={cn(\"group/navigation-menu relative flex max-w-max flex-1 items-center justify-center\", className)} {...props}>\n      {children}\n      {viewport && <NavigationMenuViewport />}\n    </NavigationMenuPrimitive.Root>\n  );\n}\n\nfunction NavigationMenuList({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.List>) {\n  return <NavigationMenuPrimitive.List data-slot=\"navigation-menu-list\" className={cn(\"group flex flex-1 list-none items-center justify-center gap-0.5\", className)} {...props} />;\n}\n\nfunction NavigationMenuItem({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Item>) {\n  return <NavigationMenuPrimitive.Item data-slot=\"navigation-menu-item\" className={cn(\"relative\", className)} {...props} />;\n}\n\nconst navigationMenuTriggerStyle = cva(\n  \"group inline-flex w-max cursor-pointer items-center justify-center gap-1 rounded-pill px-3.5 py-2 text-body-sm leading-5 font-medium whitespace-nowrap text-fg-nav outline-none transition-colors duration-150 ease-out hover:text-fg-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 data-[active]:text-fg data-[state=open]:text-fg data-[state=open]:hover:text-fg motion-reduce:transition-none\",\n);\n\nfunction NavigationMenuTrigger({ className, children, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Trigger>) {\n  return (\n    <NavigationMenuPrimitive.Trigger data-slot=\"navigation-menu-trigger\" className={cn(navigationMenuTriggerStyle(), className)} {...props}>\n      {children}\n      <ChevronDown aria-hidden className=\"size-4 transition-transform duration-200 ease-out group-data-[state=open]:rotate-180 motion-reduce:transition-none\" />\n    </NavigationMenuPrimitive.Trigger>\n  );\n}\n\nfunction NavigationMenuContent({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Content>) {\n  return (\n    <NavigationMenuPrimitive.Content\n      data-slot=\"navigation-menu-content\"\n      className={cn(\n        \"top-0 left-0 w-full p-1.5 md:absolute md:w-auto\",\n        \"group-data-[viewport=false]/navigation-menu:top-full group-data-[viewport=false]/navigation-menu:mt-3 group-data-[viewport=false]/navigation-menu:rounded-card group-data-[viewport=false]/navigation-menu:bg-surface group-data-[viewport=false]/navigation-menu:shadow-floating group-data-[viewport=false]/navigation-menu:ring-6 group-data-[viewport=false]/navigation-menu:ring-tint group-data-[viewport=false]/navigation-menu:data-[state=open]:animate-pop-in\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction NavigationMenuViewport({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Viewport>) {\n  return (\n    <div className=\"absolute top-full left-1/2 isolate z-50 flex -translate-x-1/2 justify-center md:left-0 md:translate-x-0\">\n      <NavigationMenuPrimitive.Viewport\n        data-slot=\"navigation-menu-viewport\"\n        className={cn(\n          \"relative mt-3 h-(--radix-navigation-menu-viewport-height) w-(--radix-navigation-menu-viewport-width) max-w-[calc(100vw-2rem)] origin-top overflow-hidden rounded-card bg-surface text-fg shadow-floating ring-6 ring-tint transition-[width,height] duration-200 ease-out data-[state=open]:animate-pop-in md:origin-top-left motion-reduce:transition-none\",\n          className,\n        )}\n        {...props}\n      />\n    </div>\n  );\n}\n\nfunction NavigationMenuLink({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Link>) {\n  return (\n    <NavigationMenuPrimitive.Link\n      data-slot=\"navigation-menu-link\"\n      className={cn(\n        \"flex items-start gap-3 rounded-card p-3 text-body-sm leading-snug text-fg-nav outline-none transition-colors duration-150 ease-out hover:bg-wash-hover focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring data-[active=true]:bg-wash-hover motion-reduce:transition-none [&_svg:not([class*='size-'])]:size-4\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\n/** The blue tile the site's menu rows lead with: a 36px square in brand blue holding one white 16px line icon. */\nfunction NavigationMenuIcon({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"navigation-menu-icon\" className={cn(\"flex size-9 shrink-0 items-center justify-center rounded-control bg-brand text-on-brand [&>svg]:size-4\", className)} {...props} />;\n}\n\nfunction NavigationMenuIndicator({ className, ...props }: React.ComponentProps<typeof NavigationMenuPrimitive.Indicator>) {\n  return (\n    <NavigationMenuPrimitive.Indicator data-slot=\"navigation-menu-indicator\" className={cn(\"top-full z-10 flex h-1.5 items-end justify-center overflow-hidden data-[state=visible]:animate-fade-in\", className)} {...props}>\n      <div className=\"relative top-[60%] size-2.5 rotate-45 rounded-tl-sm bg-tint\" />\n    </NavigationMenuPrimitive.Indicator>\n  );\n}\n\nexport {\n  NavigationMenu,\n  NavigationMenuContent,\n  NavigationMenuIcon,\n  NavigationMenuIndicator,\n  NavigationMenuItem,\n  NavigationMenuLink,\n  NavigationMenuList,\n  NavigationMenuTrigger,\n  NavigationMenuViewport,\n  navigationMenuTriggerStyle,\n};\n"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "hero-pattern-hole",
+  "type": "lib",
+  "title": "Hero pattern hole",
+  "description": "Attributes for excluding content areas from dot-pattern backgrounds.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Marking a hero's or a card's content so HeroDotField and HeroCirclePatternSurface keep their dots off it: spread `patternHole(\"text\")` on a heading.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/hero-pattern-hole.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add hero-pattern-hole --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/shared/hero-pattern-hole.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/hero-pattern-hole.ts",
+        "sha256": "03793f305b86a4a3f4bb6ccf5108c375651c6a044e45bc21a5f3438594e26d4d",
+        "retained": false,
+        "exports": [
+          "HERO_PATTERN_HOLE_ATTRIBUTE",
+          "HeroPatternHole"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/hero-pattern-hole.d.ts",
+      "content": "export declare const HERO_PATTERN_HOLE_ATTRIBUTE = \"data-hero-pattern-hole\";\n/**\n * How a marked element clears the dot patterns behind it. `text` clears each rendered line, `box` the element's box,\n * `snug-box` the box with just enough margin that no dot touches it, and `tight-box` the box with only a sliver of\n * margin (items packed close together). `cover` keeps the dots but places no solid cluster there: for opaque content\n * that hides the dots itself and moves, like a carousel's cards. `oval` clears the ellipse inscribed in the box, with a\n * frayed edge, for a soft opening around a drawing rather than a cut-out.\n */\nexport type HeroPatternHole = \"text\" | \"box\" | \"snug-box\" | \"tight-box\" | \"cover\" | \"oval\";\n/** Spread on an element to mark it as a hole: `<h1 {...patternHole(\"text\")}>`. */\nexport declare function patternHole(kind: HeroPatternHole): Record<string, string>;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/hero-pattern-hole.ts",
+      "content": "// A plain module, not a client one, so server components can mark holes with the attribute too.\nexport const HERO_PATTERN_HOLE_ATTRIBUTE = \"data-hero-pattern-hole\";\n\n/**\n * How a marked element clears the dot patterns behind it. `text` clears each rendered line, `box` the element's box,\n * `snug-box` the box with just enough margin that no dot touches it, and `tight-box` the box with only a sliver of\n * margin (items packed close together). `cover` keeps the dots but places no solid cluster there: for opaque content\n * that hides the dots itself and moves, like a carousel's cards. `oval` clears the ellipse inscribed in the box, with a\n * frayed edge, for a soft opening around a drawing rather than a cut-out.\n */\nexport type HeroPatternHole = \"text\" | \"box\" | \"snug-box\" | \"tight-box\" | \"cover\" | \"oval\";\n\n/** Spread on an element to mark it as a hole: `<h1 {...patternHole(\"text\")}>`. */\nexport function patternHole(kind: HeroPatternHole) {\n  return { [HERO_PATTERN_HOLE_ATTRIBUTE]: kind } as Record<string, string>;\n}\n"
+    }
+  ]
+}

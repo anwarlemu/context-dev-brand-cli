@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "trust-strip",
+  "type": "site",
+  "title": "Trust strip",
+  "description": "Linked security cards with a mark, title, description, and action.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring",
+    "button-secondary"
+  ],
+  "usage": "Compliance, policies and zero data retention near the bottom of the home page. Trust center links open a new tab; links within the site (the ZDR page) stay in it.",
+  "avoid": [
+    "Gray line icons in place of the dot marks",
+    "Colored badges or seals",
+    "A black pill per card",
+    "More than one link per card"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/trust-strip.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add trust-strip --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/trust-strip.tsx; src/components/sections/home/trust-mark.tsx; src/components/sections/home/trust-marks.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/trust-strip.tsx",
+        "sha256": "c31ecffa1fdc6ad54c0e8686831b9aa783f035c6a6dff4628d95bee45bde0c27",
+        "retained": false,
+        "exports": [
+          "TrustStrip"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/trust-mark.tsx",
+        "sha256": "5e87ebbac403b5cce7dfcfa85a6338a6ce3a91bca26532f75a75abc6215b1631",
+        "retained": false,
+        "exports": [
+          "TrustMark"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/trust-marks.ts",
+        "sha256": "f71a97f5674f44f9a7dbdf84e00acdd142ef16225425c0d97a0c87bbdaabc16e",
+        "retained": false,
+        "exports": [
+          "TrustMarkId",
+          "TRUST_MARK_PITCH",
+          "TRUST_MARK_DOT_RADIUS",
+          "TRUST_MARK_RING_STROKE",
+          "TRUST_MARK_CELLS",
+          "TRUST_MARK_ROWS"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/trust-strip.d.ts",
+      "content": "import * as React from \"react\";\ndeclare const TRUST_MARKS: {\n    readonly compliance: readonly [\"     #####     \", \"   ##ooooo##   \", \"  ##ooooooo##  \", \" ##ooooooooo## \", \" #ooooooooooo# \", \"#o###o###o###o#\", \"#o#ooo#o#o#ooo#\", \"#o###o#o#o#ooo#\", \"#ooo#o#o#o#ooo#\", \"#o###o###o###o#\", \" #ooooooooooo# \", \" ##ooooooooo## \", \"  ##ooooooo##  \", \"   ##ooooo##   \", \"     #####     \"];\n    readonly policies: readonly [\"   #########   \", \"  #ooooooooo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo###oooo#  \", \"  #ooooooooo#  \", \"  #ooooooooo#  \", \"   #########   \"];\n    readonly zdr: readonly [\"     #####     \", \"    #ooooo#  # \", \"   #o     o##  \", \"   #o     o#   \", \"   #o     ##   \", \"   #o    #o#   \", \"   #o   # o#   \", \"   #o  #  o#   \", \"   #o #   o#   \", \"   #o#    o#   \", \"   ##     o#   \", \"   #o     o#   \", \"  ##o     o#   \", \" #  #ooooo#    \", \"     #####     \"];\n    /** @deprecated The site's third card is now zero data retention (`zdr`); kept so pages that drew it still render. */\n    readonly controls: readonly [\" ############# \", \"#ooooooooooooo#\", \"#ooooooooooooo#\", \"#ooooo#ooooooo#\", \"#ooooo#ooooooo#\", \"#oooo#o#oooooo#\", \"#oooo#o#oooooo#\", \"#####oo#oo#####\", \"#oooooo#oo#ooo#\", \"#ooooooo##oooo#\", \"#ooooooo##oooo#\", \"#ooooooo#ooooo#\", \"#ooooooooooooo#\", \"#ooooooooooooo#\", \" ############# \"];\n};\ntype TrustMarkId = keyof typeof TRUST_MARKS;\n/** A trust card's dot mark in brand blue. The hover morph is a visual of its own; this is its resting picture. */\ndeclare function TrustMark({ mark, rows, className }: {\n    mark?: TrustMarkId;\n    rows?: readonly string[];\n    className?: string;\n}): React.JSX.Element;\nexport type TrustItem = {\n    mark?: React.ReactNode;\n    label: string;\n    description: string;\n    linkLabel: string;\n    href: string;\n};\n/** `external` defaults to whether `href` leaves the site (`https://`): the site opens only those in a new tab. */\ndeclare function TrustCard({ mark, label, description, linkLabel, href, external, className }: TrustItem & {\n    external?: boolean;\n    className?: string;\n}): React.JSX.Element;\ndeclare function TrustStrip({ items, className }: {\n    items: TrustItem[];\n    className?: string;\n}): React.JSX.Element;\nexport { TrustStrip, TrustCard, TrustMark, TRUST_MARKS, type TrustMarkId };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/trust-strip/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/trust-strip.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { TrustMark, TrustStrip } from \"@/components/site/trust-strip\";\n\nconst TRUST_CENTER = \"https://trust.context.dev/\";\n\nexport function Site() {\n  return (<SiteSection>\n    <TrustStrip\n      className=\"w-full\"\n      items={[\n        { mark: <TrustMark mark=\"compliance\" />, label: \"SOC 2 Type 2\", description: \"Review our compliance status and request access to security information through the trust center.\", linkLabel: \"View compliance\", href: TRUST_CENTER },\n        { mark: <TrustMark mark=\"policies\" />, label: \"Security policies\", description: \"Review the policies covering data handling, access control, and incident response.\", linkLabel: \"Review policies\", href: TRUST_CENTER },\n        { mark: <TrustMark mark=\"zdr\" />, label: \"Zero data retention\", description: \"Keep inputs and outputs out of our logs, caches, and storage. We only record that a request was made.\", linkLabel: \"How ZDR works\", href: \"/zero-data-retention\" },\n      ]}\n    />\n  </SiteSection>);\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "button",
+    "dot-glyph",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/trust-strip.tsx",
+      "content": "import * as React from \"react\";\n\nimport { buttonVariants } from \"@/components/ui/button\";\nimport { DotGlyph } from \"@/components/ui/dot-glyph\";\nimport { cn } from \"@/lib/utils\";\n\n// The home page's security row: three white cards in the soft blue ring, each with a blue dot mark, a title, a sentence\n// and an outline pill. The whole card is the link (the pill's hit area stretches over it), so hovering the card tints\n// the pill the way hovering the pill does. On phones the mark sits beside the text, scaled down; from tablet up, above.\n\n// The brand's trust marks on its 15 by 15 dot grid, as the site draws them: `#` a solid dot, `o` a ring, a space an\n// empty cell. The site shows compliance, policies and zero data retention (`zdr`).\nconst TRUST_MARKS = {\n  compliance: [\"     #####     \", \"   ##ooooo##   \", \"  ##ooooooo##  \", \" ##ooooooooo## \", \" #ooooooooooo# \", \"#o###o###o###o#\", \"#o#ooo#o#o#ooo#\", \"#o###o#o#o#ooo#\", \"#ooo#o#o#o#ooo#\", \"#o###o###o###o#\", \" #ooooooooooo# \", \" ##ooooooooo## \", \"  ##ooooooo##  \", \"   ##ooooo##   \", \"     #####     \"],\n  policies: [\"   #########   \", \"  #ooooooooo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo#####oo#  \", \"  #ooooooooo#  \", \"  #oo###oooo#  \", \"  #ooooooooo#  \", \"  #ooooooooo#  \", \"   #########   \"],\n  zdr: [\"     #####     \", \"    #ooooo#  # \", \"   #o     o##  \", \"   #o     o#   \", \"   #o     ##   \", \"   #o    #o#   \", \"   #o   # o#   \", \"   #o  #  o#   \", \"   #o #   o#   \", \"   #o#    o#   \", \"   ##     o#   \", \"   #o     o#   \", \"  ##o     o#   \", \" #  #ooooo#    \", \"     #####     \"],\n  /** @deprecated The site's third card is now zero data retention (`zdr`); kept so pages that drew it still render. */\n  controls: [\" ############# \", \"#ooooooooooooo#\", \"#ooooooooooooo#\", \"#ooooo#ooooooo#\", \"#ooooo#ooooooo#\", \"#oooo#o#oooooo#\", \"#oooo#o#oooooo#\", \"#####oo#oo#####\", \"#oooooo#oo#ooo#\", \"#ooooooo##oooo#\", \"#ooooooo##oooo#\", \"#ooooooo#ooooo#\", \"#ooooooooooooo#\", \"#ooooooooooooo#\", \" ############# \"],\n} as const;\n\n// The library's DotGlyph reads 2 as a solid dot and 1 as a ring.\nconst toGlyphRows = (rows: readonly string[]) => rows.map((row) => row.replace(/#/g, \"2\").replace(/o/g, \"1\"));\n\ntype TrustMarkId = keyof typeof TRUST_MARKS;\n\n/** A trust card's dot mark in brand blue. The hover morph is a visual of its own; this is its resting picture. */\nfunction TrustMark({ mark, rows, className }: { mark?: TrustMarkId; rows?: readonly string[]; className?: string }) {\n  return <DotGlyph rows={toGlyphRows(rows ?? TRUST_MARKS[mark ?? \"compliance\"])} className={cn(\"size-18.75 text-fg-brand\", className)} />;\n}\n\nexport type TrustItem = { mark?: React.ReactNode; label: string; description: string; linkLabel: string; href: string };\n\n/** `external` defaults to whether `href` leaves the site (`https://`): the site opens only those in a new tab. */\nfunction TrustCard({ mark, label, description, linkLabel, href, external = href.startsWith(\"https://\"), className }: TrustItem & { external?: boolean; className?: string }) {\n  return (\n    <div data-slot=\"trust-card\" data-hover-morph=\"\" className={cn(\"rounded-card bg-ring-tint p-2\", className)}>\n      <div className=\"group/trust relative grid h-full grid-cols-[4rem_minmax(0,1fr)] items-start gap-x-5 rounded-card bg-surface p-6 ring-1 ring-hairline md:flex md:flex-col md:p-8\">\n        <div aria-hidden=\"true\" className=\"row-span-3 size-16 md:mb-6 md:h-22 md:w-auto\">\n          <div className=\"origin-top-left scale-72 md:scale-100\">{mark}</div>\n        </div>\n        <h3 className=\"col-start-2 text-body-lg leading-snug font-medium text-fg\">{label}</h3>\n        <p className=\"col-start-2 mt-3 mb-6 max-w-sm text-body leading-relaxed text-fg-muted\">{description}</p>\n        <a\n          href={href}\n          {...(external ? { target: \"_blank\", rel: \"noopener noreferrer\" } : {})}\n          className={cn(buttonVariants({ variant: \"pill-outline\" }), \"col-start-2 w-fit group-hover/trust:bg-tint after:absolute after:inset-0 after:rounded-card md:mt-auto\")}\n        >\n          {linkLabel}\n        </a>\n      </div>\n    </div>\n  );\n}\n\nfunction TrustStrip({ items, className }: { items: TrustItem[]; className?: string }) {\n  return (\n    <ul data-slot=\"trust-strip\" className={cn(\"grid grid-cols-1 gap-10 md:grid-cols-3 lg:gap-16\", className)}>\n      {items.map((item) => (\n        <li key={item.label} className=\"-m-2 flex\">\n          <TrustCard className=\"flex-1\" {...item} />\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport { TrustStrip, TrustCard, TrustMark, TRUST_MARKS, type TrustMarkId };\n"
+    }
+  ]
+}

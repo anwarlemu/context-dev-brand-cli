@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "radio-group",
+  "type": "ui",
+  "title": "Radio Group",
+  "description": "A small set of exclusive choices: 16px circles that turn brand blue around a blue dot when chosen.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Pick one of two to five options that should all stay visible (an output format, a region, a plan). Pair each RadioGroupItem with a Label by htmlFor; arrow keys move the choice. For longer lists use Select; for an on or off setting use Switch.",
+  "avoid": [
+    "Radio buttons for settings that apply at once",
+    "More than five options",
+    "A radio group with nothing chosen when one option is the default"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/radio-group.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add radio-group",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from context-dashboard c0ddf7a src/components/ui/form.tsx (the checkbox and field terms: the 16px box, strong hairline and brand blue)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/radio-group.d.ts",
+      "content": "import * as React from \"react\";\nimport * as RadioGroupPrimitive from \"@radix-ui/react-radio-group\";\ndeclare function RadioGroup({ className, ...props }: React.ComponentProps<typeof RadioGroupPrimitive.Root>): React.JSX.Element;\ndeclare function RadioGroupItem({ className, ...props }: React.ComponentProps<typeof RadioGroupPrimitive.Item>): React.JSX.Element;\nexport { RadioGroup, RadioGroupItem };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/radio-group/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/radio-group/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/radio-group.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { Label } from \"@/components/ui/label\";\nimport { RadioGroup, RadioGroupItem } from \"@/components/ui/radio-group\";\n\n// On a pricing page: how the team wants to be billed.\nexport function Site() {\n  return (\n    <fieldset className=\"grid gap-3\">\n      <legend className=\"mb-3 text-body text-fg\">Billing</legend>\n      <RadioGroup defaultValue=\"yearly\" name=\"billing\">\n        <div className=\"flex items-center gap-2.5\">\n          <RadioGroupItem value=\"monthly\" id=\"billing-monthly\" />\n          <Label htmlFor=\"billing-monthly\">Monthly</Label>\n        </div>\n        <div className=\"flex items-center gap-2.5\">\n          <RadioGroupItem value=\"yearly\" id=\"billing-yearly\" />\n          <Label htmlFor=\"billing-yearly\">Yearly (two months free)</Label>\n        </div>\n      </RadioGroup>\n    </fieldset>\n  );\n}\n\n// In a scrape request's settings: the output format, with an unavailable option.\nexport function Product() {\n  const [format, setFormat] = useState(\"markdown\");\n  return (\n    <div className=\"grid gap-3\">\n      <p id=\"format-label\" className=\"text-body-sm text-fg\">Output format</p>\n      <RadioGroup value={format} onValueChange={setFormat} aria-labelledby=\"format-label\">\n        {[\n          [\"markdown\", \"Markdown\"],\n          [\"html\", \"HTML\"],\n          [\"text\", \"Plain text\"],\n        ].map(([value, label]) => (\n          <div key={value} className=\"flex items-center gap-2.5\">\n            <RadioGroupItem value={value} id={`format-${value}`} />\n            <Label htmlFor={`format-${value}`}>{label}</Label>\n          </div>\n        ))}\n        <div className=\"flex items-center gap-2.5\" data-disabled=\"true\">\n          <RadioGroupItem value=\"pdf\" id=\"format-pdf\" disabled />\n          <Label htmlFor=\"format-pdf\">PDF (on Pro)</Label>\n        </div>\n      </RadioGroup>\n      <p className=\"text-caption text-fg-subtle\">Requests return {format === \"html\" ? \"HTML\" : format === \"text\" ? \"plain text\" : \"Markdown\"}.</p>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "label"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-radio-group"
+  ],
+  "files": [
+    {
+      "path": "components/ui/radio-group.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as RadioGroupPrimitive from \"@radix-ui/react-radio-group\";\n\nimport { cn } from \"@/lib/utils\";\n\n// One choice of a few, in the checkbox's terms: a 16px circle with the strong hairline on the surface; chosen, the edge\n// turns brand blue around a 6px blue dot. Options stack 12px apart with a body-sm label 10px from the circle (pair each\n// item with a Label by htmlFor). The same control on both surfaces; the product's tokens make it a touch smaller.\nfunction RadioGroup({ className, ...props }: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {\n  return <RadioGroupPrimitive.Root data-slot=\"radio-group\" className={cn(\"grid gap-3\", className)} {...props} />;\n}\n\nfunction RadioGroupItem({ className, ...props }: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {\n  return (\n    <RadioGroupPrimitive.Item\n      data-slot=\"radio-group-item\"\n      className={cn(\n        \"peer grid size-4 shrink-0 cursor-pointer place-items-center rounded-pill border border-line-strong bg-surface outline-none transition-[border-color] duration-150 ease-out hover:border-fg-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-danger data-[state=checked]:border-brand motion-reduce:transition-none\",\n        className,\n      )}\n      {...props}\n    >\n      <RadioGroupPrimitive.Indicator data-slot=\"radio-group-indicator\" className=\"block size-1.5 rounded-pill bg-brand\" />\n    </RadioGroupPrimitive.Item>\n  );\n}\n\nexport { RadioGroup, RadioGroupItem };\n"
+    }
+  ]
+}

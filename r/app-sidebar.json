@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "app-sidebar",
+  "type": "product",
+  "title": "App sidebar",
+  "description": "Dashboard navigation with workspace controls, search, grouped links, and footer actions. Opens as a drawer on phones.",
+  "surface": "product",
+  "kinds": [
+    "app-sidebar",
+    "app-nav-item",
+    "app-nav-label"
+  ],
+  "usage": "Every product page.",
+  "avoid": [
+    "A blue active item",
+    "A bordered or filled sidebar",
+    "Animating the switch between link lists"
+  ],
+  "notes": "The navigation scrolls independently when the links exceed the available height. Edge fades indicate hidden links, and the bottom chevron scrolls farther down. Icons are optional on `SidebarLink` and `SidebarButton`.",
+  "documentation": "https://context-ds.vercel.app/components/app-sidebar.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add app-sidebar --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/sidebar.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/sidebar.tsx",
+        "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+        "retained": false,
+        "exports": [
+          "Sidebar"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/app-sidebar.d.ts",
+      "content": "import * as React from \"react\";\nimport { type LucideIcon } from \"lucide-react\";\ndeclare function AppSidebar({ header, footer, open, onOpenChange, listPosition, navLabel, navRef, className, children, }: {\n    header?: React.ReactNode;\n    footer?: React.ReactNode;\n    open?: boolean;\n    onOpenChange?: (open: boolean) => void;\n    /** \"high\" for a long list: less space above it than below. */\n    listPosition?: \"center\" | \"high\";\n    navLabel?: string;\n    navRef?: React.Ref<HTMLElement>;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/** A group of links, named by a small outlined tag (sentence case, not a control). */\ndeclare function SidebarGroup({ label, children }: {\n    label?: React.ReactNode;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/**\n * One link: a 16px icon at stroke 1.75, the page's name, and anything trailing it (Data APIs' chevron). Pass your\n * router's link with asChild (its children become the name), or render it as a button with `as=\"button\"` (Help).\n */\ndeclare function SidebarLink({ icon: Icon, active, trailing, asChild, className, children, ...props }: React.ComponentProps<\"a\"> & {\n    icon?: LucideIcon;\n    active?: boolean;\n    trailing?: React.ReactNode;\n    asChild?: boolean;\n}): React.JSX.Element;\n/** A row in the sidebar's style that runs an action instead of going somewhere (Help opens its window). */\ndeclare function SidebarButton({ icon: Icon, className, children, ...props }: React.ComponentProps<\"button\"> & {\n    icon?: LucideIcon;\n}): React.JSX.Element;\n/** The search button beside the workspace: a 32px ghost square with its shortcut in the tooltip. */\ndeclare function SidebarSearchButton({ shortcut, onClick }: {\n    shortcut?: string;\n    onClick?: () => void;\n}): React.JSX.Element;\nexport { AppSidebar, SidebarButton, SidebarGroup, SidebarLink, SidebarSearchButton };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/app-sidebar/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/app-sidebar.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Boxes, ChartNoAxesColumn, CircleHelp, Code, KeyRound, LayoutGrid, Radar, Users } from \"lucide-react\";\nimport { AppSidebar, SidebarButton, SidebarGroup, SidebarLink, SidebarSearchButton } from \"@/components/product/app-sidebar\";\nimport { UserMenu } from \"@/components/product/user-menu\";\nimport { WorkspaceSwitcher } from \"@/components/product/workspace-switcher\";\nimport { Button } from \"@/components/ui/button\";\n\nconst GROUPS = [{ label: undefined, items: [{ title: \"Overview\", icon: LayoutGrid }] }, { label: \"Products\", items: [{ title: \"Data APIs\", icon: Boxes }, { title: \"Monitors\", icon: Radar }] }, { label: \"Workspace\", items: [{ title: \"API keys\", icon: KeyRound }, { title: \"Usage\", icon: ChartNoAxesColumn }, { title: \"Team\", icon: Users }] }];\nexport function Product() {\n  const [workspace, setWorkspace] = useState(\"acme\");\n  const [open, setOpen] = useState(false);\n  const [active, setActive] = useState(\"Overview\");\n  return <div className=\"flex h-[34rem] w-full overflow-hidden\">\n    <AppSidebar open={open} onOpenChange={setOpen} header={<><div className=\"min-w-0\"><WorkspaceSwitcher value={workspace} onValueChange={setWorkspace} workspaces={[{ id: \"acme\", name: \"Acme\", plan: \"Pro\" }, { id: \"personal\", name: \"Personal\", plan: \"Free\" }]} /></div><SidebarSearchButton onClick={() => { window.location.href = \"/preview/command/Product\"; }} /></>} footer={<><SidebarButton icon={CircleHelp} onClick={() => setActive(\"Help: hello@context.dev\")}>Help</SidebarButton><SidebarLink href=\"https://docs.context.dev\" target=\"_blank\" rel=\"noreferrer\" icon={Code}>Documentation</SidebarLink><UserMenu name=\"Ian Gerado\" email=\"ian@acme.com\" /></>}>\n      {GROUPS.map((group) => <SidebarGroup key={group.label ?? \"main\"} label={group.label}>{group.items.map(({ title, icon }) => <SidebarLink key={title} href=\"#example-page\" icon={icon} active={active === title} onClick={(event) => { event.preventDefault(); setActive(title); setOpen(false); }}>{title}</SidebarLink>)}</SidebarGroup>)}\n    </AppSidebar>\n    <div id=\"example-page\" className=\"flex min-w-0 flex-1 flex-col gap-4 p-4\"><Button className=\"self-start md:hidden\" variant=\"outline\" onClick={() => setOpen(true)}>Open navigation</Button><p role=\"status\" className=\"text-body-sm\">{active}</p></div>\n  </div>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "user-menu",
+    "workspace-switcher",
+    "button"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "tooltip",
+    "use-scrolling-scrollbars",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/app-sidebar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { ChevronDown, Search, type LucideIcon } from \"lucide-react\";\n\nimport { Tooltip, TooltipContent, TooltipTrigger } from \"@/components/ui/tooltip\";\nimport { useScrollingScrollbars } from \"@/hooks/use-scrolling-scrollbars\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's sidebar: on the canvas, no border or separate fill, 212px wide, 28px in from its edges. The workspace\n// and search at the top (level with the top bar), one list of links centered in the space between, then any billing\n// cards, Help, Documentation and the account at the foot. Spacers either side center the list and shrink away first,\n// so a list taller than the space still scrolls from its first row; a long list (the playground's APIs) sits higher.\n// The page you are on sits in a neutral gray wash (never blue), its name and icon a step short of black, and changes\n// at once with no transition. Below 768px it is a white drawer over a scrim, opened from the top bar's menu button;\n// it closes on Escape, on the scrim and once the window grows past it.\nfunction AppSidebar({\n  header,\n  footer,\n  open = false,\n  onOpenChange,\n  listPosition = \"center\",\n  navLabel = \"Dashboard\",\n  navRef,\n  className,\n  children,\n}: {\n  header?: React.ReactNode;\n  footer?: React.ReactNode;\n  open?: boolean;\n  onOpenChange?: (open: boolean) => void;\n  /** \"high\" for a long list: less space above it than below. */\n  listPosition?: \"center\" | \"high\";\n  navLabel?: string;\n  navRef?: React.Ref<HTMLElement>;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  useScrollingScrollbars();\n  const list = React.useRef<HTMLElement | null>(null);\n  const [edges, setEdges] = React.useState({ above: false, below: false });\n  React.useLayoutEffect(() => {\n    const area = list.current;\n    if (!area) return;\n    const measure = () => {\n      const above = area.scrollTop > 1;\n      const below = area.scrollTop + area.clientHeight < area.scrollHeight - 1;\n      setEdges((old) => old.above === above && old.below === below ? old : { above, below });\n    };\n    measure();\n    const observer = new ResizeObserver(measure);\n    observer.observe(area);\n    for (const child of area.children) observer.observe(child);\n    area.addEventListener(\"scroll\", measure, { passive: true });\n    return () => { observer.disconnect(); area.removeEventListener(\"scroll\", measure); };\n  }, [children]);\n  React.useEffect(() => {\n    if (!open) return;\n    const close = () => onOpenChange?.(false);\n    const onKey = (e: KeyboardEvent) => e.key === \"Escape\" && close();\n    const desktop = window.matchMedia(\"(min-width: 48rem)\");\n    const onWide = () => desktop.matches && close();\n    window.addEventListener(\"keydown\", onKey);\n    desktop.addEventListener(\"change\", onWide);\n    return () => {\n      window.removeEventListener(\"keydown\", onKey);\n      desktop.removeEventListener(\"change\", onWide);\n    };\n  }, [open, onOpenChange]);\n  return (\n    <>\n      {/* Always there below md, fading with the drawer rather than popping in and out ahead of it. */}\n      <div\n        aria-hidden\n        onClick={() => onOpenChange?.(false)}\n        className={cn(\"fixed inset-0 z-40 bg-scrim transition-opacity duration-200 ease-emphasized md:hidden motion-reduce:transition-none\", !open && \"pointer-events-none opacity-0\")}\n      />\n      <aside\n        data-slot=\"app-sidebar\"\n        className={cn(\n          \"flex h-full w-(--ds-layout-sidebar) shrink-0 flex-col bg-canvas px-7\",\n          \"max-md:fixed max-md:inset-y-2 max-md:left-2 max-md:z-50 max-md:h-auto max-md:rounded-shell max-md:bg-surface max-md:shadow-drawer max-md:transition-[translate,visibility] max-md:ease-emphasized motion-reduce:max-md:transition-none\",\n          open ? \"max-md:translate-x-0 max-md:duration-250\" : \"max-md:invisible max-md:-translate-x-[calc(100%+1rem)] max-md:duration-200\",\n          className,\n        )}\n      >\n        {header && <div className=\"flex shrink-0 items-center gap-0.5 pt-6 pb-2\">{header}</div>}\n        <div className=\"relative -mx-7 flex min-h-0 flex-1 flex-col\">\n        <nav ref={(element) => {\n          list.current = element;\n          if (typeof navRef === \"function\") return navRef(element);\n          if (navRef) navRef.current = element;\n        }} aria-label={navLabel} data-scroll-above={edges.above || undefined} data-scroll-below={edges.below || undefined} className=\"ds-scrollbar flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5\">\n          <div aria-hidden className=\"min-h-0 flex-1\" />\n          <div className=\"relative flex shrink-0 flex-col gap-1.5\">{children}</div>\n          <div aria-hidden className={cn(\"min-h-0\", listPosition === \"high\" ? \"flex-[2.5]\" : \"flex-1\")} />\n        </nav>\n        {edges.above && <div aria-hidden className=\"pointer-events-none absolute inset-x-0 top-0 h-6 bg-linear-to-b from-canvas to-transparent max-md:from-surface\" />}\n        {edges.below && <div className=\"pointer-events-none absolute inset-x-0 bottom-0 flex h-8 items-end justify-center bg-linear-to-t from-canvas to-transparent max-md:from-surface\">\n          <button type=\"button\" aria-label=\"Scroll navigation down\" onClick={() => list.current?.scrollBy({ top: list.current.clientHeight * 0.75, behavior: window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches ? \"instant\" : \"smooth\" })} className=\"pointer-events-auto grid size-6 place-items-center rounded-pill bg-surface text-fg-muted shadow-card outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring\">\n            <ChevronDown className=\"size-3.5\" strokeWidth={1.75} />\n          </button>\n        </div>}\n        </div>\n        {footer && <div className=\"flex flex-col gap-1.5 pt-2 pb-5.5\">{footer}</div>}\n      </aside>\n    </>\n  );\n}\n\n/** A group of links, named by a small outlined tag (sentence case, not a control). */\nfunction SidebarGroup({ label, children }: { label?: React.ReactNode; children: React.ReactNode }) {\n  return (\n    <div data-slot=\"sidebar-group\" className=\"flex flex-col gap-0.5\">\n      {label && <p className=\"mt-3 mb-1 ml-3 w-fit rounded-tag border border-line px-1.5 py-px font-sans text-axis leading-4 text-fg-muted\">{label}</p>}\n      {children}\n    </div>\n  );\n}\n\nconst linkClass = (active: boolean) =>\n  cn(\n    \"group/link relative flex h-8 w-full items-center gap-2.5 rounded-control pr-2 pl-3 text-body-sm no-underline outline-none transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-focus-ring\",\n    active ? \"bg-wash-selected font-medium text-neutral-80\" : \"text-fg-muted hover:bg-wash-hover hover:text-fg\",\n  );\n\n/**\n * One link: a 16px icon at stroke 1.75, the page's name, and anything trailing it (Data APIs' chevron). Pass your\n * router's link with asChild (its children become the name), or render it as a button with `as=\"button\"` (Help).\n */\nfunction SidebarLink({\n  icon: Icon,\n  active = false,\n  trailing,\n  asChild = false,\n  className,\n  children,\n  ...props\n}: React.ComponentProps<\"a\"> & { icon?: LucideIcon; active?: boolean; trailing?: React.ReactNode; asChild?: boolean }) {\n  const inner = (label: React.ReactNode) => (\n    <>\n      {Icon && <Icon className={cn(\"size-4 shrink-0 transition-colors duration-150\", active ? \"text-neutral-80\" : \"text-fg-subtle group-hover/link:text-fg-muted\")} strokeWidth={1.75} />}\n      <span className=\"min-w-0 flex-1 truncate text-left\">{label}</span>\n      {trailing}\n    </>\n  );\n  if (asChild && React.isValidElement<{ children?: React.ReactNode }>(children)) {\n    return (\n      <Slot data-slot=\"sidebar-link\" aria-current={active ? \"page\" : undefined} className={cn(linkClass(active), className)} {...(props as React.ComponentProps<typeof Slot>)}>\n        {React.cloneElement(children, undefined, inner(children.props.children))}\n      </Slot>\n    );\n  }\n  return (\n    <a data-slot=\"sidebar-link\" aria-current={active ? \"page\" : undefined} className={cn(linkClass(active), className)} {...props}>\n      {inner(children)}\n    </a>\n  );\n}\n\n/** A row in the sidebar's style that runs an action instead of going somewhere (Help opens its window). */\nfunction SidebarButton({ icon: Icon, className, children, ...props }: React.ComponentProps<\"button\"> & { icon?: LucideIcon }) {\n  return (\n    <button type=\"button\" data-slot=\"sidebar-button\" className={cn(linkClass(false), className)} {...props}>\n      {Icon && <Icon className=\"size-4 shrink-0 text-fg-subtle transition-colors duration-150 group-hover/link:text-fg-muted\" strokeWidth={1.75} />}\n      <span className=\"min-w-0 flex-1 truncate text-left\">{children}</span>\n    </button>\n  );\n}\n\n/** The search button beside the workspace: a 32px ghost square with its shortcut in the tooltip. */\nfunction SidebarSearchButton({ shortcut = \"⌘K\", onClick }: { shortcut?: string; onClick?: () => void }) {\n  return (\n    <Tooltip>\n      <TooltipTrigger asChild>\n        <button\n          type=\"button\"\n          onClick={onClick}\n          aria-label=\"Search\"\n          aria-keyshortcuts=\"Meta+K\"\n          className=\"mr-0.5 ml-auto grid size-8 shrink-0 place-items-center rounded-control text-fg-muted outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring\"\n        >\n          <Search className=\"size-3.5\" strokeWidth={1.5} />\n        </button>\n      </TooltipTrigger>\n      <TooltipContent side=\"top\">Search · {shortcut}</TooltipContent>\n    </Tooltip>\n  );\n}\n\nexport { AppSidebar, SidebarButton, SidebarGroup, SidebarLink, SidebarSearchButton };\n"
+    }
+  ]
+}

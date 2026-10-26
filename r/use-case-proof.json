@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "use-case-proof",
+  "type": "site",
+  "title": "Use case proof",
+  "description": "Use-case sections for customer quotes, metrics, examples, and stories.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring",
+    "stat",
+    "chip"
+  ],
+  "usage": "The proof section right after the logo strip on a use case page, the \"what teams built\" examples, and the closing customer stories, each inside a `SiteSection`.",
+  "avoid": [
+    "Star ratings",
+    "Metrics in black",
+    "More than one link per card",
+    "Logos in color on the customer chips when the artwork is white (set `whiteArtwork`)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-case-proof.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-case-proof --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/use-cases/use-case-sections.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/use-cases/use-case-sections.tsx",
+        "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
+        "retained": false,
+        "exports": [
+          "UseCaseProof",
+          "UseCaseHowItWorks",
+          "UseCaseExamples",
+          "UseCaseComparison",
+          "UseCaseStories"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/use-case-proof.d.ts",
+      "content": "import * as React from \"react\";\nexport type UseCaseCustomer = {\n    name: string;\n    logo: string;\n    /** A wide wordmark, shown alone; otherwise a round mark beside the name. */\n    wordmark?: boolean;\n    /** Wordmarks drawn in white, turned black for the white chip. */\n    whiteArtwork?: boolean;\n    /** A fill behind a round mark that needs one (a brand color from the customer's own data). */\n    background?: string;\n};\n/** The customers as outlined pill chips: a round mark and the name, or a wordmark alone. */\ndeclare function UseCaseCustomers({ items, className }: {\n    items: readonly UseCaseCustomer[];\n    className?: string;\n}): React.JSX.Element;\nexport type UseCaseProofQuote = {\n    quote: React.ReactNode;\n    name: string;\n    role: string;\n    story?: {\n        label: string;\n        href: string;\n    };\n};\nexport type UseCaseMetric = {\n    value: string;\n    label: React.ReactNode;\n};\n/** The large quote card beside the metric cards (the metrics stack on the right from lg, two across from sm). */\ndeclare function UseCaseProof({ quote, metrics, className }: {\n    quote: UseCaseProofQuote;\n    metrics: readonly UseCaseMetric[];\n    className?: string;\n}): React.JSX.Element;\nexport type UseCaseExample = {\n    title: string;\n    description: React.ReactNode;\n    href: string;\n    credit: React.ReactNode;\n};\n/** What customers built: a title, a sentence and an arrow link to the customer behind it. */\ndeclare function UseCaseExampleCards({ items, className }: {\n    items: readonly UseCaseExample[];\n    className?: string;\n}): React.JSX.Element;\nexport type UseCaseStory = {\n    customer: string;\n    title: React.ReactNode;\n    metric: string;\n    metricLabel: React.ReactNode;\n    href: string;\n};\n/** Story cards, the whole card the link: the customer and the story's title on top, its headline number at the foot. */\ndeclare function UseCaseStoryCards({ items, className }: {\n    items: readonly UseCaseStory[];\n    className?: string;\n}): React.JSX.Element;\nexport { UseCaseCustomers, UseCaseProof, UseCaseExampleCards, UseCaseStoryCards };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/use-case-proof/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/use-case-proof.tsx",
+      "content": "import { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { UseCaseCustomers, UseCaseExampleCards, UseCaseProof, UseCaseStoryCards } from \"@/components/site/use-case-proof\";\n\n// Each customer's own mark goes in its chip.\nconst mark = (domain: string) => `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;\n\nexport function Site() {\n  return (\n    <div className=\"flex w-full flex-col\">\n      <SiteSection lines>\n        <SectionHeading title=\"Teams crawling the web with\" accent=\"Context.dev.\" />\n        <SectionHeaderRule />\n        <UseCaseCustomers\n          items={[\n            { name: \"Mintlify\", logo: mark(\"mintlify.com\") },\n            { name: \"Similarweb\", logo: mark(\"similarweb.com\") },\n            { name: \"Instant\", logo: mark(\"instant.so\") },\n          ]}\n        />\n        <UseCaseProof\n          quote={{\n            quote: \"We replaced our crawler, its proxies and its parsers with one API, and our agents got better context the same day.\",\n            name: \"Raz\",\n            role: \"AI Lead, Similarweb\",\n            story: { label: \"Read the story\", href: \"https://context.dev/blog/similarweb-10x-ai-agents-with-context-dev\" },\n          }}\n          metrics={[\n            { value: \"10x\", label: \"more data points for each agent\" },\n            { value: \"< 1 day\", label: \"from first call to production\" },\n          ]}\n        />\n      </SiteSection>\n\n      <SiteSection lines>\n        <SectionHeading title=\"What teams\" accent=\"built with it.\" description=\"Three crawls running in production today.\" />\n        <SectionHeaderRule />\n        <UseCaseExampleCards\n          items={[\n            { title: \"Docs from a repo\", description: \"Every page of a product's site, crawled into a branded docs site.\", href: \"https://context.dev/customers/mintlify\", credit: \"Mintlify\" },\n            { title: \"Store builder\", description: \"A shop's pages, crawled to seed an AI store builder with its brand.\", href: \"https://context.dev/customers/instant\", credit: \"Instant\" },\n            { title: \"Agent research\", description: \"Company sites crawled on demand to answer an agent's questions.\", href: \"https://context.dev/customers/similarweb\", credit: \"Similarweb\" },\n          ]}\n        />\n      </SiteSection>\n\n      <SiteSection lines>\n        <SectionHeading title=\"Stories from\" accent=\"the field.\" />\n        <SectionHeaderRule />\n        <UseCaseStoryCards\n          items={[\n            { customer: \"Instant\", title: \"Switched from Firecrawl in under a day\", metric: \"< 1 day\", metricLabel: \"to production\", href: \"https://context.dev/blog/instant-switches-from-firecrawl-to-context-dev-in-under-a-day\" },\n            { customer: \"Tinfoil\", title: \"Added scraping to a private search agent\", metric: \"5 min\", metricLabel: \"to integrate\", href: \"https://context.dev/blog/tinfoil-switches-to-context-dev-for-zero-data-retention-web-scraping\" },\n            { customer: \"Mastra\", title: \"Personalized onboarding in an hour\", metric: \"1 hour\", metricLabel: \"to an MVP\", href: \"https://context.dev/blog/mastra-personalizes-onboarding-with-context-dev\" },\n          ]}\n        />\n      </SiteSection>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "button",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/use-case-proof.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowRight, ArrowUpRight } from \"lucide-react\";\n\nimport { buttonVariants } from \"@/components/ui/button\";\nimport { cn } from \"@/lib/utils\";\n\n// The use case pages' proof sections: the customers as outlined chips, a large quote card beside a stack of metric\n// cards, the example cards (a title, a sentence and the customer behind it as an arrow link) and the story cards (the\n// customer, the story's title and its headline number). Every card is white in the soft blue ring.\n\nconst RING = \"-m-2 rounded-card bg-ring-tint p-2\";\nconst CARD = \"flex h-full min-w-0 flex-col gap-4 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\";\nconst FOCUS = \"outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring\";\nconst ARROW = \"size-4 shrink-0\";\n\nexport type UseCaseCustomer = {\n  name: string;\n  logo: string;\n  /** A wide wordmark, shown alone; otherwise a round mark beside the name. */\n  wordmark?: boolean;\n  /** Wordmarks drawn in white, turned black for the white chip. */\n  whiteArtwork?: boolean;\n  /** A fill behind a round mark that needs one (a brand color from the customer's own data). */\n  background?: string;\n};\n\n/** The customers as outlined pill chips: a round mark and the name, or a wordmark alone. */\nfunction UseCaseCustomers({ items, className }: { items: readonly UseCaseCustomer[]; className?: string }) {\n  return (\n    <ul data-slot=\"use-case-customers\" className={cn(\"mb-6 flex flex-wrap gap-3\", className)}>\n      {items.map((customer) => (\n        <li key={customer.name} className=\"flex items-center gap-2.5 rounded-pill py-1.5 pr-4 pl-1.5 ring-1 ring-black/10 ring-inset\">\n          {customer.wordmark ? (\n            <img src={customer.logo} alt={customer.name} width={88} height={22} className={cn(\"h-5 w-auto max-w-24 object-contain\", customer.whiteArtwork && \"brightness-0\")} />\n          ) : (\n            <>\n              <img\n                src={customer.logo}\n                alt=\"\"\n                width={28}\n                height={28}\n                className={cn(\"size-7 shrink-0 rounded-pill object-cover ring-1 ring-black/6\", customer.background && \"p-1\")}\n                style={customer.background ? { backgroundColor: customer.background } : undefined}\n              />\n              <span className=\"text-body-sm leading-snug text-fg\">{customer.name}</span>\n            </>\n          )}\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport type UseCaseProofQuote = { quote: React.ReactNode; name: string; role: string; story?: { label: string; href: string } };\nexport type UseCaseMetric = { value: string; label: React.ReactNode };\n\n/** The large quote card beside the metric cards (the metrics stack on the right from lg, two across from sm). */\nfunction UseCaseProof({ quote, metrics, className }: { quote: UseCaseProofQuote; metrics: readonly UseCaseMetric[]; className?: string }) {\n  return (\n    <div data-slot=\"use-case-proof\" className={cn(\"grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]\", className)}>\n      <div className={RING}>\n        <figure className={cn(CARD, \"justify-between gap-8\")}>\n          <blockquote className=\"text-h5 leading-snug tracking-tight text-pretty text-fg md:text-h4\">&ldquo;{quote.quote}&rdquo;</blockquote>\n          <figcaption className=\"flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between\">\n            <span className=\"flex flex-col gap-0.5\">\n              <span className=\"text-body leading-snug text-fg\">{quote.name}</span>\n              <span className=\"text-body-sm leading-snug text-fg-subtle\">{quote.role}</span>\n            </span>\n            {quote.story && (\n              <a href={quote.story.href} className={cn(buttonVariants({ variant: \"pill-outline\" }), \"gap-2 py-2.5\")}>\n                {quote.story.label}\n                <ArrowRight aria-hidden=\"true\" className=\"size-4\" />\n              </a>\n            )}\n          </figcaption>\n        </figure>\n      </div>\n      <dl className=\"grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-1\">\n        {metrics.map((metric) => (\n          <div key={metric.value} className={RING}>\n            <div className={cn(CARD, \"flex-col-reverse justify-end gap-2\")}>\n              <dt className=\"text-body leading-snug text-fg-secondary\">{metric.label}</dt>\n              <dd className=\"text-h2 leading-none tracking-tight text-fg-brand\">{metric.value}</dd>\n            </div>\n          </div>\n        ))}\n      </dl>\n    </div>\n  );\n}\n\nexport type UseCaseExample = { title: string; description: React.ReactNode; href: string; credit: React.ReactNode };\n\n/** What customers built: a title, a sentence and an arrow link to the customer behind it. */\nfunction UseCaseExampleCards({ items, className }: { items: readonly UseCaseExample[]; className?: string }) {\n  return (\n    <ul data-slot=\"use-case-example-cards\" className={cn(\"grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3\", className)}>\n      {items.map((item) => (\n        <li key={item.title} className={RING}>\n          <div className={CARD}>\n            <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{item.title}</h3>\n            <p className=\"text-body leading-snug text-fg-secondary\">{item.description}</p>\n            <a href={item.href} className={cn(\"group mt-auto inline-flex w-fit items-center gap-2 rounded-sm pt-2 text-body leading-snug text-fg-brand\", FOCUS)}>\n              {item.credit}\n              <ArrowRight aria-hidden=\"true\" className={ARROW} />\n            </a>\n          </div>\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport type UseCaseStory = { customer: string; title: React.ReactNode; metric: string; metricLabel: React.ReactNode; href: string };\n\n/** Story cards, the whole card the link: the customer and the story's title on top, its headline number at the foot. */\nfunction UseCaseStoryCards({ items, className }: { items: readonly UseCaseStory[]; className?: string }) {\n  return (\n    <ul data-slot=\"use-case-story-cards\" className={cn(\"grid grid-cols-1 gap-6 md:grid-cols-3\", className)}>\n      {items.map((story) => (\n        <li key={story.href} className={RING}>\n          <a href={story.href} className={cn(CARD, \"group relative justify-between gap-10 transition-[background-color] duration-200 ease-out hover:bg-tint/40 motion-reduce:transition-none\", FOCUS)}>\n            <span className=\"flex flex-col gap-3 pr-8\">\n              <span className=\"text-body-sm leading-snug text-fg-subtle\">{story.customer}</span>\n              <span className=\"text-h5 leading-snug text-pretty text-fg\">{story.title}</span>\n            </span>\n            <ArrowUpRight aria-hidden=\"true\" className=\"absolute top-6 right-6 size-5 text-black/35 transition-[color] duration-200 ease-out group-hover:text-fg-brand motion-reduce:transition-none md:top-8 md:right-8\" />\n            <span className=\"flex flex-col gap-1\">\n              <span className=\"text-h3 leading-none tracking-tight text-fg-brand\">{story.metric}</span>\n              <span className=\"text-body-sm leading-snug text-fg-secondary\">{story.metricLabel}</span>\n            </span>\n          </a>\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport { UseCaseCustomers, UseCaseProof, UseCaseExampleCards, UseCaseStoryCards };\n"
+    }
+  ]
+}

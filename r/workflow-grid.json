@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "workflow-grid",
+  "type": "site",
+  "title": "Workflow grid",
+  "description": "Responsive card grid with titles, descriptions, and media panels.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring",
+    "media-frame"
+  ],
+  "usage": "What people build with the product (workflows, use cases), each with a dot story (`story` panel) or an interface mockup (`mockup` panel).",
+  "avoid": [
+    "Pictures of different shapes in one row",
+    "Buttons inside the cards",
+    "Gray panel backgrounds"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/workflow-grid.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add workflow-grid --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/workflow-grid.tsx; src/components/sections/home/home-design.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/workflow-grid.tsx",
+        "sha256": "c86bae82b231f92573273a396e406c3956c736bb4e2eb662b1ff146437d57ae7",
+        "retained": false,
+        "exports": [
+          "WorkflowGrid"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/home-design.ts",
+        "sha256": "453086596ac101daa92f679569f9265e2085576cb6a7fc7ffda762776e4837ce",
+        "retained": false,
+        "exports": [
+          "HOME_HEADING",
+          "HOME_DESCRIPTION",
+          "HOME_WATER_CARD",
+          "HOME_DEMO_RING",
+          "HOME_DEMO_PANEL"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/workflow-grid.d.ts",
+      "content": "import * as React from \"react\";\nexport type WorkflowItem = {\n    title: string;\n    description: string;\n    media?: React.ReactNode;\n    mediaVariant?: \"story\" | \"mockup\";\n};\n/**\n * The picture panel, in the ring with its radius repeated so the corners match. `story` (the default) is white and\n * holds a dot story centered at up to 26rem (81.5% of the panel in three columns, so it scales with it); `mockup` is\n * the pale panel the site's interface mockups sit in, filled edge to edge.\n */\ndeclare function WorkflowMedia({ variant, children, className }: {\n    variant?: \"story\" | \"mockup\";\n    children?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\ndeclare function WorkflowCard({ title, description, media, mediaVariant, className }: WorkflowItem & {\n    className?: string;\n}): React.JSX.Element;\ndeclare function WorkflowGrid({ items, className }: {\n    items: WorkflowItem[];\n    className?: string;\n}): React.JSX.Element;\nexport { WorkflowGrid, WorkflowCard, WorkflowMedia };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/workflow-grid/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/workflow-grid.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { WorkflowGrid } from \"@/components/site/workflow-grid\";\nimport { AutofillStory } from \"@/components/visuals/stories/autofill-story\";\nimport { BatchStory } from \"@/components/visuals/stories/batch-story\";\nimport { EnrichStory } from \"@/components/visuals/stories/enrich-story\";\nimport { RagStory } from \"@/components/visuals/stories/rag-story\";\nimport { ResearchStory } from \"@/components/visuals/stories/research-story\";\nimport { ScrapeStory } from \"@/components/visuals/stories/scrape-story\";\n\n// Each workflow with its own dot story in the panel, as on the home page.\nexport function Site() {\n  return (<SiteSection>\n    <WorkflowGrid\n      className=\"w-full\"\n      items={[\n        { title: \"Scrape anything\", description: \"Turn webpages and PDFs into Markdown, HTML, structured fields, images, and screenshots in one request.\", media: <ScrapeStory className=\"w-full\" /> },\n        { title: \"Ground RAG in fresh content\", description: \"Collect pages with Scrape and Crawl, add documents with Parse, and keep your retrieval index current with Monitors.\", media: <RagStory className=\"w-full\" /> },\n        { title: \"Run deep research on demand\", description: \"Resolve a domain to a typed brand profile, then research the company in your JSON shape, with sources.\", media: <ResearchStory className=\"w-full\" /> },\n        { title: \"Run batches at scale\", description: \"Scrape thousands of URLs or crawl entire sites in one job, then collect results when it completes.\", media: <BatchStory className=\"w-full\" /> },\n        { title: \"Enrich any entity your agent sees\", description: \"Connect company references and person identifiers to brand profiles and people data.\", media: <EnrichStory className=\"w-full\" /> },\n        { title: \"Autofill onboarding forms\", description: \"Pre-fill company fields from a work email domain so more users finish signing up.\", media: <AutofillStory className=\"w-full\" /> },\n      ]}\n    />\n  </SiteSection>);\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section",
+    "story-autofill",
+    "story-batch",
+    "story-enrich",
+    "story-rag",
+    "story-research",
+    "story-scrape"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/workflow-grid.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The home page's workflow cards: three across on wide screens, each a white card in the soft blue ring with an h4\n// title, a short description and a picture panel pinned to the bottom. The panels keep one shape (459 by 317 in three\n// columns, a fixed height below), so each picture scales down rather than reflowing and cards in a row line up.\n\nexport type WorkflowItem = { title: string; description: string; media?: React.ReactNode; mediaVariant?: \"story\" | \"mockup\" };\n\n/**\n * The picture panel, in the ring with its radius repeated so the corners match. `story` (the default) is white and\n * holds a dot story centered at up to 26rem (81.5% of the panel in three columns, so it scales with it); `mockup` is\n * the pale panel the site's interface mockups sit in, filled edge to edge.\n */\nfunction WorkflowMedia({ variant = \"story\", children, className }: { variant?: \"story\" | \"mockup\"; children?: React.ReactNode; className?: string }) {\n  return (\n    <div data-slot=\"workflow-media\" className={cn(\"h-92 rounded-card bg-ring-tint p-2 xl:aspect-[459/317] xl:h-auto\", className)}>\n      {variant === \"mockup\" ? (\n        <div className=\"flex h-full flex-col justify-center overflow-hidden rounded-card bg-announcement select-none\">{children}</div>\n      ) : (\n        <div className=\"flex h-full items-center justify-center overflow-hidden rounded-card bg-surface px-4 select-none sm:px-9 xl:px-0\">\n          <div className=\"relative flex w-full max-w-104 justify-center xl:w-[81.5%] xl:max-w-none\">{children}</div>\n        </div>\n      )}\n    </div>\n  );\n}\n\nfunction WorkflowCard({ title, description, media, mediaVariant, className }: WorkflowItem & { className?: string }) {\n  return (\n    <div data-slot=\"workflow-card\" className={cn(\"rounded-card bg-ring-tint p-2\", className)}>\n      <div className=\"flex h-full min-w-0 flex-col gap-6 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8 xl:p-6\">\n        <div className=\"flex flex-col gap-3\">\n          <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{title}</h3>\n          <p className=\"text-body leading-normal text-fg-secondary\">{description}</p>\n        </div>\n        {media !== undefined && <WorkflowMedia variant={mediaVariant} className=\"mt-auto\">\n            {media}\n          </WorkflowMedia>}\n      </div>\n    </div>\n  );\n}\n\nfunction WorkflowGrid({ items, className }: { items: WorkflowItem[]; className?: string }) {\n  return (\n    <ul data-slot=\"workflow-grid\" className={cn(\"grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3 xl:gap-5\", className)}>\n      {items.map((item) => (\n        <li key={item.title} className=\"-m-2 flex\">\n          <WorkflowCard className=\"flex-1\" {...item} />\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport { WorkflowGrid, WorkflowCard, WorkflowMedia };\n"
+    }
+  ]
+}

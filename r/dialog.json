@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "dialog",
+  "type": "ui",
+  "title": "Dialog",
+  "description": "Modal dialog with a framed panel, focus management, Escape dismissal, and a scrollable overlay.",
+  "surface": "product",
+  "kinds": [
+    "app-dialog"
+  ],
+  "usage": "Confirmations, short forms, pickers. Title h5, body padded 20px, actions right-aligned over a light line.",
+  "avoid": [
+    "Centered dialogs",
+    "Dialogs for long workflows (use a page)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/dialog.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add dialog --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/dialog.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/dialog.tsx",
+        "sha256": "45b7c747c0394dd24e601005ace7294c31bfaff09aa44b988da1e20b448f66f1",
+        "retained": false,
+        "exports": [
+          "Dialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/dialog.d.ts",
+      "content": "import * as React from \"react\";\nimport * as DialogPrimitive from \"@radix-ui/react-dialog\";\ndeclare function Dialog(props: React.ComponentProps<typeof DialogPrimitive.Root>): React.JSX.Element;\ndeclare function DialogTrigger(props: React.ComponentProps<typeof DialogPrimitive.Trigger>): React.JSX.Element;\ndeclare function DialogClose(props: React.ComponentProps<typeof DialogPrimitive.Close>): React.JSX.Element;\ndeclare function DialogPortal(props: React.ComponentProps<typeof DialogPrimitive.Portal>): React.JSX.Element;\ndeclare function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>): React.JSX.Element;\ndeclare const WIDTHS: {\n    readonly md: \"max-w-lg\";\n    readonly lg: \"max-w-3xl\";\n    readonly xl: \"max-w-5xl\";\n    readonly \"2xl\": \"max-w-6xl\";\n};\ndeclare function DialogContent({ className, children, size, showCloseButton, ...props }: React.ComponentProps<typeof DialogPrimitive.Content> & {\n    size?: keyof typeof WIDTHS;\n    showCloseButton?: boolean;\n}): React.JSX.Element;\ndeclare function DialogHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function DialogBody({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function DialogFooter({ className, divider, ...props }: React.ComponentProps<\"div\"> & {\n    divider?: boolean;\n}): React.JSX.Element;\ndeclare function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>): React.JSX.Element;\ndeclare function DialogDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>): React.JSX.Element;\nexport { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/dialog/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/dialog.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from \"@/components/ui/dialog\";\nimport { Input } from \"@/components/ui/input\";\nimport { Field } from \"@/components/ui/field\";\nimport { SecretField } from \"@/components/ui/secret-field\";\n\nexport function Product() {\n  const [open, setOpen] = useState(false);\n  const [name, setName] = useState(\"\");\n  const [created, setCreated] = useState(\"\");\n  return (\n    <div className=\"grid w-full max-w-sm gap-4\">\n      <Dialog open={open} onOpenChange={setOpen}>\n        <DialogTrigger asChild><Button variant=\"brand\">Create key</Button></DialogTrigger>\n        <DialogContent>\n          <form onSubmit={(event) => { event.preventDefault(); if (!name.trim()) return; setCreated(name.trim()); setOpen(false); }}>\n            <DialogHeader><DialogTitle>Create an API key</DialogTitle><DialogDescription>Keys work for every endpoint on your plan.</DialogDescription></DialogHeader>\n            <DialogBody><Field label=\"Name\" htmlFor=\"key-name\" help=\"Only you see this.\" required><Input id=\"key-name\" value={name} onChange={(event) => setName(event.target.value)} placeholder=\"Production\" /></Field></DialogBody>\n            <DialogFooter><DialogClose asChild><Button variant=\"outline\">Cancel</Button></DialogClose><Button type=\"submit\" variant=\"brand\" disabled={!name.trim()}>Create</Button></DialogFooter>\n          </form>\n        </DialogContent>\n      </Dialog>\n      {created && <div className=\"grid gap-2\"><p role=\"status\" className=\"text-body-sm\">{created} key created in this example.</p><SecretField secret=\"ctx_example_9f2c41b7e0a84d6c\" /></div>}\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "input",
+    "field",
+    "secret-field"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-dialog",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/dialog.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as DialogPrimitive from \"@radix-ui/react-dialog\";\nimport { X } from \"lucide-react\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's dialog: a white panel in a 6px frame that floats on a hairline and a soft shadow, rising 4px as it\n// fades in. Radix adds the focus trap, scroll lock and Escape.\nfunction Dialog(props: React.ComponentProps<typeof DialogPrimitive.Root>) {\n  return <DialogPrimitive.Root data-slot=\"dialog\" {...props} />;\n}\n\nfunction DialogTrigger(props: React.ComponentProps<typeof DialogPrimitive.Trigger>) {\n  return <DialogPrimitive.Trigger data-slot=\"dialog-trigger\" {...props} />;\n}\n\nfunction DialogClose(props: React.ComponentProps<typeof DialogPrimitive.Close>) {\n  return <DialogPrimitive.Close data-slot=\"dialog-close\" {...props} />;\n}\n\nfunction DialogPortal(props: React.ComponentProps<typeof DialogPrimitive.Portal>) {\n  const container = usePortalContainer();\n  return <DialogPrimitive.Portal data-slot=\"dialog-portal\" container={container} {...props} />;\n}\n\nfunction DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {\n  return <DialogPrimitive.Overlay data-slot=\"dialog-overlay\" className={cn(\"fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overscroll-contain bg-scrim px-4 pt-[12vh] pb-6 max-md:pt-4\", className)} {...props} />;\n}\n\nconst WIDTHS = { md: \"max-w-lg\", lg: \"max-w-3xl\", xl: \"max-w-5xl\", \"2xl\": \"max-w-6xl\" } as const;\n\nfunction DialogContent({\n  className,\n  children,\n  size = \"md\",\n  showCloseButton = true,\n  ...props\n}: React.ComponentProps<typeof DialogPrimitive.Content> & { size?: keyof typeof WIDTHS; showCloseButton?: boolean }) {\n  return (\n    <DialogPortal>\n      <DialogOverlay>\n        <DialogPrimitive.Content\n          data-slot=\"dialog-content\"\n          className={cn(\n            \"relative z-50 w-full shrink-0 animate-content-in rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none\",\n            WIDTHS[size],\n            className,\n          )}\n          {...props}\n        >\n          <div className=\"relative rounded-shell bg-surface\">\n            {children}\n            {showCloseButton && (\n            <DialogPrimitive.Close\n              aria-label=\"Close\"\n              className=\"absolute top-3.5 right-3 grid size-8 place-items-center rounded-control text-fg-subtle transition-colors duration-150 ease-out outline-none hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring [&_svg]:size-4\"\n            >\n              <X strokeWidth={1.5} />\n            </DialogPrimitive.Close>\n            )}\n          </div>\n        </DialogPrimitive.Content>\n      </DialogOverlay>\n    </DialogPortal>\n  );\n}\n\nfunction DialogHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"dialog-header\" className={cn(\"flex flex-col gap-1.5 px-5 pt-5 pr-15\", className)} {...props} />;\n}\n\nfunction DialogBody({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"dialog-body\" className={cn(\"px-5 pt-5 pb-5 text-body-sm text-fg\", className)} {...props} />;\n}\n\nfunction DialogFooter({ className, divider = true, ...props }: React.ComponentProps<\"div\"> & { divider?: boolean }) {\n  return <div data-slot=\"dialog-footer\" className={cn(\"flex items-center justify-end gap-2 px-5\", divider ? \"border-t border-line-subtle py-3.5\" : \"pb-5\", className)} {...props} />;\n}\n\nfunction DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {\n  return <DialogPrimitive.Title data-slot=\"dialog-title\" className={cn(\"text-h5 leading-snug font-normal tracking-normal text-fg\", className)} {...props} />;\n}\n\nfunction DialogDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>) {\n  return <DialogPrimitive.Description data-slot=\"dialog-description\" className={cn(\"text-body-sm text-fg-muted\", className)} {...props} />;\n}\n\nexport { Dialog, DialogBody, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay, DialogPortal, DialogTitle, DialogTrigger };\n"
+    }
+  ]
+}

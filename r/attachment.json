@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "attachment",
+  "type": "ui",
+  "title": "Attachment",
+  "description": "A file on a card: its glyph in a tile frame, its name, its size or status in mono, and row actions.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Use for files a person attaches (a sitemap to crawl, a CSV of URLs for a batch, a brand kit) or files a job produced. Set state idle (waiting, dashed), uploading or processing (name dimmed, add a Spinner), error (soft red and a red line) or done. AttachmentTrigger makes the whole card open the file; AttachmentGroup scrolls a row of them.",
+  "avoid": [
+    "A progress bar inside the card",
+    "Bold file names",
+    "A card that grows on hover"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/attachment.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add attachment",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from context-dashboard c0ddf7a src/components/dots/glyph-tile.tsx and src/components/playground/code-card.tsx (cards)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/glyph-tile.tsx",
+        "sha256": "b718047bde70707b25ca56ffe0e91ad63130fb63af4014595b82dcbd4232cf05",
+        "retained": false,
+        "exports": [
+          "GlyphTile",
+          "StillGlyph"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/playground/code-card.tsx",
+        "sha256": "a511a282fdb664b654c7cd0eba3c84cd63beb0ad8e4b795f9cd4dc031485ce86",
+        "retained": false,
+        "exports": [
+          "CodeCard"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/attachment.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\nimport { Button } from \"@/components/ui/button\";\ndeclare const attachmentVariants: (props?: ({\n    size?: \"default\" | \"sm\" | \"xs\" | null | undefined;\n    orientation?: \"horizontal\" | \"vertical\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ntype AttachmentState = \"idle\" | \"uploading\" | \"processing\" | \"error\" | \"done\";\ndeclare function Attachment({ className, state, size, orientation, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof attachmentVariants> & {\n    state?: AttachmentState;\n}): React.JSX.Element;\ndeclare const attachmentMediaVariants: (props?: ({\n    variant?: \"image\" | \"icon\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function AttachmentMedia({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof attachmentMediaVariants>): React.JSX.Element;\ndeclare function AttachmentContent({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function AttachmentTitle({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function AttachmentDescription({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function AttachmentActions({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** A row action on the attachment (remove, retry, download): the ghost icon button. */\ndeclare function AttachmentAction({ className, variant, size, ...props }: React.ComponentProps<typeof Button>): React.JSX.Element;\n/** Makes the whole card open the file: a button (or a link with asChild) stretched over it. */\ndeclare function AttachmentTrigger({ className, asChild, type, ...props }: React.ComponentProps<\"button\"> & {\n    asChild?: boolean;\n}): React.JSX.Element;\ndeclare function AttachmentGroup({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentTitle, AttachmentTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/attachment/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/attachment/Product"
+    },
+    {
+      "name": "States",
+      "url": "https://context-ds.vercel.app/preview/attachment/States"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/attachment.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Download, FileSpreadsheet, FileText, Image as ImageIcon, RotateCw, X } from \"lucide-react\";\n\nimport { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentTitle, AttachmentTrigger } from \"@/components/ui/attachment\";\nimport { Spinner } from \"@/components/ui/spinner\";\n\nexport function Site() {\n  return (\n    <AttachmentGroup className=\"w-full max-w-2xl\">\n      {[\n        { name: \"pricing.md\", size: \"4.2 KB\", icon: FileText },\n        { name: \"products.json\", size: \"18.6 KB\", icon: FileText },\n        { name: \"hero.png\", size: \"220 KB\", icon: ImageIcon },\n      ].map((f) => (\n        <Attachment key={f.name}>\n          <AttachmentMedia>\n            <f.icon strokeWidth={1.5} />\n          </AttachmentMedia>\n          <AttachmentContent>\n            <AttachmentTitle>{f.name}</AttachmentTitle>\n            <AttachmentDescription>{f.size}</AttachmentDescription>\n          </AttachmentContent>\n          <AttachmentTrigger aria-label={`Open ${f.name}`} />\n        </Attachment>\n      ))}\n    </AttachmentGroup>\n  );\n}\n\nexport function Product() {\n  const [files, setFiles] = useState([\n    { name: \"urls-october.csv\", detail: \"2,400 URLs · 86 KB\", state: \"done\" as const },\n    { name: \"sitemap.xml\", detail: \"Uploading · 64%\", state: \"uploading\" as const },\n    { name: \"brand-kit.zip\", detail: \"Larger than the 25 MB limit\", state: \"error\" as const },\n  ]);\n  return (\n    <div className=\"grid w-full max-w-md gap-2\">\n      {files.map((f) => (\n        <Attachment key={f.name} state={f.state} className=\"w-full\">\n          <AttachmentMedia>\n            <FileSpreadsheet strokeWidth={1.5} />\n          </AttachmentMedia>\n          <AttachmentContent>\n            <AttachmentTitle>{f.name}</AttachmentTitle>\n            <AttachmentDescription>{f.detail}</AttachmentDescription>\n          </AttachmentContent>\n          <AttachmentActions>\n            {f.state === \"uploading\" && <Spinner className=\"mx-2 text-fg-subtle\" />}\n            {f.state === \"error\" && (\n              <AttachmentAction aria-label={`Retry ${f.name}`}>\n                <RotateCw strokeWidth={1.5} />\n              </AttachmentAction>\n            )}\n            {f.state === \"done\" && (\n              <AttachmentAction aria-label={`Download ${f.name}`}>\n                <Download strokeWidth={1.5} />\n              </AttachmentAction>\n            )}\n            <AttachmentAction aria-label={`Remove ${f.name}`} onClick={() => setFiles((all) => all.filter((x) => x.name !== f.name))}>\n              <X strokeWidth={1.5} />\n            </AttachmentAction>\n          </AttachmentActions>\n        </Attachment>\n      ))}\n      {files.length === 0 && <p role=\"status\" className=\"text-body-sm text-fg-muted\">No files attached.</p>}\n    </div>\n  );\n}\n\nexport function States() {\n  return (\n    <div className=\"flex flex-wrap items-start gap-3\">\n      <Attachment state=\"idle\">\n        <AttachmentMedia>\n          <FileText strokeWidth={1.5} />\n        </AttachmentMedia>\n        <AttachmentContent>\n          <AttachmentTitle>Drop a sitemap</AttachmentTitle>\n          <AttachmentDescription>XML or TXT</AttachmentDescription>\n        </AttachmentContent>\n      </Attachment>\n      <Attachment state=\"processing\" size=\"sm\">\n        <AttachmentMedia>\n          <FileText strokeWidth={1.5} />\n        </AttachmentMedia>\n        <AttachmentContent>\n          <AttachmentTitle>report.pdf</AttachmentTitle>\n          <AttachmentDescription>Parsing</AttachmentDescription>\n        </AttachmentContent>\n      </Attachment>\n      <Attachment orientation=\"vertical\">\n        <AttachmentMedia>\n          <ImageIcon strokeWidth={1.5} />\n        </AttachmentMedia>\n        <AttachmentContent>\n          <AttachmentTitle>logo.svg</AttachmentTitle>\n          <AttachmentDescription>3.1 KB</AttachmentDescription>\n        </AttachmentContent>\n      </Attachment>\n      <Attachment size=\"xs\">\n        <AttachmentMedia>\n          <FileText strokeWidth={1.5} />\n        </AttachmentMedia>\n        <AttachmentContent>\n          <AttachmentTitle>notes.txt</AttachmentTitle>\n        </AttachmentContent>\n      </Attachment>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "spinner"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "button",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/attachment.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { cn } from \"@/lib/utils\";\n\n// A file attached to a message or a request (extrapolated from the dashboard's cards and glyph tiles): the card's white\n// with its hairline drawn into the shadow and card corners. The file sits in the glyph tile's frame (a bordered square\n// with control corners, the mark in brand blue); its name is body-sm ink and its size or status caption in the mono\n// face, in the subtle gray. A file still waiting has a dashed edge, one uploading or processing dims its name until it\n// is done, one that failed takes the banner's soft red and a red line.\nconst attachmentVariants = cva(\n  \"group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-card border border-transparent bg-surface text-fg shadow-card transition-[background-color,border-color] duration-150 ease-out has-[>[data-slot=attachment-trigger]]:hover:bg-subtle has-[>[data-slot=attachment-trigger]:focus-visible]:outline-2 has-[>[data-slot=attachment-trigger]:focus-visible]:outline-offset-2 has-[>[data-slot=attachment-trigger]:focus-visible]:outline-solid has-[>[data-slot=attachment-trigger]:focus-visible]:outline-focus-ring data-[state=error]:border-alert/30 data-[state=error]:bg-alert/6 data-[state=error]:shadow-none data-[state=idle]:border-dashed data-[state=idle]:border-line-strong data-[state=idle]:shadow-none motion-reduce:transition-none\",\n  {\n    variants: {\n      size: {\n        default: \"gap-3 text-body-sm has-data-[slot=attachment-content]:px-3 has-data-[slot=attachment-content]:py-2.5 has-data-[slot=attachment-media]:p-2.5\",\n        sm: \"gap-2.5 text-body-sm has-data-[slot=attachment-content]:px-2.5 has-data-[slot=attachment-content]:py-2 has-data-[slot=attachment-media]:p-2\",\n        xs: \"gap-2 rounded-control text-caption has-data-[slot=attachment-content]:px-2 has-data-[slot=attachment-content]:py-1.5 has-data-[slot=attachment-media]:p-1.5\",\n      },\n      orientation: {\n        horizontal: \"min-w-48 items-center\",\n        vertical: \"w-28 flex-col has-data-[slot=attachment-content]:w-36\",\n      },\n    },\n    defaultVariants: { size: \"default\", orientation: \"horizontal\" },\n  },\n);\n\ntype AttachmentState = \"idle\" | \"uploading\" | \"processing\" | \"error\" | \"done\";\n\nfunction Attachment({ className, state = \"done\", size = \"default\", orientation = \"horizontal\", ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof attachmentVariants> & { state?: AttachmentState }) {\n  return <div data-slot=\"attachment\" data-state={state} data-size={size} data-orientation={orientation} aria-busy={state === \"uploading\" || state === \"processing\" || undefined} className={cn(attachmentVariants({ size, orientation }), className)} {...props} />;\n}\n\nconst attachmentMediaVariants = cva(\n  \"relative flex aspect-square w-10 shrink-0 items-center justify-center overflow-hidden rounded-control group-data-[orientation=vertical]/attachment:w-full group-data-[size=sm]/attachment:w-8 group-data-[size=xs]/attachment:w-7 [&_svg]:pointer-events-none\",\n  {\n    variants: {\n      variant: {\n        // The glyph tile's frame with a line glyph in brand blue (red once it failed).\n        icon: \"border border-line bg-surface text-fg-brand group-data-[state=error]/attachment:text-alert-strong [&_svg:not([class*='size-'])]:size-4 group-data-[orientation=vertical]/attachment:[&_svg:not([class*='size-'])]:size-6 group-data-[size=xs]/attachment:[&_svg:not([class*='size-'])]:size-3.5\",\n        // A picture shows itself; it stays faint until it has uploaded.\n        image: \"bg-subtle opacity-60 group-data-[state=done]/attachment:opacity-100 group-data-[state=idle]/attachment:opacity-100 *:[img]:aspect-square *:[img]:w-full *:[img]:object-cover\",\n      },\n    },\n    defaultVariants: { variant: \"icon\" },\n  },\n);\n\nfunction AttachmentMedia({ className, variant = \"icon\", ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof attachmentMediaVariants>) {\n  return <div data-slot=\"attachment-media\" data-variant={variant} className={cn(attachmentMediaVariants({ variant }), className)} {...props} />;\n}\n\nfunction AttachmentContent({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"attachment-content\" className={cn(\"max-w-full min-w-0 flex-1 leading-snug group-data-[orientation=vertical]/attachment:px-1 group-data-[orientation=vertical]/attachment:pb-1\", className)} {...props} />;\n}\n\nfunction AttachmentTitle({ className, ...props }: React.ComponentProps<\"span\">) {\n  return (\n    <span\n      data-slot=\"attachment-title\"\n      className={cn(\"block max-w-full min-w-0 truncate text-fg transition-colors duration-200 ease-out group-data-[state=processing]/attachment:text-fg-subtle group-data-[state=uploading]/attachment:text-fg-subtle motion-reduce:transition-none\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction AttachmentDescription({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"attachment-description\" className={cn(\"mt-0.5 block max-w-full min-w-0 truncate font-mono text-caption leading-snug text-fg-subtle tabular-nums group-data-[state=error]/attachment:font-sans group-data-[state=error]/attachment:text-danger-strong\", className)} {...props} />;\n}\n\nfunction AttachmentActions({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"attachment-actions\" className={cn(\"relative z-20 flex shrink-0 items-center gap-0.5 group-data-[orientation=vertical]/attachment:absolute group-data-[orientation=vertical]/attachment:top-3.5 group-data-[orientation=vertical]/attachment:right-3.5\", className)} {...props} />;\n}\n\n/** A row action on the attachment (remove, retry, download): the ghost icon button. */\nfunction AttachmentAction({ className, variant, size = \"icon\", ...props }: React.ComponentProps<typeof Button>) {\n  return <Button data-slot=\"attachment-action\" variant={variant ?? \"ghost\"} size={size} className={cn(\"group-data-[orientation=vertical]/attachment:bg-surface group-data-[orientation=vertical]/attachment:shadow-raised\", className)} {...props} />;\n}\n\n/** Makes the whole card open the file: a button (or a link with asChild) stretched over it. */\nfunction AttachmentTrigger({ className, asChild = false, type, ...props }: React.ComponentProps<\"button\"> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"button\";\n  return <Comp data-slot=\"attachment-trigger\" type={asChild ? undefined : (type ?? \"button\")} className={cn(\"absolute inset-0 z-10 cursor-pointer rounded-card outline-none\", className)} {...props} />;\n}\n\nfunction AttachmentGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"attachment-group\"\n      className={cn(\"ds-scrollbar flex min-w-0 snap-x snap-mandatory scroll-px-1 gap-3 overflow-x-auto overscroll-x-contain p-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { Attachment, AttachmentAction, AttachmentActions, AttachmentContent, AttachmentDescription, AttachmentGroup, AttachmentMedia, AttachmentTitle, AttachmentTrigger };\n"
+    }
+  ]
+}

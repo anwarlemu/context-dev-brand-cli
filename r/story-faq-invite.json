@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-faq-invite",
+  "type": "visual",
+  "title": "FAQ invite story",
+  "description": "Dot animation of an Ask anything banner that folds into a paper plane.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Under the FAQ section's intro, on the ring pattern (FaqSection shows it by default). Plays only on screen; shows the banner with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "The banner types \"Ask anything\", melts into a paper plane, and the plane draws back and flies off by the top right\ncorner. Its grid covers the whole of its ring pattern, so the plane can leave by the pattern's own corner; the banner's\nbottom edge sits on the grid's last row, level with the foot of the FAQ list beside it.",
+  "documentation": "https://context-ds.vercel.app/components/story-faq-invite.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-faq-invite --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/faq-demo-invite.tsx; src/components/sections/faq-demo-story-player.ts; src/components/sections/faq-demo-story-scenes.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/faq-demo-invite.tsx",
+        "sha256": "f44ad172b01c7e0f7cc23c2db0fef4dfb2dc8e47fae7fcbbf7eb00af45486fe7",
+        "retained": false,
+        "exports": [
+          "FaqDemoInvite"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/faq-demo-story-player.ts",
+        "sha256": "07e3de7cdf157b129da57386ed537d1688050389f83dfd7e4d24ea517bc0606b",
+        "retained": false,
+        "exports": [
+          "createFaqDemoStoryPlayer"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/faq-demo-story-scenes.ts",
+        "sha256": "ea6de43dd27f90f155a210f8ca05b43bbefe12e231b241369de3d930a2dceba3",
+        "retained": false,
+        "exports": [
+          "FAQ_DEMO_STORY_GRID",
+          "BANNER_ORIGIN",
+          "BANNER_INSIDE",
+          "BANNER_FILLED",
+          "BANNER_OPEN",
+          "bannerShare",
+          "QUESTION",
+          "PLANE_AT_REST",
+          "EMPTY",
+          "FLIGHT_COLUMNS",
+          "paintFlight",
+          "FAQ_DEMO_RESTING"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/faq-invite-story.d.ts",
+      "content": "/**\n * The picture under the FAQ intro: a banner asks for questions and becomes a paper plane that flies from the bottom left\n * off to the top right. With reduced motion it shows the banner.\n */\nexport declare function FaqInviteStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/faq-invite-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createFaqInviteStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/faq-invite-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The FAQ invite's pictures, in the brand dot grid: a banner asking for questions and the paper plane it becomes,\n * which flies off from the bottom left to the top right.\n */\nexport declare const FAQ_INVITE_STORY_GRID: DotGrid;\nexport declare const BANNER_ORIGIN: GridPoint;\n/** The banner's inside as a path in grid units, for clearing the ring pattern from behind its question. */\nexport declare const BANNER_INSIDE: string;\nexport declare const BANNER_FILLED: StoryPicture;\nexport declare const BANNER_OPEN: StoryPicture;\nexport declare const bannerShare: (column: number) => number;\nexport declare const QUESTION: DotStoryText;\nexport declare const PLANE_AT_REST: StoryPicture;\nexport declare const EMPTY: StoryPicture;\n/** Far enough that the plane and the trail behind it have both left the grid. */\nexport declare const FLIGHT_COLUMNS: number;\n/** The plane `travelled` columns along its way out, with the trail it leaves behind its fold. */\nexport declare function paintFlight(states: Uint8Array, travelled: number): Uint8Array<ArrayBufferLike>;\n/** The banner with its question: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const FAQ_INVITE_RESTING: {\n    texts: DotStoryText[];\n    clearedPath: string;\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-faq-invite/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-faq-invite.tsx",
+      "content": "import { HeroCirclePatternSurface } from \"@/components/visuals/hero-circle-pattern\";\nimport { patternHole } from \"@/components/visuals/hero-pattern-hole\";\nimport { FaqInviteStory } from \"@/components/visuals/stories/faq-invite-story\";\n\nexport function Site() {\n  return (\n    <HeroCirclePatternSurface tone=\"subtle\" clusters={false} className=\"w-full max-w-md select-none\">\n      <div aria-hidden=\"true\" {...patternHole(\"cover\")} className=\"relative block\">\n        <FaqInviteStory />\n      </div>\n    </HeroCirclePatternSurface>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "hero-circle-pattern",
+    "hero-pattern-hole"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/faq-invite-story.tsx",
+      "content": "'use client';\n\nimport { FAQ_INVITE_RESTING, FAQ_INVITE_STORY_GRID } from '@/components/visuals/stories/faq-invite-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadFaqInviteStory: LoadDotStory = async (stage) => {\n\tconst { createFaqInviteStoryPlayer } = await import('@/components/visuals/stories/faq-invite-story-player');\n\treturn createFaqInviteStoryPlayer(stage);\n};\n\n/**\n * The picture under the FAQ intro: a banner asks for questions and becomes a paper plane that flies from the bottom left\n * off to the top right. With reduced motion it shows the banner.\n */\nexport function FaqInviteStory({ className }: { className?: string }) {\n\treturn <DotStory grid={FAQ_INVITE_STORY_GRID} resting={FAQ_INVITE_RESTING} load={loadFaqInviteStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/faq-invite-story-player.ts",
+      "content": "import { BANNER_FILLED, BANNER_INSIDE, BANNER_OPEN, BANNER_ORIGIN, EMPTY, FAQ_INVITE_STORY_GRID, FLIGHT_COLUMNS, PLANE_AT_REST, QUESTION, bannerShare, paintFlight } from '@/components/visuals/stories/faq-invite-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The invitation, played as a loop: a banner sweeps in and asks its question, then melts into a paper plane, which\n * draws back and flies off to the top right.\n */\n\nconst TYPING = { startsAt: 0.3, charactersPerSecond: 12 };\nconst ASKED_AT = TYPING.startsAt + typingSeconds(QUESTION, TYPING.charactersPerSecond);\nconst MELT_SECONDS = 1.1;\nconst FLIGHT = { startsAt: 0.45, seconds: 1.6, drawBack: 1.4 };\n// The plane has already left when the loop comes round, so the banner arrives on an empty grid rather than on the\n// plane's resting picture.\nconst CLEARED_SECONDS = 0.5;\n\n// Eases in from a step backwards, so the plane draws back before it goes.\nconst launch = (t: number) => t * t * ((FLIGHT.drawBack + 1) * t - FLIGHT.drawBack);\n\nexport function createFaqInviteStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst bannerInside = new Path2D(BANNER_INSIDE);\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: FAQ_INVITE_STORY_GRID,\n\t\tresting: { beat: 2, heldSeconds: ASKED_AT },\n\t\tbeats: [\n\t\t\t{ picture: EMPTY, arrival: { kind: 'builds', seconds: 0, order: () => 0 }, holdSeconds: CLEARED_SECONDS },\n\t\t\t{ picture: BANNER_FILLED, arrival: { kind: 'waves', seconds: 0.9, origin: BANNER_ORIGIN }, holdSeconds: 0.15 },\n\t\t\t{\n\t\t\t\tpicture: BANNER_OPEN,\n\t\t\t\tarrival: { kind: 'builds', seconds: 0.5, order: bannerShare },\n\t\t\t\tholdSeconds: ASKED_AT + 1.5,\n\t\t\t\twrite: (pen, heldSeconds) => pen.type(QUESTION, heldSeconds, { ...TYPING, cursorLingers: Infinity }),\n\t\t\t\tclears: (context) => context.fill(bannerInside),\n\t\t\t},\n\t\t\t{ picture: BANNER_FILLED, arrival: { kind: 'builds', seconds: 0.4, order: bannerShare }, holdSeconds: 0.1 },\n\t\t\t{\n\t\t\t\tpicture: PLANE_AT_REST,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: FLIGHT.startsAt + FLIGHT.seconds,\n\t\t\t\tanimate(states, heldSeconds) {\n\t\t\t\t\tif (heldSeconds < FLIGHT.startsAt) return;\n\t\t\t\t\tpaintFlight(states, FLIGHT_COLUMNS * launch(clamp01((heldSeconds - FLIGHT.startsAt) / FLIGHT.seconds)));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/faq-invite-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clear, polygon, ringsWithSpeckle, solidWithSpeckle, stack, type DotPainter, type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The FAQ invite's pictures, in the brand dot grid: a banner asking for questions and the paper plane it becomes,\n * which flies off from the bottom left to the top right.\n */\n\n// The picture covers the whole of its ring pattern, so the plane can leave by the pattern's own corner; the halo is\n// what clears the pattern from around its dots.\nexport const FAQ_INVITE_STORY_GRID: DotGrid = { columns: 56, rows: 42, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 14 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = FAQ_INVITE_STORY_GRID;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst middleOf = (from: number, to: number) => ((from + to) / 2 + 0.5) * PITCH;\nconst centerOf = (index: number) => (index + 0.5) * PITCH;\n\n// Its bottom edge sits on the grid's last row, level with the foot of the FAQ list beside it.\nconst BANNER = { left: 6, right: 49, top: 29, bottom: 41, tail: 5 };\nconst BANNER_MIDDLE = (BANNER.top + BANNER.bottom) / 2;\nexport const BANNER_ORIGIN: GridPoint = { column: BANNER.left, row: BANNER_MIDDLE };\n\n// A ribbon with a swallowtail cut into each end: a plain box read as another button.\nconst BANNER_CORNERS: GridPoint[] = [\n\t{ column: BANNER.left, row: BANNER.top },\n\t{ column: BANNER.right, row: BANNER.top },\n\t{ column: BANNER.right - BANNER.tail, row: BANNER_MIDDLE },\n\t{ column: BANNER.right, row: BANNER.bottom },\n\t{ column: BANNER.left, row: BANNER.bottom },\n\t{ column: BANNER.left + BANNER.tail, row: BANNER_MIDDLE },\n];\nconst banner = (interior: DotPainter) => polygon(BANNER_CORNERS, interior);\n/** The banner's inside as a path in grid units, for clearing the ring pattern from behind its question. */\nexport const BANNER_INSIDE = `M${BANNER_CORNERS.map(({ column, row }) => `${centerOf(column)} ${centerOf(row)}`).join('L')}Z`;\n\nexport const BANNER_FILLED = pictureOf(FAQ_INVITE_STORY_GRID, banner(ringsWithSpeckle));\nexport const BANNER_OPEN = pictureOf(FAQ_INVITE_STORY_GRID, banner(clear));\nexport const bannerShare = (column: number) => (column - BANNER.left) / (BANNER.right - BANNER.left);\n\n// Doto is monospaced, each letter three fifths of its size wide.\nconst DOTO_ADVANCE = 0.6;\nconst QUESTION_TEXT = 'Ask anything';\nconst QUESTION_SIZE = 30;\n// Set from its left edge, not its middle: it is typed, and the cursor stands at the end of what has been typed so far.\nexport const QUESTION: DotStoryText = { text: QUESTION_TEXT, x: middleOf(BANNER.left, BANNER.right) - ((QUESTION_TEXT.length + 1) * DOTO_ADVANCE * QUESTION_SIZE) / 2, y: baselineOn(BANNER_MIDDLE, QUESTION_SIZE), size: QUESTION_SIZE, weight: 800 };\n\nconst PLANE = { left: 8, top: 17 };\nconst planePoint = (column: number, row: number): GridPoint => ({ column: PLANE.left + column, row: PLANE.top + row });\nconst NOSE = planePoint(24, 0);\nconst WING_TIP = planePoint(0, 9);\nconst FOLD = planePoint(9, 13);\nconst KEEL = planePoint(13, 20);\n\n// The wing seen from above is solid and the keel beneath it rings, which is what makes the fold read as a fold.\nconst plane = stack(polygon([WING_TIP, NOSE, FOLD], solidWithSpeckle), polygon([FOLD, NOSE, KEEL], ringsWithSpeckle));\nexport const PLANE_AT_REST: StoryPicture = pictureOf(FAQ_INVITE_STORY_GRID, plane);\n\nexport const EMPTY = pictureOf(FAQ_INVITE_STORY_GRID, clear);\n\n// The way out is shallower than the plane's own heading, so it leaves by the top right corner and not through the top.\nconst CLIMB = 0.72;\nconst TRAIL = { every: 3, columns: 21, gap: 2 };\n/** Far enough that the plane and the trail behind it have both left the grid. */\nexport const FLIGHT_COLUMNS = COLUMNS - PLANE.left + TRAIL.columns;\n\nconst isOnGrid = (column: number, row: number) => column >= 0 && column < COLUMNS && row >= 0 && row < ROWS;\n\n/** The plane `travelled` columns along its way out, with the trail it leaves behind its fold. */\nexport function paintFlight(states: Uint8Array, travelled: number) {\n\t// Whole cells, so the plane keeps its shape as it moves instead of being redrawn a little differently each frame.\n\tconst across = Math.round(travelled);\n\tconst up = Math.round(travelled * CLIMB);\n\tstates.fill(DOT_ABSENT);\n\n\tfor (let step = Math.max(0, across - TRAIL.columns); step <= across - TRAIL.gap; step++) {\n\t\tif (step % TRAIL.every !== 0) continue;\n\t\tconst column = FOLD.column - 1 + step;\n\t\tconst row = FOLD.row + 1 - Math.round(step * CLIMB);\n\t\tif (isOnGrid(column, row)) states[row * COLUMNS + column] = DOT_HOLLOW;\n\t}\n\tfor (const cell of PLANE_AT_REST.cells) {\n\t\tconst column = cell.column + across;\n\t\tconst row = cell.row - up;\n\t\tif (isOnGrid(column, row)) states[row * COLUMNS + column] = cell.filled ? DOT_FILLED : DOT_HOLLOW;\n\t}\n\treturn states;\n}\n\n/** The banner with its question: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const FAQ_INVITE_RESTING = { ...BANNER_OPEN, texts: [QUESTION], clearedPath: BANNER_INSIDE };\n"
+    }
+  ]
+}

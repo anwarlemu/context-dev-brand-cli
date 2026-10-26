@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "native-select",
+  "type": "ui",
+  "title": "Native Select",
+  "description": "The browser's own select in the dashboard's field: 40px, control corners, a light border and the up-down chevron.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Choose one value where the platform picker serves better than a custom menu: phones, very long lists (countries, time zones), or forms that must work before script loads. Use NativeSelectOption and NativeSelectOptGroup; give it a name to submit with the form.",
+  "avoid": [
+    "Styling the open list (the browser draws it)",
+    "A native select beside custom selects in the same form",
+    "Placeholder text as the only label"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/native-select.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add native-select",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx (SelectMenu field trigger)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/native-select.d.ts",
+      "content": "import * as React from \"react\";\ntype NativeSelectProps = Omit<React.ComponentProps<\"select\">, \"size\"> & {\n    size?: \"sm\" | \"default\";\n};\ndeclare function NativeSelect({ className, size, ...props }: NativeSelectProps): React.JSX.Element;\ndeclare function NativeSelectOption({ className, ...props }: React.ComponentProps<\"option\">): React.JSX.Element;\ndeclare function NativeSelectOptGroup({ className, ...props }: React.ComponentProps<\"optgroup\">): React.JSX.Element;\nexport { NativeSelect, NativeSelectOptGroup, NativeSelectOption };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/native-select/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/native-select/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/native-select.tsx",
+      "content": "import { Label } from \"@/components/ui/label\";\nimport { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from \"@/components/ui/native-select\";\n\n// On the contact page: team size.\nexport function Site() {\n  return (\n    <div className=\"grid w-full max-w-sm gap-2\">\n      <Label htmlFor=\"team-size\">Team size</Label>\n      <NativeSelect id=\"team-size\" name=\"teamSize\" defaultValue=\"11-50\" className=\"w-full\">\n        <NativeSelectOption value=\"1-10\">1 to 10</NativeSelectOption>\n        <NativeSelectOption value=\"11-50\">11 to 50</NativeSelectOption>\n        <NativeSelectOption value=\"51-200\">51 to 200</NativeSelectOption>\n        <NativeSelectOption value=\"200+\">More than 200</NativeSelectOption>\n      </NativeSelect>\n    </div>\n  );\n}\n\n// In a monitor's settings: a region with groups, the compact size, and invalid and disabled states.\nexport function Product() {\n  return (\n    <div className=\"grid w-full max-w-sm gap-4\">\n      <div className=\"grid gap-2\">\n        <Label htmlFor=\"region\">Region</Label>\n        <NativeSelect id=\"region\" defaultValue=\"iad\" className=\"w-full\">\n          <NativeSelectOptGroup label=\"Americas\">\n            <NativeSelectOption value=\"iad\">US East (Virginia)</NativeSelectOption>\n            <NativeSelectOption value=\"sfo\">US West (San Francisco)</NativeSelectOption>\n          </NativeSelectOptGroup>\n          <NativeSelectOptGroup label=\"Europe\">\n            <NativeSelectOption value=\"fra\">Frankfurt</NativeSelectOption>\n            <NativeSelectOption value=\"lhr\">London</NativeSelectOption>\n          </NativeSelectOptGroup>\n        </NativeSelect>\n      </div>\n      <div className=\"flex flex-wrap items-center gap-3\">\n        <NativeSelect size=\"sm\" defaultValue=\"hourly\" aria-label=\"Frequency\">\n          <NativeSelectOption value=\"hourly\">Hourly</NativeSelectOption>\n          <NativeSelectOption value=\"daily\">Daily</NativeSelectOption>\n        </NativeSelect>\n        <NativeSelect aria-label=\"Webhook\" aria-invalid defaultValue=\"\">\n          <NativeSelectOption value=\"\" disabled>Choose a webhook</NativeSelectOption>\n          <NativeSelectOption value=\"slack\">Slack alerts</NativeSelectOption>\n        </NativeSelect>\n        <NativeSelect aria-label=\"Plan\" disabled defaultValue=\"pro\">\n          <NativeSelectOption value=\"pro\">Pro</NativeSelectOption>\n        </NativeSelect>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "label"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/native-select.tsx",
+      "content": "import * as React from \"react\";\nimport { ChevronsUpDown } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The browser's own select dressed as the dashboard's select field (SelectTrigger `field`): 40px, control corners, the\n// light border that darkens on hover and turns brand blue on focus, body-sm ink, and the up-down chevron in the subtle\n// gray at the right. `size=\"sm\"` is the 28px compact field. Use it where the platform picker is better (phones, long\n// lists, forms that must work without script).\ntype NativeSelectProps = Omit<React.ComponentProps<\"select\">, \"size\"> & { size?: \"sm\" | \"default\" };\n\nfunction NativeSelect({ className, size = \"default\", ...props }: NativeSelectProps) {\n  return (\n    <div data-slot=\"native-select-wrapper\" data-size={size} className={cn(\"group/native-select relative w-fit has-[select:disabled]:opacity-50\", className)}>\n      <select\n        data-slot=\"native-select\"\n        data-size={size}\n        className=\"h-10 w-full min-w-0 cursor-pointer appearance-none rounded-control border border-line bg-surface py-0 pr-9 pl-3.5 text-body-sm text-fg outline-none transition-[border-color] duration-150 ease-out hover:border-line-strong focus:border-brand disabled:cursor-not-allowed aria-invalid:border-danger data-[size=sm]:h-7 data-[size=sm]:pr-8 data-[size=sm]:pl-2.5 data-[size=sm]:text-caption motion-reduce:transition-none\"\n        {...props}\n      />\n      <ChevronsUpDown aria-hidden data-slot=\"native-select-icon\" strokeWidth={1.5} className=\"pointer-events-none absolute top-1/2 right-3 size-3.5 -translate-y-1/2 text-fg-subtle group-data-[size=sm]/native-select:right-2.5\" />\n    </div>\n  );\n}\n\nfunction NativeSelectOption({ className, ...props }: React.ComponentProps<\"option\">) {\n  return <option data-slot=\"native-select-option\" className={cn(\"bg-surface text-fg\", className)} {...props} />;\n}\n\nfunction NativeSelectOptGroup({ className, ...props }: React.ComponentProps<\"optgroup\">) {\n  return <optgroup data-slot=\"native-select-optgroup\" className={cn(\"bg-surface text-fg\", className)} {...props} />;\n}\n\nexport { NativeSelect, NativeSelectOptGroup, NativeSelectOption };\n"
+    }
+  ]
+}

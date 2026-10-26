@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "accordion",
+  "type": "ui",
+  "title": "Accordion",
+  "description": "Expandable question and answer rows with a rotating chevron.",
+  "surface": "site",
+  "kinds": [
+    "faq"
+  ],
+  "usage": "FAQs.",
+  "avoid": [
+    "Hiding essential content"
+  ],
+  "notes": "Questions are set in regular weight, answers in the site's muted text (#4D4D4D, `text-fg-nav`) at body-sm.",
+  "documentation": "https://context-ds.vercel.app/components/accordion.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add accordion --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/ui/accordion.tsx; src/components/ui/accordion-content.tsx; src/components/sections/faq.tsx (quick view)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/accordion.tsx",
+        "sha256": "06bf37dea86694645291645796eaa55876f8d090d2a535f2c3aa6fbb46233241",
+        "retained": false,
+        "exports": []
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/accordion-content.tsx",
+        "sha256": "c9fd99d9592bd81a639f3d538ba052cfa1aa3832b6069bdf6768f4564f789e22",
+        "retained": false,
+        "exports": []
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/faq.tsx",
+        "sha256": "36215871f961f3ce59410bb696f5445b2a8a72f90af85e3f63fd9da8112795b1",
+        "retained": false,
+        "exports": [
+          "Faq"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/accordion.d.ts",
+      "content": "import * as React from \"react\";\nimport * as AccordionPrimitive from \"@radix-ui/react-accordion\";\ndeclare function Accordion(props: React.ComponentProps<typeof AccordionPrimitive.Root>): React.JSX.Element;\ndeclare function AccordionItem({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>): React.JSX.Element;\ndeclare function AccordionTrigger({ className, children, icon, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & {\n    icon?: React.ReactNode | null;\n}): React.JSX.Element;\ndeclare function AccordionContent({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Content>): React.JSX.Element;\nexport { Accordion, AccordionContent, AccordionItem, AccordionTrigger };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/accordion/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/accordion.tsx",
+      "content": "import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from \"@/components/ui/accordion\";\n\nexport function Site() {\n  return (\n    <Accordion type=\"single\" collapsible defaultValue=\"a\" className=\"w-full max-w-xl\">\n      <AccordionItem value=\"a\">\n        <AccordionTrigger>Do you respect robots.txt?</AccordionTrigger>\n        <AccordionContent>Yes. Every crawl follows the site&rsquo;s rules unless you own the domain.</AccordionContent>\n      </AccordionItem>\n      <AccordionItem value=\"b\">\n        <AccordionTrigger>Is there a free plan?</AccordionTrigger>\n        <AccordionContent>Yes: 1,000 credits a month, no card required.</AccordionContent>\n      </AccordionItem>\n    </Accordion>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-accordion",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/accordion.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as AccordionPrimitive from \"@radix-ui/react-accordion\";\nimport { ChevronDown } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The site's FAQ list (the bordered quick view in src/components/sections/faq.tsx): questions in regular weight on light\n// rules, a chevron that turns over when open (or your own icon), the answer in the site's muted text (#4D4D4D) at\n// body-sm, opening in a short ease-out.\nfunction Accordion(props: React.ComponentProps<typeof AccordionPrimitive.Root>) {\n  return <AccordionPrimitive.Root data-slot=\"accordion\" {...props} />;\n}\n\nfunction AccordionItem({ className, ...props }: React.ComponentProps<typeof AccordionPrimitive.Item>) {\n  return <AccordionPrimitive.Item data-slot=\"accordion-item\" className={cn(\"border-b border-line\", className)} {...props} />;\n}\n\nfunction AccordionTrigger({ className, children, icon, ...props }: React.ComponentProps<typeof AccordionPrimitive.Trigger> & { icon?: React.ReactNode | null }) {\n  return (\n    <AccordionPrimitive.Header className=\"flex\">\n      <AccordionPrimitive.Trigger\n        data-slot=\"accordion-trigger\"\n        className={cn(\n          \"flex flex-1 items-center justify-between gap-4 py-4 text-left font-normal tracking-normal text-fg outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 max-md:gap-3 [&[data-state=open]>svg]:rotate-180\",\n          className,\n        )}\n        {...props}\n      >\n        {children}\n        {icon === undefined ? <ChevronDown className=\"size-4 shrink-0 transition-transform duration-200 ease-out motion-reduce:transition-none\" /> : icon}\n      </AccordionPrimitive.Trigger>\n    </AccordionPrimitive.Header>\n  );\n}\n\nfunction AccordionContent({ className, children, ...props }: React.ComponentProps<typeof AccordionPrimitive.Content>) {\n  return (\n    <AccordionPrimitive.Content\n      data-slot=\"accordion-content\"\n      className=\"overflow-hidden text-body-sm leading-5 text-fg-nav data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down motion-reduce:animate-none\"\n      {...props}\n    >\n      <div className={cn(\"pb-4\", className)}>{children}</div>\n    </AccordionPrimitive.Content>\n  );\n}\n\nexport { Accordion, AccordionContent, AccordionItem, AccordionTrigger };\n"
+    }
+  ]
+}

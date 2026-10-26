@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "scrape-reliability",
+  "type": "site",
+  "title": "Scrape reliability",
+  "description": "Success-rate card, a request log in a dot window, and three cards on what runs on every request.",
+  "surface": "site",
+  "kinds": [
+    "card",
+    "card-ring"
+  ],
+  "usage": "The home page's reliability section (\"Every page, fully loaded.\"), between the product grid and the use cases. The rate, the request log (steps with a time, a mark and a detail, a blocked step drawn as a ring) and the three pillars take the site's copy by default; pass your own through props.",
+  "avoid": [
+    "A green check or red cross in the log (a solid dot for a step that went through",
+    "a ring for one that was blocked)",
+    "A chart in place of the single figure",
+    "More than three pillars",
+    "Bold figures"
+  ],
+  "notes": "The rate card and the log sit side by side from lg (0.8 to 1.4), stacked below; the pillars go three across from md.\nThe log's times and details hide on phones, leaving the mark and the step.",
+  "documentation": "https://context-ds.vercel.app/components/scrape-reliability.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add scrape-reliability --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/scrape-reliability.tsx; src/components/sections/shared/dot-window.tsx; src/lib/scrape-reliability.ts; src/components/sections/home/homepage.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/scrape-reliability.tsx",
+        "sha256": "763dc7cefb1bd4224b0ca35273663d4f149af143850c94eb625c4e78ea99de7f",
+        "retained": false,
+        "exports": [
+          "ScrapeReliability"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/dot-window.tsx",
+        "sha256": "b98a28c1071a7d049114d8c315540bb1948210719f7a2e0b0029bbbae34cd414",
+        "retained": false,
+        "exports": [
+          "DOT_WINDOW_PITCH",
+          "DotWindow",
+          "DotRule"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/lib/scrape-reliability.ts",
+        "sha256": "a573c2e971f496dc6b11f18c95c980c1ad37cc8847711957253a476d2ef820dc",
+        "retained": false,
+        "exports": [
+          "SCRAPE_SUCCESS_RATE"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/homepage.tsx",
+        "sha256": "a7d664d6c5578916c3cd2b7afc4eb905f49a661756d090469ec2a20828a34f1c",
+        "retained": false,
+        "exports": [
+          "Homepage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/scrape-reliability.d.ts",
+      "content": "import * as React from \"react\";\nexport type ReliabilityLogEntry = {\n    time: React.ReactNode;\n    event: React.ReactNode;\n    detail?: React.ReactNode;\n    blocked?: boolean;\n};\nexport type ReliabilityLog = {\n    url: React.ReactNode;\n    status: React.ReactNode;\n    entries: ReliabilityLogEntry[];\n    result: React.ReactNode;\n    meta?: React.ReactNode;\n};\nexport type ReliabilityPillar = {\n    title: React.ReactNode;\n    description: React.ReactNode;\n};\n/** The request log: one request's steps in a dot window, on a white card in the soft blue ring. */\ndeclare function ReliabilityRequestLog({ log, className }: {\n    log: ReliabilityLog;\n    className?: string;\n}): React.JSX.Element;\n/**\n * The reliability section: heading and line, the rate card beside the request log (stacked below lg), then the\n * pillars three across from md. Every part has the site's copy as its default.\n */\ndeclare function ScrapeReliability({ title, accent, description, rate, rateLabel, log, pillars, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title?: React.ReactNode;\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    /** The headline figure, e.g. \"99.96%\". */\n    rate?: React.ReactNode;\n    rateLabel?: React.ReactNode;\n    log?: ReliabilityLog;\n    pillars?: ReliabilityPillar[];\n}): React.JSX.Element;\nexport { ScrapeReliability, ReliabilityRequestLog };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/scrape-reliability/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/scrape-reliability.tsx",
+      "content": "import { ScrapeReliability } from \"@/components/site/scrape-reliability\";\n\n// The home page's section between the product grid and the use cases, with the site's copy (every prop's default).\nexport function Site() {\n  return <ScrapeReliability className=\"w-full\" />;\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "section",
+    "dot-engine",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/scrape-reliability.tsx",
+      "content": "import * as React from \"react\";\n\nimport { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { DotWindow } from \"@/components/visuals/dot-engine/dot-window\";\nimport { cn } from \"@/lib/utils\";\n\n// The home page's reliability section (\"Every page, fully loaded.\"): a white card with the success rate as one large\n// blue figure, beside a request log framed as a dot window (the URL and its status pill, each step with its time, a mark\n// and a detail, then what came back), and three cards on what runs on every request. The log uses the brand's two\n// marks: a solid dot for a step that went through, a hollow ring for the attempt that was blocked.\n\nexport type ReliabilityLogEntry = { time: React.ReactNode; event: React.ReactNode; detail?: React.ReactNode; blocked?: boolean };\nexport type ReliabilityLog = { url: React.ReactNode; status: React.ReactNode; entries: ReliabilityLogEntry[]; result: React.ReactNode; meta?: React.ReactNode };\nexport type ReliabilityPillar = { title: React.ReactNode; description: React.ReactNode };\n\nconst RING = \"-m-2 rounded-card bg-ring-tint p-2\";\nconst CARD = \"flex h-full min-w-0 flex-col gap-3 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\";\n\n/** A log mark: a solid blue dot, or a hollow ring when the step was blocked. */\nfunction LogMark({ blocked = false }: { blocked?: boolean }) {\n  return (\n    <svg aria-hidden=\"true\" viewBox=\"0 0 10 10\" className=\"size-2.5 shrink-0 text-fg-brand\">\n      {blocked ? <circle cx=\"5\" cy=\"5\" r=\"4.25\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\" /> : <circle cx=\"5\" cy=\"5\" r=\"5\" fill=\"currentColor\" />}\n    </svg>\n  );\n}\n\n/** The request log: one request's steps in a dot window, on a white card in the soft blue ring. */\nfunction ReliabilityRequestLog({ log, className }: { log: ReliabilityLog; className?: string }) {\n  return (\n    <div className={cn(RING, className)}>\n      <div className=\"flex h-full items-center rounded-card bg-surface p-4 ring-1 ring-hairline sm:p-6\">\n        <DotWindow className=\"w-full\">\n          <div className=\"flex items-center justify-between gap-3 border-b border-wash-pill pb-4\">\n            <span className=\"truncate font-mono text-caption leading-4 text-fg\">{log.url}</span>\n            <span className=\"shrink-0 rounded-pill bg-ring-tint px-3 py-1 font-mono text-caption leading-4 text-fg-brand\">{log.status}</span>\n          </div>\n          <ol aria-label=\"Request log\" className=\"py-2\">\n            {log.entries.map((entry, index) => (\n              <li key={index} className=\"flex min-h-10 items-center gap-3 py-1\">\n                <span className=\"hidden w-9 shrink-0 font-mono text-caption leading-4 text-fg-faint sm:block\">{entry.time}</span>\n                <LogMark blocked={entry.blocked} />\n                <span className=\"min-w-0 flex-1 text-body-sm text-fg\">{entry.event}</span>\n                {entry.detail && <span className={cn(\"hidden shrink-0 pl-3 text-right font-mono text-caption leading-4 sm:block\", entry.blocked ? \"text-fg\" : \"text-fg-subtle\")}>{entry.detail}</span>}\n              </li>\n            ))}\n          </ol>\n          <div className=\"flex items-center justify-between gap-3 border-t border-wash-pill pt-4\">\n            <span className=\"flex items-center gap-3 text-body-sm whitespace-nowrap text-fg\">\n              <LogMark />\n              {log.result}\n            </span>\n            {log.meta && <span className=\"font-mono text-caption leading-4 whitespace-nowrap text-fg-subtle\">{log.meta}</span>}\n          </div>\n        </DotWindow>\n      </div>\n    </div>\n  );\n}\n\nconst DEFAULT_LOG: ReliabilityLog = {\n  url: \"shop.example.com/products\",\n  status: \"200 OK\",\n  entries: [\n    { time: \"0.0s\", event: \"Rendered in a real browser\", detail: \"JS executed\" },\n    { time: \"1.1s\", event: \"Blocked by bot protection\", detail: \"403\", blocked: true },\n    { time: \"1.2s\", event: \"Escalated to a stronger proxy\", detail: \"automatic\" },\n    { time: \"2.0s\", event: \"Retried with a new strategy\", detail: \"200\" },\n  ],\n  result: \"Markdown returned\",\n  meta: \"2.4s · 1 credit\",\n};\n\nconst DEFAULT_PILLARS: ReliabilityPillar[] = [\n  { title: \"JavaScript rendering, always\", description: \"Every request loads in a real browser. There is no opt-out, because half-rendered HTML from a single-page app is a failure that looks like a success.\" },\n  { title: \"Proxies that escalate\", description: \"When a site blocks a request, it moves to a stronger proxy on its own. You never pick a proxy tier or pay extra for one.\" },\n  { title: \"Retries that adapt\", description: \"Failed attempts retry with a different strategy before anything comes back to you. Retries run on our side, not in your code.\" },\n];\n\n/**\n * The reliability section: heading and line, the rate card beside the request log (stacked below lg), then the\n * pillars three across from md. Every part has the site's copy as its default.\n */\nfunction ScrapeReliability({\n  title = \"Every page,\",\n  accent = \"fully loaded.\",\n  description = \"Rendering, proxies, and retries run on every request. You send a URL and get the page, not a list of settings to tune.\",\n  rate = \"99.96%\",\n  rateLabel = \"Scrape success rate, with no configuration.\",\n  log = DEFAULT_LOG,\n  pillars = DEFAULT_PILLARS,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title?: React.ReactNode;\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  /** The headline figure, e.g. \"99.96%\". */\n  rate?: React.ReactNode;\n  rateLabel?: React.ReactNode;\n  log?: ReliabilityLog;\n  pillars?: ReliabilityPillar[];\n}) {\n  return (\n    <SiteSection lines data-slot=\"scrape-reliability\" className={className} {...props}>\n      <SectionHeading title={title} accent={accent} description={description} />\n      <SectionHeaderRule />\n      <div className=\"grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.4fr)]\">\n        <div className={RING}>\n          <div className={cn(CARD, \"items-center justify-center gap-2 text-center\")}>\n            <span className=\"text-figure leading-none font-normal tracking-figure text-fg-brand md:text-figure-lg\">{rate}</span>\n            <span className=\"text-body leading-snug text-fg-secondary\">{rateLabel}</span>\n          </div>\n        </div>\n        <ReliabilityRequestLog log={log} />\n      </div>\n      <ul className=\"mt-6 grid grid-cols-1 gap-6 md:grid-cols-3\">\n        {pillars.map((pillar, index) => (\n          <li key={index} className={RING}>\n            <div className={CARD}>\n              <h3 className=\"text-h4 leading-snug font-normal tracking-normal text-fg\">{pillar.title}</h3>\n              <p className=\"text-body leading-snug text-fg-secondary\">{pillar.description}</p>\n            </div>\n          </li>\n        ))}\n      </ul>\n    </SiteSection>\n  );\n}\n\nexport { ScrapeReliability, ReliabilityRequestLog };\n"
+    }
+  ]
+}

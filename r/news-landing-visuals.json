@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "news-landing-visuals",
+  "type": "site",
+  "title": "News page visuals",
+  "description": "The News page's hero demo and capability panels: a company in and its newest coverage out.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The News product page (context.dev/news): NewsHeroDemo under the hero, and NewsEntityPanel, NewsCoveragePanel, NewsSourcePanel as the pictures in its three capability cards (ProductStorySection), in that order.",
+  "avoid": [
+    "A dot story and a panel in the same card",
+    "Bold names or titles",
+    "Syntax colors in the output"
+  ],
+  "notes": "NewsHeroDemo is a ProductDemoCard with a company in and its newest coverage out. The panels show the ways to name a company, the coverage filters, and an article with its source. Each takes its example values as\nprops where a page would change them, and keeps the site's illustrative ones by default.",
+  "documentation": "https://context-ds.vercel.app/components/news-landing-visuals.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add news-landing-visuals --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/news-landing-visuals.tsx; src/components/sections/products/product-landing-content.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/news-landing-visuals.tsx",
+        "sha256": "ab4d0171c6fc5902602f125e446977203afe41cde23f67fe73b1379960c28db0",
+        "retained": false,
+        "exports": [
+          "NewsHeroDemo",
+          "NewsEntityPanel",
+          "NewsCoveragePanel",
+          "NewsSourcePanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-content.tsx",
+        "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+        "retained": false,
+        "exports": [
+          "RelatedProductId",
+          "ProductLandingContent",
+          "scrapeLandingContent",
+          "answersLandingContent",
+          "searchLandingContent",
+          "mapLandingContent",
+          "brandLandingContent",
+          "styleguideLandingContent",
+          "batchesLandingContent",
+          "monitorsLandingContent",
+          "parseLandingContent",
+          "brandSearchLandingContent",
+          "peopleEnrichmentLandingContent",
+          "newsLandingContent"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/news-landing-visuals.d.ts",
+      "content": "export type NewsArticle = {\n    type: string;\n    title: string;\n    source: string;\n    date: string;\n};\nexport declare function NewsHeroDemo({ domain, articles, output }: {\n    domain?: string;\n    articles?: NewsArticle[];\n    output?: string;\n}): import(\"react\").JSX.Element;\nexport declare function NewsEntityPanel(): import(\"react\").JSX.Element;\nexport declare function NewsCoveragePanel(): import(\"react\").JSX.Element;\nexport declare function NewsSourcePanel(): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/news-landing-visuals/Site"
+    },
+    {
+      "name": "Capabilities",
+      "url": "https://context-ds.vercel.app/preview/news-landing-visuals/Capabilities"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/news-landing-visuals.tsx",
+      "content": "import { NewsCoveragePanel, NewsEntityPanel, NewsHeroDemo, NewsSourcePanel } from \"@/components/site/news-landing-visuals\";\nimport { ProductStorySection } from \"@/components/site/product-landing\";\n\nexport function Site() {\n  return (\n    <div className=\"mx-auto w-full max-w-[var(--ds-layout-column-wide)] px-6 py-12 sm:px-8 md:px-10 lg:px-12\">\n      <NewsHeroDemo />\n    </div>\n  );\n}\n\nexport function Capabilities() {\n  return (\n    <div className=\"w-full\">\n      <ProductStorySection\n        title=\"Pick a company.\"\n        accent=\"Follow its coverage.\"\n        description=\"Find articles about the business you follow, narrow them to the coverage you want, and keep every source attached.\"\n        items={[\n          { title: \"Search around a company\", description: \"Identify the business by name, domain, ticker, or ISIN to find relevant coverage.\", story: <NewsEntityPanel /> },\n          { title: \"Choose the coverage\", description: \"Filter by date, publisher, country, language, or article type. Sort by relevance or newest first.\", story: <NewsCoveragePanel /> },\n          { title: \"Keep the source attached\", description: \"Use publisher details, article URLs, publication dates, and story IDs to build a feed your users can inspect.\", story: <NewsSourcePanel /> },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "product-landing"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "product-demo-card",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/news-landing-visuals.tsx",
+      "content": "import { CapabilityPanel, DemoRow, MarkGlyph, ParamRow, ProductDemoCard, StatusChip } from \"@/components/site/product-demo-card\";\nimport { cn } from \"@/lib/utils\";\n\n// The News page's hero demo (a company in, its newest coverage out) and its three capability panels: the ways to name\n// a company, the coverage filters, and an article with its source.\n\n/** The site's building icon (Hugeicons Building 02, drawn at a 1.5 stroke). */\nfunction BuildingIcon({ className }: { className?: string }) {\n  return (\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" className={className}>\n      <path d=\"M15 2H9C5.69067 2 5 2.69067 5 6V22H19V6C19 2.69067 18.3093 2 15 2Z\" stroke=\"currentColor\" strokeLinejoin=\"round\" strokeWidth=\"1.5\" />\n      <path d=\"M3 22H21\" stroke=\"currentColor\" strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth=\"1.5\" />\n      <path d=\"M15 22V19C15 17.3453 14.6547 17 13 17H11C9.34533 17 9 17.3453 9 19V22\" stroke=\"currentColor\" strokeLinejoin=\"round\" strokeWidth=\"1.5\" />\n      <path d=\"M13.5 6H10.5M13.5 9.5H10.5M13.5 13H10.5\" stroke=\"currentColor\" strokeLinecap=\"round\" strokeWidth=\"1.5\" />\n    </svg>\n  );\n}\n\nexport type NewsArticle = { type: string; title: string; source: string; date: string };\n\nconst ARTICLES: NewsArticle[] = [\n  { type: \"Editorial\", title: \"Example expands its developer platform\", source: \"Industry Journal\", date: \"Sep 18\" },\n  { type: \"Press release\", title: \"New tools for teams building on the web\", source: \"Example Newsroom\", date: \"Sep 16\" },\n  { type: \"Editorial\", title: \"What the latest release means for developers\", source: \"The Product Review\", date: \"Sep 14\" },\n];\n\nconst NEWS_RESPONSE = `{\n  \"data\": [\n    {\n      \"title\": \"${ARTICLES[0].title}\",\n      \"url\": \"https://journal.example/4821\",\n      \"type\": \"editorial\",\n      \"published_at\": \"2026-09-18T14:00:00Z\",\n      \"source\": { \"name\": \"${ARTICLES[0].source}\" },\n      \"story_id\": \"st_7d41\"\n    }\n  ],\n  \"has_more\": true,\n  \"next_cursor\": \"c_9f2a\"\n}`;\n\nexport function NewsHeroDemo({ domain = \"example.com\", articles = ARTICLES, output = NEWS_RESPONSE }: { domain?: string; articles?: NewsArticle[]; output?: string }) {\n  return (\n    <ProductDemoCard\n      label=\"Illustrative company coverage\"\n      inputLabel=\"Company\"\n      input={\n        <>\n          <DemoRow\n            glyph={\n              <MarkGlyph>\n                <BuildingIcon className=\"size-4\" />\n              </MarkGlyph>\n            }\n            title={domain}\n            detail=\"Domain\"\n            status={<StatusChip>Newest first</StatusChip>}\n          />\n          <ul className=\"flex flex-col\">\n            {articles.map((article) => (\n              <li key={article.title} className=\"flex flex-col gap-1 border-t border-hairline px-1 py-3 first:border-0\">\n                <span className=\"flex items-center justify-between gap-4 text-demo-meta leading-4 text-black/50\">\n                  <span>{article.type}</span>\n                  <span>{article.date}</span>\n                </span>\n                <span className=\"text-demo-row leading-5 text-fg\">{article.title}</span>\n                <span className=\"text-demo-meta leading-4 text-black/50\">{article.source}</span>\n              </li>\n            ))}\n          </ul>\n        </>\n      }\n      outputLabel=\"JSON response\"\n      filename=\"news.json\"\n      output={output}\n    />\n  );\n}\n\nconst ENTITY_TYPES = [\"name\", \"domain\", \"ticker\", \"isin\"];\n\nexport function NewsEntityPanel() {\n  return (\n    <CapabilityPanel label=\"The ways to identify a company\">\n      <p className=\"font-mono text-demo-code leading-5 text-black/60\">searchBy.entity.type</p>\n      <ul className=\"flex flex-wrap gap-2\">\n        {ENTITY_TYPES.map((type) => (\n          <li key={type} className={cn(\"rounded-pill border border-brand px-3 py-1 font-mono text-demo-code leading-5 text-brand\", type === \"domain\" && \"bg-blue-10\")}>\n            {type}\n          </li>\n        ))}\n      </ul>\n      <div className=\"flex items-center gap-3 border-t border-hairline pt-3\">\n        <MarkGlyph className=\"size-8\">\n          <BuildingIcon className=\"size-4\" />\n        </MarkGlyph>\n        <span className=\"flex min-w-0 flex-col\">\n          <span className=\"text-demo-label leading-5 text-fg\">example.com</span>\n          <span className=\"text-demo-meta leading-4 text-black/50\">One company, one feed</span>\n        </span>\n      </div>\n    </CapabilityPanel>\n  );\n}\n\nconst COVERAGE_OPTIONS = [\n  {\n    group: \"filterBy\",\n    params: [\n      { name: \"articleType\", value: \"editorial\" },\n      { name: \"sourceCountry\", value: \"us\" },\n      { name: \"articleLanguage\", value: \"en\" },\n    ],\n  },\n  { group: \"sortBy\", params: [{ name: \"type\", value: \"newest\" }] },\n];\n\nexport function NewsCoveragePanel() {\n  return (\n    <CapabilityPanel label=\"Example coverage filters\">\n      {COVERAGE_OPTIONS.map(({ group, params }) => (\n        <div key={group} className=\"flex flex-col gap-2 border-t border-hairline pt-3 first:border-0 first:pt-0\">\n          <p className=\"font-mono text-demo-code leading-5 text-fg\">{group}</p>\n          <div className=\"flex flex-col gap-3 border-l border-black/10 pl-3\">\n            {params.map((param) => (\n              <ParamRow key={param.name} name={param.name} value={param.value} />\n            ))}\n          </div>\n        </div>\n      ))}\n    </CapabilityPanel>\n  );\n}\n\nconst SOURCE_FIELDS = [\n  { label: \"Publisher\", value: ARTICLES[0].source },\n  { label: \"URL\", value: \"journal.example/4821\" },\n  { label: \"Published\", value: \"Sep 18, 2026\" },\n  { label: \"Story\", value: \"st_7d41\" },\n];\n\nexport function NewsSourcePanel() {\n  return (\n    <CapabilityPanel label=\"Illustrative article with its source\">\n      <p className=\"text-demo-row leading-5 text-fg\">{ARTICLES[0].title}</p>\n      <dl className=\"flex flex-col\">\n        {SOURCE_FIELDS.map((field) => (\n          <div key={field.label} className=\"flex items-center justify-between gap-3 border-t border-hairline py-2.5 text-demo-label leading-5\">\n            <dt className=\"shrink-0 text-black/50\">{field.label}</dt>\n            <dd className=\"truncate text-fg\">{field.value}</dd>\n          </div>\n        ))}\n      </dl>\n    </CapabilityPanel>\n  );\n}\n"
+    }
+  ]
+}

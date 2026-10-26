@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-batches",
+  "type": "visual",
+  "title": "Batches story",
+  "description": "Dot animation of batch processing and progress.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "The Batches empty state, above its heading. Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page",
+    "More than one story in an empty state"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-batches.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-batches --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/batches/batches-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/batches/batches-story.tsx",
+        "sha256": "a6a74278e1d159d5865bf92c5cfb14b5407ea430bb55fbae6940cf72159602ec",
+        "retained": false,
+        "exports": [
+          "BatchesStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/batches-story.d.ts",
+      "content": "/** The Batches empty state's picture: a batch reads its sources, then counts through its URLs as its progress fills. */\nexport declare function BatchesStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/batches-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createBatchesStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/batches-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The Batches empty state's pictures, ported from the website's Research and \"Run batches at scale\" cards: the\n * sources a batch reads, then the job counting its way through its URLs while its progress fills dot by dot.\n */\nexport declare const BATCHES_STORY_GRID: DotGrid;\nexport declare const SOURCES: StoryPicture;\nexport declare const SOURCES_LABEL: DotStoryText;\nexport declare const BATCH_SIZE = 25000;\nexport declare const PROGRESS_CELLS: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\nexport declare const EMPTY_PROGRESS: StoryPicture;\nexport declare const FULL_PROGRESS: StoryPicture;\nexport declare const COUNTER: DotStoryText;\n/** The sources being read: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const BATCHES_RESTING: {\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n    texts: DotStoryText[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/story-batches/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-batches.tsx",
+      "content": "import { BatchesStory } from \"@/components/visuals/stories/batches-story\";\n\nexport function Product() {\n  return (\n    <div className=\"flex flex-col items-center px-8 py-16 text-center\">\n      <BatchesStory className=\"w-72\" />\n      <h2 className=\"mt-8 text-h4\">Scrape pages in bulk</h2>\n      <p className=\"mt-1 max-w-120 text-body-sm text-balance text-fg-muted\">\n        Submit your first batch to scrape a list of URLs, or crawl a whole site, as one job you can check on later.\n      </p>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/batches-story.tsx",
+      "content": "'use client';\n\nimport { BATCHES_RESTING, BATCHES_STORY_GRID } from '@/components/visuals/stories/batches-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst load: LoadDotStory = async (stage) => {\n\tconst { createBatchesStoryPlayer } = await import('@/components/visuals/stories/batches-story-player');\n\treturn createBatchesStoryPlayer(stage);\n};\n\n/** The Batches empty state's picture: a batch reads its sources, then counts through its URLs as its progress fills. */\nexport function BatchesStory({ className }: { className?: string }) {\n\treturn <DotStory grid={BATCHES_STORY_GRID} resting={BATCHES_RESTING} load={load} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/batches-story-player.ts",
+      "content": "import { BATCH_SIZE, BATCHES_STORY_GRID, COUNTER, EMPTY_PROGRESS, FULL_PROGRESS, PROGRESS_CELLS, SOURCES, SOURCES_LABEL } from '@/components/visuals/stories/batches-story-scenes';\nimport { DOT_FILLED } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellIndexIn, clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One batch, played as a loop: its sources are read, then they melt into the job, which counts up to its URLs while\n * its progress fills dot by dot. The full progress melts back into the sources.\n */\n\nconst MELT = { kind: 'melts' as const, seconds: 1 };\nconst RUN = { startsAt: 0.3, seconds: 3 };\nconst cellIndex = cellIndexIn(BATCHES_STORY_GRID);\n// Slows only a little toward the end, so the count is still visibly counting when it lands on the total.\nconst settle = (t: number) => 1 - (1 - t) ** 1.6;\nconst ran = (heldSeconds: number) => settle(clamp01((heldSeconds - RUN.startsAt) / RUN.seconds));\n\nexport function createBatchesStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: BATCHES_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: 2 },\n\t\tbeats: [\n\t\t\t{ picture: SOURCES, arrival: MELT, holdSeconds: 2.4, write: (pen) => pen.text(SOURCES_LABEL) },\n\t\t\t{\n\t\t\t\tpicture: EMPTY_PROGRESS,\n\t\t\t\tarrival: MELT,\n\t\t\t\tholdSeconds: RUN.startsAt + RUN.seconds + 1.4,\n\t\t\t\tanimate: (states, heldSeconds) => {\n\t\t\t\t\tconst done = Math.round(ran(heldSeconds) * PROGRESS_CELLS.length);\n\t\t\t\t\tfor (let step = 0; step < done; step++) states[cellIndex(PROGRESS_CELLS[step])] = DOT_FILLED;\n\t\t\t\t},\n\t\t\t\tdeparture: FULL_PROGRESS,\n\t\t\t\twrite: (pen, heldSeconds) => pen.text({ ...COUNTER, text: `${Math.round(ran(heldSeconds) * BATCH_SIZE).toLocaleString('en-US')} URLs` }),\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/batches-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellStates, cellsOfStates, fillCells, rectangle, ringsWithSpeckle, solidWithSpeckle, stack, type DotPainter, type Region } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The Batches empty state's pictures, ported from the website's Research and \"Run batches at scale\" cards: the\n * sources a batch reads, then the job counting its way through its URLs while its progress fills dot by dot.\n */\n\nexport const BATCHES_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, pitch: PITCH } = BATCHES_STORY_GRID;\nconst x = (column: number) => column * PITCH;\nconst y = (row: number) => row * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\n\nconst BOOK = { columns: 40, rows: 8, spine: 4, pages: 3 };\nconst BOOKS = [\n\t{ left: 10, top: 3, isDark: true },\n\t{ left: 7, top: 13, isDark: false },\n\t{ left: 11, top: 23, isDark: true },\n];\n\n// A book lying flat: a solid spine, the page edges as rings at its other end, and a title band across its cover.\nconst book = ({ left, top, isDark }: (typeof BOOKS)[number]): DotPainter =>\n\trectangle({ left, right: left + BOOK.columns - 1, top, bottom: top + BOOK.rows - 1 }, (column, row) => {\n\t\tif (column < left + BOOK.spine) return DOT_FILLED;\n\t\tif (column >= left + BOOK.columns - BOOK.pages) return row % 2 === 0 ? DOT_HOLLOW : DOT_ABSENT;\n\t\tconst isTitle = (row === top + 3 || row === top + 4) && column >= left + BOOK.spine + 4 && column < left + BOOK.spine + 20;\n\t\tif (isTitle) return isDark ? DOT_HOLLOW : DOT_FILLED;\n\t\treturn isDark ? solidWithSpeckle(column, row) : ringsWithSpeckle(column, row);\n\t});\n\nexport const SOURCES = pictureOf(BATCHES_STORY_GRID, stack(...BOOKS.map(book)));\nexport const SOURCES_LABEL: DotStoryText = { text: 'Reading 3 sources', x: x(COLUMNS / 2), y: baselineOn(34, 18), size: 18, weight: 700, muted: true, anchor: 'middle' };\n\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(BATCHES_STORY_GRID, states) });\n\nexport const BATCH_SIZE = 25000;\n/** One dot per share of the batch, filled in reading order as the job runs. */\nconst PROGRESS: Region = { left: 4, top: 20, columns: 50, rows: 8 };\nexport const PROGRESS_CELLS = fillCells(PROGRESS, false);\nexport const EMPTY_PROGRESS = pictureOfStates(cellStates(BATCHES_STORY_GRID, PROGRESS_CELLS));\nexport const FULL_PROGRESS = pictureOfStates(cellStates(BATCHES_STORY_GRID, fillCells(PROGRESS, true)));\nexport const COUNTER: DotStoryText = { text: `${BATCH_SIZE.toLocaleString('en-US')} URLs`, x: x(COLUMNS / 2), y: y(15), size: 64, weight: 800, anchor: 'middle' };\n\n/** The sources being read: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const BATCHES_RESTING = { cells: SOURCES.cells, texts: [SOURCES_LABEL] };\n"
+    }
+  ]
+}

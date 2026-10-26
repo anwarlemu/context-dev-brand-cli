@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "badge",
+  "type": "ui",
+  "title": "Badge",
+  "description": "Status labels, product tags, and site chips.",
+  "surface": "both",
+  "kinds": [
+    "app-badge",
+    "chip"
+  ],
+  "usage": "A run's or monitor's status (`default` for paused or queued, `brand` running, `success`, `warning` skipped, `destructive` failed), `tag` for a tag, `chip` for the site's pill-shaped labels.",
+  "avoid": [
+    "Badges as buttons",
+    "More than one tone per row"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/badge.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add badge",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/monitors/monitor-status.tsx; src/components/ui/form.tsx; website src/components/sections/home/product-grid.tsx (chip)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/monitors/monitor-status.tsx",
+        "sha256": "ef46081196942d65cf9efebfd0206d22121b3547ad1cf3f98a41babe4e1c94cc",
+        "retained": false,
+        "exports": [
+          "MonitorStatusBadge",
+          "MonitorStatusDot"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/product-grid.tsx",
+        "sha256": "c845eed09fa77a98a03fd569d611dd9042a7f9dd9a916548534827c33301448a",
+        "retained": false,
+        "exports": [
+          "ProductGrid"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/badge.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const badgeVariants: (props?: ({\n    variant?: \"default\" | \"tag\" | \"brand\" | \"warning\" | \"destructive\" | \"chip\" | \"success\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Badge({ className, variant, asChild, ...props }: React.ComponentProps<\"span\"> & VariantProps<typeof badgeVariants> & {\n    asChild?: boolean;\n}): React.JSX.Element;\nexport { Badge, badgeVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/badge/Product"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/badge/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/badge.tsx",
+      "content": "import { Badge } from \"@/components/ui/badge\";\n\nexport function Product() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-2\">\n      <Badge>paused</Badge>\n      <Badge variant=\"brand\">running</Badge>\n      <Badge variant=\"success\">completed</Badge>\n      <Badge variant=\"warning\">skipped</Badge>\n      <Badge variant=\"destructive\">failed</Badge>\n      <Badge variant=\"tag\">pricing</Badge>\n    </div>\n  );\n}\n\nexport function Site() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-2\">\n      <Badge variant=\"chip\">Fresh sources for RAG</Badge>\n      <Badge variant=\"chip\">Company news</Badge>\n      <Badge variant=\"chip\">Agent web search</Badge>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/badge.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The product's status label (the dashboard's StatusBadge): the word in mono caption on a hairline-bordered box, the\n// status told by its color alone. `tag` is the dashboard's tag chip (blue on blue 10); `chip` is the site's hairline pill.\nconst badgeVariants = cva(\"inline-flex w-fit shrink-0 items-center justify-center gap-1 whitespace-nowrap [&>svg]:pointer-events-none [&>svg]:size-3\", {\n  variants: {\n    variant: {\n      default: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-fg-subtle\",\n      brand: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-fg-brand\",\n      success: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-success\",\n      warning: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-warning\",\n      destructive: \"rounded-control border border-line px-2 pt-0.75 pb-1 font-mono text-caption leading-none text-danger\",\n      tag: \"h-6 rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-blue-10 px-2.5 text-caption text-fg-brand\",\n      chip: \"rounded-pill px-3 py-1 text-body-sm leading-snug text-fg-nav ring-1 ring-line ring-inset\",\n    },\n  },\n  defaultVariants: { variant: \"default\" },\n});\n\nfunction Badge({ className, variant, asChild = false, ...props }: React.ComponentProps<\"span\"> & VariantProps<typeof badgeVariants> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"span\";\n  return <Comp data-slot=\"badge\" className={cn(badgeVariants({ variant }), className)} {...props} />;\n}\n\nexport { Badge, badgeVariants };\n"
+    }
+  ]
+}

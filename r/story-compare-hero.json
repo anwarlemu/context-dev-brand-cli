@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-compare-hero",
+  "type": "visual",
+  "title": "Compare hero story",
+  "description": "Dot animation of feature and benchmark comparisons, with captions.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "A comparison page hero on the site. Plays only on screen; shows the finished feature table with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-compare-hero.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-compare-hero --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/page-heroes/compare-hero-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/page-heroes/compare-hero-story.tsx",
+        "sha256": "cddc4f10bfcd00e05b641b764fe92f3a5bd034c45527272323023c15cb3507df",
+        "retained": false,
+        "exports": [
+          "CompareHeroStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/compare-hero-story.d.ts",
+      "content": "/**\n * The compare hero's picture: two tools checked feature by feature, then their bars rising side by side. With\n * reduced motion it shows the finished feature table.\n */\nexport declare function CompareHeroStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/compare-hero-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createCompareHeroStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/compare-hero-story-scenes.d.ts",
+      "content": "export declare const FEATURE_COUNT: number;\n/** The feature table with its first `checked` rows filled in: a block where a tool has the feature, a dash where not. */\nexport declare function paintFeatures(states: Uint8Array, checked: number): Uint8Array<ArrayBufferLike>;\nexport declare const FEATURES_UNCHECKED: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const FEATURES_CHECKED: import(\"../dot-engine/dot-story-beats\").StoryPicture;\n/** The bars `grown` of the way to their full height, from 0 to 1. */\nexport declare function paintBars(states: Uint8Array, grown: number): Uint8Array<ArrayBufferLike>;\nexport declare const BARS_FLAT: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const BARS_GROWN: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const COMPARE_CAPTIONS: {\n    features: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    pricing: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n};\n/** The finished feature table: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const COMPARE_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-compare-hero/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-compare-hero.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { CompareHeroStory } from \"@/components/visuals/stories/compare-hero-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <CompareHeroStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "story-parts",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/compare-hero-story.tsx",
+      "content": "'use client';\n\nimport { COMPARE_RESTING } from '@/components/visuals/stories/compare-hero-story-scenes';\nimport { HERO_STORY_GRID } from '@/components/visuals/stories/hero-story-kit';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadCompareHeroStory: LoadDotStory = async (stage) => {\n\tconst { createCompareHeroStoryPlayer } = await import('@/components/visuals/stories/compare-hero-story-player');\n\treturn createCompareHeroStoryPlayer(stage);\n};\n\n/**\n * The compare hero's picture: two tools checked feature by feature, then their bars rising side by side. With\n * reduced motion it shows the finished feature table.\n */\nexport function CompareHeroStory({ className }: { className?: string }) {\n\treturn <DotStory grid={HERO_STORY_GRID} resting={COMPARE_RESTING} load={loadCompareHeroStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/compare-hero-story-player.ts",
+      "content": "import { BARS_FLAT, BARS_GROWN, COMPARE_CAPTIONS, FEATURES_CHECKED, FEATURES_UNCHECKED, FEATURE_COUNT, paintBars, paintFeatures } from '@/components/visuals/stories/compare-hero-story-scenes';\nimport { HERO_STORY_GRID, stepAt } from '@/components/visuals/stories/hero-story-kit';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01, easeOut } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One comparison, played as a loop: the two tools are checked against each feature in turn, then the table melts\n * into pairs of bars that rise to show where each one comes out ahead.\n */\n\nconst CHECKING = { startsAt: 0.5, everySeconds: 0.45 };\nconst CHECKED_AT = CHECKING.startsAt + (FEATURE_COUNT - 1) * CHECKING.everySeconds;\nconst RISING = { startsAt: 0.3, seconds: 1.4 };\n\nexport function createCompareHeroStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: HERO_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: CHECKED_AT + 0.8 },\n\t\tbeats: [\n\t\t\tcaptionedBeat({\n\t\t\t\tpicture: FEATURES_UNCHECKED,\n\t\t\t\tdeparture: FEATURES_CHECKED,\n\t\t\t\tcaption: COMPARE_CAPTIONS.features,\n\t\t\t\tholdSeconds: CHECKED_AT + 1.8,\n\t\t\t\tisTyped: true,\n\t\t\t\tanimate: (states, heldSeconds) => void paintFeatures(states, stepAt(heldSeconds, CHECKING, FEATURE_COUNT - 1) + 1),\n\t\t\t}),\n\t\t\tcaptionedBeat({\n\t\t\t\tpicture: BARS_FLAT,\n\t\t\t\tdeparture: BARS_GROWN,\n\t\t\t\tcaption: COMPARE_CAPTIONS.pricing,\n\t\t\t\tholdSeconds: RISING.startsAt + RISING.seconds + 1.8,\n\t\t\t\tisTyped: true,\n\t\t\t\tanimate: (states, heldSeconds) => void paintBars(states, easeOut(clamp01((heldSeconds - RISING.startsAt) / RISING.seconds))),\n\t\t\t}),\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/compare-hero-story-scenes.ts",
+      "content": "import { HERO_STORY_GRID, blankScreen, cellAt, heroCaption, pictureOfStates } from '@/components/visuals/stories/hero-story-kit';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { paintShape, rings, roundedBox, solid, type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/**\n * The compare hero's pictures, in the brand dot grid: two tools checked against a list of features, and the same two\n * as pairs of bars. Context.dev is the solid one of each pair, the other tool the one in rings.\n */\n\nconst OURS: DotBox = { left: 13, right: 19, top: 4, bottom: 7 };\nconst THEIRS: DotBox = { left: 23, right: 29, top: 4, bottom: 7 };\nconst FEATURE_LEFT = 3;\nconst FEATURES = [\n\t{ row: 12, right: 9, theyHaveIt: true },\n\t{ row: 17, right: 7, theyHaveIt: false },\n\t{ row: 22, right: 10, theyHaveIt: true },\n\t{ row: 27, right: 8, theyHaveIt: false },\n\t{ row: 32, right: 9, theyHaveIt: false },\n];\nexport const FEATURE_COUNT = FEATURES.length;\nconst MARK_REACH = 1;\n\nfunction paintMark(states: Uint8Array, center: number, row: number, state: number) {\n\tfor (let down = -MARK_REACH; down <= MARK_REACH; down++) {\n\t\tfor (let across = -MARK_REACH; across <= MARK_REACH; across++) states[cellAt(center + across, row + down)] = state;\n\t}\n}\n\n/** The feature table with its first `checked` rows filled in: a block where a tool has the feature, a dash where not. */\nexport function paintFeatures(states: Uint8Array, checked: number) {\n\tstates.fill(DOT_ABSENT);\n\tpaintShape(HERO_STORY_GRID, states, roundedBox(OURS, 1), solid);\n\tpaintShape(HERO_STORY_GRID, states, roundedBox(THEIRS, 1), rings);\n\tconst oursCenter = (OURS.left + OURS.right) / 2;\n\tconst theirsCenter = (THEIRS.left + THEIRS.right) / 2;\n\tFEATURES.slice(0, checked).forEach(({ row, right, theyHaveIt }) => {\n\t\tfor (let column = FEATURE_LEFT; column <= right; column++) states[cellAt(column, row)] = DOT_HOLLOW;\n\t\tpaintMark(states, oursCenter, row, DOT_FILLED);\n\t\tif (theyHaveIt) paintMark(states, theirsCenter, row, DOT_HOLLOW);\n\t\telse for (let across = -MARK_REACH; across <= MARK_REACH; across++) states[cellAt(theirsCenter + across, row)] = DOT_HOLLOW;\n\t});\n\treturn states;\n}\n\nexport const FEATURES_UNCHECKED = pictureOfStates(paintFeatures(blankScreen(), 0));\nexport const FEATURES_CHECKED = pictureOfStates(paintFeatures(blankScreen(), FEATURE_COUNT));\n\nconst BASELINE = { row: 32, left: 4, right: 29 };\nconst BAR_WIDTH = 3;\n// Each comparison is a pair of bars; neither tool is the taller one every time.\nconst COMPARISONS = [\n\t{ left: 6, ours: 13, theirs: 19 },\n\t{ left: 14, ours: 23, theirs: 14 },\n\t{ left: 22, ours: 17, theirs: 9 },\n];\n\nfunction paintBar(states: Uint8Array, left: number, height: number, state: number) {\n\tfor (let up = 1; up <= height; up++) {\n\t\tfor (let across = 0; across < BAR_WIDTH; across++) states[cellAt(left + across, BASELINE.row - up)] = state;\n\t}\n}\n\n/** The bars `grown` of the way to their full height, from 0 to 1. */\nexport function paintBars(states: Uint8Array, grown: number) {\n\tstates.fill(DOT_ABSENT);\n\tfor (let column = BASELINE.left; column <= BASELINE.right; column++) states[cellAt(column, BASELINE.row)] = DOT_FILLED;\n\tfor (const { left, ours, theirs } of COMPARISONS) {\n\t\tpaintBar(states, left, Math.round(ours * grown), DOT_FILLED);\n\t\tpaintBar(states, left + BAR_WIDTH + 1, Math.round(theirs * grown), DOT_HOLLOW);\n\t}\n\treturn states;\n}\n\nexport const BARS_FLAT = pictureOfStates(paintBars(blankScreen(), 0));\nexport const BARS_GROWN = pictureOfStates(paintBars(blankScreen(), 1));\n\nexport const COMPARE_CAPTIONS = {\n\tfeatures: heroCaption('side by side', 'features', 'what each tool covers'),\n\tpricing: heroCaption('side by side', 'pricing', 'and where each one wins'),\n};\n\n/** The finished feature table: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const COMPARE_RESTING = { ...FEATURES_CHECKED, texts: COMPARE_CAPTIONS.features };\n"
+    }
+  ]
+}

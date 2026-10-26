@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-metadata",
+  "type": "visual",
+  "title": "Metadata story",
+  "description": "Dot animation of titles and descriptions being added to URLs.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Page metadata on a site card. Plays only on screen; shows the URLs as enriched as they get with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-metadata.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-metadata --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/metadata-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/metadata-story.tsx",
+        "sha256": "ea2c4fd5c5adb0271aeaaf917af45b6babd704073d011f57835b653b7e8b0451",
+        "retained": false,
+        "exports": [
+          "MetadataStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/metadata-story.d.ts",
+      "content": "/**\n * The \"Use available metadata\" card's picture: a tag becomes three mapped URLs, two of which gain their title and\n * description while the third waits. With reduced motion it shows the URLs as enriched as they get.\n */\nexport declare function MetadataStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/metadata-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createMetadataStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/metadata-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The \"Use available metadata\" card's pictures, in the brand dot grid: a tag, for what a mapped URL can carry, and\n * three mapped URLs, two of which gain their title and description while the newest still waits for its own.\n */\nexport declare const METADATA_STORY_GRID: DotGrid;\nexport declare const TAG_PICTURE: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const TAG_CAPTION: DotStoryText[];\n/** The pages whose title and description are available; the newest has been found but not yet enriched. */\nexport declare const ENRICHED_COUNT: number;\nexport declare const cardAt: (row: number) => number;\n/** How far along a card's metadata a dot is, from 0 to 1, or -1 if it is not part of it. */\nexport declare const alongMetadata: (column: number, row: number) => number;\nexport declare const CARDS_FOUND: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const CARDS_ENRICHED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\n/** Clears each card's block of rings `enriched[card]` of the way along, from its left. */\nexport declare function paintEnriched(states: Uint8Array, enriched: number[]): Uint8Array<ArrayBufferLike>;\nexport declare const CARD_TEXTS: {\n    url: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n        muted: true;\n    };\n    status: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n        muted: true;\n        anchor: \"end\";\n    };\n    title: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n    };\n    description: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n        muted: true;\n    };\n}[];\nexport declare const enrichedStatus: (status: DotStoryText) => DotStoryText;\n/** The URLs, as enriched as they get: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const METADATA_RESTING: {\n    texts: {\n        text: string;\n        x: number;\n        y: number;\n        size: number;\n        weight: number;\n    }[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-metadata/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-metadata.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { MetadataStory } from \"@/components/visuals/stories/metadata-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <MetadataStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/metadata-story.tsx",
+      "content": "'use client';\n\nimport { METADATA_RESTING, METADATA_STORY_GRID } from '@/components/visuals/stories/metadata-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadMetadataStory: LoadDotStory = async (stage) => {\n\tconst { createMetadataStoryPlayer } = await import('@/components/visuals/stories/metadata-story-player');\n\treturn createMetadataStoryPlayer(stage);\n};\n\n/**\n * The \"Use available metadata\" card's picture: a tag becomes three mapped URLs, two of which gain their title and\n * description while the third waits. With reduced motion it shows the URLs as enriched as they get.\n */\nexport function MetadataStory({ className }: { className?: string }) {\n\treturn <DotStory grid={METADATA_STORY_GRID} resting={METADATA_RESTING} load={loadMetadataStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/metadata-story-player.ts",
+      "content": "import { CARDS_ENRICHED, CARDS_FOUND, CARD_TEXTS, ENRICHED_COUNT, METADATA_STORY_GRID, TAG_CAPTION, TAG_PICTURE, enrichedStatus, paintEnriched } from '@/components/visuals/stories/metadata-story-scenes';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01, easeOut } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One map's metadata, played as a loop: a tag melts into three mapped URLs, each with a block of rings where its\n * metadata will go; the first two clear and gain a title and description, and the newest stays pending.\n */\n\nconst MELT_SECONDS = 1.1;\nconst DETAIL = { at: 0.5, fadeSeconds: 0.3 };\nconst ENRICHING = { startsAt: 0.9, everySeconds: 0.9, seconds: 0.4, textAfterSeconds: 0.25, textSeconds: 0.3 };\nconst ENRICHED_AT = ENRICHING.startsAt + (ENRICHED_COUNT - 1) * ENRICHING.everySeconds + ENRICHING.seconds;\n\nconst enrichesAt = (card: number) => (card < ENRICHED_COUNT ? ENRICHING.startsAt + card * ENRICHING.everySeconds : Infinity);\n\nexport function createMetadataStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst [tagLabel, tagValue, tagDetail] = TAG_CAPTION;\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: METADATA_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: ENRICHED_AT + 1 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: TAG_PICTURE,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: 2.4,\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(tagLabel);\n\t\t\t\t\tpen.text(tagValue);\n\t\t\t\t\tpen.text(tagDetail, clamp01((heldSeconds - DETAIL.at) / DETAIL.fadeSeconds));\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\tpicture: CARDS_FOUND,\n\t\t\t\tdeparture: CARDS_ENRICHED,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: ENRICHED_AT + 3.2,\n\t\t\t\tanimate: (states, heldSeconds) =>\n\t\t\t\t\tvoid paintEnriched(\n\t\t\t\t\t\tstates,\n\t\t\t\t\t\tCARD_TEXTS.map((_, card) => easeOut(clamp01((heldSeconds - enrichesAt(card)) / ENRICHING.seconds)))\n\t\t\t\t\t),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tCARD_TEXTS.forEach(({ url, status, title, description }, card) => {\n\t\t\t\t\t\tconst written = clamp01((heldSeconds - enrichesAt(card) - ENRICHING.textAfterSeconds) / ENRICHING.textSeconds);\n\t\t\t\t\t\tpen.text(url);\n\t\t\t\t\t\tpen.text(status, 1 - written);\n\t\t\t\t\t\tpen.text(enrichedStatus(status), written);\n\t\t\t\t\t\tpen.text(title, written);\n\t\t\t\t\t\tpen.text(description, written);\n\t\t\t\t\t});\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/metadata-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { polygon, solidWithSpeckle, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\nimport { storyCaption } from '@/components/visuals/dot-engine/story-caption';\n\n/**\n * The \"Use available metadata\" card's pictures, in the brand dot grid: a tag, for what a mapped URL can carry, and\n * three mapped URLs, two of which gain their title and description while the newest still waits for its own.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const METADATA_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, pitch: PITCH } = METADATA_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst TAG = { point: { column: 2, row: 19 }, shoulder: 12, right: 30, top: 8, bottom: 30, hole: { column: 10.5, row: 19, radius: 2.1 }, lines: [{ rows: [14, 15], to: 26 }, { rows: [19], to: 27 }, { rows: [22], to: 23 }, { rows: [25], to: 25 }], linesFrom: 16 };\n\n// A luggage tag lying on its side, its point and string hole to the left, a title and lines of description on it.\nconst tag = polygon(\n\t[\n\t\tTAG.point,\n\t\t{ column: TAG.shoulder, row: TAG.top },\n\t\t{ column: TAG.right, row: TAG.top },\n\t\t{ column: TAG.right, row: TAG.bottom },\n\t\t{ column: TAG.shoulder, row: TAG.bottom },\n\t],\n\t(column, row) => {\n\t\tconst fromHole = Math.hypot(column - TAG.hole.column, row - TAG.hole.row);\n\t\tif (fromHole <= TAG.hole.radius) return DOT_ABSENT;\n\t\tif (fromHole <= TAG.hole.radius + 1) return DOT_FILLED;\n\t\tconst line = TAG.lines.find(({ rows }) => rows.includes(row));\n\t\tif (line && between(column, TAG.linesFrom, line.to)) return line.rows.length > 1 ? DOT_ABSENT : DOT_HOLLOW;\n\t\treturn line?.rows.length === 1 ? DOT_FILLED : solidWithSpeckle(column, row);\n\t}\n);\n\nexport const TAG_PICTURE = pictureOf(METADATA_STORY_GRID, tag);\nexport const TAG_CAPTION = storyCaption(METADATA_STORY_GRID, 34, 'each URL can carry', 'a title', 'and a description');\n\nconst CARD = { left: 3, right: 54, rows: 10, tops: [2, 14, 26], tab: 5, body: { left: 12, right: 51, top: 5, bottom: 7 } };\nconst PAGES = [\n\t{ url: 'stripe.com/pricing', title: 'Pricing & fees', description: 'Pay-as-you-go pricing for payments' },\n\t{ url: 'stripe.com/docs/api', title: 'API reference', description: 'Complete reference for the Stripe API' },\n\t{ url: 'stripe.com/sessions/2026', title: '', description: '' },\n];\n/** The pages whose title and description are available; the newest has been found but not yet enriched. */\nexport const ENRICHED_COUNT = PAGES.filter(({ title }) => title.length > 0).length;\nexport const cardAt = (row: number) => CARD.tops.findIndex((top) => between(row, top, top + CARD.rows - 1));\n/** How far along a card's metadata a dot is, from 0 to 1, or -1 if it is not part of it. */\nexport const alongMetadata = (column: number, row: number) => {\n\tconst card = cardAt(row);\n\tif (card < 0 || !between(row - CARD.tops[card], CARD.body.top, CARD.body.bottom) || !between(column, CARD.body.left, CARD.body.right)) return -1;\n\treturn (column - CARD.body.left) / (CARD.body.right - CARD.body.left);\n};\n\n// Each mapped URL is a card with a solid tab. Its URL is written along the top; below it, a block of rings stands\n// in for the title and description until they arrive, and clears to make room for them when they do.\nconst cards = (isEnriched: (card: number) => boolean): DotPainter => (column, row) => {\n\tconst card = cardAt(row);\n\tif (card < 0 || !between(column, CARD.left, CARD.right)) return DOT_ABSENT;\n\tconst down = row - CARD.tops[card];\n\tif (column <= CARD.left + CARD.tab) return between(down, 4, 5) && between(column, CARD.left + 2, CARD.left + 3) ? DOT_HOLLOW : DOT_FILLED;\n\tif (column === CARD.right || down === 0 || down === CARD.rows - 1) return DOT_FILLED;\n\tif (alongMetadata(column, row) < 0) return DOT_ABSENT;\n\treturn isEnriched(card) ? DOT_ABSENT : DOT_HOLLOW;\n};\n\nexport const CARDS_FOUND = pictureOf(METADATA_STORY_GRID, cards(() => false));\nexport const CARDS_ENRICHED = pictureOf(METADATA_STORY_GRID, cards((card) => card < ENRICHED_COUNT));\n\n/** Clears each card's block of rings `enriched[card]` of the way along, from its left. */\nexport function paintEnriched(states: Uint8Array, enriched: number[]) {\n\tfor (let cell = 0; cell < states.length; cell++) {\n\t\tconst row = Math.floor(cell / COLUMNS);\n\t\tconst along = alongMetadata(cell % COLUMNS, row);\n\t\tif (along >= 0 && along <= (enriched[cardAt(row)] ?? 0)) states[cell] = CARDS_ENRICHED.states[cell];\n\t}\n\treturn states;\n}\n\nconst TEXT_LEFT = x(CARD.body.left);\nexport const CARD_TEXTS = PAGES.map(({ url, title, description }, index) => ({\n\turl: { text: url, x: TEXT_LEFT, y: baselineOn(CARD.tops[index] + 2.5, 13), size: 13, weight: 700, muted: true } satisfies DotStoryText,\n\tstatus: { text: 'pending', x: x(CARD.right - 1.5), y: baselineOn(CARD.tops[index] + 2.5, 12), size: 12, weight: 700, muted: true, anchor: 'end' } satisfies DotStoryText,\n\ttitle: { text: title, x: TEXT_LEFT, y: baselineOn(CARD.tops[index] + 5, 16), size: 16, weight: 800 } satisfies DotStoryText,\n\tdescription: { text: description, x: TEXT_LEFT, y: baselineOn(CARD.tops[index] + 7.3, 12), size: 12, weight: 700, muted: true } satisfies DotStoryText,\n}));\nexport const enrichedStatus = (status: DotStoryText): DotStoryText => ({ ...status, text: 'enriched', muted: false });\n\n/** The URLs, as enriched as they get: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const METADATA_RESTING = {\n\t...CARDS_ENRICHED,\n\ttexts: CARD_TEXTS.flatMap(({ url, status, title, description }, index) => (index < ENRICHED_COUNT ? [url, enrichedStatus(status), title, description] : [url, status])),\n};\n"
+    }
+  ]
+}

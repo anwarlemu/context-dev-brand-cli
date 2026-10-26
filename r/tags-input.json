@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "tags-input",
+  "type": "ui",
+  "title": "Tags input",
+  "description": "Input that converts typed or pasted values into tags and marks invalid entries.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Lists of short values in a form (domains, emails, URLs, tags).",
+  "avoid": [
+    "Long free text",
+    "A single value"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/tags-input.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add tags-input --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/form.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/tags-input.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function TagsInput({ id, tags, onTagsChange, placeholder, isTagInvalid, bare, className, ...inputProps }: {\n    id?: string;\n    tags: string[];\n    onTagsChange: (tags: string[]) => void;\n    placeholder?: string;\n    isTagInvalid?: (tag: string) => boolean;\n    /** Drops the field's own border, for a TagsInput set inside a container that draws one. */\n    bare?: boolean;\n    className?: string;\n} & Pick<React.ComponentProps<\"input\">, \"aria-describedby\" | \"aria-invalid\" | \"required\" | \"disabled\">): React.JSX.Element;\nexport { TagsInput };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/tags-input/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/tags-input.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { Field } from \"@/components/ui/field\";\nimport { TagsInput } from \"@/components/ui/tags-input\";\n\nexport function Product() {\n  const [domains, setDomains] = useState([\"acme.com\", \"globex.io\", \"not a domain\"]);\n  return (\n    <div className=\"w-full max-w-md\">\n      <Field label=\"Domains\" htmlFor=\"domains\" help=\"Press Enter or type a comma after each one.\">\n        <TagsInput id=\"domains\" tags={domains} onTagsChange={setDomains} placeholder=\"acme.com\" isTagInvalid={(tag) => !/^[\\w-]+(\\.[\\w-]+)+$/.test(tag)} />\n      </Field>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "field"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/tags-input.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { X } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's tags field: each tag a small blue chip (red when invalid) with its own remove button, typed with Enter\n// or a comma, removed with Backspace, and a pasted list split into tags. Borders like an input.\nfunction TagsInput({\n  id,\n  tags,\n  onTagsChange,\n  placeholder,\n  isTagInvalid,\n  bare = false,\n  className,\n  ...inputProps\n}: {\n  id?: string;\n  tags: string[];\n  onTagsChange: (tags: string[]) => void;\n  placeholder?: string;\n  isTagInvalid?: (tag: string) => boolean;\n  /** Drops the field's own border, for a TagsInput set inside a container that draws one. */\n  bare?: boolean;\n  className?: string;\n} & Pick<React.ComponentProps<\"input\">, \"aria-describedby\" | \"aria-invalid\" | \"required\" | \"disabled\">) {\n  const [draft, setDraft] = React.useState(\"\");\n\n  function commit(value: string) {\n    const tag = value.trim().replace(/,$/, \"\");\n    if (tag && !tags.includes(tag)) onTagsChange([...tags, tag]);\n    setDraft(\"\");\n  }\n\n  return (\n    <div\n      data-slot=\"tags-input\"\n      className={cn(\n        \"flex min-h-10 w-full flex-wrap items-center gap-1.5 px-2 py-1.5\",\n        !bare && \"rounded-control border border-line bg-surface transition-[border-color,box-shadow] duration-150 ease-out focus-within:border-brand hover:border-line-strong motion-reduce:transition-none\",\n        className,\n      )}\n    >\n      {tags.map((tag) => (\n        <span\n          key={tag}\n          className={cn(\"flex h-6 items-center gap-1 rounded-[calc(var(--ds-radius-control)-0.125rem)] pr-1 pl-2.5 text-caption\", isTagInvalid?.(tag) ? \"bg-danger/8 text-danger\" : \"bg-blue-10 text-fg-brand\")}\n        >\n          {tag}\n          <button\n            type=\"button\"\n            aria-label={`Remove ${tag}`}\n            onClick={() => onTagsChange(tags.filter((existing) => existing !== tag))}\n            className=\"grid size-4 place-items-center rounded-icon outline-none transition-colors duration-150 ease-out hover:bg-brand hover:text-on-brand focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-solid focus-visible:outline-focus-ring\"\n          >\n            <X className=\"size-3\" strokeWidth={1.75} />\n          </button>\n        </span>\n      ))}\n      <input\n        {...inputProps}\n        id={id}\n        aria-invalid={inputProps[\"aria-invalid\"] ?? (isTagInvalid && tags.some(isTagInvalid) ? true : undefined)}\n        value={draft}\n        onChange={(event) => {\n          if (!(event.nativeEvent as InputEvent).isComposing && event.target.value.endsWith(\",\")) commit(event.target.value);\n          else setDraft(event.target.value);\n        }}\n        onKeyDown={(event) => {\n          if (event.nativeEvent.isComposing || event.keyCode === 229) return;\n          if (event.key === \"Enter\") {\n            event.preventDefault();\n            commit(draft);\n          }\n          if (event.key === \"Backspace\" && !draft && tags.length > 0) onTagsChange(tags.slice(0, -1));\n        }}\n        onPaste={(event) => {\n          const pasted = event.clipboardData\n            .getData(\"text\")\n            .split(/[,\\s]+/)\n            .map((part) => part.trim())\n            .filter(Boolean);\n          if (pasted.length < 2) return;\n          event.preventDefault();\n          onTagsChange(Array.from(new Set([...tags, ...pasted])));\n          setDraft(\"\");\n        }}\n        onBlur={() => draft && commit(draft)}\n        placeholder={tags.length === 0 ? placeholder : \"\"}\n        className=\"h-7 min-w-24 flex-1 bg-transparent px-1.5 text-body-sm text-fg outline-none placeholder:text-fg-subtle\"\n      />\n    </div>\n  );\n}\n\nexport { TagsInput };\n"
+    }
+  ]
+}

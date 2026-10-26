@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "upgrade-glyph",
+  "type": "visual",
+  "title": "Upgrade glyph",
+  "description": "Dot animation that transitions between a gift and a rocket. Uses a static gift with reduced motion.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "The upgrade or plan card.",
+  "avoid": [
+    "Using it for anything but upgrades"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/upgrade-glyph.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add upgrade-glyph --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/dots/upgrade-glyph.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/upgrade-glyph.tsx",
+        "sha256": "79dca2a8d7f8e16ff9109802bae3133db32d43e0e27672404963a55ef2cdd56b",
+        "retained": false,
+        "exports": [
+          "UpgradeGlyph"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/glyph/upgrade-glyph.d.ts",
+      "content": "/** The upgrade card's picture: a gift that takes off as a rocket, on a loop while on screen. Reduced motion keeps the gift. */\nexport declare function UpgradeGlyph({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/upgrade-glyph/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/upgrade-glyph.tsx",
+      "content": "import { Card, CardDescription, CardTitle } from \"@/components/ui/card\";\nimport { UpgradeGlyph } from \"@/components/visuals/glyph/upgrade-glyph\";\n\nexport function Product() {\n  return (\n    <Card className=\"mx-auto w-full max-w-xs items-start\">\n      <UpgradeGlyph className=\"w-24 text-brand\" />\n      <CardTitle>Upgrade plan</CardTitle>\n      <CardDescription>More credits and higher rate limits.</CardDescription>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "glyph-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/upgrade-glyph.tsx",
+      "content": "\"use client\";\n\nimport { DotStory, type LoadDotStory } from \"@/components/visuals/dot-engine/dot-story\";\nimport { cellStates } from \"@/components/visuals/dot-engine/dot-story-cells\";\nimport { GLYPH_GRID } from \"@/components/visuals/glyph/glyph-art\";\nimport { GIFT_CELLS } from \"@/components/visuals/glyph/upgrade-story-art\";\nimport { FINE_GRID, fineCellsOf } from \"@/components/visuals/glyph/upgrade-story-fine\";\n\nconst RESTING = { cells: fineCellsOf(cellStates(GLYPH_GRID, GIFT_CELLS)) };\n\nconst load: LoadDotStory = async (stage) => {\n  const { createUpgradeStoryPlayer } = await import(\"@/components/visuals/glyph/upgrade-story-player\");\n  return createUpgradeStoryPlayer(stage);\n};\n\n/** The upgrade card's picture: a gift that takes off as a rocket, on a loop while on screen. Reduced motion keeps the gift. */\nexport function UpgradeGlyph({ className }: { className?: string }) {\n  return <DotStory grid={FINE_GRID} resting={RESTING} load={load} className={className} />;\n}\n"
+    }
+  ]
+}

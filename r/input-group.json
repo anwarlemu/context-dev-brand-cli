@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "input-group",
+  "type": "ui",
+  "title": "Input Group",
+  "description": "The field with addons inside it: icons, text, small buttons or a gray segment, sharing one border and focus.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Put context inside a field: a search icon, a protocol or unit (https://, ms), a copy or show button, or a domain suffix as a segment. Use InputGroupInput or InputGroupTextarea as the control; addons go at inline-start, inline-end, block-start or block-end. A click on an addon focuses the field.",
+  "avoid": [
+    "Two controls in one group",
+    "An addon that hides what the field contains",
+    "A blue border before the field has focus"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/input-group.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add input-group",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/form.tsx (INPUT_CLASS); extended with addons",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/input-group.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\nimport { Button } from \"@/components/ui/button\";\ndeclare function InputGroup({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare const inputGroupAddonVariants: (props?: ({\n    align?: \"inline-end\" | \"inline-start\" | \"block-end\" | \"block-start\" | null | undefined;\n    variant?: \"plain\" | \"segment\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function InputGroupAddon({ className, align, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof inputGroupAddonVariants>): React.JSX.Element;\ndeclare const inputGroupButtonVariants: (props?: ({\n    size?: \"sm\" | \"xs\" | \"icon-xs\" | \"icon-sm\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function InputGroupButton({ className, type, variant, size, ...props }: Omit<React.ComponentProps<typeof Button>, \"size\"> & VariantProps<typeof inputGroupButtonVariants>): React.JSX.Element;\ndeclare function InputGroupText({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function InputGroupInput({ className, ...props }: React.ComponentProps<\"input\">): React.JSX.Element;\ndeclare function InputGroupTextarea({ className, ...props }: React.ComponentProps<\"textarea\">): React.JSX.Element;\nexport { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/input-group/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/input-group/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/input-group.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Check, Copy, Eye, EyeOff, Search } from \"lucide-react\";\n\nimport { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea } from \"@/components/ui/input-group\";\nimport { Label } from \"@/components/ui/label\";\n\n// On the home page: try the API on any website.\nexport function Site() {\n  return (\n    <div className=\"grid w-full max-w-md gap-2\">\n      <Label htmlFor=\"try-url\">Website</Label>\n      <InputGroup>\n        <InputGroupAddon>\n          <InputGroupText>https://</InputGroupText>\n        </InputGroupAddon>\n        <InputGroupInput id=\"try-url\" placeholder=\"stripe.com\" />\n      </InputGroup>\n    </div>\n  );\n}\n\n// In the product: search, a secret with show and copy, a domain suffix, a unit, a textarea with a footer, and states.\nexport function Product() {\n  const [shown, setShown] = useState(false);\n  const [copied, setCopied] = useState(false);\n  const key = \"ctx_live_8f2a91c4e07b\";\n  return (\n    <div className=\"grid w-full max-w-md gap-4\">\n      <InputGroup>\n        <InputGroupAddon>\n          <Search strokeWidth={1.5} />\n        </InputGroupAddon>\n        <InputGroupInput placeholder=\"Search requests\" aria-label=\"Search requests\" />\n      </InputGroup>\n      <div className=\"grid gap-2\">\n        <Label htmlFor=\"api-key\">API key</Label>\n        <InputGroup>\n          <InputGroupInput id=\"api-key\" readOnly type={shown ? \"text\" : \"password\"} value={key} className=\"font-mono\" />\n          <InputGroupAddon align=\"inline-end\">\n            <InputGroupButton size=\"icon-xs\" aria-label={shown ? \"Hide key\" : \"Show key\"} onClick={() => setShown((s) => !s)}>\n              {shown ? <EyeOff strokeWidth={1.5} /> : <Eye strokeWidth={1.5} />}\n            </InputGroupButton>\n            <InputGroupButton size=\"icon-xs\" aria-label={copied ? \"Copied\" : \"Copy key\"} onClick={() => navigator.clipboard.writeText(key).then(() => setCopied(true), () => undefined)}>\n              {copied ? <Check strokeWidth={1.75} /> : <Copy strokeWidth={1.5} />}\n            </InputGroupButton>\n          </InputGroupAddon>\n        </InputGroup>\n      </div>\n      <div className=\"grid gap-2\">\n        <Label htmlFor=\"sender\">Sending domain</Label>\n        <InputGroup>\n          <InputGroupInput id=\"sender\" defaultValue=\"alerts\" />\n          <InputGroupAddon align=\"inline-end\" variant=\"segment\">@acme.com</InputGroupAddon>\n        </InputGroup>\n      </div>\n      <InputGroup className=\"w-40\">\n        <InputGroupInput defaultValue=\"250\" aria-label=\"Timeout\" inputMode=\"numeric\" />\n        <InputGroupAddon align=\"inline-end\">ms</InputGroupAddon>\n      </InputGroup>\n      <InputGroup>\n        <InputGroupTextarea placeholder=\"Describe what to extract\" aria-label=\"Extraction prompt\" />\n        <InputGroupAddon align=\"block-end\" className=\"justify-between\">\n          <InputGroupText>Uses 1 credit per page</InputGroupText>\n          <InputGroupButton variant=\"brand\" size=\"xs\">Run</InputGroupButton>\n        </InputGroupAddon>\n      </InputGroup>\n      <InputGroup>\n        <InputGroupInput aria-invalid defaultValue=\"not a url\" aria-label=\"Callback URL\" />\n      </InputGroup>\n      <InputGroup>\n        <InputGroupInput disabled defaultValue=\"org_3f9a2c\" aria-label=\"Organization\" />\n      </InputGroup>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "label"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "button",
+    "utils"
+  ],
+  "packages": [
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/input-group.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's field with things inside it (INPUT_CLASS): the same 40px, control corners and light border that darkens\n// on hover and turns brand blue when the control inside has focus, around a borderless control. Addons sit at either end:\n// a subtle glyph or text (a search icon, \"https://\", a unit), a small ghost button (copy, clear, show), or a `segment`,\n// a gray cell with a divider (a domain suffix). Invalid, read-only and disabled states belong to the whole group. Addons\n// can also sit above or below a textarea (block-start, block-end).\nfunction InputGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div\n      data-slot=\"input-group\"\n      role=\"group\"\n      className={cn(\n        \"group/input-group relative flex h-10 w-full min-w-0 items-center overflow-hidden rounded-control border border-line bg-surface transition-[border-color] duration-150 ease-out hover:border-line-strong motion-reduce:transition-none\",\n        \"has-[[data-slot=input-group-control]:focus-visible]:border-brand\",\n        \"has-[[data-slot][aria-invalid=true]]:border-danger\",\n        \"has-[[data-slot=input-group-control]:read-only]:bg-subtle has-[[data-slot=input-group-control]:disabled]:pointer-events-none has-[[data-slot=input-group-control]:disabled]:opacity-50\",\n        \"has-[>[data-align=block-end]]:h-auto has-[>[data-align=block-end]]:flex-col has-[>[data-align=block-start]]:h-auto has-[>[data-align=block-start]]:flex-col has-[>textarea]:h-auto\",\n        \"has-[>[data-align=inline-start]]:[&>input]:pl-2 has-[>[data-align=inline-end]]:[&>input]:pr-2 has-[>[data-align=block-start]]:[&>textarea]:pt-1 has-[>[data-align=block-end]]:[&>textarea]:pb-1\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nconst inputGroupAddonVariants = cva(\n  \"flex h-auto shrink-0 cursor-text items-center justify-center gap-2 text-body-sm text-fg-subtle select-none group-has-[[data-slot=input-group-control]:disabled]/input-group:cursor-not-allowed [&>kbd]:rounded-sm [&>svg:not([class*='size-'])]:size-4\",\n  {\n    variants: {\n      align: {\n        \"inline-start\": \"order-first pl-3.5 has-[>button]:pl-1\",\n        \"inline-end\": \"order-last pr-3 has-[>button]:pr-1\",\n        \"block-start\": \"order-first w-full justify-start px-3.5 pt-2.5\",\n        \"block-end\": \"order-last w-full justify-start px-3.5 pb-2.5\",\n      },\n      variant: {\n        plain: \"\",\n        segment: \"self-stretch border-line bg-subtle px-3.5 text-fg-muted\",\n      },\n    },\n    compoundVariants: [\n      { variant: \"segment\", align: \"inline-end\", className: \"border-l pr-3.5\" },\n      { variant: \"segment\", align: \"inline-start\", className: \"border-r pl-3.5\" },\n    ],\n    defaultVariants: { align: \"inline-start\", variant: \"plain\" },\n  },\n);\n\nfunction InputGroupAddon({ className, align = \"inline-start\", variant = \"plain\", ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof inputGroupAddonVariants>) {\n  return (\n    <div\n      role=\"group\"\n      data-slot=\"input-group-addon\"\n      data-align={align}\n      data-variant={variant}\n      className={cn(inputGroupAddonVariants({ align, variant }), className)}\n      onClick={(e) => {\n        // A click on the addon (not on a button in it) focuses the control, as a click inside a field would.\n        if ((e.target as HTMLElement).closest(\"button\")) return;\n        e.currentTarget.parentElement?.querySelector<HTMLElement>(\"input, textarea\")?.focus();\n      }}\n      {...props}\n    />\n  );\n}\n\nconst inputGroupButtonVariants = cva(\"\", {\n  variants: {\n    size: {\n      xs: \"h-6 gap-1 rounded-sm px-2 text-caption [&>svg:not([class*='size-'])]:size-3.5\",\n      sm: \"h-8 gap-1.5 px-2.5 text-body-sm\",\n      \"icon-xs\": \"size-6 rounded-sm p-0 [&>svg:not([class*='size-'])]:size-3.5\",\n      \"icon-sm\": \"size-8 p-0 [&>svg:not([class*='size-'])]:size-4\",\n    },\n  },\n  defaultVariants: { size: \"xs\" },\n});\n\nfunction InputGroupButton({ className, type = \"button\", variant = \"ghost\", size = \"xs\", ...props }: Omit<React.ComponentProps<typeof Button>, \"size\"> & VariantProps<typeof inputGroupButtonVariants>) {\n  return <Button type={type} data-size={size} variant={variant} className={cn(inputGroupButtonVariants({ size }), className)} {...props} />;\n}\n\nfunction InputGroupText({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span className={cn(\"flex items-center gap-2 text-body-sm text-fg-subtle [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4\", className)} {...props} />;\n}\n\nfunction InputGroupInput({ className, ...props }: React.ComponentProps<\"input\">) {\n  return (\n    <input\n      data-slot=\"input-group-control\"\n      className={cn(\"h-full min-w-0 flex-1 bg-transparent px-3.5 text-body-sm text-fg outline-none placeholder:text-fg-subtle read-only:text-fg-muted disabled:cursor-not-allowed\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction InputGroupTextarea({ className, ...props }: React.ComponentProps<\"textarea\">) {\n  return (\n    <textarea\n      data-slot=\"input-group-control\"\n      className={cn(\"field-sizing-content flex min-h-16 w-full min-w-0 flex-1 resize-none bg-transparent px-3.5 py-2.5 text-body-sm text-fg outline-none placeholder:text-fg-subtle read-only:text-fg-muted disabled:cursor-not-allowed\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput, InputGroupText, InputGroupTextarea };\n"
+    }
+  ]
+}

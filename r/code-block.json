@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "code-block",
+  "type": "ui",
+  "title": "Code Block",
+  "description": "Code to read and copy: the dashboard's light card with numbered, wrapped lines, or the site's dark code window.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Use for a request, a response or a snippet someone will read or copy. In the product use the default look (a JSON response, a webhook payload, an SDK call); on the site use variant terminal. Give it a CodeBlockHeader with CodeBlockTitle (the file or language) and a CodeBlockCopyButton, then CodeBlockContent with the code and its language. For an interactive JSON response with folding and search use JsonViewer; for a sample in several languages on the site use CodeTabs.",
+  "avoid": [
+    "A dark block in the product",
+    "Syntax colors outside the code tokens",
+    "Sideways scrolling in the product"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/code-block.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add code-block",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/playground/json-viewer.tsx; src/components/playground/code-card.tsx; website src/components/sections/shared/code-frame.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/playground/json-viewer.tsx",
+        "sha256": "229fccdf8e8a9f5ece15ffe0b0e3ef077eeb06882d11489db11782825ad0cf40",
+        "retained": false,
+        "exports": [
+          "JsonViewer"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/playground/code-card.tsx",
+        "sha256": "a511a282fdb664b654c7cd0eba3c84cd63beb0ad8e4b795f9cd4dc031485ce86",
+        "retained": false,
+        "exports": [
+          "CodeCard"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/code-frame.tsx",
+        "sha256": "204ee7a516440edbe0a28d4037c2804445d73f1d126ad7bd408f0eb3c526c926",
+        "retained": false,
+        "exports": [
+          "TERMINAL_BACKGROUND",
+          "TERMINAL_LABEL_CLASS",
+          "TerminalWindow",
+          "CodeFrame"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/code-block.d.ts",
+      "content": "import * as React from \"react\";\ntype Variant = \"default\" | \"terminal\";\ndeclare function CodeBlock({ variant, className, children, ...props }: React.ComponentProps<\"figure\"> & {\n    variant?: Variant;\n}): React.JSX.Element;\ndeclare function CodeBlockHeader({ className, children, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** The file name or language: muted caption in the product, a white chip in the site's window. */\ndeclare function CodeBlockTitle({ className, ...props }: React.ComponentProps<\"figcaption\">): React.JSX.Element;\ndeclare function CodeBlockActions({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** Copies the code; the glyph turns to a check for a moment, and a live region says so. */\ndeclare function CodeBlockCopyButton({ value, label, className, ...props }: Omit<React.ComponentProps<\"button\">, \"value\" | \"children\"> & {\n    value: string;\n    label?: string;\n}): React.JSX.Element;\n/**\n * The code. Pass the text as `code` and its `language` (json, ts, tsx, js, python, bash, curl). Line numbers show in\n * the product's look by default; lines wrap there and scroll in the site's window, unless `wrap` says otherwise.\n * `maxHeight` lets a long file scroll inside the block.\n */\ndeclare function CodeBlockContent({ code, language, lineNumbers, wrap, className, ...props }: Omit<React.ComponentProps<\"pre\">, \"children\"> & {\n    code: string;\n    language?: string;\n    lineNumbers?: boolean;\n    wrap?: boolean;\n}): React.JSX.Element;\nexport { CodeBlock, CodeBlockActions, CodeBlockContent, CodeBlockCopyButton, CodeBlockHeader, CodeBlockTitle };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/code-block/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/code-block/Product"
+    },
+    {
+      "name": "Shell",
+      "url": "https://context-ds.vercel.app/preview/code-block/Shell"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/code-block.tsx",
+      "content": "import { Braces } from \"lucide-react\";\n\nimport { CodeBlock, CodeBlockActions, CodeBlockContent, CodeBlockCopyButton, CodeBlockHeader, CodeBlockTitle } from \"@/components/ui/code-block\";\n\nconst SCRAPE = `import { Context } from \"@context-dev/sdk\";\n\nconst context = new Context({ apiKey: process.env.CONTEXT_API_KEY });\n// Any page as clean markdown, ready for a model.\nconst page = await context.scrape({ url: \"https://example.com/pricing\", format: \"markdown\" });\nconsole.log(page.markdown);`;\n\nconst RESPONSE = `{\n  \"url\": \"https://example.com/pricing\",\n  \"status\": 200,\n  \"title\": \"Pricing\",\n  \"markdown\": \"# Pricing\\\\n\\\\nStart free, then pay for what you use. Every plan includes every API, and you can change plans at any time without a call.\",\n  \"credits\": 1,\n  \"cached\": false,\n  \"links\": null\n}`;\n\nconst CURL = `curl https://api.context.dev/v1/scrape \\\\\n  -H \"Authorization: Bearer $CONTEXT_API_KEY\" \\\\\n  -d '{\"url\": \"https://example.com\", \"format\": \"markdown\"}'`;\n\nexport function Site() {\n  return (\n    <CodeBlock variant=\"terminal\" className=\"w-full max-w-2xl\">\n      <CodeBlockHeader>\n        <CodeBlockTitle>scrape.ts</CodeBlockTitle>\n        <CodeBlockActions>\n          <CodeBlockCopyButton value={SCRAPE} />\n        </CodeBlockActions>\n      </CodeBlockHeader>\n      <CodeBlockContent code={SCRAPE} language=\"ts\" />\n    </CodeBlock>\n  );\n}\n\nexport function Product() {\n  return (\n    <CodeBlock className=\"w-full max-w-2xl\">\n      <CodeBlockHeader>\n        <CodeBlockTitle>\n          <Braces strokeWidth={1.5} /> response.json\n        </CodeBlockTitle>\n        <CodeBlockActions>\n          <CodeBlockCopyButton value={RESPONSE} label=\"Copy JSON\" />\n        </CodeBlockActions>\n      </CodeBlockHeader>\n      <CodeBlockContent code={RESPONSE} language=\"json\" />\n    </CodeBlock>\n  );\n}\n\nexport function Shell() {\n  return (\n    <CodeBlock className=\"w-full max-w-2xl\">\n      <CodeBlockHeader>\n        <CodeBlockTitle>cURL</CodeBlockTitle>\n        <CodeBlockActions>\n          <CodeBlockCopyButton value={CURL} />\n        </CodeBlockActions>\n      </CodeBlockHeader>\n      <CodeBlockContent code={CURL} language=\"curl\" lineNumbers={false} />\n    </CodeBlock>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react",
+    "@context-dev/sdk"
+  ],
+  "requires": [
+    "theme",
+    "copy-button",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/code-block.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Copy } from \"lucide-react\";\n\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { cn } from \"@/lib/utils\";\n\n// Code to read and copy, in the brand's two code looks. `default` is the dashboard's (json-viewer.tsx, code-card.tsx):\n// a white card with its hairline in the shadow, a 44px head over a light rule with the file or language in muted\n// caption and the copy button in its corner, then mono caption on the code card's line, numbered in the subtle gray,\n// keys and keywords navy, strings brand blue, numbers a lighter blue; lines wrap rather than scroll sideways.\n// `terminal` is the site's code window (code-window.tsx): the soft blue ring, a near-black window with three window\n// dots and a label chip in its 44px chrome bar, and the code in the site's GitHub-dark colors, scrolling sideways.\n\ntype Variant = \"default\" | \"terminal\";\nconst VariantContext = React.createContext<Variant>(\"default\");\n\nfunction CodeBlock({ variant = \"default\", className, children, ...props }: React.ComponentProps<\"figure\"> & { variant?: Variant }) {\n  return (\n    <VariantContext.Provider value={variant}>\n      <figure\n        data-slot=\"code-block\"\n        data-variant={variant}\n        className={cn(\"group/code-block m-0 flex w-full min-w-0 flex-col\", variant === \"terminal\" ? \"rounded-card bg-ring-tint p-2\" : \"rounded-card bg-surface text-fg shadow-card\", className)}\n        {...props}\n      >\n        {variant === \"terminal\" ? <div className=\"flex min-w-0 flex-col overflow-hidden rounded-card bg-code text-white\">{children}</div> : children}\n      </figure>\n    </VariantContext.Provider>\n  );\n}\n\nfunction CodeBlockHeader({ className, children, ...props }: React.ComponentProps<\"div\">) {\n  const variant = React.useContext(VariantContext);\n  if (variant === \"terminal\")\n    return (\n      <div data-slot=\"code-block-header\" className={cn(\"flex min-h-11 min-w-0 shrink-0 items-center gap-2 border-b border-white/10 px-4 py-2\", className)} {...props}>\n        <span aria-hidden=\"true\" className=\"size-3 shrink-0 rounded-pill bg-window-close\" />\n        <span aria-hidden=\"true\" className=\"size-3 shrink-0 rounded-pill bg-window-minimize\" />\n        <span aria-hidden=\"true\" className=\"size-3 shrink-0 rounded-pill bg-window-zoom\" />\n        {children}\n      </div>\n    );\n  return (\n    <div data-slot=\"code-block-header\" className={cn(\"flex h-11 min-w-0 shrink-0 items-center gap-2 border-b border-line-subtle pr-2 pl-4\", className)} {...props}>\n      {children}\n    </div>\n  );\n}\n\n/** The file name or language: muted caption in the product, a white chip in the site's window. */\nfunction CodeBlockTitle({ className, ...props }: React.ComponentProps<\"figcaption\">) {\n  const variant = React.useContext(VariantContext);\n  return (\n    <figcaption\n      data-slot=\"code-block-title\"\n      className={cn(\n        \"flex min-w-0 items-center gap-1.5 truncate [&_svg]:size-3.5 [&_svg]:shrink-0\",\n        variant === \"terminal\" ? \"ml-2 rounded-card bg-white/10 px-2.5 py-1 font-mono text-caption font-medium text-white\" : \"text-caption text-fg-muted\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction CodeBlockActions({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"code-block-actions\" className={cn(\"ml-auto flex shrink-0 items-center gap-1\", className)} {...props} />;\n}\n\n/** Copies the code; the glyph turns to a check for a moment, and a live region says so. */\nfunction CodeBlockCopyButton({ value, label = \"Copy code\", className, ...props }: Omit<React.ComponentProps<\"button\">, \"value\" | \"children\"> & { value: string; label?: string }) {\n  const variant = React.useContext(VariantContext);\n  const { hasCopied, copy } = useCopy();\n  return (\n    <>\n      <button\n        type=\"button\"\n        data-slot=\"code-block-copy-button\"\n        data-copied={hasCopied || undefined}\n        aria-label={hasCopied ? \"Copied\" : label}\n        onClick={() => copy(value)}\n        className={cn(\n          \"inline-flex shrink-0 items-center justify-center outline-none transition-[background-color,color,scale] duration-150 ease-out active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:size-3.5\",\n          variant === \"terminal\"\n            ? \"size-7 rounded-card text-white/45 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60\"\n            : \"size-8 rounded-control text-fg-subtle hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\",\n          hasCopied && variant === \"default\" && \"text-success hover:text-success\",\n          className,\n        )}\n        {...props}\n      >\n        {hasCopied ? <Check aria-hidden strokeWidth={1.75} /> : <Copy aria-hidden strokeWidth={1.5} />}\n      </button>\n      <span aria-live=\"polite\" className=\"sr-only\">\n        {hasCopied ? \"Copied\" : \"\"}\n      </span>\n    </>\n  );\n}\n\ntype Kind = \"text\" | \"comment\" | \"punctuation\" | \"keyword\" | \"string\" | \"function\" | \"number\" | \"property\";\n\n// The dashboard's light highlighting (json-viewer, code-card) and the site's dark theme (code-window), by kind.\nconst COLORS: Record<Variant, Record<Kind, string | undefined>> = {\n  default: { text: undefined, comment: \"text-fg-subtle\", punctuation: \"text-fg-muted\", keyword: \"text-navy-60\", string: \"text-fg-brand\", function: undefined, number: \"text-blue-70\", property: \"text-navy-60\" },\n  terminal: { text: undefined, comment: \"text-code-comment\", punctuation: \"text-code-punctuation\", keyword: \"text-code-keyword\", string: \"text-code-string\", function: \"text-code-function\", number: \"text-code-number\", property: \"text-code-property\" },\n};\n\nconst KEYWORDS = /^(?:import|from|export|default|function|return|const|let|var|if|else|for|of|in|new|type|interface|extends|as|async|await|class|this|throw|try|catch|def|curl|package|use|require)$/;\nconst LITERALS = /^(?:true|false|null|undefined|None|True|False|nil)$/;\n\n/** Splits code into colored runs. JSON keys are properties; in scripts strings, keywords, calls and numbers; in shell the command and its flags. */\nfunction tokenize(code: string, language: string): { kind: Kind; text: string }[] {\n  const out: { kind: Kind; text: string }[] = [];\n  const push = (kind: Kind, text: string) => (text ? out.push({ kind, text }) : undefined);\n  if (language === \"json\") {\n    for (const m of code.matchAll(/(\"(?:\\\\.|[^\"\\\\])*\")(\\s*:)?|(-?\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?)|(true|false|null)|([{}[\\],:])|(\\s+|[^\"{}[\\],:\\d\\s-]+|[\\s\\S])/g)) {\n      if (m[1]) {\n        push(m[2] ? \"property\" : \"string\", m[1]);\n        if (m[2]) push(\"punctuation\", m[2]);\n      } else if (m[3]) push(\"number\", m[3]);\n      else if (m[4]) push(\"number\", m[4]);\n      else if (m[5]) push(\"punctuation\", m[5]);\n      else push(\"text\", m[0]);\n    }\n    return out;\n  }\n  if (language === \"bash\" || language === \"sh\" || language === \"shell\" || language === \"curl\") {\n    for (const line of code.split(/(\\n)/)) {\n      if (line === \"\\n\") push(\"text\", line);\n      else if (/^\\s*#/.test(line)) push(\"comment\", line);\n      else {\n        let first = true;\n        for (const m of line.matchAll(/(\"[^\"]*\"|'[^']*')|(\\s--?[\\w-]+)|(\\s+)|(\\S+)/g)) {\n          if (m[1]) push(\"string\", m[1]);\n          else if (m[2]) push(\"keyword\", m[2]);\n          else if (m[3]) push(\"text\", m[3]);\n          else {\n            push(first ? \"function\" : m[4] === \"\\\\\" ? \"punctuation\" : \"text\", m[4]);\n            first = false;\n          }\n        }\n      }\n    }\n    return out;\n  }\n  const pattern = /(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/|#[^\\n]*)|(\"(?:\\\\.|[^\"\\\\\\n])*\"|'(?:\\\\.|[^'\\\\\\n])*'|`(?:\\\\.|[^`\\\\])*`)|\\b(\\d+(?:\\.\\d+)?)\\b|([A-Za-z_$][\\w$]*)(?=\\s*\\()|([A-Za-z_$][\\w$]*)(?=\\s*:)|([A-Za-z_$][\\w$]*)|([{}()[\\];,.<>=+\\-*/!?&|:])|(\\s+|[\\s\\S])/g;\n  for (const m of code.matchAll(pattern)) {\n    if (m[1]) push(language === \"python\" || !m[1].startsWith(\"#\") ? \"comment\" : \"text\", m[1]);\n    else if (m[2]) push(\"string\", m[2]);\n    else if (m[3]) push(\"number\", m[3]);\n    else if (m[4]) push(KEYWORDS.test(m[4]) ? \"keyword\" : \"function\", m[4]);\n    else if (m[5]) push(KEYWORDS.test(m[5]) ? \"keyword\" : \"property\", m[5]);\n    else if (m[6]) push(KEYWORDS.test(m[6]) ? \"keyword\" : LITERALS.test(m[6]) ? \"number\" : \"text\", m[6]);\n    else if (m[7]) push(\"punctuation\", m[7]);\n    else push(\"text\", m[8]);\n  }\n  return out;\n}\n\n/**\n * The code. Pass the text as `code` and its `language` (json, ts, tsx, js, python, bash, curl). Line numbers show in\n * the product's look by default; lines wrap there and scroll in the site's window, unless `wrap` says otherwise.\n * `maxHeight` lets a long file scroll inside the block.\n */\nfunction CodeBlockContent({ code, language = \"ts\", lineNumbers, wrap, className, ...props }: Omit<React.ComponentProps<\"pre\">, \"children\"> & { code: string; language?: string; lineNumbers?: boolean; wrap?: boolean }) {\n  const variant = React.useContext(VariantContext);\n  const terminal = variant === \"terminal\";\n  const numbered = lineNumbers ?? !terminal;\n  const wraps = wrap ?? !terminal;\n  const colors = COLORS[variant];\n  const lines = React.useMemo(() => {\n    const rows: { kind: Kind; text: string }[][] = [[]];\n    for (const token of tokenize(code.replace(/\\n$/, \"\"), language)) {\n      token.text.split(\"\\n\").forEach((part, i) => {\n        if (i > 0) rows.push([]);\n        if (part) rows[rows.length - 1].push({ kind: token.kind, text: part });\n      });\n    }\n    return rows;\n  }, [code, language]);\n  return (\n    <pre\n      data-slot=\"code-block-content\"\n      tabIndex={0}\n      className={cn(\n        \"ds-scrollbar m-0 min-w-0 overflow-auto font-mono outline-none [tab-size:2] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid\",\n        terminal ? \"p-5 text-body-sm leading-terminal text-code-text focus-visible:outline-white/60\" : \"py-3 text-caption leading-code-card text-fg focus-visible:outline-focus-ring\",\n        className,\n      )}\n      {...props}\n    >\n      <code className={cn(\"grid\", wraps ? \"grid-cols-[minmax(0,1fr)]\" : \"min-w-max\")}>\n        {lines.map((line, i) => (\n          <span key={i} className={cn(\"grid\", numbered ? \"grid-cols-[2.5rem_minmax(0,1fr)]\" : \"grid-cols-[minmax(0,1fr)]\", !terminal && !numbered && \"pl-5\", !terminal && \"hover:bg-neutral-5/60\")}>\n            {numbered && (\n              <span aria-hidden className={cn(\"pr-3 text-right tabular-nums select-none\", terminal ? \"text-code-comment\" : \"text-fg-subtle\")}>\n                {i + 1}\n              </span>\n            )}\n            <span className={cn(!terminal && \"pr-5\", wraps ? \"whitespace-pre-wrap [overflow-wrap:anywhere]\" : \"whitespace-pre\")}>\n              {line.length\n                ? line.map((t, j) => (\n                    <span key={j} className={colors[t.kind]}>\n                      {t.text}\n                    </span>\n                  ))\n                : \"\\u200b\"}\n            </span>\n          </span>\n        ))}\n      </code>\n    </pre>\n  );\n}\n\nexport { CodeBlock, CodeBlockActions, CodeBlockContent, CodeBlockCopyButton, CodeBlockHeader, CodeBlockTitle };\n"
+    }
+  ]
+}

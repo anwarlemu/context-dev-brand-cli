@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "banner",
+  "type": "ui",
+  "title": "Banner",
+  "description": "Page-level information or error notice with optional actions.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Plan, credit and account notices above a page's content: `info` for news, `alert` for something that needs action.",
+  "avoid": [
+    "More than one banner on a page",
+    "Banners for form errors"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/banner.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add banner --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/dashboard-ui/banner.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/dashboard-ui/banner.tsx",
+        "sha256": "838054533e72d1c773d317d189759ac7d439efa44f0270e92583c9471a785aa8",
+        "retained": false,
+        "exports": [
+          "Banner"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/banner.d.ts",
+      "content": "import * as React from \"react\";\ndeclare const TONES: {\n    readonly info: \"border-line bg-blue-10\";\n    readonly alert: \"border-alert/30 bg-alert/6\";\n};\ndeclare function Banner({ tone, title, actions, role, className, children, ...props }: Omit<React.ComponentProps<\"div\">, \"title\"> & {\n    tone?: keyof typeof TONES;\n    title: React.ReactNode;\n    actions?: React.ReactNode;\n    role?: \"status\" | \"alert\";\n}): React.JSX.Element;\nexport { Banner };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/banner/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/banner.tsx",
+      "content": "import { Banner } from \"@/components/ui/banner\";\nimport { Button } from \"@/components/ui/button\";\n\nexport function Product() {\n  return (\n    <div className=\"flex w-full max-w-2xl flex-col gap-3\">\n      <Banner title=\"Monitors are here\" actions={<Button size=\"sm\" asChild><a href=\"https://docs.context.dev/monitors\" target=\"_blank\" rel=\"noreferrer\">Read more</a></Button>}>\n        Watch any page and get told the moment it changes.\n      </Banner>\n      <Banner tone=\"alert\" title=\"You've used 92% of your credits\" actions={<Button variant=\"brand\" size=\"sm\" asChild><a href=\"/preview/settings-page/Billing\">Upgrade</a></Button>}>\n        Requests stop when you run out. Credits reset on the 1st.\n      </Banner>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/banner.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's page banner: a notice across the top of a page, blue 10 for news (`info`) or a soft red for trouble\n// (`alert`), its title in medium weight, actions at the end.\nconst TONES = {\n  info: \"border-line bg-blue-10\",\n  alert: \"border-alert/30 bg-alert/6\",\n} as const;\n\nfunction Banner({\n  tone = \"info\",\n  title,\n  actions,\n  role,\n  className,\n  children,\n  ...props\n}: Omit<React.ComponentProps<\"div\">, \"title\"> & { tone?: keyof typeof TONES; title: React.ReactNode; actions?: React.ReactNode; role?: \"status\" | \"alert\" }) {\n  return (\n    <div\n      role={role ?? (tone === \"alert\" ? \"alert\" : \"status\")}\n      data-slot=\"banner\"\n      className={cn(\"flex flex-col gap-3 rounded-card border px-4 py-3 text-body-sm text-fg sm:flex-row sm:items-center sm:justify-between\", TONES[tone], className)}\n      {...props}\n    >\n      <div className=\"min-w-0\">\n        <p className=\"font-medium\">{title}</p>\n        {children && <div className=\"mt-0.5 text-fg-muted\">{children}</div>}\n      </div>\n      {actions && <div className=\"flex shrink-0 flex-wrap gap-2\">{actions}</div>}\n    </div>\n  );\n}\n\nexport { Banner };\n"
+    }
+  ]
+}

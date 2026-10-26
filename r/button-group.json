@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "button-group",
+  "type": "ui",
+  "title": "Button Group",
+  "description": "Buttons, fields and text cells joined into one bar: shared edges, square inner corners, control corners outside.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Join actions that work on the same thing (a pager, Copy beside a value, a split button with its menu, a field with its unit). Use outline buttons inside; ButtonGroupText for a gray prefix or suffix; ButtonGroupSeparator between filled buttons; nest groups to space them.",
+  "avoid": [
+    "Mixing pills and control-cornered buttons",
+    "More than one blue button in a group",
+    "Unrelated actions in one bar"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/button-group.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add button-group",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from the dashboard's outline buttons and fields (context-dashboard c0ddf7a src/components/ui/button.tsx, form.tsx)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/button.tsx",
+        "sha256": "4471d9c1213fb690c714622f54d8e0f6fc881d6291b024de0c01235bfc2e273b",
+        "retained": false,
+        "exports": [
+          "buttonClassName",
+          "Button"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/button-group.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const buttonGroupVariants: (props?: ({\n    orientation?: \"horizontal\" | \"vertical\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function ButtonGroup({ className, orientation, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof buttonGroupVariants>): React.JSX.Element;\ndeclare function ButtonGroupText({ className, asChild, ...props }: React.ComponentProps<\"div\"> & {\n    asChild?: boolean;\n}): React.JSX.Element;\ndeclare function ButtonGroupSeparator({ className, orientation, ...props }: React.ComponentProps<\"div\"> & {\n    orientation?: \"horizontal\" | \"vertical\";\n}): React.JSX.Element;\nexport { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/button-group/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/button-group/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/button-group.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Check, ChevronDown, ChevronLeft, ChevronRight, Copy } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from \"@/components/ui/button-group\";\nimport { Input } from \"@/components/ui/input\";\n\n// On the docs: an install command with its copy button.\nexport function Site() {\n  const [copied, setCopied] = useState(false);\n  return (\n    <ButtonGroup className=\"w-full max-w-md\">\n      <ButtonGroupText className=\"font-mono\">$</ButtonGroupText>\n      <Input readOnly value=\"npm install @context-dev/sdk\" aria-label=\"Install command\" className=\"font-mono\" />\n      <Button aria-label={copied ? \"Copied\" : \"Copy command\"} onClick={() => navigator.clipboard.writeText(\"npm install @context-dev/sdk\").then(() => setCopied(true), () => undefined)}>\n        {copied ? <Check /> : <Copy />}\n      </Button>\n    </ButtonGroup>\n  );\n}\n\n// In the product: a pager, a split action, nested groups and a vertical stack.\nexport function Product() {\n  const [page, setPage] = useState(2);\n  return (\n    <div className=\"grid gap-5\">\n      <ButtonGroup aria-label=\"Pages\">\n        <Button size=\"sm\" aria-label=\"Previous page\" onClick={() => setPage((p) => Math.max(1, p - 1))}>\n          <ChevronLeft />\n        </Button>\n        <ButtonGroupText className=\"h-8 tabular-nums\">Page {page} of 9</ButtonGroupText>\n        <Button size=\"sm\" aria-label=\"Next page\" onClick={() => setPage((p) => Math.min(9, p + 1))}>\n          <ChevronRight />\n        </Button>\n      </ButtonGroup>\n      <ButtonGroup>\n        <Button variant=\"primary\" size=\"sm\">Run crawl</Button>\n        <ButtonGroupSeparator />\n        <Button variant=\"primary\" size=\"sm\" aria-label=\"More run options\">\n          <ChevronDown />\n        </Button>\n      </ButtonGroup>\n      <ButtonGroup>\n        <ButtonGroup>\n          <Button size=\"sm\">Markdown</Button>\n          <Button size=\"sm\">HTML</Button>\n        </ButtonGroup>\n        <ButtonGroup>\n          <Button size=\"sm\">Export</Button>\n        </ButtonGroup>\n      </ButtonGroup>\n      <ButtonGroup orientation=\"vertical\" className=\"w-40\">\n        <Button size=\"sm\">Scrape</Button>\n        <Button size=\"sm\">Search</Button>\n        <Button size=\"sm\">Crawl</Button>\n      </ButtonGroup>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "input"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/button-group.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Buttons joined into one control, as the dashboard joins its outline buttons and fields (a pager, a split action, a\n// copyable value with its button): inner corners square off and the shared edges merge, so outline buttons read as one\n// bar with control corners outside. A field, select or text segment can sit in the bar. ButtonGroupText is the gray cell\n// with muted body-sm text (a prefix or a unit); ButtonGroupSeparator is the 1px rule between filled buttons. Nested\n// groups sit 8px apart.\nconst buttonGroupVariants = cva(\n  \"group/button-group flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 [&>input]:flex-1\",\n  {\n    variants: {\n      orientation: {\n        horizontal: \"[&>*:not(:first-child)]:rounded-l-none [&>*:not(:first-child)]:border-l-0 [&>*:not(:last-child)]:rounded-r-none\",\n        vertical: \"flex-col [&>*:not(:first-child)]:rounded-t-none [&>*:not(:first-child)]:border-t-0 [&>*:not(:last-child)]:rounded-b-none\",\n      },\n    },\n    defaultVariants: { orientation: \"horizontal\" },\n  },\n);\n\nfunction ButtonGroup({ className, orientation, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof buttonGroupVariants>) {\n  return <div role=\"group\" data-slot=\"button-group\" data-orientation={orientation ?? \"horizontal\"} className={cn(buttonGroupVariants({ orientation }), className)} {...props} />;\n}\n\nfunction ButtonGroupText({ className, asChild = false, ...props }: React.ComponentProps<\"div\"> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"div\";\n  return (\n    <Comp\n      data-slot=\"button-group-text\"\n      className={cn(\"flex items-center gap-1.5 rounded-control border border-line-strong bg-subtle px-3.5 text-body-sm whitespace-nowrap text-fg-muted [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-3.5\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction ButtonGroupSeparator({ className, orientation = \"vertical\", ...props }: React.ComponentProps<\"div\"> & { orientation?: \"horizontal\" | \"vertical\" }) {\n  return (\n    <div\n      role=\"separator\"\n      aria-orientation={orientation}\n      data-slot=\"button-group-separator\"\n      data-orientation={orientation}\n      className={cn(\"relative shrink-0 self-stretch bg-white/24\", orientation === \"vertical\" ? \"w-px\" : \"h-px\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants };\n"
+    }
+  ]
+}

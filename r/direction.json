@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "direction",
+  "type": "ui",
+  "title": "Direction",
+  "description": "Sets left-to-right or right-to-left reading for the Radix-based components inside it.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Wrap a right-to-left page or region in DirectionProvider with dir=\"rtl\" (and set dir on the element) so menus, sliders, tabs and toggle groups flip their keyboard and layout. useDirection reads the current direction.",
+  "avoid": [
+    "Setting dir without the provider",
+    "Mirroring brand marks or logos"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/direction.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add direction",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "No dashboard counterpart: it sets the reading direction for the Radix controls in context-dashboard c0ddf7a src/components/ui/menu.tsx and src/components/ui/tabs.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/tabs.tsx",
+        "sha256": "98fe9ed3a9e0b878305eaee6e61f64e9541785acd56f38a8efdd344f79f1a98a",
+        "retained": false,
+        "exports": [
+          "TabOption",
+          "Tabs"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/direction.d.ts",
+      "content": "import * as React from \"react\";\nimport * as DirectionPrimitive from \"@radix-ui/react-direction\";\ndeclare function DirectionProvider({ dir, direction, children }: React.ComponentProps<typeof DirectionPrimitive.DirectionProvider> & {\n    direction?: React.ComponentProps<typeof DirectionPrimitive.DirectionProvider>[\"dir\"];\n}): React.JSX.Element;\ndeclare const useDirection: typeof DirectionPrimitive.useDirection;\nexport { DirectionProvider, useDirection };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/direction/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/direction/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/direction.tsx",
+      "content": "\"use client\";\n\nimport { DirectionProvider, useDirection } from \"@/components/ui/direction\";\nimport { Slider } from \"@/components/ui/slider\";\nimport { ToggleGroup, ToggleGroupItem } from \"@/components/ui/toggle-group\";\n\nfunction Reading() {\n  const dir = useDirection();\n  return <p className=\"text-caption text-fg-subtle\">Reading direction: {dir}</p>;\n}\n\n// A right-to-left page: the toggle group and slider flip their order and keys.\nexport function Site() {\n  return (\n    <DirectionProvider dir=\"rtl\">\n      <div dir=\"rtl\" className=\"grid w-full max-w-xs gap-3\">\n        <ToggleGroup type=\"single\" defaultValue=\"month\" aria-label=\"Billing\">\n          <ToggleGroupItem value=\"month\">شهري</ToggleGroupItem>\n          <ToggleGroupItem value=\"year\">سنوي</ToggleGroupItem>\n        </ToggleGroup>\n        <Reading />\n      </div>\n    </DirectionProvider>\n  );\n}\n\n// The same controls left to right and right to left, side by side.\nexport function Product() {\n  return (\n    <div className=\"grid w-full max-w-md gap-6 sm:grid-cols-2\">\n      {([\"ltr\", \"rtl\"] as const).map((dir) => (\n        <DirectionProvider key={dir} dir={dir}>\n          <div dir={dir} className=\"grid gap-3\">\n            <Slider defaultValue={[30]} aria-label={`Limit (${dir})`} />\n            <Reading />\n          </div>\n        </DirectionProvider>\n      ))}\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "slider",
+    "toggle-group"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [
+    "@radix-ui/react-direction"
+  ],
+  "files": [
+    {
+      "path": "components/ui/direction.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as DirectionPrimitive from \"@radix-ui/react-direction\";\n\n// Sets the reading direction (ltr or rtl) for every Radix-based component inside it, so menus, sliders, tabs and\n// toggle groups flip for right-to-left text. It draws nothing of its own; set dir on the element you wrap as well.\nfunction DirectionProvider({ dir, direction, children }: React.ComponentProps<typeof DirectionPrimitive.DirectionProvider> & { direction?: React.ComponentProps<typeof DirectionPrimitive.DirectionProvider>[\"dir\"] }) {\n  return <DirectionPrimitive.DirectionProvider dir={direction ?? dir}>{children}</DirectionPrimitive.DirectionProvider>;\n}\n\nconst useDirection = DirectionPrimitive.useDirection;\n\nexport { DirectionProvider, useDirection };\n"
+    }
+  ]
+}

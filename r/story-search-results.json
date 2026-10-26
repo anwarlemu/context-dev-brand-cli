@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-search-results",
+  "type": "visual",
+  "title": "Search results story",
+  "description": "Dot animation of a typed query, three ranked results and their highlighted passages.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The hero of a search product page (the Search page shows it in the hero demo). Draw it in a white card on the ring pattern. Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "A query is typed into the field at the top, three results sweep in under it with their source, title and relevance (a filled chip for high, an outline for medium), then each passage highlights the span that answers the query.",
+  "documentation": "https://context-ds.vercel.app/components/story-search-results.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-search-results --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/search-results-story.tsx; src/components/sections/products/search-results-story-player.ts; src/components/sections/products/search-results-story-scenes.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/search-results-story.tsx",
+        "sha256": "0733ea8212cee3076e6698b023e610a41a5f5c855766184b56ba98a17b7654c6",
+        "retained": false,
+        "exports": [
+          "SearchResultsStory"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/search-results-story-player.ts",
+        "sha256": "e1bac86b1d5f5aae17c0a1795347dee40c3062592826f7ddebc86e696846412d",
+        "retained": false,
+        "exports": [
+          "createSearchResultsStoryPlayer"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/search-results-story-scenes.ts",
+        "sha256": "d45417f3b24481ba4b17d0d3c211891f16ba86ca4f1df053fbf3cbe2990c2ad5",
+        "retained": false,
+        "exports": [
+          "SEARCH_RESULTS_STORY_GRID",
+          "PASSAGE",
+          "RESULT_COUNT",
+          "HIGHLIGHTS",
+          "resultTop",
+          "resultAt",
+          "FIELD_ONLY",
+          "RESULTS_FOUND",
+          "RESULTS_HIGHLIGHTED",
+          "QUERY",
+          "FRESHNESS_LABEL",
+          "RESULT_TEXTS",
+          "SEARCH_RESULTS_RESTING"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/search-results-story.d.ts",
+      "content": "export declare function SearchResultsStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/search-results-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createSearchResultsStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/search-results-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare const SEARCH_RESULTS_STORY_GRID: DotGrid;\nexport declare const PASSAGE: {\n    row: number;\n    left: number;\n    right: number;\n};\nexport declare const RESULT_COUNT: number;\nexport declare const HIGHLIGHTS: {\n    from: number;\n    to: number;\n}[];\nexport declare const resultTop: (index: number) => number;\nexport declare const resultAt: (row: number) => number;\nexport declare const FIELD_ONLY: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULTS_FOUND: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULTS_HIGHLIGHTED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const QUERY: DotStoryText;\nexport declare const FRESHNESS_LABEL: DotStoryText;\nexport declare const RESULT_TEXTS: DotStoryText[][];\nexport declare const SEARCH_RESULTS_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-search-results/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-search-results.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { SearchResultsStory } from \"@/components/visuals/stories/search-results-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <SearchResultsStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/search-results-story.tsx",
+      "content": "'use client';\n\nimport { SEARCH_RESULTS_RESTING, SEARCH_RESULTS_STORY_GRID } from '@/components/visuals/stories/search-results-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadSearchResultsStory: LoadDotStory = async (stage) => {\n\tconst { createSearchResultsStoryPlayer } = await import('@/components/visuals/stories/search-results-story-player');\n\treturn createSearchResultsStoryPlayer(stage);\n};\n\nexport function SearchResultsStory({ className }: { className?: string }) {\n\treturn <DotStory grid={SEARCH_RESULTS_STORY_GRID} resting={SEARCH_RESULTS_RESTING} load={loadSearchResultsStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/search-results-story-player.ts",
+      "content": "import { FIELD_ONLY, FRESHNESS_LABEL, HIGHLIGHTS, PASSAGE, QUERY, RESULT_COUNT, RESULT_TEXTS, RESULTS_FOUND, RESULTS_HIGHLIGHTED, SEARCH_RESULTS_STORY_GRID, resultAt, resultTop } from '@/components/visuals/stories/search-results-story-scenes';\nimport { NEVER, fadedInAt, paintRevealed, revealSchedule } from '@/components/visuals/stories/story-reveal';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\nconst CLEAR_SECONDS = 0.8;\nconst TYPING = { startsAt: 0.4, charactersPerSecond: 14 };\nconst TYPED_AT = TYPING.startsAt + typingSeconds(QUERY, TYPING.charactersPerSecond);\nconst RESULTS = { startsAt: TYPED_AT + 0.3, everySeconds: 0.35, sweepSeconds: 0.5, textDelay: 0.3 };\nconst HIGHLIGHT = { startsAt: RESULTS.startsAt + RESULT_COUNT * RESULTS.everySeconds + 0.6, everySeconds: 0.4, sweepSeconds: 0.5 };\nconst HOLD_SECONDS = HIGHLIGHT.startsAt + RESULT_COUNT * HIGHLIGHT.everySeconds + 2.4;\n\nconst { columns, rows } = SEARCH_RESULTS_STORY_GRID;\nconst resultStartsAt = (index: number) => RESULTS.startsAt + index * RESULTS.everySeconds;\nconst highlightStartsAt = (index: number) => HIGHLIGHT.startsAt + index * HIGHLIGHT.everySeconds;\n\nconst FOUND_AT = revealSchedule(SEARCH_RESULTS_STORY_GRID, (column, row) => {\n\tconst index = resultAt(row);\n\treturn index < 0 ? 0 : resultStartsAt(index) + (column / columns) * RESULTS.sweepSeconds;\n});\n\nconst HIGHLIGHTED_AT = revealSchedule(SEARCH_RESULTS_STORY_GRID, (column, row) => {\n\tconst index = resultAt(row);\n\tif (index < 0 || row !== resultTop(index) + PASSAGE.row) return NEVER;\n\tconst { from, to } = HIGHLIGHTS[index];\n\treturn highlightStartsAt(index) + ((column - from) / (to - from + 1)) * HIGHLIGHT.sweepSeconds;\n});\n\nexport function createSearchResultsStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: SEARCH_RESULTS_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: HOLD_SECONDS },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: FIELD_ONLY,\n\t\t\t\tdeparture: RESULTS_HIGHLIGHTED,\n\t\t\t\tarrival: { kind: 'builds', seconds: CLEAR_SECONDS, order: (_, row) => 1 - row / rows },\n\t\t\t\tholdSeconds: HOLD_SECONDS,\n\t\t\t\tanimate(states, heldSeconds) {\n\t\t\t\t\tpaintRevealed(states, RESULTS_FOUND.states, FOUND_AT, heldSeconds);\n\t\t\t\t\tpaintRevealed(states, RESULTS_HIGHLIGHTED.states, HIGHLIGHTED_AT, heldSeconds);\n\t\t\t\t},\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(FRESHNESS_LABEL);\n\t\t\t\t\tpen.type(QUERY, heldSeconds, TYPING);\n\t\t\t\t\tRESULT_TEXTS.forEach((texts, index) => texts.forEach((text) => pen.text(text, fadedInAt(heldSeconds, resultStartsAt(index) + RESULTS.textDelay))));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/search-results-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clear, rectangle, stack, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\nexport const SEARCH_RESULTS_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, pitch: PITCH } = SEARCH_RESULTS_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst centerOf = (left: number, right: number) => ((left + right + 1) / 2) * PITCH;\n\nconst FIELD: DotBox = { left: 0, right: COLUMNS - 1, top: 0, bottom: 4 };\nconst FIELD_ICON = { column: 2, row: 2 };\nconst RESULT = { left: 0, right: COLUMNS - 1, rows: 10, firstTop: 6, every: 11 };\nconst CHIP = { left: 45, right: 55, top: 2, bottom: 5 };\nexport const PASSAGE = { row: 7, left: 2, right: 48 };\n\nconst RESULTS = [\n\t{ source: 'arxiv.org/abs/2404.07220', title: 'Blended RAG: hybrid retrieval', relevance: 'high', highlight: { from: 6, to: 30 } },\n\t{ source: 'weaviate.io/blog/hybrid-search', title: 'Hybrid search, explained', relevance: 'high', highlight: { from: 12, to: 38 } },\n\t{ source: 'docs.pinecone.io/guides/hybrid', title: 'Sparse and dense vectors', relevance: 'medium', highlight: { from: 4, to: 18 } },\n];\nexport const RESULT_COUNT = RESULTS.length;\nexport const HIGHLIGHTS = RESULTS.map(({ highlight }) => highlight);\n\nexport const resultTop = (index: number) => RESULT.firstTop + index * RESULT.every;\nexport const resultAt = (row: number) => (row < RESULT.firstTop ? -1 : Math.min(RESULT_COUNT - 1, Math.floor((row - RESULT.firstTop) / RESULT.every)));\n\nconst field: DotPainter = stack((column, row) => (column === FIELD_ICON.column && row === FIELD_ICON.row ? DOT_HOLLOW : DOT_ABSENT), rectangle(FIELD, clear));\n\nfunction result(index: number, isHighlighted: boolean): DotPainter {\n\tconst top = resultTop(index);\n\tconst { relevance, highlight } = RESULTS[index];\n\treturn rectangle({ left: RESULT.left, right: RESULT.right, top, bottom: top + RESULT.rows - 1 }, (column, row) => {\n\t\tconst down = row - top;\n\t\tconst isChip = column >= CHIP.left && column <= CHIP.right && down >= CHIP.top && down <= CHIP.bottom;\n\t\tif (isChip) {\n\t\t\tconst isChipEdge = column === CHIP.left || column === CHIP.right || down === CHIP.top || down === CHIP.bottom;\n\t\t\tif (!isChipEdge) return DOT_ABSENT;\n\t\t\treturn relevance === 'high' ? DOT_FILLED : DOT_HOLLOW;\n\t\t}\n\t\tif (down !== PASSAGE.row || column < PASSAGE.left || column > PASSAGE.right) return DOT_ABSENT;\n\t\treturn isHighlighted && column >= highlight.from && column <= highlight.to ? DOT_FILLED : DOT_HOLLOW;\n\t});\n}\n\nconst results = (isHighlighted: boolean) => RESULTS.map((_, index) => result(index, isHighlighted));\n\nexport const FIELD_ONLY = pictureOf(SEARCH_RESULTS_STORY_GRID, field);\nexport const RESULTS_FOUND = pictureOf(SEARCH_RESULTS_STORY_GRID, stack(field, ...results(false)));\nexport const RESULTS_HIGHLIGHTED = pictureOf(SEARCH_RESULTS_STORY_GRID, stack(field, ...results(true)));\n\nexport const QUERY: DotStoryText = { text: 'how does hybrid search improve RAG?', x: x(4.5), y: baselineOn(2, 17), size: 17, weight: 700 };\nexport const FRESHNESS_LABEL: DotStoryText = { text: 'last_month', x: x(COLUMNS - 2), y: baselineOn(2, 12), size: 12, weight: 700, muted: true, anchor: 'end' };\n\nexport const RESULT_TEXTS: DotStoryText[][] = RESULTS.map(({ source, title, relevance }, index) => {\n\tconst top = resultTop(index);\n\treturn [\n\t\t{ text: source, x: x(2), y: baselineOn(top + 2, 12), size: 12, weight: 700, muted: true },\n\t\t{ text: title, x: x(2), y: baselineOn(top + 4.5, 15), size: 15, weight: 700 },\n\t\t{ text: relevance, x: centerOf(CHIP.left, CHIP.right), y: baselineOn(top + 3.5, 12), size: 12, weight: 700, anchor: 'middle' },\n\t];\n});\n\nexport const SEARCH_RESULTS_RESTING = { ...RESULTS_HIGHLIGHTED, texts: [QUERY, FRESHNESS_LABEL, ...RESULT_TEXTS.flat()] };\n"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "form",
+  "type": "ui",
+  "title": "Form",
+  "description": "react-hook-form fields laid out as the dashboard's: a body-sm label above the control, help and errors in caption.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Build a validated form: wrap it in Form with useForm's methods, then FormField with a render function that returns FormItem, FormLabel, FormControl around one control, FormDescription and FormMessage. FormControl wires the id, aria-describedby and aria-invalid; FormMessage shows the field's error.",
+  "avoid": [
+    "A red label on an invalid field",
+    "Validating on every keystroke before the first submit",
+    "Two controls in one FormItem"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/form.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add form",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/form.tsx (Field)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/form.d.ts",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { type ControllerProps, type FieldPath, type FieldValues } from \"react-hook-form\";\nimport { Label } from \"@/components/ui/label\";\ndeclare const Form: <TFieldValues extends FieldValues, TContext = any, TTransformedValues = TFieldValues>({ children, watch, getValues, getErrors, getFieldState, setError, clearErrors, setValue, setValues, trigger, formState, resetField, reset, resetDefaultValues, handleSubmit, unregister, control, register, setFocus, subscribe, }: import(\"react-hook-form\").FormProviderProps<TFieldValues, TContext, TTransformedValues>) => React.JSX.Element;\ndeclare function FormField<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>(props: ControllerProps<TFieldValues, TName>): React.JSX.Element;\n/** The state of the field around it: its ids for labels and messages, and react-hook-form's error, dirty and touched state. */\ndeclare function useFormField(): {\n    invalid: boolean;\n    isDirty: boolean;\n    isTouched: boolean;\n    isValidating: boolean;\n    error?: import(\"react-hook-form\").FieldError | undefined;\n    id: string;\n    name: string;\n    formItemId: string;\n    formDescriptionId: string;\n    formMessageId: string;\n};\ndeclare function FormItem({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function FormLabel({ className, ...props }: React.ComponentProps<typeof Label>): React.JSX.Element;\n/** Hands the field's id, its description and message ids and aria-invalid to the one control inside it. */\ndeclare function FormControl(props: React.ComponentProps<typeof Slot>): React.JSX.Element;\ndeclare function FormDescription({ className, ...props }: React.ComponentProps<\"p\">): React.JSX.Element;\ndeclare function FormMessage({ className, children, ...props }: React.ComponentProps<\"p\">): React.JSX.Element | null;\nexport { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/form/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/form/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/form.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { useForm } from \"react-hook-form\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from \"@/components/ui/form\";\nimport { Input } from \"@/components/ui/input\";\nimport { Switch } from \"@/components/ui/switch\";\n\ntype Signup = { email: string };\n\n// On the site: a sign-up with validation.\nexport function Site() {\n  const form = useForm<Signup>({ defaultValues: { email: \"\" } });\n  const [sent, setSent] = useState(\"\");\n  return (\n    <Form {...form}>\n      <form className=\"grid w-full max-w-sm gap-4\" noValidate onSubmit={form.handleSubmit((v) => setSent(`We sent a sign-in link to ${v.email}.`))}>\n        <FormField\n          control={form.control}\n          name=\"email\"\n          rules={{ required: \"Enter your work email.\", pattern: { value: /^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/, message: \"That email does not look right.\" } }}\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Work email</FormLabel>\n              <FormControl>\n                <Input type=\"email\" placeholder=\"you@company.com\" {...field} />\n              </FormControl>\n              <FormMessage />\n            </FormItem>\n          )}\n        />\n        <Button type=\"submit\" variant=\"pill\" className=\"w-fit\">Start for free</Button>\n        <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{sent}</p>\n      </form>\n    </Form>\n  );\n}\n\ntype Webhook = { name: string; url: string; retries: boolean };\n\n// In the product: a webhook with a description, a URL check, a switch and a saving state.\nexport function Product() {\n  const form = useForm<Webhook>({ defaultValues: { name: \"Slack alerts\", url: \"\", retries: true } });\n  const [saved, setSaved] = useState(\"\");\n  return (\n    <Form {...form}>\n      <form\n        className=\"grid w-full max-w-md gap-5\"\n        noValidate\n        onSubmit={form.handleSubmit(async (v) => {\n          await new Promise((r) => setTimeout(r, 600));\n          setSaved(`Saved ${v.name}.`);\n        })}\n      >\n        <FormField\n          control={form.control}\n          name=\"name\"\n          rules={{ required: \"Name the webhook.\" }}\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Name</FormLabel>\n              <FormControl>\n                <Input {...field} />\n              </FormControl>\n              <FormMessage />\n            </FormItem>\n          )}\n        />\n        <FormField\n          control={form.control}\n          name=\"url\"\n          rules={{ required: \"Enter the URL to call.\", pattern: { value: /^https:\\/\\//, message: \"Use an https URL.\" } }}\n          render={({ field }) => (\n            <FormItem>\n              <FormLabel>Endpoint URL</FormLabel>\n              <FormControl>\n                <Input placeholder=\"https://hooks.acme.com/context\" {...field} />\n              </FormControl>\n              <FormDescription>Each monitor change is sent as a signed POST.</FormDescription>\n              <FormMessage />\n            </FormItem>\n          )}\n        />\n        <FormField\n          control={form.control}\n          name=\"retries\"\n          render={({ field }) => (\n            <FormItem className=\"flex-row items-center justify-between gap-4\">\n              <div className=\"grid gap-1\">\n                <FormLabel>Retry failed deliveries</FormLabel>\n                <FormDescription>Up to five times over an hour.</FormDescription>\n              </div>\n              <FormControl>\n                <Switch checked={field.value} onCheckedChange={field.onChange} />\n              </FormControl>\n            </FormItem>\n          )}\n        />\n        <div className=\"flex items-center gap-3\">\n          <Button type=\"submit\" variant=\"brand\" disabled={form.formState.isSubmitting}>\n            {form.formState.isSubmitting ? \"Saving...\" : \"Save webhook\"}\n          </Button>\n          <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{saved}</p>\n        </div>\n      </form>\n    </Form>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "input",
+    "switch"
+  ],
+  "examplePackages": [
+    "react-hook-form"
+  ],
+  "requires": [
+    "theme",
+    "label",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "react-hook-form"
+  ],
+  "files": [
+    {
+      "path": "components/ui/form.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { Controller, FormProvider, useFormContext, useFormState, type ControllerProps, type FieldPath, type FieldValues } from \"react-hook-form\";\n\nimport { Label } from \"@/components/ui/label\";\nimport { cn } from \"@/lib/utils\";\n\n// A react-hook-form form laid out as the dashboard's (form.tsx Field): each FormItem is a field with its body-sm ink\n// label 8px above the control; help sits under it in the subtle gray caption and an error in the red caption. A field\n// that fails keeps its label ink: only the control (aria-invalid, the red border) and its message turn red. Space fields\n// 20px apart in the form.\nconst Form = FormProvider;\n\ntype FormFieldContextValue<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>> = { name: TName };\n\nconst FormFieldContext = React.createContext<FormFieldContextValue | null>(null);\n\nfunction FormField<TFieldValues extends FieldValues = FieldValues, TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>>(props: ControllerProps<TFieldValues, TName>) {\n  return (\n    <FormFieldContext.Provider value={{ name: props.name }}>\n      <Controller {...props} />\n    </FormFieldContext.Provider>\n  );\n}\n\ntype FormItemContextValue = { id: string };\n\nconst FormItemContext = React.createContext<FormItemContextValue | null>(null);\n\n/** The state of the field around it: its ids for labels and messages, and react-hook-form's error, dirty and touched state. */\nfunction useFormField() {\n  const fieldContext = React.useContext(FormFieldContext);\n  const itemContext = React.useContext(FormItemContext);\n  const { getFieldState } = useFormContext();\n  if (!fieldContext) throw new Error(\"useFormField should be used within <FormField>\");\n  if (!itemContext) throw new Error(\"useFormField should be used within <FormItem>\");\n  const formState = useFormState({ name: fieldContext.name });\n  const fieldState = getFieldState(fieldContext.name, formState);\n  const { id } = itemContext;\n  return { id, name: fieldContext.name, formItemId: `${id}-form-item`, formDescriptionId: `${id}-form-item-description`, formMessageId: `${id}-form-item-message`, ...fieldState };\n}\n\nfunction FormItem({ className, ...props }: React.ComponentProps<\"div\">) {\n  const id = React.useId();\n  return (\n    <FormItemContext.Provider value={{ id }}>\n      <div data-slot=\"form-item\" className={cn(\"flex min-w-0 flex-col gap-2\", className)} {...props} />\n    </FormItemContext.Provider>\n  );\n}\n\nfunction FormLabel({ className, ...props }: React.ComponentProps<typeof Label>) {\n  const { error, formItemId } = useFormField();\n  return <Label data-slot=\"form-label\" data-error={!!error} htmlFor={formItemId} className={cn(\"w-fit\", className)} {...props} />;\n}\n\n/** Hands the field's id, its description and message ids and aria-invalid to the one control inside it. */\nfunction FormControl(props: React.ComponentProps<typeof Slot>) {\n  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();\n  return <Slot data-slot=\"form-control\" id={formItemId} aria-describedby={!error ? formDescriptionId : `${formDescriptionId} ${formMessageId}`} aria-invalid={!!error} {...props} />;\n}\n\nfunction FormDescription({ className, ...props }: React.ComponentProps<\"p\">) {\n  const { formDescriptionId } = useFormField();\n  return <p data-slot=\"form-description\" id={formDescriptionId} className={cn(\"m-0 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nfunction FormMessage({ className, children, ...props }: React.ComponentProps<\"p\">) {\n  const { error, formMessageId } = useFormField();\n  const body = error ? String(error.message ?? \"\") : children;\n  if (!body) return null;\n  return (\n    <p data-slot=\"form-message\" id={formMessageId} role={error ? \"alert\" : undefined} className={cn(\"m-0 text-caption text-danger\", className)} {...props}>\n      {body}\n    </p>\n  );\n}\n\nexport { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage, useFormField };\n"
+    }
+  ]
+}

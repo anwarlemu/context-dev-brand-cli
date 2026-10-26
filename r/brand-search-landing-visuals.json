@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "brand-search-landing-visuals",
+  "type": "site",
+  "title": "Brand search page visuals",
+  "description": "The Brand search page's hero demo and capability panels: a partial name in and matching companies out.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The Brand search product page (context.dev/brand-search): BrandSearchHeroDemo under the hero, and BrandSearchAutocompletePanel, BrandSearchResultPanel, BrandSearchMatchingPanel as the pictures in its three capability cards (ProductStorySection), in that order.",
+  "avoid": [
+    "A dot story and a panel in the same card",
+    "Bold names or titles",
+    "Syntax colors in the output"
+  ],
+  "notes": "BrandSearchHeroDemo is a ProductDemoCard with a partial name in and matching companies out. The panels show autocomplete as someone types, one result with its details, and the matching options. Each takes its example values as\nprops where a page would change them, and keeps the site's illustrative ones by default.",
+  "documentation": "https://context-ds.vercel.app/components/brand-search-landing-visuals.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add brand-search-landing-visuals --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/products/brand-search-landing-visuals.tsx; src/components/sections/products/product-landing-content.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/brand-search-landing-visuals.tsx",
+        "sha256": "83d8fa6e18cad695b6e5841fc0a2a4dee88694f0f18deec7681c3bdf025bb9a0",
+        "retained": false,
+        "exports": [
+          "BrandSearchHeroDemo",
+          "BrandSearchAutocompletePanel",
+          "BrandSearchResultPanel",
+          "BrandSearchMatchingPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-content.tsx",
+        "sha256": "f051af708aff25575f22cf5c150051d6528e9f167c29aa9d8244ab34a307c6c2",
+        "retained": false,
+        "exports": [
+          "RelatedProductId",
+          "ProductLandingContent",
+          "scrapeLandingContent",
+          "answersLandingContent",
+          "searchLandingContent",
+          "mapLandingContent",
+          "brandLandingContent",
+          "styleguideLandingContent",
+          "batchesLandingContent",
+          "monitorsLandingContent",
+          "parseLandingContent",
+          "brandSearchLandingContent",
+          "peopleEnrichmentLandingContent",
+          "newsLandingContent"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/brand-search-landing-visuals.d.ts",
+      "content": "export type BrandMatch = {\n    name: string;\n    domain: string;\n};\nexport declare function BrandSearchHeroDemo({ query, matches, output }: {\n    query?: string;\n    matches?: BrandMatch[];\n    output?: string;\n}): import(\"react\").JSX.Element;\nexport declare function BrandSearchAutocompletePanel({ query, matches }: {\n    query?: string;\n    matches?: BrandMatch[];\n}): import(\"react\").JSX.Element;\nexport declare function BrandSearchResultPanel(): import(\"react\").JSX.Element;\nexport declare function BrandSearchMatchingPanel(): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/brand-search-landing-visuals/Site"
+    },
+    {
+      "name": "Capabilities",
+      "url": "https://context-ds.vercel.app/preview/brand-search-landing-visuals/Capabilities"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/brand-search-landing-visuals.tsx",
+      "content": "import { BrandSearchAutocompletePanel, BrandSearchHeroDemo, BrandSearchMatchingPanel, BrandSearchResultPanel } from \"@/components/site/brand-search-landing-visuals\";\nimport { ProductStorySection } from \"@/components/site/product-landing\";\n\nexport function Site() {\n  return (\n    <div className=\"mx-auto w-full max-w-[var(--ds-layout-column-wide)] px-6 py-12 sm:px-8 md:px-10 lg:px-12\">\n      <BrandSearchHeroDemo />\n    </div>\n  );\n}\n\nexport function Capabilities() {\n  return (\n    <div className=\"w-full\">\n      <ProductStorySection\n        title=\"Search as they type.\"\n        accent=\"Show the company they mean.\"\n        description=\"Match a partial name or domain to recognizable brands, then tune the matching to your market.\"\n        items={[\n          { title: \"Autocomplete company names\", description: \"Find matching brands as someone types. Prefix matching helps people select the company they mean.\", story: <BrandSearchAutocompletePanel /> },\n          { title: \"Show a recognizable result\", description: \"Each match includes a name, domain, and logo URL, plus a description, country, and primary language when available.\", story: <BrandSearchResultPanel /> },\n          { title: \"Control the matching\", description: \"Search names, domains, or both. Filter by country and primary language, choose whole-word matching, or allow up to two typos.\", story: <BrandSearchMatchingPanel /> },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "product-landing"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "product-demo-card"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/brand-search-landing-visuals.tsx",
+      "content": "import { CapabilityPanel, DemoRow, MarkGlyph, ParamRow, ProductDemoCard, StatusChip } from \"@/components/site/product-demo-card\";\n\n// The Brand search page's hero demo (a partial name in, matching companies out) and its three capability panels:\n// autocomplete as someone types, one result's details, and the matching options.\n\n/** The site's search icon (Hugeicons Search 01, drawn at a 1.5 stroke). */\nfunction SearchIcon({ className }: { className?: string }) {\n  return (\n    <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\" className={className}>\n      <path d=\"M17 17L21 21\" stroke=\"currentColor\" strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth=\"1.5\" />\n      <path d=\"M19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19C15.4183 19 19 15.4183 19 11Z\" stroke=\"currentColor\" strokeLinecap=\"round\" strokeLinejoin=\"round\" strokeWidth=\"1.5\" />\n    </svg>\n  );\n}\n\nexport type BrandMatch = { name: string; domain: string };\n\nconst QUERY = \"lin\";\n\nconst MATCHES: BrandMatch[] = [\n  { name: \"Linear\", domain: \"linear.app\" },\n  { name: \"LinkedIn\", domain: \"linkedin.com\" },\n  { name: \"Linktree\", domain: \"linktr.ee\" },\n];\n\nconst SEARCH_RESPONSE = `{\n  \"results\": [\n    {\n      \"name\": \"Linear\",\n      \"domain\": \"linear.app\",\n      \"logo\": \"https://logos.context.dev/...\",\n      \"language\": \"english\"\n    },\n    { \"name\": \"LinkedIn\", \"domain\": \"linkedin.com\", \"logo\": \"...\" },\n    { \"name\": \"Linktree\", \"domain\": \"linktr.ee\", \"logo\": \"...\" }\n  ]\n}`;\n\n/** The matches, each name's typed part in brand blue. */\nfunction MatchList({ query, matches }: { query: string; matches: BrandMatch[] }) {\n  return (\n    <ul className=\"flex flex-col\">\n      {matches.map((match) => (\n        <li key={match.domain} className=\"flex items-center gap-3.5 border-t border-hairline px-4 py-3 first:border-0\">\n          <MarkGlyph>{match.name[0]}</MarkGlyph>\n          <span className=\"flex min-w-0 flex-col\">\n            <span className=\"text-demo-row leading-5 text-fg\">\n              <span className=\"text-brand\">{match.name.slice(0, query.length)}</span>\n              {match.name.slice(query.length)}\n            </span>\n            <span className=\"text-demo-code leading-demo-label text-black/50\">{match.domain}</span>\n          </span>\n        </li>\n      ))}\n    </ul>\n  );\n}\n\nexport function BrandSearchHeroDemo({ query = QUERY, matches = MATCHES, output = SEARCH_RESPONSE }: { query?: string; matches?: BrandMatch[]; output?: string }) {\n  return (\n    <ProductDemoCard\n      label=\"Illustrative company autocomplete\"\n      inputLabel=\"Search query\"\n      input={\n        <>\n          <DemoRow\n            glyph={\n              <MarkGlyph>\n                <SearchIcon className=\"size-4\" />\n              </MarkGlyph>\n            }\n            title={query}\n            detail=\"Company name or domain\"\n            status={<StatusChip>{matches.length} matches</StatusChip>}\n          />\n          <MatchList query={query} matches={matches} />\n        </>\n      }\n      outputLabel=\"JSON response\"\n      filename=\"results.json\"\n      output={output}\n    />\n  );\n}\n\nexport function BrandSearchAutocompletePanel({ query = QUERY, matches = MATCHES }: { query?: string; matches?: BrandMatch[] }) {\n  return (\n    <CapabilityPanel label=\"Illustrative autocomplete results\">\n      <div className=\"flex items-center gap-2.5 rounded-card border border-black/10 px-3.5 py-2.5\">\n        <SearchIcon className=\"size-4 shrink-0 text-brand\" />\n        <p className=\"text-demo-row leading-5 text-fg\">\n          {query}\n          <span aria-hidden=\"true\" className=\"ml-px inline-block h-4 w-px translate-y-0.5 bg-brand\" />\n        </p>\n      </div>\n      <MatchList query={query} matches={matches} />\n    </CapabilityPanel>\n  );\n}\n\nconst LINEAR_DETAILS = [\n  { label: \"Logo\", value: \"logos.context.dev\" },\n  { label: \"Country\", value: \"US\" },\n  { label: \"Language\", value: \"english\" },\n];\n\nexport function BrandSearchResultPanel() {\n  return (\n    <CapabilityPanel label=\"Illustrative search result\">\n      <div className=\"flex items-center gap-3.5\">\n        <MarkGlyph>L</MarkGlyph>\n        <span className=\"flex min-w-0 flex-col\">\n          <span className=\"text-demo-title leading-demo-title text-fg\">Linear</span>\n          <span className=\"text-demo-code leading-demo-label text-black/50\">linear.app</span>\n        </span>\n      </div>\n      <dl className=\"flex flex-col\">\n        {LINEAR_DETAILS.map((detail) => (\n          <div key={detail.label} className=\"flex items-center justify-between gap-3 border-t border-hairline py-2.5 text-demo-label leading-5\">\n            <dt className=\"text-black/50\">{detail.label}</dt>\n            <dd className=\"truncate text-fg\">{detail.value}</dd>\n          </div>\n        ))}\n      </dl>\n    </CapabilityPanel>\n  );\n}\n\nexport function BrandSearchMatchingPanel() {\n  return (\n    <CapabilityPanel label=\"Example matching options\">\n      <ParamRow name=\"queryBy\" value=\"name, domain\" />\n      <ParamRow name=\"country\" value=\"US\" />\n      <ParamRow name=\"language\" value=\"english\" />\n      <ParamRow name=\"typoTolerance\" value=\"2\" />\n    </CapabilityPanel>\n  );\n}\n"
+    }
+  ]
+}

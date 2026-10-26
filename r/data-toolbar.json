@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "data-toolbar",
+  "type": "product",
+  "title": "Data toolbar",
+  "description": "Search and filter controls for data tables and lists.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Above lists and tables.",
+  "avoid": [
+    "A filled search field",
+    "Filters before the search"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/data-toolbar.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add data-toolbar --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/api-keys/api-keys-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/api-keys/api-keys-page.tsx",
+        "sha256": "a1269c38b4734ba450d4a1d07182df5b52052b717786a3a22d75147029a4a63c",
+        "retained": false,
+        "exports": [
+          "ApiKeysPage",
+          "KeyFormDialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/data-toolbar.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function DataToolbar({ className, children, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function DataToolbarSearch({ value, onValueChange, placeholder, label, collapsible, className, children, }: {\n    value: string;\n    onValueChange: (value: string) => void;\n    placeholder?: string;\n    /** The field's accessible name; the placeholder when left out. */\n    label?: string;\n    collapsible?: boolean;\n    className?: string;\n    /** Controls inside the open field, before its close button (search parameters). */\n    children?: React.ReactNode;\n}): React.JSX.Element;\n/** The filters at the right end of the toolbar, 4px apart. */\ndeclare function DataToolbarActions({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { DataToolbar, DataToolbarActions, DataToolbarSearch };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/data-toolbar/Product"
+    },
+    {
+      "name": "Collapsible",
+      "url": "https://context-ds.vercel.app/preview/data-toolbar/Collapsible"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/data-toolbar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { DataToolbar, DataToolbarActions, DataToolbarSearch } from \"@/components/product/data-toolbar\";\nimport { TagFilter } from \"@/components/ui/tag-filter\";\nimport { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from \"@/components/ui/select\";\n\nexport function Product() {\n  const [query, setQuery] = React.useState(\"\");\n  const [status, setStatus] = React.useState(\"all\");\n  return (\n    <DataToolbar className=\"w-full max-w-2xl\">\n      <DataToolbarSearch value={query} onValueChange={setQuery} placeholder=\"Search keys\" label=\"Search API keys\" />\n      <DataToolbarActions>\n        <Select value={status} onValueChange={setStatus}>\n          <SelectTrigger appearance=\"ghost\" aria-label=\"Status\">\n            <SelectValue />\n          </SelectTrigger>\n          <SelectContent align=\"end\">\n            <SelectItem value=\"all\">All statuses</SelectItem>\n            <SelectItem value=\"active\">Active</SelectItem>\n            <SelectItem value=\"disabled\">Disabled</SelectItem>\n          </SelectContent>\n        </Select>\n      </DataToolbarActions>\n    </DataToolbar>\n  );\n}\n\nexport function Collapsible() {\n  const [query, setQuery] = React.useState(\"\");\n  const [tags, setTags] = React.useState<string[]>([\"pricing\"]);\n  return (\n    <DataToolbar className=\"w-full max-w-2xl\">\n      <DataToolbarSearch collapsible value={query} onValueChange={setQuery} placeholder=\"Search monitors\" />\n      <DataToolbarActions>\n        <TagFilter tags={tags} tagOptions={[\"pricing\", \"docs\", \"competitors\"]} onAddTag={(t) => setTags((all) => [...all, t])} onRemoveTag={(t) => setTags((all) => all.filter((x) => x !== t))} />\n      </DataToolbarActions>\n    </DataToolbar>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "tag-filter",
+    "select"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/data-toolbar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Search, X } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Above a table: the search at the left, the filters (ghost selects, tags) at the right, one line that wraps only\n// when it has to. The search is a 32px bordered field 256px wide; `collapsible` keeps it a 36px icon until it's\n// opened, then a field ringed in blue that Escape or its close button clears and folds away.\nfunction DataToolbar({ className, children, ...props }: React.ComponentProps<\"div\">) {\n  return (\n    <div data-slot=\"data-toolbar\" className={cn(\"flex flex-wrap items-center justify-between gap-x-4 gap-y-2\", className)} {...props}>\n      {children}\n    </div>\n  );\n}\n\nfunction DataToolbarSearch({\n  value,\n  onValueChange,\n  placeholder = \"Search\",\n  label,\n  collapsible = false,\n  className,\n  children,\n}: {\n  value: string;\n  onValueChange: (value: string) => void;\n  placeholder?: string;\n  /** The field's accessible name; the placeholder when left out. */\n  label?: string;\n  collapsible?: boolean;\n  className?: string;\n  /** Controls inside the open field, before its close button (search parameters). */\n  children?: React.ReactNode;\n}) {\n  const [open, setOpen] = React.useState(value !== \"\");\n  const inputRef = React.useRef<HTMLInputElement>(null);\n  const focusOnOpen = React.useRef(false);\n  React.useEffect(() => {\n    if (!open || !focusOnOpen.current) return;\n    focusOnOpen.current = false;\n    inputRef.current?.focus();\n  }, [open]);\n  const close = () => {\n    onValueChange(\"\");\n    setOpen(false);\n  };\n  const name = label ?? placeholder;\n\n  if (collapsible && !open && !value) {\n    return (\n      <button\n        type=\"button\"\n        aria-label={name}\n        onClick={() => {\n          focusOnOpen.current = true;\n          setOpen(true);\n        }}\n        className={cn(\"grid size-9 shrink-0 place-items-center rounded-control text-fg-subtle outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring\", className)}\n      >\n        <Search className=\"size-4\" strokeWidth={1.5} />\n      </button>\n    );\n  }\n\n  if (collapsible) {\n    return (\n      <search data-slot=\"data-toolbar-search\" className={cn(\"flex h-9 w-64 min-w-0 shrink items-center gap-2 rounded-control border border-brand pr-1 pl-3.5 shadow-[0_0_0_4px_var(--ds-color-blue-10)]\", className)}>\n        <Search className=\"size-3.5 shrink-0 text-fg-subtle\" strokeWidth={1.5} />\n        <input\n          ref={inputRef}\n          type=\"search\"\n          value={value}\n          onChange={(e) => onValueChange(e.target.value)}\n          onKeyDown={(e) => e.key === \"Escape\" && close()}\n          placeholder={placeholder}\n          aria-label={name}\n          className=\"min-w-0 flex-1 bg-transparent text-body-sm text-fg outline-none placeholder:text-fg-subtle [&::-webkit-search-cancel-button]:hidden\"\n        />\n        {children}\n        <button type=\"button\" aria-label=\"Close search\" onClick={close} className=\"grid size-7 shrink-0 place-items-center rounded-sm text-fg-subtle outline-none transition-colors duration-150 hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring\">\n          <X className=\"size-3.5\" strokeWidth={1.5} />\n        </button>\n      </search>\n    );\n  }\n\n  return (\n    <label\n      data-slot=\"data-toolbar-search\"\n      className={cn(\"flex h-8 w-64 min-w-0 items-center gap-2 rounded-control border border-line px-3 transition-[border-color,box-shadow] duration-150 ease-out focus-within:border-brand hover:border-line-strong motion-reduce:transition-none\", className)}\n    >\n      <Search className=\"size-3.5 shrink-0 text-fg-subtle\" strokeWidth={1.5} />\n      <input type=\"search\" value={value} onChange={(e) => onValueChange(e.target.value)} placeholder={placeholder} aria-label={name} className=\"min-w-0 flex-1 bg-transparent text-body-sm text-fg outline-none placeholder:text-fg-subtle\" />\n      {children}\n    </label>\n  );\n}\n\n/** The filters at the right end of the toolbar, 4px apart. */\nfunction DataToolbarActions({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"data-toolbar-actions\" className={cn(\"ml-auto flex flex-wrap items-center gap-1\", className)} {...props} />;\n}\n\nexport { DataToolbar, DataToolbarActions, DataToolbarSearch };\n"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "app-top-bar",
+  "type": "product",
+  "title": "App top bar",
+  "description": "Dashboard top bar with a mobile navigation button and space for credits or account controls.",
+  "surface": "product",
+  "kinds": [
+    "app-topbar"
+  ],
+  "usage": "Above every product page.",
+  "avoid": [
+    "Page titles in the top bar",
+    "A filled or bordered bar"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/app-top-bar.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add app-top-bar --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/top-bar.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/top-bar.tsx",
+        "sha256": "9ff95e3f405b7bf181a3ecb7b9b099dd45fd920bc061c7bbef4efb99536c541e",
+        "retained": false,
+        "exports": [
+          "TopBar"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/app-top-bar.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function AppTopBar({ onMenuClick, className, children }: {\n    onMenuClick?: () => void;\n    className?: string;\n    children?: React.ReactNode;\n}): React.JSX.Element;\nexport { AppTopBar };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/app-top-bar/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/app-top-bar.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { AppTopBar } from \"@/components/product/app-top-bar\";\nimport { AppSidebar, SidebarGroup, SidebarLink } from \"@/components/product/app-sidebar\";\nimport { Product as CreditsExample } from \"./credits-menu\";\n\nexport function Product() {\n  const [open, setOpen] = useState(false);\n  return <div className=\"w-full self-start\"><AppTopBar onMenuClick={() => setOpen(true)}><CreditsExample /></AppTopBar>\n    <div className=\"md:hidden\"><AppSidebar open={open} onOpenChange={setOpen} navLabel=\"Example navigation\"><SidebarGroup><SidebarLink href=\"/preview/overview-page/Block\">Overview</SidebarLink><SidebarLink href=\"/preview/table-page/Block\">API keys</SidebarLink></SidebarGroup></AppSidebar></div>\n  </div>;\n}\n"
+    },
+    {
+      "path": "examples/credits-menu.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Gauge } from \"lucide-react\";\n\nimport { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody } from \"@/components/ui/dialog\";\nimport { Button } from \"@/components/ui/button\";\nimport { CreditsMenu } from \"@/components/product/credits-menu\";\n\nexport function Product() {\n  const [autoTopUp, setAutoTopUp] = useState(true);\n  const [open, setOpen] = useState(false);\n  const [upgraded, setUpgraded] = useState(false);\n  return (\n    <div className=\"flex w-full max-w-md justify-end\">\n      <CreditsMenu\n        remaining={41590}\n        total={upgraded ? 250000 : 100000}\n        plan={{ name: upgraded ? \"Scale\" : \"Pro Plan\", price: upgraded ? \"$99/month\" : \"$49/month\", resetLabel: \"Nov 1\" }}\n        refill={100000}\n        rateLimit=\"600 req/min\"\n        autoTopUp={autoTopUp}\n        onAutoTopUpChange={setAutoTopUp}\n        autoTopUpDescription=\"Adds 10K credits for $5 when you drop under 1K.\"\n        onUpgrade={() => setOpen(true)}\n        usageAction={\n          <a href=\"/preview/usage-card/Product\">\n            <Gauge className=\"size-3.5\" strokeWidth={1.5} />\n            View usage\n          </a>\n        }\n      />\n      <Dialog open={open} onOpenChange={setOpen}><DialogContent><DialogHeader><DialogTitle>Change plan</DialogTitle><DialogDescription>This updates the example plan.</DialogDescription></DialogHeader><DialogBody><Button variant=\"brand\" onClick={() => { setUpgraded((value) => !value); setOpen(false); }}>Choose {upgraded ? \"Pro\" : \"Scale\"}</Button></DialogBody></DialogContent></Dialog>\n    </div>\n  );\n}\n\nexport function Loading() {\n  return (\n    <div className=\"flex w-full max-w-md justify-end\">\n      <CreditsMenu remaining={0} plan={{ name: \"Free\" }} loading />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "app-sidebar",
+    "dialog",
+    "button",
+    "credits-menu"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/app-top-bar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Menu } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Level with the sidebar's workspace row (80px, 56px on phones). Every page heads itself, so the bar has no title and\n// no fill: only the menu button where the sidebar is a drawer, and the credits (or the account) at the right.\nfunction AppTopBar({ onMenuClick, className, children }: { onMenuClick?: () => void; className?: string; children?: React.ReactNode }) {\n  return (\n    <header data-slot=\"app-top-bar\" className={cn(\"flex h-14 shrink-0 items-center justify-end gap-4 px-3 md:h-20 md:pr-4.5 md:pl-5\", className)}>\n      {onMenuClick && (\n        <button\n          type=\"button\"\n          onClick={onMenuClick}\n          aria-label=\"Open navigation\"\n          className=\"mr-auto -ml-0.5 grid size-9 shrink-0 place-items-center rounded-control text-fg-muted outline-none transition-colors duration-150 hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring md:hidden\"\n        >\n          <Menu className=\"size-4.5\" strokeWidth={1.5} />\n        </button>\n      )}\n      {children}\n    </header>\n  );\n}\n\nexport { AppTopBar };\n"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-glossary-hero",
+  "type": "visual",
+  "title": "Glossary hero story",
+  "description": "Dot animation of glossary entries and lookup, with captions.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The glossary page hero on the site. Plays only on screen; shows the book with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-glossary-hero.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-glossary-hero --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/page-heroes/glossary-hero-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/page-heroes/glossary-hero-story.tsx",
+        "sha256": "2c900dbeafd2709c851aef2cfa53b9a00187760026ab32684f5d51ba29d46c8e",
+        "retained": false,
+        "exports": [
+          "GlossaryHeroStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/glossary-hero-story.d.ts",
+      "content": "/**\n * The glossary hero's picture: an open book read line by line, then one entry looked up term after term. With\n * reduced motion it shows the book.\n */\nexport declare function GlossaryHeroStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/glossary-hero-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createGlossaryHeroStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/glossary-hero-story-scenes.d.ts",
+      "content": "export declare const BOOK_LINE_COUNT: number;\n/** The book with the line being read (none when negative) solid, and the rest rings. Lines run down one page, then the next. */\nexport declare function paintBook(states: Uint8Array, reading: number): Uint8Array<ArrayBufferLike>;\nexport declare const BOOK_UNREAD: import(\"../dot-engine/dot-story-beats\").StoryPicture;\n/** The terms looked up, and how many dots wide each sets on the entry. */\nexport declare const TERMS: {\n    word: string;\n    dots: number;\n}[];\n/** The entry for the term at `index`: the term set solid, its definition in rings beneath. */\nexport declare function paintEntry(states: Uint8Array, index: number): Uint8Array<ArrayBufferLike>;\nexport declare const ENTRIES: import(\"../dot-engine/dot-story-beats\").StoryPicture[];\nexport declare const BOOK_CAPTION: import(\"../dot-engine/dot-story-player\").DotStoryText[];\nexport declare const ENTRY_CAPTIONS: import(\"../dot-engine/dot-story-player\").DotStoryText[][];\n/** The open book: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const GLOSSARY_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-glossary-hero/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-glossary-hero.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { GlossaryHeroStory } from \"@/components/visuals/stories/glossary-hero-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <GlossaryHeroStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "story-parts",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/glossary-hero-story.tsx",
+      "content": "'use client';\n\nimport { GLOSSARY_RESTING } from '@/components/visuals/stories/glossary-hero-story-scenes';\nimport { HERO_STORY_GRID } from '@/components/visuals/stories/hero-story-kit';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadGlossaryHeroStory: LoadDotStory = async (stage) => {\n\tconst { createGlossaryHeroStoryPlayer } = await import('@/components/visuals/stories/glossary-hero-story-player');\n\treturn createGlossaryHeroStoryPlayer(stage);\n};\n\n/**\n * The glossary hero's picture: an open book read line by line, then one entry looked up term after term. With\n * reduced motion it shows the book.\n */\nexport function GlossaryHeroStory({ className }: { className?: string }) {\n\treturn <DotStory grid={HERO_STORY_GRID} resting={GLOSSARY_RESTING} load={loadGlossaryHeroStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/glossary-hero-story-player.ts",
+      "content": "import { BOOK_CAPTION, BOOK_LINE_COUNT, BOOK_UNREAD, ENTRIES, ENTRY_CAPTIONS, TERMS, paintBook, paintEntry } from '@/components/visuals/stories/glossary-hero-story-scenes';\nimport { HERO_STORY_GRID, stepAt } from '@/components/visuals/stories/hero-story-kit';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The glossary, played as a loop: a line of the open book is read at a time, then the book melts into a single\n * entry, and one term after another is looked up on it.\n */\n\nconst READING = { startsAt: 0.4, everySeconds: 0.2 };\nconst READ_AT = READING.startsAt + BOOK_LINE_COUNT * READING.everySeconds;\nconst LOOKING_UP = { startsAt: 0, everySeconds: 1.5 };\nconst TYPING = { startsAfter: 0.15, charactersPerSecond: 14 };\nconst lastTerm = TERMS.length - 1;\n\n// Past the last line nothing is being read, so the book leaves as it arrived.\nconst readingAt = (heldSeconds: number) => {\n\tconst line = stepAt(heldSeconds, READING, BOOK_LINE_COUNT);\n\treturn line === BOOK_LINE_COUNT ? -1 : line;\n};\n\nexport function createGlossaryHeroStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: HERO_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: READ_AT + 0.5 },\n\t\tbeats: [\n\t\t\tcaptionedBeat({ picture: BOOK_UNREAD, caption: BOOK_CAPTION, holdSeconds: READ_AT + 1.2, isTyped: true, animate: (states, heldSeconds) => void paintBook(states, readingAt(heldSeconds)) }),\n\t\t\t{\n\t\t\t\t...captionedBeat({ picture: ENTRIES[0], departure: ENTRIES[lastTerm], caption: ENTRY_CAPTIONS[0], holdSeconds: TERMS.length * LOOKING_UP.everySeconds + 0.6, animate: (states, heldSeconds) => void paintEntry(states, stepAt(heldSeconds, LOOKING_UP, lastTerm)) }),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tconst term = stepAt(heldSeconds, LOOKING_UP, lastTerm);\n\t\t\t\t\tconst [label, word, detail] = ENTRY_CAPTIONS[term];\n\t\t\t\t\tpen.text(label);\n\t\t\t\t\tpen.type(word, heldSeconds, { startsAt: term * LOOKING_UP.everySeconds + TYPING.startsAfter, charactersPerSecond: TYPING.charactersPerSecond });\n\t\t\t\t\tpen.text(detail);\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/glossary-hero-story-scenes.ts",
+      "content": "import { HERO_STORY_GRID, between, blankScreen, heroCaption, pictureOfStates } from '@/components/visuals/stories/hero-story-kit';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { paintShape, roundedBox, type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/** The glossary hero's pictures, in the brand dot grid: an open book being read, and one of its entries up close. */\n\nconst PAGES: DotBox[] = [\n\t{ left: 3, right: 15, top: 6, bottom: 31 },\n\t{ left: 17, right: 29, top: 6, bottom: 31 },\n];\nconst PAGE_LINE = { firstRow: 10, every: 3, perPage: 7, inset: 2 };\n// How far short of the page's edge each line stops, so the two pages read as text rather than ruled paper.\nconst LINE_SHORTFALLS = [0, 2, 0, 4, 1, 0, 5];\nexport const BOOK_LINE_COUNT = PAGES.length * PAGE_LINE.perPage;\n\n/** The book with the line being read (none when negative) solid, and the rest rings. Lines run down one page, then the next. */\nexport function paintBook(states: Uint8Array, reading: number) {\n\tPAGES.forEach((page, pageIndex) => {\n\t\tpaintShape(HERO_STORY_GRID, states, roundedBox(page, 1), (column, row) => {\n\t\t\tconst line = (row - PAGE_LINE.firstRow) / PAGE_LINE.every;\n\t\t\tif (!Number.isInteger(line) || !between(line, 0, PAGE_LINE.perPage - 1)) return DOT_ABSENT;\n\t\t\tif (!between(column, page.left + PAGE_LINE.inset, page.right - PAGE_LINE.inset - LINE_SHORTFALLS[line])) return DOT_ABSENT;\n\t\t\treturn pageIndex * PAGE_LINE.perPage + line === reading ? DOT_FILLED : DOT_HOLLOW;\n\t\t});\n\t});\n\treturn states;\n}\n\nexport const BOOK_UNREAD = pictureOfStates(paintBook(blankScreen(), -1));\n\nconst ENTRY: DotBox = { left: 3, right: 29, top: 7, bottom: 30 };\nconst ENTRY_LEFT = 6;\nconst TERM_ROWS = [10, 11];\nconst DEFINITION = [\n\t{ row: 15, right: 26 },\n\t{ row: 18, right: 23 },\n\t{ row: 21, right: 25 },\n\t{ row: 24, right: 21 },\n\t{ row: 27, right: 16 },\n];\n/** The terms looked up, and how many dots wide each sets on the entry. */\nexport const TERMS = [\n\t{ word: 'crawling', dots: 12 },\n\t{ word: 'HTTP', dots: 7 },\n\t{ word: 'APIs', dots: 7 },\n\t{ word: 'brands', dots: 10 },\n];\n\n/** The entry for the term at `index`: the term set solid, its definition in rings beneath. */\nexport function paintEntry(states: Uint8Array, index: number) {\n\treturn paintShape(HERO_STORY_GRID, states, roundedBox(ENTRY, 2), (column, row) => {\n\t\tif (TERM_ROWS.includes(row)) return between(column, ENTRY_LEFT, ENTRY_LEFT + TERMS[index].dots - 1) ? DOT_FILLED : DOT_ABSENT;\n\t\tconst line = DEFINITION.find((candidate) => candidate.row === row);\n\t\treturn line && between(column, ENTRY_LEFT, line.right) ? DOT_HOLLOW : DOT_ABSENT;\n\t});\n}\n\nexport const ENTRIES = TERMS.map((_, index) => pictureOfStates(paintEntry(blankScreen(), index)));\n\nexport const BOOK_CAPTION = heroCaption('the glossary', 'A to Z', 'plain-English definitions');\nexport const ENTRY_CAPTIONS = TERMS.map(({ word }) => heroCaption('look up', word, 'and what it means'));\n\n/** The open book: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const GLOSSARY_RESTING = { ...BOOK_UNREAD, texts: BOOK_CAPTION };\n"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "input-otp",
+  "type": "ui",
+  "title": "Input OTP",
+  "description": "A one-time code in joined 40px slots, the active slot in brand blue with a blinking caret.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Enter a short verification code (six digits for sign-in or a sensitive change). Set maxLength, and pattern={REGEXP_ONLY_DIGITS} for numbers; onComplete fires when the code is full. Pasting a whole code and SMS autofill work. Say where the code was sent in the help line.",
+  "avoid": [
+    "Separate inputs per digit",
+    "Auto-submitting without showing the code",
+    "A code field without a resend action nearby"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/input-otp.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add input-otp",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from the dashboard's field (context-dashboard c0ddf7a src/components/ui/form.tsx, INPUT_CLASS)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/input-otp.d.ts",
+      "content": "import * as React from \"react\";\ndeclare const REGEXP_ONLY_DIGITS = \"^\\\\d+$\";\ndeclare const REGEXP_ONLY_CHARS = \"^[a-zA-Z]+$\";\ndeclare const REGEXP_ONLY_DIGITS_AND_CHARS = \"^[a-zA-Z0-9]+$\";\ntype InputOTPProps = Omit<React.ComponentProps<\"input\">, \"value\" | \"defaultValue\" | \"onChange\" | \"maxLength\" | \"pattern\"> & {\n    maxLength: number;\n    value?: string;\n    defaultValue?: string;\n    onChange?: (value: string) => void;\n    onComplete?: (value: string) => void;\n    /** A regular expression (as a string) each character must match, such as REGEXP_ONLY_DIGITS. */\n    pattern?: string;\n    containerClassName?: string;\n};\ndeclare function InputOTP({ maxLength, value: valueProp, defaultValue, onChange, onComplete, pattern, containerClassName, className, children, disabled, onFocus, onBlur, onKeyDown, ...props }: InputOTPProps): React.JSX.Element;\ndeclare function InputOTPGroup({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function InputOTPSlot({ index, className, ...props }: React.ComponentProps<\"div\"> & {\n    index: number;\n}): React.JSX.Element;\ndeclare function InputOTPSeparator(props: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, REGEXP_ONLY_CHARS, REGEXP_ONLY_DIGITS, REGEXP_ONLY_DIGITS_AND_CHARS };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/input-otp/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/input-otp/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/input-otp.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, REGEXP_ONLY_DIGITS } from \"@/components/ui/input-otp\";\n\n// On sign-in: the code from the email.\nexport function Site() {\n  return (\n    <div className=\"grid gap-3\">\n      <p id=\"code-label\" className=\"text-body text-fg\">Enter the code we emailed you</p>\n      <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} aria-labelledby=\"code-label\">\n        <InputOTPGroup>\n          {Array.from({ length: 6 }, (_, i) => (\n            <InputOTPSlot key={i} index={i} />\n          ))}\n        </InputOTPGroup>\n      </InputOTP>\n    </div>\n  );\n}\n\n// Confirming a change to billing: two groups of three, a completed state, an invalid code and a disabled field.\nexport function Product() {\n  const [code, setCode] = useState(\"\");\n  const done = code.length === 6;\n  return (\n    <div className=\"grid gap-5\">\n      <div className=\"grid gap-2\">\n        <p id=\"confirm-label\" className=\"text-body-sm text-fg\">Confirmation code</p>\n        <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS} value={code} onChange={setCode} aria-labelledby=\"confirm-label\">\n          <InputOTPGroup>\n            <InputOTPSlot index={0} />\n            <InputOTPSlot index={1} />\n            <InputOTPSlot index={2} />\n          </InputOTPGroup>\n          <InputOTPSeparator />\n          <InputOTPGroup>\n            <InputOTPSlot index={3} />\n            <InputOTPSlot index={4} />\n            <InputOTPSlot index={5} />\n          </InputOTPGroup>\n        </InputOTP>\n        <p aria-live=\"polite\" className=\"text-caption text-fg-subtle\">{done ? \"Code entered. Confirm to continue.\" : \"Sent to anwar@acme.com.\"}</p>\n      </div>\n      <InputOTP maxLength={4} defaultValue=\"1234\" aria-invalid aria-label=\"Invalid code\">\n        <InputOTPGroup>\n          {Array.from({ length: 4 }, (_, i) => (\n            <InputOTPSlot key={i} index={i} />\n          ))}\n        </InputOTPGroup>\n      </InputOTP>\n      <InputOTP maxLength={4} disabled aria-label=\"Disabled code\">\n        <InputOTPGroup>\n          {Array.from({ length: 4 }, (_, i) => (\n            <InputOTPSlot key={i} index={i} />\n          ))}\n        </InputOTPGroup>\n      </InputOTP>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/input-otp.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Minus } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A one-time code field in the dashboard field's terms (INPUT_CLASS): joined 40px slots in the light border with control\n// corners outside, the code in the mono face, and the active slot raised above its neighbors in the brand blue edge with\n// a blinking 1px caret. One real input lies over the slots, so typing, deleting, pasting a whole code, autofill from SMS\n// and arrow keys all work as in any field. `pattern` limits each character.\nconst REGEXP_ONLY_DIGITS = \"^\\\\d+$\";\nconst REGEXP_ONLY_CHARS = \"^[a-zA-Z]+$\";\nconst REGEXP_ONLY_DIGITS_AND_CHARS = \"^[a-zA-Z0-9]+$\";\n\ntype Slot = { char: string | null; isActive: boolean; hasFakeCaret: boolean };\nconst InputOTPContext = React.createContext<{ slots: Slot[]; invalid: boolean; disabled: boolean }>({ slots: [], invalid: false, disabled: false });\n\ntype InputOTPProps = Omit<React.ComponentProps<\"input\">, \"value\" | \"defaultValue\" | \"onChange\" | \"maxLength\" | \"pattern\"> & {\n  maxLength: number;\n  value?: string;\n  defaultValue?: string;\n  onChange?: (value: string) => void;\n  onComplete?: (value: string) => void;\n  /** A regular expression (as a string) each character must match, such as REGEXP_ONLY_DIGITS. */\n  pattern?: string;\n  containerClassName?: string;\n};\n\nfunction InputOTP({ maxLength, value: valueProp, defaultValue = \"\", onChange, onComplete, pattern, containerClassName, className, children, disabled = false, onFocus, onBlur, onKeyDown, ...props }: InputOTPProps) {\n  const [inner, setInner] = React.useState(defaultValue.slice(0, maxLength));\n  const value = valueProp ?? inner;\n  const input = React.useRef<HTMLInputElement>(null);\n  const [focused, setFocused] = React.useState(false);\n  const [selection, setSelection] = React.useState<[number, number]>([value.length, value.length]);\n  const test = React.useMemo(() => (pattern ? new RegExp(pattern) : null), [pattern]);\n\n  const sync = React.useCallback(() => {\n    const el = input.current;\n    if (el && document.activeElement === el) setSelection([el.selectionStart ?? el.value.length, el.selectionEnd ?? el.value.length]);\n  }, []);\n  React.useEffect(() => {\n    document.addEventListener(\"selectionchange\", sync);\n    return () => document.removeEventListener(\"selectionchange\", sync);\n  }, [sync]);\n\n  const commit = (next: string) => {\n    if (valueProp === undefined) setInner(next);\n    onChange?.(next);\n    if (next.length === maxLength && next !== value) onComplete?.(next);\n  };\n\n  // A caret at the end, or the last character selected when the code is full, so typing replaces it.\n  const placeCaret = (el: HTMLInputElement) => {\n    const at = Math.min(el.value.length, maxLength - 1);\n    if (el.value.length >= maxLength) el.setSelectionRange(at, maxLength);\n    else el.setSelectionRange(el.value.length, el.value.length);\n    sync();\n  };\n\n  const [start, end] = selection;\n  const active = focused ? (start === end ? Math.min(start, maxLength - 1) : start) : -1;\n  const slots: Slot[] = Array.from({ length: maxLength }, (_, i) => ({\n    char: value[i] ?? null,\n    isActive: i === active,\n    hasFakeCaret: focused && start === end && i === start && !value[i],\n  }));\n  const invalid = props[\"aria-invalid\"] === true || props[\"aria-invalid\"] === \"true\";\n\n  return (\n    <InputOTPContext.Provider value={{ slots, invalid, disabled }}>\n      <div data-slot=\"input-otp\" className={cn(\"relative flex items-center gap-2 has-disabled:opacity-50\", containerClassName)}>\n        {children}\n        <input\n          ref={input}\n          data-slot=\"input-otp-input\"\n          inputMode={pattern === REGEXP_ONLY_DIGITS ? \"numeric\" : \"text\"}\n          autoComplete=\"one-time-code\"\n          spellCheck={false}\n          maxLength={maxLength}\n          value={value}\n          disabled={disabled}\n          className={cn(\"absolute inset-0 size-full cursor-text bg-transparent text-transparent caret-transparent opacity-0 outline-none disabled:cursor-not-allowed\", className)}\n          onChange={(e) => {\n            const next = e.target.value.replace(/\\s/g, \"\").slice(0, maxLength);\n            if (next && test && !test.test(next)) return;\n            commit(next);\n          }}\n          onPaste={(e) => {\n            // A pasted code replaces the whole field, cut to length and checked against the pattern.\n            const text = e.clipboardData.getData(\"text\").replace(/\\s/g, \"\").slice(0, maxLength);\n            if (!text) return;\n            e.preventDefault();\n            if (test && !test.test(text)) return;\n            commit(text);\n            requestAnimationFrame(() => input.current && placeCaret(input.current));\n          }}\n          onFocus={(e) => {\n            setFocused(true);\n            placeCaret(e.currentTarget);\n            onFocus?.(e);\n          }}\n          onMouseUp={(e) => placeCaret(e.currentTarget)}\n          onBlur={(e) => {\n            setFocused(false);\n            onBlur?.(e);\n          }}\n          onKeyDown={(e) => {\n            onKeyDown?.(e);\n            if (e.defaultPrevented) return;\n            const el = e.currentTarget;\n            const at = el.selectionStart ?? 0;\n            // Arrows move one slot and select it, so the next key replaces that character.\n            if (e.key === \"ArrowLeft\" || e.key === \"ArrowRight\") {\n              e.preventDefault();\n              const to = Math.max(0, Math.min(e.key === \"ArrowLeft\" ? at - 1 : at + 1, el.value.length));\n              el.setSelectionRange(to, to < el.value.length ? to + 1 : to);\n              sync();\n            } else if (e.key === \"Home\" || e.key === \"End\") {\n              e.preventDefault();\n              const to = e.key === \"Home\" ? 0 : el.value.length;\n              el.setSelectionRange(to, to);\n              sync();\n            }\n          }}\n          {...props}\n        />\n      </div>\n    </InputOTPContext.Provider>\n  );\n}\n\nfunction InputOTPGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"input-otp-group\" className={cn(\"flex items-center rounded-control\", className)} {...props} />;\n}\n\nfunction InputOTPSlot({ index, className, ...props }: React.ComponentProps<\"div\"> & { index: number }) {\n  const { slots, invalid } = React.useContext(InputOTPContext);\n  const { char, hasFakeCaret, isActive } = slots[index] ?? { char: null, hasFakeCaret: false, isActive: false };\n  return (\n    <div\n      data-slot=\"input-otp-slot\"\n      data-active={isActive || undefined}\n      aria-invalid={invalid || undefined}\n      className={cn(\n        \"relative -ml-px flex size-10 items-center justify-center border border-line bg-surface font-mono text-body leading-none text-fg tabular-nums transition-[border-color] duration-150 ease-out first:ml-0 first:rounded-l-control last:rounded-r-control aria-invalid:border-danger data-active:z-10 data-active:border-brand motion-reduce:transition-none\",\n        className,\n      )}\n      {...props}\n    >\n      {char}\n      {hasFakeCaret && (\n        <div className=\"pointer-events-none absolute inset-0 flex items-center justify-center\">\n          <div className=\"h-4 w-px animate-pulse bg-fg\" />\n        </div>\n      )}\n    </div>\n  );\n}\n\nfunction InputOTPSeparator(props: React.ComponentProps<\"div\">) {\n  return (\n    <div data-slot=\"input-otp-separator\" role=\"separator\" className=\"flex items-center text-fg-faint\" {...props}>\n      <Minus strokeWidth={1.5} className=\"size-4\" />\n    </div>\n  );\n}\n\nexport { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot, REGEXP_ONLY_CHARS, REGEXP_ONLY_DIGITS, REGEXP_ONLY_DIGITS_AND_CHARS };\n"
+    }
+  ]
+}

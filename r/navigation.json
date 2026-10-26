@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "navigation",
+  "type": "lib",
+  "title": "Navigation",
+  "description": "Navigation callback for the page blocks.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Connect a page block to your application router.",
+  "avoid": [],
+  "notes": "Blocks call `navigate(href)` for navigation actions. By default it loads that path. A client router can listen for\nthe cancelable `ds:navigate` event, call `event.preventDefault()`, then use `event.detail.href` with its own router.",
+  "documentation": "https://context-ds.vercel.app/components/navigation.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add navigation --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Integration helper; no public website counterpart.",
+    "sources": []
+  },
+  "api": [
+    {
+      "path": "lib/navigation.d.ts",
+      "content": "/** Lets the host router handle a block's navigation before falling back to a normal page load. */\nexport declare function navigate(href: string): void;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [],
+  "packages": [],
+  "files": [
+    {
+      "path": "lib/navigation.ts",
+      "content": "/** Lets the host router handle a block's navigation before falling back to a normal page load. */\nexport function navigate(href: string) {\n  const event = new CustomEvent(\"ds:navigate\", { detail: { href }, cancelable: true });\n  if (window.dispatchEvent(event)) window.location.assign(href);\n}\n"
+    }
+  ]
+}

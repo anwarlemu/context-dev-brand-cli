@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "separator",
+  "type": "ui",
+  "title": "Separator",
+  "description": "Horizontal or vertical divider.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Dividing menu groups, card sections, toolbars.",
+  "avoid": [
+    "Thick or dark rules"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/separator.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add separator",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx; src/components/ui/dialog.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/dialog.tsx",
+        "sha256": "45b7c747c0394dd24e601005ace7294c31bfaff09aa44b988da1e20b448f66f1",
+        "retained": false,
+        "exports": [
+          "Dialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/separator.d.ts",
+      "content": "import * as React from \"react\";\nimport * as SeparatorPrimitive from \"@radix-ui/react-separator\";\ndeclare function Separator({ className, orientation, decorative, ...props }: React.ComponentProps<typeof SeparatorPrimitive.Root>): React.JSX.Element;\nexport { Separator };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/separator/Product"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/separator/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/separator.tsx",
+      "content": "import { Separator } from \"@/components/ui/separator\";\n\nexport function Product() {\n  return (\n    <div className=\"w-full max-w-sm text-body-sm\">\n      <p className=\"text-fg\">Monitors</p>\n      <p className=\"text-fg-muted\">Watch pages for changes.</p>\n      <Separator className=\"my-3\" />\n      <div className=\"flex h-5 items-center gap-3 text-fg-muted\">\n        <span>Daily</span>\n        <Separator orientation=\"vertical\" />\n        <span>Weekly</span>\n        <Separator orientation=\"vertical\" />\n        <span>Monthly</span>\n      </div>\n    </div>\n  );\n}\n\nexport function Site() {\n  return (\n    <div className=\"w-full max-w-md\">\n      <p className=\"text-h5 text-fg\">Scrape</p>\n      <p className=\"text-body text-fg-muted\">Any page as clean Markdown.</p>\n      <Separator className=\"my-5\" />\n      <p className=\"text-h5 text-fg\">Search</p>\n      <p className=\"text-body text-fg-muted\">The web, read for you.</p>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-separator"
+  ],
+  "files": [
+    {
+      "path": "components/ui/separator.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as SeparatorPrimitive from \"@radix-ui/react-separator\";\n\nimport { cn } from \"@/lib/utils\";\n\nfunction Separator({ className, orientation = \"horizontal\", decorative = true, ...props }: React.ComponentProps<typeof SeparatorPrimitive.Root>) {\n  return (\n    <SeparatorPrimitive.Root\n      data-slot=\"separator\"\n      decorative={decorative}\n      orientation={orientation}\n      className={cn(\"shrink-0 bg-line-subtle data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px\", className)}\n      {...props}\n    />\n  );\n}\n\nexport { Separator };\n"
+    }
+  ]
+}

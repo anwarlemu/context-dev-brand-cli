@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "item",
+  "type": "ui",
+  "title": "Item",
+  "description": "A row of content: a glyph or picture, a title over a muted line, actions at the end.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Use for rows in a list or a settings group: an API key with its last use, a monitor with its schedule, a team member with their role. ItemGroup stacks them; ItemSeparator rules them. As a link or button (asChild) an item washes on hover; aria-current marks the selected one. `outline` puts a row on its own card, `muted` on the subtle gray; size sm makes sidebar-height rows.",
+  "avoid": [
+    "Bold titles",
+    "Two lines of actions in one row",
+    "A row that moves on hover"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/item.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add item",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from context-dashboard c0ddf7a src/components/settings/settings-page.tsx (settings rows) and src/components/shell/sidebar.tsx (links)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/settings/settings-page.tsx",
+        "sha256": "71b6314133504ed6c34b75261acfeafd875e298dec815f706e8d0c09dfc81757",
+        "retained": false,
+        "exports": [
+          "SettingsPage"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/sidebar.tsx",
+        "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+        "retained": false,
+        "exports": [
+          "Sidebar"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/item.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\nimport { Separator } from \"@/components/ui/separator\";\ndeclare function ItemGroup({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function ItemSeparator({ className, ...props }: React.ComponentProps<typeof Separator>): React.JSX.Element;\ndeclare const itemVariants: (props?: ({\n    variant?: \"default\" | \"muted\" | \"outline\" | null | undefined;\n    size?: \"default\" | \"sm\" | \"xs\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Item({ className, variant, size, asChild, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof itemVariants> & {\n    asChild?: boolean;\n}): React.JSX.Element;\ndeclare const itemMediaVariants: (props?: ({\n    variant?: \"default\" | \"image\" | \"icon\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function ItemMedia({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof itemMediaVariants>): React.JSX.Element;\ndeclare function ItemContent({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function ItemTitle({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** The muted line under a title, clamped to two lines. */\ndeclare function ItemDescription({ className, ...props }: React.ComponentProps<\"p\">): React.JSX.Element;\ndeclare function ItemActions({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function ItemHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function ItemFooter({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Item, ItemActions, ItemContent, ItemDescription, ItemFooter, ItemGroup, ItemHeader, ItemMedia, ItemSeparator, ItemTitle };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/item/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/item/Product"
+    },
+    {
+      "name": "Sizes",
+      "url": "https://context-ds.vercel.app/preview/item/Sizes"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/item.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { ChevronRight, Globe, KeyRound, MoreVertical, ScanText } from \"lucide-react\";\n\nimport { Avatar, AvatarFallback } from \"@/components/ui/avatar\";\nimport { Badge } from \"@/components/ui/badge\";\nimport { Button } from \"@/components/ui/button\";\nimport { Item, ItemActions, ItemContent, ItemDescription, ItemGroup, ItemMedia, ItemSeparator, ItemTitle } from \"@/components/ui/item\";\nimport { GlyphTile } from \"@/components/visuals/glyph/glyph-tile\";\n\nexport function Site() {\n  return (\n    <ItemGroup className=\"w-full max-w-lg gap-2\">\n      {[\n        { glyph: \"scrape\" as const, title: \"Scrape\", text: \"Any page as clean markdown, HTML or JSON.\" },\n        { glyph: \"crawl\" as const, title: \"Crawl\", text: \"A whole site, page by page, with a sitemap or without.\" },\n      ].map((p) => (\n        <Item key={p.title} variant=\"outline\" asChild>\n          <a href={`https://context.dev/${p.title.toLowerCase()}`} target=\"_blank\" rel=\"noreferrer\">\n            <ItemMedia variant=\"image\">\n              <GlyphTile name={p.glyph} className=\"size-10 p-1.5\" />\n            </ItemMedia>\n            <ItemContent>\n              <ItemTitle>{p.title}</ItemTitle>\n              <ItemDescription>{p.text}</ItemDescription>\n            </ItemContent>\n            <ItemActions>\n              <ChevronRight className=\"size-4 text-fg-subtle\" strokeWidth={1.5} />\n            </ItemActions>\n          </a>\n        </Item>\n      ))}\n    </ItemGroup>\n  );\n}\n\nconst KEYS = [\n  { name: \"Production\", used: \"Used 2 minutes ago\", status: \"Active\" },\n  { name: \"Staging\", used: \"Used yesterday\", status: \"Active\" },\n  { name: \"Old CI key\", used: \"Never used\", status: \"Revoked\" },\n];\n\nexport function Product() {\n  const [selected, setSelected] = useState(\"Production\");\n  return (\n    <ItemGroup className=\"w-full max-w-xl rounded-card bg-surface shadow-card\">\n      {KEYS.map((k, i) => (\n        <div key={k.name}>\n          {i > 0 && <ItemSeparator />}\n          <Item asChild aria-current={selected === k.name}>\n            <button type=\"button\" className=\"w-full text-left\" onClick={() => setSelected(k.name)}>\n              <ItemMedia variant=\"icon\">\n                <KeyRound strokeWidth={1.75} />\n              </ItemMedia>\n              <ItemContent>\n                <ItemTitle>{k.name}</ItemTitle>\n                <ItemDescription>{k.used}</ItemDescription>\n              </ItemContent>\n              <ItemActions>\n                <Badge variant={k.status === \"Active\" ? \"success\" : \"default\"}>{k.status}</Badge>\n              </ItemActions>\n            </button>\n          </Item>\n        </div>\n      ))}\n    </ItemGroup>\n  );\n}\n\nexport function Sizes() {\n  return (\n    <div className=\"grid w-full max-w-md gap-3\">\n      <Item variant=\"muted\">\n        <ItemMedia variant=\"icon\">\n          <Globe strokeWidth={1.75} />\n        </ItemMedia>\n        <ItemContent>\n          <ItemTitle>docs.example.com</ItemTitle>\n          <ItemDescription>Monitored every hour</ItemDescription>\n        </ItemContent>\n        <ItemActions>\n          <Button variant=\"ghost\" size=\"icon\" aria-label=\"Monitor actions\">\n            <MoreVertical strokeWidth={1.5} />\n          </Button>\n        </ItemActions>\n      </Item>\n      <Item size=\"sm\" variant=\"outline\">\n        <ItemMedia variant=\"icon\">\n          <ScanText strokeWidth={1.75} />\n        </ItemMedia>\n        <ItemContent>\n          <ItemTitle>Parse</ItemTitle>\n        </ItemContent>\n      </Item>\n      <Item size=\"xs\">\n        <Avatar className=\"size-5\">\n          <AvatarFallback>AL</AvatarFallback>\n        </Avatar>\n        <ItemContent>\n          <ItemTitle>Ana Lopez invited you to Acme</ItemTitle>\n        </ItemContent>\n      </Item>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "avatar",
+    "badge",
+    "button",
+    "glyph-tile"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "separator",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/item.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { Separator } from \"@/components/ui/separator\";\nimport { cn } from \"@/lib/utils\";\n\n// A row of content, as the dashboard lays out its settings rows and lists (settings-section.tsx, the sidebar's links):\n// a 16px line glyph or a GlyphTile at the start, a body-sm title in ink over a muted description, actions at the end.\n// `default` is bare and, as a link or button, washes on hover like a sidebar link; `outline` is the card with its\n// hairline drawn into the shadow; `muted` sits on the subtle gray. A selected item (aria-current or data-selected)\n// takes the sidebar's selected wash. ItemGroup stacks them with a light rule between (divide-line-subtle).\nfunction ItemGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div role=\"list\" data-slot=\"item-group\" className={cn(\"group/item-group flex flex-col\", className)} {...props} />;\n}\n\nfunction ItemSeparator({ className, ...props }: React.ComponentProps<typeof Separator>) {\n  return <Separator data-slot=\"item-separator\" orientation=\"horizontal\" className={cn(\"my-0\", className)} {...props} />;\n}\n\nconst itemVariants = cva(\n  \"group/item flex flex-wrap items-center rounded-control text-body-sm text-fg outline-none transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring aria-[current=page]:bg-wash-selected aria-[current=true]:bg-wash-selected data-[selected=true]:bg-wash-selected motion-reduce:transition-none [a]:hover:bg-wash-hover [button]:hover:bg-wash-hover\",\n  {\n    variants: {\n      variant: {\n        default: \"bg-transparent\",\n        outline: \"rounded-card bg-surface shadow-card [a]:hover:bg-subtle [button]:hover:bg-subtle\",\n        muted: \"rounded-card bg-subtle\",\n      },\n      size: {\n        default: \"gap-3 px-4 py-3\",\n        sm: \"min-h-8 gap-2.5 px-3 py-1.5\",\n        xs: \"gap-2 px-2 py-1 text-caption\",\n      },\n    },\n    defaultVariants: { variant: \"default\", size: \"default\" },\n  },\n);\n\nfunction Item({ className, variant = \"default\", size = \"default\", asChild = false, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof itemVariants> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"div\";\n  return <Comp data-slot=\"item\" data-variant={variant} data-size={size} className={cn(itemVariants({ variant, size, className }))} {...props} />;\n}\n\n// `icon` is the sidebar's 16px glyph at stroke 1.75 in the subtle gray; `image` a 40px picture or GlyphTile with control\n// corners.\nconst itemMediaVariants = cva(\"flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:self-start [&_svg]:pointer-events-none\", {\n  variants: {\n    variant: {\n      default: \"bg-transparent\",\n      icon: \"text-fg-subtle group-has-data-[slot=item-description]/item:mt-0.5 [&_svg:not([class*='size-'])]:size-4\",\n      image: \"size-10 overflow-hidden rounded-control [&_img]:size-full [&_img]:object-cover\",\n    },\n  },\n  defaultVariants: { variant: \"default\" },\n});\n\nfunction ItemMedia({ className, variant = \"default\", ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof itemMediaVariants>) {\n  return <div data-slot=\"item-media\" data-variant={variant} className={cn(itemMediaVariants({ variant, className }))} {...props} />;\n}\n\nfunction ItemContent({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"item-content\" className={cn(\"flex min-w-0 flex-1 flex-col gap-1 [&+[data-slot=item-content]]:flex-none\", className)} {...props} />;\n}\n\nfunction ItemTitle({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"item-title\" className={cn(\"flex w-fit min-w-0 items-center gap-2 leading-snug text-fg\", className)} {...props} />;\n}\n\n/** The muted line under a title, clamped to two lines. */\nfunction ItemDescription({ className, ...props }: React.ComponentProps<\"p\">) {\n  return <p data-slot=\"item-description\" className={cn(\"line-clamp-2 leading-relaxed font-normal text-balance text-fg-muted [&>a]:text-fg-brand [&>a]:underline [&>a]:underline-offset-4\", className)} {...props} />;\n}\n\nfunction ItemActions({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"item-actions\" className={cn(\"flex items-center gap-2\", className)} {...props} />;\n}\n\nfunction ItemHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"item-header\" className={cn(\"flex basis-full items-center justify-between gap-2\", className)} {...props} />;\n}\n\nfunction ItemFooter({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"item-footer\" className={cn(\"flex basis-full items-center justify-between gap-2\", className)} {...props} />;\n}\n\nexport { Item, ItemActions, ItemContent, ItemDescription, ItemFooter, ItemGroup, ItemHeader, ItemMedia, ItemSeparator, ItemTitle };\n"
+    }
+  ]
+}

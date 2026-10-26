@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "sonner",
+  "type": "ui",
+  "title": "Toaster",
+  "description": "Toast container and notifications for action feedback.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Confirming an action that happened.",
+  "avoid": [
+    "Toasts for errors that need action"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/sonner.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add sonner --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/ui/sonner.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/sonner.tsx",
+        "sha256": "54bbbe94b195997395b236584057642dc58482a87cef127722f58c7d0b5c428e",
+        "retained": false,
+        "exports": []
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/sonner.d.ts",
+      "content": "import * as React from \"react\";\nimport { type ToasterProps } from \"sonner\";\ndeclare function Toaster(props: ToasterProps): React.JSX.Element;\nexport { Toaster };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/sonner/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/sonner.tsx",
+      "content": "\"use client\";\n\nimport { useEffect } from \"react\";\nimport { toast } from \"sonner\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Toaster } from \"@/components/ui/sonner\";\n\nconst showKeyCreated = () => toast(\"Key created\", { id: \"key-created\", toasterId: \"toast-example\", description: \"Copy it now; it won't be shown again.\", duration: Infinity });\n\n// A toast raised on load and held, in a Toaster pinned to this frame (`absolute` instead of the viewport's `fixed`) so\n// it shows here. In an app, mount one <Toaster /> near the root and call toast() from anywhere.\nexport function Product() {\n  useEffect(() => {\n    showKeyCreated();\n  }, []);\n  return (\n    <div className=\"relative flex h-48 justify-center\">\n      <Button variant=\"outline\" onClick={showKeyCreated}>\n        Create key\n      </Button>\n      <Toaster id=\"toast-example\" style={{ position: \"absolute\" }} />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [
+    "sonner"
+  ],
+  "requires": [
+    "theme"
+  ],
+  "packages": [
+    "sonner"
+  ],
+  "files": [
+    {
+      "path": "components/ui/sonner.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Toaster as Sonner, type ToasterProps } from \"sonner\";\n\n// The brand's toasts (src/components/ui/sonner.tsx): white with a light border and a soft shadow, the description muted,\n// a close button on each, at the bottom center (src/app/providers.tsx). Sonner's own enter and exit motion is kept.\nfunction Toaster(props: ToasterProps) {\n  return (\n    <Sonner\n      className=\"toaster group\"\n      position=\"bottom-center\"\n      closeButton\n      toastOptions={{\n        classNames: {\n          toast: \"bg-surface! text-fg! border! border-line! shadow-[0_0.25rem_0.75rem_rgb(0_0_0/0.08)]! font-sans! text-body-sm!\",\n          description: \"text-fg-muted!\",\n          actionButton: \"rounded-control! bg-primary! text-on-primary!\",\n          cancelButton: \"rounded-control! bg-subtle! text-fg-muted!\",\n          closeButton: \"bg-surface! text-fg! border-line! hover:bg-wash-hover!\",\n        },\n      }}\n      {...props}\n    />\n  );\n}\n\nexport { Toaster };\n"
+    }
+  ]
+}

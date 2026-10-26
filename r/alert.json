@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "alert",
+  "type": "ui",
+  "title": "Alert",
+  "description": "A notice in the flow of a page: card corners and a light edge, a line glyph, a medium title over muted text, an action at the end.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Use for something the person should know where it applies: a key that will expire, a crawl that hit its limit, a change to the API. `info` (blue 10) for news, `warning` (soft amber) for something that needs attention soon, `destructive` (soft red) for what failed, `default` for a quiet note. Put a lucide glyph first, then AlertTitle and AlertDescription; put a button or a short note in AlertAction. For a notice across the top of a whole page, use Banner.",
+  "avoid": [
+    "Two alerts stacked for the same thing",
+    "A red alert for something that has not failed",
+    "Bold titles",
+    "An alert that moves or slides in"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/alert.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add alert",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/dashboard-ui/banner.tsx (the page banner; extrapolated for the default and warning tones)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/dashboard-ui/banner.tsx",
+        "sha256": "838054533e72d1c773d317d189759ac7d439efa44f0270e92583c9471a785aa8",
+        "retained": false,
+        "exports": [
+          "Banner"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/alert.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const alertVariants: (props?: ({\n    variant?: \"default\" | \"warning\" | \"destructive\" | \"info\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Alert({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof alertVariants>): React.JSX.Element;\ndeclare function AlertTitle({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function AlertDescription({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\n/** What sits at the end of a notice: a button or a quiet note, centered against the title and description. */\ndeclare function AlertAction({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Alert, AlertAction, AlertDescription, AlertTitle, alertVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/alert/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/alert/Product"
+    },
+    {
+      "name": "TitleOnly",
+      "url": "https://context-ds.vercel.app/preview/alert/TitleOnly"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/alert.tsx",
+      "content": "import { Info, KeyRound, OctagonAlert, TriangleAlert } from \"lucide-react\";\n\nimport { Alert, AlertAction, AlertDescription, AlertTitle } from \"@/components/ui/alert\";\nimport { Button } from \"@/components/ui/button\";\n\nexport function Site() {\n  return (\n    <div className=\"grid w-full max-w-xl gap-3\">\n      <Alert variant=\"info\">\n        <Info strokeWidth={1.5} />\n        <AlertTitle>Parse is now generally available</AlertTitle>\n        <AlertDescription>Turn any page into clean markdown or JSON with one call. Existing keys work without changes.</AlertDescription>\n      </Alert>\n      <Alert>\n        <KeyRound strokeWidth={1.5} />\n        <AlertTitle>Keys stay on your server</AlertTitle>\n        <AlertDescription>Call the API from your backend; never ship a key in a browser bundle.</AlertDescription>\n      </Alert>\n    </div>\n  );\n}\n\nexport function Product() {\n  return (\n    <div className=\"grid w-full max-w-2xl gap-3\">\n      <Alert variant=\"warning\">\n        <TriangleAlert strokeWidth={1.5} />\n        <AlertTitle>You have used 92% of this month's credits</AlertTitle>\n        <AlertDescription>Calls stop when credits run out. Upgrade, or wait until the plan renews on Nov 1.</AlertDescription>\n        <AlertAction>\n          <Button variant=\"brand\" size=\"sm\">Upgrade</Button>\n        </AlertAction>\n      </Alert>\n      <Alert variant=\"destructive\">\n        <OctagonAlert strokeWidth={1.5} />\n        <AlertTitle>Crawl stopped at 1,240 pages</AlertTitle>\n        <AlertDescription>docs.example.com returned 429 for 3 minutes. Retry with a lower rate, or contact support.</AlertDescription>\n        <AlertAction>\n          <Button size=\"sm\">Retry</Button>\n        </AlertAction>\n      </Alert>\n      <Alert variant=\"info\">\n        <Info strokeWidth={1.5} />\n        <AlertTitle>Webhooks now include the request ID</AlertTitle>\n      </Alert>\n    </div>\n  );\n}\n\nexport function TitleOnly() {\n  return (\n    <div className=\"grid w-full max-w-xl gap-3\">\n      <Alert>\n        <AlertTitle>Monitors check every 15 minutes on the Starter plan.</AlertTitle>\n      </Alert>\n      <Alert variant=\"destructive\">\n        <AlertTitle>This key was revoked on Oct 2</AlertTitle>\n        <AlertDescription>Requests with it return 401. Create a new key in API keys.</AlertDescription>\n      </Alert>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/alert.tsx",
+      "content": "import * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A notice in the flow of a page, drawn as the dashboard's page banner (banner.tsx): card corners, a light edge, 16px\n// of side padding, a medium title over muted text, a 16px line glyph beside them in the tone's color and an action at\n// the end. `default` sits on the card's white with its hairline, `info` on blue 10 (news), `warning` on the soft amber\n// with its amber line, `destructive` on the soft red of the banner's alert. The same tokens hold on the site, where\n// text-body-sm is 14px, and in the product's dark theme.\nconst alertVariants = cva(\n  \"group/alert relative grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2.5 gap-y-0.5 rounded-card border px-4 py-3 text-body-sm leading-relaxed text-fg has-[>svg]:grid-cols-[auto_minmax(0,1fr)_auto] [&>svg]:mt-0.5 [&>svg]:size-4 [&>svg]:shrink-0\",\n  {\n    variants: {\n      variant: {\n        default: \"border-line bg-surface [&>svg]:text-fg-subtle\",\n        info: \"border-line bg-blue-10 [&>svg]:text-fg-brand\",\n        warning: \"border-warning-line bg-warning-soft [&>svg]:text-warning\",\n        destructive: \"border-alert/30 bg-alert/6 [&>svg]:text-alert-strong [&>[data-slot=alert-title]]:text-danger-strong\",\n      },\n    },\n    defaultVariants: { variant: \"default\" },\n  },\n);\n\nfunction Alert({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof alertVariants>) {\n  return <div data-slot=\"alert\" data-variant={variant ?? \"default\"} role=\"alert\" className={cn(alertVariants({ variant }), className)} {...props} />;\n}\n\nfunction AlertTitle({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"alert-title\" className={cn(\"col-start-1 min-w-0 font-medium group-has-[>svg]/alert:col-start-2\", className)} {...props} />;\n}\n\nfunction AlertDescription({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"alert-description\" className={cn(\"col-start-1 min-w-0 text-fg-muted group-has-[>svg]/alert:col-start-2 [&_a]:text-fg-brand [&_a]:underline [&_a]:underline-offset-4 [&_p]:leading-relaxed\", className)} {...props} />;\n}\n\n/** What sits at the end of a notice: a button or a quiet note, centered against the title and description. */\nfunction AlertAction({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"alert-action\" className={cn(\"col-start-2 row-span-2 row-start-1 flex shrink-0 items-center gap-2 self-center group-has-[>svg]/alert:col-start-3\", className)} {...props} />;\n}\n\nexport { Alert, AlertAction, AlertDescription, AlertTitle, alertVariants };\n"
+    }
+  ]
+}

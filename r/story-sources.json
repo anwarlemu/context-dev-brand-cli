@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-sources",
+  "type": "visual",
+  "title": "Sources story",
+  "description": "Dot animation of an answer with numbered source links.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Cited answers on a site card. Plays only on screen; shows the cited answer with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-sources.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-sources --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/sources-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/sources-story.tsx",
+        "sha256": "5186aa395f90455cd03cc995d0b6675c9e427c5ec9a4afcda0599fa7f6387095",
+        "retained": false,
+        "exports": [
+          "SourcesStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/sources-story.d.ts",
+      "content": "/**\n * The \"Keep the sources\" card's picture: an answer becomes the link its claims keep, then the answer again with\n * each claim tied to its numbered URL. With reduced motion it shows the cited answer.\n */\nexport declare function SourcesStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/sources-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createSourcesStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/sources-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The \"Keep the sources\" card's pictures, in the brand dot grid: the answer as a written page, the link that every\n * claim in it keeps, and the page again with each claim tied to the numbered URL it came from.\n */\nexport declare const SOURCES_STORY_GRID: DotGrid;\nexport declare const ANSWER: StoryPicture;\nexport declare const CHAIN: StoryPicture;\nexport declare const UNCITED: StoryPicture;\nexport declare const CITED: StoryPicture;\n/** Ties the first `count` claims to their sources: the claim goes solid, and so do its connector and its badge. */\nexport declare function paintCited(states: Uint8Array, count: number): Uint8Array<ArrayBufferLike>;\nexport declare const SOURCE_TEXTS: DotStoryText[][];\nexport declare const CAPTIONS: {\n    answer: DotStoryText[];\n    links: DotStoryText[];\n};\nexport declare const CLAIM_COUNT: number;\n/** The answer with its sources: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const SOURCES_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-sources/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-sources.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { SourcesStory } from \"@/components/visuals/stories/sources-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <SourcesStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/sources-story.tsx",
+      "content": "'use client';\n\nimport { SOURCES_RESTING, SOURCES_STORY_GRID } from '@/components/visuals/stories/sources-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadSourcesStory: LoadDotStory = async (stage) => {\n\tconst { createSourcesStoryPlayer } = await import('@/components/visuals/stories/sources-story-player');\n\treturn createSourcesStoryPlayer(stage);\n};\n\n/**\n * The \"Keep the sources\" card's picture: an answer becomes the link its claims keep, then the answer again with\n * each claim tied to its numbered URL. With reduced motion it shows the cited answer.\n */\nexport function SourcesStory({ className }: { className?: string }) {\n\treturn <DotStory grid={SOURCES_STORY_GRID} resting={SOURCES_RESTING} load={loadSourcesStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/sources-story-player.ts",
+      "content": "import { ANSWER, CAPTIONS, CHAIN, CITED, CLAIM_COUNT, SOURCES_STORY_GRID, SOURCE_TEXTS, UNCITED, paintCited } from '@/components/visuals/stories/sources-story-scenes';\nimport { createBeatStoryPlayer, type StoryBeat, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage, DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One cited answer, played as a loop: the answer as a written page melts into the link each of its claims keeps;\n * the link melts back into the page, and one claim at a time is tied to the numbered URL it came from.\n */\n\nconst MELT_SECONDS = 1.1;\nconst DETAIL = { at: 0.5, fadeSeconds: 0.3 };\nconst CITING = { startsAt: 0.5, everySeconds: 0.7, textSeconds: 0.3 };\nconst CITED_HOLD_SECONDS = 3;\nconst CITED_AT = CITING.startsAt + (CLAIM_COUNT - 1) * CITING.everySeconds + CITING.textSeconds;\n\nconst citedAt = (claim: number) => CITING.startsAt + claim * CITING.everySeconds;\n\nfunction captioned(picture: StoryPicture, [label, value, detail]: DotStoryText[]): StoryBeat {\n\treturn {\n\t\tpicture,\n\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\tholdSeconds: 2.4,\n\t\twrite(pen, heldSeconds) {\n\t\t\tpen.text(label);\n\t\t\tpen.text(value);\n\t\t\tpen.text(detail, clamp01((heldSeconds - DETAIL.at) / DETAIL.fadeSeconds));\n\t\t},\n\t};\n}\n\nexport function createSourcesStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: SOURCES_STORY_GRID,\n\t\tresting: { beat: 2, heldSeconds: CITED_AT + 1 },\n\t\tbeats: [\n\t\t\tcaptioned(ANSWER, CAPTIONS.answer),\n\t\t\tcaptioned(CHAIN, CAPTIONS.links),\n\t\t\t{\n\t\t\t\tpicture: UNCITED,\n\t\t\t\tdeparture: CITED,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: CITED_AT + CITED_HOLD_SECONDS,\n\t\t\t\tanimate: (states, heldSeconds) => void paintCited(states, heldSeconds < CITING.startsAt ? 0 : Math.min(CLAIM_COUNT, Math.floor((heldSeconds - CITING.startsAt) / CITING.everySeconds) + 1)),\n\t\t\t\twrite: (pen, heldSeconds) => SOURCE_TEXTS.forEach((texts, claim) => texts.forEach((text) => pen.text(text, clamp01((heldSeconds - citedAt(claim)) / CITING.textSeconds)))),\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/sources-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, paintShape, paintedStates, solidWithSpeckle, type DotPainter, type DotShape, type GridPoint } from '@/components/visuals/dot-engine/dot-story-cells';\nimport { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The \"Keep the sources\" card's pictures, in the brand dot grid: the answer as a written page, the link that every\n * claim in it keeps, and the page again with each claim tied to the numbered URL it came from.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const SOURCES_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = SOURCES_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(SOURCES_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst PAGE = { left: 2, right: 23, top: 3, bottom: 34, text: { left: 5, right: 20 }, title: { rows: [6, 7], to: 13 } };\n// Three paragraphs of three lines; the middle line of each is the claim a source backs.\nconst CLAIM_ROWS = [13, 21, 29];\nconst LINE_ENDS = [20, 18, 15];\n\nconst isClaim = (column: number, row: number) => CLAIM_ROWS.includes(row) && between(column, PAGE.text.left, LINE_ENDS[1]);\n\nconst answerPage = (isCited: (claim: number) => boolean): DotPainter => (column, row) => {\n\tif (!between(column, PAGE.left, PAGE.right) || !between(row, PAGE.top, PAGE.bottom)) return DOT_ABSENT;\n\tif (column === PAGE.left || column === PAGE.right || row === PAGE.top || row === PAGE.bottom) return DOT_FILLED;\n\tif (PAGE.title.rows.includes(row)) return between(column, PAGE.text.left, PAGE.title.to) ? DOT_FILLED : DOT_ABSENT;\n\tconst claim = CLAIM_ROWS.findIndex((claimRow) => Math.abs(row - claimRow) <= 2);\n\tif (claim < 0 || (row - CLAIM_ROWS[claim]) % 2 !== 0) return DOT_ABSENT;\n\tconst line = (row - CLAIM_ROWS[claim]) / 2 + 1;\n\tif (!between(column, PAGE.text.left, LINE_ENDS[line])) return DOT_ABSENT;\n\treturn line === 1 && isCited(claim) ? DOT_FILLED : DOT_HOLLOW;\n};\n\nexport const ANSWER = pictureOfStates(paintedStates(SOURCES_STORY_GRID, answerPage(() => false)));\n\nconst LINK = { outer: 5.6, inner: 2.6, spines: [[{ column: 8.5, row: 25.5 }, { column: 14, row: 20 }], [{ column: 18, row: 16 }, { column: 23.5, row: 10.5 }]] satisfies GridPoint[][] };\nconst fromSpine = (column: number, row: number, [from, to]: GridPoint[]) => distanceToSegment(column, row, from, to);\n// Two links of a chain, end over end on the diagonal.\nconst isChain: DotShape = (column, row) => LINK.spines.some((spine) => between(fromSpine(column, row, spine), LINK.inner, LINK.outer));\n\nexport const CHAIN = pictureOfStates(paintShape(SOURCES_STORY_GRID, blank(), isChain, solidWithSpeckle));\n\nconst BADGE = { left: 28, columns: 5, rows: 7 };\nconst CONNECTOR = { from: PAGE.right + 1, to: BADGE.left - 1 };\n// Each source's number, cut out of its solid badge in rings: type set over the dots would only show between them.\nconst DIGITS = [\n\t[' o ', 'oo ', ' o ', ' o ', 'ooo'],\n\t['oo ', '  o', ' o ', 'o  ', 'ooo'],\n\t['oo ', '  o', ' o ', '  o', 'oo '],\n];\nconst SOURCES = [\n\t{ url: 'linear.app/pricing', title: 'Pricing' },\n\t{ url: 'linear.app/docs/billing', title: 'Billing and plans' },\n\t{ url: 'linear.app/changelog', title: 'Changelog' },\n];\n\nconst citations = (isCited: (claim: number) => boolean): DotPainter => (column, row) => {\n\tconst claim = CLAIM_ROWS.findIndex((claimRow) => Math.abs(row - claimRow) <= (BADGE.rows - 1) / 2);\n\tif (claim < 0) return DOT_ABSENT;\n\tif (row === CLAIM_ROWS[claim] && between(column, CONNECTOR.from, CONNECTOR.to)) return isCited(claim) ? DOT_FILLED : DOT_HOLLOW;\n\tif (!between(column, BADGE.left, BADGE.left + BADGE.columns - 1)) return DOT_ABSENT;\n\tif (!isCited(claim)) return DOT_HOLLOW;\n\tconst mark = DIGITS[claim][row - CLAIM_ROWS[claim] + 2]?.[column - BADGE.left - 1];\n\treturn mark === 'o' ? DOT_HOLLOW : DOT_FILLED;\n};\n\nconst citedAnswer = (isCited: (claim: number) => boolean) => paintedStates(SOURCES_STORY_GRID, (column, row) => (column <= PAGE.right ? answerPage(isCited)(column, row) : citations(isCited)(column, row)));\n\nexport const UNCITED = pictureOfStates(citedAnswer(() => false));\nexport const CITED = pictureOfStates(citedAnswer(() => true));\n\n/** Ties the first `count` claims to their sources: the claim goes solid, and so do its connector and its badge. */\nexport function paintCited(states: Uint8Array, count: number) {\n\tfor (let cell = 0; cell < states.length; cell++) {\n\t\tconst row = Math.floor(cell / COLUMNS);\n\t\tconst claim = CLAIM_ROWS.findIndex((claimRow) => Math.abs(row - claimRow) <= (BADGE.rows - 1) / 2);\n\t\tif (claim >= 0 && claim < count && (cell % COLUMNS >= CONNECTOR.from || isClaim(cell % COLUMNS, row))) states[cell] = CITED.states[cell];\n\t}\n\treturn states;\n}\n\nconst SOURCE_LEFT = x(BADGE.left + BADGE.columns + 1.5);\nexport const SOURCE_TEXTS: DotStoryText[][] = SOURCES.map(({ url, title }, index) => [\n\t{ text: url, x: SOURCE_LEFT, y: baselineOn(CLAIM_ROWS[index] - 1.2, 14), size: 14, weight: 800 },\n\t{ text: title, x: SOURCE_LEFT, y: baselineOn(CLAIM_ROWS[index] + 1.4, 12), size: 12, weight: 700, muted: true },\n]);\n\nexport const CAPTIONS = {\n\tanswer: storyCaption(SOURCES_STORY_GRID, 34, 'the answer', '3 claims', 'but where are they from?'),\n\tlinks: storyCaption(SOURCES_STORY_GRID, 34, 'it returns', '3 URLs', 'one for every claim'),\n};\nexport const CLAIM_COUNT = CLAIM_ROWS.length;\n\n/** The answer with its sources: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const SOURCES_RESTING = { ...CITED, texts: SOURCE_TEXTS.flat() };\n"
+    }
+  ]
+}

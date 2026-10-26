@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "empty",
+  "type": "ui",
+  "title": "Empty",
+  "description": "What a page or panel shows when it has nothing yet: a glyph tile, a title, one muted line and the next actions.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Use for a page, table or panel with nothing in it yet, or nothing matching a search. Put a GlyphTile (or EmptyMedia variant icon with a line glyph) in EmptyMedia, a short title in EmptyTitle, one line of why or what next in EmptyDescription, and the actions (the brand button first) in EmptyContent, with anything quieter (a usage line) after them. Use variant outline for an empty panel inside a busy page. EmptyState (product) is the same look with props; Empty is the composable version.",
+  "avoid": [
+    "A blank panel",
+    "More than one brand button",
+    "A long paragraph",
+    "A moving illustration other than the glyph's own loop"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/empty.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add empty",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/monitors/monitors-home.tsx; src/components/dots/glyph-tile.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/monitors/monitors-home.tsx",
+        "sha256": "561f65c2548d2b206555b1f7620812a153c262b86bf259df3fa95fcd3864f070",
+        "retained": false,
+        "exports": [
+          "MonitorsSkeleton",
+          "MonitorsHome"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/glyph-tile.tsx",
+        "sha256": "b718047bde70707b25ca56ffe0e91ad63130fb63af4014595b82dcbd4232cf05",
+        "retained": false,
+        "exports": [
+          "GlyphTile",
+          "StillGlyph"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/empty.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const emptyVariants: (props?: ({\n    variant?: \"default\" | \"outline\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Empty({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof emptyVariants>): React.JSX.Element;\ndeclare function EmptyHeader({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare const emptyMediaVariants: (props?: ({\n    variant?: \"default\" | \"icon\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function EmptyMedia({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof emptyMediaVariants>): React.JSX.Element;\ndeclare function EmptyTitle({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare function EmptyDescription({ className, ...props }: React.ComponentProps<\"p\">): React.JSX.Element;\n/** The next actions (the brand button first), then anything quieter under them, such as a usage line. */\ndeclare function EmptyContent({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\nexport { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/empty/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/empty/Product"
+    },
+    {
+      "name": "Icon",
+      "url": "https://context-ds.vercel.app/preview/empty/Icon"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/empty.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Plus, Search } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from \"@/components/ui/empty\";\nimport { GlyphTile } from \"@/components/visuals/glyph/glyph-tile\";\n\nexport function Site() {\n  return (\n    <Empty variant=\"outline\" className=\"w-full max-w-xl\">\n      <EmptyHeader>\n        <EmptyMedia>\n          <GlyphTile name=\"search\" className=\"size-16 p-2\" />\n        </EmptyMedia>\n        <EmptyTitle>No articles match \"rate limits\"</EmptyTitle>\n        <EmptyDescription>Try a shorter search, or browse the guides by API.</EmptyDescription>\n      </EmptyHeader>\n      <EmptyContent>\n        <Button variant=\"pill-outline\" size=\"sm\" asChild>\n          <a href=\"https://docs.context.dev\" target=\"_blank\" rel=\"noreferrer\">Browse the docs</a>\n        </Button>\n      </EmptyContent>\n    </Empty>\n  );\n}\n\nexport function Product() {\n  const [created, setCreated] = useState(false);\n  if (created) return <p role=\"status\" className=\"text-body-sm text-fg-muted\">A monitor would be created here.</p>;\n  return (\n    <Empty className=\"w-full max-w-xl\">\n      <EmptyHeader>\n        <EmptyMedia>\n          <GlyphTile name=\"monitors\" ringed className=\"size-28\" />\n        </EmptyMedia>\n        <EmptyTitle>Watch a page or sitemap</EmptyTitle>\n        <EmptyDescription>Create your first monitor to watch a page or sitemap for exact changes, or a whole site for changes that matter.</EmptyDescription>\n      </EmptyHeader>\n      <EmptyContent>\n        <div className=\"flex flex-wrap items-center justify-center gap-2\">\n          <Button variant=\"brand\" size=\"sm\" onClick={() => setCreated(true)}>\n            <Plus strokeWidth={1.75} /> Create monitor\n          </Button>\n          <Button size=\"sm\" asChild>\n            <a href=\"https://docs.context.dev/monitors\" target=\"_blank\" rel=\"noreferrer\">Read docs</a>\n          </Button>\n        </div>\n        <span className=\"text-caption text-fg-subtle\">0 of 5 monitors used</span>\n      </EmptyContent>\n    </Empty>\n  );\n}\n\nexport function Icon() {\n  return (\n    <Empty variant=\"outline\" className=\"w-full max-w-md\">\n      <EmptyHeader>\n        <EmptyMedia variant=\"icon\">\n          <Search strokeWidth={1.5} />\n        </EmptyMedia>\n        <EmptyTitle>No batches match this filter</EmptyTitle>\n        <EmptyDescription>Clear the status filter to see every batch.</EmptyDescription>\n      </EmptyHeader>\n    </Empty>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "glyph-tile"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/empty.tsx",
+      "content": "import * as React from \"react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Never a blank page, as the dashboard's empty state (empty-state.tsx, monitors-home): centered in its column, the\n// media (a GlyphTile: the 64px bordered square, or the 112px ringed story on a product's first visit), the title at h4\n// in 450 weight, one balanced muted line at most 480px wide, then the next actions with the brand button first and\n// anything quieter under them. `outline` draws a dashed hairline box around it for an empty panel inside a page.\n// Nothing moves except the glyph's own loop.\nconst emptyVariants = cva(\"flex min-w-0 flex-1 flex-col items-center justify-center px-8 pt-8 pb-10 text-center\", {\n  variants: {\n    variant: {\n      default: \"\",\n      outline: \"rounded-card border border-dashed border-line-strong\",\n    },\n  },\n  defaultVariants: { variant: \"default\" },\n});\n\nfunction Empty({ className, variant, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof emptyVariants>) {\n  return <div data-slot=\"empty\" data-variant={variant ?? \"default\"} className={cn(emptyVariants({ variant }), className)} {...props} />;\n}\n\nfunction EmptyHeader({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"empty-header\" className={cn(\"flex max-w-120 flex-col items-center\", className)} {...props} />;\n}\n\n// `default` holds a GlyphTile (or any art) as it is; `icon` is the glyph tile's frame for a plain mark: a 64px square\n// with control corners, a hairline edge and the mark in brand blue.\nconst emptyMediaVariants = cva(\"mb-6 flex shrink-0 items-center justify-center [&_svg]:pointer-events-none [&_svg]:shrink-0\", {\n  variants: {\n    variant: {\n      default: \"bg-transparent\",\n      icon: \"size-16 rounded-control border border-line bg-surface text-fg-brand [&_svg:not([class*='size-'])]:size-7\",\n    },\n  },\n  defaultVariants: { variant: \"default\" },\n});\n\nfunction EmptyMedia({ className, variant = \"default\", ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof emptyMediaVariants>) {\n  return <div data-slot=\"empty-media\" data-variant={variant} className={cn(emptyMediaVariants({ variant }), className)} {...props} />;\n}\n\nfunction EmptyTitle({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"empty-title\" className={cn(\"text-h4 leading-snug font-[450] tracking-normal text-balance text-fg\", className)} {...props} />;\n}\n\nfunction EmptyDescription({ className, ...props }: React.ComponentProps<\"p\">) {\n  return <p data-slot=\"empty-description\" className={cn(\"mt-1 max-w-120 text-body-sm text-balance text-fg-muted [&>a]:text-fg-brand [&>a]:underline [&>a]:underline-offset-4\", className)} {...props} />;\n}\n\n/** The next actions (the brand button first), then anything quieter under them, such as a usage line. */\nfunction EmptyContent({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"empty-content\" className={cn(\"mt-5 flex w-full max-w-120 min-w-0 flex-col items-center gap-6 text-body-sm text-balance text-fg-subtle\", className)} {...props} />;\n}\n\nexport { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle };\n"
+    }
+  ]
+}

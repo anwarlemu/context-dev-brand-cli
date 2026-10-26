@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-mcp",
+  "type": "visual",
+  "title": "MCP story",
+  "description": "Dot animation of an assistant plugging into the hosted MCP server and answering from the web.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Giving an AI assistant web search through MCP, on a workflow card (the Search page shows it beside RAG). Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "An assistant window plugs into a globe through a connector labeled MCP, the prompt \"search the web\" is typed and sent, a pulse runs along the cable and back, and the reply lines fill in. The labels under the globe name the server and that sign-in uses OAuth.",
+  "documentation": "https://context-ds.vercel.app/components/story-mcp.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-mcp --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/mcp-story.tsx; src/components/sections/products/mcp-story-player.ts; src/components/sections/products/mcp-story-scenes.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/mcp-story.tsx",
+        "sha256": "e5c142601311f8871103c77cc95775277aff9fba8c7ae24f44fe9a2eb794d233",
+        "retained": false,
+        "exports": [
+          "McpStory"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/mcp-story-player.ts",
+        "sha256": "634ee277a8cf5cb9104d1abbf87b0c44ec1ea9f368c6540d93540650157eab6f",
+        "retained": false,
+        "exports": [
+          "createMcpStoryPlayer"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/mcp-story-scenes.ts",
+        "sha256": "d00103bc946924414174de3d42881b7ce08d1afbe9d0b09995eafb8a57fef9dd",
+        "retained": false,
+        "exports": [
+          "MCP_STORY_GRID",
+          "QUESTION_BUBBLE",
+          "REPLY_LINES",
+          "CABLE",
+          "CONNECTOR",
+          "UNPLUGGED",
+          "PLUGGED_IN",
+          "ASKED",
+          "ANSWERED",
+          "ASSISTANT_LABEL",
+          "PROMPT",
+          "CONNECTION_TEXTS",
+          "MCP_RESTING"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/mcp-story.d.ts",
+      "content": "export declare function McpStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/mcp-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createMcpStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/mcp-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare const MCP_STORY_GRID: DotGrid;\nexport declare const QUESTION_BUBBLE: {\n    row: number;\n    left: number;\n    right: number;\n}[];\nexport declare const REPLY_LINES: {\n    row: number;\n    left: number;\n    right: number;\n}[];\nexport declare const CABLE: {\n    row: number;\n    left: number;\n    right: number;\n};\nexport declare const CONNECTOR: DotBox;\nexport declare const UNPLUGGED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const PLUGGED_IN: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const ASKED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const ANSWERED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const ASSISTANT_LABEL: DotStoryText;\nexport declare const PROMPT: DotStoryText;\nexport declare const CONNECTION_TEXTS: DotStoryText[];\nexport declare const MCP_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-mcp/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-mcp.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { McpStory } from \"@/components/visuals/stories/mcp-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <McpStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/mcp-story.tsx",
+      "content": "'use client';\n\nimport { MCP_RESTING, MCP_STORY_GRID } from '@/components/visuals/stories/mcp-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadMcpStory: LoadDotStory = async (stage) => {\n\tconst { createMcpStoryPlayer } = await import('@/components/visuals/stories/mcp-story-player');\n\treturn createMcpStoryPlayer(stage);\n};\n\nexport function McpStory({ className }: { className?: string }) {\n\treturn <DotStory grid={MCP_STORY_GRID} resting={MCP_RESTING} load={loadMcpStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/mcp-story-player.ts",
+      "content": "import { ANSWERED, ASKED, ASSISTANT_LABEL, CABLE, CONNECTION_TEXTS, CONNECTOR, MCP_STORY_GRID, PLUGGED_IN, PROMPT, QUESTION_BUBBLE, REPLY_LINES, UNPLUGGED } from '@/components/visuals/stories/mcp-story-scenes';\nimport { NEVER, fadedInAt, paintRevealed, revealSchedule } from '@/components/visuals/stories/story-reveal';\nimport { DOT_FILLED, DOT_HOLLOW } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { isInDotBox } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\nconst CLEAR_SECONDS = 0.8;\nconst PLUG = { startsAt: 0.3, secondsPerColumn: 0.05 };\nconst CONNECTED_AT = PLUG.startsAt + (CABLE.right - CABLE.left) * PLUG.secondsPerColumn;\nconst TYPING = { startsAt: CONNECTED_AT + 0.4, charactersPerSecond: 14, cursorLingers: 0.2 };\nconst SENT_AT = TYPING.startsAt + typingSeconds(PROMPT, TYPING.charactersPerSecond) + 0.3;\nconst PULSE = { outAt: SENT_AT + 0.3, backAt: SENT_AT + 1.3, seconds: 0.8 };\nconst REPLY = { startsAt: PULSE.backAt + PULSE.seconds + 0.2, everyLineSeconds: 0.2, secondsPerColumn: 0.02 };\nconst HOLD_SECONDS = REPLY.startsAt + REPLY_LINES.length * REPLY.everyLineSeconds + 2.6;\n\nconst { columns } = MCP_STORY_GRID;\n\nconst PLUGGED_IN_AT = revealSchedule(MCP_STORY_GRID, (column, row) => (isInDotBox(CONNECTOR, column, row) ? PLUG.startsAt + (column - CABLE.left) * PLUG.secondsPerColumn : NEVER));\n\nconst ASKED_AT = revealSchedule(MCP_STORY_GRID, (column, row) => {\n\tconst bubble = QUESTION_BUBBLE.find((line) => line.row === row && column >= line.left && column <= line.right);\n\treturn bubble ? SENT_AT + (bubble.right - column) * REPLY.secondsPerColumn : NEVER;\n});\n\nconst ANSWERED_AT = revealSchedule(MCP_STORY_GRID, (column, row) => {\n\tconst line = REPLY_LINES.findIndex((candidate) => candidate.row === row && column >= candidate.left && column <= candidate.right);\n\treturn line < 0 ? NEVER : REPLY.startsAt + line * REPLY.everyLineSeconds + (column - REPLY_LINES[line].left) * REPLY.secondsPerColumn;\n});\n\nfunction pulseAlongCable(heldSeconds: number) {\n\tconst outward = (heldSeconds - PULSE.outAt) / PULSE.seconds;\n\tif (outward >= 0 && outward < 1) return outward;\n\tconst back = (heldSeconds - PULSE.backAt) / PULSE.seconds;\n\tif (back >= 0 && back < 1) return 1 - back;\n\treturn null;\n}\n\nfunction paintPulse(states: Uint8Array, heldSeconds: number) {\n\tconst along = pulseAlongCable(heldSeconds);\n\tif (along === null) return;\n\tconst column = Math.round(CABLE.left + along * (CABLE.right - CABLE.left));\n\tconst cell = CABLE.row * columns + column;\n\tif (states[cell] === DOT_HOLLOW) states[cell] = DOT_FILLED;\n}\n\nexport function createMcpStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: MCP_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: HOLD_SECONDS },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: UNPLUGGED,\n\t\t\t\tdeparture: ANSWERED,\n\t\t\t\tarrival: { kind: 'builds', seconds: CLEAR_SECONDS, order: (column) => column / columns },\n\t\t\t\tholdSeconds: HOLD_SECONDS,\n\t\t\t\tanimate(states, heldSeconds) {\n\t\t\t\t\tpaintRevealed(states, PLUGGED_IN.states, PLUGGED_IN_AT, heldSeconds);\n\t\t\t\t\tpaintRevealed(states, ASKED.states, ASKED_AT, heldSeconds);\n\t\t\t\t\tpaintRevealed(states, ANSWERED.states, ANSWERED_AT, heldSeconds);\n\t\t\t\t\tpaintPulse(states, heldSeconds);\n\t\t\t\t},\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(ASSISTANT_LABEL);\n\t\t\t\t\tCONNECTION_TEXTS.forEach((text) => pen.text(text, fadedInAt(heldSeconds, CONNECTED_AT)));\n\t\t\t\t\tif (heldSeconds < SENT_AT) pen.type(PROMPT, heldSeconds, TYPING);\n\t\t\t\t\telse pen.text(PROMPT, 1 - fadedInAt(heldSeconds, SENT_AT));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/mcp-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clear, disc, isInDotBox, rectangle, stack, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\nexport const MCP_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { pitch: PITCH } = MCP_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst centerOf = (left: number, right: number) => ((left + right + 1) / 2) * PITCH;\n\nconst WINDOW: DotBox = { left: 1, right: 20, top: 7, bottom: 30 };\nconst TITLE_BAR_ROW = 10;\nconst COMPOSER_ROW = 26;\nexport const QUESTION_BUBBLE = [\n\t{ row: 13, left: 8, right: 18 },\n\t{ row: 15, left: 11, right: 18 },\n];\nexport const REPLY_LINES = [\n\t{ row: 19, left: 3, right: 16 },\n\t{ row: 21, left: 3, right: 12 },\n\t{ row: 23, left: 3, right: 15 },\n];\nexport const CABLE = { row: 18, left: 21, right: 37 };\nconst PLUG: DotBox = { left: 26, right: 29, top: 15, bottom: 21 };\nconst PRONGS = { left: 30, right: 31, rows: [16, 20] };\nconst SOCKET: DotBox = { left: 33, right: 34, top: 14, bottom: 22 };\nexport const CONNECTOR: DotBox = { left: CABLE.left, right: CABLE.right, top: SOCKET.top, bottom: SOCKET.bottom };\n// A whole-number radius leaves a lone dot at each pole and on each side of the rim.\nconst GLOBE = { center: { column: 46, row: 18 }, radius: 8.6, parallelOffset: 4, meridianWidth: 4.5 };\n\nconst lines = (bars: { row: number; left: number; right: number }[], state: typeof DOT_FILLED | typeof DOT_HOLLOW): DotPainter => (column, row) => (bars.some((bar) => bar.row === row && column >= bar.left && column <= bar.right) ? state : DOT_ABSENT);\n\nconst assistantWindow = stack((column, row) => {\n\tif (row === TITLE_BAR_ROW && column > WINDOW.left && column < WINDOW.right) return DOT_FILLED;\n\tif (row === COMPOSER_ROW && column > WINDOW.left && column < WINDOW.right) return DOT_HOLLOW;\n\treturn DOT_ABSENT;\n}, rectangle(WINDOW, clear));\n\nconst globe = disc(GLOBE.center, GLOBE.radius, (column, row) => {\n\tconst across = column - GLOBE.center.column;\n\tconst down = row - GLOBE.center.row;\n\tconst meridianOffset = Math.round(GLOBE.meridianWidth * Math.sqrt(Math.max(0, 1 - (down / GLOBE.radius) ** 2)));\n\tconst isParallel = down === 0 || Math.abs(down) === GLOBE.parallelOffset;\n\tconst isMeridian = across === 0 || Math.abs(across) === meridianOffset;\n\treturn isParallel || isMeridian ? DOT_FILLED : DOT_HOLLOW;\n});\n\nconst connector: DotPainter = (column, row) => {\n\tif (isInDotBox(PLUG, column, row)) return DOT_FILLED;\n\tif (column >= PRONGS.left && column <= PRONGS.right && PRONGS.rows.includes(row)) return DOT_FILLED;\n\tif (isInDotBox(SOCKET, column, row)) return DOT_HOLLOW;\n\treturn row === CABLE.row && column >= CABLE.left && column <= CABLE.right ? DOT_HOLLOW : DOT_ABSENT;\n};\n\nexport const UNPLUGGED = pictureOf(MCP_STORY_GRID, stack(assistantWindow, globe));\nexport const PLUGGED_IN = pictureOf(MCP_STORY_GRID, stack(assistantWindow, connector, globe));\nexport const ASKED = pictureOf(MCP_STORY_GRID, stack(assistantWindow, lines(QUESTION_BUBBLE, DOT_FILLED), connector, globe));\nexport const ANSWERED = pictureOf(MCP_STORY_GRID, stack(assistantWindow, lines(QUESTION_BUBBLE, DOT_FILLED), lines(REPLY_LINES, DOT_HOLLOW), connector, globe));\n\nexport const ASSISTANT_LABEL: DotStoryText = { text: 'assistant', x: x(WINDOW.left + 2), y: baselineOn(8.5, 12), size: 12, weight: 700, muted: true };\nexport const PROMPT: DotStoryText = { text: 'search the web', x: x(WINDOW.left + 2), y: baselineOn(28, 12), size: 12, weight: 700 };\nexport const CONNECTION_TEXTS: DotStoryText[] = [\n\t{ text: 'MCP', x: centerOf(PLUG.left, SOCKET.right), y: baselineOn(11.5, 14), size: 14, weight: 700, anchor: 'middle' },\n\t{ text: 'mcp.context.dev', x: centerOf(GLOBE.center.column, GLOBE.center.column), y: baselineOn(30.5, 13), size: 13, weight: 700, anchor: 'middle' },\n\t{ text: 'OAuth, no API key', x: centerOf(GLOBE.center.column, GLOBE.center.column), y: baselineOn(33.5, 12), size: 12, weight: 700, muted: true, anchor: 'middle' },\n];\n\nexport const MCP_RESTING = { ...ANSWERED, texts: [ASSISTANT_LABEL, ...CONNECTION_TEXTS] };\n"
+    }
+  ]
+}

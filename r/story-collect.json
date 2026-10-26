@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-collect",
+  "type": "visual",
+  "title": "Collect story",
+  "description": "Dot animation of job progress, collected results, and a completion webhook.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Batch or dataset jobs on a site card. Plays only on screen; shows the full ring with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-collect.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-collect --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/collect-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/collect-story.tsx",
+        "sha256": "00aa59adc2fa01b9c6250b78d568d7089a689dd58299f19775b0ceafd375a68a",
+        "retained": false,
+        "exports": [
+          "CollectStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/collect-story.d.ts",
+      "content": "/**\n * The \"Collect the dataset\" card's picture: a ring fills as the job runs, becomes the results a page at a time,\n * then the paper plane of the completion webhook. With reduced motion it shows the full ring.\n */\nexport declare function CollectStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/collect-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createCollectStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/collect-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/**\n * The \"Collect the dataset\" card's pictures, in the brand dot grid: a ring that fills as the job runs, the results\n * a page at a time, and the paper plane of the webhook sent when the job is done.\n */\nexport declare const COLLECT_STORY_GRID: DotGrid;\n/** The progress ring with `done` of it filled, clockwise from the top. */\nexport declare function paintProgress(states: Uint8Array, done: number): Uint8Array<ArrayBufferLike>;\nexport declare const PROGRESS_EMPTY: StoryPicture;\nexport declare const PROGRESS_DONE: StoryPicture;\n/** The results table turned to `page`: each page has its own rows, and its dot in the pager below is the solid one. */\nexport declare function paintResults(states: Uint8Array, page: number): Uint8Array<ArrayBufferLike>;\nexport declare const PAGES_SHOWN = 3;\nexport declare const RESULTS_FIRST_PAGE: StoryPicture;\nexport declare const RESULTS_LAST_PAGE: StoryPicture;\nexport declare const WEBHOOK_PLANE: StoryPicture;\nexport declare const CAPTIONS: {\n    progress: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    results: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    webhook: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n};\n/** The full ring: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const COLLECT_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-collect/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-collect.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { CollectStory } from \"@/components/visuals/stories/collect-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <CollectStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/collect-story.tsx",
+      "content": "'use client';\n\nimport { COLLECT_RESTING, COLLECT_STORY_GRID } from '@/components/visuals/stories/collect-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadCollectStory: LoadDotStory = async (stage) => {\n\tconst { createCollectStoryPlayer } = await import('@/components/visuals/stories/collect-story-player');\n\treturn createCollectStoryPlayer(stage);\n};\n\n/**\n * The \"Collect the dataset\" card's picture: a ring fills as the job runs, becomes the results a page at a time,\n * then the paper plane of the completion webhook. With reduced motion it shows the full ring.\n */\nexport function CollectStory({ className }: { className?: string }) {\n\treturn <DotStory grid={COLLECT_STORY_GRID} resting={COLLECT_RESTING} load={loadCollectStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/collect-story-player.ts",
+      "content": "import { CAPTIONS, COLLECT_STORY_GRID, PAGES_SHOWN, PROGRESS_DONE, PROGRESS_EMPTY, RESULTS_FIRST_PAGE, RESULTS_LAST_PAGE, WEBHOOK_PLANE, paintProgress, paintResults } from '@/components/visuals/stories/collect-story-scenes';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One job's collection, played as a loop: a ring fills as the job runs to completion, melts into the results,\n * turned a page at a time, and those melt into the paper plane of the webhook that says the job is done.\n */\n\nconst RUNNING = { startsAt: 0.3, seconds: 2 };\nconst PAGING = { startsAt: 0.9, everySeconds: 0.8 };\n\nconst doneAt = (heldSeconds: number) => clamp01((heldSeconds - RUNNING.startsAt) / RUNNING.seconds);\nconst pageAt = (heldSeconds: number) => (heldSeconds < PAGING.startsAt ? 0 : Math.min(PAGES_SHOWN - 1, Math.floor((heldSeconds - PAGING.startsAt) / PAGING.everySeconds) + 1));\n\nexport function createCollectStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst [statusLabel, percent, status] = CAPTIONS.progress;\n\tconst [resultsLabel, page, pageDetail] = CAPTIONS.results;\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: COLLECT_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: RUNNING.startsAt + RUNNING.seconds + 0.6 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\t...captionedBeat({ picture: PROGRESS_EMPTY, departure: PROGRESS_DONE, caption: CAPTIONS.progress, holdSeconds: RUNNING.startsAt + RUNNING.seconds + 1.2, animate: (states, heldSeconds) => void paintProgress(states, doneAt(heldSeconds)) }),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tconst done = doneAt(heldSeconds);\n\t\t\t\t\tpen.text(statusLabel);\n\t\t\t\t\tpen.text({ ...percent, text: `${Math.round(done * 100)}%` });\n\t\t\t\t\tpen.text({ ...status, text: done < 1 ? 'running' : 'completed' });\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\t...captionedBeat({ picture: RESULTS_FIRST_PAGE, departure: RESULTS_LAST_PAGE, caption: CAPTIONS.results, holdSeconds: PAGING.startsAt + (PAGES_SHOWN - 1) * PAGING.everySeconds + 0.8, animate: (states, heldSeconds) => void paintResults(states, pageAt(heldSeconds)) }),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(resultsLabel);\n\t\t\t\t\tpen.text({ ...page, text: `page ${pageAt(heldSeconds) + 1}` });\n\t\t\t\t\tpen.text(pageDetail);\n\t\t\t\t},\n\t\t\t},\n\t\t\tcaptionedBeat({ picture: WEBHOOK_PLANE, caption: CAPTIONS.webhook, holdSeconds: 2.4, isTyped: true }),\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/collect-story-scenes.ts",
+      "content": "import { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, paintShape, polygon, roundedBox, solidWithSpeckle, type DotBox, type DotShape } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/**\n * The \"Collect the dataset\" card's pictures, in the brand dot grid: a ring that fills as the job runs, the results\n * a page at a time, and the paper plane of the webhook sent when the job is done.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const COLLECT_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS } = COLLECT_STORY_GRID;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(COLLECT_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst RING = { center: { column: 16, row: 19 }, outer: 13.4, inner: 7.6 };\nconst isRing: DotShape = (column, row) => between(Math.hypot(column - RING.center.column, row - RING.center.row), RING.inner, RING.outer);\n\n/** The progress ring with `done` of it filled, clockwise from the top. */\nexport function paintProgress(states: Uint8Array, done: number) {\n\treturn paintShape(COLLECT_STORY_GRID, states, isRing, (column, row) => {\n\t\tconst round = (Math.atan2(column - RING.center.column, RING.center.row - row) / (Math.PI * 2) + 1) % 1;\n\t\treturn round < done ? DOT_FILLED : DOT_HOLLOW;\n\t});\n}\n\nexport const PROGRESS_EMPTY = pictureOfStates(paintProgress(blank(), 0));\nexport const PROGRESS_DONE = pictureOfStates(paintProgress(blank(), 1));\n\nconst TABLE: DotBox = { left: 4, right: 28, top: 3, bottom: 34 };\nconst TABLE_PARTS = { header: [5, 6], rows: [10, 13, 16, 19, 22, 25], key: { left: 7, right: 9 }, value: { left: 12, shortest: 17, spread: 9 }, pager: { row: 30, columns: [10, 13, 16, 19, 22] } };\n\n/** The results table turned to `page`: each page has its own rows, and its dot in the pager below is the solid one. */\nexport function paintResults(states: Uint8Array, page: number) {\n\treturn paintShape(COLLECT_STORY_GRID, states, roundedBox(TABLE, 2), (column, row) => {\n\t\tif (TABLE_PARTS.header.includes(row)) return between(column, TABLE.left + 3, TABLE.right - 3) ? DOT_FILLED : DOT_ABSENT;\n\t\tif (row === TABLE_PARTS.pager.row) return TABLE_PARTS.pager.columns.includes(column) ? (TABLE_PARTS.pager.columns[page] === column ? DOT_FILLED : DOT_HOLLOW) : DOT_ABSENT;\n\t\tconst line = TABLE_PARTS.rows.indexOf(row);\n\t\tif (line < 0) return DOT_ABSENT;\n\t\tif (between(column, TABLE_PARTS.key.left, TABLE_PARTS.key.right)) return DOT_FILLED;\n\t\tconst valueEnds = TABLE_PARTS.value.shortest + ((line * 5 + page * 7) % TABLE_PARTS.value.spread);\n\t\treturn between(column, TABLE_PARTS.value.left, valueEnds) ? DOT_HOLLOW : DOT_ABSENT;\n\t});\n}\n\nexport const PAGES_SHOWN = 3;\nexport const RESULTS_FIRST_PAGE = pictureOfStates(paintResults(blank(), 0));\nexport const RESULTS_LAST_PAGE = pictureOfStates(paintResults(blank(), PAGES_SHOWN - 1));\n\nconst PLANE = { nose: { column: 30, row: 7 }, wing: { column: 2, row: 17 }, fold: { column: 12, row: 22 }, tail: { column: 15, row: 31 }, keel: { column: 17, row: 24 }, under: { column: 25, row: 28 } };\n// A paper plane, nose up and to the right: its upper wing solid, the wing folded under it in rings.\nconst paperPlane = polygon([PLANE.nose, PLANE.wing, PLANE.fold, PLANE.tail, PLANE.keel, PLANE.under], (column, row) => {\n\tconst foldRow = PLANE.fold.row + ((PLANE.nose.row - PLANE.fold.row) * (column - PLANE.fold.column)) / (PLANE.nose.column - PLANE.fold.column);\n\tif (Math.abs(row - foldRow) < 0.6 && column >= PLANE.fold.column) return DOT_FILLED;\n\treturn row < foldRow ? solidWithSpeckle(column, row) : DOT_HOLLOW;\n});\n\nexport const WEBHOOK_PLANE = pictureOf(COLLECT_STORY_GRID, paperPlane);\n\nconst caption = (label: string, value: string, detail: string) => storyCaption(COLLECT_STORY_GRID, 34, label, value, detail);\nexport const CAPTIONS = {\n\tprogress: caption('job status', '0%', 'running'),\n\tresults: caption('results', 'page 1', '1,000 results a page'),\n\twebhook: caption('webhook', 'sent', 'batch completed'),\n};\n\n/** The full ring: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const COLLECT_RESTING = { ...PROGRESS_DONE, texts: [CAPTIONS.progress[0], { ...CAPTIONS.progress[1], text: '100%' }, { ...CAPTIONS.progress[2], text: 'completed' }] };\n"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "checkbox",
+  "type": "ui",
+  "title": "Checkbox",
+  "description": "Checkbox with checked, unchecked, and disabled states.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Multiple choices and table row selection.",
+  "avoid": [
+    "Checkboxes for settings that apply at once (use a switch)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/checkbox.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add checkbox --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "none in PR 1045 (the dashboard has no checkbox; the site's DotCheckbox in src/components/ui/dot-checkbox.tsx is a static mark)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/dot-checkbox.tsx",
+        "sha256": "29da3317a4f52b8754956550e831c92fd083973ee8f36a2d2150fe20d786e7e4",
+        "retained": false,
+        "exports": [
+          "DotCheckbox"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/checkbox.d.ts",
+      "content": "import * as React from \"react\";\nimport * as CheckboxPrimitive from \"@radix-ui/react-checkbox\";\ndeclare function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxPrimitive.Root>): React.JSX.Element;\nexport { Checkbox };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/checkbox/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/checkbox.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Checkbox } from \"@/components/ui/checkbox\";\nimport { Label } from \"@/components/ui/label\";\n\n// Checked, unchecked, mixed (some of a group picked) and disabled.\nexport function Product() {\n  const [selected, setSelected] = useState([\"scrape\"]);\n  const toggle = (name: string, checked: boolean) => setSelected((all) => checked ? [...all, name] : all.filter((value) => value !== name));\n  return (\n    <div className=\"grid gap-3\">\n      <div className=\"flex items-center gap-2.5\">\n        <Checkbox id=\"cb-all\" checked={selected.length === 2 ? true : selected.length ? \"indeterminate\" : false} onCheckedChange={(checked) => setSelected(checked ? [\"scrape\", \"search\"] : [])} />\n        <Label htmlFor=\"cb-all\">All APIs</Label>\n      </div>\n      <div className=\"grid gap-3 pl-6.5\">\n        <div className=\"flex items-center gap-2.5\">\n          <Checkbox id=\"cb-scrape\" checked={selected.includes(\"scrape\")} onCheckedChange={(checked) => toggle(\"scrape\", checked === true)} />\n          <Label htmlFor=\"cb-scrape\">Scrape</Label>\n        </div>\n        <div className=\"flex items-center gap-2.5\">\n          <Checkbox id=\"cb-search\" checked={selected.includes(\"search\")} onCheckedChange={(checked) => toggle(\"search\", checked === true)} />\n          <Label htmlFor=\"cb-search\">Search</Label>\n        </div>\n        <div className=\"flex items-center gap-2.5\">\n          <Checkbox id=\"cb-crawl\" disabled />\n          <Label htmlFor=\"cb-crawl\">Crawl (on Pro)</Label>\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "label"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-checkbox",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/checkbox.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as CheckboxPrimitive from \"@radix-ui/react-checkbox\";\nimport { Check, Minus } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A 16px box with a hairline edge; checked fills brand blue with a white check.\nfunction Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {\n  return (\n    <CheckboxPrimitive.Root\n      data-slot=\"checkbox\"\n      className={cn(\n        \"peer grid size-4 shrink-0 place-items-center rounded-sm border border-line-strong bg-surface text-white outline-none transition-[background-color,border-color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-brand data-[state=checked]:bg-brand data-[state=indeterminate]:border-brand data-[state=indeterminate]:bg-brand\",\n        className,\n      )}\n      {...props}\n    >\n      <CheckboxPrimitive.Indicator data-slot=\"checkbox-indicator\" className=\"grid place-items-center [&_svg]:size-3\">\n        {props.checked === \"indeterminate\" ? <Minus strokeWidth={2.5} /> : <Check strokeWidth={2.5} />}\n      </CheckboxPrimitive.Indicator>\n    </CheckboxPrimitive.Root>\n  );\n}\n\nexport { Checkbox };\n"
+    }
+  ]
+}

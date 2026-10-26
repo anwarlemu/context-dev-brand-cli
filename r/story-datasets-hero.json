@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-datasets-hero",
+  "type": "visual",
+  "title": "Datasets hero story",
+  "description": "Dot animation of source documents becoming table rows, with captions.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The datasets page hero on the site. Plays only on screen; shows the finished dataset with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-datasets-hero.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-datasets-hero --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/page-heroes/datasets-hero-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/page-heroes/datasets-hero-story.tsx",
+        "sha256": "cf683430c70ef478d11f9f99c4fd5def0bc2fb19c10ee0cd4c25f2c0f1747572",
+        "retained": false,
+        "exports": [
+          "DatasetsHeroStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/datasets-hero-story.d.ts",
+      "content": "/**\n * The datasets hero's picture: source documents collected one by one, then the table they are delivered as filling\n * row by row. With reduced motion it shows the finished dataset.\n */\nexport declare function DatasetsHeroStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/datasets-hero-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createDatasetsHeroStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/datasets-hero-story-scenes.d.ts",
+      "content": "export declare const SOURCE_COUNT: number;\n/** The sources with the first `collected` of them read: a collected source's lines are solid, the rest rings. */\nexport declare function paintSources(states: Uint8Array, collected: number): Uint8Array<ArrayBufferLike>;\nexport declare const SOURCES_UNREAD: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const SOURCES_COLLECTED: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RECORD_COUNT: number;\n/** The table with its first `filled` records in: solid headings over rows of rings. */\nexport declare function paintDataset(states: Uint8Array, filled: number): Uint8Array<ArrayBufferLike>;\nexport declare const DATASET_EMPTY: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const DATASET_FILLED: import(\"../dot-engine/dot-story-beats\").StoryPicture;\nexport declare const DATASETS_CAPTIONS: {\n    sources: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    dataset: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n};\n/** The finished dataset: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const DATASETS_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-datasets-hero/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-datasets-hero.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { DatasetsHeroStory } from \"@/components/visuals/stories/datasets-hero-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <DatasetsHeroStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "story-parts",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/datasets-hero-story.tsx",
+      "content": "'use client';\n\nimport { DATASETS_RESTING } from '@/components/visuals/stories/datasets-hero-story-scenes';\nimport { HERO_STORY_GRID } from '@/components/visuals/stories/hero-story-kit';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadDatasetsHeroStory: LoadDotStory = async (stage) => {\n\tconst { createDatasetsHeroStoryPlayer } = await import('@/components/visuals/stories/datasets-hero-story-player');\n\treturn createDatasetsHeroStoryPlayer(stage);\n};\n\n/**\n * The datasets hero's picture: source documents collected one by one, then the table they are delivered as filling\n * row by row. With reduced motion it shows the finished dataset.\n */\nexport function DatasetsHeroStory({ className }: { className?: string }) {\n\treturn <DotStory grid={HERO_STORY_GRID} resting={DATASETS_RESTING} load={loadDatasetsHeroStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/datasets-hero-story-player.ts",
+      "content": "import { DATASETS_CAPTIONS, DATASET_EMPTY, DATASET_FILLED, RECORD_COUNT, SOURCES_COLLECTED, SOURCES_UNREAD, SOURCE_COUNT, paintDataset, paintSources } from '@/components/visuals/stories/datasets-hero-story-scenes';\nimport { HERO_STORY_GRID, stepAt } from '@/components/visuals/stories/hero-story-kit';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One project, played as a loop: the source documents are collected one at a time, then melt into the dataset\n * they are delivered as, its records filling in row by row.\n */\n\nconst COLLECTING = { startsAt: 0.6, everySeconds: 0.6 };\nconst COLLECTED_AT = COLLECTING.startsAt + (SOURCE_COUNT - 1) * COLLECTING.everySeconds;\nconst FILLING = { startsAt: 0.5, everySeconds: 0.3 };\nconst FILLED_AT = FILLING.startsAt + (RECORD_COUNT - 1) * FILLING.everySeconds;\n\nexport function createDatasetsHeroStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: HERO_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: FILLED_AT + 0.8 },\n\t\tbeats: [\n\t\t\tcaptionedBeat({\n\t\t\t\tpicture: SOURCES_UNREAD,\n\t\t\t\tdeparture: SOURCES_COLLECTED,\n\t\t\t\tcaption: DATASETS_CAPTIONS.sources,\n\t\t\t\tholdSeconds: COLLECTED_AT + 1.8,\n\t\t\t\tisTyped: true,\n\t\t\t\tanimate: (states, heldSeconds) => void paintSources(states, stepAt(heldSeconds, COLLECTING, SOURCE_COUNT - 1) + 1),\n\t\t\t}),\n\t\t\tcaptionedBeat({\n\t\t\t\tpicture: DATASET_EMPTY,\n\t\t\t\tdeparture: DATASET_FILLED,\n\t\t\t\tcaption: DATASETS_CAPTIONS.dataset,\n\t\t\t\tholdSeconds: FILLED_AT + 2,\n\t\t\t\tisTyped: true,\n\t\t\t\tanimate: (states, heldSeconds) => void paintDataset(states, stepAt(heldSeconds, FILLING, RECORD_COUNT - 1) + 1),\n\t\t\t}),\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/datasets-hero-story-scenes.ts",
+      "content": "import { HERO_STORY_GRID, between, blankScreen, heroCaption, pictureOfStates } from '@/components/visuals/stories/hero-story-kit';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { paintShape, roundedBox, type DotBox } from '@/components/visuals/dot-engine/dot-story-cells';\n\n/**\n * The datasets hero's pictures, in the brand dot grid: a spread of source documents collected one at a time, and\n * the table they are delivered as, filling a row at a time.\n */\n\n// Back to front: each source overlaps the one before it.\nconst SOURCES: DotBox[] = [\n\t{ left: 3, right: 14, top: 4, bottom: 20 },\n\t{ left: 10, right: 21, top: 10, bottom: 26 },\n\t{ left: 17, right: 28, top: 16, bottom: 32 },\n];\nexport const SOURCE_COUNT = SOURCES.length;\nconst SOURCE_LINE = { firstRow: 3, every: 3, inset: 2 };\nconst SOURCE_LINE_SHORTFALLS = [0, 2, 0, 3, 1];\n\n/** The sources with the first `collected` of them read: a collected source's lines are solid, the rest rings. */\nexport function paintSources(states: Uint8Array, collected: number) {\n\tSOURCES.forEach((source, index) => {\n\t\tpaintShape(HERO_STORY_GRID, states, roundedBox(source, 1), (column, row) => {\n\t\t\tconst line = (row - source.top - SOURCE_LINE.firstRow) / SOURCE_LINE.every;\n\t\t\tif (!Number.isInteger(line) || !between(line, 0, SOURCE_LINE_SHORTFALLS.length - 1) || row >= source.bottom - 1) return DOT_ABSENT;\n\t\t\tif (!between(column, source.left + SOURCE_LINE.inset, source.right - SOURCE_LINE.inset - SOURCE_LINE_SHORTFALLS[line])) return DOT_ABSENT;\n\t\t\treturn index < collected ? DOT_FILLED : DOT_HOLLOW;\n\t\t});\n\t});\n\treturn states;\n}\n\nexport const SOURCES_UNREAD = pictureOfStates(paintSources(blankScreen(), 0));\nexport const SOURCES_COLLECTED = pictureOfStates(paintSources(blankScreen(), SOURCE_COUNT));\n\nconst TABLE: DotBox = { left: 3, right: 29, top: 5, bottom: 33 };\nconst HEADER_ROWS = [7, 8];\nconst TABLE_COLUMNS = [\n\t{ left: 5, right: 10 },\n\t{ left: 13, right: 18 },\n\t{ left: 21, right: 27 },\n];\nconst RECORD = { firstRow: 12, every: 3 };\n// How far short of its column each record's three values stop.\nconst RECORD_SHORTFALLS = [\n\t[0, 2, 1],\n\t[2, 0, 3],\n\t[1, 1, 0],\n\t[0, 3, 2],\n\t[3, 0, 1],\n\t[1, 2, 0],\n\t[0, 1, 4],\n];\nexport const RECORD_COUNT = RECORD_SHORTFALLS.length;\n\n/** The table with its first `filled` records in: solid headings over rows of rings. */\nexport function paintDataset(states: Uint8Array, filled: number) {\n\treturn paintShape(HERO_STORY_GRID, states, roundedBox(TABLE, 2), (column, row) => {\n\t\tconst tableColumn = TABLE_COLUMNS.findIndex(({ left, right }) => between(column, left, right));\n\t\tif (tableColumn === -1) return DOT_ABSENT;\n\t\tif (HEADER_ROWS.includes(row)) return DOT_FILLED;\n\t\tconst record = (row - RECORD.firstRow) / RECORD.every;\n\t\tif (!Number.isInteger(record) || !between(record, 0, filled - 1)) return DOT_ABSENT;\n\t\treturn column <= TABLE_COLUMNS[tableColumn].right - RECORD_SHORTFALLS[record][tableColumn] ? DOT_HOLLOW : DOT_ABSENT;\n\t});\n}\n\nexport const DATASET_EMPTY = pictureOfStates(paintDataset(blankScreen(), 0));\nexport const DATASET_FILLED = pictureOfStates(paintDataset(blankScreen(), RECORD_COUNT));\n\nexport const DATASETS_CAPTIONS = {\n\tsources: heroCaption('your engineer collects', 'sources', 'archives, catalogs, portals'),\n\tdataset: heroCaption('delivered as a', 'dataset', 'CSV, JSON or an API'),\n};\n\n/** The finished dataset: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const DATASETS_RESTING = { ...DATASET_FILLED, texts: DATASETS_CAPTIONS.dataset };\n"
+    }
+  ]
+}

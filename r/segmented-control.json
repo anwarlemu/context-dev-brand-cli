@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "segmented-control",
+  "type": "ui",
+  "title": "Segmented control",
+  "description": "Single-choice option group with radio semantics and an animated selection indicator.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Ranges on charts, small choices inside forms. `segmented` (a gray track) where the unpicked options must still read as choices.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/segmented-control.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add segmented-control --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/tabs.tsx; src/components/ui/form.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/tabs.tsx",
+        "sha256": "98fe9ed3a9e0b878305eaee6e61f64e9541785acd56f38a8efdd344f79f1a98a",
+        "retained": false,
+        "exports": [
+          "TabOption",
+          "Tabs"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/segmented-control.d.ts",
+      "content": "import * as React from \"react\";\ntype Option<T extends string> = {\n    value: T;\n    label: React.ReactNode;\n    count?: number;\n};\ndeclare function SegmentedControl<T extends string>({ value, onValueChange, options, label, size, variant, className, }: {\n    value: T;\n    onValueChange: (value: T) => void;\n    options: Option<T>[];\n    label: string;\n    size?: \"sm\" | \"md\";\n    variant?: \"plain\" | \"segmented\";\n    className?: string;\n}): React.JSX.Element;\nexport { SegmentedControl };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/segmented-control/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/segmented-control.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\n\nimport { SegmentedControl } from \"@/components/ui/segmented-control\";\n\nexport function Product() {\n  const [range, setRange] = useState<\"24h\" | \"7d\" | \"30d\">(\"7d\");\n  const [view, setView] = useState<\"requests\" | \"credits\">(\"requests\");\n  return (\n    <div className=\"flex flex-col items-start gap-4\">\n      <SegmentedControl\n        label=\"Range\"\n        value={range}\n        onValueChange={setRange}\n        options={[\n          { value: \"24h\", label: \"24h\" },\n          { value: \"7d\", label: \"7 days\" },\n          { value: \"30d\", label: \"30 days\" },\n        ]}\n      />\n      <SegmentedControl\n        label=\"Chart\"\n        variant=\"segmented\"\n        value={view}\n        onValueChange={setView}\n        options={[\n          { value: \"requests\", label: \"Requests\" },\n          { value: \"credits\", label: \"Credits\" },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "use-tab-glide",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/segmented-control.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { useTabGlide } from \"@/hooks/use-tab-glide\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's tabs used as a value picker inside a form or a chart (form.tsx SegmentedControl): the same gliding\n// soft gray pill, with radio semantics. `segmented` sits the options on a gray track with a white pill.\ntype Option<T extends string> = { value: T; label: React.ReactNode; count?: number };\n\nconst INNER_RADIUS = \"rounded-[calc(var(--ds-radius-control)-0.125rem)]\";\nconst PILL_SURFACE = { plain: \"bg-wash-pill\", segmented: \"bg-surface shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]\" };\n\nfunction SegmentedControl<T extends string>({\n  value,\n  onValueChange,\n  options,\n  label,\n  size = \"md\",\n  variant = \"plain\",\n  className,\n}: {\n  value: T;\n  onValueChange: (value: T) => void;\n  options: Option<T>[];\n  label: string;\n  size?: \"sm\" | \"md\";\n  variant?: \"plain\" | \"segmented\";\n  className?: string;\n}) {\n  const pillRef = React.useRef<HTMLSpanElement>(null);\n  const isPlaced = useTabGlide(pillRef, value);\n  const segmented = variant === \"segmented\";\n  const radius = size === \"sm\" || segmented ? INNER_RADIUS : \"rounded-control\";\n\n  return (\n    <div\n      role=\"radiogroup\"\n      aria-label={label}\n      data-slot=\"segmented-control\"\n      className={cn(\"relative isolate inline-flex w-fit items-center\", segmented ? \"gap-0.5 rounded-control bg-neutral-5 p-0.5\" : size === \"sm\" ? \"gap-0.5\" : \"gap-1\", className)}\n    >\n      <span ref={pillRef} aria-hidden className={cn(\"pointer-events-none absolute top-0 left-0 -z-10\", radius, PILL_SURFACE[variant], !isPlaced && \"invisible\")} />\n      {options.map((o, index) => {\n        const selected = o.value === value;\n        return (\n          <button\n            key={o.value}\n            type=\"button\"\n            role=\"radio\"\n            aria-checked={selected}\n            tabIndex={selected || (!options.some((option) => option.value === value) && index === 0) ? 0 : -1}\n            data-tab-id={o.value}\n            onClick={() => onValueChange(o.value)}\n            onKeyDown={(event) => {\n              const delta = event.key === \"ArrowRight\" || event.key === \"ArrowDown\" ? 1 : event.key === \"ArrowLeft\" || event.key === \"ArrowUp\" ? -1 : 0;\n              if (!delta && event.key !== \"Home\" && event.key !== \"End\") return;\n              event.preventDefault();\n              const next = event.key === \"Home\" ? 0 : event.key === \"End\" ? options.length - 1 : (index + delta + options.length) % options.length;\n              onValueChange(options[next].value);\n              event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role=\"radio\"]')[next]?.focus();\n            }}\n            className={cn(\n              \"flex items-center gap-1.5 whitespace-nowrap outline-none transition-[color] duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring motion-reduce:transition-none\",\n              radius,\n              size === \"sm\" ? \"h-7 px-3 text-caption\" : segmented ? \"h-8 px-3.5 text-body-sm\" : \"h-9 px-4 text-body-sm\",\n              // Only the text answers a hover, so nothing fades over the pill gliding in beneath.\n              selected ? \"text-fg\" : cn(\"hover:text-fg\", segmented ? \"text-fg-muted\" : \"text-fg-subtle\"),\n              // Until the pill lands, the selected option draws the surface itself so the first paint matches.\n              selected && !isPlaced && PILL_SURFACE[variant],\n            )}\n          >\n            {o.label}\n            {o.count !== undefined && <span className={cn(\"tabular-nums transition-[color] duration-200 ease-out\", selected ? \"text-fg-muted\" : \"text-fg-subtle\")}>{o.count}</span>}\n          </button>\n        );\n      })}\n    </div>\n  );\n}\n\nexport { SegmentedControl };\n"
+    }
+  ]
+}

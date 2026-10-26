@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "pagination",
+  "type": "ui",
+  "title": "Pagination",
+  "description": "The dashboard's pagination row: quiet Previous and Next with chevrons, page squares with the current one on the gray wash, and the page count.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Page through a long list under its table card (monitors, batches, usage). Put PaginationSummary first (Page 2 of 5), disable Previous and Next at the ends, and keep the row 16px under the card. For tables you sort and filter too, use DataTable.",
+  "avoid": [
+    "Infinite scrolling for records people need to find again",
+    "A blue current page",
+    "More than seven page numbers at once"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/pagination.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add pagination",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/monitors/monitors-home.tsx; src/components/batches/batches-home.tsx; src/components/usage/usage-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/monitors/monitors-home.tsx",
+        "sha256": "561f65c2548d2b206555b1f7620812a153c262b86bf259df3fa95fcd3864f070",
+        "retained": false,
+        "exports": [
+          "MonitorsSkeleton",
+          "MonitorsHome"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/batches/batches-home.tsx",
+        "sha256": "a1dc2ec7973acdc3516cf70e0e7151d01c90a0ef0a3d9363ff491b900b3b434c",
+        "retained": false,
+        "exports": [
+          "BatchesSkeleton",
+          "BatchesHome"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/usage/usage-page.tsx",
+        "sha256": "88665c09035bc549aac535885e2b3591dbe84b9f4ba4c20de3911b19672e686c",
+        "retained": false,
+        "exports": [
+          "UsageView",
+          "UsagePage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/pagination.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Pagination({ className, ...props }: React.ComponentProps<\"nav\">): React.JSX.Element;\ndeclare function PaginationContent({ className, ...props }: React.ComponentProps<\"ul\">): React.JSX.Element;\ndeclare function PaginationItem(props: React.ComponentProps<\"li\">): React.JSX.Element;\ntype PaginationLinkProps = {\n    isActive?: boolean;\n    disabled?: boolean;\n} & React.ComponentProps<\"a\">;\ndeclare function PaginationLink({ className, isActive, disabled, ...props }: PaginationLinkProps): React.JSX.Element;\ndeclare function PaginationPrevious({ className, children, ...props }: PaginationLinkProps): React.JSX.Element;\ndeclare function PaginationNext({ className, children, ...props }: PaginationLinkProps): React.JSX.Element;\ndeclare function PaginationEllipsis({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\n/** \"Page 2 of 5\" before the controls, in the subtle gray with tabular figures, 12px from them. */\ndeclare function PaginationSummary({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\nexport { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationSummary };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/pagination/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/pagination/Product"
+    },
+    {
+      "name": "PreviousAndNext",
+      "url": "https://context-ds.vercel.app/preview/pagination/PreviousAndNext"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/pagination.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationSummary } from \"@/components/ui/pagination\";\n\nfunction Pages({ count, initial = 0 }: { count: number; initial?: number }) {\n  const [page, setPage] = React.useState(initial);\n  const go = (p: number) => (event: React.MouseEvent) => {\n    event.preventDefault();\n    if (p >= 0 && p < count) setPage(p);\n  };\n  const list = count <= 7 ? Array.from({ length: count }, (_, i) => i) : [0, ...[page - 1, page, page + 1].filter((p) => p > 0 && p < count - 1), count - 1];\n  return (\n    <Pagination>\n      <PaginationContent>\n        <PaginationSummary>\n          Page {page + 1} of {count}\n        </PaginationSummary>\n        <PaginationItem>\n          <PaginationPrevious href=\"#\" onClick={go(page - 1)} disabled={page === 0} />\n        </PaginationItem>\n        {list.map((p, i) => (\n          <React.Fragment key={p}>\n            {i > 0 && p - list[i - 1] > 1 && (\n              <PaginationItem>\n                <PaginationEllipsis />\n              </PaginationItem>\n            )}\n            <PaginationItem>\n              <PaginationLink href=\"#\" isActive={p === page} onClick={go(p)} aria-label={`Page ${p + 1}`}>\n                {p + 1}\n              </PaginationLink>\n            </PaginationItem>\n          </React.Fragment>\n        ))}\n        <PaginationItem>\n          <PaginationNext href=\"#\" onClick={go(page + 1)} disabled={page === count - 1} />\n        </PaginationItem>\n      </PaginationContent>\n    </Pagination>\n  );\n}\n\nexport function Site() {\n  return (\n    <div className=\"w-full max-w-xl\">\n      <Pages count={5} />\n    </div>\n  );\n}\n\nexport function Product() {\n  return (\n    <div className=\"w-full max-w-xl\">\n      <Pages count={24} initial={6} />\n    </div>\n  );\n}\n\nexport function PreviousAndNext() {\n  const [page, setPage] = React.useState(0);\n  return (\n    <Pagination className=\"max-w-xl\">\n      <PaginationContent>\n        <PaginationSummary>Page {page + 1}</PaginationSummary>\n        <PaginationItem>\n          <PaginationPrevious href=\"#\" onClick={(e) => { e.preventDefault(); setPage((p) => Math.max(0, p - 1)); }} disabled={page === 0} />\n        </PaginationItem>\n        <PaginationItem>\n          <PaginationNext href=\"#\" onClick={(e) => { e.preventDefault(); setPage((p) => p + 1); }} />\n        </PaginationItem>\n      </PaginationContent>\n    </Pagination>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/pagination.tsx",
+      "content": "import * as React from \"react\";\nimport { ChevronLeft, ChevronRight, MoreHorizontal } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's pagination (context-dashboard monitors, batches and usage lists): a row at the end of a list, 16px\n// under the table card, in body-sm. Previous and Next are quiet 32px buttons, muted with a 14px chevron at stroke 1.5,\n// washing gray and darkening under the pointer and fading to 40 percent when there is nowhere to go. Page numbers are\n// 32px squares in the same style; the current one sits on the gray selected wash, as the sidebar marks the page you\n// are on. PaginationSummary is the subtle \"Page 2 of 5\" in tabular figures before them.\nfunction Pagination({ className, ...props }: React.ComponentProps<\"nav\">) {\n  return <nav role=\"navigation\" aria-label=\"Pagination\" data-slot=\"pagination\" className={cn(\"flex w-full justify-end\", className)} {...props} />;\n}\n\nfunction PaginationContent({ className, ...props }: React.ComponentProps<\"ul\">) {\n  return <ul data-slot=\"pagination-content\" className={cn(\"flex flex-wrap items-center gap-1 text-body-sm\", className)} {...props} />;\n}\n\nfunction PaginationItem(props: React.ComponentProps<\"li\">) {\n  return <li data-slot=\"pagination-item\" {...props} />;\n}\n\nconst LINK =\n  \"flex h-8 min-w-8 cursor-pointer items-center justify-center gap-1 rounded-control px-2.5 text-body-sm text-fg-muted tabular-nums no-underline outline-none transition-colors duration-150 ease-out hover:bg-wash-hover hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring aria-disabled:pointer-events-none aria-disabled:opacity-40 data-[active=true]:bg-wash-selected data-[active=true]:text-fg motion-reduce:transition-none [&_svg]:size-3.5 [&_svg]:shrink-0\";\n\ntype PaginationLinkProps = { isActive?: boolean; disabled?: boolean } & React.ComponentProps<\"a\">;\n\nfunction PaginationLink({ className, isActive, disabled, ...props }: PaginationLinkProps) {\n  return (\n    <a\n      data-slot=\"pagination-link\"\n      data-active={isActive || undefined}\n      aria-current={isActive ? \"page\" : undefined}\n      aria-disabled={disabled || undefined}\n      tabIndex={disabled ? -1 : undefined}\n      className={cn(LINK, className)}\n      {...props}\n    />\n  );\n}\n\nfunction PaginationPrevious({ className, children = \"Previous\", ...props }: PaginationLinkProps) {\n  return (\n    <PaginationLink aria-label=\"Go to the previous page\" className={cn(\"pr-3 pl-2.5\", className)} {...props}>\n      <ChevronLeft strokeWidth={1.5} />\n      <span>{children}</span>\n    </PaginationLink>\n  );\n}\n\nfunction PaginationNext({ className, children = \"Next\", ...props }: PaginationLinkProps) {\n  return (\n    <PaginationLink aria-label=\"Go to the next page\" className={cn(\"pr-2.5 pl-3\", className)} {...props}>\n      <span>{children}</span>\n      <ChevronRight strokeWidth={1.5} />\n    </PaginationLink>\n  );\n}\n\nfunction PaginationEllipsis({ className, ...props }: React.ComponentProps<\"span\">) {\n  return (\n    <span aria-hidden data-slot=\"pagination-ellipsis\" className={cn(\"flex size-8 items-center justify-center text-fg-subtle\", className)} {...props}>\n      <MoreHorizontal className=\"size-3.5\" strokeWidth={1.5} />\n      <span className=\"sr-only\">More pages</span>\n    </span>\n  );\n}\n\n/** \"Page 2 of 5\" before the controls, in the subtle gray with tabular figures, 12px from them. */\nfunction PaginationSummary({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"pagination-summary\" className={cn(\"mr-2 text-body-sm text-fg-subtle tabular-nums\", className)} {...props} />;\n}\n\nexport { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationSummary };\n"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-tenant-theme",
+  "type": "visual",
+  "title": "Tenant theme story",
+  "description": "Dot animation of a dashboard switching between tenant themes.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Per-tenant theming on a site card or product hero. Plays only on screen; shows the first tenant's theme with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-tenant-theme.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-tenant-theme --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/tenant-theme-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/tenant-theme-story.tsx",
+        "sha256": "9d764577ae330f49279f957a815e97b98fc43c1863255b1088fce5f2c774350e",
+        "retained": false,
+        "exports": [
+          "TenantThemeStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/tenant-theme-story.d.ts",
+      "content": "/**\n * The theming page's picture: one dashboard re-themed for three tenants in turn, each brand spreading across it from\n * the mark in its sidebar. With reduced motion it shows the first tenant's.\n */\nexport declare function TenantThemeStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/tenant-theme-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createTenantThemeStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/tenant-theme-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The theming page's pictures, in the brand dot grid: one dashboard, drawn three times over for three tenants. The\n * layout never changes; what changes is the brand on it, the mark in the sidebar, the tone of the sidebar and the\n * accents, the shape of the button and the numbers in the chart.\n */\nexport declare const TENANT_THEME_GRID: DotGrid;\nexport declare const TENANT_THEMES: {\n    picture: StoryPicture;\n    domain: DotStoryText;\n}[];\n/** Where each new theme spreads from: the tenant's mark in the sidebar. */\nexport declare const THEME_ORIGIN: {\n    column: number;\n    row: number;\n};\n/** The first tenant's dashboard: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const TENANT_THEME_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-tenant-theme/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-tenant-theme.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { TenantThemeStory } from \"@/components/visuals/stories/tenant-theme-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <TenantThemeStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/tenant-theme-story.tsx",
+      "content": "'use client';\n\nimport { TENANT_THEME_RESTING, TENANT_THEME_GRID } from '@/components/visuals/stories/tenant-theme-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadTenantThemeStory: LoadDotStory = async (stage) => {\n\tconst { createTenantThemeStoryPlayer } = await import('@/components/visuals/stories/tenant-theme-story-player');\n\treturn createTenantThemeStoryPlayer(stage);\n};\n\n/**\n * The theming page's picture: one dashboard re-themed for three tenants in turn, each brand spreading across it from\n * the mark in its sidebar. With reduced motion it shows the first tenant's.\n */\nexport function TenantThemeStory({ className }: { className?: string }) {\n\treturn <DotStory grid={TENANT_THEME_GRID} resting={TENANT_THEME_RESTING} load={loadTenantThemeStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/tenant-theme-story-player.ts",
+      "content": "import { TENANT_THEMES, TENANT_THEME_GRID, THEME_ORIGIN } from '@/components/visuals/stories/tenant-theme-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One codebase, played as a loop over three tenants: each tenant's domain is typed under the dashboard, and its brand\n * spreads across the same layout in a wave from the mark in the sidebar.\n */\n\nconst WAVE_SECONDS = 1.2;\nconst TYPING = { startsAt: 0.1, charactersPerSecond: 12 };\nconst THEMED_HOLD_SECONDS = 2.2;\n\nexport function createTenantThemeStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: TENANT_THEME_GRID,\n\t\tresting: { beat: 0, heldSeconds: TYPING.startsAt + typingSeconds(TENANT_THEMES[0].domain, TYPING.charactersPerSecond) + 1 },\n\t\tbeats: TENANT_THEMES.map(({ picture, domain }) => ({\n\t\t\tpicture,\n\t\t\tarrival: { kind: 'waves', seconds: WAVE_SECONDS, origin: THEME_ORIGIN },\n\t\t\tholdSeconds: TYPING.startsAt + typingSeconds(domain, TYPING.charactersPerSecond) + THEMED_HOLD_SECONDS,\n\t\t\twrite: (pen, heldSeconds) => pen.type(domain, heldSeconds, { ...TYPING, cursorLingers: 0.6 }),\n\t\t})),\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/tenant-theme-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, isInDotBox, paintShape, rings, roundedBox, solid, solidWithSpeckle, type DotBox, type DotPainter, type DotShape } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The theming page's pictures, in the brand dot grid: one dashboard, drawn three times over for three tenants. The\n * layout never changes; what changes is the brand on it, the mark in the sidebar, the tone of the sidebar and the\n * accents, the shape of the button and the numbers in the chart.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const TENANT_THEME_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = TENANT_THEME_GRID;\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst APP: DotBox = { left: 3, right: 54, top: 2, bottom: 30 };\nconst SIDEBAR = { right: 15, mark: { column: 9.5, row: 7, size: 2.6 }, links: { rows: [13, 16, 19, 22], left: 6, right: 12 } };\nconst MAIN = { left: 18, right: 52, title: { rows: [5, 6], right: 30 }, button: { left: 43, right: 52, top: 4, bottom: 7 } };\nconst STATS = { top: 10, bottom: 15, lefts: [18, 30, 42], columns: 11 };\nconst CHART = { bottom: 28, from: 19, every: 4, width: 2, tallest: 9 };\n\ninterface Tenant {\n\tdomain: string;\n\tsidebar: DotPainter;\n\taccent: DotPainter;\n\t/** The tenant's mark, a shape centerd on the origin and about one unit across. */\n\tmark: (across: number, down: number) => boolean;\n\tbuttonRadius: number;\n\tbars: number[];\n}\n\nconst TENANTS: Tenant[] = [\n\t{ domain: 'super.com', sidebar: solid, accent: solidWithSpeckle, mark: (across, down) => Math.hypot(across, down) <= 1, buttonRadius: 2, bars: [3, 5, 4, 7, 6, 8, 5, 9, 7] },\n\t{ domain: 'daily.dev', sidebar: rings, accent: solid, mark: (across, down) => Math.max(Math.abs(across), Math.abs(down)) <= 0.85, buttonRadius: 0, bars: [8, 6, 7, 4, 5, 3, 6, 4, 5] },\n\t{ domain: 'mintlify.com', sidebar: solidWithSpeckle, accent: rings, mark: (across, down) => down <= 0.9 && down >= -0.9 && Math.abs(across) <= (down + 0.9) / 1.8 + 0.2, buttonRadius: 1, bars: [4, 4, 6, 6, 8, 5, 9, 9, 6] },\n];\n\nfunction paintDashboard(states: Uint8Array, { sidebar, accent, mark, buttonRadius, bars }: Tenant) {\n\tconst button: DotShape = roundedBox(MAIN.button, buttonRadius);\n\treturn paintShape(TENANT_THEME_GRID, states, roundedBox(APP, 2), (column, row) => {\n\t\tif (column <= SIDEBAR.right) {\n\t\t\tif (mark((column - SIDEBAR.mark.column) / SIDEBAR.mark.size, (row - SIDEBAR.mark.row) / SIDEBAR.mark.size)) return sidebar === rings ? DOT_FILLED : DOT_ABSENT;\n\t\t\tif (SIDEBAR.links.rows.includes(row) && between(column, SIDEBAR.links.left, SIDEBAR.links.right)) return sidebar === rings ? DOT_FILLED : DOT_ABSENT;\n\t\t\treturn sidebar(column, row);\n\t\t}\n\t\tif (column === SIDEBAR.right + 1) return DOT_ABSENT;\n\t\tif (button(column, row)) return DOT_FILLED;\n\t\tif (MAIN.title.rows.includes(row)) return between(column, MAIN.left, MAIN.title.right) ? DOT_FILLED : DOT_ABSENT;\n\t\tconst stat = STATS.lefts.find((left) => isInDotBox({ left, right: left + STATS.columns - 1, top: STATS.top, bottom: STATS.bottom }, column, row));\n\t\tif (stat !== undefined) {\n\t\t\tconst isEdge = column === stat || column === stat + STATS.columns - 1 || row === STATS.top || row === STATS.bottom;\n\t\t\tif (isEdge) return DOT_HOLLOW;\n\t\t\treturn row === STATS.top + 2 && between(column, stat + 2, stat + 6) ? accent(column, row) : DOT_ABSENT;\n\t\t}\n\t\tconst bar = (column - CHART.from) / CHART.every;\n\t\tconst barIndex = Math.floor(bar);\n\t\tif (between(barIndex, 0, bars.length - 1) && column - CHART.from - barIndex * CHART.every < CHART.width && between(row, CHART.bottom - bars[barIndex] + 1, CHART.bottom)) return accent(column, row);\n\t\treturn DOT_ABSENT;\n\t});\n}\n\nconst dashboardOf = (tenant: Tenant): StoryPicture => {\n\tconst states = paintDashboard(new Uint8Array(COLUMNS * ROWS), tenant);\n\treturn { states, cells: cellsOfStates(TENANT_THEME_GRID, states) };\n};\n\nconst DOMAIN_SIZE = 18;\n// Doto is monospaced, each letter three fifths of its size wide; typed text is set from its left so the cursor can follow it.\nconst domainText = (domain: string): DotStoryText => ({ text: domain, x: (COLUMNS * PITCH) / 2 - (domain.length * 0.6 * DOMAIN_SIZE) / 2, y: (34 + 0.5) * PITCH + DOMAIN_SIZE / 3, size: DOMAIN_SIZE, weight: 800 });\n\nexport const TENANT_THEMES = TENANTS.map((tenant) => ({ picture: dashboardOf(tenant), domain: domainText(tenant.domain) }));\n/** Where each new theme spreads from: the tenant's mark in the sidebar. */\nexport const THEME_ORIGIN = { column: SIDEBAR.mark.column, row: SIDEBAR.mark.row };\n\n/** The first tenant's dashboard: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const TENANT_THEME_RESTING = { ...TENANT_THEMES[0].picture, texts: [TENANT_THEMES[0].domain] };\n"
+    }
+  ]
+}

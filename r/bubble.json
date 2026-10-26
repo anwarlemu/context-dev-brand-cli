@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "bubble",
+  "type": "ui",
+  "title": "Bubble",
+  "description": "A message bubble from the dashboard's support chat: brand blue for the person's own, the subtle gray for the team's.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Use inside Message for a conversation: support chat, an agent's replies. `default` for the person's own messages (align end), `secondary` for the other side, `outline` for a typing or loading bubble, `muted` for a system line, `tinted` for a highlighted reply, `destructive` for a message that failed. BubbleGroup stacks consecutive bubbles; BubbleReactions pins reactions to an edge.",
+  "avoid": [
+    "Tails or speech-bubble points",
+    "Bubbles that animate in",
+    "Bold message text"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/bubble.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add bubble",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/support-chat.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/support-chat.tsx",
+        "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+        "retained": false,
+        "exports": [
+          "SupportChat"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/bubble.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare function BubbleGroup({ className, ...props }: React.ComponentProps<\"div\">): React.JSX.Element;\ndeclare const bubbleVariants: (props?: ({\n    variant?: \"default\" | \"muted\" | \"outline\" | \"ghost\" | \"destructive\" | \"secondary\" | \"tinted\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Bubble({ variant, align, className, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof bubbleVariants> & {\n    align?: \"start\" | \"end\";\n}): React.JSX.Element;\ndeclare function BubbleContent({ asChild, className, ...props }: React.ComponentProps<\"div\"> & {\n    asChild?: boolean;\n}): React.JSX.Element;\n/** Reactions pinned to a bubble's edge: a small white pill lifted off the bubble. */\ndeclare function BubbleReactions({ side, align, className, ...props }: React.ComponentProps<\"div\"> & {\n    align?: \"start\" | \"end\";\n    side?: \"top\" | \"bottom\";\n}): React.JSX.Element;\nexport { Bubble, BubbleContent, BubbleGroup, BubbleReactions, bubbleVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/bubble/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/bubble/Product"
+    },
+    {
+      "name": "Variants",
+      "url": "https://context-ds.vercel.app/preview/bubble/Variants"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/bubble.tsx",
+      "content": "import { Bubble, BubbleContent, BubbleGroup, BubbleReactions } from \"@/components/ui/bubble\";\n\nexport function Site() {\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-3\">\n      <Bubble variant=\"secondary\">\n        <BubbleContent>Can Context.dev read pages that load with JavaScript?</BubbleContent>\n      </Bubble>\n      <Bubble align=\"end\">\n        <BubbleContent>Yes. Every page renders in a real browser first, so you get what a person sees.</BubbleContent>\n      </Bubble>\n    </div>\n  );\n}\n\nexport function Product() {\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-3\">\n      <BubbleGroup>\n        <Bubble align=\"end\">\n          <BubbleContent>My crawl stopped at 1,240 pages.</BubbleContent>\n        </Bubble>\n        <Bubble align=\"end\">\n          <BubbleContent>Is there a page limit on Starter?</BubbleContent>\n        </Bubble>\n      </BubbleGroup>\n      <Bubble variant=\"secondary\" className=\"relative mb-3\">\n        <BubbleContent>Starter crawls up to 2,000 pages per job. This one hit the site's rate limit; retry with a lower rate.</BubbleContent>\n        <BubbleReactions align=\"start\">👍 1</BubbleReactions>\n      </Bubble>\n      <Bubble variant=\"outline\">\n        <BubbleContent>Typing…</BubbleContent>\n      </Bubble>\n    </div>\n  );\n}\n\nexport function Variants() {\n  return (\n    <div className=\"flex w-full max-w-md flex-col gap-3\">\n      <Bubble variant=\"muted\">\n        <BubbleContent>Ana joined the conversation</BubbleContent>\n      </Bubble>\n      <Bubble variant=\"tinted\">\n        <BubbleContent>Tip: set maxPages to stop a crawl early.</BubbleContent>\n      </Bubble>\n      <Bubble variant=\"destructive\" align=\"end\">\n        <BubbleContent>Not sent. Check your connection and try again.</BubbleContent>\n      </Bubble>\n      <Bubble variant=\"ghost\">\n        <BubbleContent>A plain reply with no bubble, for long answers.</BubbleContent>\n      </Bubble>\n      <Bubble variant=\"secondary\">\n        <BubbleContent asChild>\n          <button type=\"button\">Rate limits</button>\n        </BubbleContent>\n      </Bubble>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/bubble.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A message bubble, as the dashboard's support chat draws one (support-chat.tsx): body-sm text, 14px by 10px of\n// padding, card corners all round (the dashboard cuts no tail), at most 85 percent of the thread's width. The person's\n// own message (`default`) is brand blue with white text; the team's (`secondary`) sits on the subtle gray. `outline` is\n// the typing bubble's white with a light edge, `muted` a quiet system line, `tinted` the blue 10 of a news banner,\n// `destructive` the banner's soft red for a message that failed. Bubbles never animate in: a conversation is read\n// line by line.\nfunction BubbleGroup({ className, ...props }: React.ComponentProps<\"div\">) {\n  return <div data-slot=\"bubble-group\" className={cn(\"flex min-w-0 flex-col gap-1\", className)} {...props} />;\n}\n\nconst bubbleVariants = cva(\n  \"group/bubble relative flex w-fit max-w-[85%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end data-[align=end]:self-end data-[variant=ghost]:max-w-full\",\n  {\n    variants: {\n      variant: {\n        default: \"*:data-[slot=bubble-content]:bg-brand *:data-[slot=bubble-content]:text-on-brand [&>[data-slot=bubble-content]:is(button,a):hover]:bg-blue-90\",\n        secondary: \"*:data-[slot=bubble-content]:bg-subtle *:data-[slot=bubble-content]:text-fg [&>[data-slot=bubble-content]:is(button,a):hover]:bg-wash-selected\",\n        muted: \"*:data-[slot=bubble-content]:bg-wash-hover *:data-[slot=bubble-content]:text-fg-muted [&>[data-slot=bubble-content]:is(button,a):hover]:bg-wash-selected\",\n        tinted: \"*:data-[slot=bubble-content]:bg-blue-10 *:data-[slot=bubble-content]:text-fg [&>[data-slot=bubble-content]:is(button,a):hover]:bg-blue-20\",\n        outline: \"*:data-[slot=bubble-content]:border-line *:data-[slot=bubble-content]:bg-surface *:data-[slot=bubble-content]:text-fg [&>[data-slot=bubble-content]:is(button,a):hover]:border-line-strong\",\n        ghost: \"*:data-[slot=bubble-content]:rounded-none *:data-[slot=bubble-content]:bg-transparent *:data-[slot=bubble-content]:p-0 *:data-[slot=bubble-content]:text-fg\",\n        destructive: \"*:data-[slot=bubble-content]:border-alert/30 *:data-[slot=bubble-content]:bg-alert/6 *:data-[slot=bubble-content]:text-danger-strong [&>[data-slot=bubble-content]:is(button,a):hover]:bg-alert/12\",\n      },\n    },\n    defaultVariants: { variant: \"default\" },\n  },\n);\n\nfunction Bubble({ variant = \"default\", align = \"start\", className, ...props }: React.ComponentProps<\"div\"> & VariantProps<typeof bubbleVariants> & { align?: \"start\" | \"end\" }) {\n  return <div data-slot=\"bubble\" data-variant={variant} data-align={align} className={cn(bubbleVariants({ variant }), className)} {...props} />;\n}\n\nfunction BubbleContent({ asChild = false, className, ...props }: React.ComponentProps<\"div\"> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"div\";\n  return (\n    <Comp\n      data-slot=\"bubble-content\"\n      className={cn(\n        \"w-fit max-w-full min-w-0 overflow-hidden rounded-card border border-transparent px-3.5 py-2.5 text-body-sm leading-relaxed [overflow-wrap:anywhere] group-data-[align=end]/bubble:self-end [button]:cursor-pointer [button]:text-left [button,a]:outline-none [button,a]:transition-[background-color,border-color] [button,a]:duration-150 [button,a]:ease-out [button,a]:focus-visible:outline-2 [button,a]:focus-visible:outline-offset-2 [button,a]:focus-visible:outline-solid [button,a]:focus-visible:outline-focus-ring motion-reduce:transition-none\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nconst bubbleReactionsVariants = cva(\"absolute z-10 flex w-fit shrink-0 items-center justify-center gap-1 rounded-pill bg-surface px-1.5 py-0.5 text-caption leading-snug text-fg shadow-raised has-[button]:p-0\", {\n  variants: {\n    side: { top: \"top-0 -translate-y-3/4\", bottom: \"bottom-0 translate-y-3/4\" },\n    align: { start: \"left-3\", end: \"right-3\" },\n  },\n  defaultVariants: { side: \"bottom\", align: \"end\" },\n});\n\n/** Reactions pinned to a bubble's edge: a small white pill lifted off the bubble. */\nfunction BubbleReactions({ side = \"bottom\", align = \"end\", className, ...props }: React.ComponentProps<\"div\"> & { align?: \"start\" | \"end\"; side?: \"top\" | \"bottom\" }) {\n  return <div data-slot=\"bubble-reactions\" data-align={align} data-side={side} className={cn(bubbleReactionsVariants({ side, align }), className)} {...props} />;\n}\n\nexport { Bubble, BubbleContent, BubbleGroup, BubbleReactions, bubbleVariants };\n"
+    }
+  ]
+}

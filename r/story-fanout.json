@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-fanout",
+  "type": "visual",
+  "title": "Fanout story",
+  "description": "Dot animation of one question fanning out into three parallel searches.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Query fanout on a search product card (the Search page shows it first under its capabilities). Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "A question is typed into the field, a stem drops from it and branches into three search fields, each with its own query, and their ranked result rows sweep in together. The labels name the option (`queryFanout: true`) and the outcome (3 searches in parallel).",
+  "documentation": "https://context-ds.vercel.app/components/story-fanout.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-fanout --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/fanout-story.tsx; src/components/sections/products/fanout-story-player.ts; src/components/sections/products/fanout-story-scenes.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/fanout-story.tsx",
+        "sha256": "125b529504b71b75208d9f9ad68628a1c10d7149b26384797a69dcefe259fe27",
+        "retained": false,
+        "exports": [
+          "FanoutStory"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/fanout-story-player.ts",
+        "sha256": "e1c644d177673827a11efa491c81a5f1cf7a8d10bed4c1402ca367133cdd4f35",
+        "retained": false,
+        "exports": [
+          "createFanoutStoryPlayer"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/fanout-story-scenes.ts",
+        "sha256": "2beb0a78f89f869e79ae9a4382377ea701229e4cf05eea2b96c268f93bc09c6a",
+        "retained": false,
+        "exports": [
+          "FANOUT_STORY_GRID",
+          "STEM",
+          "BRANCH_ROW",
+          "DROP",
+          "SEARCHES",
+          "SEARCH_FIELD",
+          "RESULT_ROWS",
+          "QUESTION_ONLY",
+          "FANNED_OUT",
+          "QUESTION_LABEL",
+          "QUESTION",
+          "SEARCH_QUERIES",
+          "FANOUT_LABEL",
+          "PARALLEL_LABEL",
+          "FANOUT_RESTING"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/fanout-story.d.ts",
+      "content": "export declare function FanoutStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/fanout-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createFanoutStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/fanout-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare const FANOUT_STORY_GRID: DotGrid;\nexport declare const STEM: {\n    column: number;\n    top: number;\n    bottom: number;\n};\nexport declare const BRANCH_ROW = 15;\nexport declare const DROP: {\n    top: number;\n    bottom: number;\n};\nexport declare const SEARCHES: {\n    left: number;\n    right: number;\n    query: string;\n}[];\nexport declare const SEARCH_FIELD: {\n    top: number;\n    bottom: number;\n};\nexport declare const RESULT_ROWS: number[];\nexport declare const QUESTION_ONLY: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const FANNED_OUT: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const QUESTION_LABEL: DotStoryText;\nexport declare const QUESTION: DotStoryText;\nexport declare const SEARCH_QUERIES: DotStoryText[];\nexport declare const FANOUT_LABEL: DotStoryText;\nexport declare const PARALLEL_LABEL: DotStoryText;\nexport declare const FANOUT_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-fanout/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-fanout.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { FanoutStory } from \"@/components/visuals/stories/fanout-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <FanoutStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine",
+    "story-parts"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/fanout-story.tsx",
+      "content": "'use client';\n\nimport { FANOUT_RESTING, FANOUT_STORY_GRID } from '@/components/visuals/stories/fanout-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadFanoutStory: LoadDotStory = async (stage) => {\n\tconst { createFanoutStoryPlayer } = await import('@/components/visuals/stories/fanout-story-player');\n\treturn createFanoutStoryPlayer(stage);\n};\n\nexport function FanoutStory({ className }: { className?: string }) {\n\treturn <DotStory grid={FANOUT_STORY_GRID} resting={FANOUT_RESTING} load={loadFanoutStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/fanout-story-player.ts",
+      "content": "import { BRANCH_ROW, DROP, FANNED_OUT, FANOUT_LABEL, FANOUT_STORY_GRID, PARALLEL_LABEL, QUESTION, QUESTION_LABEL, QUESTION_ONLY, RESULT_ROWS, SEARCHES, SEARCH_FIELD, SEARCH_QUERIES, STEM } from '@/components/visuals/stories/fanout-story-scenes';\nimport { fadedInAt, paintRevealed, revealSchedule } from '@/components/visuals/stories/story-reveal';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\nconst CLEAR_SECONDS = 0.8;\nconst TYPING = { startsAt: 0.4, charactersPerSecond: 14 };\nconst TYPED_AT = TYPING.startsAt + typingSeconds(QUESTION, TYPING.charactersPerSecond);\nconst FANOUT = { startsAt: TYPED_AT + 0.4, secondsPerRow: 0.06, secondsPerColumn: 0.02 };\nconst BRANCHED_AT = FANOUT.startsAt + (BRANCH_ROW - STEM.top) * FANOUT.secondsPerRow;\nconst SEARCHES_AT = BRANCHED_AT + 1;\nconst RESULTS = { startsAt: SEARCHES_AT + 0.7, everyLineSeconds: 0.15, sweepSeconds: 0.4 };\nconst HOLD_SECONDS = RESULTS.startsAt + RESULT_ROWS.length * RESULTS.everyLineSeconds + RESULTS.sweepSeconds + 2.6;\n\nconst { rows } = FANOUT_STORY_GRID;\nconst branchedAt = (column: number) => BRANCHED_AT + Math.abs(column - STEM.column) * FANOUT.secondsPerColumn;\n\nconst FANNED_OUT_AT = revealSchedule(FANOUT_STORY_GRID, (column, row) => {\n\tif (row < STEM.top) return 0;\n\tif (row <= BRANCH_ROW) return row === BRANCH_ROW ? branchedAt(column) : FANOUT.startsAt + (row - STEM.top) * FANOUT.secondsPerRow;\n\tif (row <= DROP.bottom) return branchedAt(column) + (row - BRANCH_ROW) * FANOUT.secondsPerRow;\n\tif (row <= SEARCH_FIELD.bottom) return SEARCHES_AT + (row - SEARCH_FIELD.top) * FANOUT.secondsPerRow;\n\tconst search = SEARCHES.find(({ left, right }) => column >= left && column <= right) ?? SEARCHES[0];\n\treturn RESULTS.startsAt + RESULT_ROWS.indexOf(row) * RESULTS.everyLineSeconds + ((column - search.left) / (search.right - search.left)) * RESULTS.sweepSeconds;\n});\n\nexport function createFanoutStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: FANOUT_STORY_GRID,\n\t\tresting: { beat: 0, heldSeconds: HOLD_SECONDS },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: QUESTION_ONLY,\n\t\t\t\tdeparture: FANNED_OUT,\n\t\t\t\tarrival: { kind: 'builds', seconds: CLEAR_SECONDS, order: (_, row) => 1 - row / rows },\n\t\t\t\tholdSeconds: HOLD_SECONDS,\n\t\t\t\tanimate: (states, heldSeconds) => paintRevealed(states, FANNED_OUT.states, FANNED_OUT_AT, heldSeconds),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(QUESTION_LABEL);\n\t\t\t\t\tpen.type(QUESTION, heldSeconds, TYPING);\n\t\t\t\t\tpen.text(FANOUT_LABEL, fadedInAt(heldSeconds, FANOUT.startsAt));\n\t\t\t\t\tSEARCH_QUERIES.forEach((query) => pen.text(query, fadedInAt(heldSeconds, SEARCHES_AT + 0.2)));\n\t\t\t\t\tpen.text(PARALLEL_LABEL, fadedInAt(heldSeconds, RESULTS.startsAt + 0.3));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/fanout-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clear, rectangle, stack, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\nexport const FANOUT_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { pitch: PITCH } = FANOUT_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\n\nconst QUESTION_FIELD: DotBox = { left: 3, right: 54, top: 4, bottom: 9 };\nexport const STEM = { column: 28, top: 10, bottom: 14 };\nexport const BRANCH_ROW = 15;\nexport const DROP = { top: 16, bottom: 18 };\nexport const SEARCHES = [\n\t{ left: 2, right: 18, query: 'agent citations' },\n\t{ left: 20, right: 36, query: 'llm grounding' },\n\t{ left: 39, right: 55, query: 'source links' },\n];\nexport const SEARCH_FIELD = { top: 19, bottom: 23 };\nexport const RESULT_ROWS = [26, 28, 30];\nconst RANK_TAB = 4;\nconst RESULT_ENDS = [1, 4, 2];\n\nconst centerOf = ({ left, right }: { left: number; right: number }) => Math.round((left + right) / 2);\nconst BRANCH = { left: centerOf(SEARCHES[0]), right: centerOf(SEARCHES[SEARCHES.length - 1]) };\n\nconst questionField = rectangle(QUESTION_FIELD, clear);\n\nconst fanout: DotPainter = (column, row) => {\n\tif (column === STEM.column && row >= STEM.top && row <= STEM.bottom) return DOT_HOLLOW;\n\tif (row === BRANCH_ROW && column === STEM.column) return DOT_FILLED;\n\tif (row === BRANCH_ROW && column >= BRANCH.left && column <= BRANCH.right) return DOT_HOLLOW;\n\tif (row >= DROP.top && row <= DROP.bottom && SEARCHES.some((search) => centerOf(search) === column)) return DOT_HOLLOW;\n\treturn DOT_ABSENT;\n};\n\nconst searchFields = stack(...SEARCHES.map(({ left, right }) => rectangle({ left, right, top: SEARCH_FIELD.top, bottom: SEARCH_FIELD.bottom }, clear)));\n\nconst searchResults: DotPainter = (column, row) => {\n\tconst line = RESULT_ROWS.indexOf(row);\n\tconst search = SEARCHES.find(({ left, right }) => column > left && column < right);\n\tif (line < 0 || !search || column > search.right - RESULT_ENDS[line]) return DOT_ABSENT;\n\treturn column <= search.left + RANK_TAB ? DOT_FILLED : DOT_HOLLOW;\n};\n\nexport const QUESTION_ONLY = pictureOf(FANOUT_STORY_GRID, questionField);\nexport const FANNED_OUT = pictureOf(FANOUT_STORY_GRID, stack(questionField, fanout, searchFields, searchResults));\n\nexport const QUESTION_LABEL: DotStoryText = { text: 'query', x: x(QUESTION_FIELD.left + 1), y: baselineOn(2, 12), size: 12, weight: 700, muted: true };\nexport const QUESTION: DotStoryText = { text: 'how do agents cite web sources?', x: x(QUESTION_FIELD.left + 3), y: baselineOn(6.5, 15), size: 15, weight: 700 };\nexport const SEARCH_QUERIES: DotStoryText[] = SEARCHES.map(({ left, query }) => ({ text: query, x: x(left + 2), y: baselineOn(21, 12), size: 12, weight: 700 }));\nexport const FANOUT_LABEL: DotStoryText = { text: 'queryFanout: true', x: x(3), y: baselineOn(34.5, 12), size: 12, weight: 700, muted: true };\nexport const PARALLEL_LABEL: DotStoryText = { text: '3 searches in parallel', x: x(55), y: baselineOn(34.5, 12), size: 12, weight: 700, muted: true, anchor: 'end' };\n\nexport const FANOUT_RESTING = { ...FANNED_OUT, texts: [QUESTION_LABEL, QUESTION, ...SEARCH_QUERIES, FANOUT_LABEL, PARALLEL_LABEL] };\n"
+    }
+  ]
+}

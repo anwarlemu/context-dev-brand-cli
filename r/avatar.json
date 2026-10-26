@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "avatar",
+  "type": "ui",
+  "title": "Avatar",
+  "description": "Profile image with initials as the fallback.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "People and organizations.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/avatar.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add avatar --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/shell/user-menu.tsx; src/components/team/team-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/shell/user-menu.tsx",
+        "sha256": "9024bc50588065ca1fd342856be17dd5562b0730fd49660c9e74283cf21b2811",
+        "retained": false,
+        "exports": [
+          "UserMenu"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/team/team-page.tsx",
+        "sha256": "af2b0b2e2d9b18dd48f98252af751eeb49944d96f94aaa9e2dc8dbe30c4f4f7f",
+        "retained": false,
+        "exports": [
+          "INITIAL_MEMBERS",
+          "ROLE_LABELS",
+          "TeamPage",
+          "InviteDialog"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/avatar.d.ts",
+      "content": "import * as React from \"react\";\nimport * as AvatarPrimitive from \"@radix-ui/react-avatar\";\ndeclare function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>): React.JSX.Element;\ndeclare function AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>): React.JSX.Element;\ndeclare function AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>): React.JSX.Element;\nexport { Avatar, AvatarFallback, AvatarImage };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/avatar/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/avatar.tsx",
+      "content": "import { Avatar, AvatarFallback } from \"@/components/ui/avatar\";\n\n// Initials on the brand blue stand in when there is no picture; 28px by default, 24px in dense rows.\nexport function Product() {\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <div className=\"flex items-center gap-2\">\n        <Avatar>\n          <AvatarFallback>AL</AvatarFallback>\n        </Avatar>\n        <Avatar>\n          <AvatarFallback>MJ</AvatarFallback>\n        </Avatar>\n        <Avatar className=\"size-6\">\n          <AvatarFallback>RK</AvatarFallback>\n        </Avatar>\n      </div>\n      <div className=\"flex items-center gap-2.5\">\n        <Avatar>\n          <AvatarFallback>AL</AvatarFallback>\n        </Avatar>\n        <div className=\"text-body-sm leading-tight\">\n          <p className=\"text-fg\">Anwar Lemu</p>\n          <p className=\"text-caption text-fg-subtle\">anwar@acme.com</p>\n        </div>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-avatar"
+  ],
+  "files": [
+    {
+      "path": "components/ui/avatar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as AvatarPrimitive from \"@radix-ui/react-avatar\";\n\nimport { cn } from \"@/lib/utils\";\n\nfunction Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {\n  return <AvatarPrimitive.Root data-slot=\"avatar\" className={cn(\"relative flex size-7 shrink-0 overflow-hidden rounded-pill\", className)} {...props} />;\n}\n\nfunction AvatarImage({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Image>) {\n  return <AvatarPrimitive.Image data-slot=\"avatar-image\" className={cn(\"aspect-square size-full object-cover\", className)} {...props} />;\n}\n\n// Initials in white on the brand blue, at 11px (the dashboard's team table and user menu).\nfunction AvatarFallback({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {\n  return <AvatarPrimitive.Fallback data-slot=\"avatar-fallback\" className={cn(\"flex size-full items-center justify-center bg-brand text-axis text-on-brand\", className)} {...props} />;\n}\n\nexport { Avatar, AvatarFallback, AvatarImage };\n"
+    }
+  ]
+}

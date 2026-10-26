@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "stat-block",
+  "type": "site",
+  "title": "Stat block",
+  "description": "Site statistic card with a figure and caption.",
+  "surface": "site",
+  "kinds": [
+    "stat",
+    "card"
+  ],
+  "usage": "Proof figures on use-case and customer pages, beside a quote or in a row of two.",
+  "avoid": [
+    "More than one figure per card",
+    "Black or gray figures",
+    "Figures without a caption that says what they measure"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/stat-block.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add stat-block --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/use-cases/use-case-sections.tsx (UseCaseProof metrics)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/use-cases/use-case-sections.tsx",
+        "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
+        "retained": false,
+        "exports": [
+          "UseCaseProof",
+          "UseCaseHowItWorks",
+          "UseCaseExamples",
+          "UseCaseComparison",
+          "UseCaseStories"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/stat-block.d.ts",
+      "content": "import * as React from \"react\";\n/** A list of figures. One column on phones, two from sm; beside a quote, pass `lg:grid-cols-1` to stack them. */\ndeclare function StatBlocks({ className, ...props }: React.ComponentProps<\"dl\">): React.JSX.Element;\n/** One figure and its caption, e.g. \"< 1 day\" over \"for SiteGPT to move its website crawling off Firecrawl\". */\ndeclare function StatBlock({ value, label, className, ...props }: Omit<React.ComponentProps<\"div\">, \"children\"> & {\n    value: React.ReactNode;\n    label: React.ReactNode;\n}): React.JSX.Element;\nexport { StatBlock, StatBlocks };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/stat-block/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/stat-block.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { StatBlock, StatBlocks } from \"@/components/site/stat-block\";\n\nexport function Site() {\n  return (<SiteSection>\n    <StatBlocks className=\"w-full max-w-3xl\">\n      <StatBlock value=\"< 1 day\" label=\"for SiteGPT to move its website crawling off Firecrawl\" />\n      <StatBlock value=\"1 API\" label=\"replaced Hyperspell’s waterfall of fallback crawlers\" />\n    </StatBlocks>\n  </SiteSection>);\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/stat-block.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The use-case pages' proof figures: a big brand-blue figure in the heading face with a plain caption under it, each\n// in a white card inside the soft blue ring. The caption is the term and the figure its value, so the list reads right\n// to a screen reader while the figure still sits on top.\n\n/** A list of figures. One column on phones, two from sm; beside a quote, pass `lg:grid-cols-1` to stack them. */\nfunction StatBlocks({ className, ...props }: React.ComponentProps<\"dl\">) {\n  return <dl data-slot=\"stat-blocks\" className={cn(\"grid grid-cols-1 gap-6 sm:grid-cols-2\", className)} {...props} />;\n}\n\n/** One figure and its caption, e.g. \"< 1 day\" over \"for SiteGPT to move its website crawling off Firecrawl\". */\nfunction StatBlock({ value, label, className, ...props }: Omit<React.ComponentProps<\"div\">, \"children\"> & { value: React.ReactNode; label: React.ReactNode }) {\n  return (\n    // The ring wraps the card, so its outer edge keeps the card's radius; the negative margin keeps it out of the grid's gaps.\n    <div data-slot=\"stat-block\" className={cn(\"-m-2 rounded-card bg-ring-tint p-2\", className)} {...props}>\n      <div className=\"flex h-full min-w-0 flex-col-reverse justify-end gap-2 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\">\n        <dt className=\"text-body leading-snug text-fg-secondary\">{label}</dt>\n        <dd className=\"text-h2 leading-none tracking-tight text-fg-brand\">{value}</dd>\n      </div>\n    </div>\n  );\n}\n\nexport { StatBlock, StatBlocks };\n"
+    }
+  ]
+}

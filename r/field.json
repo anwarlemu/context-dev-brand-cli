@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "field",
+  "type": "ui",
+  "title": "Field",
+  "description": "Form field layout with a label, required indicator, help text, and error message.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Every form control.",
+  "avoid": [
+    "Placeholder as the only label"
+  ],
+  "notes": "Pass one form control as the child. The field connects its label, help text, required state, and error message to that control. Pass a reactive `error` from your form validation; the field does not validate the value itself. Clear the error when the value is valid.",
+  "documentation": "https://context-ds.vercel.app/components/field.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add field --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/form.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/field.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Field({ label, htmlFor, help, error, required, className, children, }: {\n    label: React.ReactNode;\n    htmlFor?: string;\n    help?: React.ReactNode;\n    error?: React.ReactNode;\n    required?: boolean;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { Field };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/field/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/field.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nexport function Product() {\n  const [email, setEmail] = useState(\"anwar@\");\n  const [valid, setValid] = useState(false);\n  return (\n    <div className=\"grid w-full max-w-sm gap-5\">\n      <Field label=\"Webhook URL\" htmlFor=\"hook\" help=\"We POST every change here.\" required>\n        <Input id=\"hook\" type=\"url\" placeholder=\"https://acme.com/hooks/context\" />\n      </Field>\n      <Field label=\"Email\" htmlFor=\"email\" error={valid ? undefined : \"Enter a valid email.\"} help=\"We'll send monitor updates here.\">\n        <Input id=\"email\" type=\"email\" required value={email} onChange={(event) => { setEmail(event.target.value); setValid(event.target.validity.valid); }} />\n      </Field>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "input"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "label",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/ui/field.tsx",
+      "content": "import * as React from \"react\";\n\nimport { Label } from \"@/components/ui/label\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's form field: the label above in body-sm (not muted), a red asterisk when required, help or an error\n// below in caption.\nfunction Field({\n  label,\n  htmlFor,\n  help,\n  error,\n  required = false,\n  className,\n  children,\n}: {\n  label: React.ReactNode;\n  htmlFor?: string;\n  help?: React.ReactNode;\n  error?: React.ReactNode;\n  required?: boolean;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  const generatedId = React.useId();\n  const control = React.Children.toArray(children).find((child) => React.isValidElement<{ id?: string }>(child));\n  const id = htmlFor ?? (React.isValidElement<{ id?: string }>(control) ? control.props.id : undefined) ?? generatedId;\n  const messageId = `${id}-message`;\n  return (\n    <div data-slot=\"field\" data-invalid={error ? true : undefined} className={cn(\"flex flex-col gap-2\", className)}>\n      <Label htmlFor={id} className=\"block\">\n        {label}\n        {required && (\n          <>\n            <span aria-hidden className=\"ml-0.5 text-danger\">\n              *\n            </span>\n            <span className=\"sr-only\"> (required)</span>\n          </>\n        )}\n      </Label>\n      {React.Children.map(children, (child) => {\n        if (!React.isValidElement<React.InputHTMLAttributes<HTMLInputElement>>(child)) return child;\n        return React.cloneElement(child, {\n          id,\n          ...(required ? { required: true } : {}),\n          \"aria-invalid\": error ? true : child.props[\"aria-invalid\"],\n          \"aria-describedby\": [child.props[\"aria-describedby\"], (error || help) && messageId].filter(Boolean).join(\" \") || undefined,\n        });\n      })}\n      <p id={messageId} aria-live=\"polite\" className={cn(\"text-caption empty:hidden\", error ? \"text-danger\" : \"text-fg-subtle\")}>{error ?? help}</p>\n    </div>\n  );\n}\n\nexport { Field };\n"
+    }
+  ]
+}

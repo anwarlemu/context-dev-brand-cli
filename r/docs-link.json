@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "docs-link",
+  "type": "ui",
+  "title": "Docs link",
+  "description": "Documentation link with a book icon and external-link arrow.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Pointing from a page or form to its guide in the docs.",
+  "avoid": [
+    "Links inside running text",
+    "Primary actions"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/docs-link.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add docs-link --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/dashboard-ui/docs-link.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/dashboard-ui/docs-link.tsx",
+        "sha256": "278e86df16b2242d6b977a3355d87e4d53a9ea897e71ce30bb0642c6ae07ef82",
+        "retained": false,
+        "exports": [
+          "DocsLink"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/docs-link.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function DocsLink({ className, children, ...props }: React.ComponentProps<\"a\">): React.JSX.Element;\nexport { DocsLink };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/docs-link/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/docs-link.tsx",
+      "content": "import { DocsLink } from \"@/components/ui/docs-link\";\n\nexport function Product() {\n  return (\n    <div className=\"flex flex-col gap-1\">\n      <DocsLink href=\"https://docs.context.dev\" />\n      <DocsLink href=\"https://docs.context.dev/monitors\">Monitors guide</DocsLink>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/docs-link.tsx",
+      "content": "import * as React from \"react\";\nimport { ArrowUpRight, BookOpen } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's link to the docs: a book, the label in muted caption that underlines on hover, and an arrow that\n// darkens with it (150ms ease-out). Opens in a new tab.\nfunction DocsLink({ className, children = \"Read the docs\", ...props }: React.ComponentProps<\"a\">) {\n  return (\n    <a\n      target=\"_blank\"\n      rel=\"noopener noreferrer\"\n      data-slot=\"docs-link\"\n      className={cn(\n        \"group flex h-6 w-fit shrink-0 items-center gap-1 text-caption whitespace-nowrap text-fg-muted decoration-fg/25 underline-offset-4 transition-colors duration-150 ease-out outline-none hover:text-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring\",\n        className,\n      )}\n      {...props}\n    >\n      <BookOpen className=\"size-3.5\" strokeWidth={1.5} />\n      {children}\n      <ArrowUpRight\n        className=\"size-3.5 shrink-0 transition-colors duration-150 ease-out motion-reduce:transition-none\"\n        strokeWidth={1.5}\n        aria-hidden\n      />\n    </a>\n  );\n}\n\nexport { DocsLink };\n"
+    }
+  ]
+}

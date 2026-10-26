@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "button",
+  "type": "ui",
+  "title": "Button",
+  "description": "Product buttons and site pill buttons, with variants for primary, secondary, and contextual actions.",
+  "surface": "both",
+  "kinds": [
+    "button-primary",
+    "button-secondary",
+    "button-on-brand",
+    "app-button-brand",
+    "app-button-black",
+    "app-button-outline",
+    "app-button-ghost"
+  ],
+  "usage": "Every action. In the product one `brand` (blue) per screen for the main action, `outline` (the default) for the rest, `primary` (black) to save, `ghost` for quiet actions, `on-brand` on a blue panel; `md` (40px, the default) for a form's or page's main action, `sm` (32px) in toolbars and cards. On the site one `pill` (black) per section, `pill-outline` for the rest, `pill-on-brand` on blue.",
+  "avoid": [
+    "Two blue main actions on one product screen",
+    "Pills inside the product",
+    "Bold labels"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/button.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add button",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/button.tsx; website src/components/sections/shared/brand-outline-pill.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/button.tsx",
+        "sha256": "4471d9c1213fb690c714622f54d8e0f6fc881d6291b024de0c01235bfc2e273b",
+        "retained": false,
+        "exports": [
+          "buttonClassName",
+          "Button"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/brand-outline-pill.ts",
+        "sha256": "b78b3e57bc75cc7dd5c90c6d04063507112e7d2fa354bb5e463475d10bc71c5c",
+        "retained": false,
+        "exports": [
+          "BRAND_OUTLINE_PILL_CLASS",
+          "BRAND_OUTLINE_PILL_ON_BLUE_CLASS",
+          "BRAND_BLACK_PILL_CLASS"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/button.d.ts",
+      "content": "import * as React from \"react\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const buttonVariants: (props?: ({\n    variant?: \"primary\" | \"pill\" | \"brand\" | \"outline\" | \"outline-brand\" | \"ghost\" | \"on-brand\" | \"pill-outline\" | \"pill-on-brand\" | null | undefined;\n    size?: \"sm\" | \"md\" | \"icon\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ntype ButtonProps = React.ComponentProps<\"button\"> & VariantProps<typeof buttonVariants> & {\n    asChild?: boolean;\n};\ndeclare function Button({ className, variant, size, asChild, type, ...props }: ButtonProps): React.JSX.Element;\nexport { Button, buttonVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/button/Product"
+    },
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/button/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/button.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { ArrowRight, MoreVertical, Plus } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\n\nexport function Product() {\n  const [message, setMessage] = useState(\"\");\n  return (\n    <div className=\"flex flex-col gap-4\">\n      <div className=\"flex flex-wrap items-center gap-2\">\n        <Button variant=\"brand\" onClick={() => setMessage(\"New monitor selected.\")}>\n          <Plus /> New monitor\n        </Button>\n        <Button variant=\"primary\" onClick={() => setMessage(\"Changes saved.\")}>Save</Button>\n        <Button onClick={() => setMessage(\"Changes cancelled.\")}>Cancel</Button>\n        <Button variant=\"outline-brand\" onClick={() => setMessage(\"Upgrade selected.\")}>Upgrade</Button>\n        <Button variant=\"ghost\" onClick={() => setMessage(\"Step skipped.\")}>Skip</Button>\n        <Button variant=\"ghost\" size=\"icon\" aria-label=\"Row actions\" onClick={() => setMessage(\"Row actions selected.\")}>\n          <MoreVertical strokeWidth={1.5} />\n        </Button>\n      </div>\n      <div className=\"flex flex-wrap items-center gap-2\">\n        <Button variant=\"brand\" size=\"sm\" onClick={() => setMessage(\"Create key selected.\")}>\n          <Plus /> Create key\n        </Button>\n        <Button size=\"sm\" onClick={() => { const link = document.createElement(\"a\"); link.href = URL.createObjectURL(new Blob([\"name,status\\nProduction,active\\n\"], { type: \"text/csv\" })); link.download = \"example.csv\"; link.click(); URL.revokeObjectURL(link.href); setMessage(\"Example exported.\"); }}>Export</Button>\n        <Button variant=\"ghost\" size=\"sm\" onClick={() => setMessage(\"\")}>\n          Clear\n        </Button>\n      </div>\n      <div className=\"flex flex-wrap items-center gap-2 rounded-card bg-brand p-4\">\n        <Button variant=\"on-brand\" asChild><a href=\"mailto:hello@context.dev\">Talk to us</a></Button>\n      </div>\n      <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{message}</p>\n    </div>\n  );\n}\n\nexport function Site() {\n  return (\n    <div className=\"flex flex-wrap items-center gap-3\">\n      <Button variant=\"pill\" asChild><a href=\"https://context.dev/signup\" target=\"_blank\" rel=\"noreferrer\">Start for free</a></Button>\n      <Button variant=\"pill-outline\" asChild><a href=\"https://docs.context.dev\" target=\"_blank\" rel=\"noreferrer\">Read the docs <ArrowRight /></a></Button>\n      <Button variant=\"pill-outline\" size=\"sm\" asChild><a href=\"https://context.dev\" target=\"_blank\" rel=\"noreferrer\">Explore</a></Button>\n      <div className=\"rounded-card bg-brand p-4\">\n        <Button variant=\"pill-on-brand\" asChild><a href=\"https://cal.com/context-dev/30min\" target=\"_blank\" rel=\"noreferrer\">Book a demo</a></Button>\n      </div>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/button.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// One button for both surfaces. The product's variants and sizes are the dashboard's (button-class-name.ts): black\n// `primary`, brand blue `brand` for the one main action, `outline` (the default), `outline-brand`, `ghost` and\n// `on-brand`, all with control corners and a small press. The site's pills (brand-outline-pill.ts) are the other three:\n// the black pill, the blue outline pill and the white outline pill on blue.\nconst buttonVariants = cva(\n  \"inline-flex shrink-0 items-center justify-center gap-1.5 whitespace-nowrap font-normal outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5\",\n  {\n    variants: {\n      variant: {\n        primary: \"rounded-control bg-primary text-on-primary hover:bg-neutral-90\",\n        brand: \"rounded-control bg-brand text-on-brand hover:bg-blue-90\",\n        outline: \"rounded-control border border-line-strong text-fg hover:border-fg\",\n        \"outline-brand\": \"rounded-control border border-brand text-fg-brand hover:bg-blue-10\",\n        ghost: \"rounded-control text-fg-muted hover:bg-wash-hover hover:text-fg data-[state=open]:bg-wash-hover data-[state=open]:text-fg\",\n        \"on-brand\": \"rounded-control border border-white text-white hover:bg-white/10\",\n        pill: \"rounded-pill border border-black bg-black text-white hover:bg-neutral-80\",\n        \"pill-outline\": \"rounded-pill border border-brand bg-white text-fg-brand hover:bg-blue-10\",\n        \"pill-on-brand\": \"rounded-pill border border-white text-white hover:bg-white/12\",\n      },\n      size: {\n        sm: \"h-8 px-3.5 text-body-sm\",\n        // The main action on a form or page (the dashboard's Support button).\n        md: \"h-10 px-4.5 text-body-sm\",\n        // A square icon button, the size of the dashboard's row menu and dialog close buttons.\n        icon: \"size-8 px-0 [&_svg:not([class*='size-'])]:size-4\",\n      },\n    },\n    compoundVariants: [\n      { variant: [\"primary\", \"brand\", \"outline\", \"outline-brand\", \"ghost\", \"on-brand\"], className: \"transition-[color,background-color,border-color,scale] duration-150 ease-out\" },\n      { variant: \"ghost\", size: \"icon\", className: \"text-fg-subtle\" },\n      // The site's pills are sized by their padding, at body size, as on the brand's pages; `sm` is the smaller pill\n      // the brand's forms and lists use.\n      { variant: [\"pill\", \"pill-outline\", \"pill-on-brand\"], className: \"transition-[color,background-color,border-color,scale] duration-200 ease-out\" },\n      { variant: [\"pill\", \"pill-outline\", \"pill-on-brand\"], size: \"md\", className: \"h-auto px-5 py-3 text-body leading-snug\" },\n      { variant: [\"pill\", \"pill-outline\", \"pill-on-brand\"], size: \"sm\", className: \"h-auto px-4 py-2 text-body-sm leading-snug\" },\n    ],\n    defaultVariants: { variant: \"outline\", size: \"md\" },\n  },\n);\n\ntype ButtonProps = React.ComponentProps<\"button\"> & VariantProps<typeof buttonVariants> & { asChild?: boolean };\n\nfunction Button({ className, variant, size, asChild = false, type, ...props }: ButtonProps) {\n  const Comp = asChild ? Slot : \"button\";\n  return <Comp data-slot=\"button\" type={asChild ? type : (type ?? \"button\")} className={cn(buttonVariants({ variant, size, className }))} {...props} />;\n}\n\nexport { Button, buttonVariants };\n"
+    }
+  ]
+}

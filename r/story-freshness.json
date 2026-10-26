@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-freshness",
+  "type": "visual",
+  "title": "Freshness story",
+  "description": "Dot animation of freshness settings selecting cached or live content.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Caching and freshness settings on a site card. Plays only on screen; shows the live capture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-freshness.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-freshness --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/freshness-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/freshness-story.tsx",
+        "sha256": "495dc14f56ae5f988abfbce0f7d7b3eb6db4ccead4c877245d4e0919b6b2fa74",
+        "retained": false,
+        "exports": [
+          "FreshnessStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/freshness-story.d.ts",
+      "content": "/**\n * The \"Control freshness\" card's picture: a dial sets how old a copy may be, and becomes the cache or the live web\n * the page then comes from. With reduced motion it shows the live capture.\n */\nexport declare function FreshnessStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/freshness-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createFreshnessStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/freshness-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The \"Control freshness\" card's pictures, in the brand dot grid: a dial that sets how old a copy may be, the cache\n * a copy that is fresh enough is served from, and the live web a fresh capture goes out to.\n */\nexport declare const FRESHNESS_STORY_GRID: DotGrid;\n/**\n * The dial with its needle `age` of the way from fresh (far left) to the oldest copy (far right). The band fills\n * behind the needle: every age up to the one it points at is accepted.\n */\nexport declare function paintDial(states: Uint8Array, age: number): Uint8Array<ArrayBufferLike>;\nexport declare const DIAL_LABELS: DotStoryText[];\n/** The cache, a drum of three stacked discs, with a band of rings `read` of the way down it as a copy is read out (none at 0 or 1). */\nexport declare function paintCache(states: Uint8Array, read: number): Uint8Array<ArrayBufferLike>;\n/** How far the globe turns before it looks the same again: one meridian's width. */\nexport declare const GLOBE_TURN: number;\n/** The live web, a globe turned `turned` radians: its meridians travel across its face, its parallels stay put. */\nexport declare function paintGlobe(states: Uint8Array, turned: number): Uint8Array<ArrayBufferLike>;\n/** The oldest copy the first request accepts, as a share of the dial. */\nexport declare const CACHED_AGE = 0.7;\nexport declare const DIAL_FRESH: StoryPicture;\nexport declare const DIAL_CACHED: StoryPicture;\nexport declare const CACHE_AT_REST: StoryPicture;\nexport declare const GLOBE_AT_REST: StoryPicture;\nexport declare const ONE_HOUR_MS = 3600000;\nexport declare const CAPTIONS: {\n    acceptCached: DotStoryText[];\n    cached: DotStoryText[];\n    requireFresh: DotStoryText[];\n    fresh: DotStoryText[];\n};\n/** The live capture: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const FRESHNESS_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-freshness/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-freshness.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { FreshnessStory } from \"@/components/visuals/stories/freshness-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <FreshnessStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/freshness-story.tsx",
+      "content": "'use client';\n\nimport { FRESHNESS_RESTING, FRESHNESS_STORY_GRID } from '@/components/visuals/stories/freshness-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadFreshnessStory: LoadDotStory = async (stage) => {\n\tconst { createFreshnessStoryPlayer } = await import('@/components/visuals/stories/freshness-story-player');\n\treturn createFreshnessStoryPlayer(stage);\n};\n\n/**\n * The \"Control freshness\" card's picture: a dial sets how old a copy may be, and becomes the cache or the live web\n * the page then comes from. With reduced motion it shows the live capture.\n */\nexport function FreshnessStory({ className }: { className?: string }) {\n\treturn <DotStory grid={FRESHNESS_STORY_GRID} resting={FRESHNESS_RESTING} load={loadFreshnessStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/freshness-story-player.ts",
+      "content": "import { CACHED_AGE, CACHE_AT_REST, CAPTIONS, DIAL_CACHED, DIAL_FRESH, DIAL_LABELS, FRESHNESS_STORY_GRID, GLOBE_AT_REST, GLOBE_TURN, ONE_HOUR_MS, paintCache, paintDial, paintGlobe } from '@/components/visuals/stories/freshness-story-scenes';\nimport { createBeatStoryPlayer, type StoryBeat, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage, DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * Two requests for the same page, played as a loop: the dial is turned up to accept an hour-old copy, and melts\n * into the cache that copy is read from; then it is turned back to zero, and melts into the live web the fresh\n * capture goes out to.\n */\n\nconst MELT_SECONDS = 1.1;\nconst TURN = { startsAt: 0.35, seconds: 1.2 };\nconst READ = { startsAt: 0.4, seconds: 0.9 };\nconst DETAIL = { fadeSeconds: 0.3 };\n// The globe looks the same after each second of turning, so the picture the story rests on is one it really shows.\nconst GLOBE_TURNS_PER_SECOND = 1;\nconst MS_STEP = 1000;\n\nconst easeInOut = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);\n\nfunction captioned(picture: StoryPicture, holdSeconds: number, animate: NonNullable<StoryBeat['animate']>, [label, value, detail]: DotStoryText[], detailAt: number): StoryBeat {\n\treturn {\n\t\tpicture,\n\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\tholdSeconds,\n\t\tanimate,\n\t\twrite(pen, heldSeconds) {\n\t\t\tpen.text(label);\n\t\t\tpen.text(value);\n\t\t\tpen.text(detail, clamp01((heldSeconds - detailAt) / DETAIL.fadeSeconds));\n\t\t},\n\t};\n}\n\n/** The dial turned from one age to another, its reading counting along with the needle. */\nfunction dialBeat(picture: StoryPicture, departure: StoryPicture, from: number, to: number, caption: DotStoryText[]): StoryBeat {\n\tconst ageAt = (heldSeconds: number) => from + (to - from) * easeInOut(clamp01((heldSeconds - TURN.startsAt) / TURN.seconds));\n\tconst beat = captioned(picture, TURN.startsAt + TURN.seconds + 1.1, (states, heldSeconds) => void paintDial(states, ageAt(heldSeconds)), caption, TURN.startsAt + TURN.seconds);\n\treturn {\n\t\t...beat,\n\t\tdeparture,\n\t\twrite(pen, heldSeconds) {\n\t\t\tconst [label, value, detail] = caption;\n\t\t\tconst reading = Math.round(((ageAt(heldSeconds) / CACHED_AGE) * ONE_HOUR_MS) / MS_STEP) * MS_STEP;\n\t\t\tpen.text(label);\n\t\t\tpen.text({ ...value, text: String(reading) });\n\t\t\tpen.text(detail, clamp01((heldSeconds - TURN.startsAt - TURN.seconds) / DETAIL.fadeSeconds));\n\t\t\tDIAL_LABELS.forEach((dialLabel) => pen.text(dialLabel));\n\t\t},\n\t};\n}\n\nexport function createFreshnessStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: FRESHNESS_STORY_GRID,\n\t\tresting: { beat: 3, heldSeconds: 2 },\n\t\tbeats: [\n\t\t\tdialBeat(DIAL_FRESH, DIAL_CACHED, 0, CACHED_AGE, CAPTIONS.acceptCached),\n\t\t\tcaptioned(CACHE_AT_REST, 2.6, (states, heldSeconds) => void paintCache(states, clamp01((heldSeconds - READ.startsAt) / READ.seconds)), CAPTIONS.cached, READ.startsAt + READ.seconds),\n\t\t\tdialBeat(DIAL_CACHED, DIAL_FRESH, CACHED_AGE, 0, CAPTIONS.requireFresh),\n\t\t\tcaptioned(GLOBE_AT_REST, 3, (states, heldSeconds) => void paintGlobe(states, heldSeconds * GLOBE_TURNS_PER_SECOND * GLOBE_TURN), CAPTIONS.fresh, 0.5),\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/freshness-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, isFilledAmongSolids, paintShape, type DotShape } from '@/components/visuals/dot-engine/dot-story-cells';\nimport { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The \"Control freshness\" card's pictures, in the brand dot grid: a dial that sets how old a copy may be, the cache\n * a copy that is fresh enough is served from, and the live web a fresh capture goes out to.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const FRESHNESS_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = FRESHNESS_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(FRESHNESS_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\n\n// Every picture stands in the same place, left of the words that say what it means.\nconst CENTER = 16;\n\nconst DIAL = { center: { column: CENTER, row: 25 }, radius: 14.4, band: 4, needle: 9.5, needleWidth: 0.75, hub: 2.2, ticks: 6, tickGap: 0.09 };\nconst isDial: DotShape = (column, row) => row <= DIAL.center.row && Math.hypot(column - DIAL.center.column, row - DIAL.center.row) <= DIAL.radius;\n\n/**\n * The dial with its needle `age` of the way from fresh (far left) to the oldest copy (far right). The band fills\n * behind the needle: every age up to the one it points at is accepted.\n */\nexport function paintDial(states: Uint8Array, age: number) {\n\tconst angle = Math.PI * (1 - age);\n\tconst tip = { column: DIAL.center.column + DIAL.needle * Math.cos(angle), row: DIAL.center.row - DIAL.needle * Math.sin(angle) };\n\tstates.fill(DOT_ABSENT);\n\treturn paintShape(FRESHNESS_STORY_GRID, states, isDial, (column, row) => {\n\t\tconst fromCenter = Math.hypot(column - DIAL.center.column, row - DIAL.center.row);\n\t\tconst along = 1 - Math.atan2(DIAL.center.row - row, column - DIAL.center.column) / Math.PI;\n\t\tif (fromCenter > DIAL.radius - 1 - DIAL.band) {\n\t\t\tconst mark = along * DIAL.ticks;\n\t\t\tif (Math.abs(mark - Math.round(mark)) < DIAL.tickGap && Math.round(mark) % DIAL.ticks !== 0) return DOT_ABSENT;\n\t\t\treturn along <= age ? DOT_FILLED : DOT_HOLLOW;\n\t\t}\n\t\tif (fromCenter <= DIAL.hub || distanceToSegment(column, row, DIAL.center, tip) < DIAL.needleWidth) return DOT_FILLED;\n\t\treturn DOT_ABSENT;\n\t});\n}\n\nexport const DIAL_LABELS: DotStoryText[] = [\n\t{ text: 'fresh', x: x(CENTER - DIAL.radius), y: baselineOn(DIAL.center.row + 2.5, 12), size: 12, weight: 700, muted: true },\n\t{ text: 'older', x: x(CENTER + DIAL.radius + 1), y: baselineOn(DIAL.center.row + 2.5, 12), size: 12, weight: 700, muted: true, anchor: 'end' },\n];\n\nconst CACHE = { top: 8, bottom: 30, halfWidth: 11.4, depth: 3.2, seams: [15.3, 22.6], read: { rows: 2 } };\nconst isOnDisc = (column: number, row: number, discRow: number) => ((column - CENTER) / CACHE.halfWidth) ** 2 + ((row - discRow) / CACHE.depth) ** 2 <= 1;\n// The front edge of a disc whose middle is on `discRow`, one dot deep in each column.\nconst isOnRim = (column: number, row: number, discRow: number) => row === Math.round(discRow + CACHE.depth * Math.sqrt(Math.max(0, 1 - ((column - CENTER) / CACHE.halfWidth) ** 2)));\nconst isCache: DotShape = (column, row) => (row >= CACHE.top && row <= CACHE.bottom && Math.abs(column - CENTER) <= CACHE.halfWidth) || isOnDisc(column, row, CACHE.top) || isOnDisc(column, row, CACHE.bottom);\n\n/** The cache, a drum of three stacked discs, with a band of rings `read` of the way down it as a copy is read out (none at 0 or 1). */\nexport function paintCache(states: Uint8Array, read: number) {\n\tconst readRow = CACHE.top + CACHE.depth + read * (CACHE.bottom - CACHE.top);\n\tstates.fill(DOT_ABSENT);\n\treturn paintShape(FRESHNESS_STORY_GRID, states, isCache, (column, row) => {\n\t\tif (isOnRim(column, row, CACHE.top)) return DOT_FILLED;\n\t\tif (isOnDisc(column, row, CACHE.top)) return DOT_HOLLOW;\n\t\tif (CACHE.seams.some((seam) => isOnRim(column, row, seam))) return DOT_ABSENT;\n\t\tconst isBeingRead = read > 0 && read < 1 && Math.abs(row - readRow) < CACHE.read.rows;\n\t\treturn !isBeingRead && isFilledAmongSolids(column, row) ? DOT_FILLED : DOT_HOLLOW;\n\t});\n}\n\nconst GLOBE = { center: { column: CENTER, row: 19 }, radius: 14.4, meridians: 6, lineWidth: 0.55, parallels: [-0.5, 0, 0.5] };\nconst isGlobe: DotShape = (column, row) => Math.hypot(column - GLOBE.center.column, row - GLOBE.center.row) <= GLOBE.radius;\n/** How far the globe turns before it looks the same again: one meridian's width. */\nexport const GLOBE_TURN = Math.PI / GLOBE.meridians;\n\n/** The live web, a globe turned `turned` radians: its meridians travel across its face, its parallels stay put. */\nexport function paintGlobe(states: Uint8Array, turned: number) {\n\tstates.fill(DOT_ABSENT);\n\treturn paintShape(FRESHNESS_STORY_GRID, states, isGlobe, (column, row) => {\n\t\tconst up = (row - GLOBE.center.row) / GLOBE.radius;\n\t\tif (GLOBE.parallels.some((parallel) => Math.abs(row - GLOBE.center.row - parallel * GLOBE.radius) < GLOBE.lineWidth)) return DOT_FILLED;\n\t\tconst across = (column - GLOBE.center.column) / (GLOBE.radius * Math.sqrt(1 - up * up));\n\t\tconst longitude = Math.asin(Math.max(-1, Math.min(1, across))) + turned;\n\t\tconst fromMeridian = Math.abs(longitude / GLOBE_TURN - Math.round(longitude / GLOBE_TURN)) * GLOBE_TURN;\n\t\t// A meridian is one dot wide wherever it is on the face, so its width in longitude grows toward the limb.\n\t\tconst dotInLongitude = 1 / (GLOBE.radius * Math.sqrt(1 - up * up) * Math.sqrt(Math.max(0.02, 1 - across * across)));\n\t\treturn fromMeridian < GLOBE.lineWidth * dotInLongitude ? DOT_FILLED : DOT_HOLLOW;\n\t});\n}\n\n/** The oldest copy the first request accepts, as a share of the dial. */\nexport const CACHED_AGE = 0.7;\nexport const DIAL_FRESH = pictureOfStates(paintDial(blank(), 0));\nexport const DIAL_CACHED = pictureOfStates(paintDial(blank(), CACHED_AGE));\nexport const CACHE_AT_REST = pictureOfStates(paintCache(blank(), 0));\nexport const GLOBE_AT_REST = pictureOfStates(paintGlobe(blank(), 0));\n\nexport const ONE_HOUR_MS = 3_600_000;\nexport const CAPTIONS = {\n\tacceptCached: storyCaption(FRESHNESS_STORY_GRID, 34, 'maxAgeMs', String(ONE_HOUR_MS), 'a copy up to 1h old is fine'),\n\tcached: storyCaption(FRESHNESS_STORY_GRID, 34, 'from the cache', '40 ms', 'captured 12 minutes ago'),\n\trequireFresh: storyCaption(FRESHNESS_STORY_GRID, 34, 'maxAgeMs', '0', 'always captured fresh'),\n\tfresh: storyCaption(FRESHNESS_STORY_GRID, 34, 'from the live page', '1.9 s', 'captured just now'),\n};\n\n/** The live capture: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const FRESHNESS_RESTING = { ...GLOBE_AT_REST, texts: CAPTIONS.fresh };\n"
+    }
+  ]
+}

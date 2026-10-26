@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "comparison-table",
+  "type": "site",
+  "title": "Comparison table",
+  "description": "Comparison table with a highlighted Context.dev column and text or check-mark cells.",
+  "surface": "site",
+  "kinds": [
+    "table",
+    "card-ring"
+  ],
+  "usage": "Comparing the product with an alternative: `text` on a use-case page (your own crawler against the API), `marks` for an alternatives page's full feature comparison. Mark Context.dev's column with `highlight`.",
+  "avoid": [
+    "Uppercase or bold heads",
+    "Red crosses for a missing feature (an en dash)",
+    "Vertical rules between columns",
+    "Gray category bands"
+  ],
+  "notes": "The card scrolls sideways on narrow screens and is focusable, so a keyboard can scroll it too; `caption` names it.",
+  "documentation": "https://context-ds.vercel.app/components/comparison-table.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add comparison-table --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/use-cases/use-case-sections.tsx (UseCaseComparison); src/components/sections/alternatives/alternative-comparison-table.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/use-cases/use-case-sections.tsx",
+        "sha256": "b21ca67438053333e7973769415f812fe99f83ac4450430770315e4203039e5c",
+        "retained": false,
+        "exports": [
+          "UseCaseProof",
+          "UseCaseHowItWorks",
+          "UseCaseExamples",
+          "UseCaseComparison",
+          "UseCaseStories"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/alternatives/alternative-comparison-table.tsx",
+        "sha256": "f7ded287c768f55e544cd276e4fbab903c976d475ad9f61285fbaa05ae9da880",
+        "retained": false,
+        "exports": [
+          "ComparisonSupport",
+          "AlternativeComparisonRow",
+          "ComparisonSupportCell",
+          "AlternativeComparisonTable"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/comparison-table.d.ts",
+      "content": "import * as React from \"react\";\nexport type ComparisonCellValue = boolean | string;\nexport type ComparisonColumn = {\n    key: string;\n    header: string;\n    caption?: string;\n    highlight?: boolean;\n};\nexport type ComparisonRow = {\n    feature: string;\n    category?: string;\n    [key: string]: ComparisonCellValue | undefined;\n};\n/** A `marks` cell: a check, an en dash for no, or a short figure. */\ndeclare function ComparisonMark({ value, highlight }: {\n    value: ComparisonCellValue | undefined;\n    highlight?: boolean;\n}): React.JSX.Element;\ndeclare function ComparisonTable({ columns, rows, variant, caption, firstColumnHeader, footnote, className, }: {\n    columns: ComparisonColumn[];\n    rows: ComparisonRow[];\n    variant?: \"text\" | \"marks\";\n    /** Names the scrolling region and the table for screen readers; the visible title belongs to the section around it. */\n    caption?: string;\n    /** The first column's head; `marks` defaults to \"Feature\", `text` leaves it empty. */\n    firstColumnHeader?: string;\n    /** A line under the card, such as when prices were last checked. */\n    footnote?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\nexport { ComparisonTable, ComparisonMark };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/comparison-table/Site"
+    },
+    {
+      "name": "Marks",
+      "url": "https://context-ds.vercel.app/preview/comparison-table/Marks"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/comparison-table.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { ComparisonTable } from \"@/components/site/comparison-table\";\n\n// A use-case page's comparison: answers in words, the alternative first and the brand's column last.\nexport function Site() {\n  return (<SiteSection>\n    <ComparisonTable\n      className=\"w-full\"\n      caption=\"Context.dev compared with your own crawler\"\n      columns={[\n        { key: \"alternative\", header: \"Your own crawler\", caption: \"build and maintain\" },\n        { key: \"context\", header: \"Context.dev\", caption: \"one API key\", highlight: true },\n      ]}\n      rows={[\n        { feature: \"JavaScript-heavy pages\", alternative: \"Run and scale a fleet of headless browsers\", context: \"Every page rendered in a real browser\" },\n        { feature: \"Bot protection\", alternative: \"Buy proxies, rotate them, and write retry logic\", context: \"Automatic proxy escalation and retries\" },\n        { feature: \"Clean output\", alternative: \"Write HTML-to-Markdown cleanup for every site\", context: \"Markdown with the main content only\" },\n        { feature: \"Large sites\", alternative: \"Build queues and workers to fan out\", context: \"Up to 100,000 pages per batch crawl\" },\n        { feature: \"Cost\", alternative: \"Servers, proxies, and engineering time\", context: \"1 credit per page, failed pages are free\" },\n      ]}\n    />\n  </SiteSection>);\n}\n\n// An alternatives page's full comparison: checks, dashes and short figures under category headings.\nexport function Marks() {\n  return (<SiteSection>\n    <ComparisonTable\n      className=\"w-full\"\n      variant=\"marks\"\n      caption=\"Context.dev compared with Firecrawl\"\n      columns={[\n        { key: \"context\", header: \"Context.dev\", highlight: true },\n        { key: \"firecrawl\", header: \"Firecrawl\" },\n      ]}\n      rows={[\n        { category: \"Scraping & Crawling\", feature: \"Scrape to Markdown or HTML\", context: true, firecrawl: true },\n        { category: \"Scraping & Crawling\", feature: \"JSON extraction against your schema\", context: \"5 credits\", firecrawl: \"5 credits\" },\n        { category: \"Scraping & Crawling\", feature: \"Async batch scraping\", context: \"Up to 100,000 URLs\", firecrawl: true },\n        { category: \"Scraping & Crawling\", feature: \"JSON extraction inside batches\", context: false, firecrawl: true },\n        { category: \"Interaction & Search\", feature: \"Search 10 results with page Markdown\", context: \"2 credits\", firecrawl: \"12 credits\" },\n        { category: \"Interaction & Search\", feature: \"Live multi-step browser sessions\", context: false, firecrawl: \"Billed per minute\" },\n        { category: \"Pricing & Billing\", feature: \"Highlights (relevant passages)\", context: \"+1 credit\", firecrawl: \"+4 credits\" },\n        { category: \"Pricing & Billing\", feature: \"Zero data retention\", context: \"No extra credits\", firecrawl: \"+1 credit/page\" },\n        { category: \"Also Included: Brand & Company Data\", feature: \"Brand profile by domain, name, email, or ticker\", context: true, firecrawl: false },\n        { category: \"Also Included: Brand & Company Data\", feature: \"Logo CDN for direct embedding (Logo Link)\", context: true, firecrawl: false },\n      ]}\n      footnote=\"Prices and features checked May 2026.\"\n    />\n  </SiteSection>);\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/comparison-table.tsx",
+      "content": "import * as React from \"react\";\nimport { Check } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The site's comparison tables, both inside a white card in the soft blue glass ring, the brand's own column tinted blue\n// at 4 percent, and no vertical rules.\n// - `text` (the use-case pages): column heads at h5 with a small caption under each, hairline rows, and each cell a\n//   short answer in words, the alternative's muted and the brand's in black.\n// - `marks` (the alternatives pages' full comparison): compact centered heads, rows grouped under plain category\n//   headings, and each cell a check, a quiet en dash for no, or a short figure (in blue in the brand's column).\n\nexport type ComparisonCellValue = boolean | string;\nexport type ComparisonColumn = { key: string; header: string; caption?: string; highlight?: boolean };\nexport type ComparisonRow = { feature: string; category?: string; [key: string]: ComparisonCellValue | undefined };\n\n/** A `marks` cell: a check, an en dash for no, or a short figure. */\nfunction ComparisonMark({ value, highlight }: { value: ComparisonCellValue | undefined; highlight?: boolean }) {\n  if (typeof value === \"string\") return <span className={cn(\"text-body-sm\", highlight ? \"font-normal text-fg-brand\" : \"text-fg-nav\")}>{value}</span>;\n  if (value) {\n    return (\n      <span className=\"inline-flex justify-center\">\n        <Check aria-hidden=\"true\" className={cn(\"size-5\", highlight ? \"text-fg-brand\" : \"text-[var(--ds-color-neutral-50)]\")} />\n        <span className=\"sr-only\">Yes</span>\n      </span>\n    );\n  }\n  return (\n    <span className=\"text-body-sm text-neutral-30\">\n      <span aria-hidden=\"true\">–</span>\n      <span className=\"sr-only\">No</span>\n    </span>\n  );\n}\n\nfunction ComparisonTable({\n  columns,\n  rows,\n  variant = \"text\",\n  caption,\n  firstColumnHeader,\n  footnote,\n  className,\n}: {\n  columns: ComparisonColumn[];\n  rows: ComparisonRow[];\n  variant?: \"text\" | \"marks\";\n  /** Names the scrolling region and the table for screen readers; the visible title belongs to the section around it. */\n  caption?: string;\n  /** The first column's head; `marks` defaults to \"Feature\", `text` leaves it empty. */\n  firstColumnHeader?: string;\n  /** A line under the card, such as when prices were last checked. */\n  footnote?: React.ReactNode;\n  className?: string;\n}) {\n  const marks = variant === \"marks\";\n  const categories = [...new Set(rows.flatMap((row) => (row.category ? [row.category] : [])))];\n  const groups = categories.length > 0 ? categories.map((category) => ({ category, rows: rows.filter((row) => row.category === category) })) : [{ category: undefined, rows }];\n  const firstHeader = firstColumnHeader ?? (marks ? \"Feature\" : undefined);\n  const last = columns.length - 1;\n\n  return (\n    <div data-slot=\"comparison-table\" className={cn(\"flex flex-col gap-3\", className)}>\n      {/* The glass ring: a wrapper 8px wider than the card, so its outer edge shares the card's radius. */}\n      <div className=\"-m-2 rounded-card bg-ring-tint p-2\">\n        <div tabIndex={0} role=\"region\" aria-label={caption} className=\"overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring\">\n          <table className={cn(\"w-full border-collapse text-left leading-snug\", marks ? \"min-w-136\" : \"min-w-160\")}>\n            {caption && <caption className=\"sr-only\">{caption}</caption>}\n            <thead>\n              {marks ? (\n                <tr className=\"text-body-sm\">\n                  <th scope=\"col\" className=\"px-5 py-4 font-normal text-fg-nav md:px-8\">\n                    {firstHeader}\n                  </th>\n                  {columns.map((col) => (\n                    <th key={col.key} scope=\"col\" className={cn(\"w-36 px-4 py-4 text-center md:w-44\", col.highlight ? \"bg-brand/4 font-normal text-fg-brand\" : \"font-normal text-fg\")}>\n                      {col.header}\n                    </th>\n                  ))}\n                </tr>\n              ) : (\n                <tr className=\"align-bottom\">\n                  {firstHeader ? (\n                    <th scope=\"col\" className=\"w-[28%] px-5 py-5 text-body-sm font-normal text-fg-subtle md:px-8\">\n                      {firstHeader}\n                    </th>\n                  ) : (\n                    <td className=\"w-[28%] px-5 py-5 md:px-8\" />\n                  )}\n                  {columns.map((col, i) => (\n                    <th key={col.key} scope=\"col\" className={cn(\"px-5 py-5 font-normal\", i === last && \"md:px-8\", col.highlight && \"bg-brand/4\")}>\n                      <span className={cn(\"block text-h5\", col.highlight ? \"text-fg-brand\" : \"text-fg\")}>{col.header}</span>\n                      {col.caption && <span className=\"block text-body-sm text-fg-subtle\">{col.caption}</span>}\n                    </th>\n                  ))}\n                </tr>\n              )}\n            </thead>\n            {groups.map((group) => (\n              <tbody key={group.category ?? \"rows\"}>\n                {group.category && (\n                  <tr className=\"border-t border-hairline\">\n                    <th scope=\"colgroup\" colSpan={columns.length + 1} className=\"px-5 pt-6 pb-2 text-body-sm font-normal text-fg md:px-8\">\n                      {group.category}\n                    </th>\n                  </tr>\n                )}\n                {group.rows.map((row) =>\n                  marks ? (\n                    <tr key={row.feature} className=\"border-t border-wash-pill\">\n                      <th scope=\"row\" className=\"px-5 py-3.5 text-body font-normal text-fg-nav md:px-8\">\n                        {row.feature}\n                      </th>\n                      {columns.map((col) => (\n                        <td key={col.key} className={cn(\"px-4 py-3.5 text-center\", col.highlight && \"bg-brand/4\")}>\n                          <ComparisonMark value={row[col.key]} highlight={col.highlight} />\n                        </td>\n                      ))}\n                    </tr>\n                  ) : (\n                    <tr key={row.feature} className=\"border-t border-hairline\">\n                      <th scope=\"row\" className=\"px-5 py-4 text-body font-normal text-fg md:px-8\">\n                        {row.feature}\n                      </th>\n                      {columns.map((col, i) => (\n                        <td key={col.key} className={cn(\"px-5 py-4 text-body\", i === last && \"md:px-8\", col.highlight ? \"bg-brand/4 text-fg\" : \"text-fg-subtle\")}>\n                          {typeof row[col.key] === \"boolean\" ? <ComparisonMark value={row[col.key]} highlight={col.highlight} /> : row[col.key]}\n                        </td>\n                      ))}\n                    </tr>\n                  ),\n                )}\n              </tbody>\n            ))}\n          </table>\n        </div>\n      </div>\n      {footnote && <p className=\"text-body-sm leading-relaxed text-fg-subtle\">{footnote}</p>}\n    </div>\n  );\n}\n\nexport { ComparisonTable, ComparisonMark };\n"
+    }
+  ]
+}

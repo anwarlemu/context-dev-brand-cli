@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "glyph-card",
+  "type": "product",
+  "title": "Glyph card",
+  "description": "Cards with glyph headers or centered figures, plus status labels and links.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Cards on overview, usage and summary pages.",
+  "avoid": [
+    "Lucide icons in the card's header tile"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/glyph-card.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add glyph-card --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/overview/overview-cards.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/overview/overview-cards.tsx",
+        "sha256": "60975826dce01c1fcaf129b051e164d9992cf93f94e67049371c356c5786156a",
+        "retained": false,
+        "exports": [
+          "useEntrance",
+          "Rise",
+          "CenteredCard",
+          "GlyphCard",
+          "ARROW_LINK_CLASS",
+          "LINK_UNDERLINE_CLASS",
+          "LinkArrow",
+          "CardLink",
+          "StatusPill"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/glyph-card.d.ts",
+      "content": "import * as React from \"react\";\nimport type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\n/** The up-right arrow every \"go somewhere\" link carries; it nudges in its direction on hover. */\ndeclare function LinkArrow({ className }: {\n    className?: string;\n}): React.JSX.Element;\n/** Gray caption text with the arrow, darkening and underlining on hover. Pass your router's link with asChild. */\ndeclare function CardLink({ asChild, className, children, ...props }: React.ComponentProps<\"a\"> & {\n    asChild?: boolean;\n}): React.JSX.Element;\ndeclare function GlyphCard({ glyph, title, aside, className, children }: {\n    glyph: GlyphPairName;\n    title: React.ReactNode;\n    aside?: React.ReactNode;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/** A small outlined pill for a card's corner or header: a state, with its colored dot. */\ndeclare function StatusPill({ dotClassName, className, children }: {\n    dotClassName?: string;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/**\n * One visual centered over its label, a pill in the top right. Given onClick (or a link through asChild) the whole card\n * is the action: the label turns brand blue and the card gains the translucent ring on hover.\n */\ndeclare function CenteredCard({ label, badge, visual, onClick, asChild, className, children }: {\n    label: React.ReactNode;\n    badge?: React.ReactNode;\n    visual: React.ReactNode;\n    onClick?: () => void;\n    asChild?: boolean;\n    className?: string;\n    children?: React.ReactNode;\n}): React.JSX.Element;\n/** A centered card's big number: 26px medium in brand blue, a unit after it, nudged toward its label. */\ndeclare function CenteredNumber({ value, suffix }: {\n    value: React.ReactNode;\n    suffix?: React.ReactNode;\n}): React.JSX.Element;\nexport { CardLink, CenteredCard, CenteredNumber, GlyphCard, LinkArrow, StatusPill };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/glyph-card/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/glyph-card.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { UsageSummaryDialog, CreditsRemaining, CreditsUsed } from \"@/components/product/usage-summary\";\n\nimport { CardLink, CenteredCard, CenteredNumber, GlyphCard, StatusPill } from \"@/components/product/glyph-card\";\n\nexport function Product() {\n  const [open, setOpen] = useState(false);\n  return (\n    <div className=\"grid w-full max-w-2xl gap-3 sm:grid-cols-2\">\n      <GlyphCard glyph=\"monitors\" title=\"Monitors\" aside={<CardLink href=\"/preview/usage-card/Product\">View all</CardLink>}>\n        <p className=\"text-caption text-fg-muted\">12 pages watched, 3 changed this week.</p>\n      </GlyphCard>\n      <GlyphCard glyph=\"batches\" title=\"Nightly crawl\" aside={<StatusPill dotClassName=\"bg-success\">Running</StatusPill>}>\n        <p className=\"text-caption text-fg-muted\">1,204 of 2,000 pages done.</p>\n      </GlyphCard>\n      <div className=\"@container grid\">\n        <CenteredCard label=\"API calls\" badge=\"Last 30 days\" visual={<CenteredNumber value=\"41,880\" />} />\n      </div>\n      <div className=\"@container grid\">\n        <CenteredCard label=\"Successful calls\" badge=\"1,256 errors\" visual={<CenteredNumber value=\"97.00\" suffix=\"%\" />} onClick={() => setOpen(true)} />\n      </div>\n      <UsageSummaryDialog open={open} onOpenChange={setOpen} description=\"Usage in this example.\"><CreditsRemaining remaining={41590} total={100000} /><CreditsUsed today={2318} month={58410} /></UsageSummaryDialog>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "usage-summary"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "glyph-tile",
+    "glyph-engine",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/glyph-card.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { ArrowUpRight } from \"lucide-react\";\n\nimport { StillGlyph } from \"@/components/visuals/glyph/glyph-tile\";\nimport type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { cn } from \"@/lib/utils\";\n\n// The redesigned dashboard's cards. GlyphCard heads a card with its page's dot glyph in a small bordered tile, the\n// title in body text and anything at the right (a link out, a switch, a status). CenteredCard holds one centered\n// visual (a big number) over its label, with a small pill in the corner. CardLink is the quiet way out of a card.\n\n/** The up-right arrow every \"go somewhere\" link carries; it nudges in its direction on hover. */\nfunction LinkArrow({ className }: { className?: string }) {\n  return (\n    <ArrowUpRight\n      aria-hidden\n      className={cn(\"size-3.5 shrink-0 transition-[translate,color] duration-150 ease-emphasized group-hover:translate-x-px group-hover:-translate-y-px motion-reduce:transition-none motion-reduce:translate-none\", className)}\n      strokeWidth={1.5}\n    />\n  );\n}\n\n/** Gray caption text with the arrow, darkening and underlining on hover. Pass your router's link with asChild. */\nfunction CardLink({ asChild = false, className, children, ...props }: React.ComponentProps<\"a\"> & { asChild?: boolean }) {\n  const classes = cn(\n    \"group flex h-6 shrink-0 items-center gap-1 text-caption whitespace-nowrap text-fg-muted decoration-fg/25 underline-offset-4 outline-none transition-colors duration-150 hover:text-fg hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring\",\n    className,\n  );\n  if (asChild && React.isValidElement<{ children?: React.ReactNode }>(children)) {\n    return (\n      <Slot data-slot=\"card-link\" className={classes} {...(props as React.ComponentProps<typeof Slot>)}>\n        {React.cloneElement(\n          children,\n          undefined,\n          <>\n            {children.props.children}\n            <LinkArrow />\n          </>,\n        )}\n      </Slot>\n    );\n  }\n  return (\n    <a data-slot=\"card-link\" className={classes} {...props}>\n      {children}\n      <LinkArrow />\n    </a>\n  );\n}\n\nfunction GlyphCard({ glyph, title, aside, className, children }: { glyph: GlyphPairName; title: React.ReactNode; aside?: React.ReactNode; className?: string; children: React.ReactNode }) {\n  return (\n    <section data-slot=\"glyph-card\" className={cn(\"flex min-w-0 flex-col rounded-card bg-surface p-3 shadow-card\", className)}>\n      <div className=\"mb-2 flex items-center gap-2.5\">\n        <span className=\"flex size-7 shrink-0 items-center justify-center rounded-tag border border-line\">\n          <StillGlyph name={glyph} dense className=\"size-4 text-brand\" />\n        </span>\n        <h3 className=\"flex-1 text-body-sm font-normal tracking-normal\">{title}</h3>\n        {aside}\n      </div>\n      {children}\n    </section>\n  );\n}\n\n/** A small outlined pill for a card's corner or header: a state, with its colored dot. */\nfunction StatusPill({ dotClassName, className, children }: { dotClassName?: string; className?: string; children: React.ReactNode }) {\n  return (\n    <span className={cn(\"flex h-5 shrink-0 items-center gap-1.5 rounded-tag border border-line px-2 text-caption text-fg-muted\", className)}>\n      {dotClassName && <span className={cn(\"size-1.5 rounded-pill\", dotClassName)} aria-hidden />}\n      {children}\n    </span>\n  );\n}\n\n/**\n * One visual centered over its label, a pill in the top right. Given onClick (or a link through asChild) the whole card\n * is the action: the label turns brand blue and the card gains the translucent ring on hover.\n */\nfunction CenteredCard({ label, badge, visual, onClick, asChild = false, className, children }: { label: React.ReactNode; badge?: React.ReactNode; visual: React.ReactNode; onClick?: () => void; asChild?: boolean; className?: string; children?: React.ReactNode }) {\n  const interactive = asChild || Boolean(onClick);\n  // On a phone-width card the corner pill reaches over the visual, so the visual starts below it there.\n  const classes = cn(\n    \"@container group relative isolate flex flex-col items-center overflow-hidden rounded-card bg-surface px-3 pt-9 pb-3 no-underline shadow-card outline-none transition-shadow duration-150 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring @lg:pt-4\",\n    interactive && \"hover:shadow-[var(--ds-shadow-card),var(--ds-shadow-ring-hover)]\",\n    className,\n  );\n  const body = (\n    <>\n      <span className=\"relative flex flex-1 items-center\">{visual}</span>\n      <span className={cn(\"relative mt-2 text-body-sm text-fg\", interactive && \"transition-colors duration-150 group-hover:text-fg-brand\")}>{label}</span>\n      {badge && <span className=\"absolute top-2.5 right-2.5 flex h-5 items-center rounded-tag border border-line bg-surface px-2 text-caption text-fg-muted\">{badge}</span>}\n    </>\n  );\n  if (asChild && React.isValidElement(children)) {\n    return (\n      <Slot data-slot=\"centered-card\" className={classes}>\n        {React.cloneElement(children, undefined, body)}\n      </Slot>\n    );\n  }\n  if (onClick)\n    return (\n      <button type=\"button\" data-slot=\"centered-card\" onClick={onClick} className={classes}>\n        {body}\n      </button>\n    );\n  return (\n    <div data-slot=\"centered-card\" className={classes}>\n      {body}\n    </div>\n  );\n}\n\n/** A centered card's big number: 26px medium in brand blue, a unit after it, nudged toward its label. */\nfunction CenteredNumber({ value, suffix }: { value: React.ReactNode; suffix?: React.ReactNode }) {\n  return (\n    <span className=\"flex translate-y-1.5 items-baseline text-caption leading-none font-medium tracking-tight tabular-nums\">\n      <span className=\"text-metric text-fg-brand\">{value}</span>\n      {suffix && <span className=\"text-body font-normal tracking-normal text-fg-subtle\">{suffix}</span>}\n    </span>\n  );\n}\n\nexport { CardLink, CenteredCard, CenteredNumber, GlyphCard, LinkArrow, StatusPill };\n"
+    }
+  ]
+}

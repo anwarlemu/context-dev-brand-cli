@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "aspect-ratio",
+  "type": "ui",
+  "title": "Aspect Ratio",
+  "description": "Holds media at a fixed shape; round and frame the media inside with the card's corners and hairline.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Keep screenshots, video and logo previews from shifting the layout while they load (16 / 9 for a page capture, 1 / 1 for a logo). Put the image inside with object-cover and the card's corners.",
+  "avoid": [
+    "Stretching a logo to fill",
+    "A frame without the media's real ratio"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/aspect-ratio.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add aspect-ratio",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "No dashboard counterpart: it keeps media placeholders at their shape as context-dashboard c0ddf7a src/components/ui/skeleton.tsx does, framed as the brand frames screenshots",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/skeleton.tsx",
+        "sha256": "8ba92bcd099b12b2bebb2aa8008808c66b2f502c4f2bebc9d93c1e3ea2da2980",
+        "retained": false,
+        "exports": [
+          "Skeleton"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/aspect-ratio.d.ts",
+      "content": "import * as React from \"react\";\nimport * as AspectRatioPrimitive from \"@radix-ui/react-aspect-ratio\";\ndeclare function AspectRatio(props: React.ComponentProps<typeof AspectRatioPrimitive.Root>): React.JSX.Element;\nexport { AspectRatio };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/aspect-ratio/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/aspect-ratio/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/aspect-ratio.tsx",
+      "content": "import { AspectRatio } from \"@/components/ui/aspect-ratio\";\n\n// A page capture held at 16:9 while it loads, framed as the brand frames screenshots.\nexport function Site() {\n  return (\n    <div className=\"w-full max-w-md\">\n      <AspectRatio ratio={16 / 9} className=\"overflow-hidden rounded-card bg-subtle shadow-card\">\n        <div className=\"grid size-full place-items-center p-6 text-center\">\n          <div className=\"grid gap-1\">\n            <p className=\"text-body text-fg\">stripe.com</p>\n            <p className=\"text-body-sm text-fg-subtle\">Screenshot captured at 1440 by 810</p>\n          </div>\n        </div>\n      </AspectRatio>\n    </div>\n  );\n}\n\n// Logo tiles at 1:1 in a brand result.\nexport function Product() {\n  return (\n    <div className=\"grid w-full max-w-sm grid-cols-3 gap-3\">\n      {[\"Acme\", \"Globex\", \"Initech\"].map((name) => (\n        <AspectRatio key={name} ratio={1} className=\"overflow-hidden rounded-card bg-surface shadow-card\">\n          <div className=\"grid size-full place-items-center text-body-sm text-fg-muted\">{name}</div>\n        </AspectRatio>\n      ))}\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [
+    "@radix-ui/react-aspect-ratio"
+  ],
+  "files": [
+    {
+      "path": "components/ui/aspect-ratio.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as AspectRatioPrimitive from \"@radix-ui/react-aspect-ratio\";\n\n// Holds media at a fixed shape (a screenshot, a logo tile, a video). The frame has no look of its own: round and clip\n// the media inside with the card's corners and give it the card's hairline, as the brand frames its screenshots.\nfunction AspectRatio(props: React.ComponentProps<typeof AspectRatioPrimitive.Root>) {\n  return <AspectRatioPrimitive.Root data-slot=\"aspect-ratio\" {...props} />;\n}\n\nexport { AspectRatio };\n"
+    }
+  ]
+}

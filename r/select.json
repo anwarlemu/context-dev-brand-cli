@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "select",
+  "type": "ui",
+  "title": "Select",
+  "description": "Single-choice menu with toolbar, field, and chip trigger variants.",
+  "surface": "product",
+  "kinds": [
+    "app-select"
+  ],
+  "usage": "Filters (ghost), form values (field), card footers (chip).",
+  "avoid": [
+    "Native selects",
+    "More than about 20 options (use a command list)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/select.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add select --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/select.d.ts",
+      "content": "import * as React from \"react\";\nimport * as SelectPrimitive from \"@radix-ui/react-select\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const triggerVariants: (props?: ({\n    appearance?: \"ghost\" | \"field\" | \"chip\" | null | undefined;\n    compact?: boolean | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Select(props: React.ComponentProps<typeof SelectPrimitive.Root>): React.JSX.Element;\ndeclare function SelectGroup(props: React.ComponentProps<typeof SelectPrimitive.Group>): React.JSX.Element;\ndeclare function SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>): React.JSX.Element;\ndeclare function SelectTrigger({ className, appearance, compact, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Trigger> & VariantProps<typeof triggerVariants>): React.JSX.Element;\ndeclare function SelectContent({ className, children, position, ...props }: React.ComponentProps<typeof SelectPrimitive.Content>): React.JSX.Element;\ndeclare function SelectLabel({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.Label>): React.JSX.Element;\ndeclare function SelectItem({ className, children, description, ...props }: React.ComponentProps<typeof SelectPrimitive.Item> & {\n    description?: React.ReactNode;\n}): React.JSX.Element;\ndeclare function SelectSeparator({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.Separator>): React.JSX.Element;\nexport { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/select/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/select.tsx",
+      "content": "import { Calendar } from \"lucide-react\";\n\nimport { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from \"@/components/ui/select\";\n\nexport function Product() {\n  return (\n    <div className=\"flex flex-wrap items-start gap-6\">\n      <Select defaultValue=\"30d\">\n        <SelectTrigger aria-label=\"Range\">\n          <Calendar strokeWidth={1.5} />\n          <SelectValue />\n        </SelectTrigger>\n        <SelectContent>\n          <SelectItem value=\"7d\">Last 7 days</SelectItem>\n          <SelectItem value=\"30d\">Last 30 days</SelectItem>\n          <SelectItem value=\"90d\">Last 90 days</SelectItem>\n        </SelectContent>\n      </Select>\n      <div className=\"w-64\">\n        <Select defaultValue=\"markdown\">\n          <SelectTrigger appearance=\"field\" aria-label=\"Format\">\n            <SelectValue />\n          </SelectTrigger>\n          <SelectContent>\n            <SelectItem value=\"markdown\" description=\"Clean text for models\">Markdown</SelectItem>\n            <SelectItem value=\"html\" description=\"The page as rendered\">HTML</SelectItem>\n          </SelectContent>\n        </Select>\n      </div>\n      <Select defaultValue=\"all\">\n        <SelectTrigger appearance=\"chip\" aria-label=\"Status\">\n          <SelectValue />\n        </SelectTrigger>\n        <SelectContent className=\"min-w-40\">\n          <SelectItem value=\"all\">All statuses</SelectItem>\n          <SelectItem value=\"active\">Active</SelectItem>\n          <SelectItem value=\"paused\">Paused</SelectItem>\n        </SelectContent>\n      </Select>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-select",
+    "lucide-react",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/select.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as SelectPrimitive from \"@radix-ui/react-select\";\nimport { Check, ChevronDown, ChevronsUpDown, ChevronUp } from \"lucide-react\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's single-choice dropdown (SelectMenu): a quiet bordered button in toolbars (`ghost`), a full field beside\n// inputs (`field`, `compact` for dense panels), or a small gray chip in a card's footer (`chip`); the list is the same\n// menu panel growing from its trigger's corner, the selected row black with a blue check.\nconst triggerVariants = cva(\n  \"flex items-center gap-1.5 whitespace-nowrap outline-none transition-colors duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-3.5 [&_svg]:shrink-0 [&_svg]:text-fg-subtle\",\n  {\n    variants: {\n      appearance: {\n        ghost: \"h-8 rounded-control border border-line px-3 text-body-sm text-fg-muted hover:border-line-strong hover:text-fg data-[state=open]:border-line-strong data-[state=open]:text-fg\",\n        field: \"w-full rounded-control border border-line bg-surface text-fg hover:border-line-strong data-[state=open]:border-brand data-placeholder:text-fg-subtle [&>span]:flex-1 [&>span]:text-left\",\n        chip: \"h-7 rounded-[calc(var(--ds-radius-control)-0.125rem)] bg-wash-hover px-2.5 text-caption text-fg-muted hover:bg-wash-pill hover:text-fg data-[state=open]:bg-wash-pill data-[state=open]:text-fg\",\n      },\n      // A shorter field, for dense panels.\n      compact: { true: \"\", false: \"\" },\n    },\n    compoundVariants: [\n      { appearance: \"field\", compact: false, className: \"h-10 px-3.5 text-body-sm\" },\n      { appearance: \"field\", compact: true, className: \"h-7 px-2.5 text-caption\" },\n    ],\n    defaultVariants: { appearance: \"ghost\", compact: false },\n  },\n);\n\nfunction Select(props: React.ComponentProps<typeof SelectPrimitive.Root>) {\n  return <SelectPrimitive.Root data-slot=\"select\" {...props} />;\n}\n\nfunction SelectGroup(props: React.ComponentProps<typeof SelectPrimitive.Group>) {\n  return <SelectPrimitive.Group data-slot=\"select-group\" {...props} />;\n}\n\nfunction SelectValue(props: React.ComponentProps<typeof SelectPrimitive.Value>) {\n  return <SelectPrimitive.Value data-slot=\"select-value\" {...props} />;\n}\n\nfunction SelectTrigger({ className, appearance, compact, children, ...props }: React.ComponentProps<typeof SelectPrimitive.Trigger> & VariantProps<typeof triggerVariants>) {\n  return (\n    <SelectPrimitive.Trigger data-slot=\"select-trigger\" className={cn(triggerVariants({ appearance, compact }), className)} {...props}>\n      {children}\n      <SelectPrimitive.Icon asChild>\n        <ChevronsUpDown strokeWidth={1.5} />\n      </SelectPrimitive.Icon>\n    </SelectPrimitive.Trigger>\n  );\n}\n\nfunction SelectContent({ className, children, position = \"popper\", ...props }: React.ComponentProps<typeof SelectPrimitive.Content>) {\n  return (\n    <SelectPrimitive.Portal container={usePortalContainer()}>\n      <SelectPrimitive.Content\n        data-slot=\"select-content\"\n        position={position}\n        sideOffset={6}\n        className={cn(\n          \"relative z-50 max-h-80 min-w-52 origin-(--radix-select-content-transform-origin) animate-pop-in overflow-hidden rounded-shell bg-surface p-(--ds-space-frame) shadow-floating\",\n          position === \"popper\" && \"w-full min-w-(--radix-select-trigger-width)\",\n          className,\n        )}\n        {...props}\n      >\n        <SelectPrimitive.ScrollUpButton className=\"flex h-6 items-center justify-center text-fg-subtle\">\n          <ChevronUp className=\"size-3.5\" />\n        </SelectPrimitive.ScrollUpButton>\n        <SelectPrimitive.Viewport className=\"flex flex-col gap-0.5\">{children}</SelectPrimitive.Viewport>\n        <SelectPrimitive.ScrollDownButton className=\"flex h-6 items-center justify-center text-fg-subtle\">\n          <ChevronDown className=\"size-3.5\" />\n        </SelectPrimitive.ScrollDownButton>\n      </SelectPrimitive.Content>\n    </SelectPrimitive.Portal>\n  );\n}\n\nfunction SelectLabel({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.Label>) {\n  return <SelectPrimitive.Label data-slot=\"select-label\" className={cn(\"px-2.5 pt-1 pb-1.5 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nfunction SelectItem({ className, children, description, ...props }: React.ComponentProps<typeof SelectPrimitive.Item> & { description?: React.ReactNode }) {\n  return (\n    <SelectPrimitive.Item\n      data-slot=\"select-item\"\n      className={cn(\n        \"relative flex w-full cursor-default items-start gap-2 rounded-control py-1.5 pr-8 pl-2.5 text-body-sm leading-5 text-fg-muted outline-none select-none transition-colors duration-150 data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[state=checked]:text-fg\",\n        className,\n      )}\n      {...props}\n    >\n      <span className=\"min-w-0 flex-1\">\n        <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>\n        {description && <span className=\"mt-0.5 block text-caption text-fg-subtle\">{description}</span>}\n      </span>\n      <SelectPrimitive.ItemIndicator className=\"absolute top-2 right-2.5 text-brand\">\n        <Check className=\"size-3.5\" strokeWidth={1.75} />\n      </SelectPrimitive.ItemIndicator>\n    </SelectPrimitive.Item>\n  );\n}\n\nfunction SelectSeparator({ className, ...props }: React.ComponentProps<typeof SelectPrimitive.Separator>) {\n  return <SelectPrimitive.Separator data-slot=\"select-separator\" className={cn(\"-mx-1.5 my-1 h-px bg-line-subtle\", className)} {...props} />;\n}\n\nexport { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectSeparator, SelectTrigger, SelectValue };\n"
+    }
+  ]
+}

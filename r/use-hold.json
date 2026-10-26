@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "use-hold",
+  "type": "hook",
+  "title": "useHold",
+  "description": "Runs an action after a pointer or key is held for the required duration.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Destructive actions that should not fire on a stray click.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/use-hold.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add use-hold --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/hooks/use-hold.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/hooks/use-hold.ts",
+        "sha256": "8f5df8f3b4545eb2fed6044a71860d2ae276745f6c6494b9ade5678b4db2edb7",
+        "retained": false,
+        "exports": [
+          "useHold"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "hooks/use-hold.d.ts",
+      "content": "import { type KeyboardEvent, type PointerEvent } from \"react\";\n/** Fires `onConfirm` only after the pointer or key stays down for `durationMs`, so a stray click can't do anything. */\nexport declare function useHold(durationMs: number, onConfirm: () => void): {\n    isHolding: boolean;\n    handlers: {\n        onPointerDown: (event: PointerEvent) => void;\n        onPointerCancel: () => void;\n        onContextMenu: () => void;\n        onPointerUp: () => void;\n        onPointerLeave: () => void;\n        onKeyDown: (event: KeyboardEvent) => void;\n        onKeyUp: () => void;\n        onBlur: () => void;\n    };\n};\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "hooks/use-hold.ts",
+      "content": "\"use client\";\n\nimport { type KeyboardEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from \"react\";\n\n/** Fires `onConfirm` only after the pointer or key stays down for `durationMs`, so a stray click can't do anything. */\nexport function useHold(durationMs: number, onConfirm: () => void) {\n  const [isHolding, setHolding] = useState(false);\n  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);\n  const cancel = useCallback(() => {\n    clearTimeout(timeoutRef.current);\n    timeoutRef.current = undefined;\n    setHolding(false);\n  }, []);\n  useEffect(() => {\n    const visibility = () => { if (document.hidden) cancel(); };\n    window.addEventListener(\"blur\", cancel);\n    document.addEventListener(\"visibilitychange\", visibility);\n    return () => { clearTimeout(timeoutRef.current); window.removeEventListener(\"blur\", cancel); document.removeEventListener(\"visibilitychange\", visibility); };\n  }, [cancel]);\n\n  function start() {\n    if (timeoutRef.current !== undefined) return;\n    setHolding(true);\n    timeoutRef.current = setTimeout(() => {\n      setHolding(false);\n      timeoutRef.current = undefined;\n      onConfirm();\n    }, durationMs);\n  }\n\n  const handlers = {\n    onPointerDown: (event: PointerEvent) => { if (event.button === 0 && event.isPrimary) start(); },\n    onPointerCancel: cancel,\n    onContextMenu: cancel,\n    onPointerUp: cancel,\n    onPointerLeave: cancel,\n    onKeyDown: (event: KeyboardEvent) => {\n      if ((event.key === \"Enter\" || event.key === \" \") && !event.repeat) {\n        event.preventDefault();\n        start();\n      }\n    },\n    onKeyUp: cancel,\n    onBlur: cancel,\n  };\n\n  return { isHolding, handlers };\n}\n"
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-search",
+  "type": "visual",
+  "title": "Search story",
+  "description": "Dot animation of a search query and ranked results.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The search product on a site card. Plays only on screen; shows its resting picture with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-search.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-search --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/home/search-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/search-story.tsx",
+        "sha256": "9d3090319f80d4979fc05e1f2ea491f531313a4c5f029c2bde0f59f16cc257af",
+        "retained": false,
+        "exports": [
+          "SearchStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/search-story.d.ts",
+      "content": "/**\n * The Search card's picture: a question is typed at an old terminal, which becomes three ranked results with their\n * pages read. With reduced motion it shows the results.\n */\nexport declare function SearchStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/search-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createSearchStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/search-story-scenes.d.ts",
+      "content": "import type { GlyphCell } from '@/components/visuals/dot-engine/dot-glyph-cells';\nimport { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The Search card's pictures, in the brand dot grid: a question is typed at an old terminal, and the terminal becomes\n * what the search brings back, three ranked results with their pages already read.\n */\nexport declare const SEARCH_STORY_GRID: DotGrid;\nexport declare const TERMINAL: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\n/** The keys, for the one that goes down with each letter typed. */\nexport declare const KEYS: GlyphCell[];\nexport declare const QUERY_LINES: DotStoryText[];\nexport declare const SCREEN_LABEL: DotStoryText;\nexport declare const resultAt: (row: number) => number;\nexport declare const RESULTS_FILLED: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULTS_READ: import(\"@/components/visuals/dot-engine/dot-story-beats\").StoryPicture;\nexport declare const RESULT_TEXTS: DotStoryText[][];\n/** The results, read: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const SEARCH_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-search/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-search.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { SearchStory } from \"@/components/visuals/stories/search-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <SearchStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/search-story.tsx",
+      "content": "'use client';\n\nimport { SEARCH_RESTING, SEARCH_STORY_GRID } from '@/components/visuals/stories/search-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadSearchStory: LoadDotStory = async (stage) => {\n\tconst { createSearchStoryPlayer } = await import('@/components/visuals/stories/search-story-player');\n\treturn createSearchStoryPlayer(stage);\n};\n\n/**\n * The Search card's picture: a question is typed at an old terminal, which becomes three ranked results with their\n * pages read. With reduced motion it shows the results.\n */\nexport function SearchStory({ className }: { className?: string }) {\n\treturn <DotStory grid={SEARCH_STORY_GRID} resting={SEARCH_RESTING} load={loadSearchStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/search-story-player.ts",
+      "content": "import { KEYS, QUERY_LINES, RESULTS_FILLED, RESULTS_READ, RESULT_TEXTS, SCREEN_LABEL, SEARCH_STORY_GRID, TERMINAL, resultAt } from '@/components/visuals/stories/search-story-scenes';\nimport { DOT_FILLED } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One search, played as a loop: the question is typed at the terminal, a key going down with each letter; the\n * terminal melts into three ranked results; their rings clear one result at a time and what was read is written in.\n */\n\nconst TYPING = { startsAt: 0.5, charactersPerSecond: 11 };\nconst SECOND_LINE_AT = TYPING.startsAt + typingSeconds(QUERY_LINES[0], TYPING.charactersPerSecond);\nconst TYPED_AT = SECOND_LINE_AT + typingSeconds(QUERY_LINES[1], TYPING.charactersPerSecond);\nconst MELT_SECONDS = 1.1;\nconst READ = { seconds: 1.2, everySeconds: 0.45, textSeconds: 0.3 };\n\nconst { columns } = SEARCH_STORY_GRID;\n\n// A different key for each letter, the same ones every loop.\nfunction pressKey(states: Uint8Array, heldSeconds: number) {\n\tif (heldSeconds < TYPING.startsAt || heldSeconds > TYPED_AT) return;\n\tconst letter = Math.floor((heldSeconds - TYPING.startsAt) * TYPING.charactersPerSecond);\n\tconst key = KEYS[(letter * 37 + 11) % KEYS.length];\n\tstates[key.row * columns + key.column] = DOT_FILLED;\n}\n\nexport function createSearchStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: SEARCH_STORY_GRID,\n\t\tresting: { beat: 2, heldSeconds: 2.4 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: TERMINAL,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: TYPED_AT + 0.9,\n\t\t\t\tanimate: pressKey,\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(SCREEN_LABEL);\n\t\t\t\t\tpen.type(QUERY_LINES[0], heldSeconds, { ...TYPING, cursorLingers: 0 });\n\t\t\t\t\tpen.type(QUERY_LINES[1], heldSeconds, { ...TYPING, startsAt: SECOND_LINE_AT, cursorLingers: Infinity });\n\t\t\t\t},\n\t\t\t},\n\t\t\t{ picture: RESULTS_FILLED, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 0.2 },\n\t\t\t{\n\t\t\t\tpicture: RESULTS_READ,\n\t\t\t\t// Top result first, each one clearing from its rank toward its end.\n\t\t\t\tarrival: { kind: 'builds', seconds: READ.seconds, order: (column, row) => (resultAt(row) + column / columns) / RESULT_TEXTS.length },\n\t\t\t\tholdSeconds: 3.6,\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tRESULT_TEXTS.forEach((texts, index) => texts.forEach((text) => pen.text(text, clamp01((heldSeconds - index * READ.everySeconds) / READ.textSeconds))));\n\t\t\t\t},\n\t\t\t},\n\t\t\t{ picture: RESULTS_FILLED, arrival: { kind: 'builds', seconds: 0.5, order: (column) => column / columns }, holdSeconds: 0.1 },\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/search-story-scenes.ts",
+      "content": "import type { GlyphCell } from '@/components/visuals/dot-engine/dot-glyph-cells';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { polygon, rectangle, ringsWithSpeckle, solid, solidWithSpeckle, stack, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The Search card's pictures, in the brand dot grid: a question is typed at an old terminal, and the terminal becomes\n * what the search brings back, three ranked results with their pages already read.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const SEARCH_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst PITCH = SEARCH_STORY_GRID.pitch;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\n\nconst CASE = { left: 12, right: 45, top: 1, bottom: 24 };\nconst CASE_CORNER = 2;\nconst SCREEN = { left: 16, right: 41, top: 4, bottom: 19 };\nconst CONTROLS = { top: 21, bottom: 23, knobs: [38, 41], vents: { from: 15, to: 23 }, row: 22 };\nconst NECK = { left: 26, right: 31, top: 25, bottom: 26 };\nconst BASE = { left: 20, right: 37, top: 27, bottom: 29, flare: 2 };\nconst KEYBOARD = { left: 14, right: 43, top: 31, bottom: 37, flare: 4 };\nconst SPACE_BAR = { from: 22, to: 35, row: KEYBOARD.bottom - 1 };\nconst KEY_PITCH = 3;\n\nconst isWithin = ({ left, right, top, bottom }: { left: number; right: number; top: number; bottom: number }, column: number, row: number) => column >= left && column <= right && row >= top && row <= bottom;\n\n// The tube's case, its corners taken off: a box that size with square corners read as a window, not a monitor.\nconst monitorCase = polygon(\n\t[\n\t\t{ column: CASE.left + CASE_CORNER, row: CASE.top },\n\t\t{ column: CASE.right - CASE_CORNER, row: CASE.top },\n\t\t{ column: CASE.right, row: CASE.top + CASE_CORNER },\n\t\t{ column: CASE.right, row: CASE.bottom - CASE_CORNER },\n\t\t{ column: CASE.right - CASE_CORNER, row: CASE.bottom },\n\t\t{ column: CASE.left + CASE_CORNER, row: CASE.bottom },\n\t\t{ column: CASE.left, row: CASE.bottom - CASE_CORNER },\n\t\t{ column: CASE.left, row: CASE.top + CASE_CORNER },\n\t],\n\tsolidWithSpeckle\n);\n\nconst monitor: DotPainter = (column, row) => {\n\tif (isWithin(SCREEN, column, row)) return column === SCREEN.left || column === SCREEN.right || row === SCREEN.top || row === SCREEN.bottom ? DOT_HOLLOW : DOT_ABSENT;\n\tconst shell = monitorCase(column, row);\n\tif (shell === DOT_ABSENT || row < CONTROLS.top || row > CONTROLS.bottom || column <= CASE.left + 1 || column >= CASE.right - 1) return shell;\n\tif (row !== CONTROLS.row) return DOT_HOLLOW;\n\tconst isVent = column >= CONTROLS.vents.from && column <= CONTROLS.vents.to && column % 2 === 1;\n\treturn CONTROLS.knobs.includes(column) || isVent ? DOT_FILLED : DOT_HOLLOW;\n};\n\nconst stand = stack(\n\trectangle(NECK, solid),\n\tpolygon(\n\t\t[\n\t\t\t{ column: BASE.left, row: BASE.top },\n\t\t\t{ column: BASE.right, row: BASE.top },\n\t\t\t{ column: BASE.right + BASE.flare, row: BASE.bottom },\n\t\t\t{ column: BASE.left - BASE.flare, row: BASE.bottom },\n\t\t],\n\t\tringsWithSpeckle\n\t)\n);\n\n// Seen from the front and a little above, so it widens toward the typist; its keys are rings with gaps between them.\nconst keyboardDeck = polygon(\n\t[\n\t\t{ column: KEYBOARD.left, row: KEYBOARD.top },\n\t\t{ column: KEYBOARD.right, row: KEYBOARD.top },\n\t\t{ column: KEYBOARD.right + KEYBOARD.flare, row: KEYBOARD.bottom },\n\t\t{ column: KEYBOARD.left - KEYBOARD.flare, row: KEYBOARD.bottom },\n\t],\n\t(column, row) => {\n\t\tif (row === SPACE_BAR.row) return column >= SPACE_BAR.from && column <= SPACE_BAR.to ? DOT_FILLED : DOT_ABSENT;\n\t\treturn (column + row) % KEY_PITCH === 0 ? DOT_ABSENT : DOT_HOLLOW;\n\t}\n);\n\nexport const TERMINAL = pictureOf(SEARCH_STORY_GRID, stack(monitor, stand, keyboardDeck));\n/** The keys, for the one that goes down with each letter typed. */\nexport const KEYS: GlyphCell[] = TERMINAL.cells.filter((cell) => !cell.filled && cell.row > KEYBOARD.top && cell.row < SPACE_BAR.row);\n\nconst SCREEN_LEFT = x(SCREEN.left + 2);\nexport const QUERY_LINES: DotStoryText[] = [\n\t{ text: '> How teams use', x: SCREEN_LEFT, y: baselineOn(SCREEN.top + 4, 19), size: 19, weight: 700 },\n\t{ text: '  Context.dev', x: SCREEN_LEFT, y: baselineOn(SCREEN.top + 8, 19), size: 19, weight: 700 },\n];\nexport const SCREEN_LABEL: DotStoryText = { text: 'WEB SEARCH', x: SCREEN_LEFT, y: baselineOn(SCREEN.bottom - 2, 12), size: 12, weight: 700, muted: true };\n\nconst RESULT = { left: 3, right: 54, rows: 10, pitch: 12, top: 2, badge: 6 };\nconst RESULTS = [\n\t{ source: 'context.dev / customer stories', title: 'Dagny: brand context for agent onboarding' },\n\t{ source: 'context.dev / customer stories', title: 'Tinfoil: web scraping for a search agent' },\n\t{ source: 'context.dev / customer stories', title: 'Mintlify: branded docs from a repository' },\n];\n// The rank is cut out of its solid tab in rings: type set over the dots would only show between them.\nconst RANK_DIGITS = [\n\t[' o ', 'oo ', ' o ', ' o ', 'ooo'],\n\t['oo ', '  o', ' o ', 'o  ', 'ooo'],\n\t['oo ', '  o', ' o ', '  o', 'oo '],\n];\nconst RANK_DIGIT = { left: 3, top: 3 };\nconst resultTop = (index: number) => RESULT.top + index * RESULT.pitch;\nexport const resultAt = (row: number) => Math.min(RESULTS.length - 1, Math.max(0, Math.floor((row - RESULT.top) / RESULT.pitch)));\n\n// Each result is a bar with its rank on a solid tab. Full of rings it has enough in it to melt; cleared it has room\n// for what the search read.\nfunction resultBars(isCleared: boolean): DotPainter {\n\treturn stack(\n\t\t...RESULTS.map((_, index): DotPainter => {\n\t\t\tconst top = resultTop(index);\n\t\t\tconst bar = rectangle({ left: RESULT.left, right: RESULT.right, top, bottom: top + RESULT.rows - 1 }, (column, row) => {\n\t\t\t\tif (column <= RESULT.left + RESULT.badge) return RANK_DIGITS[index][row - top - RANK_DIGIT.top]?.[column - RESULT.left - RANK_DIGIT.left] === 'o' ? DOT_HOLLOW : DOT_FILLED;\n\t\t\t\tif (!isCleared) return DOT_HOLLOW;\n\t\t\t\treturn row === top + 2 && column === RESULT.right - 9 ? DOT_HOLLOW : DOT_ABSENT;\n\t\t\t});\n\t\t\treturn bar;\n\t\t})\n\t);\n}\n\nexport const RESULTS_FILLED = pictureOf(SEARCH_STORY_GRID, resultBars(false));\nexport const RESULTS_READ = pictureOf(SEARCH_STORY_GRID, resultBars(true));\n\nexport const RESULT_TEXTS: DotStoryText[][] = RESULTS.map(({ source, title }, index) => [\n\t{ text: source, x: x(RESULT.left + RESULT.badge + 3), y: baselineOn(resultTop(index) + 2.5, 13), size: 13, weight: 600, muted: true },\n\t{ text: 'Markdown', x: x(RESULT.right - 1), y: baselineOn(resultTop(index) + 2.5, 12), size: 12, weight: 700, muted: true, anchor: 'end' },\n\t{ text: title, x: x(RESULT.left + RESULT.badge + 3), y: baselineOn(resultTop(index) + 6, 15), size: 15, weight: 700 },\n]);\n\n/** The results, read: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const SEARCH_RESTING = { ...RESULTS_READ, texts: RESULT_TEXTS.flat() };\n"
+    }
+  ]
+}

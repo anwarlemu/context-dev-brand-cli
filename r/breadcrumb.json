@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "breadcrumb",
+  "type": "ui",
+  "title": "Breadcrumb",
+  "description": "The dashboard's breadcrumb: subtle gray links, 14px chevrons between them, and the current page in black.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Show where a detail page sits under its list (Batches, then a batch ID) and let people step back up. Put it above the page title. Set an ID in mono, as the dashboard sets a batch's, and collapse middle levels into BreadcrumbEllipsis when the trail is long.",
+  "avoid": [
+    "A breadcrumb on a top-level page",
+    "Linking the current page",
+    "Separators other than the chevron"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/breadcrumb.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add breadcrumb",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/batches/batch-detail.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/batches/batch-detail.tsx",
+        "sha256": "1206bd4fb7956ffc37efd01fd1026161dba47d0407c11fe61a4bea31a186fbe4",
+        "retained": false,
+        "exports": [
+          "BatchDetail"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/breadcrumb.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function Breadcrumb(props: React.ComponentProps<\"nav\">): React.JSX.Element;\ndeclare function BreadcrumbList({ className, ...props }: React.ComponentProps<\"ol\">): React.JSX.Element;\ndeclare function BreadcrumbItem({ className, ...props }: React.ComponentProps<\"li\">): React.JSX.Element;\ndeclare function BreadcrumbLink({ asChild, className, ...props }: React.ComponentProps<\"a\"> & {\n    asChild?: boolean;\n}): React.JSX.Element;\ndeclare function BreadcrumbPage({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<\"li\">): React.JSX.Element;\ndeclare function BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\nexport { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/breadcrumb/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/breadcrumb/Product"
+    },
+    {
+      "name": "Collapsed",
+      "url": "https://context-ds.vercel.app/preview/breadcrumb/Collapsed"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/breadcrumb.tsx",
+      "content": "import { Slash } from \"lucide-react\";\n\nimport { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from \"@/components/ui/breadcrumb\";\n\nexport function Site() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>\n          <BreadcrumbLink href=\"#docs\">Docs</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbLink href=\"#apis\">APIs</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbPage>Brand API</BreadcrumbPage>\n        </BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}\n\nexport function Product() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>\n          <BreadcrumbLink href=\"#batches\">Batches</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbPage className=\"font-mono text-caption\">batch_7c1e9a04f2</BreadcrumbPage>\n        </BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}\n\nexport function Collapsed() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>\n          <BreadcrumbLink href=\"#monitors\">Monitors</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbEllipsis />\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbLink href=\"#checks\">Checks</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator>\n          <Slash strokeWidth={1.5} />\n        </BreadcrumbSeparator>\n        <BreadcrumbItem>\n          <BreadcrumbPage>Oct 24, 09:12</BreadcrumbPage>\n        </BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/breadcrumb.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\nimport { ChevronRight, MoreHorizontal } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The dashboard's breadcrumb (context-dashboard src/components/batches/batch-detail.tsx): body-sm on one line, the\n// links in the subtle gray darkening to black under the pointer, a 14px chevron at stroke 1.5 between them in the same\n// gray, 8px either side, and the page you are on in black (an ID is set in mono, as the dashboard sets a batch's).\nfunction Breadcrumb(props: React.ComponentProps<\"nav\">) {\n  return <nav aria-label=\"Breadcrumb\" data-slot=\"breadcrumb\" {...props} />;\n}\n\nfunction BreadcrumbList({ className, ...props }: React.ComponentProps<\"ol\">) {\n  return <ol data-slot=\"breadcrumb-list\" className={cn(\"flex flex-wrap items-center gap-2 text-body-sm break-words text-fg-subtle\", className)} {...props} />;\n}\n\nfunction BreadcrumbItem({ className, ...props }: React.ComponentProps<\"li\">) {\n  return <li data-slot=\"breadcrumb-item\" className={cn(\"inline-flex min-w-0 items-center gap-1.5\", className)} {...props} />;\n}\n\nfunction BreadcrumbLink({ asChild, className, ...props }: React.ComponentProps<\"a\"> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"a\";\n  return (\n    <Comp\n      data-slot=\"breadcrumb-link\"\n      className={cn(\"rounded-sm text-fg-subtle no-underline outline-none transition-colors duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring motion-reduce:transition-none\", className)}\n      {...props}\n    />\n  );\n}\n\nfunction BreadcrumbPage({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"breadcrumb-page\" role=\"link\" aria-disabled=\"true\" aria-current=\"page\" className={cn(\"truncate text-fg\", className)} {...props} />;\n}\n\nfunction BreadcrumbSeparator({ children, className, ...props }: React.ComponentProps<\"li\">) {\n  return (\n    <li data-slot=\"breadcrumb-separator\" role=\"presentation\" aria-hidden=\"true\" className={cn(\"text-fg-subtle [&>svg]:size-3.5\", className)} {...props}>\n      {children ?? <ChevronRight strokeWidth={1.5} />}\n    </li>\n  );\n}\n\nfunction BreadcrumbEllipsis({ className, ...props }: React.ComponentProps<\"span\">) {\n  return (\n    <span data-slot=\"breadcrumb-ellipsis\" role=\"presentation\" aria-hidden=\"true\" className={cn(\"flex size-6 items-center justify-center text-fg-subtle\", className)} {...props}>\n      <MoreHorizontal className=\"size-3.5\" strokeWidth={1.5} />\n      <span className=\"sr-only\">More</span>\n    </span>\n  );\n}\n\nexport { Breadcrumb, BreadcrumbEllipsis, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator };\n"
+    }
+  ]
+}

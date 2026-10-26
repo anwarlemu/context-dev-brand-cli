@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "glyph-tile",
+  "type": "visual",
+  "title": "Glyph tile",
+  "description": "Product glyph in a bordered tile. Includes static and larger animated variants.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "Card and list icons for product pages and APIs. `ringed` for the large featured glyph.",
+  "avoid": [
+    "Glyph tiles as body illustrations",
+    "Several looping tiles starting in step (stagger startsAtSeconds)"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/glyph-tile.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add glyph-tile --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/dots/glyph-tile.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/glyph-tile.tsx",
+        "sha256": "b718047bde70707b25ca56ffe0e91ad63130fb63af4014595b82dcbd4232cf05",
+        "retained": false,
+        "exports": [
+          "GlyphTile",
+          "StillGlyph"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/glyph/glyph-tile.d.ts",
+      "content": "import { type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\ntype GlyphTileProps = {\n    name: GlyphPairName;\n    className?: string;\n    /** The large, featured glyph: fine brand-blue dots on the page instead of a small bordered tile. */\n    ringed?: boolean;\n    /** How far into its loop this tile starts, so neighbors don't change in step. */\n    startsAtSeconds?: number;\n    /** Holds the pair's first picture instead of looping between the two. */\n    still?: boolean;\n};\n/**\n * A page's glyph as the dashboard's cards show it. Small, it is a brand-blue glyph in a plain bordered square that\n * loops between what the page is about and what it gives you; `ringed`, it is drawn large in the fine dot pattern.\n */\nexport declare function GlyphTile({ name, className, ringed, startsAtSeconds, still }: GlyphTileProps): import(\"react\").JSX.Element;\n/** A glyph's first picture as a still SVG, in the current text color. */\nexport declare function StillGlyph({ name, className, dense, }: {\n    name: GlyphPairName;\n    className?: string;\n    /** Bigger dots for icon sizes, where the default spacing looks thin. */\n    dense?: boolean;\n}): import(\"react\").JSX.Element;\nexport {};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/glyph-tile/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/glyph-tile.tsx",
+      "content": "import { GlyphTile, StillGlyph } from \"@/components/visuals/glyph/glyph-tile\";\n\n// Small tiles as card and list icons (staggered so they never loop in step), one held still, and the bare StillGlyph.\n// `ringed` (last) draws the large fine-dot glyph instead of a tile.\nexport function Product() {\n  return (\n    <div className=\"flex flex-wrap items-center justify-center gap-4\">\n      <GlyphTile name=\"scrape\" className=\"size-10 p-1.5\" />\n      <GlyphTile name=\"search\" startsAtSeconds={0.9} className=\"size-10 p-1.5\" />\n      <GlyphTile name=\"parse\" startsAtSeconds={1.8} className=\"size-10 p-1.5\" />\n      <GlyphTile name=\"crawl\" still className=\"size-10 p-1.5\" />\n      <StillGlyph name=\"apiKeys\" dense className=\"size-5 text-brand\" />\n      <span aria-hidden className=\"mx-2 h-10 w-px bg-hairline\" />\n      <GlyphTile name=\"dataApis\" ringed className=\"w-16\" />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "glyph-engine",
+    "glyph-loop",
+    "glyph-story",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/glyph-tile.tsx",
+      "content": "import { GLYPH_GRID, glyphSubject, type GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { GlyphLoop } from \"@/components/visuals/glyph/glyph-loop\";\nimport { GlyphStory } from \"@/components/visuals/glyph/glyph-story\";\nimport { SURFACE_COLOR } from \"@/components/visuals/glyph/surface-color\";\nimport { cn } from \"@/lib/utils\";\n\ntype GlyphTileProps = {\n  name: GlyphPairName;\n  className?: string;\n  /** The large, featured glyph: fine brand-blue dots on the page instead of a small bordered tile. */\n  ringed?: boolean;\n  /** How far into its loop this tile starts, so neighbors don't change in step. */\n  startsAtSeconds?: number;\n  /** Holds the pair's first picture instead of looping between the two. */\n  still?: boolean;\n};\n\n/**\n * A page's glyph as the dashboard's cards show it. Small, it is a brand-blue glyph in a plain bordered square that\n * loops between what the page is about and what it gives you; `ringed`, it is drawn large in the fine dot pattern.\n */\nexport function GlyphTile({ name, className, ringed = false, startsAtSeconds, still = false }: GlyphTileProps) {\n  // The large, featured glyph is drawn like the Browse APIs and Upgrade plan cards: fine brand-blue dots on the page.\n  if (ringed) return <GlyphStory name={name} still={still} className={cn(\"shrink-0 text-brand\", className)} />;\n  // A small brand-blue glyph in a plain bordered square, like the chart cards' icons.\n  return (\n    <span className={cn(\"flex shrink-0 items-center justify-center rounded-control border border-line bg-surface\", className)}>\n      {still ? (\n        <StillGlyph name={name} className=\"w-full text-brand\" />\n      ) : (\n        <GlyphLoop name={name} surfaceColor={SURFACE_COLOR} startsAtSeconds={startsAtSeconds} className=\"w-full text-brand\" />\n      )}\n    </span>\n  );\n}\n\n// Drawn small, the usual dots leave more gap than ink and a glyph reads faded; dense ones nearly touch, so a 20px icon\n// keeps its weight and one-dot lines (a key's shaft, a trend line) stay joined up.\nconst DENSE_DOT_RADIUS = 4.7;\n\n/** A glyph's first picture as a still SVG, in the current text color. */\nexport function StillGlyph({\n  name,\n  className = \"w-full text-white\",\n  dense = false,\n}: {\n  name: GlyphPairName;\n  className?: string;\n  /** Bigger dots for icon sizes, where the default spacing looks thin. */\n  dense?: boolean;\n}) {\n  const { columns, rows, pitch, ringStroke } = GLYPH_GRID;\n  const dotRadius = dense ? DENSE_DOT_RADIUS : GLYPH_GRID.dotRadius;\n  return (\n    <svg aria-hidden=\"true\" viewBox={`0 0 ${columns * pitch} ${rows * pitch}`} className={className}>\n      {glyphSubject(name).map(({ column, row, filled }) => (\n        <circle\n          key={`${column}:${row}`}\n          cx={(column + 0.5) * pitch}\n          cy={(row + 0.5) * pitch}\n          r={filled ? dotRadius : dotRadius - ringStroke / 2}\n          fill={filled ? \"currentColor\" : \"none\"}\n          stroke={filled ? \"none\" : \"currentColor\"}\n          strokeWidth={ringStroke}\n        />\n      ))}\n    </svg>\n  );\n}\n"
+    }
+  ]
+}

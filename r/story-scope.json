@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-scope",
+  "type": "visual",
+  "title": "Scope story",
+  "description": "Dot animation of subdomain scope and crawl limits.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Scoping link discovery on a site card. Plays only on screen; shows the meter at its limit with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-scope.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-scope --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/scope-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/scope-story.tsx",
+        "sha256": "3d5d0b4342fc7825decf21514b0b456e82074a445a65d8a115c1cdbe3616c1d3",
+        "retained": false,
+        "exports": [
+          "ScopeStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/scope-story.d.ts",
+      "content": "/**\n * The \"Scope the discovery\" card's picture: a domain takes in its subdomains, then becomes a meter that fills with\n * links and stops at the limit. With reduced motion it shows the meter at its limit.\n */\nexport declare function ScopeStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/scope-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createScopeStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/scope-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\n/**\n * The \"Scope the discovery\" card's pictures, in the brand dot grid: a domain with its subdomains around it, taken\n * in one by one, and a meter of links that fills to the limit set for the request and stops.\n */\nexport declare const SCOPE_STORY_GRID: DotGrid;\n/** The domain and its subdomains, the first `included` of them taken in: an included one is solid, and so is its spoke. */\nexport declare function paintDomains(states: Uint8Array, included: number): Uint8Array<ArrayBufferLike>;\nexport declare const SUBDOMAIN_COUNT: number;\nexport declare const DOMAIN_ALONE: StoryPicture;\nexport declare const DOMAIN_WITH_SUBDOMAINS: StoryPicture;\n/** The meter with `links` of its slots filled from the bottom; the marker beside it points at the limit. */\nexport declare function paintMeter(states: Uint8Array, links: number): Uint8Array<ArrayBufferLike>;\nexport declare const LINK_LIMIT_SLOTS: number;\nexport declare const METER_EMPTY: StoryPicture;\nexport declare const METER_AT_LIMIT: StoryPicture;\nexport declare const MAX_LINKS = 500;\nexport declare const CAPTIONS: {\n    subdomains: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    limit: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n};\n/** The meter at its limit: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const SCOPE_RESTING: {\n    texts: import(\"../dot-engine/dot-story-player\").DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-scope/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-scope.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { ScopeStory } from \"@/components/visuals/stories/scope-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <ScopeStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/scope-story.tsx",
+      "content": "'use client';\n\nimport { SCOPE_RESTING, SCOPE_STORY_GRID } from '@/components/visuals/stories/scope-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadScopeStory: LoadDotStory = async (stage) => {\n\tconst { createScopeStoryPlayer } = await import('@/components/visuals/stories/scope-story-player');\n\treturn createScopeStoryPlayer(stage);\n};\n\n/**\n * The \"Scope the discovery\" card's picture: a domain takes in its subdomains, then becomes a meter that fills with\n * links and stops at the limit. With reduced motion it shows the meter at its limit.\n */\nexport function ScopeStory({ className }: { className?: string }) {\n\treturn <DotStory grid={SCOPE_STORY_GRID} resting={SCOPE_RESTING} load={loadScopeStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/scope-story-player.ts",
+      "content": "import { CAPTIONS, DOMAIN_ALONE, DOMAIN_WITH_SUBDOMAINS, LINK_LIMIT_SLOTS, MAX_LINKS, METER_AT_LIMIT, METER_EMPTY, SCOPE_STORY_GRID, SUBDOMAIN_COUNT, paintDomains, paintMeter } from '@/components/visuals/stories/scope-story-scenes';\nimport { createBeatStoryPlayer, typingSeconds } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One request's scope, played as a loop: subdomains are switched on and the domain takes each of them in; it melts\n * into a meter that fills with links, slot by slot, and stops at the limit.\n */\n\nconst MELT_SECONDS = 1.1;\nconst TYPING = { startsAt: 0.3, charactersPerSecond: 12 };\nconst INCLUDING = { afterTypingSeconds: 0.3, everySeconds: 0.45 };\nconst FILLING = { startsAt: 0.3, everySeconds: 0.16 };\nconst DETAIL_FADE_SECONDS = 0.3;\n\nconst stepsAt = (heldSeconds: number, startsAt: number, everySeconds: number, most: number) => (heldSeconds < startsAt ? 0 : Math.min(most, Math.floor((heldSeconds - startsAt) / everySeconds) + 1));\n\nexport function createScopeStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\tconst [subdomainsLabel, subdomainsValue, subdomainsDetail] = CAPTIONS.subdomains;\n\tconst [limitLabel, limitValue, limitDetail] = CAPTIONS.limit;\n\tconst includingAt = TYPING.startsAt + typingSeconds(subdomainsValue, TYPING.charactersPerSecond) + INCLUDING.afterTypingSeconds;\n\tconst includedAt = includingAt + (SUBDOMAIN_COUNT - 1) * INCLUDING.everySeconds;\n\tconst limitReachedAt = FILLING.startsAt + (LINK_LIMIT_SLOTS - 1) * FILLING.everySeconds;\n\tconst linksAt = (heldSeconds: number) => stepsAt(heldSeconds, FILLING.startsAt, FILLING.everySeconds, LINK_LIMIT_SLOTS);\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: SCOPE_STORY_GRID,\n\t\tresting: { beat: 1, heldSeconds: limitReachedAt + 1 },\n\t\tbeats: [\n\t\t\t{\n\t\t\t\tpicture: DOMAIN_ALONE,\n\t\t\t\tdeparture: DOMAIN_WITH_SUBDOMAINS,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: includedAt + 1.8,\n\t\t\t\tanimate: (states, heldSeconds) => void paintDomains(states, stepsAt(heldSeconds, includingAt, INCLUDING.everySeconds, SUBDOMAIN_COUNT)),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(subdomainsLabel);\n\t\t\t\t\tpen.type(subdomainsValue, heldSeconds, TYPING);\n\t\t\t\t\tpen.text(subdomainsDetail, clamp01((heldSeconds - includingAt) / DETAIL_FADE_SECONDS));\n\t\t\t\t},\n\t\t\t},\n\t\t\t{\n\t\t\t\tpicture: METER_EMPTY,\n\t\t\t\tdeparture: METER_AT_LIMIT,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: limitReachedAt + 2.6,\n\t\t\t\tanimate: (states, heldSeconds) => void paintMeter(states, linksAt(heldSeconds)),\n\t\t\t\twrite(pen, heldSeconds) {\n\t\t\t\t\tpen.text(limitLabel);\n\t\t\t\t\tpen.text({ ...limitValue, text: String(Math.round((linksAt(heldSeconds) / LINK_LIMIT_SLOTS) * MAX_LINKS)) });\n\t\t\t\t\tpen.text(limitDetail, clamp01((heldSeconds - limitReachedAt) / DETAIL_FADE_SECONDS));\n\t\t\t\t},\n\t\t\t},\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/scope-story-scenes.ts",
+      "content": "import { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport type { StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, distanceToSegment, isFilledAmongSolids, paintShape, type DotShape } from '@/components/visuals/dot-engine/dot-story-cells';\nimport { storyCaption } from '@/components/visuals/dot-engine/story-caption';\n\n/**\n * The \"Scope the discovery\" card's pictures, in the brand dot grid: a domain with its subdomains around it, taken\n * in one by one, and a meter of links that fills to the limit set for the request and stops.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const SCOPE_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS } = SCOPE_STORY_GRID;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(SCOPE_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\nconst DOMAIN = { center: { column: 16, row: 17 }, radius: 6.2 };\nconst SUBDOMAIN = { radius: 3.6, out: 12 };\n// The subdomains stand around the domain: upper left, upper right and straight below.\nconst SUBDOMAINS = [-5 / 6, -1 / 6, 1 / 2].map((turnsOfPi) => ({ column: DOMAIN.center.column + SUBDOMAIN.out * Math.cos(turnsOfPi * Math.PI), row: DOMAIN.center.row + SUBDOMAIN.out * Math.sin(turnsOfPi * Math.PI) }));\nconst isDomain: DotShape = (column, row) => Math.hypot(column - DOMAIN.center.column, row - DOMAIN.center.row) <= DOMAIN.radius;\nconst subdomainAt = (column: number, row: number) => SUBDOMAINS.findIndex((subdomain) => Math.hypot(column - subdomain.column, row - subdomain.row) <= SUBDOMAIN.radius);\nconst isSubdomain: DotShape = (column, row) => subdomainAt(column, row) >= 0;\nconst SPOKE_WIDTH = 0.6;\n\n/** The domain and its subdomains, the first `included` of them taken in: an included one is solid, and so is its spoke. */\nexport function paintDomains(states: Uint8Array, included: number) {\n\tstates.fill(DOT_ABSENT);\n\tfor (let row = 0; row < ROWS; row++) {\n\t\tfor (let column = 0; column < COLUMNS / 2; column++) {\n\t\t\tconst spoke = SUBDOMAINS.findIndex((subdomain) => distanceToSegment(column, row, DOMAIN.center, subdomain) < SPOKE_WIDTH);\n\t\t\tif (spoke >= 0) states[row * COLUMNS + column] = spoke < included ? DOT_FILLED : DOT_HOLLOW;\n\t\t}\n\t}\n\tpaintShape(SCOPE_STORY_GRID, states, isSubdomain, (column, row) => (subdomainAt(column, row) < included && isFilledAmongSolids(column, row) ? DOT_FILLED : DOT_HOLLOW));\n\treturn paintShape(SCOPE_STORY_GRID, states, isDomain, (column, row) => (isFilledAmongSolids(column, row) ? DOT_FILLED : DOT_HOLLOW));\n}\n\nexport const SUBDOMAIN_COUNT = SUBDOMAINS.length;\nexport const DOMAIN_ALONE = pictureOfStates(paintDomains(blank(), 0));\nexport const DOMAIN_WITH_SUBDOMAINS = pictureOfStates(paintDomains(blank(), SUBDOMAIN_COUNT));\n\nconst METER = { left: 8, right: 22, top: 3, bottom: 34, link: { left: 10, right: 20, from: 32, every: 2 }, slots: 14, limit: 9, marker: { column: 24, reach: 3 } };\nconst isMeter: DotShape = (column, row) => between(column, METER.left, METER.right) && between(row, METER.top, METER.bottom);\nconst slotRow = (slot: number) => METER.link.from - slot * METER.link.every;\nconst LIMIT_ROW = slotRow(METER.limit) + 1;\n\n/** The meter with `links` of its slots filled from the bottom; the marker beside it points at the limit. */\nexport function paintMeter(states: Uint8Array, links: number) {\n\tstates.fill(DOT_ABSENT);\n\tpaintShape(SCOPE_STORY_GRID, states, isMeter, (column, row) => {\n\t\tif (row === LIMIT_ROW) return DOT_FILLED;\n\t\tconst slot = (METER.link.from - row) / METER.link.every;\n\t\tif (!Number.isInteger(slot) || !between(slot, 0, METER.slots - 1) || !between(column, METER.link.left, METER.link.right)) return DOT_ABSENT;\n\t\treturn slot < links ? DOT_FILLED : DOT_HOLLOW;\n\t});\n\t// An arrowhead pointing in at the limit line.\n\tfor (let reach = 0; reach <= METER.marker.reach; reach++) {\n\t\tfor (let row = LIMIT_ROW - reach; row <= LIMIT_ROW + reach; row++) states[row * COLUMNS + METER.marker.column + reach] = DOT_FILLED;\n\t}\n\treturn states;\n}\n\nexport const LINK_LIMIT_SLOTS = METER.limit;\nexport const METER_EMPTY = pictureOfStates(paintMeter(blank(), 0));\nexport const METER_AT_LIMIT = pictureOfStates(paintMeter(blank(), METER.limit));\n\nexport const MAX_LINKS = 500;\nexport const CAPTIONS = {\n\tsubdomains: storyCaption(SCOPE_STORY_GRID, 34, 'includeSubdomains', 'true', 'docs. blog. and app. too'),\n\tlimit: storyCaption(SCOPE_STORY_GRID, 34, 'maxLinks', String(MAX_LINKS), 'and the map stops there'),\n};\n\n/** The meter at its limit: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const SCOPE_RESTING = { ...METER_AT_LIMIT, texts: CAPTIONS.limit };\n"
+    }
+  ]
+}

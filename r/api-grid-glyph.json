@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "api-grid-glyph",
+  "type": "visual",
+  "title": "API grid glyph",
+  "description": "A grid of API icons with an animated highlight and API labels.",
+  "surface": "product",
+  "kinds": [],
+  "usage": "A card that browses many APIs. Pass the list as `apis` (title and glyph); the dashboard's Data APIs are the default.",
+  "avoid": [
+    "More than about sixteen tiles",
+    "Tiles without a glyph"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/api-grid-glyph.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add api-grid-glyph --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/dots/api-grid-glyph.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/dots/api-grid-glyph.tsx",
+        "sha256": "8c439d0a3a1c6a929943364c870c40591dc17ab96bafedeb47382c613e1edb5f",
+        "retained": false,
+        "exports": [
+          "ApiGridGlyph"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/glyph/api-grid-glyph.d.ts",
+      "content": "import type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nexport type ApiGridItem = {\n    title: string;\n    glyph: GlyphPairName;\n};\n/** The dashboard's Data APIs, in their playground order. */\nexport declare const DATA_APIS: ApiGridItem[];\n/**\n * The Browse APIs card's picture: every API as a small dot tile in one grid, with a highlight that hops between them\n * the way a pick moves through a menu, so the card reads as a choice of many rather than a single thing. The hop runs\n * only while on screen, and holds on the first tile with reduced motion.\n */\nexport declare function ApiGridGlyph({ apis, className }: {\n    apis?: ApiGridItem[];\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/api-grid-glyph/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/api-grid-glyph.tsx",
+      "content": "import { Card, CardDescription, CardTitle } from \"@/components/ui/card\";\nimport { ApiGridGlyph } from \"@/components/visuals/glyph/api-grid-glyph\";\n\nexport function Product() {\n  return (\n    <Card className=\"mx-auto w-full max-w-xs items-center text-center\">\n      <ApiGridGlyph />\n      <CardTitle>Browse APIs</CardTitle>\n      <CardDescription>Every Data API, ready to try in the playground.</CardDescription>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "glyph-engine",
+    "glyph-tile",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/glyph/api-grid-glyph.tsx",
+      "content": "\"use client\";\n\nimport { useEffect, useRef, useState } from \"react\";\nimport type { GlyphPairName } from \"@/components/visuals/glyph/glyph-art\";\nimport { StillGlyph } from \"@/components/visuals/glyph/glyph-tile\";\nimport { cn } from \"@/lib/utils\";\n\nconst STEP_MS = 1100;\n\nexport type ApiGridItem = { title: string; glyph: GlyphPairName };\n\n/** The dashboard's Data APIs, in their playground order. */\nexport const DATA_APIS: ApiGridItem[] = [\n  { title: \"Scrape Anything\", glyph: \"scrape\" },\n  { title: \"Map URLs\", glyph: \"map\" },\n  { title: \"Crawl Website\", glyph: \"crawl\" },\n  { title: \"Search Web\", glyph: \"search\" },\n  { title: \"Answers\", glyph: \"answers\" },\n  { title: \"Brand Retrieval\", glyph: \"retrieve\" },\n  { title: \"Search Brands\", glyph: \"brandSearch\" },\n  { title: \"Extract Styleguide\", glyph: \"styleguide\" },\n  { title: \"Enrich Person\", glyph: \"peopleEnrich\" },\n  { title: \"Search News\", glyph: \"newsSearch\" },\n  { title: \"NAICS Lookup\", glyph: \"naics\" },\n  { title: \"Parse File\", glyph: \"parse\" },\n];\n\n/**\n * The Browse APIs card's picture: every API as a small dot tile in one grid, with a highlight that hops between them\n * the way a pick moves through a menu, so the card reads as a choice of many rather than a single thing. The hop runs\n * only while on screen, and holds on the first tile with reduced motion.\n */\nexport function ApiGridGlyph({ apis = DATA_APIS, className }: { apis?: ApiGridItem[]; className?: string }) {\n  const rootRef = useRef<HTMLSpanElement>(null);\n  const [active, setActive] = useState(0);\n\n  useEffect(() => {\n    const root = rootRef.current;\n    if (!root || apis.length < 2) return;\n    if (window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return;\n\n    let timer = 0;\n    let isOnScreen = false;\n    const hop = () =>\n      // Never the same tile twice in a row, and never just the neighbor (when there are enough), so the hop reads as a\n      // jump across the grid.\n      setActive((current) => (apis.length > 3 ? (current + 2 + Math.floor(Math.random() * (apis.length - 3))) % apis.length : (current + 1) % apis.length));\n    const sync = () => {\n      window.clearInterval(timer);\n      if (isOnScreen && !document.hidden) timer = window.setInterval(hop, STEP_MS);\n    };\n    const visibility = new IntersectionObserver(([entry]) => {\n      isOnScreen = entry.isIntersecting;\n      sync();\n    });\n    visibility.observe(root);\n    document.addEventListener(\"visibilitychange\", sync);\n    return () => {\n      window.clearInterval(timer);\n      visibility.disconnect();\n      document.removeEventListener(\"visibilitychange\", sync);\n    };\n  }, [apis]);\n\n  const current = apis[active % Math.max(apis.length, 1)];\n\n  return (\n    <span ref={rootRef} aria-hidden className={cn(\"flex flex-col items-center gap-2\", className)}>\n      <span className=\"grid grid-cols-4 gap-1.5\">\n        {apis.map(({ title, glyph }, index) => (\n          <span\n            key={title}\n            className={cn(\n              \"grid size-7 place-items-center rounded-control p-1 transition-colors duration-300 ease-out\",\n              index === active ? \"bg-brand text-on-brand\" : \"bg-blue-10/60 text-brand/60\",\n            )}\n          >\n            <StillGlyph name={glyph} className=\"w-full\" />\n          </span>\n        ))}\n      </span>\n      {/* Names the highlighted tile, so each hop says which API it landed on. */}\n      {current && (\n        <span key={active} className=\"animate-content-in text-caption text-fg-subtle\">\n          {current.title}\n        </span>\n      )}\n    </span>\n  );\n}\n"
+    }
+  ]
+}

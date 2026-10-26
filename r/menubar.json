@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "menubar",
+  "type": "ui",
+  "title": "Menubar",
+  "description": "A bar of menus in a hairline control, its open trigger on the gray wash pill, each menu the dashboard's framed menu.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "An editor or tool with many commands grouped by kind (the playground's File, View and Run). Keep menu names to one word, put frequent commands first, and show their shortcuts. For one menu use DropdownMenu; for page navigation use NavigationMenu or the sidebar.",
+  "avoid": [
+    "Navigation between pages",
+    "A single menu in a bar",
+    "Animating the move from one menu to the next"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/menubar.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add menubar",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx (the menus); src/components/ui/tabs.tsx (the gray wash pill)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      },
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/tabs.tsx",
+        "sha256": "98fe9ed3a9e0b878305eaee6e61f64e9541785acd56f38a8efdd344f79f1a98a",
+        "retained": false,
+        "exports": [
+          "TabOption",
+          "Tabs"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/menubar.d.ts",
+      "content": "import * as React from \"react\";\nimport * as MenubarPrimitive from \"@radix-ui/react-menubar\";\ndeclare function Menubar({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Root>): React.JSX.Element;\ndeclare function MenubarMenu(props: React.ComponentProps<typeof MenubarPrimitive.Menu>): React.JSX.Element;\ndeclare function MenubarGroup(props: React.ComponentProps<typeof MenubarPrimitive.Group>): React.JSX.Element;\ndeclare function MenubarPortal(props: React.ComponentProps<typeof MenubarPrimitive.Portal>): React.JSX.Element;\ndeclare function MenubarRadioGroup(props: React.ComponentProps<typeof MenubarPrimitive.RadioGroup>): React.JSX.Element;\ndeclare function MenubarTrigger({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Trigger>): React.JSX.Element;\ndeclare function MenubarContent({ className, align, alignOffset, sideOffset, ...props }: React.ComponentProps<typeof MenubarPrimitive.Content>): React.JSX.Element;\ndeclare function MenubarItem({ className, inset, variant, ...props }: React.ComponentProps<typeof MenubarPrimitive.Item> & {\n    inset?: boolean;\n    variant?: \"default\" | \"destructive\";\n}): React.JSX.Element;\ndeclare function MenubarCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof MenubarPrimitive.CheckboxItem>): React.JSX.Element;\ndeclare function MenubarRadioItem({ className, children, ...props }: React.ComponentProps<typeof MenubarPrimitive.RadioItem>): React.JSX.Element;\ndeclare function MenubarLabel({ className, inset, ...props }: React.ComponentProps<typeof MenubarPrimitive.Label> & {\n    inset?: boolean;\n}): React.JSX.Element;\ndeclare function MenubarSeparator({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Separator>): React.JSX.Element;\ndeclare function MenubarShortcut({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\ndeclare function MenubarSub(props: React.ComponentProps<typeof MenubarPrimitive.Sub>): React.JSX.Element;\ndeclare function MenubarSubTrigger({ className, inset, children, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubTrigger> & {\n    inset?: boolean;\n}): React.JSX.Element;\ndeclare function MenubarSubContent({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubContent>): React.JSX.Element;\nexport { Menubar, MenubarCheckboxItem, MenubarContent, MenubarGroup, MenubarItem, MenubarLabel, MenubarMenu, MenubarPortal, MenubarRadioGroup, MenubarRadioItem, MenubarSeparator, MenubarShortcut, MenubarSub, MenubarSubContent, MenubarSubTrigger, MenubarTrigger, };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/menubar/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/menubar/Product"
+    },
+    {
+      "name": "Open",
+      "url": "https://context-ds.vercel.app/preview/menubar/Open"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/menubar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Copy, Download, Play, RotateCcw } from \"lucide-react\";\n\nimport {\n  Menubar,\n  MenubarCheckboxItem,\n  MenubarContent,\n  MenubarItem,\n  MenubarLabel,\n  MenubarMenu,\n  MenubarRadioGroup,\n  MenubarRadioItem,\n  MenubarSeparator,\n  MenubarShortcut,\n  MenubarSub,\n  MenubarSubContent,\n  MenubarSubTrigger,\n  MenubarTrigger,\n} from \"@/components/ui/menubar\";\n\nfunction Bar({ defaultValue }: { defaultValue?: string }) {\n  const [wrap, setWrap] = React.useState(true);\n  const [format, setFormat] = React.useState(\"json\");\n  return (\n    <Menubar defaultValue={defaultValue}>\n      <MenubarMenu value=\"request\">\n        <MenubarTrigger>Request</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>\n            <Play strokeWidth={1.5} />\n            Run\n            <MenubarShortcut>⌘↵</MenubarShortcut>\n          </MenubarItem>\n          <MenubarItem>\n            <RotateCcw strokeWidth={1.5} />\n            Reset parameters\n          </MenubarItem>\n          <MenubarSeparator />\n          <MenubarSub>\n            <MenubarSubTrigger>Copy as</MenubarSubTrigger>\n            <MenubarSubContent>\n              <MenubarItem>cURL</MenubarItem>\n              <MenubarItem>TypeScript</MenubarItem>\n              <MenubarItem>Python</MenubarItem>\n            </MenubarSubContent>\n          </MenubarSub>\n          <MenubarSeparator />\n          <MenubarItem variant=\"destructive\">Clear history</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n      <MenubarMenu value=\"view\">\n        <MenubarTrigger>View</MenubarTrigger>\n        <MenubarContent>\n          <MenubarLabel>Response</MenubarLabel>\n          <MenubarRadioGroup value={format} onValueChange={setFormat}>\n            <MenubarRadioItem value=\"json\">JSON</MenubarRadioItem>\n            <MenubarRadioItem value=\"markdown\">Markdown</MenubarRadioItem>\n            <MenubarRadioItem value=\"html\">HTML</MenubarRadioItem>\n          </MenubarRadioGroup>\n          <MenubarSeparator />\n          <MenubarCheckboxItem checked={wrap} onCheckedChange={(on) => setWrap(on === true)}>\n            Wrap long lines\n          </MenubarCheckboxItem>\n        </MenubarContent>\n      </MenubarMenu>\n      <MenubarMenu value=\"export\">\n        <MenubarTrigger>Export</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>\n            <Copy strokeWidth={1.5} />\n            Copy response\n            <MenubarShortcut>⌘C</MenubarShortcut>\n          </MenubarItem>\n          <MenubarItem>\n            <Download strokeWidth={1.5} />\n            Download JSON\n          </MenubarItem>\n          <MenubarItem disabled>Download CSV (tables only)</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n    </Menubar>\n  );\n}\n\nexport function Site() {\n  return <Bar />;\n}\n\nexport function Product() {\n  return <Bar />;\n}\n\nexport function Open() {\n  return <Bar defaultValue=\"view\" />;\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-menubar",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/menubar.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as MenubarPrimitive from \"@radix-ui/react-menubar\";\nimport { Check, ChevronRight, Circle } from \"lucide-react\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// A menu bar, extrapolated from the dashboard: the bar is a hairline control (control corners, 2px inside, white),\n// its triggers plain muted body-sm labels that darken under the pointer, the open one on the gray wash pill the tabs\n// use. Its menus are the dashboard's menus (the dropdown menu): shell corners in a 6px frame, roomy muted rows that\n// wash and darken when highlighted, 14px icons, caption labels and shortcuts, edge-to-edge separators, red destructive\n// rows. A menu grows from its trigger in a short pop; moving along the bar or down a menu is instant (both are done by\n// keyboard and many times a day, and a panel that lingered while closing would dismiss the next one).\nconst PANEL = \"ds-scrollbar z-50 flex max-h-(--radix-menubar-content-available-height) min-w-48 origin-(--radix-menubar-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0\";\nconst ROW = \"relative flex w-full cursor-default items-center gap-2 rounded-control px-2.5 py-1.5 text-body-sm leading-5 text-fg-muted outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg data-[inset]:pl-8 [&_svg]:size-3.5 [&_svg]:shrink-0\";\nconst DESTRUCTIVE = \"text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger\";\n\nfunction Menubar({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Root>) {\n  return <MenubarPrimitive.Root data-slot=\"menubar\" className={cn(\"flex h-9 w-fit items-center gap-0.5 rounded-control border border-line bg-surface p-0.5\", className)} {...props} />;\n}\n\nfunction MenubarMenu(props: React.ComponentProps<typeof MenubarPrimitive.Menu>) {\n  return <MenubarPrimitive.Menu data-slot=\"menubar-menu\" {...props} />;\n}\n\nfunction MenubarGroup(props: React.ComponentProps<typeof MenubarPrimitive.Group>) {\n  return <MenubarPrimitive.Group data-slot=\"menubar-group\" {...props} />;\n}\n\nfunction MenubarPortal(props: React.ComponentProps<typeof MenubarPrimitive.Portal>) {\n  return <MenubarPrimitive.Portal data-slot=\"menubar-portal\" container={usePortalContainer()} {...props} />;\n}\n\nfunction MenubarRadioGroup(props: React.ComponentProps<typeof MenubarPrimitive.RadioGroup>) {\n  return <MenubarPrimitive.RadioGroup data-slot=\"menubar-radio-group\" {...props} />;\n}\n\nfunction MenubarTrigger({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Trigger>) {\n  return (\n    <MenubarPrimitive.Trigger\n      data-slot=\"menubar-trigger\"\n      className={cn(\n        \"flex h-full items-center rounded-[calc(var(--ds-radius-control)-0.125rem)] px-3 text-body-sm text-fg-muted outline-none select-none transition-colors duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring data-[state=open]:bg-wash-pill data-[state=open]:text-fg motion-reduce:transition-none\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nfunction MenubarContent({ className, align = \"start\", alignOffset = -3, sideOffset = 6, ...props }: React.ComponentProps<typeof MenubarPrimitive.Content>) {\n  return (\n    <MenubarPortal>\n      <MenubarPrimitive.Content data-slot=\"menubar-content\" align={align} alignOffset={alignOffset} sideOffset={sideOffset} collisionPadding={8} className={cn(PANEL, className)} {...props} />\n    </MenubarPortal>\n  );\n}\n\nfunction MenubarItem({ className, inset, variant = \"default\", ...props }: React.ComponentProps<typeof MenubarPrimitive.Item> & { inset?: boolean; variant?: \"default\" | \"destructive\" }) {\n  return <MenubarPrimitive.Item data-slot=\"menubar-item\" data-inset={inset || undefined} data-variant={variant} className={cn(ROW, variant === \"destructive\" && DESTRUCTIVE, className)} {...props} />;\n}\n\nfunction MenubarCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof MenubarPrimitive.CheckboxItem>) {\n  return (\n    <MenubarPrimitive.CheckboxItem data-slot=\"menubar-checkbox-item\" checked={checked} className={cn(ROW, \"pr-8\", className)} {...props}>\n      {children}\n      <MenubarPrimitive.ItemIndicator className=\"absolute right-2.5 text-brand\">\n        <Check strokeWidth={1.75} />\n      </MenubarPrimitive.ItemIndicator>\n    </MenubarPrimitive.CheckboxItem>\n  );\n}\n\nfunction MenubarRadioItem({ className, children, ...props }: React.ComponentProps<typeof MenubarPrimitive.RadioItem>) {\n  return (\n    <MenubarPrimitive.RadioItem data-slot=\"menubar-radio-item\" className={cn(ROW, \"pr-8 data-[state=checked]:text-fg\", className)} {...props}>\n      {children}\n      <MenubarPrimitive.ItemIndicator className=\"absolute right-3 text-brand\">\n        <Circle className=\"size-2! fill-current\" strokeWidth={0} />\n      </MenubarPrimitive.ItemIndicator>\n    </MenubarPrimitive.RadioItem>\n  );\n}\n\nfunction MenubarLabel({ className, inset, ...props }: React.ComponentProps<typeof MenubarPrimitive.Label> & { inset?: boolean }) {\n  return <MenubarPrimitive.Label data-slot=\"menubar-label\" data-inset={inset || undefined} className={cn(\"px-2.5 pt-1 pb-1.5 text-caption text-fg-subtle data-[inset]:pl-8\", className)} {...props} />;\n}\n\nfunction MenubarSeparator({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.Separator>) {\n  return <MenubarPrimitive.Separator data-slot=\"menubar-separator\" className={cn(\"-mx-1.5 my-1 h-px bg-line-subtle\", className)} {...props} />;\n}\n\nfunction MenubarShortcut({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"menubar-shortcut\" className={cn(\"ml-auto pl-4 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nfunction MenubarSub(props: React.ComponentProps<typeof MenubarPrimitive.Sub>) {\n  return <MenubarPrimitive.Sub data-slot=\"menubar-sub\" {...props} />;\n}\n\nfunction MenubarSubTrigger({ className, inset, children, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubTrigger> & { inset?: boolean }) {\n  return (\n    <MenubarPrimitive.SubTrigger data-slot=\"menubar-sub-trigger\" data-inset={inset || undefined} className={cn(ROW, \"data-[state=open]:bg-wash-hover data-[state=open]:text-fg\", className)} {...props}>\n      {children}\n      <ChevronRight className=\"ml-auto\" strokeWidth={1.5} />\n    </MenubarPrimitive.SubTrigger>\n  );\n}\n\nfunction MenubarSubContent({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {\n  return (\n    <MenubarPortal>\n      <MenubarPrimitive.SubContent data-slot=\"menubar-sub-content\" collisionPadding={8} className={cn(PANEL, \"min-w-40\", className)} {...props} />\n    </MenubarPortal>\n  );\n}\n\nexport {\n  Menubar,\n  MenubarCheckboxItem,\n  MenubarContent,\n  MenubarGroup,\n  MenubarItem,\n  MenubarLabel,\n  MenubarMenu,\n  MenubarPortal,\n  MenubarRadioGroup,\n  MenubarRadioItem,\n  MenubarSeparator,\n  MenubarShortcut,\n  MenubarSub,\n  MenubarSubContent,\n  MenubarSubTrigger,\n  MenubarTrigger,\n};\n"
+    }
+  ]
+}

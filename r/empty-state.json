@@ -1,0 +1,95 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "empty-state",
+  "type": "product",
+  "title": "Empty state",
+  "description": "Empty-page and empty-table layouts with a message and next actions.",
+  "surface": "product",
+  "kinds": [
+    "app-empty-state"
+  ],
+  "usage": "Pages and tables with nothing in them yet, or nothing matching a search.",
+  "avoid": [
+    "A blank panel",
+    "A lucide icon in place of the glyph tile"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/empty-state.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add empty-state --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/monitors/monitors-home.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/monitors/monitors-home.tsx",
+        "sha256": "561f65c2548d2b206555b1f7620812a153c262b86bf259df3fa95fcd3864f070",
+        "retained": false,
+        "exports": [
+          "MonitorsSkeleton",
+          "MonitorsHome"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/empty-state.d.ts",
+      "content": "import * as React from \"react\";\ndeclare function EmptyState({ glyph, title, description, actions, footer, fill, as: Heading, className, }: {\n    glyph?: React.ReactNode;\n    title: React.ReactNode;\n    description?: React.ReactNode;\n    actions?: React.ReactNode;\n    footer?: React.ReactNode;\n    /** Takes the page's height and centers itself in it, as on a page with nothing else to show. */\n    fill?: boolean;\n    /** h1 when the empty state is the whole page (it stands in for the page header). */\n    as?: \"h1\" | \"h2\" | \"h3\";\n    className?: string;\n}): React.JSX.Element;\n/** Inside a table: the one row saying nothing matches, or nothing has happened yet, in quiet text. */\ndeclare function EmptyStateRow({ colSpan, className, children }: {\n    colSpan: number;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { EmptyState, EmptyStateRow };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/empty-state/Product"
+    },
+    {
+      "name": "FirstVisit",
+      "url": "https://context-ds.vercel.app/preview/empty-state/FirstVisit"
+    },
+    {
+      "name": "InTable",
+      "url": "https://context-ds.vercel.app/preview/empty-state/InTable"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/empty-state.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { ExampleNameDialog } from \"./demo-feedback\";\nimport { Plus } from \"lucide-react\";\n\nimport { EmptyState, EmptyStateRow } from \"@/components/product/empty-state\";\nimport { Button } from \"@/components/ui/button\";\nimport { Table, TableBody, TableHead, TableHeader, TableRow } from \"@/components/ui/table\";\nimport { GlyphTile } from \"@/components/visuals/glyph/glyph-tile\";\n\nexport function Product() {\n  const [open, setOpen] = useState(false);\n  const [created, setCreated] = useState(\"\");\n  if (created) return <div className=\"grid gap-3\"><p role=\"status\">{created} created in this example.</p><Button variant=\"outline\" onClick={() => setCreated(\"\")}>Reset example</Button></div>;\n  return (<>\n    <EmptyState\n      glyph={<GlyphTile name=\"apiKeys\" className=\"size-16 p-2\" />}\n      title=\"No API keys yet\"\n      description=\"Use these keys to authenticate requests to the API. Keep them secret.\"\n      actions={\n        <Button variant=\"brand\" size=\"sm\" onClick={() => setOpen(true)}>\n          <Plus className=\"size-3.5\" strokeWidth={1.75} />\n          Create API key\n        </Button>\n      }\n    />\n    <ExampleNameDialog title=\"Create API key\" open={open} onOpenChange={setOpen} onSave={setCreated} submitLabel=\"Create\" /></>\n  );\n}\n\nexport function FirstVisit() {\n  const [open, setOpen] = useState(false);\n  const [created, setCreated] = useState(\"\");\n  if (created) return <div className=\"grid gap-3\"><p role=\"status\">{created} created in this example.</p><Button variant=\"outline\" onClick={() => setCreated(\"\")}>Reset example</Button></div>;\n  return (<>\n    <EmptyState\n      glyph={<GlyphTile name=\"monitors\" ringed className=\"size-28\" />}\n      title=\"Watch a page or sitemap\"\n      description=\"Create your first monitor to watch a page or sitemap for exact changes, or a whole site for changes that matter.\"\n      actions={\n        <>\n          <Button variant=\"brand\" size=\"sm\" onClick={() => setOpen(true)}>\n            <Plus className=\"size-3.5\" strokeWidth={1.75} />\n            Create monitor\n          </Button>\n          <Button variant=\"outline\" size=\"sm\" asChild><a href=\"https://docs.context.dev/monitors\" target=\"_blank\" rel=\"noreferrer\">Read docs</a></Button>\n        </>\n      }\n      footer={<span className=\"text-caption text-fg-subtle\">0 of 5 monitors used</span>}\n    />\n    <ExampleNameDialog title=\"Create Monitor\" open={open} onOpenChange={setOpen} onSave={setCreated} submitLabel=\"Create\" /></>\n  );\n}\n\nexport function InTable() {\n  return (\n    <div className=\"w-full max-w-2xl\">\n      <Table>\n        <TableHeader>\n          <TableRow>\n            <TableHead>Monitor</TableHead>\n            <TableHead>Status</TableHead>\n            <TableHead>Last run</TableHead>\n          </TableRow>\n        </TableHeader>\n        <TableBody>\n          <EmptyStateRow colSpan={3}>No monitors match your search or filters.</EmptyStateRow>\n        </TableBody>\n      </Table>\n    </div>\n  );\n}\n"
+    },
+    {
+      "path": "examples/demo-feedback.tsx",
+      "content": "\"use client\";\n\nimport { useState, type ReactNode } from \"react\";\nimport { Button } from \"@/components/ui/button\";\nimport { Dialog, DialogBody, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from \"@/components/ui/dialog\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nexport function ExampleMessage({ children }: { children: ReactNode }) {\n  return <p role=\"status\" className=\"text-body-sm text-fg-muted empty:hidden\">{children}</p>;\n}\n\nexport function ExampleNameDialog({ title, open, onOpenChange, initial = \"\", label = \"Name\", submitLabel = \"Save\", onSave }: { title: string; open: boolean; onOpenChange: (open: boolean) => void; initial?: string; label?: string; submitLabel?: string; onSave: (name: string) => void }) {\n  return <Dialog open={open} onOpenChange={onOpenChange}><DialogContent><NameForm key={`${open}-${initial}`} title={title} initial={initial} label={label} submitLabel={submitLabel} onSave={(name) => { onSave(name); onOpenChange(false); }} onCancel={() => onOpenChange(false)} /></DialogContent></Dialog>;\n}\n\nfunction NameForm({ title, initial, label, submitLabel, onSave, onCancel }: { title: string; initial: string; label: string; submitLabel: string; onSave: (name: string) => void; onCancel: () => void }) {\n  const [name, setName] = useState(initial);\n  return <form onSubmit={(event) => { event.preventDefault(); if (name.trim()) onSave(name.trim()); }}>\n    <DialogHeader><DialogTitle>{title}</DialogTitle><DialogDescription>Changes apply to this example.</DialogDescription></DialogHeader>\n    <DialogBody><Field label={label} required><Input value={name} onChange={(event) => setName(event.target.value)} /></Field></DialogBody>\n    <DialogFooter><Button variant=\"outline\" onClick={onCancel}>Cancel</Button><Button type=\"submit\" variant=\"brand\" disabled={!name.trim()}>{submitLabel}</Button></DialogFooter>\n  </form>;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "table",
+    "glyph-tile",
+    "dialog",
+    "field",
+    "input"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/product/empty-state.tsx",
+      "content": "import * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// Never a blank page: a glyph tile (64px, or the 112px ringed story for a product's first visit), the title at h4, one\n// balanced line of muted text at most 480px wide, then the next actions (the brand button first) and anything quieter\n// under them, such as a usage line. Centered in the page column, which it fills when the page has nothing else.\nfunction EmptyState({\n  glyph,\n  title,\n  description,\n  actions,\n  footer,\n  fill = false,\n  as: Heading = \"h2\",\n  className,\n}: {\n  glyph?: React.ReactNode;\n  title: React.ReactNode;\n  description?: React.ReactNode;\n  actions?: React.ReactNode;\n  footer?: React.ReactNode;\n  /** Takes the page's height and centers itself in it, as on a page with nothing else to show. */\n  fill?: boolean;\n  /** h1 when the empty state is the whole page (it stands in for the page header). */\n  as?: \"h1\" | \"h2\" | \"h3\";\n  className?: string;\n}) {\n  return (\n    <div data-slot=\"empty-state\" className={cn(\"flex flex-col items-center px-8 text-center\", fill ? \"my-auto flex-1 justify-center py-16\" : \"pt-8 pb-10\", className)}>\n      {glyph}\n      <Heading className={cn(\"text-h4 leading-snug font-[450] tracking-normal text-fg\", glyph && \"mt-6\")}>{title}</Heading>\n      {description && <p className=\"mt-1 max-w-120 text-body-sm text-balance text-fg-muted\">{description}</p>}\n      {actions && <div className=\"mt-5 flex flex-wrap items-center justify-center gap-2\">{actions}</div>}\n      {footer && <div className=\"mt-6\">{footer}</div>}\n    </div>\n  );\n}\n\n/** Inside a table: the one row saying nothing matches, or nothing has happened yet, in quiet text. */\nfunction EmptyStateRow({ colSpan, className, children }: { colSpan: number; className?: string; children: React.ReactNode }) {\n  return (\n    <tr data-slot=\"empty-state-row\">\n      <td colSpan={colSpan} className={cn(\"px-4 py-12 text-center text-body-sm text-fg-subtle\", className)}>\n        {children}\n      </td>\n    </tr>\n  );\n}\n\nexport { EmptyState, EmptyStateRow };\n"
+    }
+  ]
+}

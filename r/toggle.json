@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "toggle",
+  "type": "ui",
+  "title": "Toggle",
+  "description": "A key that stays pressed: muted when off, on the gray pill wash with ink text when on; an outline variant adds the strong hairline.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Turn one view option on or off in a toolbar (wrap lines, show raw HTML, pin a filter). Give an icon-only toggle an aria-label. For a setting saved to an account use Switch; for one choice of several use ToggleGroup.",
+  "avoid": [
+    "A toggle for an action",
+    "A blue pressed state",
+    "Icon motion when it is pressed"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/toggle.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add toggle",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "Extrapolated from context-dashboard c0ddf7a src/components/ui/button.tsx (the ghost and outline buttons)",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/button.tsx",
+        "sha256": "4471d9c1213fb690c714622f54d8e0f6fc881d6291b024de0c01235bfc2e273b",
+        "retained": false,
+        "exports": [
+          "buttonClassName",
+          "Button"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/toggle.d.ts",
+      "content": "import * as React from \"react\";\nimport * as TogglePrimitive from \"@radix-ui/react-toggle\";\nimport { type VariantProps } from \"class-variance-authority\";\ndeclare const toggleVariants: (props?: ({\n    variant?: \"default\" | \"outline\" | null | undefined;\n    size?: \"default\" | \"sm\" | \"lg\" | null | undefined;\n} & import(\"class-variance-authority/types\").ClassProp) | undefined) => string;\ndeclare function Toggle({ className, variant, size, ...props }: React.ComponentProps<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>): React.JSX.Element;\nexport { Toggle, toggleVariants };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/toggle/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/toggle/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/toggle.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { Bold, Italic, WrapText } from \"lucide-react\";\n\nimport { Toggle } from \"@/components/ui/toggle\";\n\n// On a docs page: wrap long lines in a code sample.\nexport function Site() {\n  return (\n    <Toggle variant=\"outline\" aria-label=\"Wrap lines\" defaultPressed>\n      <WrapText strokeWidth={1.5} /> Wrap lines\n    </Toggle>\n  );\n}\n\n// In a response viewer's toolbar: view options, sizes and a disabled one.\nexport function Product() {\n  const [raw, setRaw] = useState(false);\n  return (\n    <div className=\"grid gap-4\">\n      <div className=\"flex flex-wrap items-center gap-2\">\n        <Toggle pressed={raw} onPressedChange={setRaw}>Raw HTML</Toggle>\n        <Toggle variant=\"outline\" defaultPressed>\n          <WrapText strokeWidth={1.5} /> Wrap\n        </Toggle>\n        <Toggle size=\"sm\" aria-label=\"Bold\">\n          <Bold strokeWidth={1.75} />\n        </Toggle>\n        <Toggle size=\"sm\" aria-label=\"Italic\">\n          <Italic strokeWidth={1.75} />\n        </Toggle>\n        <Toggle size=\"lg\" variant=\"outline\">Large</Toggle>\n        <Toggle disabled>Disabled</Toggle>\n      </div>\n      <p className=\"text-caption text-fg-subtle\">Showing the {raw ? \"raw HTML\" : \"rendered Markdown\"}.</p>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-toggle",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/toggle.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as TogglePrimitive from \"@radix-ui/react-toggle\";\nimport { cva, type VariantProps } from \"class-variance-authority\";\n\nimport { cn } from \"@/lib/utils\";\n\n// A pressed-or-not key, in the button's terms (the dashboard's ghost and outline buttons, control corners, body-sm): off\n// it reads muted and washes gray under the pointer; on it holds the pill wash with ink text. `outline` adds the strong\n// hairline, which turns ink when on. A press scales it to 97 percent; the state change itself is color only.\nconst toggleVariants = cva(\n  \"inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-control text-body-sm whitespace-nowrap text-fg-muted outline-none select-none transition-[color,background-color,border-color,scale] duration-150 ease-out hover:text-fg active:scale-[0.97] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus-ring disabled:pointer-events-none disabled:opacity-50 aria-invalid:text-danger data-[state=on]:text-fg motion-reduce:transition-none motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5\",\n  {\n    variants: {\n      variant: {\n        default: \"bg-transparent hover:bg-wash-hover data-[state=on]:bg-wash-pill\",\n        outline: \"border border-line-strong bg-transparent hover:border-fg data-[state=on]:border-fg data-[state=on]:bg-wash-hover\",\n      },\n      size: {\n        default: \"h-8 min-w-8 px-2.5\",\n        sm: \"h-7 min-w-7 px-2 text-caption\",\n        lg: \"h-10 min-w-10 px-3.5\",\n      },\n    },\n    defaultVariants: { variant: \"default\", size: \"default\" },\n  },\n);\n\nfunction Toggle({ className, variant, size, ...props }: React.ComponentProps<typeof TogglePrimitive.Root> & VariantProps<typeof toggleVariants>) {\n  return <TogglePrimitive.Root data-slot=\"toggle\" className={cn(toggleVariants({ variant, size, className }))} {...props} />;\n}\n\nexport { Toggle, toggleVariants };\n"
+    }
+  ]
+}

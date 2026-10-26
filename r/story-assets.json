@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "story-assets",
+  "type": "visual",
+  "title": "Assets story",
+  "description": "Dot animation of a logo, colors, and company profile.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "Brand logos and colors on a site card. Plays only on screen; shows the profile with reduced motion.",
+  "avoid": [
+    "Stories as the main content of a page"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/story-assets.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add story-assets --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "site src/components/sections/products/assets-story.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/assets-story.tsx",
+        "sha256": "34701d64be11440e526b4ffdce231972055ece0caa75fdb7dbc162f983ad4733",
+        "retained": false,
+        "exports": [
+          "AssetsStory"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/visuals/stories/assets-story.d.ts",
+      "content": "/**\n * The \"Get the visual assets\" card's picture: a brand's logo becomes its colors, then a company profile wearing\n * both. With reduced motion it shows the profile.\n */\nexport declare function AssetsStory({ className }: {\n    className?: string;\n}): import(\"react\").JSX.Element;\n"
+    },
+    {
+      "path": "components/visuals/stories/assets-story-player.d.ts",
+      "content": "import type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\nexport declare function createAssetsStoryPlayer(stage: DotStoryStage): DotStoryPlayer;\n"
+    },
+    {
+      "path": "components/visuals/stories/assets-story-scenes.d.ts",
+      "content": "import { type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n/**\n * The \"Get the visual assets\" card's pictures, in the brand dot grid: a brand's logo on its tile, its colors as a\n * row of swatches, and a company profile dressed in both.\n */\nexport declare const ASSETS_STORY_GRID: DotGrid;\nexport declare const LOGO: StoryPicture;\nexport declare const LOGO_CAPTION: DotStoryText[];\nexport declare const PALETTE: StoryPicture;\nexport declare const SWATCH_TEXTS: DotStoryText[][];\nexport declare const PROFILE_PICTURE: StoryPicture;\nexport declare const PROFILE_TEXTS: DotStoryText[];\n/** The profile: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport declare const ASSETS_RESTING: {\n    texts: DotStoryText[];\n    states: Uint8Array;\n    cells: import(\"../dot-engine/dot-glyph-cells\").GlyphCell[];\n};\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/story-assets/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/story-assets.tsx",
+      "content": "import { Card } from \"@/components/ui/card\";\nimport { AssetsStory } from \"@/components/visuals/stories/assets-story\";\n\nexport function Site() {\n  return (\n    <Card variant=\"ring\" className=\"min-h-[22rem] w-full max-w-xl items-center justify-center\">\n      <div className=\"relative w-full max-w-[26rem]\">\n        <AssetsStory />\n      </div>\n    </Card>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "card"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "dot-engine"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/visuals/stories/assets-story.tsx",
+      "content": "'use client';\n\nimport { ASSETS_RESTING, ASSETS_STORY_GRID } from '@/components/visuals/stories/assets-story-scenes';\nimport { DotStory, type LoadDotStory } from '@/components/visuals/dot-engine/dot-story';\n\nconst loadAssetsStory: LoadDotStory = async (stage) => {\n\tconst { createAssetsStoryPlayer } = await import('@/components/visuals/stories/assets-story-player');\n\treturn createAssetsStoryPlayer(stage);\n};\n\n/**\n * The \"Get the visual assets\" card's picture: a brand's logo becomes its colors, then a company profile wearing\n * both. With reduced motion it shows the profile.\n */\nexport function AssetsStory({ className }: { className?: string }) {\n\treturn <DotStory grid={ASSETS_STORY_GRID} resting={ASSETS_RESTING} load={loadAssetsStory} className={className} />;\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/assets-story-player.ts",
+      "content": "import { ASSETS_STORY_GRID, LOGO, LOGO_CAPTION, PALETTE, PROFILE_PICTURE, PROFILE_TEXTS, SWATCH_TEXTS } from '@/components/visuals/stories/assets-story-scenes';\nimport { captionedBeat } from '@/components/visuals/dot-engine/story-caption';\nimport { createBeatStoryPlayer } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { clamp01 } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryPlayer, DotStoryStage } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * One brand's assets, played as a loop: its logo melts into its colors, four swatches named one after another,\n * and the swatches melt into a company profile wearing both.\n */\n\nconst MELT_SECONDS = 1.1;\nconst NAMING = { startsAt: 0.2, everySeconds: 0.3, seconds: 0.3 };\n\nexport function createAssetsStoryPlayer(stage: DotStoryStage): DotStoryPlayer {\n\treturn createBeatStoryPlayer(stage, {\n\t\tgrid: ASSETS_STORY_GRID,\n\t\tresting: { beat: 2, heldSeconds: 2 },\n\t\tbeats: [\n\t\t\tcaptionedBeat({ picture: LOGO, caption: LOGO_CAPTION, holdSeconds: 2.2 }),\n\t\t\t{\n\t\t\t\tpicture: PALETTE,\n\t\t\t\tarrival: { kind: 'melts', seconds: MELT_SECONDS },\n\t\t\t\tholdSeconds: 2.8,\n\t\t\t\twrite: (pen, heldSeconds) => SWATCH_TEXTS.forEach((texts, index) => texts.forEach((text) => pen.text(text, clamp01((heldSeconds - NAMING.startsAt - index * NAMING.everySeconds) / NAMING.seconds)))),\n\t\t\t},\n\t\t\t{ picture: PROFILE_PICTURE, arrival: { kind: 'melts', seconds: MELT_SECONDS }, holdSeconds: 3.2, write: (pen) => PROFILE_TEXTS.forEach((text) => pen.text(text)) },\n\t\t],\n\t});\n}\n"
+    },
+    {
+      "path": "components/visuals/stories/assets-story-scenes.ts",
+      "content": "import { storyCaption } from '@/components/visuals/dot-engine/story-caption';\nimport { DOT_ABSENT, DOT_FILLED, DOT_HOLLOW, type DotGrid } from '@/components/visuals/dot-engine/dot-morph-dots';\nimport { pictureOf, type StoryPicture } from '@/components/visuals/dot-engine/dot-story-beats';\nimport { cellsOfStates, isInDotBox, paintShape, rings, ringsWithSpeckle, solid, solidWithSpeckle, roundedBox, type DotBox, type DotPainter } from '@/components/visuals/dot-engine/dot-story-cells';\nimport type { DotStoryText } from '@/components/visuals/dot-engine/dot-story-player';\n\n/**\n * The \"Get the visual assets\" card's pictures, in the brand dot grid: a brand's logo on its tile, its colors as a\n * row of swatches, and a company profile dressed in both.\n */\n\n// The ring pattern behind the picture already keeps clear of it, so the dots need no halo of their own.\nexport const ASSETS_STORY_GRID: DotGrid = { columns: 58, rows: 38, pitch: 10, dotRadius: 3.2, ringStroke: 1, haloRadius: 0 };\n\nconst { columns: COLUMNS, rows: ROWS, pitch: PITCH } = ASSETS_STORY_GRID;\nconst x = (column: number) => column * PITCH;\n// Doto sits a third of its size below the middle of the row it is set on.\nconst baselineOn = (row: number, size: number) => (row + 0.5) * PITCH + size / 3;\nconst pictureOfStates = (states: Uint8Array): StoryPicture => ({ states, cells: cellsOfStates(ASSETS_STORY_GRID, states) });\nconst blank = () => new Uint8Array(COLUMNS * ROWS);\nconst between = (value: number, from: number, to: number) => value >= from && value <= to;\n\ntype Box = DotBox;\nconst isInBox = isInDotBox;\n\n// A made-up mark, so no real company's logo is redrawn: a square with a disc over its corner, where they overlap in rings.\nconst markIn = (tile: Box): DotPainter => {\n\tconst size = tile.right - tile.left;\n\tconst square: Box = { left: tile.left + Math.round(size * 0.4), right: tile.left + Math.round(size * 0.78), top: tile.top + Math.round(size * 0.2), bottom: tile.top + Math.round(size * 0.58) };\n\tconst disc = { column: tile.left + size * 0.4, row: tile.top + size * 0.6, radius: size * 0.22 };\n\treturn (column, row) => {\n\t\tconst isOnDisc = Math.hypot(column - disc.column, row - disc.row) <= disc.radius;\n\t\tconst isOnSquare = isInBox(square, column, row);\n\t\tif (isOnDisc && isOnSquare) return DOT_HOLLOW;\n\t\treturn isOnDisc || isOnSquare ? DOT_FILLED : DOT_ABSENT;\n\t};\n};\nconst withBackdrop = (mark: DotPainter, backdrop: DotPainter): DotPainter => (column, row) => {\n\tconst state = mark(column, row);\n\treturn state === DOT_ABSENT ? backdrop(column, row) : state;\n};\n\nconst LOGO_TILE: Box = { left: 5, right: 27, top: 8, bottom: 30 };\nconst clearAround = (mark: DotPainter): DotPainter => (column, row) => {\n\tconst state = mark(column, row);\n\tif (state !== DOT_ABSENT) return state;\n\tconst isBesideMark = [-1, 0, 1].some((across) => [-1, 0, 1].some((down) => mark(column + across, row + down) !== DOT_ABSENT));\n\treturn isBesideMark ? DOT_ABSENT : DOT_HOLLOW;\n};\nexport const LOGO = pictureOfStates(paintShape(ASSETS_STORY_GRID, blank(), roundedBox(LOGO_TILE, 4), clearAround(markIn(LOGO_TILE))));\nexport const LOGO_CAPTION = storyCaption(ASSETS_STORY_GRID, 34, 'logos', 'SVG', 'icon and wordmark');\n\nconst SWATCH = { top: 6, bottom: 22, columns: 12, every: 14, left: 2, radius: 2 };\n// Four tones, darkest to lightest, told apart by how many of their dots are solid.\n// Copy the palette shows (the colors the API found), not colors this page paints.\nconst SAMPLE_PALETTE_HEX = ['1A1F36', '5E8E3E', '95BF47', 'F4F6F8'];\n\nconst SWATCHES = [\n\t{ hex: `#${SAMPLE_PALETTE_HEX[0]}`, role: 'primary', tone: solid },\n\t{ hex: `#${SAMPLE_PALETTE_HEX[1]}`, role: 'accent', tone: solidWithSpeckle },\n\t{ hex: `#${SAMPLE_PALETTE_HEX[2]}`, role: 'light', tone: ringsWithSpeckle },\n\t{ hex: `#${SAMPLE_PALETTE_HEX[3]}`, role: 'surface', tone: rings },\n];\nconst swatchBox = (index: number): Box => ({ left: SWATCH.left + index * SWATCH.every, right: SWATCH.left + index * SWATCH.every + SWATCH.columns - 1, top: SWATCH.top, bottom: SWATCH.bottom });\n\nconst paletteStates = blank();\nSWATCHES.forEach(({ tone }, index) => paintShape(ASSETS_STORY_GRID, paletteStates, roundedBox(swatchBox(index), SWATCH.radius), tone));\nexport const PALETTE = pictureOfStates(paletteStates);\nexport const SWATCH_TEXTS: DotStoryText[][] = SWATCHES.map(({ hex, role }, index) => [\n\t{ text: hex, x: x(swatchBox(index).left), y: baselineOn(SWATCH.bottom + 3, 15), size: 15, weight: 800 },\n\t{ text: role, x: x(swatchBox(index).left), y: baselineOn(SWATCH.bottom + 5.5, 12), size: 12, weight: 700, muted: true },\n]);\n\nconst PROFILE: Box = { left: 5, right: 52, top: 3, bottom: 33 };\nconst BANNER_BOTTOM = 12;\nconst AVATAR: Box = { left: 9, right: 21, top: 8, bottom: 20 };\nconst BUTTON: Box = { left: 38, right: 48, top: 16, bottom: 19 };\nconst COPY_LINES = [\n\t{ row: 28, to: 44 },\n\t{ row: 30, to: 36 },\n];\n\n// A company's profile page: a banner in its color, its logo on the avatar, a follow button, and room for its name.\nconst profile: DotPainter = (column, row) => {\n\tif (roundedBox(AVATAR, 2)(column, row)) {\n\t\tconst isEdge = !roundedBox(AVATAR, 2)(column - 1, row) || !roundedBox(AVATAR, 2)(column + 1, row) || !roundedBox(AVATAR, 2)(column, row - 1) || !roundedBox(AVATAR, 2)(column, row + 1);\n\t\treturn isEdge ? DOT_FILLED : withBackdrop(markIn(AVATAR), () => DOT_ABSENT)(column, row);\n\t}\n\tif (row <= BANNER_BOTTOM) return isInBox({ ...AVATAR, left: AVATAR.left - 1, right: AVATAR.right + 1, top: AVATAR.top - 1 }, column, row) ? DOT_ABSENT : solidWithSpeckle(column, row);\n\tif (isInBox(BUTTON, column, row)) return DOT_FILLED;\n\tconst line = COPY_LINES.find((candidate) => candidate.row === row);\n\treturn line && between(column, AVATAR.left, line.to) ? DOT_HOLLOW : DOT_ABSENT;\n};\n\nexport const PROFILE_PICTURE = pictureOf(ASSETS_STORY_GRID, (column, row) => {\n\tif (!isInBox(PROFILE, column, row)) return DOT_ABSENT;\n\treturn column === PROFILE.left || column === PROFILE.right || row === PROFILE.top || row === PROFILE.bottom ? DOT_FILLED : profile(column, row);\n});\nexport const PROFILE_TEXTS: DotStoryText[] = [\n\t{ text: 'Shopify', x: x(AVATAR.left), y: baselineOn(23, 22), size: 22, weight: 900 },\n\t{ text: 'shopify.com', x: x(AVATAR.left), y: baselineOn(25.5, 13), size: 13, weight: 700, muted: true },\n];\n\n/** The profile: what the picture shows before it plays, and instead of playing with reduced motion. */\nexport const ASSETS_RESTING = { ...PROFILE_PICTURE, texts: PROFILE_TEXTS };\n"
+    }
+  ]
+}

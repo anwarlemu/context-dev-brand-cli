@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "code-card",
+  "type": "product",
+  "title": "Code card",
+  "description": "Code display with language selection, copy, expand and collapse controls, and footer actions.",
+  "surface": "product",
+  "kinds": [
+    "code-window"
+  ],
+  "usage": "Quickstarts and request samples.",
+  "avoid": [
+    "Dark code cards in the product"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/code-card.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add code-card --surface product",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/playground/code-card.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/playground/code-card.tsx",
+        "sha256": "a511a282fdb664b654c7cd0eba3c84cd63beb0ad8e4b795f9cd4dc031485ce86",
+        "retained": false,
+        "exports": [
+          "CodeCard"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/product/code-card.d.ts",
+      "content": "import * as React from \"react\";\n/** One language's code. `display` is what the card shows when it differs from what Copy puts on the clipboard (a masked key). */\nexport type CodeSample = {\n    language: string;\n    code: string;\n    display?: string;\n};\nexport declare function CodeCard({ samples, language: languageProp, onLanguageChange, defaultExpanded, onCopy, footer, className, }: {\n    samples: CodeSample[];\n    /** The shown language, when the page keeps it (so every card on the page follows one pick). */\n    language?: string;\n    onLanguageChange?: (language: string) => void;\n    /** Whether every line shows at first; otherwise the code starts folded to its first few lines. */\n    defaultExpanded?: boolean;\n    onCopy?: (sample: CodeSample) => void;\n    /** Sits at the end of the footer, e.g. \"Open in\" and a row of CodeCardAction buttons. */\n    footer?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\n/** A small icon button for the footer (an agent's mark in an \"Open in\" row), named by its tooltip. */\nexport declare function CodeCardAction({ label, onClick, className, children }: {\n    label: string;\n    onClick?: () => void;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/code-card/Product"
+    },
+    {
+      "name": "SingleLanguage",
+      "url": "https://context-ds.vercel.app/preview/code-card/SingleLanguage"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/code-card.tsx",
+      "content": "\"use client\";\n\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { Bot, Sparkles } from \"lucide-react\";\n\nimport { CodeCard, CodeCardAction } from \"@/components/product/code-card\";\n\nexport function Product() {\n  const { copy, hasCopied } = useCopy();\n  return (\n    <CodeCard\n      className=\"w-full max-w-xl\"\n      samples={[\n        {\n          language: \"cURL\",\n          code: `curl https://api.context.dev/v1/scrape \\\\\\n  -H \"Authorization: Bearer ctx_live_9f2c41b7e0a84d6c\" \\\\\\n  -H \"Content-Type: application/json\" \\\\\\n  -d '{\\n    \"url\": \"https://acme.com\",\\n    \"format\": \"markdown\",\\n    \"onlyMainContent\": true\\n  }'`,\n          display: `curl https://api.context.dev/v1/scrape \\\\\\n  -H \"Authorization: Bearer ctx_live_••••••••\" \\\\\\n  -H \"Content-Type: application/json\" \\\\\\n  -d '{\\n    \"url\": \"https://acme.com\",\\n    \"format\": \"markdown\",\\n    \"onlyMainContent\": true\\n  }'`,\n        },\n        { language: \"TypeScript (SDK)\", code: `import ContextDev from 'context.dev';\\n\\nconst client = new ContextDev({ apiKey: process.env.CONTEXT_DEV_API_KEY });\\nconst page = await client.scrape({ url: 'https://acme.com', format: 'markdown' });\\nconsole.log(page.markdown);` },\n      ]}\n      footer={\n        <>\n          <span className=\"hidden @md:inline\">Open in</span>\n          <CodeCardAction label=\"Open in Claude\" onClick={() => window.open(\"https://claude.ai/new\", \"_blank\", \"noopener,noreferrer\")}>\n            <Sparkles strokeWidth={1.5} />\n          </CodeCardAction>\n          <CodeCardAction label={hasCopied ? \"Copied\" : \"Copy for your agent\"} onClick={() => copy(\"Use the Context.dev API to scrape https://acme.com and return markdown.\")}>\n            <Bot strokeWidth={1.5} />\n          </CodeCardAction>\n        </>\n      }\n    />\n  );\n}\n\nexport function SingleLanguage() {\n  return <CodeCard className=\"w-full max-w-xl\" defaultExpanded samples={[{ language: \"cURL\", code: `curl https://api.context.dev/v1/scrape \\\\\\n  -H \"Authorization: Bearer $CONTEXT_DEV_API_KEY\" \\\\\\n  -d '{\"url\": \"https://acme.com\"}'` }]} />;\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "copy-button"
+  ],
+  "examplePackages": [
+    "lucide-react",
+    "context.dev"
+  ],
+  "requires": [
+    "theme",
+    "copy-button",
+    "select",
+    "tooltip",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/product/code-card.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, ChevronDown, Copy } from \"lucide-react\";\n\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from \"@/components/ui/select\";\nimport { Tooltip, TooltipContent, TooltipTrigger } from \"@/components/ui/tooltip\";\nimport { cn } from \"@/lib/utils\";\n\n// The playground's code card: the call straight on the card in mono with light highlighting (strings brand blue,\n// keywords and flags navy, numbers a lighter blue), folded to its first five lines until expanded, copy waiting in the\n// code's corner, and one quiet footer for everything about it: the language chip, the fold, and anything else (an\n// \"Open in\" row of agents). Long lines wrap rather than scroll sideways. Not clipped, so the language menu can open\n// over what's below.\n\nconst COLLAPSED_LINES = 5;\nconst KEYWORDS = \"curl|const|let|await|import|from|return|require|def|func|package|use\";\nconst LITERALS = \"true|false|True|False|null|None|nil\";\nconst TOKEN = new RegExp(`('[^']*'|\"[^\"]*\"|--[a-z-]+|\\\\b(?:${KEYWORDS})\\\\b|\\\\b\\\\d+\\\\b|\\\\b(?:${LITERALS})\\\\b)`, \"g\");\nconst KEYWORD = new RegExp(`^(${KEYWORDS})$`);\nconst LITERAL = new RegExp(`^(\\\\d+|${LITERALS})$`);\n\nfunction tokenClass(token: string) {\n  if (/^['\"]/.test(token)) return \"text-fg-brand\";\n  if (token.startsWith(\"--\") || KEYWORD.test(token)) return \"text-navy-60\";\n  if (LITERAL.test(token)) return \"text-blue-70\";\n  return undefined;\n}\n\n/** One language's code. `display` is what the card shows when it differs from what Copy puts on the clipboard (a masked key). */\nexport type CodeSample = { language: string; code: string; display?: string };\n\nexport function CodeCard({\n  samples,\n  language: languageProp,\n  onLanguageChange,\n  defaultExpanded = false,\n  onCopy,\n  footer,\n  className,\n}: {\n  samples: CodeSample[];\n  /** The shown language, when the page keeps it (so every card on the page follows one pick). */\n  language?: string;\n  onLanguageChange?: (language: string) => void;\n  /** Whether every line shows at first; otherwise the code starts folded to its first few lines. */\n  defaultExpanded?: boolean;\n  onCopy?: (sample: CodeSample) => void;\n  /** Sits at the end of the footer, e.g. \"Open in\" and a row of CodeCardAction buttons. */\n  footer?: React.ReactNode;\n  className?: string;\n}) {\n  const [ownLanguage, setOwnLanguage] = React.useState(samples[0]?.language ?? \"\");\n  const language = languageProp ?? ownLanguage;\n  const setLanguage = (next: string) => {\n    setOwnLanguage(next);\n    onLanguageChange?.(next);\n  };\n  const [expanded, setExpanded] = React.useState(defaultExpanded);\n  const { hasCopied, copy } = useCopy();\n  const sample = samples.find((s) => s.language === language) ?? samples[0];\n  const lines = (sample?.display ?? sample?.code ?? \"\").split(\"\\n\");\n  const canExpand = lines.length > COLLAPSED_LINES;\n  const copyLabel = hasCopied ? \"Copied\" : \"Copy code\";\n\n  return (\n    <div data-slot=\"code-card\" data-expanded={(expanded && canExpand) || undefined} className={cn(\"@container flex min-h-0 flex-col rounded-card bg-surface text-fg shadow-card\", className)}>\n      <div className=\"ds-scrollbar relative min-h-0 flex-1 overflow-y-auto\">\n        <pre className={cn(\"py-4 pr-14 pl-5 font-mono text-caption leading-code-card\", !expanded && canExpand && \"max-h-[122px] overflow-y-hidden\")}>\n          <code>\n            {lines.map((line, i) => (\n              <span key={i} className=\"block min-h-[1.65em] whitespace-pre-wrap [overflow-wrap:anywhere]\">\n                {line.split(TOKEN).map((part, j) => (\n                  <span key={j} className={tokenClass(part)}>\n                    {part}\n                  </span>\n                ))}\n              </span>\n            ))}\n          </code>\n        </pre>\n        {canExpand && !expanded && <div className=\"pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-surface to-transparent\" />}\n        <span className=\"absolute top-2.5 right-2.5 flex items-center\">\n          <Tooltip>\n            <TooltipTrigger asChild>\n              <button\n                type=\"button\"\n                onClick={() => {\n                  if (!sample) return;\n                  void copy(sample.code);\n                  onCopy?.(sample);\n                }}\n                aria-label={copyLabel}\n                className=\"grid size-8 place-items-center rounded-control text-fg-subtle outline-none transition-[color,background-color,scale] duration-150 ease-out hover:bg-wash-hover hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring active:scale-[0.97] motion-reduce:active:scale-100\"\n              >\n                {hasCopied ? <Check className=\"size-3.5 text-success\" strokeWidth={1.75} /> : <Copy className=\"size-3.5\" strokeWidth={1.5} />}\n              </button>\n            </TooltipTrigger>\n            <TooltipContent side=\"top\">{copyLabel}</TooltipContent>\n          </Tooltip>\n        </span>\n      </div>\n      <div className=\"flex h-11 shrink-0 items-center gap-3 border-t border-line-subtle pr-3 pl-2 text-caption whitespace-nowrap text-fg-subtle\">\n        {samples.length > 1 ? (\n          <Select value={sample?.language} onValueChange={setLanguage}>\n            <SelectTrigger appearance=\"chip\" aria-label=\"Language\">\n              <SelectValue />\n            </SelectTrigger>\n            <SelectContent position=\"popper\" sideOffset={16} className=\"w-auto min-w-40\">\n              {samples.map((s) => (\n                <SelectItem key={s.language} value={s.language}>\n                  {s.language}\n                </SelectItem>\n              ))}\n            </SelectContent>\n          </Select>\n        ) : (\n          sample && <span className=\"flex h-7 items-center rounded-sm bg-wash-hover px-2.5 text-fg-muted\">{sample.language}</span>\n        )}\n        {canExpand && (\n          <button type=\"button\" onClick={() => setExpanded((e) => !e)} className=\"flex items-center gap-1 outline-none transition-colors duration-150 hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring\">\n            <ChevronDown className={cn(\"size-3.5 transition-transform duration-200 ease-out motion-reduce:transition-none\", expanded && \"rotate-180\")} strokeWidth={1.5} />\n            {expanded ? \"Show less\" : `Show all ${lines.length} lines`}\n          </button>\n        )}\n        {footer && <span className=\"ml-auto flex items-center gap-1\">{footer}</span>}\n      </div>\n    </div>\n  );\n}\n\n/** A small icon button for the footer (an agent's mark in an \"Open in\" row), named by its tooltip. */\nexport function CodeCardAction({ label, onClick, className, children }: { label: string; onClick?: () => void; className?: string; children: React.ReactNode }) {\n  return (\n    <Tooltip>\n      <TooltipTrigger asChild>\n        <button\n          type=\"button\"\n          aria-label={label}\n          onClick={onClick}\n          className={cn(\"grid size-6 place-items-center rounded-sm text-fg outline-none transition-colors duration-150 hover:bg-wash-hover focus-visible:ring-2 focus-visible:ring-focus-ring [&_svg]:size-3.5\", className)}\n        >\n          {children}\n        </button>\n      </TooltipTrigger>\n      <TooltipContent side=\"top\">{label}</TooltipContent>\n    </Tooltip>\n  );\n}\n"
+    }
+  ]
+}

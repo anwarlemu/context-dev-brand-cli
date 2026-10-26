@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "utils",
+  "type": "lib",
+  "title": "cn",
+  "description": "Class-name merging for the design system's Tailwind utilities.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Every component's className.",
+  "avoid": [],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/utils.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add utils",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/lib/utils.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/lib/utils.ts",
+        "sha256": "d94995500e74ae0158e99e72448af06bdbe1aee2b9c16702b30f6b5c9e18a6e5",
+        "retained": false,
+        "exports": [
+          "cn",
+          "formatDate"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "lib/utils.d.ts",
+      "content": "import { type ClassValue } from \"clsx\";\nexport declare function cn(...inputs: ClassValue[]): string;\n"
+    }
+  ],
+  "examples": [],
+  "exampleFiles": [],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [],
+  "packages": [
+    "clsx",
+    "tailwind-merge"
+  ],
+  "files": [
+    {
+      "path": "lib/utils.ts",
+      "content": "import { type ClassValue, clsx } from \"clsx\";\nimport { extendTailwindMerge } from \"tailwind-merge\";\n\n// The brand's scales have their own names (text-body-sm, rounded-card, shadow-floating). Without teaching\n// tailwind-merge, it reads text-body-sm as a text color and drops the real color beside it, and keeps a default\n// rounded-md next to a brand radius meant to replace it.\nconst twMerge = extendTailwindMerge({\n  extend: {\n    theme: {\n      radius: [\"sm\", \"mark\", \"control\", \"card\", \"shell\", \"panel\", \"pill\", \"demo\"],\n      shadow: [\"card\", \"raised\", \"floating\", \"key\", \"tooltip\", \"ring-hover\", \"rule-bottom\"],\n      tracking: [\"tight\", \"title\", \"snug\", \"display\", \"figure\", \"normal\", \"label\"],\n      leading: [\"hero\", \"hero-product\", \"lead\", \"lead-lg\", \"note\", \"display\", \"code\", \"question\", \"terminal\", \"demo-chip\", \"demo-label\", \"demo-title\", \"demo-score\"],\n    },\n    classGroups: {\n      \"font-weight\": [{ font: [\"regular\", \"heavy\", \"score\"] }],\n      \"font-size\": [{ text: [\"hero\", \"hero-tablet\", \"hero-desktop\", \"hero-product\", \"lead\", \"lead-lg\", \"note\", \"display\", \"h1\", \"h2\", \"h3\", \"h4\", \"h5\", \"body-lg\", \"body-md\", \"question\", \"ask\", \"body\", \"body-sm\", \"pill-sm\", \"caption\", \"figure\", \"figure-lg\", \"axis\", \"demo-glyph\", \"demo-meta\", \"demo-code\", \"demo-label\", \"demo-row\", \"demo-title\", \"demo-score\"] }],\n    },\n  },\n});\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n"
+    }
+  ]
+}

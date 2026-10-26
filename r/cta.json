@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "cta",
+  "type": "site",
+  "title": "Call to action",
+  "description": "The closing call to action that ends every site page.",
+  "surface": "site",
+  "kinds": [],
+  "usage": "The last section before the footer, on every page. `ClosingCta` with a `pill-outline` button and a `CtaTextLink`. `Cta` and `CtaButton` (the water band) are deprecated; the site no longer draws it.",
+  "avoid": [
+    "Two call to action sections on one page",
+    "Bold headings",
+    "More than two actions",
+    "The deprecated water band (Cta) on new pages"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/cta.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add cta --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/closing-cta.tsx; src/components/sections/shared/dark-cta-link.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/closing-cta.tsx",
+        "sha256": "d72fe1e9ada38ba06e33707a5bda0ae39d96956bdac96632f4173902bd6b5838",
+        "retained": false,
+        "exports": [
+          "ClosingCTA"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/dark-cta-link.tsx",
+        "sha256": "2d21e80fb388f649a3b9a993f2680769cce3688f1ead34923ca342c873adbfa6",
+        "retained": false,
+        "exports": [
+          "DarkCtaLink"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/cta.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * The site's closing call to action, on every page: a white card in the soft blue ring, the heading and a line of muted text on\n * the left, and a smaller ringed card on the right with the offer (a figure, its label, a note) and the actions.\n * `background` sits behind the card's content (the site draws its dot field there).\n */\ndeclare function ClosingCta({ title, description, figure, figureLabel, note, primaryAction, secondaryAction, background, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title: React.ReactNode;\n    description?: React.ReactNode;\n    /** The offer's large figure (the site sets it in dots, as wide as the card up to 20rem). */\n    figure?: React.ReactNode;\n    figureLabel?: React.ReactNode;\n    note?: React.ReactNode;\n    /** A full-width `pill-outline` button. */\n    primaryAction?: React.ReactNode;\n    /** A quiet text link under it (a CtaTextLink). */\n    secondaryAction?: React.ReactNode;\n    background?: React.ReactNode;\n}): React.JSX.Element;\n/** The closing card's quiet link: muted, darkening and underlining on hover, with an arrow and a 44px target. */\ndeclare function CtaTextLink({ asChild, className, children, ...props }: React.ComponentProps<\"a\"> & {\n    asChild?: boolean;\n}): React.JSX.Element;\n/**\n * The call to action band: the dimmed brand-blue water band (pass the water texture as `background`; without one it\n * is the plain dimmed blue), a dashed frame down the column's edges with a white node where a dashed rule crosses them\n * near the foot, a centered heading with its closing words in light blue, a line of text and two actions (a CtaButton\n * `light` and a CtaButton `glass`).\n *\n * @deprecated Context.dev removed the water band; every page now closes with `ClosingCta`. Kept so existing pages\n * still render; use `ClosingCta` for new work.\n */\ndeclare function Cta({ title, accent, description, primaryAction, secondaryAction, background, className, ...props }: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n    title: React.ReactNode;\n    /** The heading's closing words, in light blue. */\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    primaryAction?: React.ReactNode;\n    secondaryAction?: React.ReactNode;\n    /** The water texture; it is dimmed so white copy stays legible. */\n    background?: React.ReactNode;\n}): React.JSX.Element;\n/**\n * The band's two buttons, one shape (the brand's button radius, 48px tall): `light` is the white key with a soft white\n * glow (it dims a step on hover); `glass` is the frosted key beside it.\n *\n * @deprecated The water band it belongs to is gone from Context.dev; use `ClosingCta` with a `pill-outline` button.\n */\ndeclare function CtaButton({ tone, asChild, className, ...props }: React.ComponentProps<\"a\"> & {\n    tone?: \"light\" | \"glass\";\n    asChild?: boolean;\n}): React.JSX.Element;\nexport { ClosingCta, Cta, CtaButton, CtaTextLink };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/cta/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/cta.tsx",
+      "content": "import { SiteSection } from \"@/components/site/section\";\nimport { ArrowRight } from \"lucide-react\";\n\nimport { Button } from \"@/components/ui/button\";\nimport { ClosingCta, CtaTextLink } from \"@/components/site/cta\";\n\nexport function Site() {\n  return (<SiteSection>\n    <ClosingCta\n      title=\"Start building with live web context.\"\n      description=\"Scrape, search, and research the web with one API. Bring the results straight into your product.\"\n      figure={<span className=\"font-data text-h1 tabular-nums\">1,000</span>}\n      figureLabel=\"free credits\"\n      note=\"Every month. No credit card required.\"\n      primaryAction={\n        <Button asChild variant=\"pill-outline\">\n          <a href=\"https://context.dev/signup\">Start for free</a>\n        </Button>\n      }\n      secondaryAction={\n        <CtaTextLink href=\"https://docs.context.dev\">\n          Read the docs <ArrowRight aria-hidden=\"true\" />\n        </CtaTextLink>\n      }\n    />\n  </SiteSection>);\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "section",
+    "button"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "section",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-slot"
+  ],
+  "files": [
+    {
+      "path": "components/site/cta.tsx",
+      "content": "import * as React from \"react\";\nimport { Slot } from \"@radix-ui/react-slot\";\n\nimport { SectionEdgeLines } from \"@/components/site/section\";\nimport { cn } from \"@/lib/utils\";\n\n// The soft blue ring around a white card. It wraps the card rather than being a shadow on it, so its outer edge keeps\n// the card's radius; the negative margin keeps it from adding layout size.\nconst GLASS_RING = \"-m-2 rounded-card bg-ring-tint p-2\";\nconst CARD = \"rounded-card bg-surface ring-1 ring-hairline\";\n\n/**\n * The site's closing call to action, on every page: a white card in the soft blue ring, the heading and a line of muted text on\n * the left, and a smaller ringed card on the right with the offer (a figure, its label, a note) and the actions.\n * `background` sits behind the card's content (the site draws its dot field there).\n */\nfunction ClosingCta({\n  title,\n  description,\n  figure,\n  figureLabel,\n  note,\n  primaryAction,\n  secondaryAction,\n  background,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode;\n  description?: React.ReactNode;\n  /** The offer's large figure (the site sets it in dots, as wide as the card up to 20rem). */\n  figure?: React.ReactNode;\n  figureLabel?: React.ReactNode;\n  note?: React.ReactNode;\n  /** A full-width `pill-outline` button. */\n  primaryAction?: React.ReactNode;\n  /** A quiet text link under it (a CtaTextLink). */\n  secondaryAction?: React.ReactNode;\n  background?: React.ReactNode;\n}) {\n  const titleId = React.useId();\n  const hasOffer = figure || figureLabel || note || primaryAction || secondaryAction;\n  return (\n    <section id=\"cta\" data-slot=\"closing-cta\" aria-labelledby={titleId} className={cn(\"relative w-full bg-surface py-16 md:py-20\", className)} {...props}>\n      <SectionEdgeLines />\n      <div className=\"relative mx-auto w-full max-w-(--ds-frame-column) px-6 sm:px-8 md:px-10 lg:px-12\">\n        <div className={GLASS_RING}>\n          <div className={cn(\"relative isolate grid items-center gap-8 overflow-hidden p-6 sm:p-8 lg:grid-cols-[1fr_calc(var(--spacing)*84)] lg:gap-12 lg:p-12\", CARD)}>\n            {background && (\n              <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 -z-10 text-fg-brand\">\n                {background}\n              </div>\n            )}\n            <div className=\"relative flex flex-col items-start gap-5\">\n              <h2 id={titleId} className=\"max-w-136 text-h3 leading-tight font-normal tracking-tight text-balance text-fg sm:text-h2\">\n                {title}\n              </h2>\n              {description && <p className=\"max-w-md text-body leading-relaxed text-fg-muted sm:text-body-lg\">{description}</p>}\n            </div>\n            {hasOffer && (\n              <div className={GLASS_RING}>\n                <div className={cn(\"relative flex flex-col p-6 sm:p-7\", CARD)}>\n                  {(figure || figureLabel) && (\n                    <p className=\"flex flex-col items-center text-center text-fg\">\n                      {figure && <span className=\"flex w-full max-w-80 justify-center\">{figure}</span>}\n                      {figureLabel && <span className=\"mt-2 text-h5 leading-snug\">{figureLabel}</span>}\n                    </p>\n                  )}\n                  {note && <p className=\"mt-3 text-center text-body-sm leading-relaxed text-fg-muted\">{note}</p>}\n                  {primaryAction && <div className=\"mt-6 flex flex-col [&>*]:w-full\">{primaryAction}</div>}\n                  {secondaryAction && <div className=\"mt-2 flex flex-col\">{secondaryAction}</div>}\n                </div>\n              </div>\n            )}\n          </div>\n        </div>\n      </div>\n    </section>\n  );\n}\n\n/** The closing card's quiet link: muted, darkening and underlining on hover, with an arrow and a 44px target. */\nfunction CtaTextLink({ asChild = false, className, children, ...props }: React.ComponentProps<\"a\"> & { asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"a\";\n  return (\n    <Comp\n      data-slot=\"cta-text-link\"\n      className={cn(\n        \"inline-flex min-h-11 items-center justify-center gap-2 rounded-card text-body-sm leading-5 font-medium text-fg/70 underline-offset-4 transition-colors duration-150 ease-out outline-none hover:text-fg hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none [&_svg]:size-4\",\n        className,\n      )}\n      {...props}\n    >\n      {children}\n    </Comp>\n  );\n}\n\n// The band's frame: dashed half-pixel hairlines in translucent white, 4px dashes with 4px gaps.\nconst DASH_X = \"bg-[repeating-linear-gradient(to_right,var(--ds-color-ring-on-brand)_0_var(--ds-space-1),transparent_var(--ds-space-1)_var(--ds-space-2))]\";\nconst DASH_Y = \"bg-[repeating-linear-gradient(to_bottom,var(--ds-color-ring-on-brand)_0_var(--ds-space-1),transparent_var(--ds-space-1)_var(--ds-space-2))]\";\nconst NODE =\n  \"absolute bottom-16 size-1.5 translate-y-1/2 rounded-pill bg-white shadow-[0_0_0_var(--ds-space-0-5)_color-mix(in_srgb,var(--ds-color-white)_20%,transparent)]\";\n\n/**\n * The call to action band: the dimmed brand-blue water band (pass the water texture as `background`; without one it\n * is the plain dimmed blue), a dashed frame down the column's edges with a white node where a dashed rule crosses them\n * near the foot, a centered heading with its closing words in light blue, a line of text and two actions (a CtaButton\n * `light` and a CtaButton `glass`).\n *\n * @deprecated Context.dev removed the water band; every page now closes with `ClosingCta`. Kept so existing pages\n * still render; use `ClosingCta` for new work.\n */\nfunction Cta({\n  title,\n  accent,\n  description,\n  primaryAction,\n  secondaryAction,\n  background,\n  className,\n  ...props\n}: Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode;\n  /** The heading's closing words, in light blue. */\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  primaryAction?: React.ReactNode;\n  secondaryAction?: React.ReactNode;\n  /** The water texture; it is dimmed so white copy stays legible. */\n  background?: React.ReactNode;\n}) {\n  return (\n    <section id=\"cta\" data-slot=\"cta\" className={cn(\"relative isolate flex w-full items-center justify-center overflow-hidden bg-dark text-white\", className)} {...props}>\n      <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 -z-10 bg-blue-80 brightness-80\">\n        {background}\n      </div>\n      <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 hidden md:block\">\n        <div className={cn(\"absolute inset-x-0 bottom-16 h-px scale-y-50\", DASH_X)} />\n      </div>\n      <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 hidden justify-center md:flex\">\n        <div className=\"relative h-full w-full max-w-(--ds-frame-column)\">\n          <div className={cn(\"absolute inset-y-0 left-0 w-px scale-x-50\", DASH_Y)} />\n          <div className={cn(\"absolute inset-y-0 right-0 w-px scale-x-50\", DASH_Y)} />\n          <span className={cn(NODE, \"left-0 -translate-x-1/2\")} />\n          <span className={cn(NODE, \"right-0 translate-x-1/2\")} />\n        </div>\n      </div>\n      <div className=\"relative z-10 mx-auto w-full max-w-(--ds-frame-column) px-6 py-16 md:px-8 md:py-20\">\n        <div className=\"mx-auto flex max-w-2xl flex-col items-center gap-6 text-center\">\n          <div className=\"flex w-full flex-col items-center gap-4\">\n            <h2 className=\"text-h3 leading-tight font-normal tracking-tight text-balance text-white md:text-h2\">\n              {title}\n              {accent && (\n                <>\n                  {\" \"}\n                  <span className=\"text-blue-40\">{accent}</span>\n                </>\n              )}\n            </h2>\n          </div>\n          {description && <p className=\"max-w-130 text-body-lg leading-relaxed text-white/90\">{description}</p>}\n          {(primaryAction || secondaryAction) && (\n            <div className=\"relative flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row\">\n              {primaryAction}\n              {secondaryAction}\n            </div>\n          )}\n        </div>\n      </div>\n    </section>\n  );\n}\n\n/**\n * The band's two buttons, one shape (the brand's button radius, 48px tall): `light` is the white key with a soft white\n * glow (it dims a step on hover); `glass` is the frosted key beside it.\n *\n * @deprecated The water band it belongs to is gone from Context.dev; use `ClosingCta` with a `pill-outline` button.\n */\nfunction CtaButton({ tone = \"light\", asChild = false, className, ...props }: React.ComponentProps<\"a\"> & { tone?: \"light\" | \"glass\"; asChild?: boolean }) {\n  const Comp = asChild ? Slot : \"a\";\n  return (\n    <Comp\n      data-slot=\"cta-button\"\n      className={cn(\n        \"relative isolate inline-flex cursor-pointer items-center justify-center gap-2 overflow-hidden whitespace-nowrap text-body font-medium outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring active:scale-[0.97] motion-reduce:transition-none motion-reduce:active:scale-100\",\n        tone === \"light\" &&\n          \"h-12 rounded-control border border-black/10 bg-white px-6.5 leading-snug text-fg shadow-[0_0_0_1px_color-mix(in_srgb,var(--ds-color-white)_35%,transparent),0_var(--ds-space-3)_var(--ds-space-10)_color-mix(in_srgb,var(--ds-color-white)_12%,transparent)] transition-[filter,scale] duration-150 ease-out hover:brightness-97\",\n        tone === \"glass\" &&\n          \"h-12 rounded-control bg-white/16 px-6 leading-snug text-white shadow-key outline-1 -outline-offset-1 outline-white/12 backdrop-blur-xs transition-[background-color,scale] duration-200 ease-out hover:bg-white/24\",\n        className,\n      )}\n      {...props}\n    />\n  );\n}\n\nexport { ClosingCta, Cta, CtaButton, CtaTextLink };\n"
+    }
+  ]
+}

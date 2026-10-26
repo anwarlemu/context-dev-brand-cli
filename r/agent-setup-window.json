@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "agent-setup-window",
+  "type": "site",
+  "title": "Agent setup window",
+  "description": "Tabbed agent setup instructions for Prompt, MCP, and CLI, with copy actions and an animated prompt preview.",
+  "surface": "site",
+  "kinds": [
+    "code-window",
+    "tabs"
+  ],
+  "usage": "Showing how to connect an agent next to a section heading. Wrap it in the ring (`rounded-card bg-ring-tint p-2`) on white.",
+  "avoid": [
+    "More than four methods",
+    "Agent logos recolored to the brand blue",
+    "Toasts from the component itself (pass onCopy)"
+  ],
+  "notes": "The methods are the site's brand pill tabs turned for the dark bar: a faint white track, the labels in white at 60%, and a\nwhite outline gliding to the picked one on the tabs' spring (it jumps with reduced motion).",
+  "documentation": "https://context-ds.vercel.app/components/agent-setup-window.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add agent-setup-window --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/components/sections/home/agent-setup-window.tsx; src/components/sections/shared/agent-setup-prompt.ts; src/components/ui/tabs.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/agent-setup-window.tsx",
+        "sha256": "581a4230084eb53fc56538fbd53af3c909fb4b97d4cb974ea6acfb176695272c",
+        "retained": false,
+        "exports": [
+          "AgentSetupWindow"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/agent-setup-prompt.ts",
+        "sha256": "3e2b893dd70a72e25376fd77b2d6986d06ef976f6848936ae01c1b0c2198f063",
+        "retained": false,
+        "exports": [
+          "AgentSetupPromptSegment",
+          "AGENT_SETUP_PROMPT_SEGMENTS",
+          "AGENT_SETUP_PROMPT",
+          "SETUP_AGENTS",
+          "AGENT_MCP_SETUP_PROMPT"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/tabs.tsx",
+        "sha256": "9d685bb15672b2c27f6dd69da8aacce0d87a1237b2d7827e000217bb81aaf296",
+        "retained": false,
+        "exports": []
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/agent-setup-window.d.ts",
+      "content": "import * as React from \"react\";\nexport type AgentSetupMethod = {\n    value: string;\n    label: string;\n    copyText: string;\n    content: React.ReactNode;\n};\nexport type SetupAgent = {\n    name: string;\n    icon?: React.ReactNode;\n};\nexport type AgentSetupCopy = {\n    method?: string;\n    agent?: string;\n    text: string;\n};\n/** A link-like run inside the window: the syntax theme's property blue, faintly underlined. */\ndeclare function SetupUrl({ children, className, style }: {\n    children: React.ReactNode;\n    className?: string;\n    style?: React.CSSProperties;\n}): React.JSX.Element;\n/** A faded shell comment on its own line. */\ndeclare function SetupComment({ children, order }: {\n    children: React.ReactNode;\n    order?: number;\n}): React.JSX.Element;\n/** A command on its own line, revealed after the lines before it. */\ndeclare function SetupLine({ children, order }: {\n    children: React.ReactNode;\n    order?: number;\n}): React.JSX.Element;\n/** The prompt, word by word; segments marked `url` arrive whole so their highlight never shows half drawn. */\ndeclare function SetupPrompt({ segments }: {\n    segments: {\n        text: string;\n        url?: boolean;\n    }[];\n}): React.JSX.Element;\ndeclare function AgentSetupWindow({ methods, agents, agentPrompt, defaultValue, cycle, onCopy, className, }: {\n    methods: AgentSetupMethod[];\n    /** Agents offered in the chrome bar; picking one copies `agentPrompt` (or the first method's text). */\n    agents?: SetupAgent[];\n    agentPrompt?: string;\n    defaultValue?: string;\n    /** Moves to the next method every six seconds while the window is on screen. */\n    cycle?: boolean;\n    /** Called after a copy, so the app can show its own toast. */\n    onCopy?: (copied: AgentSetupCopy) => void;\n    className?: string;\n}): React.JSX.Element;\nexport { AgentSetupWindow, SetupPrompt, SetupUrl, SetupComment, SetupLine };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/agent-setup-window/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/agent-setup-window.tsx",
+      "content": "\"use client\";\n\nimport { Bot, MousePointer2, Sparkles } from \"lucide-react\";\nimport { toast } from \"sonner\";\n\nimport { AgentSetupWindow, SetupComment, SetupLine, SetupPrompt, SetupUrl } from \"@/components/site/agent-setup-window\";\n\nconst PROMPT_SEGMENTS = [\n  { text: \"Signup for an account & get API key with \" },\n  { text: \"context.dev/auth.md\", url: true },\n  { text: \", then follow \" },\n  { text: \"docs.context.dev/agent-quickstart\", url: true },\n  { text: \" to integrate into the codebase\" },\n];\nconst PROMPT = PROMPT_SEGMENTS.map((s) => s.text).join(\"\");\nconst MCP_URL = \"https://mcp.context.dev/mcp\";\nconst MCP_COMMAND = `claude mcp add --transport http --scope user context ${MCP_URL}`;\nconst CLI_COMMANDS = [\"export CONTEXT_DEV_API_KEY=your_api_key\", \"context-dev web web-scrape-md --url https://example.com\"];\n\nexport function Site() {\n  return (\n    <div className=\"w-full max-w-xl rounded-card bg-ring-tint p-2\">\n      <AgentSetupWindow\n        agentPrompt={PROMPT}\n        // The app's own agent logos go here (an <img> or an svg); these icons stand in for them.\n        agents={[\n          { name: \"Claude Code\", icon: <Sparkles /> },\n          { name: \"Codex\", icon: <Bot /> },\n          { name: \"Cursor\", icon: <MousePointer2 /> },\n          { name: \"Hermes\" },\n        ]}\n        onCopy={({ agent, method }) => toast.success(agent ? `Prompt copied. Paste it into ${agent}.` : method === \"prompt\" ? \"Prompt copied. Paste it into your agent.\" : \"Copied. Run it in your terminal.\")}\n        methods={[\n          { value: \"prompt\", label: \"Prompt\", copyText: PROMPT, content: <SetupPrompt segments={PROMPT_SEGMENTS} /> },\n          {\n            value: \"mcp\",\n            label: \"MCP\",\n            copyText: MCP_COMMAND,\n            content: (\n              <>\n                <SetupComment order={0}># Claude Code</SetupComment>\n                <SetupLine order={1}>\n                  claude mcp add --transport http --scope user context <SetupUrl>{MCP_URL}</SetupUrl>\n                </SetupLine>\n                <SetupComment order={2}>\n                  # Any other MCP client: add <SetupUrl>{MCP_URL}</SetupUrl>\n                </SetupComment>\n              </>\n            ),\n          },\n          {\n            value: \"cli\",\n            label: \"CLI\",\n            copyText: CLI_COMMANDS.join(\"\\n\"),\n            content: (\n              <>\n                <SetupComment order={0}>\n                  # Install: <SetupUrl>docs.context.dev/install-cli</SetupUrl>\n                </SetupComment>\n                {CLI_COMMANDS.map((command, i) => (\n                  <SetupLine key={command} order={i + 1}>\n                    {command}\n                  </SetupLine>\n                ))}\n              </>\n            ),\n          },\n        ]}\n      />\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react",
+    "sonner"
+  ],
+  "requires": [
+    "theme",
+    "copy-button",
+    "tabs",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/agent-setup-window.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Check, Copy, Terminal } from \"lucide-react\";\n\nimport { useCopy } from \"@/components/ui/copy-button\";\nimport { Tabs, TabsContent, TabsList, TabsTrigger } from \"@/components/ui/tabs\";\nimport { cn } from \"@/lib/utils\";\n\n// The home page's agent setup window: the code window's chrome with the setup methods (Prompt, MCP, CLI) as small tabs,\n// a row of agent logos that copy the prompt for that agent, and one copy button for what is showing. Panels crossfade\n// in one grid cell, so the window keeps the tallest panel's height and never jumps; the prompt's words fade in one by\n// one each time its tab is picked. While the window is on screen it moves to the next method every six seconds,\n// pausing while the pointer or focus is inside it; reduced motion turns both the cycling and the reveal off.\n\nexport type AgentSetupMethod = { value: string; label: string; copyText: string; content: React.ReactNode };\nexport type SetupAgent = { name: string; icon?: React.ReactNode };\nexport type AgentSetupCopy = { method?: string; agent?: string; text: string };\n\nconst CYCLE_MS = 6000;\nconst WORD_STAGGER_MS = 30;\nconst LINE_STAGGER_MS = 120;\n\n// Opacity only: a transform would need inline-block words, which stops a long URL wrapping at its hyphen. The site\n// plays this at 400ms with a 4px blur; it is held to 300ms here. `backwards` holds each word hidden through its delay,\n// and a paused animation keeps it hidden until the window is first seen.\nconst revealClass = \"animate-fade-in [animation-duration:var(--ds-duration-slow)] motion-reduce:animate-none\";\nconst RevealContext = React.createContext(true);\nfunction useRevealStyle(order: number, staggerMs: number): React.CSSProperties {\n  const playing = React.useContext(RevealContext);\n  return { animationDelay: `${order * staggerMs}ms`, animationFillMode: \"backwards\", animationPlayState: playing ? \"running\" : \"paused\" };\n}\n\nconst chromeButtonClass =\n  \"inline-flex size-7 shrink-0 items-center justify-center rounded-card outline-none transition-colors duration-150 ease-out hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/60 motion-reduce:transition-none\";\n\n/** A link-like run inside the window: the syntax theme's property blue, faintly underlined. */\nfunction SetupUrl({ children, className, style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {\n  return (\n    <span style={style} className={cn(\"text-code-property underline decoration-white/20 underline-offset-2\", className)}>\n      {children}\n    </span>\n  );\n}\n\n/** A faded shell comment on its own line. */\nfunction SetupComment({ children, order = 0 }: { children: React.ReactNode; order?: number }) {\n  return (\n    <span style={useRevealStyle(order, LINE_STAGGER_MS)} className={cn(\"block text-white/35\", revealClass)}>\n      {children}\n    </span>\n  );\n}\n\n/** A command on its own line, revealed after the lines before it. */\nfunction SetupLine({ children, order = 0 }: { children: React.ReactNode; order?: number }) {\n  return (\n    <span style={useRevealStyle(order, LINE_STAGGER_MS)} className={cn(\"block\", revealClass)}>\n      {children}\n    </span>\n  );\n}\n\n/** The prompt, word by word; segments marked `url` arrive whole so their highlight never shows half drawn. */\nfunction SetupPrompt({ segments }: { segments: { text: string; url?: boolean }[] }) {\n  const tokens = segments.flatMap((segment, s) => (segment.url ? [{ key: `${s}`, text: segment.text, url: true }] : segment.text.split(/(?<=\\s)/).map((word, w) => ({ key: `${s}-${w}`, text: word, url: false }))));\n  return (\n    <p>\n      {tokens.map((token, order) => (\n        <PromptToken key={token.key} text={token.text} url={token.url} order={order} />\n      ))}\n    </p>\n  );\n}\n\nfunction PromptToken({ text, url, order }: { text: string; url: boolean; order: number }) {\n  const style = useRevealStyle(order, WORD_STAGGER_MS);\n  return url ? (\n    <SetupUrl style={style} className={revealClass}>\n      {text}\n    </SetupUrl>\n  ) : (\n    <span style={style} className={revealClass}>\n      {text}\n    </span>\n  );\n}\n\nfunction AgentSetupWindow({\n  methods,\n  agents = [],\n  agentPrompt,\n  defaultValue,\n  cycle = true,\n  onCopy,\n  className,\n}: {\n  methods: AgentSetupMethod[];\n  /** Agents offered in the chrome bar; picking one copies `agentPrompt` (or the first method's text). */\n  agents?: SetupAgent[];\n  agentPrompt?: string;\n  defaultValue?: string;\n  /** Moves to the next method every six seconds while the window is on screen. */\n  cycle?: boolean;\n  /** Called after a copy, so the app can show its own toast. */\n  onCopy?: (copied: AgentSetupCopy) => void;\n  className?: string;\n}) {\n  const [value, setValue] = React.useState(defaultValue ?? methods[0]?.value ?? \"\");\n  // Bumped on every pick, even of the tab already showing, so its timer and reveal start over.\n  const [pick, setPick] = React.useState(0);\n  const { hasCopied, copy } = useCopy();\n  const active = methods.find((m) => m.value === value) ?? methods[0];\n\n  const ref = React.useRef<HTMLDivElement>(null);\n  const [inView, setInView] = React.useState(false);\n  const [seen, setSeen] = React.useState(false);\n  const [hovered, setHovered] = React.useState(false);\n  const [focusWithin, setFocusWithin] = React.useState(false);\n  const [reducedMotion, setReducedMotion] = React.useState(false);\n\n  React.useEffect(() => {\n    const node = ref.current;\n    if (!node) return;\n    const observer = new IntersectionObserver(\n      ([entry]) => {\n        setInView(entry.isIntersecting);\n        if (entry.isIntersecting) setSeen(true);\n      },\n      { threshold: 0.4 },\n    );\n    observer.observe(node);\n    const query = window.matchMedia(\"(prefers-reduced-motion: reduce)\");\n    const onChange = () => setReducedMotion(query.matches);\n    onChange();\n    query.addEventListener(\"change\", onChange);\n    return () => {\n      observer.disconnect();\n      query.removeEventListener(\"change\", onChange);\n    };\n  }, []);\n\n  // The time a method has already been on screen, so a pause (hover, focus, scrolling away) resumes rather than restarts.\n  const shown = React.useRef({ value, pick, ms: 0 });\n  const running = cycle && methods.length > 1 && inView && !hovered && !focusWithin && !reducedMotion;\n  React.useEffect(() => {\n    if (!running) return;\n    if (shown.current.value !== value || shown.current.pick !== pick) shown.current = { value, pick, ms: 0 };\n    const current = shown.current;\n    const startedAt = performance.now();\n    const timer = window.setTimeout(() => {\n      const index = methods.findIndex((m) => m.value === value);\n      setValue(methods[(index + 1) % methods.length].value);\n    }, CYCLE_MS - current.ms);\n    return () => {\n      window.clearTimeout(timer);\n      current.ms += performance.now() - startedAt;\n    };\n  }, [running, value, pick, methods]);\n\n  const copyActive = async () => {\n    if (!active) return;\n    await copy(active.copyText);\n    onCopy?.({ method: active.value, text: active.copyText });\n  };\n\n  const copyForAgent = async (agent: SetupAgent) => {\n    const text = agentPrompt ?? methods[0]?.copyText ?? \"\";\n    try {\n      await navigator.clipboard.writeText(text);\n    } catch {\n      return;\n    }\n    onCopy?.({ agent: agent.name, text });\n  };\n\n  return (\n    <Tabs\n      ref={ref}\n      value={value}\n      onValueChange={(next) => {\n        setValue(next);\n        setPick((count) => count + 1);\n      }}\n      onPointerEnter={() => setHovered(true)}\n      onPointerLeave={() => setHovered(false)}\n      onFocus={() => setFocusWithin(true)}\n      onBlur={(event) => {\n        if (!event.currentTarget.contains(event.relatedTarget)) setFocusWithin(false);\n      }}\n      data-slot=\"agent-setup-window\"\n      className={cn(\n        \"gap-0 overflow-hidden rounded-card bg-code text-left text-white shadow-[0_var(--ds-space-2)_var(--ds-space-10)_color-mix(in_srgb,var(--ds-color-black)_18%,transparent)] ring-1 ring-white/10\",\n        className,\n      )}\n    >\n      <div className=\"flex items-center gap-2 border-b border-white/10 px-4 py-2\">\n        <span aria-hidden=\"true\" className=\"size-3 shrink-0 rounded-pill bg-window-close\" />\n        <span aria-hidden=\"true\" className=\"size-3 shrink-0 rounded-pill bg-window-minimize\" />\n        <span aria-hidden=\"true\" className=\"size-3 shrink-0 rounded-pill bg-window-zoom\" />\n        {/* The site's brand tabs turned for the dark bar: a faint white track, a white outline gliding to the picked\n            method. Until the pill lands the picked trigger draws the same outline itself. */}\n        <TabsList variant=\"pill\" aria-label=\"Agent setup method\" pillClassName=\"border-white bg-transparent\" className=\"ml-2 gap-0.5 border-white/15 bg-transparent p-0.5 text-white/60\">\n          {methods.map((method) => (\n            <TabsTrigger\n              key={method.value}\n              value={method.value}\n              className=\"flex h-auto items-center gap-1.5 px-2.5 py-1 text-caption leading-normal font-normal text-white/60 hover:text-white focus-visible:outline-white/60 data-[state=active]:border-white data-[state=active]:bg-transparent data-[state=active]:text-white\"\n            >\n              {method.label}\n            </TabsTrigger>\n          ))}\n        </TabsList>\n        {agents.length > 0 && (\n          <div className=\"ml-auto hidden items-center gap-0.5 border-r border-white/10 pr-1.5 sm:flex\">\n            {agents.map((agent) => (\n              <button\n                key={agent.name}\n                type=\"button\"\n                onClick={() => copyForAgent(agent)}\n                aria-label={`Copy the setup prompt for ${agent.name}`}\n                title={agent.name}\n                className={cn(chromeButtonClass, \"group/agent\")}\n              >\n                {/* The logo presses in a step when picked. */}\n                <span className=\"flex text-white/60 transition-transform duration-200 ease-out group-active/agent:scale-90 motion-reduce:transition-none [&_img]:size-4.5 [&_svg]:size-4.5\">\n                  {agent.icon ?? <Terminal aria-hidden=\"true\" />}\n                </span>\n              </button>\n            ))}\n          </div>\n        )}\n        <button\n          type=\"button\"\n          onClick={copyActive}\n          aria-label={hasCopied ? \"Copied\" : `Copy the ${active?.label} setup`}\n          className={cn(chromeButtonClass, \"ml-auto text-white/45 hover:text-white [&_svg]:size-3.5\", agents.length > 0 && \"sm:ml-1\")}\n        >\n          {hasCopied ? <Check aria-hidden=\"true\" strokeWidth={1.75} /> : <Copy aria-hidden=\"true\" strokeWidth={1.5} />}\n        </button>\n      </div>\n      <RevealContext.Provider value={seen}>\n        {/* Every panel shares one grid cell, so the window keeps the tallest panel's height and never jumps between tabs. */}\n        <div className=\"grid p-5 font-mono text-caption leading-code break-words text-white/85 sm:text-body-sm\">\n          {methods.map((method) => (\n            <TabsContent\n              key={method.value}\n              value={method.value}\n              forceMount\n              className=\"col-start-1 row-start-1 mt-0 transition-[opacity,filter,visibility] duration-200 ease-out data-[state=inactive]:invisible data-[state=inactive]:opacity-0 data-[state=inactive]:blur-[2px] motion-reduce:transition-none\"\n            >\n              {/* Keyed on the pick, so the panel that is showing replays its reveal. */}\n              <div key={method.value === value ? `on-${pick}` : \"off\"}>{method.content}</div>\n            </TabsContent>\n          ))}\n        </div>\n      </RevealContext.Provider>\n    </Tabs>\n  );\n}\n\nexport { AgentSetupWindow, SetupPrompt, SetupUrl, SetupComment, SetupLine };\n"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "context-menu",
+  "type": "ui",
+  "title": "Context Menu",
+  "description": "A right-click menu drawn as the dashboard's menus: a framed panel of roomy muted rows with caption labels, shortcuts and red destructive rows.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Offer the actions of a row or an object where people already right-click: a monitor in a list, a file in a batch, a node in a JSON tree. Every action here must also be reachable another way (a row's menu button), since right-click is hidden and absent on touch.",
+  "avoid": [
+    "Actions only found here",
+    "Long menus (more than about ten rows)",
+    "Icons on some rows and not others in the same group"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/context-menu.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add context-menu",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/menu.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/menu.tsx",
+        "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+        "retained": false,
+        "exports": [
+          "MENU_SURFACE_CLASS",
+          "MENU_ROW_CLASS",
+          "MENU_LABEL_CLASS",
+          "MENU_SEPARATOR_CLASS",
+          "MENU_LIST_CLASS",
+          "SelectOption",
+          "SelectMenu",
+          "MenuAction",
+          "ActionMenu"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/context-menu.d.ts",
+      "content": "import * as React from \"react\";\nimport * as ContextMenuPrimitive from \"@radix-ui/react-context-menu\";\ndeclare function ContextMenu(props: React.ComponentProps<typeof ContextMenuPrimitive.Root>): React.JSX.Element;\ndeclare function ContextMenuTrigger(props: React.ComponentProps<typeof ContextMenuPrimitive.Trigger>): React.JSX.Element;\ndeclare function ContextMenuGroup(props: React.ComponentProps<typeof ContextMenuPrimitive.Group>): React.JSX.Element;\ndeclare function ContextMenuPortal(props: React.ComponentProps<typeof ContextMenuPrimitive.Portal>): React.JSX.Element;\ndeclare function ContextMenuSub(props: React.ComponentProps<typeof ContextMenuPrimitive.Sub>): React.JSX.Element;\ndeclare function ContextMenuRadioGroup(props: React.ComponentProps<typeof ContextMenuPrimitive.RadioGroup>): React.JSX.Element;\ndeclare function ContextMenuContent({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Content>): React.JSX.Element;\ndeclare function ContextMenuItem({ className, inset, variant, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Item> & {\n    inset?: boolean;\n    variant?: \"default\" | \"destructive\";\n}): React.JSX.Element;\ndeclare function ContextMenuSubTrigger({ className, inset, children, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubTrigger> & {\n    inset?: boolean;\n}): React.JSX.Element;\ndeclare function ContextMenuSubContent({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>): React.JSX.Element;\ndeclare function ContextMenuCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.CheckboxItem>): React.JSX.Element;\ndeclare function ContextMenuRadioItem({ className, children, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.RadioItem>): React.JSX.Element;\ndeclare function ContextMenuLabel({ className, inset, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Label> & {\n    inset?: boolean;\n}): React.JSX.Element;\ndeclare function ContextMenuSeparator({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>): React.JSX.Element;\ndeclare function ContextMenuShortcut({ className, ...props }: React.ComponentProps<\"span\">): React.JSX.Element;\nexport { ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuGroup, ContextMenuItem, ContextMenuLabel, ContextMenuPortal, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger, };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/context-menu/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/context-menu/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/context-menu.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Copy, ExternalLink, Pause, Pencil, Trash2 } from \"lucide-react\";\n\nimport {\n  ContextMenu,\n  ContextMenuCheckboxItem,\n  ContextMenuContent,\n  ContextMenuItem,\n  ContextMenuLabel,\n  ContextMenuRadioGroup,\n  ContextMenuRadioItem,\n  ContextMenuSeparator,\n  ContextMenuShortcut,\n  ContextMenuSub,\n  ContextMenuSubContent,\n  ContextMenuSubTrigger,\n  ContextMenuTrigger,\n} from \"@/components/ui/context-menu\";\n\nfunction Menu() {\n  const [alerts, setAlerts] = React.useState(true);\n  const [interval, setInterval] = React.useState(\"hourly\");\n  return (\n    <ContextMenuContent className=\"w-56\">\n      <ContextMenuLabel>stripe.com/pricing</ContextMenuLabel>\n      <ContextMenuItem>\n        <ExternalLink strokeWidth={1.5} />\n        Open page\n      </ContextMenuItem>\n      <ContextMenuItem>\n        <Copy strokeWidth={1.5} />\n        Copy URL\n        <ContextMenuShortcut>⌘C</ContextMenuShortcut>\n      </ContextMenuItem>\n      <ContextMenuItem>\n        <Pencil strokeWidth={1.5} />\n        Rename\n      </ContextMenuItem>\n      <ContextMenuSeparator />\n      <ContextMenuCheckboxItem checked={alerts} onCheckedChange={(on) => setAlerts(on === true)}>\n        Email me on change\n      </ContextMenuCheckboxItem>\n      <ContextMenuSub>\n        <ContextMenuSubTrigger>Check every</ContextMenuSubTrigger>\n        <ContextMenuSubContent>\n          <ContextMenuRadioGroup value={interval} onValueChange={setInterval}>\n            <ContextMenuRadioItem value=\"15m\">15 minutes</ContextMenuRadioItem>\n            <ContextMenuRadioItem value=\"hourly\">Hour</ContextMenuRadioItem>\n            <ContextMenuRadioItem value=\"daily\">Day</ContextMenuRadioItem>\n          </ContextMenuRadioGroup>\n        </ContextMenuSubContent>\n      </ContextMenuSub>\n      <ContextMenuItem disabled>\n        <Pause strokeWidth={1.5} />\n        Pause (already paused)\n      </ContextMenuItem>\n      <ContextMenuSeparator />\n      <ContextMenuItem variant=\"destructive\">\n        <Trash2 strokeWidth={1.5} />\n        Delete monitor\n      </ContextMenuItem>\n    </ContextMenuContent>\n  );\n}\n\nexport function Site() {\n  return (\n    <ContextMenu>\n      <ContextMenuTrigger className=\"grid h-36 w-full max-w-sm place-items-center rounded-card border border-dashed border-line-strong text-body-sm text-fg-muted\">Right-click this monitor</ContextMenuTrigger>\n      <Menu />\n    </ContextMenu>\n  );\n}\n\nexport function Product() {\n  return (\n    <ContextMenu>\n      <ContextMenuTrigger className=\"flex w-full max-w-sm items-center justify-between rounded-card bg-surface px-4 py-3 shadow-card\">\n        <span className=\"grid gap-0.5\">\n          <span className=\"text-body-sm text-fg\">stripe.com/pricing</span>\n          <span className=\"text-caption text-fg-subtle\">Checked 4 minutes ago · right-click for actions</span>\n        </span>\n        <span className=\"font-mono text-caption text-success\">Live</span>\n      </ContextMenuTrigger>\n      <Menu />\n    </ContextMenu>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "surface",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-context-menu",
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/context-menu.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as ContextMenuPrimitive from \"@radix-ui/react-context-menu\";\nimport { Check, ChevronRight, Circle } from \"lucide-react\";\n\nimport { usePortalContainer } from \"@/lib/surface\";\nimport { cn } from \"@/lib/utils\";\n\n// A right-click menu drawn as the dashboard's menus (the dropdown menu): one panel with shell corners in a 6px frame on\n// a hairline and a soft shadow, roomy rows 10px in from its sides in muted body-sm that wash and darken under the\n// pointer, 14px icons at stroke 1.5, section labels in caption, separators edge to edge, shortcuts in caption at the\n// right, destructive rows red. The panel grows out of the pointer's corner in a short pop; moving the highlight is\n// instant (it is used by keyboard and many times a day).\nconst PANEL = \"ds-scrollbar z-50 flex max-h-(--radix-context-menu-content-available-height) min-w-48 origin-(--radix-context-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0\";\nconst ROW = \"relative flex w-full cursor-default items-center gap-2 rounded-control px-2.5 py-1.5 text-body-sm leading-5 text-fg-muted outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg data-[inset]:pl-8 [&_svg]:size-3.5 [&_svg]:shrink-0\";\nconst DESTRUCTIVE = \"text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger\";\n\nfunction ContextMenu(props: React.ComponentProps<typeof ContextMenuPrimitive.Root>) {\n  return <ContextMenuPrimitive.Root data-slot=\"context-menu\" {...props} />;\n}\n\nfunction ContextMenuTrigger(props: React.ComponentProps<typeof ContextMenuPrimitive.Trigger>) {\n  return <ContextMenuPrimitive.Trigger data-slot=\"context-menu-trigger\" {...props} />;\n}\n\nfunction ContextMenuGroup(props: React.ComponentProps<typeof ContextMenuPrimitive.Group>) {\n  return <ContextMenuPrimitive.Group data-slot=\"context-menu-group\" {...props} />;\n}\n\nfunction ContextMenuPortal(props: React.ComponentProps<typeof ContextMenuPrimitive.Portal>) {\n  return <ContextMenuPrimitive.Portal data-slot=\"context-menu-portal\" container={usePortalContainer()} {...props} />;\n}\n\nfunction ContextMenuSub(props: React.ComponentProps<typeof ContextMenuPrimitive.Sub>) {\n  return <ContextMenuPrimitive.Sub data-slot=\"context-menu-sub\" {...props} />;\n}\n\nfunction ContextMenuRadioGroup(props: React.ComponentProps<typeof ContextMenuPrimitive.RadioGroup>) {\n  return <ContextMenuPrimitive.RadioGroup data-slot=\"context-menu-radio-group\" {...props} />;\n}\n\nfunction ContextMenuContent({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {\n  return (\n    <ContextMenuPortal>\n      <ContextMenuPrimitive.Content data-slot=\"context-menu-content\" collisionPadding={8} className={cn(PANEL, className)} {...props} />\n    </ContextMenuPortal>\n  );\n}\n\nfunction ContextMenuItem({ className, inset, variant = \"default\", ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Item> & { inset?: boolean; variant?: \"default\" | \"destructive\" }) {\n  return <ContextMenuPrimitive.Item data-slot=\"context-menu-item\" data-inset={inset || undefined} data-variant={variant} className={cn(ROW, variant === \"destructive\" && DESTRUCTIVE, className)} {...props} />;\n}\n\nfunction ContextMenuSubTrigger({ className, inset, children, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubTrigger> & { inset?: boolean }) {\n  return (\n    <ContextMenuPrimitive.SubTrigger data-slot=\"context-menu-sub-trigger\" data-inset={inset || undefined} className={cn(ROW, \"data-[state=open]:bg-wash-hover data-[state=open]:text-fg\", className)} {...props}>\n      {children}\n      <ChevronRight className=\"ml-auto\" strokeWidth={1.5} />\n    </ContextMenuPrimitive.SubTrigger>\n  );\n}\n\nfunction ContextMenuSubContent({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {\n  return (\n    <ContextMenuPortal>\n      <ContextMenuPrimitive.SubContent data-slot=\"context-menu-sub-content\" collisionPadding={8} className={cn(PANEL, \"min-w-40\", className)} {...props} />\n    </ContextMenuPortal>\n  );\n}\n\nfunction ContextMenuCheckboxItem({ className, children, checked, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.CheckboxItem>) {\n  return (\n    <ContextMenuPrimitive.CheckboxItem data-slot=\"context-menu-checkbox-item\" checked={checked} className={cn(ROW, \"pr-8\", className)} {...props}>\n      {children}\n      <ContextMenuPrimitive.ItemIndicator className=\"absolute right-2.5 text-brand\">\n        <Check strokeWidth={1.75} />\n      </ContextMenuPrimitive.ItemIndicator>\n    </ContextMenuPrimitive.CheckboxItem>\n  );\n}\n\nfunction ContextMenuRadioItem({ className, children, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.RadioItem>) {\n  return (\n    <ContextMenuPrimitive.RadioItem data-slot=\"context-menu-radio-item\" className={cn(ROW, \"pr-8 data-[state=checked]:text-fg\", className)} {...props}>\n      {children}\n      <ContextMenuPrimitive.ItemIndicator className=\"absolute right-3 text-brand\">\n        <Circle className=\"size-2! fill-current\" strokeWidth={0} />\n      </ContextMenuPrimitive.ItemIndicator>\n    </ContextMenuPrimitive.RadioItem>\n  );\n}\n\nfunction ContextMenuLabel({ className, inset, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Label> & { inset?: boolean }) {\n  return <ContextMenuPrimitive.Label data-slot=\"context-menu-label\" data-inset={inset || undefined} className={cn(\"px-2.5 pt-1 pb-1.5 text-caption text-fg-subtle data-[inset]:pl-8\", className)} {...props} />;\n}\n\nfunction ContextMenuSeparator({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Separator>) {\n  return <ContextMenuPrimitive.Separator data-slot=\"context-menu-separator\" className={cn(\"-mx-1.5 my-1 h-px bg-line-subtle\", className)} {...props} />;\n}\n\nfunction ContextMenuShortcut({ className, ...props }: React.ComponentProps<\"span\">) {\n  return <span data-slot=\"context-menu-shortcut\" className={cn(\"ml-auto pl-4 text-caption text-fg-subtle\", className)} {...props} />;\n}\n\nexport {\n  ContextMenu,\n  ContextMenuCheckboxItem,\n  ContextMenuContent,\n  ContextMenuGroup,\n  ContextMenuItem,\n  ContextMenuLabel,\n  ContextMenuPortal,\n  ContextMenuRadioGroup,\n  ContextMenuRadioItem,\n  ContextMenuSeparator,\n  ContextMenuShortcut,\n  ContextMenuSub,\n  ContextMenuSubContent,\n  ContextMenuSubTrigger,\n  ContextMenuTrigger,\n};\n"
+    }
+  ]
+}

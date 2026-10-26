@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "revision": "ed653d5c07e03fa1a76925522113e7f630790a4c",
+  "name": "toggle-group",
+  "type": "ui",
+  "title": "Toggle Group",
+  "description": "Toggles joined on the segmented control's gray track, the pressed ones as white keys; an outline variant joins outline keys.",
+  "surface": "both",
+  "kinds": [],
+  "usage": "Choose one (type=\"single\") or several (type=\"multiple\") view options that belong together (text alignment, which APIs a chart shows, a request's formats). For a form value with one answer, SegmentedControl's gliding pill is the closer match.",
+  "avoid": [
+    "Mixing icon-only and labelled items without aria-labels",
+    "More than six items",
+    "A blue pressed item"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/toggle-group.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add toggle-group",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "context-dashboard c0ddf7a src/components/ui/form.tsx (SegmentedControl, segmented); extended to several pressed items",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "context-dashboard",
+        "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+        "path": "src/components/ui/form.tsx",
+        "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+        "retained": false,
+        "exports": [
+          "INPUT_CLASS",
+          "TEXTAREA_CLASS",
+          "Field",
+          "SegmentedControl",
+          "TagsInput"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/ui/toggle-group.d.ts",
+      "content": "import * as React from \"react\";\nimport * as ToggleGroupPrimitive from \"@radix-ui/react-toggle-group\";\nimport { type VariantProps } from \"class-variance-authority\";\nimport { toggleVariants } from \"@/components/ui/toggle\";\ndeclare function ToggleGroup({ className, variant, size, spacing, orientation, children, ...props }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants> & {\n    spacing?: number;\n    orientation?: \"horizontal\" | \"vertical\";\n}): React.JSX.Element;\ndeclare function ToggleGroupItem({ className, children, variant, size, ...props }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> & VariantProps<typeof toggleVariants>): React.JSX.Element;\nexport { ToggleGroup, ToggleGroupItem };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/toggle-group/Site"
+    },
+    {
+      "name": "Product",
+      "url": "https://context-ds.vercel.app/preview/toggle-group/Product"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/toggle-group.tsx",
+      "content": "\"use client\";\n\nimport { useState } from \"react\";\nimport { AlignCenter, AlignLeft, AlignRight } from \"lucide-react\";\n\nimport { ToggleGroup, ToggleGroupItem } from \"@/components/ui/toggle-group\";\n\n// On a product page: which language the code sample shows.\nexport function Site() {\n  return (\n    <ToggleGroup type=\"single\" defaultValue=\"ts\" aria-label=\"Language\">\n      <ToggleGroupItem value=\"ts\">TypeScript</ToggleGroupItem>\n      <ToggleGroupItem value=\"py\">Python</ToggleGroupItem>\n      <ToggleGroupItem value=\"curl\">cURL</ToggleGroupItem>\n    </ToggleGroup>\n  );\n}\n\n// On a usage chart: which APIs to show (several at once), then the outline and flush variants.\nexport function Product() {\n  const [apis, setApis] = useState([\"scrape\", \"search\"]);\n  return (\n    <div className=\"grid gap-5\">\n      <div className=\"grid gap-2\">\n        <ToggleGroup type=\"multiple\" value={apis} onValueChange={setApis} aria-label=\"APIs on the chart\">\n          <ToggleGroupItem value=\"scrape\">Scrape</ToggleGroupItem>\n          <ToggleGroupItem value=\"search\">Search</ToggleGroupItem>\n          <ToggleGroupItem value=\"crawl\">Crawl</ToggleGroupItem>\n          <ToggleGroupItem value=\"brand\">Brand</ToggleGroupItem>\n        </ToggleGroup>\n        <p className=\"text-caption text-fg-subtle\">{apis.length ? `Showing ${apis.join(\", \")}.` : \"Pick at least one API.\"}</p>\n      </div>\n      <ToggleGroup type=\"single\" variant=\"outline\" defaultValue=\"left\" aria-label=\"Alignment\">\n        <ToggleGroupItem value=\"left\" aria-label=\"Align left\">\n          <AlignLeft strokeWidth={1.5} />\n        </ToggleGroupItem>\n        <ToggleGroupItem value=\"center\" aria-label=\"Align center\">\n          <AlignCenter strokeWidth={1.5} />\n        </ToggleGroupItem>\n        <ToggleGroupItem value=\"right\" aria-label=\"Align right\">\n          <AlignRight strokeWidth={1.5} />\n        </ToggleGroupItem>\n      </ToggleGroup>\n      <ToggleGroup type=\"single\" size=\"sm\" spacing={0} defaultValue=\"7d\" aria-label=\"Range\">\n        <ToggleGroupItem value=\"24h\">24h</ToggleGroupItem>\n        <ToggleGroupItem value=\"7d\">7d</ToggleGroupItem>\n        <ToggleGroupItem value=\"30d\">30d</ToggleGroupItem>\n        <ToggleGroupItem value=\"90d\" disabled>90d</ToggleGroupItem>\n      </ToggleGroup>\n    </div>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "toggle",
+    "utils"
+  ],
+  "packages": [
+    "@radix-ui/react-toggle-group",
+    "class-variance-authority"
+  ],
+  "files": [
+    {
+      "path": "components/ui/toggle-group.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport * as ToggleGroupPrimitive from \"@radix-ui/react-toggle-group\";\nimport { type VariantProps } from \"class-variance-authority\";\n\nimport { toggleVariants } from \"@/components/ui/toggle\";\nimport { cn } from \"@/lib/utils\";\n\n// Toggles joined into one control, as the segmented control draws it (form.tsx SegmentedControl, `segmented`): a pale\n// gray track with control corners and a 2px inset; each choice is muted body-sm, and the pressed ones are white keys with\n// the segmented pill's soft drop. With `spacing={0}` the choices sit flush. `variant=\"outline\"` drops the track: joined\n// outline keys with a shared edge. Choosing is instant (no gliding key): unlike the segmented control's single value,\n// several can be on at once.\nconst ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants> & { spacing?: number; orientation?: \"horizontal\" | \"vertical\" }>({\n  size: \"default\",\n  variant: \"default\",\n  spacing: 0.5,\n  orientation: \"horizontal\",\n});\n\nconst INNER_RADIUS = \"rounded-[calc(var(--ds-radius-control)-0.125rem)]\";\n\nfunction ToggleGroup({\n  className,\n  variant = \"default\",\n  size = \"default\",\n  spacing,\n  orientation = \"horizontal\",\n  children,\n  ...props\n}: React.ComponentProps<typeof ToggleGroupPrimitive.Root> & VariantProps<typeof toggleVariants> & { spacing?: number; orientation?: \"horizontal\" | \"vertical\" }) {\n  const gap = spacing ?? (variant === \"outline\" ? 0 : 0.5);\n  return (\n    <ToggleGroupPrimitive.Root\n      data-slot=\"toggle-group\"\n      data-variant={variant}\n      data-size={size}\n      data-spacing={gap}\n      data-orientation={orientation}\n      orientation={orientation}\n      style={{ \"--gap\": gap } as React.CSSProperties}\n      className={cn(\n        \"group/toggle-group flex w-fit max-w-full items-center gap-[calc(var(--spacing)*var(--gap))] data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch\",\n        variant === \"default\" && \"overflow-x-auto rounded-control bg-neutral-5 p-0.5 [scrollbar-width:none]\",\n        className,\n      )}\n      {...props}\n    >\n      <ToggleGroupContext.Provider value={{ variant, size, spacing: gap, orientation }}>{children}</ToggleGroupContext.Provider>\n    </ToggleGroupPrimitive.Root>\n  );\n}\n\nfunction ToggleGroupItem({ className, children, variant, size, ...props }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> & VariantProps<typeof toggleVariants>) {\n  const context = React.useContext(ToggleGroupContext);\n  const v = context.variant || variant || \"default\";\n  const flush = context.spacing === 0;\n  return (\n    <ToggleGroupPrimitive.Item\n      data-slot=\"toggle-group-item\"\n      data-variant={v}\n      data-size={context.size || size}\n      data-spacing={context.spacing}\n      className={cn(\n        toggleVariants({ variant: v, size: context.size || size }),\n        // In the track the pressed choice is the white key, as in the segmented control.\n        v === \"default\" && cn(INNER_RADIUS, \"hover:bg-transparent data-[state=on]:bg-surface data-[state=on]:shadow-[0_1px_3px_rgb(0_0_0/0.08),0_0_0_1px_rgb(0_0_0/0.03)]\"),\n        // Joined outline keys share their edges and square their inner corners.\n        v === \"outline\" && flush && \"group-data-[orientation=horizontal]/toggle-group:not-first:-ml-px group-data-[orientation=horizontal]/toggle-group:not-first:rounded-l-none group-data-[orientation=horizontal]/toggle-group:not-last:rounded-r-none group-data-[orientation=vertical]/toggle-group:not-first:-mt-px group-data-[orientation=vertical]/toggle-group:not-first:rounded-t-none group-data-[orientation=vertical]/toggle-group:not-last:rounded-b-none data-[state=on]:z-10\",\n        \"focus-visible:z-20\",\n        className,\n      )}\n      {...props}\n    >\n      {children}\n    </ToggleGroupPrimitive.Item>\n  );\n}\n\nexport { ToggleGroup, ToggleGroupItem };\n"
+    }
+  ]
+}
