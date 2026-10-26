@@ -11,7 +11,7 @@ import { findItem, items } from "@www/lib/registry";
 export const framed = (type: string) => type === "site" || type === "block";
 
 // Overlays use their own viewport so focus traps, scroll locks, and panels never cover the library navigation.
-const OVERLAYS = new Set(["sheet", "dialog", "popover", "dropdown-menu", "select", "label", "workspace-switcher", "user-menu", "credits-menu", "app-top-bar", "command", "usage-summary", "stat-card", "glyph-card", "tag-filter", "data-toolbar", "empty-state", "page", "settings-section"]);
+const OVERLAYS = new Set(["sheet", "dialog", "popover", "dropdown-menu", "select", "label", "workspace-switcher", "user-menu", "credits-menu", "app-top-bar", "command", "usage-summary", "stat-card", "glyph-card", "tag-filter", "data-toolbar", "empty-state", "page", "settings-section", "alert-dialog", "combobox", "context-menu", "date-picker", "drawer", "hover-card", "menubar", "navigation-menu", "sidebar", "toast"]);
 
 export function generateStaticParams() {
   return items.flatMap((i) => Object.keys(examples[i.name] ?? {}).map((example) => ({ name: i.name, example })));

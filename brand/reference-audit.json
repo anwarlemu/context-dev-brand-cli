@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-20T18:06:55.988Z",
+  "checkedAt": "2026-10-26T11:57:35.756Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -785,6 +785,66 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "alert-dialog",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/alert-dialog.tsx",
+          "sha256": "0ce62978d5fbd5992c22fc9cb1aa484a08dec778b72ac5a8797914491bc412a5"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/dialog.tsx",
+          "sha256": "45b7c747c0394dd24e601005ace7294c31bfaff09aa44b988da1e20b448f66f1",
+          "retained": false,
+          "exports": [
+            "Dialog"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/settings/settings-page.tsx",
+          "sha256": "71b6314133504ed6c34b75261acfeafd875e298dec815f706e8d0c09dfc81757",
+          "retained": false,
+          "exports": [
+            "SettingsPage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "alert",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/alert.tsx",
+          "sha256": "02922f752b9afeb004e8acb167632b7dc8135274f12064106fedeccb3de947c9"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/dashboard-ui/banner.tsx",
+          "sha256": "838054533e72d1c773d317d189759ac7d439efa44f0270e92583c9471a785aa8",
+          "retained": false,
+          "exports": [
+            "Banner"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "alternative-sections",
       "surface": "site",
       "kind": "website",
@@ -1041,6 +1101,67 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "aspect-ratio",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/aspect-ratio.tsx",
+          "sha256": "b71a81ecbd39a99cf82f470981b1365229c2953d03ebd68c278d30667d6eb50d"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/skeleton.tsx",
+          "sha256": "8ba92bcd099b12b2bebb2aa8008808c66b2f502c4f2bebc9d93c1e3ea2da2980",
+          "retained": false,
+          "exports": [
+            "Skeleton"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "attachment",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/attachment.tsx",
+          "sha256": "d9897a4ebce390d6c8d18f7c0c81f94ee5547bf42e6aacb375231f148c4a7804"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/dots/glyph-tile.tsx",
+          "sha256": "b718047bde70707b25ca56ffe0e91ad63130fb63af4014595b82dcbd4232cf05",
+          "retained": false,
+          "exports": [
+            "GlyphTile",
+            "StillGlyph"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/playground/code-card.tsx",
+          "sha256": "a511a282fdb664b654c7cd0eba3c84cd63beb0ad8e4b795f9cd4dc031485ce86",
+          "retained": false,
+          "exports": [
+            "CodeCard"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "avatar",
@@ -1409,6 +1530,96 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "breadcrumb",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/breadcrumb.tsx",
+          "sha256": "f4dc5449f55a9e85b9492f8003cde6b2b3cf73b13e1a2a9663a9935801c2ae4a"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/batches/batch-detail.tsx",
+          "sha256": "1206bd4fb7956ffc37efd01fd1026161dba47d0407c11fe61a4bea31a186fbe4",
+          "retained": false,
+          "exports": [
+            "BatchDetail"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "bubble",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/bubble.tsx",
+          "sha256": "a90ef4e1b87a3e4ffd886ef5b706dfe614fe4f50edb9257e16a65b0612901f31"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/support-chat.tsx",
+          "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+          "retained": false,
+          "exports": [
+            "SupportChat"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "button-group",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/button-group.tsx",
+          "sha256": "b3d2f954104e0d959e7a4e290c909a4c3e4fed2f8ef9971febd631820c68db7d"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/button.tsx",
+          "sha256": "4471d9c1213fb690c714622f54d8e0f6fc881d6291b024de0c01235bfc2e273b",
+          "retained": false,
+          "exports": [
+            "buttonClassName",
+            "Button"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "button",
       "surface": "both",
       "kind": "website",
@@ -1440,6 +1651,43 @@
             "BRAND_OUTLINE_PILL_CLASS",
             "BRAND_OUTLINE_PILL_ON_BLUE_CLASS",
             "BRAND_BLACK_PILL_CLASS"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "calendar",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/calendar.tsx",
+          "sha256": "3e3f7f605ddf6cf057393fb421cf99e461ac39cc50427d1af2b6cd3a7d2cc223"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/button.tsx",
+          "sha256": "4471d9c1213fb690c714622f54d8e0f6fc881d6291b024de0c01235bfc2e273b",
+          "retained": false,
+          "exports": [
+            "buttonClassName",
+            "Button"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/lib/format-date.ts",
+          "sha256": "300b16f8f3a97502926d17e486a9e37bcf8c5bb056c1979ebfe4c61ae255bcde",
+          "retained": false,
+          "exports": [
+            "formatDateTime",
+            "formatDate"
           ]
         }
       ],
@@ -1488,6 +1736,83 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "carousel",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/carousel.tsx",
+          "sha256": "3150d297613bf621a2702ea43bc32965d3b54bfa2990f172546d706384c85dd3"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/CustomerStoriesCarousel.tsx",
+          "sha256": "825299bcc2a9a78a09ea414e7a4adc0321aa8fd53c00a79c9f618f67fd5b5b3d",
+          "retained": false,
+          "exports": [
+            "CustomerStoriesCarousel"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "chart",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/chart.tsx",
+          "sha256": "a32882db77ab19e6ec8f236beb0fffe3c2be31456301e61206b054ffa5702432"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/overview/line-chart.tsx",
+          "sha256": "4bdcd6cc0df9f9706af7f989d8d539c63b1d909ef8ac617df3afc0614dee7abc",
+          "retained": false,
+          "exports": [
+            "ChartSeries",
+            "Y_INTERVALS",
+            "niceMax",
+            "axisLabelIndexes",
+            "LineChart"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/overview/bar-chart.tsx",
+          "sha256": "d99a36a13c6b235e584fa6311b9b97d3c96cfa754ac2f9a8f33ca42601704a5f",
+          "retained": false,
+          "exports": [
+            "BarChart"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/overview/chart-tooltip.tsx",
+          "sha256": "910798d44be97d51c28f694d597019e892501d1b566e7fc50393861407ff4f91",
+          "retained": false,
+          "exports": [
+            "ChartCursor",
+            "ChartTooltipRow",
+            "formatShare",
+            "ChartTooltip"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "checkbox",
       "surface": "product",
       "kind": "dashboard",
@@ -1511,6 +1836,54 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "code-block",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/code-block.tsx",
+          "sha256": "f5afe99347c0ded1cff956647d61c1a9b679b1d27c8014fb03b814ccaa0c47b4"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/playground/json-viewer.tsx",
+          "sha256": "229fccdf8e8a9f5ece15ffe0b0e3ef077eeb06882d11489db11782825ad0cf40",
+          "retained": false,
+          "exports": [
+            "JsonViewer"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/playground/code-card.tsx",
+          "sha256": "a511a282fdb664b654c7cd0eba3c84cd63beb0ad8e4b795f9cd4dc031485ce86",
+          "retained": false,
+          "exports": [
+            "CodeCard"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/code-frame.tsx",
+          "sha256": "204ee7a516440edbe0a28d4037c2804445d73f1d126ad7bd408f0eb3c526c926",
+          "retained": false,
+          "exports": [
+            "TERMINAL_BACKGROUND",
+            "TERMINAL_LABEL_CLASS",
+            "TerminalWindow",
+            "CodeFrame"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "code-card",
@@ -1625,6 +1998,75 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "collapsible",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/collapsible.tsx",
+          "sha256": "262a70a8cc0adafae73d4214621a588378a7d528d130260c3b7b9056d1374eb5"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "3ae05ca3c6d898558a05ab0a968dc5c88cc6fbca",
+          "path": "src/components/dashboard-ui/collapse.tsx",
+          "sha256": "1a4ba7e37cefb4bea4421844c4aab8d4309fd84420dcc8a19df58291ecc12559",
+          "retained": true,
+          "exports": [
+            "Collapse"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/usage/usage-page.tsx",
+          "sha256": "88665c09035bc549aac535885e2b3591dbe84b9f4ba4c20de3911b19672e686c",
+          "retained": false,
+          "exports": [
+            "UsageView",
+            "UsagePage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "combobox",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/combobox.tsx",
+          "sha256": "630edaec6fd2e9c3bd7ae942c82401322078aab66ef7364c3156a75702610c3f"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "command",
@@ -1745,6 +2187,39 @@
           "exports": [
             "metadata",
             "CompetitorComparisonPage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "context-menu",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/context-menu.tsx",
+          "sha256": "59fc76446f560e0635c27ba4558ab0172f7d6985cc3ce70d5163027cdd9049f1"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
           ]
         }
       ],
@@ -1992,6 +2467,32 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "data-table",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/data-table.tsx",
+          "sha256": "9462365b618576a547e0145ff80cf703e7d94fe8f8870e0b0805eca4da915928"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/monitors/monitors-home.tsx",
+          "sha256": "561f65c2548d2b206555b1f7620812a153c262b86bf259df3fa95fcd3864f070",
+          "retained": false,
+          "exports": [
+            "MonitorsSkeleton",
+            "MonitorsHome"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "data-toolbar",
       "surface": "product",
       "kind": "dashboard",
@@ -2018,6 +2519,50 @@
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
     },
     {
+      "name": "date-picker",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/date-picker.tsx",
+          "sha256": "4bcde1dc2ddd5423259541eee01552db6928a7828d02dbe22e14008688bfe3df"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/lib/format-date.ts",
+          "sha256": "300b16f8f3a97502926d17e486a9e37bcf8c5bb056c1979ebfe4c61ae255bcde",
+          "retained": false,
+          "exports": [
+            "formatDateTime",
+            "formatDate"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "dialog",
       "surface": "product",
       "kind": "dashboard",
@@ -2041,6 +2586,50 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "direction",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/direction.tsx",
+          "sha256": "bfadb3e8c4aac146466a894efbebe53c5aff27efc33096c8f031f6134651aaf8"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/tabs.tsx",
+          "sha256": "98fe9ed3a9e0b878305eaee6e61f64e9541785acd56f38a8efdd344f79f1a98a",
+          "retained": false,
+          "exports": [
+            "TabOption",
+            "Tabs"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "docs-link",
@@ -2293,6 +2882,31 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "drawer",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/drawer.tsx",
+          "sha256": "b0148ac079e87039a0b92903d9c3dcdf514f83bb1c82c5e294615f0c8c25b027"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/sidebar.tsx",
+          "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+          "retained": false,
+          "exports": [
+            "Sidebar"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "dropdown-menu",
       "surface": "product",
       "kind": "dashboard",
@@ -2350,6 +2964,43 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "empty",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/empty.tsx",
+          "sha256": "8fd5e47ecd03bac898d1f64e3554330c8d13bb6bad5bbcef64ae6ccad77c51d0"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/monitors/monitors-home.tsx",
+          "sha256": "561f65c2548d2b206555b1f7620812a153c262b86bf259df3fa95fcd3864f070",
+          "retained": false,
+          "exports": [
+            "MonitorsSkeleton",
+            "MonitorsHome"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/dots/glyph-tile.tsx",
+          "sha256": "b718047bde70707b25ca56ffe0e91ad63130fb63af4014595b82dcbd4232cf05",
+          "retained": false,
+          "exports": [
+            "GlyphTile",
+            "StillGlyph"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "faq",
@@ -2541,6 +3192,35 @@
           "retained": false,
           "exports": [
             "CursorClickIcon"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "form",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/form.tsx",
+          "sha256": "a13914d2bb497e53b8d59df4012f5482857719bf27bc70ea5b70ebc5f16adece"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
           ]
         }
       ],
@@ -3348,6 +4028,39 @@
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
     },
     {
+      "name": "hover-card",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/hover-card.tsx",
+          "sha256": "64e9a81aae4676b154450245d1bb93a74401123631386193364386f5614a9c68"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "image-dot-shader",
       "surface": "site",
       "kind": "website",
@@ -3390,6 +4103,64 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "input-group",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/input-group.tsx",
+          "sha256": "27b06787e8c45c09fa70b9123be759c54d32f8de8844fcbba423eae3d954ad35"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "input-otp",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/input-otp.tsx",
+          "sha256": "d786e55f9fd4bfee104731be64611105b24eb6ed2f8841353c3e329904d0aed1"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "input",
       "surface": "both",
       "kind": "website",
@@ -3412,6 +4183,41 @@
             "Field",
             "SegmentedControl",
             "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "item",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/item.tsx",
+          "sha256": "029c72b573dc6e5c9cba75f2a3f36809fe12cdcd883a6d374ae0cc733934ae08"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/settings/settings-page.tsx",
+          "sha256": "71b6314133504ed6c34b75261acfeafd875e298dec815f706e8d0c09dfc81757",
+          "retained": false,
+          "exports": [
+            "SettingsPage"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/sidebar.tsx",
+          "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+          "retained": false,
+          "exports": [
+            "Sidebar"
           ]
         }
       ],
@@ -3578,6 +4384,208 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "marker",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/marker.tsx",
+          "sha256": "4cd9b59804f84c9fd92d987587bc7be7459ffa684655c8ec7befa4e442622f51"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/support-chat.tsx",
+          "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+          "retained": false,
+          "exports": [
+            "SupportChat"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "menubar",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/menubar.tsx",
+          "sha256": "0ba581ac5792e01c332a455e4b55abd8eed115e9c23991b013e23173c215790f"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/tabs.tsx",
+          "sha256": "98fe9ed3a9e0b878305eaee6e61f64e9541785acd56f38a8efdd344f79f1a98a",
+          "retained": false,
+          "exports": [
+            "TabOption",
+            "Tabs"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "message-scroller",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/message-scroller.tsx",
+          "sha256": "6baf7313333d81fa941905372c755ca401e9c5c9334438ab9ac664fcfe87cf64"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/support-chat.tsx",
+          "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+          "retained": false,
+          "exports": [
+            "SupportChat"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "message",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/message.tsx",
+          "sha256": "3ca85251009c59d0dfc819cb926414394ca35f08b9f825d491b12ab4442d15bb"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/support-chat.tsx",
+          "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+          "retained": false,
+          "exports": [
+            "SupportChat"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/team/team-page.tsx",
+          "sha256": "af2b0b2e2d9b18dd48f98252af751eeb49944d96f94aaa9e2dc8dbe30c4f4f7f",
+          "retained": false,
+          "exports": [
+            "INITIAL_MEMBERS",
+            "ROLE_LABELS",
+            "TeamPage",
+            "InviteDialog"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "native-select",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/native-select.tsx",
+          "sha256": "bdb260e2355fcbaf29d15705e30d009c4bdb1a5e6380af3b9e2c4b4457a0086c"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/menu.tsx",
+          "sha256": "73540a67812ab0b84855231c96bcebe8d5b93686f423aead2d92ef707d3f6585",
+          "retained": false,
+          "exports": [
+            "MENU_SURFACE_CLASS",
+            "MENU_ROW_CLASS",
+            "MENU_LABEL_CLASS",
+            "MENU_SEPARATOR_CLASS",
+            "MENU_LIST_CLASS",
+            "SelectOption",
+            "SelectMenu",
+            "MenuAction",
+            "ActionMenu"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "navigation-menu",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/navigation-menu.tsx",
+          "sha256": "86645afd53ec9931d57dfa95d3a0cb22d3224aa107ba817152165f449cc7e68d"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/header.tsx",
+          "sha256": "a7a5825f70934ce0e55c80bc75f791b1a4823827e875a687df11e6fdab971273",
+          "retained": false,
+          "exports": [
+            "Header"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/nav-menu-panels.tsx",
+          "sha256": "ed42dbe2966b42ae52ea30635780fd26ab4e68ad6e087a97d3eaead2cedf6493",
+          "retained": false,
+          "exports": [
+            "MenuIconChip",
+            "ProductsPanel",
+            "UseCasesPanel"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "navigation",
       "surface": "product",
       "kind": "library-infrastructure",
@@ -3725,6 +4733,54 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "pagination",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/pagination.tsx",
+          "sha256": "4e2349ebab1e85bfdb57afeac65724867dfa83dd6499ad1d924b77896b912d61"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/monitors/monitors-home.tsx",
+          "sha256": "561f65c2548d2b206555b1f7620812a153c262b86bf259df3fa95fcd3864f070",
+          "retained": false,
+          "exports": [
+            "MonitorsSkeleton",
+            "MonitorsHome"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/batches/batches-home.tsx",
+          "sha256": "a1dc2ec7973acdc3516cf70e0e7151d01c90a0ef0a3d9363ff491b900b3b434c",
+          "retained": false,
+          "exports": [
+            "BatchesSkeleton",
+            "BatchesHome"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/usage/usage-page.tsx",
+          "sha256": "88665c09035bc549aac535885e2b3591dbe84b9f4ba4c20de3911b19672e686c",
+          "retained": false,
+          "exports": [
+            "UsageView",
+            "UsagePage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "parse-landing-visuals",
@@ -4409,6 +5465,45 @@
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
     },
     {
+      "name": "questionnaire",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/questionnaire.tsx",
+          "sha256": "910cff72985713ce22b6cb362afacafa0332ce6ef8585d329abfeecb704a92c4"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/support-chat.tsx",
+          "sha256": "ea35a2a12a637d6261829f30e7f672fe5fa5de823c360e60fe41094237701ec4",
+          "retained": false,
+          "exports": [
+            "SupportChat"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "quickstart-card",
       "surface": "product",
       "kind": "dashboard",
@@ -4446,6 +5541,60 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "radio-group",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/radio-group.tsx",
+          "sha256": "0d63c9effe14f1e80eeee45b61219795f11d5152459d5540716797921fefcd13"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "resizable",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/resizable.tsx",
+          "sha256": "ad90d6bec2b9f1d888eb9764126d524058cc6b4b230e8ea2139667ef5f958f61"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/playground/results.tsx",
+          "sha256": "13ccb7a14920f6f4a80376afc5ab7a7bf8545584a15c07da5a9cf0162fd1b1d5",
+          "retained": false,
+          "exports": [
+            "ResultCard"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "ring-backdrop",
@@ -4887,6 +6036,41 @@
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
     },
     {
+      "name": "sidebar",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/sidebar.tsx",
+          "sha256": "2986457ad96bf8da1cd097b89ac79ab5e8bc1be3dd8df83828ce8f6e263acf86"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/sidebar.tsx",
+          "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+          "retained": false,
+          "exports": [
+            "Sidebar"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/workspace-card.tsx",
+          "sha256": "dc5b7258ba35024535ddf655bd47e4bcd36ea0e9e2187a986dc9a96891af5d9e",
+          "retained": false,
+          "exports": [
+            "WorkspaceCard"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "site-footer",
       "surface": "site",
       "kind": "website",
@@ -5071,6 +6255,31 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "slider",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/slider.tsx",
+          "sha256": "60d11e4f1dc009178bc870d5907aa0f3aef9edb057b6ea4bea444e1c0767ef55"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/switch.tsx",
+          "sha256": "9cd971f01727ebbb36ea4976e025859fd631ea6edc016ba7bf8ec9ca6ece371d",
+          "retained": false,
+          "exports": [
+            "Switch"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "sonner",
@@ -7377,6 +8586,84 @@
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
     },
     {
+      "name": "toast",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/toast.tsx",
+          "sha256": "10f8cc899403a6a998a93b42822deef5c1be4b98e752c737d726ec2e0d31d71b"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/ui/sonner.tsx",
+          "sha256": "54bbbe94b195997395b236584057642dc58482a87cef127722f58c7d0b5c428e",
+          "retained": false,
+          "exports": []
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "toggle-group",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/toggle-group.tsx",
+          "sha256": "8741a7f45931c22916beb2db898d38c12bdab3ff82d95cccf2b9f6db0f286571"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/form.tsx",
+          "sha256": "984a8bd82ee8aa89644d23f74addb6ec64edc5ffce7f2354d637470e4edb6f72",
+          "retained": false,
+          "exports": [
+            "INPUT_CLASS",
+            "TEXTAREA_CLASS",
+            "Field",
+            "SegmentedControl",
+            "TagsInput"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "toggle",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/toggle.tsx",
+          "sha256": "554d0296b0aa710be2b6a926b3f979c2c0598daa35985c891a2726a902a55761"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/button.tsx",
+          "sha256": "4471d9c1213fb690c714622f54d8e0f6fc881d6291b024de0c01235bfc2e273b",
+          "retained": false,
+          "exports": [
+            "buttonClassName",
+            "Button"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "tooltip-provider",
       "surface": "product",
       "kind": "dashboard",
@@ -7425,6 +8712,41 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "trace",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/trace.tsx",
+          "sha256": "91a0dc7f9f49ee88a02a48c8db8d7439da10961b7ed040f0f1c91325dcff0163"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/shell/sidebar.tsx",
+          "sha256": "c7ae0fafa6e46c0e952262d2940c3edba6ddf687e7d1a6431e3a942908affc8d",
+          "retained": false,
+          "exports": [
+            "Sidebar"
+          ]
+        },
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/components/ui/skeleton.tsx",
+          "sha256": "8ba92bcd099b12b2bebb2aa8008808c66b2f502c4f2bebc9d93c1e3ea2da2980",
+          "retained": false,
+          "exports": [
+            "Skeleton"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "trust-strip",
@@ -7500,6 +8822,29 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
+    },
+    {
+      "name": "typography",
+      "surface": "both",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/ui/typography.tsx",
+          "sha256": "60058f91ab7623a820eb7d74653676c64ae13b9679096c35b94cc2780049392d"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "context-dashboard",
+          "commit": "c0ddf7a56ba7e9a860cafa59ea9c2bad83720204",
+          "path": "src/app/globals.css",
+          "sha256": "9b05824c96294781b01c4f00fc8200822b3317ca0d81b0777b5f591168a33b7a",
+          "retained": false,
+          "exports": []
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
       "name": "upgrade-glyph",
