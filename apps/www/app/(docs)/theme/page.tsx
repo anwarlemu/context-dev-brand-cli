@@ -3,7 +3,7 @@ import path from "node:path";
 
 import { InstallCommand } from "@/components/site/code-window";
 import { Code } from "@www/components/code";
-import { DocsHeading, DocsSection, DocsSectionRule } from "@www/components/docs-section";
+import { DocsPage, DocsSection, PageHead } from "@www/components/docs-section";
 
 export const metadata = { title: "Design tokens" };
 
@@ -34,20 +34,10 @@ function Swatch({ name, value }: { name: string; value: string }) {
 
 export default function ThemePage() {
   return (
-    <main>
-      <DocsSection lines header="under">
-        <DocsHeading
-          as="h1"
-          title="Design tokens"
-          description="Use these tokens for colors, typography, spacing, radii, shadows, and motion. Product interfaces use ds-product. Dark mode follows .dark or data-theme."
-        >
-          <InstallCommand command="npx context-ds add theme" />
-        </DocsHeading>
-      </DocsSection>
+    <DocsPage>
+      <PageHead title="Design tokens" description="Use these tokens for colors, typography, spacing, radii, shadows, and motion. Product interfaces use ds-product. Dark mode follows .dark or data-theme."><InstallCommand command="npx context-ds add theme" /></PageHead>
 
-      <DocsSection lines>
-        <DocsHeading title="Color" description="Color scales and semantic roles. Use the role token that matches the element." />
-        <DocsSectionRule />
+      <DocsSection title="Color" description="Color scales and semantic roles. Use the role token that matches the element.">
         <div className="grid gap-8">
           {RAMPS.map((r) => {
             const list = colors.filter(([k]) => ramp(k) === r);
@@ -72,9 +62,7 @@ export default function ThemePage() {
         </div>
       </DocsSection>
 
-      <DocsSection lines>
-        <DocsHeading title="Typography" description="Rethink Sans for interface text, IBM Plex Mono for code, and Doto for display figures." />
-        <DocsSectionRule />
+      <DocsSection title="Typography" description="Rethink Sans for interface text, IBM Plex Mono for code, and Doto for display figures.">
         <div className="grid divide-y divide-line-subtle">
           {SCALE.map(([name, value]) => (
             <div key={name} className="grid items-baseline gap-3 py-6 sm:grid-cols-[10rem_1fr]">
@@ -89,9 +77,7 @@ export default function ThemePage() {
         </div>
       </DocsSection>
 
-      <DocsSection lines>
-        <DocsHeading title="Radii" description="Site values apply at the root. Product values apply within ds-product." />
-        <DocsSectionRule />
+      <DocsSection title="Radii" description="Site values apply at the root. Product values apply within ds-product.">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
           {RADII.map(([name, value]) => (
             <div key={name} className="flex flex-col gap-3">
@@ -104,9 +90,7 @@ export default function ThemePage() {
         </div>
       </DocsSection>
 
-      <DocsSection lines>
-        <DocsHeading title="Install the tokens" description="The theme item adds the token definitions and Tailwind utilities. Import both after Tailwind." />
-        <DocsSectionRule />
+      <DocsSection title="Install the tokens" description="The theme item adds the token definitions and Tailwind utilities. Import both after Tailwind.">
         <Code
           title="app/globals.css"
           code={`@import "tailwindcss";
@@ -114,6 +98,6 @@ export default function ThemePage() {
 @import "./styles/theme.css";`}
         />
       </DocsSection>
-    </main>
+    </DocsPage>
   );
 }
