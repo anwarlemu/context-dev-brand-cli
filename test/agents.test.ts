@@ -38,7 +38,7 @@ describe('agent discovery', () => {
   });
   it('returns parseable errors and rejects invalid setup before writing', () => {
     const cwd = fixture({ 'package.json': '{}' });
-    for (const args of [['init'], ['init', '--surface', 'invalid'], ['inspect', '..'], ['inspect'], ['unknown-command'], ['list', '--type', 'invalid']]) {
+    for (const args of [['init', '--surface', 'invalid'], ['inspect', '..'], ['inspect'], ['unknown-command'], ['list', '--type', 'invalid']]) {
       const result = spawnSync(process.execPath, [bin, ...args, '--json', '--no-install'], { cwd, encoding: 'utf8' });
       expect(result.status).toBe(1);
       expect(JSON.parse(result.stdout).error.message.length).toBeGreaterThan(0);
@@ -69,7 +69,7 @@ describe('initializing without restyling', () => {
     for (const [path, text] of Object.entries(sample)) {
       const after = readFileSync(join(cwd, path), 'utf8');
       if (path.endsWith('.html')) expect(after).toContain(text.match(/<body>(.*?)<\/body>/)![0]);
-      else if (path.endsWith('.css')) expect(after.replace(/^@import "\.\/_context-ds\/[^\n]+\n/gm, '')).toBe(text);
+      else if (path.endsWith('.css')) expect(after.replace(/^@import url[^\n]*\n/gm, '').replace(/^@import "\.\/_context-ds\/[^\n]+\n/gm, '')).toBe(text);
       else expect(after).toContain(text);
     }
     expect(json(cwd, 'init', '--surface', surface).changes).toEqual([]);

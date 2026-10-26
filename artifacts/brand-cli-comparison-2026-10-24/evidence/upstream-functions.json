@@ -1,0 +1,62 @@
+[
+  {
+    "label": "info",
+    "code": 0,
+    "ms": 1355
+  },
+  {
+    "label": "search",
+    "code": 0,
+    "ms": 517
+  },
+  {
+    "label": "view",
+    "code": 0,
+    "ms": 561
+  },
+  {
+    "label": "docs",
+    "code": 0,
+    "ms": 997
+  },
+  {
+    "label": "dry-run",
+    "code": 0,
+    "ms": 1156
+  },
+  {
+    "label": "diff",
+    "code": 0,
+    "ms": 1204
+  },
+  {
+    "label": "view-plan",
+    "code": 0,
+    "ms": 1186
+  },
+  {
+    "label": "migrations",
+    "code": 0,
+    "ms": 504
+  },
+  {
+    "label": "mcp-claude",
+    "code": 0,
+    "ms": 4204
+  },
+  {
+    "label": "registry-add",
+    "code": 0,
+    "ms": 521
+  },
+  {
+    "label": "preset",
+    "code": 0,
+    "ms": 606
+  },
+  {
+    "label": "eject",
+    "code": 0,
+    "ms": 2287
+  }
+]

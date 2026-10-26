@@ -1,7 +1,7 @@
 # {{brand}} design system
 - Read `.ds/guide.md` before designing or editing UI; it works with any agent and explains setup, surfaces, components, and verification.
 - For new pages or requested features: find components with `{{cli}} list <query> --json`, read `{{cli}} inspect <name> --json`, then install with `{{cli}} add <name>` and connect real application state.
-- For restyling an existing interface: run `{{cli}} --dry-run --json` first, then `{{cli}}` and follow its tasks. Preserve copy, links, elements, order, and purpose unless the user explicitly requests changes.
+- For restyling an existing interface: run `{{cli}} apply --dry-run --json` first, then `{{cli}} apply` and follow its tasks. Preserve copy, links, elements, order, and purpose unless the user explicitly requests changes.
 - Choose site or product before styling. Product pages use a 15px root and `.ds-product`; site pages use 16px on phones and 90% from 43.2rem up. Read the component's usage and API rather than guessing props.
 - Keep existing content and structure outside the requested change. Do not add decorative sections or replace application behavior as a side effect of styling.
 - Use the installed components, their `cn` helper, and brand tokens (`var(--ds-*)`); `{{cli}} tokens <term>` finds a value and `{{cli}} look <file>` shows element rules.

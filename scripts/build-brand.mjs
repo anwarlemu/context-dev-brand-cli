@@ -54,6 +54,23 @@ const theme = [
 	'\t--ease-emphasized: var(--ds-easing-out);',
 	'\t--ease-in-out: var(--ds-easing-in-out);',
 ];
+// Expose every utility-compatible token while preserving the brand's existing role names.
+const referenced = new Set([...theme.join('\n').matchAll(/var\((--ds-[\w-]+)/g)].map(match => match[1]));
+for (const token of Object.keys(t)) {
+	if (referenced.has(token)) continue;
+	let alias;
+	if (token.startsWith('--ds-color-')) alias = `--color-${token.slice(11)}`;
+	else if (token.startsWith('--ds-space-')) alias = `--spacing-${token.slice(11).replace(/-/g, '\\.')}`;
+	else if (token.startsWith('--ds-layout-')) alias = `--spacing-layout-${token.slice(12)}`;
+	else if (token.startsWith('--ds-frame-')) alias = `--container-frame-${token.slice(11)}`;
+	else if (token.startsWith('--ds-font-weight-')) alias = `--font-weight-${token.slice(17).replace(/^regular$/, 'normal')}`;
+	else if (token.startsWith('--ds-duration-')) alias = `--transition-duration-${token.slice(14)}`;
+	else if (token.startsWith('--ds-easing-')) alias = `--ease-${token.slice(12)}`;
+	else if (token === '--ds-glass-blur') alias = '--blur-glass';
+	else if (token === '--ds-glass-sheen') alias = '--background-image-glass-sheen';
+	// Decorative band percentages are consumed directly by brand CSS, not standalone utilities.
+	if (alias) theme.push(`\t${alias}: var(${token});`);
+}
 // Motion for popovers, tooltips and menus: a short ease-out pop, only a fade with reduced motion (Emil Kowalski's rules).
 const motion = `@theme {
 	--animate-pop-in: ds-pop-in var(--ds-duration-fast) var(--ds-easing-out);

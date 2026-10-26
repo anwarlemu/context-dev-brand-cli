@@ -1,0 +1,7 @@
+{
+  "label": "mcp-claude",
+  "code": 0,
+  "ms": 4204,
+  "stdout": "\nConfiguration saved to .mcp.json.\n\n",
+  "stderr": "- Configuring MCP server...\n✔ Configuring MCP server.\n- Installing dependencies.\n- Installing dependencies.\n✔ Installing dependencies.\n"
+}

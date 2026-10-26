@@ -1,0 +1,7 @@
+{
+  "label": "dry-run",
+  "code": 0,
+  "ms": 1156,
+  "stdout": "┌ shadcn add http://localhost:4650/inkbox-ds/button.json (dry run)\n│\n├ Files (3) +1 new, ~2 overwrite\n│ ~ .agents/skills/inkbox-ds/SKILL.md          overwrite\n│ + src/components/ui/_inkbox-ds/lib/utils.ts  create\n│ ~ src/components/ui/button.tsx               overwrite\n│\n├ Dependencies (4)\n│ + clsx\n│ + tailwind-merge\n│ + radix-ui\n│ + class-variance-authority\n│\n├ CSS\n│ + 197 CSS variables added to src/index.css\n│\n⚠ 2 files will be overwritten.\n│\n│ 3 files, 4 deps, 197 CSS vars\n│\n│ Run with --diff to view changes.\n│ Run with --view to view file contents.\n└ Run without --dry-run to apply.\n",
+  "stderr": "- Resolving items.\n"
+}

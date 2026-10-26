@@ -1,0 +1,48 @@
+{
+  "brands": [
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli",
+      "name": "Context.dev",
+      "bin": "context-ds",
+      "source": "github:anwarlemu/context-dev-brand-cli#release",
+      "registry": "https://context-ds.vercel.app",
+      "head": "49fdc42eb2e244f7bc967a7f0902e02ba33b99c3",
+      "status": "## v2...origin/v2 [ahead 2]"
+    },
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/inkbox-brand-cli",
+      "name": "Inkbox",
+      "bin": "inkbox-ds",
+      "source": "github:anwarlemu/inkbox-brand-cli#release",
+      "registry": "https://inkbox-ds.vercel.app",
+      "head": "0efe657cb5148f14adf638686ad5f517b499143b",
+      "status": "## main...origin/main"
+    },
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/agentcard-brand-cli",
+      "name": "Agentcard",
+      "bin": "agentcard-ds",
+      "source": "github:anwarlemu/agentcard-brand-cli#release",
+      "registry": "https://agentcard-ds.vercel.app",
+      "head": "baa02d10f32b759e3fac9fb9110259b94c6b6c8b",
+      "status": "## main...origin/main [ahead 2]"
+    },
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/opencommerce-brand-cli",
+      "name": "opencommerce",
+      "bin": "opencommerce-ds",
+      "source": "github:anwarlemu/opencommerce-brand-cli#release",
+      "registry": "https://opencommerce-ds.vercel.app",
+      "head": "d8858b2a260fa66cfc5f127f8a0454bb8deaa965",
+      "status": "## main...origin/main [ahead 2]"
+    }
+  ],
+  "phases": [
+    "Pin and inventory",
+    "Measure released CLI installation and workflows",
+    "Reproduce gaps across consumers",
+    "Implement shared fixes preserving brand-specific designs",
+    "Run each CI and consumer builds",
+    "Compare before and after, document remaining intentional differences"
+  ]
+}

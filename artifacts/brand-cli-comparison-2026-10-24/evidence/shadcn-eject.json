@@ -1,0 +1,7 @@
+{
+  "label": "eject",
+  "code": 0,
+  "ms": 2287,
+  "stdout": "\nThis action is not reversible. Future shadcn CLI updates to tailwind.css will not apply automatically.\n\n\nEjected shadcn/tailwind.css into src/index.css.\n\n",
+  "stderr": "- Inlining shadcn/tailwind.css.\n✔ Inlining shadcn/tailwind.css.\n- Removing shadcn.\n✔ Removing shadcn.\n"
+}

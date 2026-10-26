@@ -25,6 +25,7 @@ export type Palette = {
 	target?: Mode;
 	/** A site: its wide content containers take the width of the ruled column, so content sits between the lines. */
 	column?: boolean;
+	preserveColors?: boolean;
 };
 
 const fromLightness = (bg: RGBA | undefined, fg: RGBA | undefined): Pick<Palette, 'mode' | 'bg' | 'fg' | 'found'> => {

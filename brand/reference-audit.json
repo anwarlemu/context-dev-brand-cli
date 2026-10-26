@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-26T11:57:35.756Z",
+  "checkedAt": "2026-10-26T12:41:57.238Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -2233,7 +2233,7 @@
       "library": [
         {
           "path": "components/ui/copy-button.tsx",
-          "sha256": "1b5ac924b82babe36e9d69ab8b5a423632ff159e1389499879720307e35352e6"
+          "sha256": "19b5069c536a900efdc4ff93c2eec3e2b1c0aeb2f0395c10c2e2e8e4a92cca97"
         }
       ],
       "sources": [

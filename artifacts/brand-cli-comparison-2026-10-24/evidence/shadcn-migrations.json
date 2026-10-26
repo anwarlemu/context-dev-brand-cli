@@ -1,0 +1,7 @@
+{
+  "label": "migrations",
+  "code": 0,
+  "ms": 504,
+  "stdout": "Available migrations:\n- cn: migrate clsx and tailwind-merge to cn.\n- icons: migrate your ui components to a different icon library.\n- base-color: migrate your theme to a different base color.\n- radix: migrate to radix-ui.\n- rtl: migrate your components to support RTL (right-to-left).\n",
+  "stderr": ""
+}

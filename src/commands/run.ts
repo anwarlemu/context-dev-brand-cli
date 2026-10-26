@@ -1,3 +1,4 @@
+import { configureRegistry } from '../install/config.js';
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, symlinkSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -21,7 +22,7 @@ import { mainScreens, pickMain, renderBatch, renderTask, taskStatus } from '../p
 // The one command: the first run installs the brand and converts every style value; every run after that prints the
 // next task, until each main screen passes its review and the whole project passes the check.
 
-export type RunOptions = { surface?: string; theme?: string; redo?: boolean; dryRun?: boolean; install?: boolean; json?: boolean };
+export type RunOptions = { colors?: 'components'; surface?: string; theme?: string; redo?: boolean; dryRun?: boolean; install?: boolean; json?: boolean };
 
 export function run(opts: RunOptions) {
 	const root = findProjectRoot();
@@ -36,7 +37,7 @@ export function run(opts: RunOptions) {
  * code is one bundle), so it is copied into node_modules and recorded in package.json, with no install of the whole
  * project's dependencies; a teammate's next install fetches the same source.
  */
-export function selfInstall(root: string, opts: RunOptions) {
+export function selfInstall(root: string, opts: RunOptions, handoff = true) {
 	if (opts.install === false || opts.dryRun || !/[\\/]_npx[\\/]/.test(PKG_ROOT)) return;
 	const b = { ...brand(), source: process.env.DS_SOURCE ?? brand().source };
 	const pkgPath = join(root, 'package.json');
@@ -56,7 +57,9 @@ export function selfInstall(root: string, opts: RunOptions) {
 	mkdirSync(binDir, { recursive: true });
 	if (!existsSync(join(binDir, b.bin))) symlinkSync(join('..', b.bin, 'bin.js'), join(binDir, b.bin));
 	process.stderr.write(`Added ${b.name}'s design system to this project (node_modules/${b.bin}, recorded in package.json).\n`);
-	const handOff = spawnSync(process.execPath, [local, ...process.argv.slice(2), '--no-install'], { cwd: process.cwd(), stdio: 'inherit' });
+	if (!handoff) return;
+	const args = process.argv.slice(2).flatMap((arg, index, all) => arg === '--cwd' || arg === '-c' ? [] : index > 0 && ['--cwd', '-c'].includes(all[index - 1]) ? [] : arg.startsWith('--cwd=') ? [] : [arg]);
+	const handOff = spawnSync(process.execPath, [local, ...args, '--no-install'], { cwd: process.cwd(), stdio: 'inherit' });
 	process.exit(handOff.status ?? 1);
 }
 
@@ -66,6 +69,7 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const found = profile(root, files);
 	if (opts.surface && !['site', 'product'].includes(opts.surface)) throw new Error('--surface is site or product.');
 	const surface: Surface = (opts.surface as Surface | undefined) ?? previous?.surface ?? found.surface;
+	const scopedColors = project.framework !== 'native' && (opts.colors === 'components' || previous?.colors === 'components');
 	const theme = opts.theme === 'dark' ? 'dark' : previous?.theme ?? 'light';
 	const mixed = !opts.surface && found.mixed;
 	// A React + Tailwind app's components are identified first and each swapped for the library's, styled as it, or left
@@ -78,7 +82,7 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 		}
 	})();
 	const swap = (pkgJson.dependencies?.react || pkgJson.devDependencies?.react) && (project.tailwindMajor ?? 0) >= 4 ? applyComponents(project, (rel) => (mixed ? surfaceOf(rel, found) : surface), { dryRun: opts.dryRun }) : undefined;
-	const converted = convertProject(project, files, mixed ? 'site' : surface, { dryRun: opts.dryRun, theme });
+	const converted = convertProject(project, files, mixed ? 'site' : surface, { dryRun: opts.dryRun, theme, preserveColors: scopedColors });
 	const w = new Writer(root, opts.dryRun);
 	const styleText = files.filter((f) => STYLES.test(f) || MARKUP.test(f)).map((f) => readFileSync(join(root, f), 'utf8')).join('\n');
 	// Native apps have no stylesheet: their colors were converted in their own code; fonts are added as app fonts.
@@ -87,15 +91,16 @@ function setUp(root: string, opts: RunOptions, previous?: State) {
 	const layer = project.framework === 'native' ? { count: 0, files: [] as string[], styled: [] } : installElementLayer(w, styledFiles(root), (rel) => (mixed ? surfaceOf(rel, found) : surface));
 	if (!opts.dryRun) recordStyledSelectors(root, layer.styled);
 	const dots = project.framework !== 'native' && (surface === 'site' || mixed) ? installDots(w, project) : [];
+	configureRegistry(w, project, surface);
 	installAgents(w);
-	const fixed = opts.dryRun ? 0 : runCheck(root, { fix: true }).fixed;
+	const fixed = opts.dryRun ? 0 : runCheck(root, { fix: true, colorSurface: scopedColors ? surface : undefined }).fixed;
 	const screens = listScreens(detectProject(root), styledFiles(root), { ...found, surface, mixed });
 	const shell = shellFiles(project, files);
 	const main = pickMain(root, screens, shell);
 	// A site's home gets its hero dots and blue closing words now; the agent only checks them.
 	const touched = !opts.dryRun && screens[0] && (surface === 'site' || mixed) && project.framework !== 'native' ? installTouches(new Writer(root), screens[0].files.filter((f) => !shell.includes(f) || /home|index/i.test(f))) : [];
 	if (screens[0]) screens[0].files = [...new Set([...screens[0].files, ...shell])];
-	const state: State = { version: 2, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, main, marked: previous?.marked ?? [], skipped: previous?.skipped ?? {}, reviews: previous?.reviews ?? {} };
+	const state: State = { version: 2, colors: scopedColors ? 'components' : undefined, surface, mixed, theme, appliedAt: new Date().toISOString(), baseUrl: previous?.baseUrl, screens, main, marked: previous?.marked ?? [], skipped: previous?.skipped ?? {}, reviews: previous?.reviews ?? {} };
 	if (!opts.dryRun) writeState(root, state);
 	if (!opts.dryRun) recordAutoPass(root);
 	const left = opts.dryRun ? undefined : runCheck(root);

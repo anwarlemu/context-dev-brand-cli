@@ -1,0 +1,818 @@
+[
+  {
+    "brand": "context-ds",
+    "tools": [
+      {
+        "name": "get_project_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "list_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to list (e.g., ['@shadcn', '@acme']). Omit to list from every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query string for fuzzy matching against item names and descriptions"
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of item names with registry prefix (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_item_examples_from_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query for examples (e.g., 'accordion-demo', 'button demo', 'card example', 'tooltip-demo', 'example-booking-form', 'example-hero'). Common patterns: '{item-name}-demo', '{item-name} example', 'example {item-name}'"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of items to get the add command for prefixed with the registry name (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_audit_checklist",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      }
+    ],
+    "calls": [
+      {
+        "name": "get_project_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The following registries are configured in the current project:\n\n- @shadcn\n- @context-ds\n\nYou can view the items in a registry by running:\n`npx shadcn@latest view @name-of-registry`\n\nFor example: `npx shadcn@latest view @shadcn` or `npx shadcn@latest view @shadcn @acme` to view multiple registries."
+            }
+          ]
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Found 41 items matching \"button\" in registries @context-ds:\n\nShowing items 1-5 of 41:\n\n- button (registry:ui) - Product buttons and site pill buttons, with variants for primary, secondary, and contextual actions. [@context-ds] \n  Add command: `npx shadcn@latest add @context-ds/button`\n\n- hold-button (registry:ui) - Destructive action that requires a sustained pointer or key press, with a progress indicator. [@context-ds] \n  Add command: `npx shadcn@latest add @context-ds/hold-button`\n\n- copy-button (registry:ui) - Copy action with a temporary success indicator. [@context-ds] \n  Add command: `npx shadcn@latest add @context-ds/copy-button`\n\n- scroll-area (registry:ui) - Scrollable content with edge fades and a button to scroll down. [@context-ds] \n  Add command: `npx shadcn@latest add @context-ds/scroll-area`\n\n- settings-section (registry:block) - Settings sections, rows, fields, notices, and destructive-action buttons. [@context-ds] \n  Add command: `npx shadcn@latest add @context-ds/settings-section`\n\nMore items available. Use offset: 5 to see the next page."
+            }
+          ]
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Item Details:\n\n## button\n\nProduct buttons and site pill buttons, with variants for primary, secondary, and contextual actions.\n\n**Type:** registry:ui\n**Files:** 1 file(s)\n**Dependencies:** @radix-ui/react-slot, class-variance-authority"
+            }
+          ]
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "npx shadcn@latest add @context-ds/button"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "brand": "inkbox-ds",
+    "tools": [
+      {
+        "name": "get_project_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "list_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to list (e.g., ['@shadcn', '@acme']). Omit to list from every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query string for fuzzy matching against item names and descriptions"
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of item names with registry prefix (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_item_examples_from_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query for examples (e.g., 'accordion-demo', 'button demo', 'card example', 'tooltip-demo', 'example-booking-form', 'example-hero'). Common patterns: '{item-name}-demo', '{item-name} example', 'example {item-name}'"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of items to get the add command for prefixed with the registry name (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_audit_checklist",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      }
+    ],
+    "calls": [
+      {
+        "name": "get_project_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The following registries are configured in the current project:\n\n- @shadcn\n- @inkbox-ds\n\nYou can view the items in a registry by running:\n`npx shadcn@latest view @name-of-registry`\n\nFor example: `npx shadcn@latest view @shadcn` or `npx shadcn@latest view @shadcn @acme` to view multiple registries."
+            }
+          ]
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Found 13 items matching \"button\" in registries @inkbox-ds:\n\nShowing items 1-5 of 13:\n\n- button (registry:ui) - The purple pill for the main action, the lilac pill, the white outline key, the soft lilac key, ghost glyphs and text links. [@inkbox-ds] \n  Add command: `npx shadcn@latest add @inkbox-ds/button`\n\n- button-group (registry:ui) - Buttons, fields and text segments joined into one bar with shared edges and outer corners only. [@inkbox-ds] \n  Add command: `npx shadcn@latest add @inkbox-ds/button-group`\n\n- input-group (registry:ui) - The console's field with addons inside it: glyphs, text, a lilac suffix segment, buttons, or the handle check's state glyph. [@inkbox-ds] \n  Add command: `npx shadcn@latest add @inkbox-ds/input-group`\n\n- bubble (registry:ui) - A message bubble: incoming on the lilac, outgoing in the action purple, 16px corners with a 4px tail corner. [@inkbox-ds] \n  Add command: `npx shadcn@latest add @inkbox-ds/bubble`\n\n- menubar (registry:ui) - A lilac tab track of medium triggers whose menus are the dropdown menu's raised panels. [@inkbox-ds] \n  Add command: `npx shadcn@latest add @inkbox-ds/menubar`\n\nMore items available. Use offset: 5 to see the next page."
+            }
+          ]
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Item Details:\n\n## button\n\nThe purple pill for the main action, the lilac pill, the white outline key, the soft lilac key, ghost glyphs and text links.\n\n**Type:** registry:ui\n**Files:** 1 file(s)\n**Dependencies:** radix-ui, class-variance-authority"
+            }
+          ]
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "npx shadcn@latest add @inkbox-ds/button"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "brand": "agentcard-ds",
+    "tools": [
+      {
+        "name": "get_project_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "list_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to list (e.g., ['@shadcn', '@acme']). Omit to list from every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query string for fuzzy matching against item names and descriptions"
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of item names with registry prefix (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_item_examples_from_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query for examples (e.g., 'accordion-demo', 'button demo', 'card example', 'tooltip-demo', 'example-booking-form', 'example-hero'). Common patterns: '{item-name}-demo', '{item-name} example', 'example {item-name}'"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of items to get the add command for prefixed with the registry name (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_audit_checklist",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      }
+    ],
+    "calls": [
+      {
+        "name": "get_project_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The following registries are configured in the current project:\n\n- @shadcn\n- @agentcard-ds\n\nYou can view the items in a registry by running:\n`npx shadcn@latest view @name-of-registry`\n\nFor example: `npx shadcn@latest view @shadcn` or `npx shadcn@latest view @shadcn @acme` to view multiple registries."
+            }
+          ]
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Found 10 items matching \"button\" in registries @agentcard-ds:\n\nShowing items 1-5 of 10:\n\n- button (registry:ui) - Buttons for primary, secondary, toolbar and on-blue actions. [@agentcard-ds] \n  Add command: `npx shadcn@latest add @agentcard-ds/button`\n\n- hold-button (registry:ui) - Button that confirms an action after a continuous hold. [@agentcard-ds] \n  Add command: `npx shadcn@latest add @agentcard-ds/hold-button`\n\n- copy-button (registry:ui) - Copies text with success and failure feedback. [@agentcard-ds] \n  Add command: `npx shadcn@latest add @agentcard-ds/copy-button`\n\n- surface (registry:lib) - Background and text context shared by a section and its overlays. [@agentcard-ds] \n  Add command: `npx shadcn@latest add @agentcard-ds/surface`\n\n- accordion (registry:ui) - Expandable questions or sections with keyboard navigation. [@agentcard-ds] \n  Add command: `npx shadcn@latest add @agentcard-ds/accordion`\n\nMore items available. Use offset: 5 to see the next page."
+            }
+          ]
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Item Details:\n\n## button\n\nButtons for primary, secondary, toolbar and on-blue actions.\n\n**Type:** registry:ui\n**Files:** 1 file(s)\n**Dependencies:** @radix-ui/react-slot, class-variance-authority"
+            }
+          ]
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "npx shadcn@latest add @agentcard-ds/button"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "brand": "opencommerce-ds",
+    "tools": [
+      {
+        "name": "get_project_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "list_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to list (e.g., ['@shadcn', '@acme']). Omit to list from every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query string for fuzzy matching against item names and descriptions"
+            },
+            "types": {
+              "description": "Filter by item type. One of: lib, block, component, ui, hook, page, file, theme, style, item, base, font.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "limit": {
+              "description": "Maximum number of items to return (defaults to 100; use 0 for no limit)",
+              "type": "number"
+            },
+            "offset": {
+              "description": "Number of items to skip for pagination",
+              "type": "number"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of item names with registry prefix (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_item_examples_from_registries",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "registries": {
+              "description": "Array of registry names to search (e.g., ['@shadcn', '@acme']). Omit to search every registry configured in components.json.",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "query": {
+              "type": "string",
+              "description": "Search query for examples (e.g., 'accordion-demo', 'button demo', 'card example', 'tooltip-demo', 'example-booking-form', 'example-hero'). Common patterns: '{item-name}-demo', '{item-name} example', 'example {item-name}'"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of items to get the add command for prefixed with the registry name (e.g., ['@shadcn/button', '@shadcn/card'])"
+            }
+          },
+          "required": [
+            "items"
+          ],
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "get_audit_checklist",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "additionalProperties": false
+        }
+      }
+    ],
+    "calls": [
+      {
+        "name": "get_project_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "The following registries are configured in the current project:\n\n- @shadcn\n- @opencommerce-ds\n\nYou can view the items in a registry by running:\n`npx shadcn@latest view @name-of-registry`\n\nFor example: `npx shadcn@latest view @shadcn` or `npx shadcn@latest view @shadcn @acme` to view multiple registries."
+            }
+          ]
+        }
+      },
+      {
+        "name": "search_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Found 8 items matching \"button\" in registries @opencommerce-ds:\n\nShowing items 1-5 of 8:\n\n- button (registry:ui) - Flat keys for primary, secondary and toolbar actions. [@opencommerce-ds] \n  Add command: `npx shadcn@latest add @opencommerce-ds/button`\n\n- hold-button (registry:ui) - Button that confirms an action after a continuous hold. [@opencommerce-ds] \n  Add command: `npx shadcn@latest add @opencommerce-ds/hold-button`\n\n- copy-button (registry:ui) - A small Copy key that swaps to Copied in place, on white or on ink. [@opencommerce-ds] \n  Add command: `npx shadcn@latest add @opencommerce-ds/copy-button`\n\n- surface (registry:lib) - Background and text context shared by a section and its overlays. [@opencommerce-ds] \n  Add command: `npx shadcn@latest add @opencommerce-ds/surface`\n\n- accordion (registry:ui) - Expandable questions or sections with keyboard navigation. [@opencommerce-ds] \n  Add command: `npx shadcn@latest add @opencommerce-ds/accordion`\n\nMore items available. Use offset: 5 to see the next page."
+            }
+          ]
+        }
+      },
+      {
+        "name": "view_items_in_registries",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "Item Details:\n\n## button\n\nFlat keys for primary, secondary and toolbar actions.\n\n**Type:** registry:ui\n**Files:** 1 file(s)\n**Dependencies:** @radix-ui/react-slot, class-variance-authority"
+            }
+          ]
+        }
+      },
+      {
+        "name": "get_add_command_for_items",
+        "result": {
+          "content": [
+            {
+              "type": "text",
+              "text": "npx shadcn@latest add @opencommerce-ds/button"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

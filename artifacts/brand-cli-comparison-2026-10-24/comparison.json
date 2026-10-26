@@ -1,0 +1,3680 @@
+{
+  "date": "2026-10-24",
+  "upstream": "shadcn 4.22.1",
+  "candidate": "2.1.0 (local, unpublished)",
+  "brands": [
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli",
+      "name": "Context.dev",
+      "bin": "context-ds",
+      "source": "github:anwarlemu/context-dev-brand-cli#release",
+      "registry": "https://context-ds.vercel.app",
+      "head": "49fdc42eb2e244f7bc967a7f0902e02ba33b99c3",
+      "status": "## v2...origin/v2 [ahead 2]"
+    },
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/inkbox-brand-cli",
+      "name": "Inkbox",
+      "bin": "inkbox-ds",
+      "source": "github:anwarlemu/inkbox-brand-cli#release",
+      "registry": "https://inkbox-ds.vercel.app",
+      "head": "0efe657cb5148f14adf638686ad5f517b499143b",
+      "status": "## main...origin/main"
+    },
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/agentcard-brand-cli",
+      "name": "Agentcard",
+      "bin": "agentcard-ds",
+      "source": "github:anwarlemu/agentcard-brand-cli#release",
+      "registry": "https://agentcard-ds.vercel.app",
+      "head": "baa02d10f32b759e3fac9fb9110259b94c6b6c8b",
+      "status": "## main...origin/main [ahead 2]"
+    },
+    {
+      "repo": "/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/opencommerce-brand-cli",
+      "name": "opencommerce",
+      "bin": "opencommerce-ds",
+      "source": "github:anwarlemu/opencommerce-brand-cli#release",
+      "registry": "https://opencommerce-ds.vercel.app",
+      "head": "d8858b2a260fa66cfc5f127f8a0454bb8deaa965",
+      "status": "## main...origin/main [ahead 2]"
+    }
+  ],
+  "features": [
+    [
+      "Installation",
+      "Package distribution",
+      "npm package; npx shadcn@4.22.1",
+      "GitHub release branch",
+      "GitHub release branch retained; compiled 2.1.0 tarballs built",
+      "Different",
+      "Real published packages installed. npm publication is not part of this change."
+    ],
+    [
+      "Installation",
+      "init / create",
+      "Initialize existing apps or scaffold templates",
+      "No scaffold; Context required an explicit surface",
+      "Native init; create uses pinned upstream scaffold, then installs brand",
+      "Native + upstream",
+      "All four Vite scaffolds and their production builds passed."
+    ],
+    [
+      "Installation",
+      "Framework templates",
+      "Next, Vite, Start, React Router, Laravel, Astro",
+      "No scaffolding",
+      "Upstream template support exposed",
+      "Upstream",
+      "Vite and Vite monorepo executed. Other scaffold templates inventoried, not each executed."
+    ],
+    [
+      "Installation",
+      "components.json",
+      "Project paths, aliases, stylesheet, mode",
+      "Ignored aliases and target paths",
+      "Preserves config and adds the brand namespace",
+      "Native",
+      "Inherited JSONC aliases, custom paths and existing registries tested."
+    ],
+    [
+      "Installation",
+      "JavaScript / TypeScript",
+      "Transforms files according to tsx",
+      "Always emitted TypeScript",
+      "JSX/JS or TSX/TS according to project config",
+      "Native",
+      "Compiled distributions emitted JavaScript parsed without TypeScript syntax."
+    ],
+    [
+      "Installation",
+      "Package managers",
+      "npm, pnpm, yarn, bun and workspaces",
+      "Lockfile detection",
+      "Reads packageManager first, then lockfiles; upstream workspace routing",
+      "Native + upstream",
+      "npm executed; selection logic for other managers inspected, not all package managers executed."
+    ],
+    [
+      "Installation",
+      "Monorepo routing",
+      "Shared UI paths and dependency placement",
+      "No shared-package routing",
+      "Standard registry installs through upstream",
+      "Upstream",
+      "Four brands installed and built in a real shared UI workspace; private helpers live with UI."
+    ],
+    [
+      "Installation",
+      "Node / React / Tailwind prerequisites",
+      "Framework-dependent; supports multiple shadcn generations",
+      "Brand-specific React and Tailwind requirements",
+      "Checks installed versions and gives actionable setup errors",
+      "Different",
+      "Brand components still require React 19+ and Tailwind 4; Context requires React 19.2+."
+    ],
+    [
+      "Discovery",
+      "info",
+      "Machine-readable project inspection",
+      "Missing",
+      "Version, framework, aliases, surface, installed items, registry, next steps",
+      "Native",
+      "Read-only JSON and --cwd verified."
+    ],
+    [
+      "Discovery",
+      "search / list",
+      "Search configured registries; query/type/limit/offset",
+      "List with inconsistent command vocabulary",
+      "Consistent query, type, surface, pagination; upstream for other registries",
+      "Native + upstream",
+      "All four bundled catalogs and real MCP registry search tested."
+    ],
+    [
+      "Discovery",
+      "view / show / inspect",
+      "View registry items",
+      "Context inspect vs other brands show",
+      "All three names read APIs, dependencies, examples and source",
+      "Native",
+      "Existing aliases retained; own @namespace addresses supported."
+    ],
+    [
+      "Discovery",
+      "docs",
+      "Documentation and examples",
+      "No docs command",
+      "Documentation/source links and offline inspection command",
+      "Native",
+      "Exact component metadata retained."
+    ],
+    [
+      "Discovery",
+      "--version / --cwd / --json",
+      "Version, project targeting, structured operations",
+      "Missing version/cwd; inconsistent schemas",
+      "Version and cwd; stable structured native commands",
+      "Native",
+      "Error paths, cwd forwarding, discovery and install output tested. Upstream output formats remain upstream-owned."
+    ],
+    [
+      "Components",
+      "add and dependencies",
+      "Source ownership plus transitive dependencies",
+      "Bundled source installation",
+      "Alias-aware planning before writes; dependency closure and scoped helper",
+      "Native",
+      "Button/card/input/select/dialog consumers compiled for all four brands."
+    ],
+    [
+      "Components",
+      "--all / --path",
+      "Bulk install and custom component path",
+      "No consistent support",
+      "Both supported; relative imports retarget custom output",
+      "Native",
+      "Every bundled item planned, plus custom output-path regression."
+    ],
+    [
+      "Components",
+      "--dry-run / --diff / --view",
+      "Preview changes and file contents",
+      "Basic dry-run only",
+      "File actions, exact diffs and contents without writes",
+      "Native",
+      "Snapshots prove dry-run/diff purity."
+    ],
+    [
+      "Components",
+      "Existing files and updates",
+      "Keep files or overwrite after review",
+      "Keep existing files; helper patch could alter app code",
+      "Keep differing files, report conflicts, isolated brand cn, explicit overwrite",
+      "Native",
+      "Existing app helpers and local modifications preserved; repeated install is idempotent."
+    ],
+    [
+      "Components",
+      "Dependency failure recovery",
+      "Reports dependency installation errors",
+      "Could leave copied components without dependencies",
+      "Dependencies installed before component writes; no success manifest on failure",
+      "Native",
+      "Forced npm failure regression verifies no component file created."
+    ],
+    [
+      "Components",
+      "External item addresses",
+      "URLs, local files, namespaced/private registries",
+      "URL basename could silently resolve to bundled item",
+      "Actual HTTP/local content read; invalid URLs fail; own namespace supported",
+      "Native + upstream",
+      "Local-address and cycle tests; intentionally invalid external address must fail. Authenticated/custom ecosystem registries use upstream."
+    ],
+    [
+      "Components",
+      "JSX directives and component API",
+      "Base-specific APIs; configured RSC output",
+      "Brand-specific APIs",
+      "Exact source/APIs remain available; JS stripping preserves JSX and directives",
+      "Different",
+      "APIs are not interchangeable by name alone. Context primary, Inkbox default, and Agentcard/OpenCommerce primary are distinct button variants."
+    ],
+    [
+      "Styling",
+      "apply",
+      "Apply a shadcn preset/theme/font",
+      "Broad conversion workflow",
+      "Explicit brand apply scopes colors to recognized components",
+      "Different",
+      "Four apps preserved copy, callbacks and artwork colors and built after conversion. shadcn preset apply is available through the bridge."
+    ],
+    [
+      "Styling",
+      "Preserve application behavior",
+      "Component installation is not arbitrary app conversion",
+      "Adapters could remove hard-coded labels; referenced tsconfigs missed",
+      "Conservative wrapper adaptation and referenced-project type checks",
+      "Native",
+      "Reproduced lost button label and failed builds; repaired consumer tests pass."
+    ],
+    [
+      "Styling",
+      "Theme collision handling",
+      "Explicit theme install can replace theme aliases",
+      "Existing shadcn theme could override brand colors/fonts",
+      "Native resolves conflicting aliases; direct upstream command includes theme",
+      "Native + upstream",
+      "Computed colors, font families, radius and control dimensions agree between routes."
+    ],
+    [
+      "Styling",
+      "Token creation and utilities",
+      "Semantic CSS variables and Tailwind theme",
+      "Uneven utility coverage across brands",
+      "803 brand tokens generated; 793 utility aliases; ten decorative band variables used directly",
+      "Native",
+      "All Context and Inkbox tokens wired to utilities; five band parameters each in Agentcard/OpenCommerce intentionally remain direct CSS inputs."
+    ],
+    [
+      "Styling",
+      "Product/site surfaces",
+      "Preset/base configuration",
+      "Context has two surfaces; others one",
+      "Saved native surface and separate standard product registry",
+      "Native",
+      "Both Context registry trees generated; default site installation browser-tested. Product variants validated structurally, not every rendered state."
+    ],
+    [
+      "Styling",
+      "Keyboard, focus, mobile",
+      "Accessible primitives and responsive components",
+      "Primitive behavior already present",
+      "Preserved through installation and conversion fixes",
+      "Verified sample",
+      "Desktop/mobile browser checks: handlers, input, dialog Escape/focus restoration, no runtime errors or overflow. Not a full WCAG audit."
+    ],
+    [
+      "Styling",
+      "Motion and reduced motion",
+      "Component-dependent",
+      "Brand-specific motion rules",
+      "Existing brand rules preserved; Inkbox motion system retained",
+      "Different",
+      "No redesign of the other brands motion policies. Full animation-frequency/touch-device matrix was not run."
+    ],
+    [
+      "Agents",
+      "Portable skills and instructions",
+      "Official skill plus MCP integration",
+      "Guides/hooks; add alone missed guidance in three brands",
+      "Every add/init writes concise Claude/Codex skills and project guidance",
+      "Native",
+      "All four rendered skills pass the skill validator. No external LLM success-rate benchmark was run."
+    ],
+    [
+      "Agents",
+      "MCP server and configuration",
+      "mcp; init clients Claude/Cursor/VS Code/Codex/OpenCode",
+      "No compatible registry/MCP path",
+      "Pinned upstream MCP with configured brand registries",
+      "Upstream",
+      "Seven tools discovered per brand; search/view/install-command calls succeeded. Claude project config initialized in scratch app."
+    ],
+    [
+      "Registry",
+      "Standard item/index schema",
+      "Standard registry schemas and dependency graph",
+      "0 compatible items in published custom registries",
+      "Parallel compatible registries with private shared-UI helpers",
+      "Native generator",
+      "402 standard items validated; custom bundled API preserved. Hosted endpoints require deployment."
+    ],
+    [
+      "Registry",
+      "registry add / validate",
+      "Add namespace; validate authoring registry",
+      "Missing",
+      "Pinned upstream operations",
+      "Upstream",
+      "Namespace add executed; all authoring trees validated. Run validate from the registry directory."
+    ],
+    [
+      "Registry",
+      "build",
+      "Build registry JSON from authoring files",
+      "Custom brand registry build only",
+      "Native build keeps custom registry; standard authoring tree also generated",
+      "Native + upstream",
+      "Actual shadcn build reproduced all four standard registries."
+    ],
+    [
+      "Lifecycle",
+      "preset decode / resolve / url / open",
+      "Preset utilities and browser creation links",
+      "Missing",
+      "Pinned upstream operations",
+      "Upstream",
+      "Resolve/decode/url executed. open inventoried; browser launch not executed. Preset changes may change the brand."
+    ],
+    [
+      "Lifecycle",
+      "migrate",
+      "cn, icons, base-color, radix, rtl",
+      "Missing",
+      "Pinned upstream migrations",
+      "Upstream",
+      "List, cn and radix exercised in a disposable app; remaining migrations inventoried."
+    ],
+    [
+      "Lifecycle",
+      "eject",
+      "Inline upstream Tailwind stylesheet and remove dependency",
+      "Missing",
+      "Pinned upstream eject",
+      "Upstream",
+      "Executed in disposable app. Native brand components already live as app-owned source."
+    ],
+    [
+      "Lifecycle",
+      "Base libraries, RTL, prefixes, presets",
+      "Radix/Base/Aria; RTL and configuration variants",
+      "Brand libraries fixed to their source implementations",
+      "Arbitrary upstream flags exposed via shadcn <args>",
+      "Upstream",
+      "Feature access is not a claim that brand components can be blindly switched to another base API."
+    ],
+    [
+      "Lifecycle",
+      "--silent / advanced init flags",
+      "Silent, force, defaults, reinstall and other flags",
+      "Not consistently available",
+      "Upstream flags available through the bridge; native uses concise/JSON outputs",
+      "Upstream",
+      "Full discovered help/flag inventory attached. Not every combination executed."
+    ],
+    [
+      "Lifecycle",
+      "Legacy bare command",
+      "Help-oriented discovery",
+      "Bare brand command converts an app",
+      "Retained for compatibility; guides recommend info/init/add/apply explicitly",
+      "Different",
+      "Do not use the bare command for discovery. A future breaking release can remove this ambiguity."
+    ]
+  ],
+  "installation": [
+    {
+      "name": "shadcn",
+      "package": "shadcn@4.22.1",
+      "seconds": 20.201,
+      "status": 0
+    },
+    {
+      "name": "context-ds",
+      "package": "github:anwarlemu/context-dev-brand-cli#release",
+      "seconds": 51.29,
+      "status": 0
+    },
+    {
+      "name": "inkbox-ds",
+      "package": "github:anwarlemu/inkbox-brand-cli#release",
+      "seconds": 13.225,
+      "status": 0
+    },
+    {
+      "name": "agentcard-ds",
+      "package": "github:anwarlemu/agentcard-brand-cli#release",
+      "seconds": 18.254,
+      "status": 0
+    },
+    {
+      "name": "opencommerce-ds",
+      "package": "github:anwarlemu/opencommerce-brand-cli#release",
+      "seconds": 10.98,
+      "status": 0
+    }
+  ],
+  "performance": [
+    {
+      "brand": "context-ds",
+      "beforeBytes": 8211235,
+      "afterBytes": 10522837,
+      "before": {
+        "samplesMs": [
+          52,
+          52,
+          52,
+          52,
+          52,
+          52
+        ],
+        "medianMs": 52
+      },
+      "after": {
+        "samplesMs": [
+          64,
+          65,
+          65,
+          65,
+          65,
+          68
+        ],
+        "medianMs": 65
+      }
+    },
+    {
+      "brand": "inkbox-ds",
+      "beforeBytes": 4535092,
+      "afterBytes": 6832800,
+      "before": {
+        "samplesMs": [
+          52,
+          53,
+          53,
+          54,
+          57,
+          59
+        ],
+        "medianMs": 53.5
+      },
+      "after": {
+        "samplesMs": [
+          67,
+          68,
+          68,
+          71,
+          71,
+          75
+        ],
+        "medianMs": 69.5
+      }
+    },
+    {
+      "brand": "agentcard-ds",
+      "beforeBytes": 4653337,
+      "afterBytes": 6970680,
+      "before": {
+        "samplesMs": [
+          54,
+          55,
+          55,
+          55,
+          55,
+          56
+        ],
+        "medianMs": 55
+      },
+      "after": {
+        "samplesMs": [
+          67,
+          67,
+          68,
+          68,
+          68,
+          70
+        ],
+        "medianMs": 68
+      }
+    },
+    {
+      "brand": "opencommerce-ds",
+      "beforeBytes": 4370535,
+      "afterBytes": 6688424,
+      "before": {
+        "samplesMs": [
+          53,
+          53,
+          53,
+          53,
+          54,
+          55
+        ],
+        "medianMs": 53
+      },
+      "after": {
+        "samplesMs": [
+          66,
+          67,
+          68,
+          71,
+          72,
+          75
+        ],
+        "medianMs": 69.5
+      }
+    }
+  ],
+  "packages": [
+    {
+      "brand": "context-ds",
+      "packedBytes": 3090787,
+      "unpackedBytes": 10522837,
+      "files": 223,
+      "filename": "context-ds-2.1.0.tgz"
+    },
+    {
+      "brand": "inkbox-ds",
+      "packedBytes": 1543613,
+      "unpackedBytes": 6832800,
+      "files": 174,
+      "filename": "inkbox-ds-2.1.0.tgz"
+    },
+    {
+      "brand": "agentcard-ds",
+      "packedBytes": 1985013,
+      "unpackedBytes": 6970680,
+      "files": 169,
+      "filename": "agentcard-ds-2.1.0.tgz"
+    },
+    {
+      "brand": "opencommerce-ds",
+      "packedBytes": 1748870,
+      "unpackedBytes": 6688424,
+      "files": 171,
+      "filename": "opencommerce-ds-2.1.0.tgz"
+    }
+  ],
+  "tests": {
+    "ci": {
+      "context-ds": 62,
+      "inkbox-ds": 86,
+      "agentcard-ds": 58,
+      "opencommerce-ds": 58
+    },
+    "create": [
+      {
+        "brand": "context-ds",
+        "create": 0,
+        "json": true,
+        "build": 0
+      },
+      {
+        "brand": "inkbox-ds",
+        "create": 0,
+        "json": true,
+        "build": 0
+      },
+      {
+        "brand": "agentcard-ds",
+        "create": 0,
+        "json": true,
+        "build": 0
+      },
+      {
+        "brand": "opencommerce-ds",
+        "create": 0,
+        "json": true,
+        "build": 0
+      }
+    ],
+    "apply": [
+      {
+        "brand": "context-ds",
+        "preview": {
+          "code": 0,
+          "ms": 195
+        },
+        "dryRunPure": true,
+        "apply": {
+          "code": 0,
+          "ms": 1856
+        },
+        "build": 0,
+        "copyPreserved": true,
+        "callbackPreserved": true,
+        "artworkPreserved": true
+      },
+      {
+        "brand": "inkbox-ds",
+        "preview": {
+          "code": 0,
+          "ms": 193
+        },
+        "dryRunPure": true,
+        "apply": {
+          "code": 0,
+          "ms": 2304
+        },
+        "build": 0,
+        "copyPreserved": true,
+        "callbackPreserved": true,
+        "artworkPreserved": true
+      },
+      {
+        "brand": "agentcard-ds",
+        "preview": {
+          "code": 0,
+          "ms": 152
+        },
+        "dryRunPure": true,
+        "apply": {
+          "code": 0,
+          "ms": 1597
+        },
+        "build": 0,
+        "copyPreserved": true,
+        "callbackPreserved": true,
+        "artworkPreserved": true
+      },
+      {
+        "brand": "opencommerce-ds",
+        "preview": {
+          "code": 0,
+          "ms": 152
+        },
+        "dryRunPure": true,
+        "apply": {
+          "code": 0,
+          "ms": 1507
+        },
+        "build": 0,
+        "copyPreserved": true,
+        "callbackPreserved": true,
+        "artworkPreserved": true
+      }
+    ],
+    "workspace": [
+      {
+        "brand": "context-ds",
+        "add": 0,
+        "build": 0,
+        "sharedUtility": true
+      },
+      {
+        "brand": "inkbox-ds",
+        "add": 0,
+        "build": 0,
+        "sharedUtility": true
+      },
+      {
+        "brand": "agentcard-ds",
+        "add": 0,
+        "build": 0,
+        "sharedUtility": true
+      },
+      {
+        "brand": "opencommerce-ds",
+        "add": 0,
+        "build": 0,
+        "sharedUtility": true
+      }
+    ],
+    "browser": [
+      {
+        "brand": "context-ds",
+        "route": "shadcn",
+        "build": 0,
+        "styles": {
+          "background": "rgb(0, 0, 0)",
+          "expectedBackground": "rgb(0, 0, 0)",
+          "font": "\"Rethink Sans\", system-ui, sans-serif",
+          "expectedFont": "\"Rethink Sans\", system-ui, sans-serif",
+          "radius": "7.2px",
+          "height": "36px",
+          "fontSize": "12.6px",
+          "transition": "0.15s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "inkbox-ds",
+        "route": "shadcn",
+        "build": 0,
+        "styles": {
+          "background": "rgb(116, 98, 157)",
+          "expectedBackground": "rgb(116, 98, 157)",
+          "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "radius": "9999px",
+          "height": "40px",
+          "fontSize": "14px",
+          "transition": "0.15s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "agentcard-ds",
+        "route": "shadcn",
+        "build": 0,
+        "styles": {
+          "background": "rgb(0, 0, 255)",
+          "expectedBackground": "rgb(0, 0, 255)",
+          "font": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "expectedFont": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "radius": "8px",
+          "height": "40px",
+          "fontSize": "14px",
+          "transition": "0.15s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "opencommerce-ds",
+        "route": "shadcn",
+        "build": 0,
+        "styles": {
+          "background": "rgb(46, 58, 232)",
+          "expectedBackground": "rgb(46, 58, 232)",
+          "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "radius": "8px",
+          "height": "40px",
+          "fontSize": "15px",
+          "transition": "0.16s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "context-ds",
+        "route": "native",
+        "build": 0,
+        "styles": {
+          "background": "rgb(0, 0, 0)",
+          "expectedBackground": "rgb(0, 0, 0)",
+          "font": "\"Rethink Sans\", system-ui, sans-serif",
+          "expectedFont": "\"Rethink Sans\", system-ui, sans-serif",
+          "radius": "7.2px",
+          "height": "36px",
+          "fontSize": "12.6px",
+          "transition": "0.15s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "inkbox-ds",
+        "route": "native",
+        "build": 0,
+        "styles": {
+          "background": "rgb(116, 98, 157)",
+          "expectedBackground": "rgb(116, 98, 157)",
+          "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "radius": "9999px",
+          "height": "40px",
+          "fontSize": "14px",
+          "transition": "0.15s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "agentcard-ds",
+        "route": "native",
+        "build": 0,
+        "styles": {
+          "background": "rgb(0, 0, 255)",
+          "expectedBackground": "rgb(0, 0, 255)",
+          "font": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "expectedFont": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+          "radius": "8px",
+          "height": "40px",
+          "fontSize": "14px",
+          "transition": "0.15s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      },
+      {
+        "brand": "opencommerce-ds",
+        "route": "native",
+        "build": 0,
+        "styles": {
+          "background": "rgb(46, 58, 232)",
+          "expectedBackground": "rgb(46, 58, 232)",
+          "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+          "radius": "8px",
+          "height": "40px",
+          "fontSize": "15px",
+          "transition": "0.16s"
+        },
+        "focusRestored": true,
+        "art": "rgb(240, 0, 122)",
+        "desktopOverflow": false,
+        "mobileOverflow": false,
+        "errors": [],
+        "pass": true
+      }
+    ],
+    "artifacts": [
+      {
+        "brand": "context-ds",
+        "check": "standard-registry",
+        "code": 0
+      },
+      {
+        "brand": "context-ds",
+        "check": "release",
+        "code": 0
+      },
+      {
+        "brand": "context-ds",
+        "check": "registry-validate",
+        "code": 0
+      },
+      {
+        "brand": "context-ds",
+        "check": "registry-build",
+        "code": 0
+      },
+      {
+        "brand": "inkbox-ds",
+        "check": "standard-registry",
+        "code": 0
+      },
+      {
+        "brand": "inkbox-ds",
+        "check": "release",
+        "code": 0
+      },
+      {
+        "brand": "inkbox-ds",
+        "check": "registry-validate",
+        "code": 0
+      },
+      {
+        "brand": "inkbox-ds",
+        "check": "registry-build",
+        "code": 0
+      },
+      {
+        "brand": "agentcard-ds",
+        "check": "standard-registry",
+        "code": 0
+      },
+      {
+        "brand": "agentcard-ds",
+        "check": "release",
+        "code": 0
+      },
+      {
+        "brand": "agentcard-ds",
+        "check": "registry-validate",
+        "code": 0
+      },
+      {
+        "brand": "agentcard-ds",
+        "check": "registry-build",
+        "code": 0
+      },
+      {
+        "brand": "opencommerce-ds",
+        "check": "standard-registry",
+        "code": 0
+      },
+      {
+        "brand": "opencommerce-ds",
+        "check": "release",
+        "code": 0
+      },
+      {
+        "brand": "opencommerce-ds",
+        "check": "registry-validate",
+        "code": 0
+      },
+      {
+        "brand": "opencommerce-ds",
+        "check": "registry-build",
+        "code": 0
+      }
+    ],
+    "upstream": [
+      {
+        "label": "info",
+        "code": 0,
+        "ms": 1355
+      },
+      {
+        "label": "search",
+        "code": 0,
+        "ms": 517
+      },
+      {
+        "label": "view",
+        "code": 0,
+        "ms": 561
+      },
+      {
+        "label": "docs",
+        "code": 0,
+        "ms": 997
+      },
+      {
+        "label": "dry-run",
+        "code": 0,
+        "ms": 1156
+      },
+      {
+        "label": "diff",
+        "code": 0,
+        "ms": 1204
+      },
+      {
+        "label": "view-plan",
+        "code": 0,
+        "ms": 1186
+      },
+      {
+        "label": "migrations",
+        "code": 0,
+        "ms": 504
+      },
+      {
+        "label": "mcp-claude",
+        "code": 0,
+        "ms": 4204
+      },
+      {
+        "label": "registry-add",
+        "code": 0,
+        "ms": 521
+      },
+      {
+        "label": "preset",
+        "code": 0,
+        "ms": 606
+      },
+      {
+        "label": "eject",
+        "code": 0,
+        "ms": 2287
+      }
+    ],
+    "extra": [
+      {
+        "label": "apply-preset",
+        "code": 0
+      },
+      {
+        "label": "migrate-radix",
+        "code": 0
+      },
+      {
+        "label": "migrate-cn",
+        "code": 0
+      }
+    ]
+  },
+  "baseline": [
+    {
+      "brand": "context-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 64,
+      "bytes": 2849
+    },
+    {
+      "brand": "context-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 1,
+      "ms": 54,
+      "bytes": 0
+    },
+    {
+      "brand": "context-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 53,
+      "bytes": 89
+    },
+    {
+      "brand": "context-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 99
+    },
+    {
+      "brand": "context-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 97
+    },
+    {
+      "brand": "context-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 51,
+      "bytes": 97
+    },
+    {
+      "brand": "context-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 61,
+      "bytes": 473273
+    },
+    {
+      "brand": "context-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 57,
+      "bytes": 8560
+    },
+    {
+      "brand": "context-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/baseline-consumers/context-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 54,
+      "bytes": 54
+    },
+    {
+      "brand": "context-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 2849
+    },
+    {
+      "brand": "context-ds",
+      "label": "mcp",
+      "args": [
+        "mcp",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 54,
+      "bytes": 2849
+    },
+    {
+      "brand": "context-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 54,
+      "bytes": 55
+    },
+    {
+      "brand": "context-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 60,
+      "bytes": 1384
+    },
+    {
+      "brand": "context-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 54,
+      "bytes": 68
+    },
+    {
+      "brand": "context-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 54,
+      "bytes": 1385
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 60,
+      "bytes": 322
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 324
+    },
+    {
+      "brand": "context-ds",
+      "label": "rerun-preserves-files",
+      "pass": false
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 60,
+      "bytes": 1140
+    },
+    {
+      "brand": "context-ds",
+      "label": "configured-alias-path",
+      "pass": false
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 64,
+      "bytes": 1140
+    },
+    {
+      "brand": "context-ds",
+      "label": "javascript-output",
+      "pass": false
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 62,
+      "bytes": 1064
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "inspect-button",
+      "args": [
+        "inspect",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 53,
+      "bytes": 10701
+    },
+    {
+      "brand": "context-ds",
+      "label": "external-address",
+      "args": [
+        "inspect",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 10701,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "context-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": false,
+      "valid": 0,
+      "total": 189
+    },
+    {
+      "brand": "context-ds",
+      "label": "theme-token-coverage",
+      "total": 257,
+      "missing": [
+        "--ds-color-bg-brand",
+        "--ds-color-border-brand",
+        "--ds-color-border-on-brand",
+        "--ds-space-0",
+        "--ds-space-px",
+        "--ds-space-frame",
+        "--ds-space-0-5",
+        "--ds-space-1",
+        "--ds-space-1-5",
+        "--ds-space-2-5",
+        "--ds-space-3",
+        "--ds-space-3-5",
+        "--ds-space-4",
+        "--ds-space-5",
+        "--ds-space-6",
+        "--ds-space-7",
+        "--ds-space-8",
+        "--ds-space-9",
+        "--ds-space-10",
+        "--ds-space-12",
+        "--ds-space-14",
+        "--ds-space-16",
+        "--ds-space-20",
+        "--ds-space-24",
+        "--ds-space-32",
+        "--ds-layout-column",
+        "--ds-layout-column-wide",
+        "--ds-frame-column",
+        "--ds-layout-text",
+        "--ds-layout-heading",
+        "--ds-layout-sidebar",
+        "--ds-layout-parameters",
+        "--ds-layout-parameters-header",
+        "--ds-layout-product-column",
+        "--ds-layout-product-hero",
+        "--ds-layout-product-hero-lead",
+        "--ds-layout-product-hero-gap",
+        "--ds-layout-product-hero-foot",
+        "--ds-duration-moderate",
+        "--ds-duration-slow"
+      ]
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 58,
+      "bytes": 2546
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 53,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 57,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 57,
+      "bytes": 98167
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 12730
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/baseline-consumers/inkbox-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 50,
+      "bytes": 2546
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "mcp",
+      "args": [
+        "mcp",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 52,
+      "bytes": 2546
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 51,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 1216
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 285
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 54,
+      "bytes": 285
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 576
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "configured-alias-path",
+      "pass": false
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 55,
+      "bytes": 576
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "javascript-output",
+      "pass": false
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 469
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": false
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "inspect-button",
+      "args": [
+        "show",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 52,
+      "bytes": 7535
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "external-address",
+      "args": [
+        "show",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 7535,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": false,
+      "valid": 0,
+      "total": 71
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "theme-token-coverage",
+      "total": 166,
+      "missing": []
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 52,
+      "bytes": 2558
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 1,
+      "ms": 51,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 52,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 49,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 82203
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 57,
+      "bytes": 8580
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/baseline-consumers/agentcard-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 55,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 53,
+      "bytes": 2558
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "mcp",
+      "args": [
+        "mcp",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 54,
+      "bytes": 2558
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 49,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 55,
+      "bytes": 1225
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 59,
+      "bytes": 285
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 65,
+      "bytes": 285
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 55,
+      "bytes": 582
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "configured-alias-path",
+      "pass": false
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 61,
+      "bytes": 582
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "javascript-output",
+      "pass": false
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 54,
+      "bytes": 475
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": false
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "inspect-button",
+      "args": [
+        "show",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 52,
+      "bytes": 5662
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "external-address",
+      "args": [
+        "show",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 5662,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": false,
+      "valid": 0,
+      "total": 70
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "theme-token-coverage",
+      "total": 179,
+      "missing": [
+        "--ds-color-bg-brand",
+        "--ds-font-weight-regular",
+        "--ds-font-weight-medium",
+        "--ds-font-weight-heading",
+        "--ds-space-0",
+        "--ds-space-px",
+        "--ds-space-0-5",
+        "--ds-space-1",
+        "--ds-space-1-5",
+        "--ds-space-2",
+        "--ds-space-2-5",
+        "--ds-space-3",
+        "--ds-space-3-5",
+        "--ds-space-4",
+        "--ds-space-5",
+        "--ds-space-6",
+        "--ds-space-7",
+        "--ds-space-8",
+        "--ds-space-9",
+        "--ds-space-10",
+        "--ds-space-12",
+        "--ds-space-14",
+        "--ds-space-16",
+        "--ds-space-20",
+        "--ds-space-24",
+        "--ds-space-28",
+        "--ds-space-32",
+        "--ds-layout-column",
+        "--ds-layout-gutter",
+        "--ds-layout-text",
+        "--ds-layout-heading",
+        "--ds-layout-header",
+        "--ds-frame-column",
+        "--ds-glass-sheen",
+        "--ds-glass-blur",
+        "--ds-band-step",
+        "--ds-band-mix-1",
+        "--ds-band-mix-2",
+        "--ds-band-mix-3",
+        "--ds-band-mix-4",
+        "--ds-duration-moderate",
+        "--ds-duration-slow"
+      ]
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 2564
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 1,
+      "ms": 62,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 51,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 54,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 58,
+      "bytes": 85095
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 8718
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/baseline-consumers/opencommerce-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 2564
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "mcp",
+      "args": [
+        "mcp",
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 50,
+      "bytes": 2564
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 50,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 59,
+      "bytes": 1234
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 1,
+      "ms": 52,
+      "bytes": 0
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 55,
+      "bytes": 285
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 56,
+      "bytes": 285
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 60,
+      "bytes": 588
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "configured-alias-path",
+      "pass": false
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 55,
+      "bytes": 588
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "javascript-output",
+      "pass": false
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 57,
+      "bytes": 481
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": false
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "inspect-button",
+      "args": [
+        "show",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 51,
+      "bytes": 5325
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "external-address",
+      "args": [
+        "show",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 50,
+      "bytes": 5325,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": false,
+      "valid": 0,
+      "total": 71
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "theme-token-coverage",
+      "total": 201,
+      "missing": [
+        "--ds-color-bg-brand",
+        "--ds-font-weight-regular",
+        "--ds-font-weight-medium",
+        "--ds-font-weight-heading",
+        "--ds-space-0",
+        "--ds-space-px",
+        "--ds-space-0-5",
+        "--ds-space-1",
+        "--ds-space-1-5",
+        "--ds-space-2",
+        "--ds-space-2-5",
+        "--ds-space-3",
+        "--ds-space-3-5",
+        "--ds-space-4",
+        "--ds-space-4-5",
+        "--ds-space-5",
+        "--ds-space-6",
+        "--ds-space-7",
+        "--ds-space-8",
+        "--ds-space-9",
+        "--ds-space-10",
+        "--ds-space-12",
+        "--ds-space-14",
+        "--ds-space-16",
+        "--ds-space-20",
+        "--ds-space-24",
+        "--ds-space-28",
+        "--ds-space-30",
+        "--ds-space-32",
+        "--ds-layout-column",
+        "--ds-layout-medium",
+        "--ds-layout-gutter",
+        "--ds-layout-text",
+        "--ds-layout-heading",
+        "--ds-layout-header",
+        "--ds-frame-column",
+        "--ds-glass-sheen",
+        "--ds-glass-blur",
+        "--ds-band-step",
+        "--ds-band-mix-1",
+        "--ds-band-mix-2",
+        "--ds-band-mix-3",
+        "--ds-band-mix-4",
+        "--ds-duration-moderate",
+        "--ds-duration-slow",
+        "--ds-easing-pop"
+      ]
+    }
+  ],
+  "after": [
+    {
+      "brand": "context-ds",
+      "label": "all-components",
+      "args": [
+        "add",
+        "--all",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 318,
+      "bytes": 89221
+    },
+    {
+      "brand": "context-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 66,
+      "bytes": 4731
+    },
+    {
+      "brand": "context-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 0,
+      "ms": 82,
+      "bytes": 6
+    },
+    {
+      "brand": "context-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 76,
+      "bytes": 1114
+    },
+    {
+      "brand": "context-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 44066
+    },
+    {
+      "brand": "context-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 74,
+      "bytes": 10701
+    },
+    {
+      "brand": "context-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 71,
+      "bytes": 425
+    },
+    {
+      "brand": "context-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 473273
+    },
+    {
+      "brand": "context-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 67,
+      "bytes": 10939
+    },
+    {
+      "brand": "context-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/verified-release-consumers/context-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 76,
+      "bytes": 1711
+    },
+    {
+      "brand": "context-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--name",
+        "example",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 396
+    },
+    {
+      "brand": "context-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 86,
+      "bytes": 7782
+    },
+    {
+      "brand": "context-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 1711
+    },
+    {
+      "brand": "context-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 1712
+    },
+    {
+      "brand": "context-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 533
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 85,
+      "bytes": 953
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 81,
+      "bytes": 641
+    },
+    {
+      "brand": "context-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 85,
+      "bytes": 1926
+    },
+    {
+      "brand": "context-ds",
+      "label": "configured-alias-path",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 135,
+      "bytes": 1926
+    },
+    {
+      "brand": "context-ds",
+      "label": "javascript-output",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 81,
+      "bytes": 1921
+    },
+    {
+      "brand": "context-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": true
+    },
+    {
+      "brand": "context-ds",
+      "label": "inspect-button",
+      "args": [
+        "inspect",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 65,
+      "bytes": 10701
+    },
+    {
+      "brand": "context-ds",
+      "label": "external-address",
+      "args": [
+        "inspect",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 287,
+      "bytes": 37,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "context-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": true,
+      "valid": 189,
+      "total": 189
+    },
+    {
+      "brand": "context-ds",
+      "label": "theme-token-coverage",
+      "total": 257,
+      "missing": []
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "all-components",
+      "args": [
+        "add",
+        "--all",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 163,
+      "bytes": 17201
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 64,
+      "bytes": 4515
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 0,
+      "ms": 64,
+      "bytes": 6
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 66,
+      "bytes": 1103
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 65,
+      "bytes": 28280
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 80,
+      "bytes": 7494
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 80,
+      "bytes": 287
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 98167
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 67,
+      "bytes": 15004
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/verified-release-consumers/inkbox-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 71,
+      "bytes": 1786
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--name",
+        "example",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 66,
+      "bytes": 395
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 82,
+      "bytes": 7226
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 1786
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 71,
+      "bytes": 1787
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 529
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 83,
+      "bytes": 950
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 85,
+      "bytes": 639
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 89,
+      "bytes": 2002
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "configured-alias-path",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 141,
+      "bytes": 2002
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "javascript-output",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 89,
+      "bytes": 1997
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": true
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "inspect-button",
+      "args": [
+        "show",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 7494
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "external-address",
+      "args": [
+        "show",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 93,
+      "bytes": 36,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": true,
+      "valid": 71,
+      "total": 71
+    },
+    {
+      "brand": "inkbox-ds",
+      "label": "theme-token-coverage",
+      "total": 166,
+      "missing": []
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "all-components",
+      "args": [
+        "add",
+        "--all",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 151,
+      "bytes": 17238
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 4527
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 0,
+      "ms": 67,
+      "bytes": 6
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 73,
+      "bytes": 1124
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 7766
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 5618
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 299
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 82203
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 75,
+      "bytes": 10875
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/verified-release-consumers/agentcard-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 78,
+      "bytes": 1810
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--name",
+        "example",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 75,
+      "bytes": 398
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 87,
+      "bytes": 6771
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 76,
+      "bytes": 1810
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 79,
+      "bytes": 1811
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 83,
+      "bytes": 541
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 87,
+      "bytes": 959
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 87,
+      "bytes": 645
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 87,
+      "bytes": 2023
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "configured-alias-path",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 135,
+      "bytes": 2023
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "javascript-output",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 85,
+      "bytes": 2018
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": true
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "inspect-button",
+      "args": [
+        "show",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 71,
+      "bytes": 5618
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "external-address",
+      "args": [
+        "show",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 95,
+      "bytes": 36,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": true,
+      "valid": 70,
+      "total": 70
+    },
+    {
+      "brand": "agentcard-ds",
+      "label": "theme-token-coverage",
+      "total": 179,
+      "missing": [
+        "--ds-band-step",
+        "--ds-band-mix-1",
+        "--ds-band-mix-2",
+        "--ds-band-mix-3",
+        "--ds-band-mix-4"
+      ]
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "all-components",
+      "args": [
+        "add",
+        "--all",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 149,
+      "bytes": 17500
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "help",
+      "args": [
+        "--help"
+      ],
+      "exit": 0,
+      "ms": 74,
+      "bytes": 4533
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "version",
+      "args": [
+        "--version"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 6
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "info",
+      "args": [
+        "info",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 70,
+      "bytes": 1145
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "search",
+      "args": [
+        "search",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 8206
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "view",
+      "args": [
+        "view",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 5278
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "docs",
+      "args": [
+        "docs",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 68,
+      "bytes": 311
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "list",
+      "args": [
+        "list",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 69,
+      "bytes": 85095
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "guide",
+      "args": [
+        "guide",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 74,
+      "bytes": 11034
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "cwd",
+      "args": [
+        "init",
+        "--cwd",
+        "/private/tmp/brand-cli-comparison-20261024/verified-release-consumers/opencommerce-ds/default",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 86,
+      "bytes": 1834
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "create",
+      "args": [
+        "create",
+        "--name",
+        "example",
+        "--dry-run",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 78,
+      "bytes": 401
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "diff",
+      "args": [
+        "add",
+        "button",
+        "--diff",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 85,
+      "bytes": 6906
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "init-dry",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--dry-run",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 74,
+      "bytes": 1834
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "dry-run-pure",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "init-default",
+      "args": [
+        "init",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 77,
+      "bytes": 1835
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "init-explicit",
+      "args": [
+        "init",
+        "--surface",
+        "site",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 74,
+      "bytes": 553
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-default",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 87,
+      "bytes": 968
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-rerun",
+      "args": [
+        "add",
+        "button",
+        "card",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 86,
+      "bytes": 651
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "rerun-preserves-files",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-alias",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 85,
+      "bytes": 2044
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "configured-alias-path",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-javascript",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 144,
+      "bytes": 2044
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "javascript-output",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-only",
+      "args": [
+        "add",
+        "button",
+        "--json",
+        "--no-install"
+      ],
+      "exit": 0,
+      "ms": 84,
+      "bytes": 2039
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "add-installs-agent-guidance",
+      "pass": true
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "inspect-button",
+      "args": [
+        "show",
+        "button",
+        "--json"
+      ],
+      "exit": 0,
+      "ms": 66,
+      "bytes": 5278
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "external-address",
+      "args": [
+        "show",
+        "https://example.invalid/r/button.json",
+        "--json"
+      ],
+      "exit": 1,
+      "ms": 91,
+      "bytes": 36,
+      "expectedExit": "nonzero; URL must not silently resolve to bundled item"
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "shadcn-schema-compatible",
+      "pass": true,
+      "valid": 71,
+      "total": 71
+    },
+    {
+      "brand": "opencommerce-ds",
+      "label": "theme-token-coverage",
+      "total": 201,
+      "missing": [
+        "--ds-band-step",
+        "--ds-band-mix-1",
+        "--ds-band-mix-2",
+        "--ds-band-mix-3",
+        "--ds-band-mix-4"
+      ]
+    }
+  ],
+  "help": {
+    "init": "Usage: shadcn init|create [options] [components...]\n\ninitialize your project and install dependencies\n\nArguments:\n  components                 names, url or local path to component\n\nOptions:\n  -t, --template <template>  the template to use. (next, start, vite,\n                             react-router, laravel, astro)\n  -b, --base <base>          the component library to use. (base, radix, aria)\n  --monorepo                 scaffold a monorepo project.\n  --no-monorepo              skip the monorepo prompt.\n  -p, --preset [name]        use a preset configuration\n  -y, --yes                  skip confirmation prompt. (default: true)\n  -d, --defaults             use default configuration: --template=next\n                             --preset=base-nova (default: false)\n  -f, --force                force overwrite of existing configuration.\n                             (default: false)\n  -c, --cwd <cwd>            the working directory. defaults to the current\n                             directory. (default:\n                             \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -n, --name <name>          the name for the new project.\n  -s, --silent               mute output. (default: false)\n  --css-variables            use css variables for theming. (default: true)\n  --no-css-variables         do not use css variables for theming.\n  --rtl                      enable RTL support.\n  --no-rtl                   disable RTL support.\n  --pointer                  enable pointer cursor for buttons.\n  --no-pointer               disable pointer cursor for buttons.\n  --reinstall                re-install existing UI components.\n  --no-reinstall             do not re-install existing UI components.\n  -h, --help                 display help for command\n",
+    "apply": "Usage: shadcn apply [options] [preset]\n\napply a preset to an existing project\n\nArguments:\n  preset             the preset to apply\n\nOptions:\n  --preset <preset>  preset configuration to apply\n  --only [parts]     apply only parts of a preset: theme, font\n  -y, --yes          skip confirmation prompt. (default: false)\n  -c, --cwd <cwd>    the working directory. defaults to the current directory.\n                     (default:\n                     \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -s, --silent       mute output. (default: false)\n  -h, --help         display help for command\n",
+    "add": "Usage: shadcn add [options] [components...]\n\nadd a component to your project\n\nArguments:\n  components         item addresses to add\n\nOptions:\n  -y, --yes          skip confirmation prompt. (default: false)\n  -o, --overwrite    overwrite existing files. (default: false)\n  -c, --cwd <cwd>    the working directory. defaults to the current directory.\n                     (default:\n                     \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -a, --all          add all available components (default: false)\n  -p, --path <path>  the path to add the component to.\n  -s, --silent       mute output. (default: false)\n  --dry-run          preview changes without writing files. (default: false)\n  --diff [path]      show diff for a file.\n  --view [path]      show file contents.\n  -h, --help         display help for command\n",
+    "diff": "Usage: shadcn diff [options] [component]\n\n[DEPRECATED] Use `add [component] --diff` instead.\n\nArguments:\n  component        the component name\n\nOptions:\n  -y, --yes        skip confirmation prompt. (default: false)\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -h, --help       display help for command\n",
+    "docs": "Usage: shadcn docs [options] <components...>\n\nget docs, api references and usage examples for components\n\nArguments:\n  components         component names\n\nOptions:\n  -c, --cwd <cwd>    the working directory. defaults to the current directory.\n                     (default:\n                     \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -b, --base <base>  the base to use: base, radix, or aria. defaults to project\n                     base.\n  --json             output as JSON. (default: false)\n  -h, --help         display help for command\n",
+    "view": "Usage: shadcn view [options] <items...>\n\nview items from the registry\n\nArguments:\n  items            item addresses to view\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -h, --help       display help for command\n",
+    "search": "Usage: shadcn search|list [options] [registries...]\n\nsearch items from registries\n\nArguments:\n  registries             the registry addresses to search. Supports namespaces,\n                         GitHub sources and URLs. When omitted, searches all\n                         registries configured in components.json.\n\nOptions:\n  -c, --cwd <cwd>        the working directory. defaults to the current\n                         directory. (default:\n                         \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -q, --query <query>    query string\n  -t, --type <type>      filter by item type, e.g. ui, block, hook.\n                         Comma-separated for multiple.\n  -l, --limit <number>   maximum number of items to display (default: \"100\")\n  -o, --offset <number>  number of items to skip (default: \"0\")\n  --json                 output as JSON. (default: false)\n  -h, --help             display help for command\n",
+    "migrate": "Usage: shadcn migrate [options] [migration] [path]\n\nrun a migration.\n\nArguments:\n  migration          the migration to run.\n  path               optional path or glob pattern to migrate.\n\nOptions:\n  -c, --cwd <cwd>    the working directory. defaults to the current directory.\n                     (default:\n                     \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -l, --list         list all migrations. (default: false)\n  -y, --yes          skip confirmation prompt. (default: false)\n  -f, --from <name>  the base color or icon library to migrate from.\n  -t, --to <name>    the base color or icon library to migrate to.\n  -h, --help         display help for command\n",
+    "eject": "Usage: shadcn eject [options]\n\ninline shadcn/tailwind.css and remove the shadcn dependency\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -y, --yes        skip confirmation prompt. (default: false)\n  -s, --silent     mute output. (default: false)\n  -h, --help       display help for command\n",
+    "info": "Usage: shadcn info [options]\n\nget information about your project\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  --json           output as JSON. (default: false)\n  -h, --help       display help for command\n",
+    "build": "Usage: shadcn build [options] [registry]\n\nbuild components for a shadcn registry\n\nArguments:\n  registry             path to registry.json file (default: \"./registry.json\")\n\nOptions:\n  -o, --output <path>  destination directory for json files (default:\n                       \"./public/r\")\n  -c, --cwd <cwd>      the working directory. defaults to the current directory.\n                       (default:\n                       \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -h, --help           display help for command\n",
+    "mcp": "Usage: shadcn mcp [options] [command]\n\nMCP server and configuration commands\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -h, --help       display help for command\n\nCommands:\n  init [options]   Initialize MCP configuration for your client\n",
+    "mcp init": "Usage: shadcn mcp init [options]\n\nInitialize MCP configuration for your client\n\nOptions:\n  --client <client>  MCP client (claude, cursor, vscode, codex, opencode)\n  -h, --help         display help for command\n",
+    "preset": "Usage: shadcn preset [options] [command]\n\nmanage presets\n\nOptions:\n  -h, --help               display help for command\n\nCommands:\n  decode [options] <code>  decode a preset code\n  resolve|info [options]   resolve a preset from your project\n  url <code>               get the create URL for a preset code\n  open <code>              open a preset code in the browser\n",
+    "registry": "Usage: shadcn registry [options] [command]\n\nmanage registries\n\nOptions:\n  -h, --help                     display help for command\n\nCommands:\n  add [options] [registries...]  add registries to your project\n  validate [options] [registry]  validate a shadcn registry\n  help [command]                 display help for command\n",
+    "registry add": "Usage: shadcn registry add [options] [registries...]\n\nadd registries to your project\n\nArguments:\n  registries       registries (@namespace) or registry URLs (@namespace=url)\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -s, --silent     mute output. (default: false)\n  -h, --help       display help for command\n",
+    "root": "Usage: shadcn [options] [command]\n\nbuild your component library\n\nOptions:\n  -v, --version                          display the version number\n  -h, --help                             display help for command\n\nCommands:\n  init|create [options] [components...]  initialize your project and install dependencies\n  apply [options] [preset]               apply a preset to an existing project\n  add [options] [components...]          add a component to your project\n  diff [options] [component]             [DEPRECATED] Use `add [component] --diff` instead.\n  docs [options] <components...>         get docs, api references and usage examples for components\n  view [options] <items...>              view items from the registry\n  search|list [options] [registries...]  search items from registries\n  migrate [options] [migration] [path]   run a migration.\n  eject [options]                        inline shadcn/tailwind.css and remove the shadcn dependency\n  info [options]                         get information about your project\n  build [options] [registry]             build components for a shadcn registry\n  mcp [options]                          MCP server and configuration commands\n  preset                                 manage presets\n  registry                               manage registries\n  help [command]                         display help for command\n",
+    "registry validate": "Usage: shadcn registry validate [options] [registry]\n\nvalidate a shadcn registry\n\nArguments:\n  registry         registry address to validate. Supports registry.json paths\n                   and GitHub sources. (default: \"./registry.json\")\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  -h, --help       display help for command\n",
+    "preset decode": "Usage: shadcn preset decode [options] <code>\n\ndecode a preset code\n\nArguments:\n  code        the preset code to decode\n\nOptions:\n  --json      output as JSON. (default: false)\n  -h, --help  display help for command\n",
+    "preset resolve": "Usage: shadcn preset resolve|info [options]\n\nresolve a preset from your project\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli\")\n  --json           output as JSON. (default: false)\n  -h, --help       display help for command\n",
+    "preset url": "Usage: shadcn preset url [options] <code>\n\nget the create URL for a preset code\n\nArguments:\n  code        the preset code\n\nOptions:\n  -h, --help  display help for command\n",
+    "preset open": "Usage: shadcn preset open [options] <code>\n\nopen a preset code in the browser\n\nArguments:\n  code        the preset code\n\nOptions:\n  -h, --help  display help for command\n"
+  }
+}

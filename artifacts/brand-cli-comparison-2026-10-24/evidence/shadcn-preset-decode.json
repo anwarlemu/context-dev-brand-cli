@@ -1,0 +1,6 @@
+{
+  "label": "shadcn-preset-decode",
+  "code": 0,
+  "stdout": "Preset\n  code         b2fA\n  version      b\n  style        nova\n  baseColor    neutral\n  theme        neutral\n  chartColor   neutral\n  iconLibrary  lucide\n  font         geist\n  fontHeading  inherit\n  radius       default\n  menuAccent   subtle\n  menuColor    default\n  url          https://ui.shadcn.com/create?preset=b2fA\n",
+  "stderr": ""
+}

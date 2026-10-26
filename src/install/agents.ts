@@ -54,7 +54,10 @@ function mergeHooks(existing: any, cmd: string, harness: 'claude-code' | 'codex'
 
 export function installAgents(w: Writer) {
 	const text = contract();
+	const skill = readFileSync(pkgPath('brand', 'skill.md'), 'utf8').replaceAll('{{brand}}', brand().name).replaceAll('{{bin}}', brand().bin).replaceAll('{{source}}', brand().source).replaceAll('{{registry}}', brand().registryUrl ?? '');
+	for (const directory of ['.agents/skills', '.claude/skills']) w.write(`${directory}/${brand().bin}/SKILL.md`, skill);
 	w.write('.ds/guide.md', agentGuide());
+	w.write('.ds/agent-guide.md', agentGuide());
 	// A CLAUDE.md that only imports AGENTS.md gets the contract through it.
 	const claude = w.read('CLAUDE.md');
 	if (claude === undefined && w.read('AGENTS.md') !== undefined) w.write('CLAUDE.md', '@AGENTS.md\n');

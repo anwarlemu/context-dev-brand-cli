@@ -10,6 +10,7 @@ export type Review = { at: string; url: string; scores: Scores; passed: boolean;
 
 export type State = {
 	version: 2;
+	colors?: 'components';
 	surface: Surface;
 	mixed: boolean;
 	theme: 'light' | 'dark';

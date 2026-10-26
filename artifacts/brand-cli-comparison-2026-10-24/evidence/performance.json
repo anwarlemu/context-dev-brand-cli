@@ -1,0 +1,110 @@
+[
+  {
+    "brand": "context-ds",
+    "beforeBytes": 8211235,
+    "afterBytes": 10522837,
+    "before": {
+      "samplesMs": [
+        52,
+        52,
+        52,
+        52,
+        52,
+        52
+      ],
+      "medianMs": 52
+    },
+    "after": {
+      "samplesMs": [
+        64,
+        65,
+        65,
+        65,
+        65,
+        68
+      ],
+      "medianMs": 65
+    }
+  },
+  {
+    "brand": "inkbox-ds",
+    "beforeBytes": 4535092,
+    "afterBytes": 6832800,
+    "before": {
+      "samplesMs": [
+        52,
+        53,
+        53,
+        54,
+        57,
+        59
+      ],
+      "medianMs": 53.5
+    },
+    "after": {
+      "samplesMs": [
+        67,
+        68,
+        68,
+        71,
+        71,
+        75
+      ],
+      "medianMs": 69.5
+    }
+  },
+  {
+    "brand": "agentcard-ds",
+    "beforeBytes": 4653337,
+    "afterBytes": 6970680,
+    "before": {
+      "samplesMs": [
+        54,
+        55,
+        55,
+        55,
+        55,
+        56
+      ],
+      "medianMs": 55
+    },
+    "after": {
+      "samplesMs": [
+        67,
+        67,
+        68,
+        68,
+        68,
+        70
+      ],
+      "medianMs": 68
+    }
+  },
+  {
+    "brand": "opencommerce-ds",
+    "beforeBytes": 4370535,
+    "afterBytes": 6688424,
+    "before": {
+      "samplesMs": [
+        53,
+        53,
+        53,
+        53,
+        54,
+        55
+      ],
+      "medianMs": 53
+    },
+    "after": {
+      "samplesMs": [
+        66,
+        67,
+        68,
+        71,
+        72,
+        75
+      ],
+      "medianMs": 69.5
+    }
+  }
+]

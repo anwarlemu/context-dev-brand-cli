@@ -1,0 +1,26 @@
+[
+  {
+    "brand": "context-ds",
+    "add": 0,
+    "build": 0,
+    "sharedUtility": true
+  },
+  {
+    "brand": "inkbox-ds",
+    "add": 0,
+    "build": 0,
+    "sharedUtility": true
+  },
+  {
+    "brand": "agentcard-ds",
+    "add": 0,
+    "build": 0,
+    "sharedUtility": true
+  },
+  {
+    "brand": "opencommerce-ds",
+    "add": 0,
+    "build": 0,
+    "sharedUtility": true
+  }
+]

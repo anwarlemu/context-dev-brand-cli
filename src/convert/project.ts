@@ -1,3 +1,4 @@
+import { applyComponentColors } from './components.js';
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { brand, type BrandTheme } from '../lib/brand.js';
@@ -15,14 +16,14 @@ import { convertSvgMark } from './svg.js';
 
 export type ConvertResult = { written: string[]; stats: Stats; palette: Palette; marks: string[]; rasterLogos: string[] };
 
-export function convertProject(project: Project, files: string[], surface: Surface, { dryRun = false, theme = 'light' as 'light' | 'dark' } = {}): ConvertResult {
+export function convertProject(project: Project, files: string[], surface: Surface, { dryRun = false, preserveColors = false, theme = 'light' as 'light' | 'dark' } = {}): ConvertResult {
 	const root = project.root;
 	const read = (rel: string) => readFileSync(join(root, rel), 'utf8');
 	const styleFiles = files.filter((rel) => STYLES.test(rel) || MARKUP.test(rel));
 	const styleText = [project.mainStylesheet && existsSync(join(root, project.mainStylesheet)) ? read(project.mainStylesheet) : '', ...styleFiles.map(read)].join('\n');
 	const nativeFiles = files.filter((rel) => NATIVE.test(rel) || ANDROID_XML.test(rel));
 	const css = sitePalette(styleText);
-	const base: Palette = { ...(css.found || !nativeFiles.length ? css : nativePalette(nativeFiles.map(read), readNativeColor)), target: surface === 'product' && theme === 'dark' ? 'dark' : 'light', column: surface !== 'product' };
+	const base: Palette = { ...(css.found || !nativeFiles.length ? css : nativePalette(nativeFiles.map(read), readNativeColor)), target: surface === 'product' && theme === 'dark' ? 'dark' : 'light', column: surface !== 'product', preserveColors };
 	const brandTheme: BrandTheme = surface === 'product' ? (theme === 'dark' ? 'product-dark' : 'product') : 'site';
 
 	// A page that styles itself apart from the rest (a dark case study inside a light site) is read against its own
@@ -51,7 +52,8 @@ export function convertProject(project: Project, files: string[], surface: Surfa
 			after = convertMarkup(before, pal, stats);
 			if (tailwind) after = after.replace(/(\sclass(?:Name)?\s*=\s*)(["'])([^"']*)\2/g, (all, head: string, q: string, cls: string) => `${head}${q}${convertClasses(cls, pal, stats, tailwind === 'theme')}${q}`);
 		} else if (SCRIPT.test(rel)) after = convertScript(before, tailwind ? classPalette(before, pal === base ? layoutPalette : pal, tailwindColor) : pal, stats, { tailwind, theme: brandTheme });
-		else if (NATIVE.test(rel) || ANDROID_XML.test(rel) || THEME_DATA.test(rel)) after = convertNative(before, pal, stats, brandTheme, rel.endsWith('.xml') || rel.endsWith('.xaml'));
+		else if (!base.preserveColors && (NATIVE.test(rel) || ANDROID_XML.test(rel) || THEME_DATA.test(rel))) after = convertNative(before, pal, stats, brandTheme, rel.endsWith('.xml') || rel.endsWith('.xaml'));
+		if (base.preserveColors) after = applyComponentColors(rel, after, surface, stats, tailwind === 'theme');
 		if (after !== before) {
 			written.push(rel);
 			if (!dryRun) writeFileSync(join(root, rel), after);
@@ -62,7 +64,7 @@ export function convertProject(project: Project, files: string[], surface: Surfa
 	// redrawn in brand text; raster logos are listed for the agent to check, since they cannot be recolored in code.
 	const marks: string[] = [];
 	const rasterLogos: string[] = [];
-	if (base.mode === 'dark' && brandTheme !== 'product-dark') {
+	if (!base.preserveColors && base.mode === 'dark' && brandTheme !== 'product-dark') {
 		const drawn = files.filter((rel) => MARKUP.test(rel) || SCRIPT.test(rel) || STYLES.test(rel)).map(read).join('\n');
 		const isDrawn = (name: string) => new RegExp(`(src(set)?\\s*=\\s*["'{][^"'}]*|url\\(\\s*["']?[^)]*|import[^;]*|:\\s*["'][^"']*)${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(drawn);
 		for (const rel of walkFiles(root, ['**/*.svg'], ['**/node_modules/**'])) {

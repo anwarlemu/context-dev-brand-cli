@@ -1,0 +1,37 @@
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.ts took 103ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1436ms
+  Running TypeScript ...
+  Finished TypeScript in 3.5s ...
+  Collecting page data using 9 workers ...
+  Generating static pages using 9 workers (0/250) ...
+  Generating static pages using 9 workers (62/250) 
+  Generating static pages using 9 workers (124/250) 
+  Generating static pages using 9 workers (187/250) 
+✓ Generating static pages using 9 workers (250/250) in 1988ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /apple-icon.png
+├ ○ /components
+├   /components/[name]
+│ ├ ● /components/accordion
+│ ├ ● /components/alert
+│ ├ ● /components/alert-dialog
+│ └ ● [+65 more paths]
+├ ○ /icon.png
+├   /preview/[name]/[example]
+│ ├ ● /preview/accordion/Multiple
+│ ├ ● /preview/accordion/Preview
+│ ├ ● /preview/alert/Destructive
+│ └ ● [+171 more paths]
+└ ○ /theme
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+

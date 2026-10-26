@@ -34,19 +34,19 @@ const hexOf = (raw: string) => {
 
 const pxScale = (prop: string) => new Map((/radius/.test(prop) ? scales().radius : /font-size/.test(prop) ? scales().text : scales().space).map(([name, px]) => [px, name]));
 
-type Decl = { prop: string; value: string; offset: number; valueOffset: number; fontFace: boolean };
+type Decl = { prop: string; value: string; offset: number; valueOffset: number; fontFace: boolean; selector?: string };
 
 /** Declarations of a stylesheet (or styles extracted from a template), with their offsets. */
 export function declarations(css: string): Decl[] {
 	const out: Decl[] = [];
-	const stack: boolean[] = [];
+	const stack: {fontFace: boolean; selector: string}[] = [];
 	let segStart = 0;
 	const flush = (end: number) => {
 		const seg = css.slice(segStart, end);
 		for (const m of seg.matchAll(/(^|[\s;{])(--[\w-]+|[a-zA-Z-]+)\s*:\s*([^;{}]+)/g)) {
 			const start = segStart + m.index + m[1].length;
 			const lead = m[3].length - m[3].trimStart().length;
-			out.push({ prop: m[2].toLowerCase(), value: m[3].trim(), offset: start, valueOffset: start + m[0].length - m[1].length - m[3].length + lead, fontFace: stack[stack.length - 1] ?? false });
+			out.push({ prop: m[2].toLowerCase(), value: m[3].trim(), offset: start, valueOffset: start + m[0].length - m[1].length - m[3].length + lead, fontFace: stack.at(-1)?.fontFace ?? false, selector: stack.at(-1)?.selector });
 		}
 	};
 	for (let i = 0; i < css.length; i++) {
@@ -62,7 +62,8 @@ export function declarations(css: string): Decl[] {
 			let b = i - 1;
 			while (b >= segStart && !';{}'.includes(css[b])) b--;
 			flush(b + 1);
-			stack.push(/@font-face\s*$/.test(css.slice(b + 1, i).trim()) || /^\s*@font-face/.test(css.slice(b + 1, i)));
+			const header = css.slice(b + 1, i).trim();
+			stack.push({fontFace: /^@font-face/.test(header), selector: `${stack.at(-1)?.selector ?? ''} ${header.startsWith('@') ? '' : header}`.trim()});
 			segStart = i + 1;
 		} else if (ch === '}') {
 			flush(i);

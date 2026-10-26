@@ -1,0 +1,347 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Brand CLI comparison with shadcn</title><style>
+:root{font-family:system-ui,sans-serif;color:#17202b;background:#f7f8fb;line-height:1.55}body{margin:0}main{max-width:1280px;margin:auto;padding:40px 24px}h1{font-size:clamp(28px,4vw,44px);line-height:1.13;max-width:950px}h2{margin-top:44px;font-size:24px}h3{font-size:18px}p{max-width:950px}.eyebrow{color:#566375;font-size:13px}.lead{font-size:19px}.note{padding:16px 20px;background:#fff4dc;border-left:4px solid #d29a29;border-radius:8px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:white;border:1px solid #dce2ea;border-radius:16px;padding:20px}.number{font-size:30px;font-weight:650}.muted{color:#566375;font-size:14px}.scroll{overflow:auto;border:1px solid #dce2ea;border-radius:14px;background:white}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;vertical-align:top;padding:14px;border-bottom:1px solid #e5e9f0}th{background:#edf1f8;font-weight:600}td{min-width:140px}#matrix td:last-child{min-width:280px}a{color:#2454ad}code,pre{font-family:ui-monospace,monospace;font-size:13px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#eef2f8;padding:16px;border-radius:12px}details{background:white;border:1px solid #dce2ea;border-radius:12px;padding:14px;margin:10px 0}summary{cursor:pointer;font-weight:600}.filters{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0}label{display:flex;flex-direction:column;font-size:13px;gap:5px}input,select{padding:10px 14px;border-radius:999px;border:1px solid #aab7c9;font:inherit;background:white;color:inherit}input{min-width:260px}input:focus,select:focus{outline:2px solid #2454ad;outline-offset:2px}.pill{display:inline-block;border-radius:999px;padding:3px 9px;background:#e9effb;font-size:12px;white-space:nowrap}figure{margin:0}img{width:100%;border:1px solid #dce2ea;border-radius:12px}figcaption{font-size:13px;color:#566375}footer{border-top:1px solid #dce2ea;margin-top:36px;padding-top:20px;font-size:13px}@media print{.filters{display:none}.scroll{overflow:visible}table{font-size:10px}td{min-width:0!important}details{break-inside:avoid}}</style><main>
+<p class="eyebrow">ENGINEERING AUDIT · 24 OCTOBER 2026 · SHADCN 4.22.1 → BRAND CLI 2.1.0 CANDIDATES</p><h1>The main gap was installation and agent workflow consistency.</h1>
+<p class="lead">Published versions of Context, Inkbox, Agentcard and OpenCommerce were installed and tested against shadcn. Their existing components were generally usable, but project configuration, JavaScript output, safe conversion, discovery and ecosystem integration were uneven. Those reproduced gaps now have fixes and regression coverage across all four repositories.</p>
+<p class="note"><strong>Delivery status:</strong> these are local 2.1.0 candidates. This audit has not pushed branches, published packages or deployed the sites. The new hosted registry addresses become usable after deployment. Pre-existing local commits in the repositories were preserved.</p>
+<div class="cards"><div class="card"><div class="number">264</div>repository tests passed</div><div class="card"><div class="number">402</div>standard registry items validated and rebuilt</div><div class="card"><div class="number">4 + 4</div>new apps and converted apps built</div><div class="card"><div class="number">4</div>shared UI workspace installs built</div></div>
+<h2>What changed</h2><ul><li>Consistent <code>info → search → view → add --dry-run → add</code> workflow, with JSON output and project targeting.</li><li>Configured aliases, inherited JSONC configs, JSX/JS output, custom paths, exact diffs, overwrite control and idempotent installs.</li><li>Separate brand utilities preserve existing app helpers. Dependency failures occur before component files are changed.</li><li>Conversion preserves custom labels, behavior and unrelated color data. Referenced TypeScript projects are checked before accepting adaptations.</li><li>Portable agent skills are installed by init and add. Standard registries enable the actual upstream MCP and workspace implementation.</li><li>Theme/font conflicts were corrected, and missing utility aliases added without changing the brands' component designs.</li></ul>
+<h2>Measured installation and runtime costs</h2><p>The package-install measurements below are single runs on the same macOS host with shared caches and variable network conditions. They are observations, not statistically comparable cold-install benchmarks. Published shadcn installed in <strong>20.20 seconds</strong>. New candidates were built and packed locally; no claimed live-install speed improvement is inferred.</p>
+<div class="scroll"><table><thead><tr><th>Brand</th><th>Published install</th><th>Bundled items</th><th>Tests</th><th>Warm list median<br>before → after</th><th>Candidate tarball</th><th>Unpacked package<br>before → after</th></tr></thead><tbody><tr><td>Context.dev</td><td>51.29 s</td><td>189</td><td>62</td><td>52 → 65 ms</td><td>3.09 MB</td><td>8.21 MB → 10.52 MB</td></tr><tr><td>Inkbox</td><td>13.22 s</td><td>71</td><td>86</td><td>53.5 → 69.5 ms</td><td>1.54 MB</td><td>4.54 MB → 6.83 MB</td></tr><tr><td>Agentcard</td><td>18.25 s</td><td>70</td><td>58</td><td>55 → 68 ms</td><td>1.99 MB</td><td>4.65 MB → 6.97 MB</td></tr><tr><td>opencommerce</td><td>10.98 s</td><td>71</td><td>58</td><td>53 → 69.5 ms</td><td>1.75 MB</td><td>4.37 MB → 6.69 MB</td></tr></tbody></table></div>
+<p class="muted">Warm list medians use six measured subprocess runs after one warm-up. The new command/config support adds roughly 13–17 ms on this host. JavaScript transformation adds approximately 2.3 MB unpacked; it now loads only for JavaScript installs. Duplicate hosted manifests are excluded from CLI packages. Initial concurrent npx scaffolds hit a shared npm-cache failure; sequential reruns with an isolated cache passed for all four brands.</p>
+<h2>Function and capability comparison</h2><p>Every discovered top-level command, alias, subcommand group and flag is inventoried. “Upstream” means the brand CLI delegates to pinned shadcn, preserving its behavior; it does not mean we independently reimplemented that feature. The evidence column distinguishes executed cases from inspected or intentionally different behavior.</p>
+<div class="filters"><label>Find a capability<input id="query" type="search" placeholder="aliases, MCP, JavaScript, migration…"></label><label>Implementation<select id="status"><option value="">All</option><option>Native</option><option>Native + upstream</option><option>Upstream</option><option>Native generator</option><option>Different</option><option>Verified sample</option></select></label></div><p id="count" class="muted" aria-live="polite"></p>
+<div class="scroll"><table id="matrix"><thead><tr><th>Area / capability</th><th>shadcn 4.22.1</th><th>Published brands before</th><th>Candidate behavior</th><th>Implementation</th><th>Evidence / boundary</th></tr></thead><tbody><tr data-status="Different"><td><small>Installation</small><br><strong>Package distribution</strong></td><td>npm package; npx shadcn@4.22.1</td><td>GitHub release branch</td><td>GitHub release branch retained; compiled 2.1.0 tarballs built</td><td><span class="pill">Different</span></td><td>Real published packages installed. npm publication is not part of this change.</td></tr><tr data-status="Native + upstream"><td><small>Installation</small><br><strong>init / create</strong></td><td>Initialize existing apps or scaffold templates</td><td>No scaffold; Context required an explicit surface</td><td>Native init; create uses pinned upstream scaffold, then installs brand</td><td><span class="pill">Native + upstream</span></td><td>All four Vite scaffolds and their production builds passed.</td></tr><tr data-status="Upstream"><td><small>Installation</small><br><strong>Framework templates</strong></td><td>Next, Vite, Start, React Router, Laravel, Astro</td><td>No scaffolding</td><td>Upstream template support exposed</td><td><span class="pill">Upstream</span></td><td>Vite and Vite monorepo executed. Other scaffold templates inventoried, not each executed.</td></tr><tr data-status="Native"><td><small>Installation</small><br><strong>components.json</strong></td><td>Project paths, aliases, stylesheet, mode</td><td>Ignored aliases and target paths</td><td>Preserves config and adds the brand namespace</td><td><span class="pill">Native</span></td><td>Inherited JSONC aliases, custom paths and existing registries tested.</td></tr><tr data-status="Native"><td><small>Installation</small><br><strong>JavaScript / TypeScript</strong></td><td>Transforms files according to tsx</td><td>Always emitted TypeScript</td><td>JSX/JS or TSX/TS according to project config</td><td><span class="pill">Native</span></td><td>Compiled distributions emitted JavaScript parsed without TypeScript syntax.</td></tr><tr data-status="Native + upstream"><td><small>Installation</small><br><strong>Package managers</strong></td><td>npm, pnpm, yarn, bun and workspaces</td><td>Lockfile detection</td><td>Reads packageManager first, then lockfiles; upstream workspace routing</td><td><span class="pill">Native + upstream</span></td><td>npm executed; selection logic for other managers inspected, not all package managers executed.</td></tr><tr data-status="Upstream"><td><small>Installation</small><br><strong>Monorepo routing</strong></td><td>Shared UI paths and dependency placement</td><td>No shared-package routing</td><td>Standard registry installs through upstream</td><td><span class="pill">Upstream</span></td><td>Four brands installed and built in a real shared UI workspace; private helpers live with UI.</td></tr><tr data-status="Different"><td><small>Installation</small><br><strong>Node / React / Tailwind prerequisites</strong></td><td>Framework-dependent; supports multiple shadcn generations</td><td>Brand-specific React and Tailwind requirements</td><td>Checks installed versions and gives actionable setup errors</td><td><span class="pill">Different</span></td><td>Brand components still require React 19+ and Tailwind 4; Context requires React 19.2+.</td></tr><tr data-status="Native"><td><small>Discovery</small><br><strong>info</strong></td><td>Machine-readable project inspection</td><td>Missing</td><td>Version, framework, aliases, surface, installed items, registry, next steps</td><td><span class="pill">Native</span></td><td>Read-only JSON and --cwd verified.</td></tr><tr data-status="Native + upstream"><td><small>Discovery</small><br><strong>search / list</strong></td><td>Search configured registries; query/type/limit/offset</td><td>List with inconsistent command vocabulary</td><td>Consistent query, type, surface, pagination; upstream for other registries</td><td><span class="pill">Native + upstream</span></td><td>All four bundled catalogs and real MCP registry search tested.</td></tr><tr data-status="Native"><td><small>Discovery</small><br><strong>view / show / inspect</strong></td><td>View registry items</td><td>Context inspect vs other brands show</td><td>All three names read APIs, dependencies, examples and source</td><td><span class="pill">Native</span></td><td>Existing aliases retained; own @namespace addresses supported.</td></tr><tr data-status="Native"><td><small>Discovery</small><br><strong>docs</strong></td><td>Documentation and examples</td><td>No docs command</td><td>Documentation/source links and offline inspection command</td><td><span class="pill">Native</span></td><td>Exact component metadata retained.</td></tr><tr data-status="Native"><td><small>Discovery</small><br><strong>--version / --cwd / --json</strong></td><td>Version, project targeting, structured operations</td><td>Missing version/cwd; inconsistent schemas</td><td>Version and cwd; stable structured native commands</td><td><span class="pill">Native</span></td><td>Error paths, cwd forwarding, discovery and install output tested. Upstream output formats remain upstream-owned.</td></tr><tr data-status="Native"><td><small>Components</small><br><strong>add and dependencies</strong></td><td>Source ownership plus transitive dependencies</td><td>Bundled source installation</td><td>Alias-aware planning before writes; dependency closure and scoped helper</td><td><span class="pill">Native</span></td><td>Button/card/input/select/dialog consumers compiled for all four brands.</td></tr><tr data-status="Native"><td><small>Components</small><br><strong>--all / --path</strong></td><td>Bulk install and custom component path</td><td>No consistent support</td><td>Both supported; relative imports retarget custom output</td><td><span class="pill">Native</span></td><td>Every bundled item planned, plus custom output-path regression.</td></tr><tr data-status="Native"><td><small>Components</small><br><strong>--dry-run / --diff / --view</strong></td><td>Preview changes and file contents</td><td>Basic dry-run only</td><td>File actions, exact diffs and contents without writes</td><td><span class="pill">Native</span></td><td>Snapshots prove dry-run/diff purity.</td></tr><tr data-status="Native"><td><small>Components</small><br><strong>Existing files and updates</strong></td><td>Keep files or overwrite after review</td><td>Keep existing files; helper patch could alter app code</td><td>Keep differing files, report conflicts, isolated brand cn, explicit overwrite</td><td><span class="pill">Native</span></td><td>Existing app helpers and local modifications preserved; repeated install is idempotent.</td></tr><tr data-status="Native"><td><small>Components</small><br><strong>Dependency failure recovery</strong></td><td>Reports dependency installation errors</td><td>Could leave copied components without dependencies</td><td>Dependencies installed before component writes; no success manifest on failure</td><td><span class="pill">Native</span></td><td>Forced npm failure regression verifies no component file created.</td></tr><tr data-status="Native + upstream"><td><small>Components</small><br><strong>External item addresses</strong></td><td>URLs, local files, namespaced/private registries</td><td>URL basename could silently resolve to bundled item</td><td>Actual HTTP/local content read; invalid URLs fail; own namespace supported</td><td><span class="pill">Native + upstream</span></td><td>Local-address and cycle tests; intentionally invalid external address must fail. Authenticated/custom ecosystem registries use upstream.</td></tr><tr data-status="Different"><td><small>Components</small><br><strong>JSX directives and component API</strong></td><td>Base-specific APIs; configured RSC output</td><td>Brand-specific APIs</td><td>Exact source/APIs remain available; JS stripping preserves JSX and directives</td><td><span class="pill">Different</span></td><td>APIs are not interchangeable by name alone. Context primary, Inkbox default, and Agentcard/OpenCommerce primary are distinct button variants.</td></tr><tr data-status="Different"><td><small>Styling</small><br><strong>apply</strong></td><td>Apply a shadcn preset/theme/font</td><td>Broad conversion workflow</td><td>Explicit brand apply scopes colors to recognized components</td><td><span class="pill">Different</span></td><td>Four apps preserved copy, callbacks and artwork colors and built after conversion. shadcn preset apply is available through the bridge.</td></tr><tr data-status="Native"><td><small>Styling</small><br><strong>Preserve application behavior</strong></td><td>Component installation is not arbitrary app conversion</td><td>Adapters could remove hard-coded labels; referenced tsconfigs missed</td><td>Conservative wrapper adaptation and referenced-project type checks</td><td><span class="pill">Native</span></td><td>Reproduced lost button label and failed builds; repaired consumer tests pass.</td></tr><tr data-status="Native + upstream"><td><small>Styling</small><br><strong>Theme collision handling</strong></td><td>Explicit theme install can replace theme aliases</td><td>Existing shadcn theme could override brand colors/fonts</td><td>Native resolves conflicting aliases; direct upstream command includes theme</td><td><span class="pill">Native + upstream</span></td><td>Computed colors, font families, radius and control dimensions agree between routes.</td></tr><tr data-status="Native"><td><small>Styling</small><br><strong>Token creation and utilities</strong></td><td>Semantic CSS variables and Tailwind theme</td><td>Uneven utility coverage across brands</td><td>803 brand tokens generated; 793 utility aliases; ten decorative band variables used directly</td><td><span class="pill">Native</span></td><td>All Context and Inkbox tokens wired to utilities; five band parameters each in Agentcard/OpenCommerce intentionally remain direct CSS inputs.</td></tr><tr data-status="Native"><td><small>Styling</small><br><strong>Product/site surfaces</strong></td><td>Preset/base configuration</td><td>Context has two surfaces; others one</td><td>Saved native surface and separate standard product registry</td><td><span class="pill">Native</span></td><td>Both Context registry trees generated; default site installation browser-tested. Product variants validated structurally, not every rendered state.</td></tr><tr data-status="Verified sample"><td><small>Styling</small><br><strong>Keyboard, focus, mobile</strong></td><td>Accessible primitives and responsive components</td><td>Primitive behavior already present</td><td>Preserved through installation and conversion fixes</td><td><span class="pill">Verified sample</span></td><td>Desktop/mobile browser checks: handlers, input, dialog Escape/focus restoration, no runtime errors or overflow. Not a full WCAG audit.</td></tr><tr data-status="Different"><td><small>Styling</small><br><strong>Motion and reduced motion</strong></td><td>Component-dependent</td><td>Brand-specific motion rules</td><td>Existing brand rules preserved; Inkbox motion system retained</td><td><span class="pill">Different</span></td><td>No redesign of the other brands motion policies. Full animation-frequency/touch-device matrix was not run.</td></tr><tr data-status="Native"><td><small>Agents</small><br><strong>Portable skills and instructions</strong></td><td>Official skill plus MCP integration</td><td>Guides/hooks; add alone missed guidance in three brands</td><td>Every add/init writes concise Claude/Codex skills and project guidance</td><td><span class="pill">Native</span></td><td>All four rendered skills pass the skill validator. No external LLM success-rate benchmark was run.</td></tr><tr data-status="Upstream"><td><small>Agents</small><br><strong>MCP server and configuration</strong></td><td>mcp; init clients Claude/Cursor/VS Code/Codex/OpenCode</td><td>No compatible registry/MCP path</td><td>Pinned upstream MCP with configured brand registries</td><td><span class="pill">Upstream</span></td><td>Seven tools discovered per brand; search/view/install-command calls succeeded. Claude project config initialized in scratch app.</td></tr><tr data-status="Native generator"><td><small>Registry</small><br><strong>Standard item/index schema</strong></td><td>Standard registry schemas and dependency graph</td><td>0 compatible items in published custom registries</td><td>Parallel compatible registries with private shared-UI helpers</td><td><span class="pill">Native generator</span></td><td>402 standard items validated; custom bundled API preserved. Hosted endpoints require deployment.</td></tr><tr data-status="Upstream"><td><small>Registry</small><br><strong>registry add / validate</strong></td><td>Add namespace; validate authoring registry</td><td>Missing</td><td>Pinned upstream operations</td><td><span class="pill">Upstream</span></td><td>Namespace add executed; all authoring trees validated. Run validate from the registry directory.</td></tr><tr data-status="Native + upstream"><td><small>Registry</small><br><strong>build</strong></td><td>Build registry JSON from authoring files</td><td>Custom brand registry build only</td><td>Native build keeps custom registry; standard authoring tree also generated</td><td><span class="pill">Native + upstream</span></td><td>Actual shadcn build reproduced all four standard registries.</td></tr><tr data-status="Upstream"><td><small>Lifecycle</small><br><strong>preset decode / resolve / url / open</strong></td><td>Preset utilities and browser creation links</td><td>Missing</td><td>Pinned upstream operations</td><td><span class="pill">Upstream</span></td><td>Resolve/decode/url executed. open inventoried; browser launch not executed. Preset changes may change the brand.</td></tr><tr data-status="Upstream"><td><small>Lifecycle</small><br><strong>migrate</strong></td><td>cn, icons, base-color, radix, rtl</td><td>Missing</td><td>Pinned upstream migrations</td><td><span class="pill">Upstream</span></td><td>List, cn and radix exercised in a disposable app; remaining migrations inventoried.</td></tr><tr data-status="Upstream"><td><small>Lifecycle</small><br><strong>eject</strong></td><td>Inline upstream Tailwind stylesheet and remove dependency</td><td>Missing</td><td>Pinned upstream eject</td><td><span class="pill">Upstream</span></td><td>Executed in disposable app. Native brand components already live as app-owned source.</td></tr><tr data-status="Upstream"><td><small>Lifecycle</small><br><strong>Base libraries, RTL, prefixes, presets</strong></td><td>Radix/Base/Aria; RTL and configuration variants</td><td>Brand libraries fixed to their source implementations</td><td>Arbitrary upstream flags exposed via shadcn &lt;args&gt;</td><td><span class="pill">Upstream</span></td><td>Feature access is not a claim that brand components can be blindly switched to another base API.</td></tr><tr data-status="Upstream"><td><small>Lifecycle</small><br><strong>--silent / advanced init flags</strong></td><td>Silent, force, defaults, reinstall and other flags</td><td>Not consistently available</td><td>Upstream flags available through the bridge; native uses concise/JSON outputs</td><td><span class="pill">Upstream</span></td><td>Full discovered help/flag inventory attached. Not every combination executed.</td></tr><tr data-status="Different"><td><small>Lifecycle</small><br><strong>Legacy bare command</strong></td><td>Help-oriented discovery</td><td>Bare brand command converts an app</td><td>Retained for compatibility; guides recommend info/init/add/apply explicitly</td><td><span class="pill">Different</span></td><td>Do not use the bare command for discovery. A future breaking release can remove this ambiguity.</td></tr></tbody></table></div>
+<h2>Reproduced failures and fixes</h2><div class="scroll"><table><thead><tr><th>Before</th><th>Correction</th><th>Verification</th></tr></thead><tbody><tr><td>External button URL silently returned bundled button.</td><td>Resolve the actual address; fail on missing remote item.</td><td>Invalid-address tests now intentionally return nonzero.</td></tr><tr><td>Custom aliases ignored; JS projects received TSX.</td><td>Shared config resolver and lazy TypeScript stripping.</td><td>Four compiled releases pass alias, JS and all-item planning tests.</td></tr><tr><td>Custom button adaptation removed “Save changes”.</td><td>Only adapt wrappers that forward their behavior; otherwise restyle existing markup.</td><td>All four converted apps preserve copy/callbacks and build.</td></tr><tr><td>Solution-style tsconfig produced a false clean check.</td><td>Check the referenced project configs.</td><td>Converted Vite project-reference builds pass.</td></tr><tr><td>Existing theme kept neutral color and Geist aliases.</td><td>Native alias override handling; explicit theme in upstream install command.</td><td>Browser-computed brand colors and font families match both routes.</td></tr><tr><td>Shared UI imports referenced helpers installed in the app.</td><td>Place private standard-registry helpers with shared UI.</td><td>All four real workspace builds pass.</td></tr></tbody></table></div>
+<h2>Agent handoff</h2><p>Use the installed CLI with this task contract. The shipped skill contains the same concise workflow and links to the longer brand guide. A normal agent does not need to memorize component variants or infer install paths.</p><pre>Use this project's brand design system.
+Run npx &lt;brand-ds&gt; info --json.
+Find components with search, then read view &lt;names&gt; --json.
+Preview add &lt;names&gt; --dry-run --json, then install.
+Read the installed source for exact variants, props and callback signatures.
+Preserve existing content, state and event handlers.
+Run the app build, keyboard checks and desktop/mobile verification.
+Use apply only for an explicitly requested restyle.</pre><p>For direct upstream installation after brand init: <code>npx &lt;brand-ds&gt; shadcn add @&lt;brand-ds&gt;/theme @&lt;brand-ds&gt;/button</code>. The explicit theme updates existing aliases. Native <code>add</code> applies the theme automatically.</p>
+<h2>Rendered installation fixtures</h2><p>These are small integration fixtures, not proposed product layouts. Tests cover button callbacks, input values, dialog Escape/focus return, mobile overflow, expected theme values and preservation of an artwork color. External font requests were blocked for deterministic tests; font-family declarations were verified, not font CDN availability.</p><div class="cards"><figure><a href="screenshots/context-ds-shadcn-desktop.png"><img loading="lazy" src="screenshots/context-ds-shadcn-desktop.png" alt="Context.dev installed through shadcn"></a><figcaption>Context.dev · <a href="screenshots/context-ds-native-desktop.png">native desktop</a> · <a href="screenshots/context-ds-shadcn-mobile.png">mobile</a></figcaption></figure><figure><a href="screenshots/inkbox-ds-shadcn-desktop.png"><img loading="lazy" src="screenshots/inkbox-ds-shadcn-desktop.png" alt="Inkbox installed through shadcn"></a><figcaption>Inkbox · <a href="screenshots/inkbox-ds-native-desktop.png">native desktop</a> · <a href="screenshots/inkbox-ds-shadcn-mobile.png">mobile</a></figcaption></figure><figure><a href="screenshots/agentcard-ds-shadcn-desktop.png"><img loading="lazy" src="screenshots/agentcard-ds-shadcn-desktop.png" alt="Agentcard installed through shadcn"></a><figcaption>Agentcard · <a href="screenshots/agentcard-ds-native-desktop.png">native desktop</a> · <a href="screenshots/agentcard-ds-shadcn-mobile.png">mobile</a></figcaption></figure><figure><a href="screenshots/opencommerce-ds-shadcn-desktop.png"><img loading="lazy" src="screenshots/opencommerce-ds-shadcn-desktop.png" alt="opencommerce installed through shadcn"></a><figcaption>opencommerce · <a href="screenshots/opencommerce-ds-native-desktop.png">native desktop</a> · <a href="screenshots/opencommerce-ds-shadcn-mobile.png">mobile</a></figcaption></figure></div>
+<h2>Coverage limits and remaining differences</h2><ul><li>No numerical claim of Claude/Codex task success is made. Structured discovery, portable skills and real MCP calls were tested; independent model evaluation and host activation were not.</li><li>React/Tailwind prerequisites and brand component APIs remain intentional constraints. Upstream base/preset/RTL flags do not automatically make branded components compatible with another primitive API.</li><li>Vite, a shared UI workspace and all four Next documentation sites were built. Every framework template, package manager, operating system, dark-mode permutation, interaction frequency and assistive technology combination was not exercised.</li><li>Hosted registries and sites require release/deployment. Distribution remains through GitHub release branches; npm publication was not performed.</li><li>The legacy bare command still starts conversion. New guidance uses explicit discovery/setup/apply commands. A future breaking release can remove the old ambiguity.</li><li>The four repositories still carry their engines separately. Identical workflow regression suites now protect the shared behavior, but source consolidation is a separate architectural change.</li></ul>
+<h2>Complete captured CLI help</h2><p>These are the actual pinned binary's help outputs, including flags not separately exercised. This is the audit inventory, not a blanket assertion that every option combination passed an end-to-end test.</p><details><summary>shadcn init</summary><pre>Usage: shadcn init|create [options] [components...]
+
+initialize your project and install dependencies
+
+Arguments:
+  components                 names, url or local path to component
+
+Options:
+  -t, --template &lt;template&gt;  the template to use. (next, start, vite,
+                             react-router, laravel, astro)
+  -b, --base &lt;base&gt;          the component library to use. (base, radix, aria)
+  --monorepo                 scaffold a monorepo project.
+  --no-monorepo              skip the monorepo prompt.
+  -p, --preset [name]        use a preset configuration
+  -y, --yes                  skip confirmation prompt. (default: true)
+  -d, --defaults             use default configuration: --template=next
+                             --preset=base-nova (default: false)
+  -f, --force                force overwrite of existing configuration.
+                             (default: false)
+  -c, --cwd &lt;cwd&gt;            the working directory. defaults to the current
+                             directory. (default:
+                             &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -n, --name &lt;name&gt;          the name for the new project.
+  -s, --silent               mute output. (default: false)
+  --css-variables            use css variables for theming. (default: true)
+  --no-css-variables         do not use css variables for theming.
+  --rtl                      enable RTL support.
+  --no-rtl                   disable RTL support.
+  --pointer                  enable pointer cursor for buttons.
+  --no-pointer               disable pointer cursor for buttons.
+  --reinstall                re-install existing UI components.
+  --no-reinstall             do not re-install existing UI components.
+  -h, --help                 display help for command
+</pre></details><details><summary>shadcn apply</summary><pre>Usage: shadcn apply [options] [preset]
+
+apply a preset to an existing project
+
+Arguments:
+  preset             the preset to apply
+
+Options:
+  --preset &lt;preset&gt;  preset configuration to apply
+  --only [parts]     apply only parts of a preset: theme, font
+  -y, --yes          skip confirmation prompt. (default: false)
+  -c, --cwd &lt;cwd&gt;    the working directory. defaults to the current directory.
+                     (default:
+                     &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -s, --silent       mute output. (default: false)
+  -h, --help         display help for command
+</pre></details><details><summary>shadcn add</summary><pre>Usage: shadcn add [options] [components...]
+
+add a component to your project
+
+Arguments:
+  components         item addresses to add
+
+Options:
+  -y, --yes          skip confirmation prompt. (default: false)
+  -o, --overwrite    overwrite existing files. (default: false)
+  -c, --cwd &lt;cwd&gt;    the working directory. defaults to the current directory.
+                     (default:
+                     &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -a, --all          add all available components (default: false)
+  -p, --path &lt;path&gt;  the path to add the component to.
+  -s, --silent       mute output. (default: false)
+  --dry-run          preview changes without writing files. (default: false)
+  --diff [path]      show diff for a file.
+  --view [path]      show file contents.
+  -h, --help         display help for command
+</pre></details><details><summary>shadcn diff</summary><pre>Usage: shadcn diff [options] [component]
+
+[DEPRECATED] Use `add [component] --diff` instead.
+
+Arguments:
+  component        the component name
+
+Options:
+  -y, --yes        skip confirmation prompt. (default: false)
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn docs</summary><pre>Usage: shadcn docs [options] &lt;components...&gt;
+
+get docs, api references and usage examples for components
+
+Arguments:
+  components         component names
+
+Options:
+  -c, --cwd &lt;cwd&gt;    the working directory. defaults to the current directory.
+                     (default:
+                     &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -b, --base &lt;base&gt;  the base to use: base, radix, or aria. defaults to project
+                     base.
+  --json             output as JSON. (default: false)
+  -h, --help         display help for command
+</pre></details><details><summary>shadcn view</summary><pre>Usage: shadcn view [options] &lt;items...&gt;
+
+view items from the registry
+
+Arguments:
+  items            item addresses to view
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn search</summary><pre>Usage: shadcn search|list [options] [registries...]
+
+search items from registries
+
+Arguments:
+  registries             the registry addresses to search. Supports namespaces,
+                         GitHub sources and URLs. When omitted, searches all
+                         registries configured in components.json.
+
+Options:
+  -c, --cwd &lt;cwd&gt;        the working directory. defaults to the current
+                         directory. (default:
+                         &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -q, --query &lt;query&gt;    query string
+  -t, --type &lt;type&gt;      filter by item type, e.g. ui, block, hook.
+                         Comma-separated for multiple.
+  -l, --limit &lt;number&gt;   maximum number of items to display (default: &quot;100&quot;)
+  -o, --offset &lt;number&gt;  number of items to skip (default: &quot;0&quot;)
+  --json                 output as JSON. (default: false)
+  -h, --help             display help for command
+</pre></details><details><summary>shadcn migrate</summary><pre>Usage: shadcn migrate [options] [migration] [path]
+
+run a migration.
+
+Arguments:
+  migration          the migration to run.
+  path               optional path or glob pattern to migrate.
+
+Options:
+  -c, --cwd &lt;cwd&gt;    the working directory. defaults to the current directory.
+                     (default:
+                     &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -l, --list         list all migrations. (default: false)
+  -y, --yes          skip confirmation prompt. (default: false)
+  -f, --from &lt;name&gt;  the base color or icon library to migrate from.
+  -t, --to &lt;name&gt;    the base color or icon library to migrate to.
+  -h, --help         display help for command
+</pre></details><details><summary>shadcn eject</summary><pre>Usage: shadcn eject [options]
+
+inline shadcn/tailwind.css and remove the shadcn dependency
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -y, --yes        skip confirmation prompt. (default: false)
+  -s, --silent     mute output. (default: false)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn info</summary><pre>Usage: shadcn info [options]
+
+get information about your project
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  --json           output as JSON. (default: false)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn build</summary><pre>Usage: shadcn build [options] [registry]
+
+build components for a shadcn registry
+
+Arguments:
+  registry             path to registry.json file (default: &quot;./registry.json&quot;)
+
+Options:
+  -o, --output &lt;path&gt;  destination directory for json files (default:
+                       &quot;./public/r&quot;)
+  -c, --cwd &lt;cwd&gt;      the working directory. defaults to the current directory.
+                       (default:
+                       &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -h, --help           display help for command
+</pre></details><details><summary>shadcn mcp</summary><pre>Usage: shadcn mcp [options] [command]
+
+MCP server and configuration commands
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -h, --help       display help for command
+
+Commands:
+  init [options]   Initialize MCP configuration for your client
+</pre></details><details><summary>shadcn mcp init</summary><pre>Usage: shadcn mcp init [options]
+
+Initialize MCP configuration for your client
+
+Options:
+  --client &lt;client&gt;  MCP client (claude, cursor, vscode, codex, opencode)
+  -h, --help         display help for command
+</pre></details><details><summary>shadcn preset</summary><pre>Usage: shadcn preset [options] [command]
+
+manage presets
+
+Options:
+  -h, --help               display help for command
+
+Commands:
+  decode [options] &lt;code&gt;  decode a preset code
+  resolve|info [options]   resolve a preset from your project
+  url &lt;code&gt;               get the create URL for a preset code
+  open &lt;code&gt;              open a preset code in the browser
+</pre></details><details><summary>shadcn registry</summary><pre>Usage: shadcn registry [options] [command]
+
+manage registries
+
+Options:
+  -h, --help                     display help for command
+
+Commands:
+  add [options] [registries...]  add registries to your project
+  validate [options] [registry]  validate a shadcn registry
+  help [command]                 display help for command
+</pre></details><details><summary>shadcn registry add</summary><pre>Usage: shadcn registry add [options] [registries...]
+
+add registries to your project
+
+Arguments:
+  registries       registries (@namespace) or registry URLs (@namespace=url)
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -s, --silent     mute output. (default: false)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn root</summary><pre>Usage: shadcn [options] [command]
+
+build your component library
+
+Options:
+  -v, --version                          display the version number
+  -h, --help                             display help for command
+
+Commands:
+  init|create [options] [components...]  initialize your project and install dependencies
+  apply [options] [preset]               apply a preset to an existing project
+  add [options] [components...]          add a component to your project
+  diff [options] [component]             [DEPRECATED] Use `add [component] --diff` instead.
+  docs [options] &lt;components...&gt;         get docs, api references and usage examples for components
+  view [options] &lt;items...&gt;              view items from the registry
+  search|list [options] [registries...]  search items from registries
+  migrate [options] [migration] [path]   run a migration.
+  eject [options]                        inline shadcn/tailwind.css and remove the shadcn dependency
+  info [options]                         get information about your project
+  build [options] [registry]             build components for a shadcn registry
+  mcp [options]                          MCP server and configuration commands
+  preset                                 manage presets
+  registry                               manage registries
+  help [command]                         display help for command
+</pre></details><details><summary>shadcn registry validate</summary><pre>Usage: shadcn registry validate [options] [registry]
+
+validate a shadcn registry
+
+Arguments:
+  registry         registry address to validate. Supports registry.json paths
+                   and GitHub sources. (default: &quot;./registry.json&quot;)
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn preset decode</summary><pre>Usage: shadcn preset decode [options] &lt;code&gt;
+
+decode a preset code
+
+Arguments:
+  code        the preset code to decode
+
+Options:
+  --json      output as JSON. (default: false)
+  -h, --help  display help for command
+</pre></details><details><summary>shadcn preset resolve</summary><pre>Usage: shadcn preset resolve|info [options]
+
+resolve a preset from your project
+
+Options:
+  -c, --cwd &lt;cwd&gt;  the working directory. defaults to the current directory.
+                   (default:
+                   &quot;/Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli&quot;)
+  --json           output as JSON. (default: false)
+  -h, --help       display help for command
+</pre></details><details><summary>shadcn preset url</summary><pre>Usage: shadcn preset url [options] &lt;code&gt;
+
+get the create URL for a preset code
+
+Arguments:
+  code        the preset code
+
+Options:
+  -h, --help  display help for command
+</pre></details><details><summary>shadcn preset open</summary><pre>Usage: shadcn preset open [options] &lt;code&gt;
+
+open a preset code in the browser
+
+Arguments:
+  code        the preset code
+
+Options:
+  -h, --help  display help for command
+</pre></details>
+<h2>Evidence and reproduction</h2><p><a href="comparison.json">Machine-readable comparison</a> · <a href="evidence/baseline.json">Initial repository revisions</a> · <a href="evidence/final-artifacts.json">Artifact validation</a> · <a href="evidence/apply-before-fixes.json">Conversion failures before fixes</a> · <a href="evidence/apply-results.json">Conversion after fixes</a> · <a href="evidence/workspace-results.json">Workspace results</a> · <a href="evidence/mcp-results.json">MCP protocol results</a></p><pre>In each repository:
+  npm run ci
+  node scripts/make-release.mjs /tmp/&lt;brand&gt;-release
+  cd apps/www/public/r/shadcn
+  npx shadcn@4.22.1 registry validate registry.json
+  npx shadcn@4.22.1 build registry.json --output /tmp/&lt;brand&gt;-registry
+
+Persistent regressions: test/workflow-parity.test.ts
+Original local scratch harnesses: /private/tmp/brand-cli-comparison-20261024</pre>
+<footer><p>Primary reference documentation: <a href="https://ui.shadcn.com/docs/cli">CLI</a>, <a href="https://ui.shadcn.com/docs/components-json">components.json</a>, <a href="https://ui.shadcn.com/docs/registry/registry-item-json">registry item schema</a>, <a href="https://ui.shadcn.com/docs/monorepo">monorepos</a>, <a href="https://ui.shadcn.com/docs/mcp">MCP</a>, <a href="https://ui.shadcn.com/docs/skills">skills</a>. Measurements and defects in this report come from the executed local tests, not from documentation claims alone.</p></footer>
+</main><script>const rows=[...document.querySelectorAll('#matrix tbody tr')],query=document.querySelector('#query'),status=document.querySelector('#status');function filter(){const term=query.value.toLowerCase();let n=0;for(const row of rows){row.hidden=!(row.textContent.toLowerCase().includes(term)&&(!status.value||row.dataset.status===status.value));if(!row.hidden)n++}document.querySelector('#count').textContent=n+' of '+rows.length+' capabilities shown'}query.addEventListener('input',filter);status.addEventListener('change',filter);filter();</script></html>

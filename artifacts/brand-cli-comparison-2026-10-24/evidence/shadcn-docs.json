@@ -1,0 +1,7 @@
+{
+  "label": "docs",
+  "code": 0,
+  "ms": 997,
+  "stdout": "{\n  \"base\": \"radix\",\n  \"results\": [\n    {\n      \"component\": \"button\",\n      \"base\": \"radix\",\n      \"links\": {\n        \"docs\": \"https://ui.shadcn.com/docs/components/radix/button\",\n        \"examples\": \"https://ui.shadcn.com/code/apps/v4/registry/bases/radix/examples/button-example.tsx\"\n      }\n    }\n  ]\n}\n",
+  "stderr": ""
+}

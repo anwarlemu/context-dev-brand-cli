@@ -1,0 +1,66 @@
+[
+  {
+    "label": "context-ds-bridge-info",
+    "code": 0
+  },
+  {
+    "label": "context-ds-bridge-mcp-help",
+    "code": 0
+  },
+  {
+    "label": "context-ds-registry-validate",
+    "code": 0,
+    "initialCode": 1,
+    "note": "Validation succeeds from the authoring registry directory; initial run resolved source paths from the repository root."
+  },
+  {
+    "label": "inkbox-ds-bridge-info",
+    "code": 0
+  },
+  {
+    "label": "inkbox-ds-bridge-mcp-help",
+    "code": 0
+  },
+  {
+    "label": "inkbox-ds-registry-validate",
+    "code": 0,
+    "initialCode": 1,
+    "note": "Validation succeeds from the authoring registry directory; initial run resolved source paths from the repository root."
+  },
+  {
+    "label": "agentcard-ds-bridge-info",
+    "code": 0
+  },
+  {
+    "label": "agentcard-ds-bridge-mcp-help",
+    "code": 0
+  },
+  {
+    "label": "agentcard-ds-registry-validate",
+    "code": 0,
+    "initialCode": 1,
+    "note": "Validation succeeds from the authoring registry directory; initial run resolved source paths from the repository root."
+  },
+  {
+    "label": "opencommerce-ds-bridge-info",
+    "code": 0
+  },
+  {
+    "label": "opencommerce-ds-bridge-mcp-help",
+    "code": 0
+  },
+  {
+    "label": "opencommerce-ds-registry-validate",
+    "code": 0,
+    "initialCode": 1,
+    "note": "Validation succeeds from the authoring registry directory; initial run resolved source paths from the repository root."
+  },
+  {
+    "label": "shadcn-preset-decode",
+    "code": 0
+  },
+  {
+    "label": "shadcn-preset-url",
+    "code": 0
+  }
+]

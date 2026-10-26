@@ -1,0 +1,6 @@
+{
+  "label": "inkbox-ds-bridge-mcp-help",
+  "code": 0,
+  "stdout": "Usage: shadcn mcp [options] [command]\n\nMCP server and configuration commands\n\nOptions:\n  -c, --cwd <cwd>  the working directory. defaults to the current directory.\n                   (default:\n                   \"/private/tmp/brand-cli-comparison-20261024/real-consumers/inkbox-ds-native\")\n  -h, --help       display help for command\n\nCommands:\n  init [options]   Initialize MCP configuration for your client\n",
+  "stderr": ""
+}

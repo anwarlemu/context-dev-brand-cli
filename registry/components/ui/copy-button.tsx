@@ -8,6 +8,27 @@ import { cn } from "@/lib/utils";
 
 const COPIED_MS = 1500;
 
+/** Copies by selecting the text in a hidden field, for where the Clipboard API is refused; restores focus and selection. */
+function copyBySelection(text: string) {
+  const previous = document.activeElement;
+  const selection = document.getSelection();
+  const ranges = selection ? Array.from({ length: selection.rangeCount }, (_, index) => selection.getRangeAt(index)) : [];
+  const field = document.createElement("textarea");
+  field.value = text;
+  field.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+  document.body.append(field);
+  try {
+    field.focus({ preventScroll: true });
+    field.select();
+    if (!document.execCommand("copy")) throw new Error("Copy unavailable");
+  } finally {
+    field.remove();
+    if (previous instanceof HTMLElement) previous.focus({ preventScroll: true });
+    selection?.removeAllRanges();
+    for (const range of ranges) selection?.addRange(range);
+  }
+}
+
 /** Copies text and reports it for a moment, so the button can say so. */
 export function useCopy() {
   const [hasCopied, setHasCopied] = React.useState(false);
@@ -15,9 +36,16 @@ export function useCopy() {
   React.useEffect(() => () => clearTimeout(timeout.current), []);
   const copy = React.useCallback(async (text: string) => {
     try {
-      await navigator.clipboard.writeText(text);
+      const policy = document as Document & { permissionsPolicy?: { allowsFeature: (name: string) => boolean }; featurePolicy?: { allowsFeature: (name: string) => boolean } };
+      if (navigator.clipboard && (policy.permissionsPolicy ?? policy.featurePolicy)?.allowsFeature("clipboard-write") !== false) await navigator.clipboard.writeText(text);
+      else copyBySelection(text);
     } catch {
-      return;
+      // A sandboxed frame or an older browser may refuse the Clipboard API; copying a selected string still works there.
+      try {
+        copyBySelection(text);
+      } catch {
+        return;
+      }
     }
     setHasCopied(true);
     clearTimeout(timeout.current);

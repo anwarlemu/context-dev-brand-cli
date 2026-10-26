@@ -68,8 +68,9 @@ export function preToolUse(root: string, input: HookInput): HookResult {
 	const state = readState(root);
 	const s = session(root, sessionIdOf(input));
 	for (const write of writes) {
-		const after = checkText(write.relPath, write.after);
-		const before = write.before ? checkText(write.relPath, write.before) : { findings: [], overrides: [] };
+		const colorSurface = state?.colors === 'components' ? surfaceOf(write.relPath, { surface: state.surface, mixed: state.mixed, product: 0, site: 0, reasons: [] }) : undefined;
+		const after = checkText(write.relPath, write.after, colorSurface);
+		const before = write.before ? checkText(write.relPath, write.before, colorSurface) : { findings: [], overrides: [] };
 		const introduced = newFindings(before.findings, after.findings);
 		if (introduced.length) {
 			blocked.push(`${write.relPath}: ${introduced.length} off-brand value${introduced.length > 1 ? 's' : ''}`, ...introduced.slice(0, 25).map(formatFinding));

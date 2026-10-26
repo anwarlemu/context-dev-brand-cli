@@ -1,0 +1,25 @@
+
+> context-ds@2.1.0 ci
+> npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run
+
+
+> context-ds@2.1.0 build
+> tsc -p tsconfig.json && node scripts/build-brand.mjs
+
+brand: 257 tokens, site.css, product.css, theme.css, fonts.css, tokens.json
+ci limits: no brand strings in src, no em dashes, contract 11 lines
+
+> context-ds@2.1.0 registry
+> tsx scripts/build-registry.ts && node scripts/build-shadcn.mjs
+
+registry: 189 items (theme + 188), types clean, every value a brand token. Wrote apps/www/public/r
+shadcn registry: 190 items, configured targets, dependencies, theme and agent skill
+
+ RUN  v5.0.3 /Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/context-dev-brand-cli
+
+
+ Test Files  5 passed (5)
+      Tests  62 passed (62)
+   Start at  17:49:44
+   Duration  4.06s (tests 89%, transform 7%, import 4%)
+

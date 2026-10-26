@@ -1,0 +1,7 @@
+{
+  "label": "registry-add",
+  "code": 0,
+  "ms": 521,
+  "stdout": "  - @audit\n",
+  "stderr": "- Updating components.json.\n✔ Updating components.json.\n✔ Added 1 registry:\n"
+}

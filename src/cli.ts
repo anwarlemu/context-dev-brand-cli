@@ -3,10 +3,8 @@ import { join } from 'node:path';
 import { Command } from 'commander';
 import { review, snapshot } from './commands/review.js';
 import { run } from './commands/run.js';
-import { add } from './commands/add.js';
-import { list, inspect } from './commands/discover.js';
+import { workflow } from './commands/workflow.js';
 import { guide } from './commands/guide.js';
-import { init } from './commands/init.js';
 import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
 import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
 import { readHookInput } from './hooks/payload.js';
@@ -30,10 +28,6 @@ program
 	.action((opts) => run(opts));
 
 program.command('guide').description('Read the agent workflow without changing files').option('--json', 'JSON output').action((_opts, cmd) => guide(cmd.optsWithGlobals()));
-program.command('init').description('Install theme, fonts and agent instructions without converting existing styles').option('--surface <surface>', 'site or product (required)').option('--dry-run', 'show changes without writing').option('--json', 'JSON output').action((_opts, cmd) => init(cmd.optsWithGlobals()));
-program.command('inspect <items...>').description('Read usage, actual APIs, examples, dependencies and source without installing').option('--json', 'complete metadata and source as JSON').action((items, _opts, cmd) => inspect(items, cmd.optsWithGlobals()));
-program.command('add <items...>').description('Copy components and dependencies into a React 19.2+ and Tailwind 4 project').option('--overwrite', 'replace files that already exist').option('--surface <surface>', 'site or product').option('--dry-run', 'show what would be written').option('--json', 'JSON output').action((items, _opts, cmd) => add(items, cmd.optsWithGlobals()));
-program.command('list [query]').description('Search all library items without installing').option('--surface <surface>', 'site or product, including shared items').option('--type <type>', 'ui, product, site, block, visual, hook, lib, or theme').option('--json', 'JSON output').action((query, _opts, cmd) => list(query, cmd.optsWithGlobals()));
 program.command('review [url]').description('Screenshot a page at desktop and phone width and score it against the brand; a task is done when it passes').option('--threshold <n>', 'minimum score').option('--submit <dir>', 'record the scorecard an agent wrote itself (when no separate reviewer is available)').option('--all', 'review every task screen that is not done yet, at once (pass the app\'s address)').option('--any', 'review a page that is not a task').option('--json', 'JSON output').action((url, _opts, cmd) => review(url, cmd.optsWithGlobals()));
 program.command('look [target]').description('The brand styling (CSS, Tailwind, states) for every element in a file, or for one element kind').option('--surface <surface>', 'site or product').option('--json', 'JSON output').action((target, _opts, cmd) => look(target, cmd.optsWithGlobals()));
 program.command('check [files...]').description('Check that every style value is a brand token (used by hooks, pre-commit and CI)').option('--fix', 'replace exact matches with their token').option('--changed', 'only files changed in git').option('--json', 'JSON output').action((files, _opts, cmd) => check(files ?? [], cmd.optsWithGlobals()));
@@ -71,6 +65,8 @@ program
 		if (result.stderr) process.stderr.write(`${result.stderr}\n`);
 		process.exit(result.exitCode ?? 0);
 	});
+
+workflow(program);
 
 program.parseAsync().catch((error: Error & { exitCode?: number }) => {
 	if (error.exitCode === 0) return;

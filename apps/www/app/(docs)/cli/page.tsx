@@ -6,6 +6,12 @@ import { APPLY_COMMAND, SETUP_COMMAND } from "@www/lib/registry";
 export const metadata = { title: "CLI" };
 
 const COMMANDS = [
+  ["info --json", "Read the framework, aliases, registry and installed components without changing files."],
+  ["create --template vite --name my-app", "Scaffold a new app and install the brand components."],
+  ["search <term> --json", "Find suitable components before reading their APIs with view."],
+  ["add <items...> --diff", "Review local changes before choosing --overwrite."],
+  ["shadcn add @context-ds/theme @context-ds/button", "Use the standard registry with upstream workspace routing."],
+  ["mcp init --client claude", "Configure upstream MCP to expose the project's registries to an agent."],
   ["guide", "Read the complete agent instructions. This command does not change files."],
   ["init --surface site|product", "Install theme, fonts, and agent instructions without converting component styles."],
   ["inspect <items...>", "Read actual APIs, usage, examples, and source. Use --json for structured output."],
@@ -56,12 +62,12 @@ export default function CliPage() {
         </dl>
       </DocsSection>
 
-      <DocsSection title="Add components" description="Requires React 19.2+ and Tailwind 4. Configure @/* in TypeScript and the bundler. Use --dry-run --json to preview changes; existing files are kept unless --overwrite is passed.">
+      <DocsSection title="Add components" description="Requires React 19.2+ and Tailwind 4. Uses components.json aliases and TypeScript or JavaScript output. Use --dry-run --json to preview changes; existing files are kept unless --overwrite is passed.">
         <Code title="terminal" code={`npx context-ds inspect button card tabs tooltip --json\nnpx context-ds add button card tabs tooltip --surface product --json\nnpx context-ds add app-shell overview-page`} />
       </DocsSection>
 
-      <DocsSection title="Restyle an existing interface" description="The default command converts existing styles and adapts matching components. Use this only for a restyling task. Preview changes first, then run without --dry-run and follow the returned tasks.">
-        <Code title="terminal" code={`${APPLY_COMMAND} --surface site --dry-run --json`} />
+      <DocsSection title="Restyle an existing interface" description="The apply command converts existing styles and adapts matching components. Use this only for a restyling task. Preview changes first, then run without --dry-run and follow the returned tasks.">
+        <Code title="terminal" code={`${APPLY_COMMAND} apply --surface site --dry-run --json`} />
       </DocsSection>
 
       <DocsSection title="Agent instructions" description="Include this in the task when asking an agent to build or change a page.">

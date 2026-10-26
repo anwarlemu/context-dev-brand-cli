@@ -4,13 +4,15 @@ import { pkgPath } from './paths.js';
 // Everything the engine knows about the brand comes from the package's brand/ folder (built to build/): names,
 // tokens, element styles. No brand value is written in src/.
 
-export type BrandConfig = { name: string; bin: string; source: string; reviewModel: string; reviewThreshold: number; registryUrl?: string };
+export type BrandConfig = { name: string; bin: string; source: string; reviewModel: string; reviewThreshold: number; registryUrl?: string; surfaces?: ('site' | 'product')[] };
 
 let config: BrandConfig | undefined;
 export function brand(): BrandConfig {
 	config ??= JSON.parse(readFileSync(pkgPath('brand', 'brand.json'), 'utf8'));
 	return config!;
 }
+
+export const hasProduct = () => (brand().surfaces ?? ['site', 'product']).includes('product');
 
 /** The command agents run. Always through npx, since the binary is not on the shell's PATH in apps. */
 export const cli = () => `npx ${brand().bin}`;

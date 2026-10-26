@@ -1,0 +1,82 @@
+[
+  {
+    "brand": "context-ds",
+    "check": "standard-registry",
+    "code": 0
+  },
+  {
+    "brand": "context-ds",
+    "check": "release",
+    "code": 0
+  },
+  {
+    "brand": "context-ds",
+    "check": "registry-validate",
+    "code": 0
+  },
+  {
+    "brand": "context-ds",
+    "check": "registry-build",
+    "code": 0
+  },
+  {
+    "brand": "inkbox-ds",
+    "check": "standard-registry",
+    "code": 0
+  },
+  {
+    "brand": "inkbox-ds",
+    "check": "release",
+    "code": 0
+  },
+  {
+    "brand": "inkbox-ds",
+    "check": "registry-validate",
+    "code": 0
+  },
+  {
+    "brand": "inkbox-ds",
+    "check": "registry-build",
+    "code": 0
+  },
+  {
+    "brand": "agentcard-ds",
+    "check": "standard-registry",
+    "code": 0
+  },
+  {
+    "brand": "agentcard-ds",
+    "check": "release",
+    "code": 0
+  },
+  {
+    "brand": "agentcard-ds",
+    "check": "registry-validate",
+    "code": 0
+  },
+  {
+    "brand": "agentcard-ds",
+    "check": "registry-build",
+    "code": 0
+  },
+  {
+    "brand": "opencommerce-ds",
+    "check": "standard-registry",
+    "code": 0
+  },
+  {
+    "brand": "opencommerce-ds",
+    "check": "release",
+    "code": 0
+  },
+  {
+    "brand": "opencommerce-ds",
+    "check": "registry-validate",
+    "code": 0
+  },
+  {
+    "brand": "opencommerce-ds",
+    "check": "registry-build",
+    "code": 0
+  }
+]

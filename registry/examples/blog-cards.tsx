@@ -35,7 +35,12 @@ export function Site() {
 
 export function Band() {
   // The home page's band: the "All posts" pill across from the heading, and hidden on phones as the site does.
-  return <BlogSection posts={posts} allHref="https://context.dev/blog" hideOnPhones />;
+  return (
+    <>
+      <BlogSection posts={posts} allHref="https://context.dev/blog" hideOnPhones />
+      <p className="px-6 py-10 text-center text-body-sm text-fg-muted min-[768px]:hidden">The blog band is hidden on phones, as on the home page. Open this preview at a wider width to see it.</p>
+    </>
+  );
 }
 
 // A post's related articles: the cards on a white page.

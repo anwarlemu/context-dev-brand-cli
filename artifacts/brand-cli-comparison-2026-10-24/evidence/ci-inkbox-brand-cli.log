@@ -1,0 +1,25 @@
+
+> inkbox-ds@2.1.0 ci
+> npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run
+
+
+> inkbox-ds@2.1.0 build
+> tsc -p tsconfig.json && node scripts/build-brand.mjs
+
+brand: 166 tokens, site.css, theme.css, fonts.css, tokens.json
+ci limits: no brand strings in src, no em dashes, contract 12 lines
+
+> inkbox-ds@2.1.0 registry
+> tsx scripts/build-registry.ts && node scripts/build-shadcn.mjs
+
+registry: 71 items (theme + 70), types clean, every value a brand token. Wrote apps/www/public/r
+shadcn registry: 71 items, configured targets, dependencies, theme and agent skill
+
+ RUN  v5.0.5 /Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/inkbox-brand-cli
+
+
+ Test Files  8 passed (8)
+      Tests  86 passed (86)
+   Start at  17:49:36
+   Duration  5.66s (tests 86%, import 10%, transform 3%)
+

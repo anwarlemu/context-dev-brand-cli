@@ -1,0 +1,30 @@
+[
+  {
+    "brand": "context-ds",
+    "packedBytes": 3090787,
+    "unpackedBytes": 10522837,
+    "files": 223,
+    "filename": "context-ds-2.1.0.tgz"
+  },
+  {
+    "brand": "inkbox-ds",
+    "packedBytes": 1543613,
+    "unpackedBytes": 6832800,
+    "files": 174,
+    "filename": "inkbox-ds-2.1.0.tgz"
+  },
+  {
+    "brand": "agentcard-ds",
+    "packedBytes": 1985013,
+    "unpackedBytes": 6970680,
+    "files": 169,
+    "filename": "agentcard-ds-2.1.0.tgz"
+  },
+  {
+    "brand": "opencommerce-ds",
+    "packedBytes": 1748870,
+    "unpackedBytes": 6688424,
+    "files": 171,
+    "filename": "opencommerce-ds-2.1.0.tgz"
+  }
+]

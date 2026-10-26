@@ -1,0 +1,5 @@
+{
+  "code": 0,
+  "stdout": "  - registry.json\n",
+  "stderr": "- Validating registry.\n\u2714 Registry is valid.\n\u2714 Checked 1 registry file and 190 items.\n"
+}

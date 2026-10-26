@@ -1,0 +1,7 @@
+{
+  "label": "preset",
+  "code": 0,
+  "ms": 606,
+  "stdout": "{\n  \"code\": \"b2fA\",\n  \"fallbacks\": [],\n  \"values\": {\n    \"style\": \"nova\",\n    \"baseColor\": \"neutral\",\n    \"theme\": \"neutral\",\n    \"chartColor\": \"neutral\",\n    \"iconLibrary\": \"lucide\",\n    \"font\": \"geist\",\n    \"fontHeading\": \"inherit\",\n    \"radius\": \"default\",\n    \"menuAccent\": \"subtle\",\n    \"menuColor\": \"default\"\n  }\n}\n",
+  "stderr": ""
+}

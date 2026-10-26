@@ -7,6 +7,32 @@ https://context-ds.vercel.app. The CLI adds components and checks implementation
 The CLI can also adapt existing interfaces across React, HTML/CSS, other web frameworks, and native stacks. That
 conversion changes styling while preserving copy, elements, and screen purpose.
 
+## Consistent CLI workflow
+
+```sh
+npx context-ds info --json
+npx context-ds search button --json
+npx context-ds view button --json
+npx context-ds add button card --dry-run --json
+npx context-ds add button card --json
+npx context-ds add button --diff
+```
+
+For a new app: `npx -y github:anwarlemu/context-dev-brand-cli#release create --template vite --name my-app`.
+For an existing app: `init` sets up the theme; `apply --dry-run` previews a requested restyle.
+`add` also installs agent instructions and portable Claude/Codex skills, so a separate init is optional.
+Use `--cwd <app>` for a different directory. Existing components.json aliases, TS/JS output, local helpers, unrelated registries and local component edits are preserved.
+
+The standard registry works with shadcn 4.22.1:
+
+```sh
+npx context-ds init
+npx context-ds shadcn add @context-ds/theme @context-ds/button
+npx context-ds mcp init --client claude
+```
+
+Include `theme` explicitly when using upstream shadcn to update existing theme aliases. Native `add` handles it automatically. Shared workspace installation, presets, migrations, registry authoring and MCP use the pinned upstream implementation via `shadcn <args...>`. Bundled component discovery works offline; installation needs network access for missing dependencies. Agent hosts must load their MCP configuration before it is available in a session.
+
 ## Use it
 
 Read [the agent guide](https://context-ds.vercel.app/agents.md). It works with any agent that can read text or run a shell. No API key is needed; this design-system CLI is separate from the Context.dev web-data CLI.
@@ -24,18 +50,17 @@ npx context-ds add field input button --surface product --json
 npx context-ds check --changed --json
 ```
 
-Run `add` from the target app's root. It copies React components only into React 19.2+ and Tailwind CSS 4 projects with an `@/*` alias in TypeScript and the bundler. Use `--surface product` for an app or `--surface site` for marketing pages. To apply the brand to another framework, run the top-level CLI command instead. Connect real application state and routes; examples use local demo state. Run the app's own checks and test keyboard, pointer, validation, overlays, and scrolling in a browser before visual review.
+Run `add` from the target app's root. It copies React components only into React 19.2+ and Tailwind CSS 4 projects using the aliases and paths configured in components.json and TypeScript or JavaScript. Use `--surface product` for an app or `--surface site` for marketing pages. To apply the brand to another framework, use `apply` to restyle existing markup instead. Connect real application state and routes; examples use local demo state. Run the app's own checks and test keyboard, pointer, validation, overlays, and scrolling in a browser before visual review.
 
 Agents can read `/llms.txt`, `/llms-full.txt`, `/agents.md`, `/r/index.json`, `/components/{name}.md`, and `/r/{name}.json` on the docs site. Each item includes usage rules, actual TypeScript declarations, complete source, examples with their relative helpers, dependencies, and reference coverage. The CLI bundles the same registry for offline inspection. Check the revision when mixing hosted and bundled versions.
 
-To **restyle an existing interface**, preview `npx -y github:anwarlemu/context-dev-brand-cli#release --dry-run --json` from its root, then run without `--dry-run`. The default command changes styles on its first run.
+To **restyle an existing interface**, preview `npx -y github:anwarlemu/context-dev-brand-cli#release apply --dry-run --json` from its root, then run without `--dry-run`. The legacy bare command also converts styles; use explicit commands for setup and discovery.
 The CLI first identifies the app's components: what each one is, from its name, what it renders, its props
 and how it is used. In a React + Tailwind app, a component the library covers either renders the library's (its props
 mapped, its name and every use unchanged), or, where that would lose something, takes the library item's look on the
 element it renders; in any stack, stylesheet classes it recognizes get that element's brand styling. Anything nothing
 covers keeps its own design with brand values. The app is type-checked before and after, and a swap that would break
-it goes back. Every decision and its reason is in `.ds/components.json`. The first run also adds the package to the project, reads whether it is a site or a product, converts every
-style value to the brand (colors by the role they play, type, spacing, radius, shadows, motion), installs the brand
+it goes back. Every decision and its reason is in `.ds/components.json`. The first run also adds the package to the project, reads whether it is a site or a product, maps recognized component colors and other style values to brand tokens (type, spacing, radius, shadows and motion), preserving unrelated palettes and artwork, installs the brand
 stylesheet and fonts, and writes short rules and hooks for the agents. Then each run prints one task: one screen,
 with the elements to restyle and how. A task is done when the screen passes `review` (screenshots at desktop and
 phone width, scored against the brand's own pages) and every value in its files is a brand token. When every main
@@ -114,3 +139,5 @@ layers), `elements.json` (how each kind of element is styled, with its source in
 `npm run audit:references` resolves all documented source files against pinned, read-only reference commits and records source hashes. Set `WEBSITE_REFERENCE`, `DASHBOARD_REFERENCE`, and their `_COMMIT` counterparts when intentionally updating references. CI rejects library source changes that have not been audited. This coverage distinguishes current website source, retained variants, dashboard-only components, and library infrastructure; it does not claim pixel identity for every variant.
 
 With the docs running, `npm run check:references` compares shared computed styles with the current public website at desktop and phone widths. `brand/reference-measurements.json` records the latest accepted measurements and inspected public pages. Refresh the measurements and audit together when the reference changes.
+
+The explicit `apply` command scopes color conversion to recognized components and preserves unrelated artwork and shared palette data. The legacy bare-command conversion remains for compatibility; use `apply` for new restyling tasks.

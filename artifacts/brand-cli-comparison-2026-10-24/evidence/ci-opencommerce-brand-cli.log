@@ -1,0 +1,25 @@
+
+> opencommerce-ds@2.1.0 ci
+> npm run build && node scripts/ci-limits.mjs && npm run registry && vitest run
+
+
+> opencommerce-ds@2.1.0 build
+> tsc -p tsconfig.json && node scripts/build-brand.mjs
+
+brand: 201 tokens, site.css, theme.css, fonts.css, tokens.json
+ci limits: no brand strings in src, no em dashes, contract 11 lines
+
+> opencommerce-ds@2.1.0 registry
+> tsx scripts/build-registry.ts && node scripts/build-shadcn.mjs
+
+registry: 71 items (theme + 70), types clean, every value a brand token. Wrote apps/www/public/r
+shadcn registry: 71 items, configured targets, dependencies, theme and agent skill
+
+ RUN  v5.0.5 /Users/anwarlemu/Desktop/TRIAGE/Work/Agencidev/opencommerce-brand-cli
+
+
+ Test Files  5 passed (5)
+      Tests  58 passed (58)
+   Start at  17:49:33
+   Duration  7.02s (tests 90%, import 8%, transform 2%)
+

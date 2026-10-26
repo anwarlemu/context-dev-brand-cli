@@ -5,7 +5,7 @@ Use this library to build pages and interfaces for {{brand}}. This is the design
 ## Start by choosing the task
 
 - **Build a new page or add a feature:** inspect existing project conventions, run `init` if the design system is not installed, find and inspect components, then `add` the ones you need. Preserve existing behavior outside the requested change.
-- **Restyle an existing interface:** preview the default command with `--dry-run --json`, then run it to convert styles. Preserve copy, links, elements, order, and screen purpose unless the user explicitly requested changes. Run the next task it prints until the work passes validation.
+- **Restyle an existing interface:** preview `{{cli}} apply --dry-run --json`, then run `{{cli}} apply` to convert styles. Preserve copy, links, elements, order, and screen purpose unless the user explicitly requested changes. Run the next task it prints until the work passes validation.
 - **Read or plan only:** `guide`, `list`, `inspect`, and `tokens` do not change the project. Do not run the default command just to discover the library: it changes styles on its first run.
 
 ## Read before editing
@@ -29,7 +29,7 @@ npx -y {{source}} init --surface product
 
 Use `--surface site` for marketing pages. `init` installs the theme, font wiring, and agent instructions without converting existing component styles. It reports every changed file. `--dry-run --json` previews the changes. Keep existing application structure, routes, and content.
 
-Copied React components require React 19.2 or newer and Tailwind CSS 4. Configure `@/*` to resolve to your source directory in both TypeScript and the bundler. The CLI reports missing requirements. Other frameworks can use the tokens and the restyling workflow, but cannot render the React components directly.
+Copied React components require React 19.2 or newer and Tailwind CSS 4. The installer reads components.json and TypeScript or JavaScript alias configuration; existing aliases are preserved. The CLI reports missing requirements. Other frameworks can use the tokens and the restyling workflow, but cannot render the React components directly.
 
 ## Apply the right surface
 
@@ -73,3 +73,19 @@ The token check catches style values; it does not prove correct layout, accessib
 - Reference coverage and measurements: {{url}}/reference-audit.json
 
 Prefer the bundled CLI registry for reproducible offline inspection. Hosted docs may be newer; compare the registry revision before mixing sources. `.ds/guide.md` and `AGENTS.md` keep the instructions with the project. Automatic hooks depend on the host agent and its configuration; every agent can run the explicit checks above.
+
+## Project configuration and agent handoff
+
+Start with `{{cli}} info --json`, then `search <term> --json` and `view <names...> --json`. These commands are read-only. `show` and `inspect` remain aliases of `view`.
+
+`add` respects components.json, inherited TypeScript or JavaScript aliases, the target stylesheet and the package manager. It emits JSX/JS when `tsx` is false, installs the theme and agent guidance, and preserves differing local files. Use `add <names...> --diff` to review changes before `--overwrite`. Use `--cwd <app>` from a repository root. For shared workspace packages, use the upstream installer described below.
+
+`create --template vite --name <directory>` scaffolds a new app and installs brand components. `init` configures an existing app; `init button card` also adds components. `apply --dry-run --json` previews a requested conversion of existing styles. Do not run conversion to discover or install the library.
+
+Portable skills are installed in `.agents/skills/{{bin}}/SKILL.md` and `.claude/skills/{{bin}}/SKILL.md`; the full guide is `.ds/agent-guide.md`. Read `add --view` or the installed source for imports resolved to this project's paths. The installed brand utility is separate from the application's existing `lib/utils` exports.
+
+The standard shadcn registry is configured under `@{{bin}}` in components.json. For workspace routing, install with `{{cli}} shadcn add @{{bin}}/theme @{{bin}}/button`. Include the theme explicitly with upstream shadcn so existing font and color aliases are updated. Native `add` applies it automatically. A selected product surface uses the product registry automatically.
+
+Advanced operations use pinned shadcn 4.22.1: `shadcn <args...>`, `mcp`, `registry`, `preset`, `migrate`, `eject`, and `build`. These need network access on first use and preserve upstream output formats. Native brand commands accept `--json`. Preset/base changes are upstream operations that may change the brand; use them only when requested. MCP configuration alone does not prove the agent host has loaded its server.
+
+The explicit `apply` command scopes color conversion to recognized components and preserves unrelated artwork and shared palette data. The legacy bare-command conversion remains for compatibility; use `apply` for new restyling tasks.

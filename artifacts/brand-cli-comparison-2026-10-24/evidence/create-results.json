@@ -1,0 +1,26 @@
+[
+  {
+    "brand": "context-ds",
+    "create": 0,
+    "json": true,
+    "build": 0
+  },
+  {
+    "brand": "inkbox-ds",
+    "create": 0,
+    "json": true,
+    "build": 0
+  },
+  {
+    "brand": "agentcard-ds",
+    "create": 0,
+    "json": true,
+    "build": 0
+  },
+  {
+    "brand": "opencommerce-ds",
+    "create": 0,
+    "json": true,
+    "build": 0
+  }
+]

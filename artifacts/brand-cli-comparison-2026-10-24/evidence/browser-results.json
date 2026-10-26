@@ -1,0 +1,170 @@
+[
+  {
+    "brand": "context-ds",
+    "route": "shadcn",
+    "build": 0,
+    "styles": {
+      "background": "rgb(0, 0, 0)",
+      "expectedBackground": "rgb(0, 0, 0)",
+      "font": "\"Rethink Sans\", system-ui, sans-serif",
+      "expectedFont": "\"Rethink Sans\", system-ui, sans-serif",
+      "radius": "7.2px",
+      "height": "36px",
+      "fontSize": "12.6px",
+      "transition": "0.15s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "inkbox-ds",
+    "route": "shadcn",
+    "build": 0,
+    "styles": {
+      "background": "rgb(116, 98, 157)",
+      "expectedBackground": "rgb(116, 98, 157)",
+      "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "radius": "9999px",
+      "height": "40px",
+      "fontSize": "14px",
+      "transition": "0.15s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "agentcard-ds",
+    "route": "shadcn",
+    "build": 0,
+    "styles": {
+      "background": "rgb(0, 0, 255)",
+      "expectedBackground": "rgb(0, 0, 255)",
+      "font": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "expectedFont": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "radius": "8px",
+      "height": "40px",
+      "fontSize": "14px",
+      "transition": "0.15s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "opencommerce-ds",
+    "route": "shadcn",
+    "build": 0,
+    "styles": {
+      "background": "rgb(46, 58, 232)",
+      "expectedBackground": "rgb(46, 58, 232)",
+      "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "radius": "8px",
+      "height": "40px",
+      "fontSize": "15px",
+      "transition": "0.16s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "context-ds",
+    "route": "native",
+    "build": 0,
+    "styles": {
+      "background": "rgb(0, 0, 0)",
+      "expectedBackground": "rgb(0, 0, 0)",
+      "font": "\"Rethink Sans\", system-ui, sans-serif",
+      "expectedFont": "\"Rethink Sans\", system-ui, sans-serif",
+      "radius": "7.2px",
+      "height": "36px",
+      "fontSize": "12.6px",
+      "transition": "0.15s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "inkbox-ds",
+    "route": "native",
+    "build": 0,
+    "styles": {
+      "background": "rgb(116, 98, 157)",
+      "expectedBackground": "rgb(116, 98, 157)",
+      "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "radius": "9999px",
+      "height": "40px",
+      "fontSize": "14px",
+      "transition": "0.15s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "agentcard-ds",
+    "route": "native",
+    "build": 0,
+    "styles": {
+      "background": "rgb(0, 0, 255)",
+      "expectedBackground": "rgb(0, 0, 255)",
+      "font": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "expectedFont": "\"Neue Haas Grotesk Display Pro\", \"Neue Haas Grotesk Display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "radius": "8px",
+      "height": "40px",
+      "fontSize": "14px",
+      "transition": "0.15s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  },
+  {
+    "brand": "opencommerce-ds",
+    "route": "native",
+    "build": 0,
+    "styles": {
+      "background": "rgb(46, 58, 232)",
+      "expectedBackground": "rgb(46, 58, 232)",
+      "font": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "expectedFont": "Inter, ui-sans-serif, system-ui, sans-serif",
+      "radius": "8px",
+      "height": "40px",
+      "fontSize": "15px",
+      "transition": "0.16s"
+    },
+    "focusRestored": true,
+    "art": "rgb(240, 0, 122)",
+    "desktopOverflow": false,
+    "mobileOverflow": false,
+    "errors": [],
+    "pass": true
+  }
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "shadcn",
+    "package": "shadcn@4.22.1",
+    "seconds": 20.201,
+    "status": 0
+  },
+  {
+    "name": "context-ds",
+    "package": "github:anwarlemu/context-dev-brand-cli#release",
+    "seconds": 51.29,
+    "status": 0
+  },
+  {
+    "name": "inkbox-ds",
+    "package": "github:anwarlemu/inkbox-brand-cli#release",
+    "seconds": 13.225,
+    "status": 0
+  },
+  {
+    "name": "agentcard-ds",
+    "package": "github:anwarlemu/agentcard-brand-cli#release",
+    "seconds": 18.254,
+    "status": 0
+  },
+  {
+    "name": "opencommerce-ds",
+    "package": "github:anwarlemu/opencommerce-brand-cli#release",
+    "seconds": 10.98,
+    "status": 0
+  }
+]
