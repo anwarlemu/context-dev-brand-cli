@@ -1,0 +1,5 @@
+{
+	"$comment": "Faces the asset commands draw with (static instances of the Google Fonts families named in tokens.css, SIL Open Font License; the licenses sit beside them). sans is --ds-font-sans, data is --ds-font-data.",
+	"sans": { "family": "Rethink Sans", "files": { "400": "rethink-sans-400.ttf", "500": "rethink-sans-500.ttf", "600": "rethink-sans-600.ttf", "700": "rethink-sans-700.ttf" } },
+	"data": { "family": "Doto", "files": { "700": "doto-700.ttf", "900": "doto-900.ttf" } }
+}

@@ -1,0 +1,71 @@
+{
+	"$comment": "The share images and social posts, from the agd-playground share-image editor (src/components/context-og: draw.ts, Playground.tsx; routes /context-og-image-playground and /context-social-post). Layout rules are the engine's (src/assets/og.ts); this file holds the brand's part: palettes as token names, sizes, each template's opening copy and settings, and the card colors. Where the editor's hex had no token, the nearest token is used (see notes).",
+	"palettes": [
+		{ "name": "Paper", "bg": "white", "fill": "brand", "ring": "brand", "field": "brand", "fieldOp": 0.35, "text": "brand", "ink": "black", "mark": "brand" },
+		{ "name": "Blue", "bg": "brand", "fill": "white", "ring": "white", "field": "white", "fieldOp": 0.3, "text": "white", "ink": "white", "mark": "white" },
+		{ "name": "Ink", "bg": "black", "fill": "brand", "ring": "brand", "field": "neutral-80", "fieldOp": 1, "text": "white", "ink": "white", "mark": "brand" },
+		{ "name": "Mist", "bg": "bg-frame", "fill": "brand", "ring": "brand", "field": "neutral-20", "fieldOp": 1, "text": "brand", "ink": "black", "mark": "brand" },
+		{ "name": "Night", "bg": "navy-20", "fill": "blue-20", "ring": "blue-60", "field": "navy-30", "fieldOp": 1, "text": "blue-20", "ink": "blue-20", "mark": "blue-60" },
+		{ "name": "Graphite", "bg": "neutral-90", "fill": "brand", "ring": "white", "field": "neutral-80", "fieldOp": 1, "text": "white", "ink": "white", "mark": "brand" }
+	],
+	"notes": [
+		"Paper and Mist ink: the editor's #0a0a0a is black (text-default).",
+		"Ink field: #2e2e2e is neutral-80 (#333333).",
+		"Mist ground: #eeeeee is bg-frame (#F2F2F2); its field #cfd0d6 is neutral-20 (#CCCCCC).",
+		"Night: ground #0b1220 is navy-20 (#07142F), dots #dbe6ff are blue-20 (#D3E0FB), rings and mark #7f9fe8 are blue-60 (#7CA1F3), field #1f2b47 is navy-30 (#0B1E46).",
+		"Graphite: ground #161616 is neutral-90 (#191919), dots and mark #0a6cff are brand (#2563EB), field #2a2a2a is neutral-80.",
+		"Cards: heading #0a0a0a is text-default, body #52525b is text-secondary (#595959), the card edge is border-hairline (8% black, the editor drew 10%), the card shadow is shadow-floating's drop (8px down, 24px blur, 12% black; the editor drew 16% navy)."
+	],
+	"sizes": {
+		"banner": { "label": "Banner", "w": 1500, "h": 500, "u": 1, "text": { "x": 0.022, "y": 0.207, "size": 48, "width": 0.3 }, "image": { "x": 0.66, "y": 0.6, "scale": 150 } },
+		"og": { "label": "Link preview", "w": 1200, "h": 630, "u": 1.3, "text": { "x": 0.035, "y": 0.3, "size": 64, "width": 0.42 }, "image": { "x": 0.72, "y": 0.58, "scale": 105 } },
+		"square": { "label": "Square", "w": 1080, "h": 1080, "u": 1.4, "text": { "x": 0.04, "y": 0.14, "size": 72, "width": 0.7 }, "image": { "x": 0.55, "y": 0.66, "scale": 75 } }
+	},
+	"social": {
+		"s-16x9": { "label": "16:9", "w": 1200, "h": 675 },
+		"s-191": { "label": "1.91:1", "w": 1200, "h": 628 },
+		"s-1x1": { "label": "1:1", "w": 1080, "h": 1080 },
+		"s-4x5": { "label": "4:5", "w": 1080, "h": 1350 },
+		"s-3x4": { "label": "3:4", "w": 1080, "h": 1440 },
+		"s-9x16": { "label": "9:16", "w": 1080, "h": 1920 },
+		"s-3x1": { "label": "3:1", "w": 1500, "h": 500 }
+	},
+	"kinds": {
+		"share": { "label": "Share images (link previews and banners)", "templates": ["banner", "products", "customer"], "sizes": "sizes", "custom": false },
+		"social": { "label": "Social posts in any shape", "templates": ["social", "cards", "customer", "banner", "products"], "sizes": "social", "custom": true }
+	},
+	"cards": { "fill": "white", "radius": 16, "edge": "border-hairline", "shadow": { "color": "rgba(0, 0, 0, 0.12)", "blur": 24, "y": 8, "token": "--ds-shadow-floating" }, "heading": "text-default", "body": "text-secondary", "badge": "brand", "badgeInk": "white" },
+	"base": {
+		"palette": "Paper",
+		"logo": true,
+		"headline": "The web data APIs for agents",
+		"body": "",
+		"cta": "Build Magical Products",
+		"lists": "# Web extraction\nExtract\nCrawl Website\nWeb Search\nScrape Markdown\nScrape HTML\nScrape Images\nScrape Sitemap\nScrape Screenshot\nExtract Product\nExtract Products\n# Brand intelligence\nRetrieve Brand\nGet Styleguide\nGet Fonts\n# Identification\nNAICS Lookup\nSIC Lookup\nID Transaction",
+		"cards": "",
+		"footer": "context.dev",
+		"stat": "20M+",
+		"partnerName": "",
+		"partnerWhite": true,
+		"partnerSize": 40,
+		"burst": true,
+		"image": "sample:Globe",
+		"dot": 7.6,
+		"gap": 3.8,
+		"render": "toneEdges",
+		"fillPct": 40,
+		"hollowPct": 40,
+		"dither": "none",
+		"invert": false,
+		"cutout": "auto",
+		"keyTol": 2,
+		"field": "none"
+	},
+	"templates": {
+		"banner": { "label": "Banner, picture in dots", "description": "The logo top left, the headline under it in the brand blue, and any picture turned into dots by the dot shader.", "size": "og", "set": {} },
+		"products": { "label": "Products", "description": "Logo, headline and a button on one side; a brand-colored panel with a ring grid and the product lists under Doto labels on the other.", "size": "og", "set": { "headline": "Every piece of web context your agent needs.", "image": "none", "dot": 6, "gap": 10, "field": "rings" } },
+		"social": { "label": "Announcement", "description": "A big headline and a line under it, centered at the top, and the picture in dots filling the room below.", "size": "s-16x9", "set": { "palette": "Blue", "logo": false, "headline": "NEW!", "body": "Browser Profiles: log in once,\nreuse the session on every scrape.", "image": "sample:Key" } },
+		"cards": { "label": "Numbered cards", "description": "A title across the top, numbered white cards (heading and a few lines), the logo and address along the bottom, on a faint dot grid.", "size": "s-16x9", "set": { "palette": "Blue", "headline": "Every piece of web context your agent needs", "cards": "Web extraction\nExtract, crawl, search and scrape any page as markdown, HTML, images or screenshots.\n\nBrand intelligence\nRetrieve a brand, its styleguide and its fonts.\n\nIdentification\nNAICS and SIC lookups, and transaction IDs.", "image": "none", "dot": 6, "gap": 8, "field": "faint" } },
+		"customer": { "label": "Customer story", "description": "The logo top left, the customer's logo (or name) top right, a big number set in dots with a line or two under it, and a burst of dots.", "size": "og", "set": { "palette": "Blue", "headline": "companies.\nKept fresh.", "stat": "20M+", "partnerName": "Customer", "image": "none" } }
+	}
+}
