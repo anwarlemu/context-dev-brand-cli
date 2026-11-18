@@ -4,6 +4,8 @@ import { Command } from 'commander';
 import { review, snapshot } from './commands/review.js';
 import { run } from './commands/run.js';
 import { workflow } from './commands/workflow.js';
+import { registerIllustrate } from './commands/illustrate.js';
+import { registerFigma } from './commands/figma.js';
 import { guide } from './commands/guide.js';
 import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
 import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
@@ -67,6 +69,8 @@ program
 	});
 
 workflow(program);
+registerIllustrate(program);
+registerFigma(program);
 
 program.parseAsync().catch((error: Error & { exitCode?: number }) => {
 	if (error.exitCode === 0) return;

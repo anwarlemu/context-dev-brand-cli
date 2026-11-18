@@ -1,0 +1,15 @@
+{
+	"$comment": "Manifest entries for `illustrate`, read by src/lib/manifest-parts.ts (and by `manifest --json` when present). Names are resolved from the files they point to, so the list cannot drift.",
+	"commands": [
+		{
+			"name": "illustrate",
+			"usage": "illustrate [subject] [--image <file>] [--preset <name>] [--palette <name>] [--format svg,png] [--json]",
+			"summary": "A dot illustration from a built-in subject or any picture, through the brand's dot shader. Writes SVG (every dot a real circle, grouped as field, hollow and filled) and PNG. Same input, settings and seed give the same bytes.",
+			"flags": ["image", "preset", "palette", "size", "width", "height", "pad", "dot", "gap", "ring", "fit", "offset-x", "offset-y", "render", "fill", "hollow", "contrast", "edges", "dither", "invert", "cutout", "key-tol", "empty", "field", "field-opacity", "transparent", "seed", "shader", "format", "scale", "out", "list", "json"],
+			"names": { "subject": "brand/illustrate.json#subjects", "palette": "brand/illustrate.json#palettes", "preset": "brand/illustrate.json#presets" },
+			"enums": { "render": ["toneEdges", "tone", "edges", "silhouette"], "dither": ["none", "diffuse", "pattern"], "cutout": ["auto", "whole"], "empty": ["hidden", "field"], "field": ["none", "faint", "rings", "dots"], "shader": ["playground", "kit"], "format": ["svg", "png"] },
+			"unknownName": "exits 1 and names the nearest choices",
+			"rules": "brand/illustration.md"
+		}
+	]
+}

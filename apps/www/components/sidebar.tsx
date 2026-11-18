@@ -21,6 +21,8 @@ export const PAGES = [
   { href: "/theme", label: "Theme" },
   { href: "/agents", label: "Agents" },
   { href: "/cli", label: "CLI" },
+  { href: "/illustrations", label: "Illustrations" },
+  { href: "/figma", label: "Figma" },
 ];
 
 function LibrarySearch({ groups, open, onOpenChange, onNavigate }: { groups: Group[]; open: boolean; onOpenChange: (open: boolean) => void; onNavigate: (href: string) => void }) {

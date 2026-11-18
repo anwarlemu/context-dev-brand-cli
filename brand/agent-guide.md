@@ -89,3 +89,18 @@ The standard shadcn registry is configured under `@{{bin}}` in components.json. 
 Advanced operations use pinned shadcn 4.22.1: `shadcn <args...>`, `mcp`, `registry`, `preset`, `migrate`, `eject`, and `build`. These need network access on first use and preserve upstream output formats. Native brand commands accept `--json`. Preset/base changes are upstream operations that may change the brand; use them only when requested. MCP configuration alone does not prove the agent host has loaded its server.
 
 The explicit `apply` command scopes color conversion to recognized components and preserves unrelated artwork and shared palette data. The legacy bare-command conversion remains for compatibility; use `apply` for new restyling tasks.
+
+## Make illustrations
+
+`{{cli}} illustrate --list --json` lists the subjects (pictures drawn from the brand's sources, the dotted logomark, the customer burst and the website's kit artwork), palettes and presets. `{{cli}} illustrate globe --json` writes `illustration-globe.svg` (every dot a real circle, in `field`, `hollow` and `filled` groups) and a PNG; `--image <file>` shades any picture (PNG with a transparent background works best). Shader settings are flags (`--dot`, `--gap`, `--fill`, `--hollow`, `--dither`, `--render`, `--field`); colors come only from `--palette`, which reads the brand tokens. The same input, settings and `--seed` give the same bytes. Read `brand/illustration.md` (installed as part of the package) for what the brand's illustrations are: one dot size per picture, filled and hollow carrying the image, two colors, never under text. An unknown subject, palette or preset exits 1 with the nearest names; do not invent one.
+
+## Work in Figma
+
+The CLI does not call Figma; it writes what the Figma MCP tools need and prints the calls, in order. Keep Figma calls few: no exploratory reads.
+
+1. **Session first.** With no target file, `whoami` (only for the plan key) then `create_new_file`. Then `create_session` with the file key before any other file tool; pass its `sessionId` on every later call.
+2. **Skills before tools.** Load `figma-use` before the first `use_figma`, with `figma-generate-library` for variables and `figma-generate-design` for visible frames, and pass them in `skillNames`. Load `figma-design-to-code` before `get_design_context`.
+3. **Tokens.** `{{cli}} figma tokens --json` writes `figma/tokens.json` and `figma/tokens-<n>.js`. Run each script with `use_figma`. It creates one collection with the modes Site, Product light and Product dark, or one collection per mode on a plan that allows a single mode, plus effect styles for the shadows. Rerunning updates in place.
+4. **Push.** `{{cli}} figma push illustration <subject> --json` writes a `use_figma` script that draws real ellipses with paints bound to the color variables (run tokens first) and an SVG for `upload_assets`. `figma push asset <file>` (or `slide`) handles SVG and pictures through `upload_assets`; `figma push component <name>` and `figma push page <url>` write self-contained HTML for `html_to_figma`. Finish with one `get_screenshot` of the new frame.
+5. **Pull and check.** `{{cli}} figma pull <url> --json` gives the read calls (`get_variable_defs`, `get_design_context`) and where to save each response; `{{cli}} figma check <files...> --json` flags every color, font, size, radius or spacing that is not a brand token, with the nearest token. Build from library components and tokens, never from the raw values.
+6. **When Figma refuses a write** (a view-only seat, a plan limit, a rate limit), stop after one clear attempt and report the exact error; do not retry in a loop.

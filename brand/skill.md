@@ -18,3 +18,5 @@ Read `guide` for brand rules and `tokens <term> --json` for custom styling. Keep
 The standard shadcn registry is `{{registry}}/r/shadcn/{name}.json`, under `@{{bin}}` in components.json. Use `npx shadcn@4.22.1 add @{{bin}}/theme @{{bin}}/<name>` for shadcn's workspace routing and ecosystem integrations. The same registry works with its MCP server. Component references are at `{{registry}}/components`.
 
 With the upstream installer, include the theme explicitly so existing shadcn font and color aliases are updated. Native add applies it automatically.
+
+For brand illustrations, run `illustrate --list --json`, then `illustrate <subject>` or `illustrate --image <file>`; colors come only from `--palette`. For Figma, the CLI writes files and prints the Figma MCP calls in order: `create_session` first, load the figma-use skill before `use_figma`, then `figma tokens`, `figma push <illustration|asset|slide|component|page>`, or `figma pull <url>` followed by `figma check <files...>`. Stop after one refused write and report the error.
