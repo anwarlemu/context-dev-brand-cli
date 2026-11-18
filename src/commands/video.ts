@@ -30,7 +30,7 @@ export function videoCommand(program: Command) {
 		.option('--seed <n>', 'loops: which dots twinkle or fray', '0')
 		.option('-f, --format <format>', 'mp4, webm, frames or all (default: mp4 and webm with ffmpeg, frames without)')
 		.option('--still <seconds>', 'one PNG frame at this time instead of a video (a poster frame, or for reduced motion)')
-		.option('-o, --out <dir>', 'output directory (default video/)')
+		.option('-o, --out <dir>', 'output directory (default video/); with --still, a .png file name')
 		.option('--list', 'the reel, loop templates and sizes')
 		.option('--json', 'JSON output')
 		.action(async (template: string | undefined, _o, cmd: Command) => runVideo(template, cmd.optsWithGlobals() as Opts))
@@ -64,7 +64,9 @@ async function runVideo(positional: string | undefined, o: Opts) {
 	const format = pick('format', String(o.format ?? (ff ? 'all' : 'frames')), ['mp4', 'webm', 'frames', 'all'] as const);
 	if ((format === 'mp4' || format === 'webm') && !ff) throw new Error(`${format.toUpperCase()} needs ffmpeg on the PATH. Without it: --format frames.`);
 	const fps = num('fps', o.fps, 12, 60, { integer: true }) ?? (id === 'reel' ? videoDoc().reel.fps : videoDoc().loops.fps);
-	const dir = resolve(cwd, typeof o.out === 'string' ? o.out : 'video');
+	// With --still, an --out ending in .png names the frame itself; otherwise --out is a directory.
+	const stillFile = o.still !== undefined && typeof o.out === 'string' && /\.png$/i.test(o.out) ? resolve(cwd, o.out) : undefined;
+	const dir = stillFile ? resolve(stillFile, '..') : resolve(cwd, typeof o.out === 'string' ? o.out : 'video');
 	const still = num('still', o.still, 0, 20);
 	const files: OutFile[] = [];
 	const outputs = (name: string) => (format === 'frames' ? [] : (format === 'all' ? (['mp4', 'webm'] as const) : [format]).map((f) => ({ path: join(dir, `${name}.${f}`), format: f as 'mp4' | 'webm' })));
@@ -78,7 +80,7 @@ async function runVideo(positional: string | undefined, o: Opts) {
 		const { width, height, seconds } = videoDoc().reel;
 		if (still !== undefined) {
 			if (still > seconds) throw new Error(`--still takes 0 to ${seconds} for the reel.`);
-			const path = join(dir, `reel-${still}s.png`);
+			const path = stillFile ?? join(dir, `reel-${still}s.png`);
 			await reelFrames(copy, fps, (png) => write(path, png), [still]);
 			files.push({ path: display(cwd, path), format: 'png', width, height });
 		} else if (format === 'frames') {
@@ -119,7 +121,7 @@ async function runVideo(positional: string | undefined, o: Opts) {
 			const frames = loopFrames({ ...opts, seconds: still + 1 / fps });
 			let last: Buffer | undefined;
 			for (const f of frames) if (f.index === Math.round(still * fps)) last = f.png();
-			const path = join(dir, `${name}-${still}s.png`);
+			const path = stillFile ?? join(dir, `${name}-${still}s.png`);
 			write(path, last!);
 			files.push({ path: display(cwd, path), format: 'png', width, height });
 		} else if (format === 'frames') {

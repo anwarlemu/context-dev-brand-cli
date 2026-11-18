@@ -141,3 +141,20 @@ describe('asset commands', () => {
 		expect(readdirSync(join(dir, 'video', 'edges-square-frames'))).toHaveLength(24);
 	});
 });
+
+describe('--out names a file', () => {
+	const bin = join(__dirname, '..', 'bin.js');
+	it('takes the image format from the file name', () => {
+		const cwd = mkdtempSync(join(tmpdir(), 'ds-out-'));
+		const r = spawnSync(process.execPath, [bin, 'image', 'social', '--kind', 'social', '--size', '4:5', '--out', 'post.png'], { cwd, encoding: 'utf8' });
+		expect(r.status, r.stderr).toBe(0);
+		expect(readdirSync(cwd)).toEqual(['post.png']);
+	});
+	it('writes a video still to the named .png, not a folder', () => {
+		const cwd = mkdtempSync(join(tmpdir(), 'ds-out-'));
+		const r = spawnSync(process.execPath, [bin, 'video', 'twinkle', '--size', 'square', '--still', '1', '--out', 'still.png'], { cwd, encoding: 'utf8' });
+		expect(r.status, r.stderr).toBe(0);
+		expect(readdirSync(cwd)).toEqual(['still.png']);
+		expect(readFileSync(join(cwd, 'still.png')).subarray(1, 4).toString()).toBe('PNG');
+	});
+});

@@ -53,7 +53,7 @@ export function imageCommand(program: Command) {
 		.option('--cutout <mode>', 'auto (cut the subject out of its background) or whole')
 		.option('--key-tol <n>', 'cut-out tolerance (0 to 30)')
 		.option('--field <mode>', 'the grid behind: none, faint or rings')
-		.option('-f, --format <format>', 'png, svg or both', 'both')
+		.option('-f, --format <format>', 'png, svg or both (default: both, or the format an --out file name ends in)')
 		.option('--scale <n>', 'PNG pixel multiple, 1 to 4 (the editor downloads at 2)', '1')
 		.option('-o, --out <path>', 'a directory (default assets/), or one .png or .svg file')
 		.option('--all', 'every template at every size of the kind')
@@ -122,7 +122,9 @@ async function runImage(positional: string | undefined, o: Opts) {
 	}
 	if (positional && o.template && positional.toLowerCase() !== String(o.template).toLowerCase()) throw new Error(`Pass the template once (got ${positional} and --template ${o.template}).`);
 	const named = positional ?? (o.template as string | undefined);
-	const format = pick('format', String(o.format ?? 'both'), ['png', 'svg', 'both'] as const);
+	// A file named in --out picks its own format (post.png is a PNG); otherwise PNG and SVG.
+	const outExt = typeof o.out === 'string' ? /\.(png|svg)$/i.exec(o.out)?.[1]?.toLowerCase() : undefined;
+	const format = pick('format', String(o.format ?? outExt ?? 'both'), ['png', 'svg', 'both'] as const);
 	const scale = num('scale', o.scale, 1, 4) ?? 1;
 	const kind = o.kind ? pick('kind', String(o.kind), ['share', 'social'] as const) as Kind : undefined;
 	const width = num('width', o.width, 200, 4000, { integer: true });
