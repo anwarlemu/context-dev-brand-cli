@@ -145,10 +145,15 @@ const SCRIPT_LIMIT = 45000;
  * and modes, then creates or updates its share of the variables by name. Split so each stays under the tool's limit.
  */
 export function figmaTokenScripts(doc: FigmaTokens): string[] {
+	// Rows are compact, since an agent sends every character as the script: [name, type, scope set, value or
+	// [site, product light, product dark] when the modes differ, CSS name when it is not --ds- plus the name].
+	// Colors are hex (#rrggbb or #rrggbbaa).
+	const scopeSets = [...new Set(doc.variables.map((v) => JSON.stringify(v.scopes)))];
 	const head = (rows: unknown[], fx: unknown[]) => `// Applies ${rows.length} brand variables${fx.length ? ` and ${fx.length} effect styles` : ''} to this file. Generated; safe to rerun.
 const NAME = ${JSON.stringify(doc.collection)};
 const MODES = ${JSON.stringify(doc.modes)};
-// [name, type, scopes, css, site, product light, product dark]
+const SCOPES = [${scopeSets.join(',')}];
+const TYPES = ['COLOR', 'FLOAT', 'STRING'];
 const ROWS = ${JSON.stringify(rows)};
 const EFFECTS = ${JSON.stringify(fx)};
 const all = await figma.variables.getLocalVariableCollectionsAsync();
@@ -175,35 +180,47 @@ else {
 }
 const existing = await figma.variables.getLocalVariablesAsync();
 const byKey = new Map(existing.map((v) => [v.variableCollectionId + '|' + v.name, v]));
-const value = (type, v) => type === 'COLOR' ? { r: v[0], g: v[1], b: v[2], a: v[3] } : v;
+const hex = (h) => { const n = (i) => parseInt(h.slice(i, i + 2), 16) / 255; return { r: n(1), g: n(3), b: n(5), a: h.length > 7 ? n(7) : 1 }; };
+const value = (type, v) => type === 'COLOR' ? hex(v) : v;
 let created = 0, updated = 0;
 const ids = [];
-for (const [name, type, scopes, css, ...vals] of ROWS) {
-  for (const t of targets) {
-    if (layout === 'modes' && t.i > 0) continue;
-    let v = byKey.get(t.c.id + '|' + name);
+for (const [name, t, s, val, cssName] of ROWS) {
+  const type = TYPES[t];
+  const vals = Array.isArray(val) ? val : [val, val, val];
+  const css = cssName || '--ds-' + name.replace('/', '-');
+  for (const tg of targets) {
+    if (layout === 'modes' && tg.i > 0) continue;
+    let v = byKey.get(tg.c.id + '|' + name);
     if (v && v.resolvedType !== type) { v.remove(); v = undefined; }
-    if (!v) { v = figma.variables.createVariable(name, t.c, type); byKey.set(t.c.id + '|' + name, v); created++; } else updated++;
-    v.scopes = scopes;
+    if (!v) { v = figma.variables.createVariable(name, tg.c, type); byKey.set(tg.c.id + '|' + name, v); created++; } else updated++;
+    v.scopes = SCOPES[s];
     v.setVariableCodeSyntax('WEB', 'var(' + css + ')');
     if (layout === 'modes') targets.forEach((m) => v.setValueForMode(m.mode, value(type, vals[m.i])));
-    else v.setValueForMode(t.mode, value(type, vals[t.i]));
+    else v.setValueForMode(tg.mode, value(type, vals[tg.i]));
     ids.push(v.id);
   }
 }
 const styles = await figma.getLocalEffectStylesAsync();
 const effectIds = [];
 for (const e of EFFECTS) {
-  let s = styles.find((x) => x.name === e.name);
-  if (!s) s = figma.createEffectStyle();
-  s.name = e.name;
-  s.description = 'var(' + e.css + ')';
-  s.effects = e.effects.map((f) => ({ type: f.type, color: { r: f.color[0], g: f.color[1], b: f.color[2], a: f.color[3] }, offset: { x: f.x, y: f.y }, radius: f.blur, spread: f.spread, visible: true, blendMode: 'NORMAL' }));
-  effectIds.push(s.id);
+  let st = styles.find((x) => x.name === e.name);
+  if (!st) st = figma.createEffectStyle();
+  st.name = e.name;
+  st.description = 'var(' + e.css + ')';
+  st.effects = e.effects.map((f) => ({ type: f.type, color: { r: f.color[0], g: f.color[1], b: f.color[2], a: f.color[3] }, offset: { x: f.x, y: f.y }, radius: f.blur, spread: f.spread, visible: true, blendMode: 'NORMAL' }));
+  effectIds.push(st.id);
 }
 return { layout, collections: targets.map((t) => ({ id: t.c.id, name: t.c.name })).filter((x, i, a) => a.findIndex((y) => y.id === x.id) === i), created, updated, variables: ids.length, effectStyles: effectIds.length, createdNodeIds: [], mutatedNodeIds: [] };
 `;
-	const rows = doc.variables.map((v) => [v.name, v.type, v.scopes, v.css, ...v.values]);
+	const hexOf = (c: number[]) => `#${c.slice(0, 3).map((n) => Math.round(n * 255).toString(16).padStart(2, '0')).join('')}${c[3]! < 1 ? Math.round(c[3]! * 255).toString(16).padStart(2, '0') : ''}`;
+	const rows = doc.variables.map((v) => {
+		const vals = v.type === 'COLOR' ? v.values.map((c) => hexOf(c as number[])) : v.values;
+		const one = vals.every((x) => JSON.stringify(x) === JSON.stringify(vals[0]));
+		const derived = `--ds-${v.name.replace('/', '-')}`;
+		const row: unknown[] = [v.name, ['COLOR', 'FLOAT', 'STRING'].indexOf(v.type), scopeSets.indexOf(JSON.stringify(v.scopes)), one ? vals[0] : vals];
+		if (derived !== v.css) row.push(v.css);
+		return row;
+	});
 	const scripts: string[] = [];
 	let batch: unknown[] = [];
 	const flush = (fx: unknown[]) => {

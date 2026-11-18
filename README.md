@@ -117,6 +117,8 @@ Product documents use a 15px root and `ds-product` (or `<Surface kind="product">
 | `npx context-ds approve` | A person approves `ds-override` comments in a terminal. Agents cannot. |
 | `npx context-ds done <screen>` | Marks a native screen restyled (web screens are checked by `review`). |
 | `npx context-ds skip <screen> --reason "..."` | Leaves a screen as it is when it cannot pass without changing words or elements; the final summary lists each skip and why. |
+| `npx context-ds illustrate [subject]` | A dot illustration from a built-in subject or `--image <file>`: SVG with real circles and PNG, deterministic per `--seed`. `--list` names the subjects, palettes and presets; rules in `brand/illustration.md`. |
+| `npx context-ds figma <tokens\|push\|pull\|check>` | Files and ordered Figma MCP calls: tokens as variables, illustrations, assets, components and pages pushed, Figma values checked against the tokens. |
 
 `review` runs on the agent's own subscription: through Codex (`codex exec`) or Claude Code (`claude -p`), whichever is
 running, or the Anthropic API when a key is set. In any other agent (Cursor, Hermes and the rest) it saves the screenshots
