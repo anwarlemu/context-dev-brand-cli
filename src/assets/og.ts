@@ -641,7 +641,7 @@ export function dotText(
 }
 
 /*
- * A customer story: the Context.dev logo top left, the customer's logo top
+ * A customer story: the brand logo top left, the customer's logo top
  * right, a big number in dots with a line or two under it, and a burst of
  * dots behind. The words drag together; elsewhere drags the burst.
  */

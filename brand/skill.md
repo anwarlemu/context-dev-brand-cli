@@ -18,3 +18,5 @@ Read `guide` for brand rules and `tokens <term> --json` for custom styling. Keep
 The standard shadcn registry is `{{registry}}/r/shadcn/{name}.json`, under `@{{bin}}` in components.json. Use `npx shadcn@4.22.1 add @{{bin}}/theme @{{bin}}/<name>` for shadcn's workspace routing and ecosystem integrations. The same registry works with its MCP server. Component references are at `{{registry}}/components`.
 
 With the upstream installer, include the theme explicitly so existing shadcn font and color aliases are updated. Native add applies it automatically.
+
+For brand assets (share images, social posts, deck slides, the reel and dot loops, merch print files), read `npx {{bin}} manifest --json`, then run `image`, `deck`, `video` or `merch` with `--list` first. Unknown names exit 1 with the closest match; use only what the manifest lists.
