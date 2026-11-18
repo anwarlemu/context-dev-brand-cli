@@ -122,6 +122,8 @@ Product documents use a 15px root and `ds-product` (or `<Surface kind="product">
 | `npx context-ds deck` | 1920 by 1080 slides from `--input deck.json` or flags: a PNG per slide and one PDF. |
 | `npx context-ds video reel\|edges\|twinkle\|ripple\|logo` | The 10 s reel with its copy as flags, and seamless dot loops; MP4 and WebM through ffmpeg, PNG frames without. |
 | `npx context-ds merch <item>` | Print files only: SVG at physical size and 300 dpi PNG with bleed (cap, tee, hoodie, tote, mug, sticker with die line, poster, socks). |
+| `npx context-ds illustrate [subject]` | A dot illustration from a built-in subject or `--image <file>`: SVG with real circles and PNG, deterministic per `--seed`. `--list` names the subjects, palettes and presets; rules in `brand/illustration.md`. |
+| `npx context-ds figma <tokens\|push\|pull\|check>` | Files and ordered Figma MCP calls: tokens as variables, illustrations, assets, components and pages pushed, Figma values checked against the tokens. |
 
 `review` runs on the agent's own subscription: through Codex (`codex exec`) or Claude Code (`claude -p`), whichever is
 running, or the Anthropic API when a key is set. In any other agent (Cursor, Hermes and the rest) it saves the screenshots

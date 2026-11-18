@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
 import { items, registryUrl } from "@www/lib/registry";
 export default function sitemap(): MetadataRoute.Sitemap {
-  return ["", "/agents", "/cli", "/assets", "/theme", "/components", ...items.map(item => `/components/${item.name}`)].map(path => ({ url: `${registryUrl}${path}` }));
+  return ["", "/agents", "/cli", "/assets", "/illustrations", "/figma", "/theme", "/components", ...items.map(item => `/components/${item.name}`)].map(path => ({ url: `${registryUrl}${path}` }));
 }

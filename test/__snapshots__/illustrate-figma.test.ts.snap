@@ -1,0 +1,18 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`illustrate > pins the output of every subject (a changed hash is a changed picture) 1`] = `
+{
+  "burst": "7e5cecf11342c204",
+  "cursor": "a00719208640226a",
+  "extract": "19aa37fcd9b40d2e",
+  "globe": "8a7dc3d126b91bce",
+  "integration": "22ba9c920564724b",
+  "key": "2cd450d08c651fbf",
+  "layers": "fe883d824a2d625d",
+  "logomark": "1465cfb7994bc130",
+  "mark": "c328485daaeebc30",
+  "orbit": "55b2af490266c852",
+  "pages": "63602137be8ae2e7",
+  "sphere": "c98e16421221a9bc",
+}
+`;

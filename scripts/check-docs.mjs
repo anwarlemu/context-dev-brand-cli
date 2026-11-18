@@ -17,7 +17,7 @@ try {
     const nav = page.getByRole('navigation', { name: 'Library', exact: true });
 
     // Every docs page lives in the one shell, with its page head.
-    for (const path of ['/', '/components', '/theme', '/agents', '/cli']) {
+    for (const path of ['/', '/components', '/theme', '/agents', '/cli', '/illustrations', '/figma']) {
         await page.goto(base + path, { waitUntil: 'networkidle' });
         assert.equal(await page.locator('[data-library-shell]').count(), 1, `${path}: in the shell`);
         assert.equal(await page.locator('h1').count(), 1, `${path}: one h1`);

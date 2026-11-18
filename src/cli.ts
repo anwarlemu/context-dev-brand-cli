@@ -4,6 +4,8 @@ import { Command } from 'commander';
 import { review, snapshot } from './commands/review.js';
 import { run } from './commands/run.js';
 import { workflow } from './commands/workflow.js';
+import { registerIllustrate } from './commands/illustrate.js';
+import { registerFigma } from './commands/figma.js';
 import { guide } from './commands/guide.js';
 import { assets } from './commands/assets.js';
 import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
@@ -68,6 +70,9 @@ program
 	});
 
 workflow(program);
+registerIllustrate(program);
+registerFigma(program);
+// Last: it also rejects a mistyped command, so every command must be registered first.
 assets(program);
 
 program.parseAsync().catch((error: Error & { exitCode?: number; code?: string }) => {

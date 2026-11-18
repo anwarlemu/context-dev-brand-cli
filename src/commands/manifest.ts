@@ -6,6 +6,7 @@ import { videoCatalog } from '../assets/video.js';
 import { brand, cli } from '../lib/brand.js';
 import { emit } from '../lib/output.js';
 import { loadIndex } from '../library/registry.js';
+import { manifestParts } from '../lib/manifest-parts.js';
 
 // `manifest` (alias `describe`): the one document an agent reads first. It names every command with its flags (read
 // from the command definitions, so it cannot drift), every asset template, size, palette, slide, loop and merch item,
@@ -31,6 +32,12 @@ export async function manifest(program: Command) {
 		// The registry is built separately; without it the manifest still lists the commands and assets.
 	}
 	const b = brand();
+	// Commands that keep their entry as data (brand/manifest.d: illustrate, figma) add their subcommands and names.
+	const parts = manifestParts();
+	const commands = commandsOf(program).map((c) => {
+		const own = parts.filter((p) => p.name === c.name || p.name.startsWith(`${c.name} `));
+		return own.length ? { ...c, entries: own } : c;
+	});
 	return {
 		schemaVersion: 1,
 		name: b.name,
@@ -39,7 +46,7 @@ export async function manifest(program: Command) {
 		entry: 'manifest',
 		alias: 'describe',
 		validation: 'Every command checks its inputs against this document. An unknown command, flag, template, size, palette, slide type, loop, item or variant exits 1 and names the closest match and what is allowed. The CLI does not substitute a nearby value.',
-		commands: commandsOf(program),
+		commands,
 		commonFlags: ['cwd', 'json', 'help'],
 		assets: {
 			image: imageCatalog(),
