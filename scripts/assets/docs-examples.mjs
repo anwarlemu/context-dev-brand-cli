@@ -19,7 +19,11 @@ async function jpeg(src, name, width) {
 	const img = await loadImage(readFileSync(join(work, src)));
 	const h = Math.round((width * img.height) / img.width);
 	const c = createCanvas(width, h);
-	c.getContext('2d').drawImage(img, 0, 0, width, h);
+	const ctx = c.getContext('2d');
+	// Transparent print files (logo alone) sit on the brand's frame gray, as a proof would.
+	ctx.fillStyle = JSON.parse(readFileSync(join(root, 'build', 'tokens.json'), 'utf8')).site['--ds-color-bg-frame'];
+	ctx.fillRect(0, 0, width, h);
+	ctx.drawImage(img, 0, 0, width, h);
 	writeFileSync(join(out, name), await c.encode('jpeg', 86));
 	return { src: `/assets-examples/${name}`, width, height: h };
 }

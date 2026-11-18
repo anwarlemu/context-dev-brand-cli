@@ -145,7 +145,7 @@ export function drawSlide(ctx: Ctx, slide: Slide, fonts: Fonts = brandFonts()) {
 			const d = { ...designFor(template, 'custom', { w: W, h: H }), palette: p.name, headline: slots.title ?? '' };
 			if (type === 'stat') Object.assign(d, { stat: slots.stat ?? '', partnerName: '' });
 			// The announcement's 176 px headline at this size is for a word or two; a slide title is a sentence.
-			else Object.assign(d, { body: slots.body ?? '', image: pic ? 'picture' : 'none', textSize: 96, textY: 0.09, logo: true });
+			else Object.assign(d, { body: slots.body ?? '', image: pic ? 'picture' : 'none', textSize: 96, textY: 0.13, logo: true });
 			// drawDesign sets its own scale from the canvas width, so it is handed the surface's.
 			const k = ctx.getTransform().a;
 			const fake = { width: W * k, height: H * k, getContext: () => ctx };

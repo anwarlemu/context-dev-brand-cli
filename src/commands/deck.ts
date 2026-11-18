@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, isAbsolute, join, resolve } from 'node:path';
 import type { Command } from 'commander';
-import { deckCatalog, renderSlide, slideTypes, type Slide } from '../assets/deck.js';
+import { deckCatalog, deckDoc, renderSlide, slideTypes, type Slide } from '../assets/deck.js';
 import { display, pick, write, type OutFile } from '../assets/io.js';
 import { imagesToPdf } from '../assets/pdf.js';
 import { readPicture } from '../assets/picture.js';
@@ -95,7 +95,8 @@ async function runDeck(positional: string | undefined, o: Opts) {
 	for (const [i, s] of slides.entries()) {
 		if (!s || typeof s.type !== 'string') throw new Error(`Slide ${i + 1} needs a "type" (${slideTypes().join(', ')}).`);
 		const id = pick('slide type', s.type, slideTypes());
-		const pic = await picture(base, s.image);
+		// A slide's own picture, else its type's opening one (the image slide's sample).
+		const pic = await picture(base, s.image ?? deckDoc().slides[id].slots.image);
 		let r;
 		try {
 			r = renderSlide({ ...s, type: id, picture: pic }, { png: format !== 'svg', svg: format === 'svg' });
