@@ -117,11 +117,20 @@ Product documents use a 15px root and `ds-product` (or `<Surface kind="product">
 | `npx context-ds approve` | A person approves `ds-override` comments in a terminal. Agents cannot. |
 | `npx context-ds done <screen>` | Marks a native screen restyled (web screens are checked by `review`). |
 | `npx context-ds skip <screen> --reason "..."` | Leaves a screen as it is when it cannot pass without changing words or elements; the final summary lists each skip and why. |
+| `npx context-ds manifest --json` | Every command, flag, asset template, size, palette, slide, loop and merch item (`describe` is the same). Unknown names exit 1 with the closest match. |
+| `npx context-ds image <template>` | Share images and social posts (`banner`, `products`, `social`, `cards`, `customer`; `--kind social` for every post shape) as PNG and SVG; `--image` turns any picture into dots. |
+| `npx context-ds deck` | 1920 by 1080 slides from `--input deck.json` or flags: a PNG per slide and one PDF. |
+| `npx context-ds video reel\|edges\|twinkle\|ripple\|logo` | The 10 s reel with its copy as flags, and seamless dot loops; MP4 and WebM through ffmpeg, PNG frames without. |
+| `npx context-ds merch <item>` | Print files only: SVG at physical size and 300 dpi PNG with bleed (cap, tee, hoodie, tote, mug, sticker with die line, poster, socks). |
 
 `review` runs on the agent's own subscription: through Codex (`codex exec`) or Claude Code (`claude -p`), whichever is
 running, or the Anthropic API when a key is set. In any other agent (Cursor, Hermes and the rest) it saves the screenshots
 and the agent scores them itself; the final summary says which screens were scored that way. It needs
-`playwright-core` with Chromium (`npx playwright install chromium`).
+`playwright-core` with Chromium (`npx playwright install chromium`). So does `video reel`.
+
+The asset commands draw on a Skia canvas (`@napi-rs/canvas`) with the brand's fonts in `brand/fonts`; their layouts and
+copy live in `brand/assets/`, the renderer in `src/assets/` (importable as `dist/assets/index.js`). Compare them with the
+share-image editor: `PLAYGROUND=<agd-playground> CHROMIUM=<chrome> npx tsx scripts/assets/compare-playground.ts <dir>`.
 
 ## What it brings
 
