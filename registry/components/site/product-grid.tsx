@@ -116,7 +116,7 @@ function MoreApis({ items, label = "Also in the API", icon, className }: { items
   }, [marquee]);
 
   return (
-    <div data-slot="more-apis" className={cn("flex items-center gap-4 md:overflow-x-auto md:[scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden", className)}>
+    <div data-slot="more-apis" className={cn("flex items-center gap-4 md:fade-x md:overflow-x-auto md:[scrollbar-width:none] md:[&::-webkit-scrollbar]:hidden", className)}>
       <div className="inline-flex shrink-0 items-center gap-2 text-body-sm leading-snug whitespace-nowrap text-fg-secondary">
         {icon ?? <Globe aria-hidden="true" className="size-4" />}
         {label}
@@ -124,7 +124,7 @@ function MoreApis({ items, label = "Also in the API", icon, className }: { items
       <div
         className={cn(
           "relative min-w-0 flex-1 md:overflow-visible md:[mask-image:none]",
-          marquee ? "overflow-hidden [mask-image:linear-gradient(to_right,transparent,var(--ds-color-black)_var(--ds-space-10))]" : "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          marquee ? "overflow-hidden [mask-image:linear-gradient(to_right,transparent,var(--ds-color-black)_var(--ds-space-10))]" : "fade-x overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         )}
       >
         <div ref={track} className="flex w-max">

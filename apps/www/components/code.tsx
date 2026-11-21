@@ -7,7 +7,7 @@ export function Code({ code, title, tall = false, className }: { code: string; t
   const text = code.trim();
   return (
     <CodeWindow label={title} actions={<WindowCopyButton value={text} />} className={className}>
-      <div className={cn("overflow-auto [scrollbar-color:var(--ds-color-neutral-70)_transparent]", tall ? "max-h-140" : "max-h-96")}>
+      <div className={cn("fade-xy overflow-auto [scrollbar-color:var(--ds-color-neutral-70)_transparent]", tall ? "max-h-140" : "max-h-96")}>
         <CodeBlock code={text} className="w-max min-w-full" />
       </div>
     </CodeWindow>

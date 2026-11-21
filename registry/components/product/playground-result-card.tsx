@@ -129,7 +129,7 @@ export function PlaygroundResultCard({
                     {footnote && <span className="ml-auto truncate px-4 text-caption text-fg-subtle">{footnote}</span>}
                   </div>
                 )}
-                <div className={cn("flex min-h-0 flex-1 flex-col overflow-hidden rounded-control border border-line-subtle", shown !== "json" && "overflow-y-auto")}>{children}</div>
+                <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-control border border-line-subtle"><div className={cn("flex min-h-0 flex-1 flex-col", shown !== "json" && "fade-y overflow-y-auto")}>{children}</div></div>
               </div>
             ) : (
               (children ?? ready)

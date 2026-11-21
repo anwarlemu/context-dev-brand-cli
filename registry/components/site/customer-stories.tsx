@@ -192,7 +192,7 @@ function CustomerStoriesCarousel({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerEnd}
           onPointerCancel={onPointerEnd}
-          className="relative -my-6 w-full overflow-x-auto overflow-y-hidden py-6 [scrollbar-width:none] max-[43.2rem]:snap-x max-[43.2rem]:snap-mandatory [&::-webkit-scrollbar]:hidden"
+          className="fade-x relative -my-6 w-full overflow-x-auto overflow-y-hidden py-6 [scrollbar-width:none] max-[43.2rem]:snap-x max-[43.2rem]:snap-mandatory [&::-webkit-scrollbar]:hidden"
         >
           {/* The site's own breakpoints: one card (snapping, tighter gap) on phones, two from 43.2rem, three from 57.6rem. */}
           <div className="flex gap-4 pl-(--carousel-inset) min-[43.2rem]:gap-8">

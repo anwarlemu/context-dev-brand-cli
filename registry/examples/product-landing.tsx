@@ -36,7 +36,7 @@ export function Site() {
         docsHref="https://docs.context.dev"
         code={
           <CodeWindow label="TypeScript" actions={<WindowCopyButton value={CODE} />}>
-            <div className="overflow-x-auto">
+            <div className="fade-x overflow-x-auto">
               <CodeBlock code={CODE} />
             </div>
           </CodeWindow>
@@ -92,7 +92,7 @@ export function Parse() {
         playgroundHref="https://context.dev/playground/parse"
         code={
           <CodeWindow label="TypeScript" actions={<WindowCopyButton value={PARSE_CODE} />}>
-            <div className="overflow-x-auto">
+            <div className="fade-x overflow-x-auto">
               <CodeBlock code={PARSE_CODE} />
             </div>
           </CodeWindow>

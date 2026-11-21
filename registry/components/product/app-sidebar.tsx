@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 // and search at the top (level with the top bar), one list of links centered in the space between, then any billing
 // cards, Help, Documentation and the account at the foot. Spacers either side center the list and shrink away first,
 // so a list taller than the space still scrolls from its first row; a long list (the playground's APIs) sits higher.
+// The list's scroll edges fade (fade-y), so no row is ever cut off under the header.
 // The page you are on sits in a neutral gray wash (never blue), its name and icon a step short of black, and changes
 // at once with no transition. Below 768px it is a white drawer over a scrim, opened from the top bar's menu button;
 // it closes on Escape, on the scrim and once the window grows past it.
@@ -91,13 +92,12 @@ function AppSidebar({
           list.current = element;
           if (typeof navRef === "function") return navRef(element);
           if (navRef) navRef.current = element;
-        }} aria-label={navLabel} data-scroll-above={edges.above || undefined} data-scroll-below={edges.below || undefined} className="ds-scrollbar flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5">
+        }} aria-label={navLabel} data-scroll-above={edges.above || undefined} data-scroll-below={edges.below || undefined} className="ds-scrollbar fade-y flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-7 py-0.5">
           <div aria-hidden className="min-h-0 flex-1" />
           <div className="relative flex shrink-0 flex-col gap-1.5">{children}</div>
           <div aria-hidden className={cn("min-h-0", listPosition === "high" ? "flex-[2.5]" : "flex-1")} />
         </nav>
-        {edges.above && <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-6 bg-linear-to-b from-canvas to-transparent max-md:from-surface" />}
-        {edges.below && <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-8 items-end justify-center bg-linear-to-t from-canvas to-transparent max-md:from-surface">
+        {edges.below && <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-8 items-end justify-center">
           <button type="button" aria-label="Scroll navigation down" onClick={() => list.current?.scrollBy({ top: list.current.clientHeight * 0.75, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })} className="pointer-events-auto grid size-6 place-items-center rounded-pill bg-surface text-fg-muted shadow-card outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring">
             <ChevronDown className="size-3.5" strokeWidth={1.75} />
           </button>

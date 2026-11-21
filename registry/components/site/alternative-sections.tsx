@@ -36,8 +36,10 @@ function ComparisonSupportCell({ value, ours = false }: { value: ComparisonSuppo
 function TableCard({ label, minWidth, children }: { label: string; minWidth: string; children: React.ReactNode }) {
   return (
     <div className="-m-2 rounded-card bg-ring-tint p-2">
-      <div tabIndex={0} role="region" aria-label={label} className="overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring">
-        <table className={cn("w-full border-collapse text-left leading-normal", minWidth)}>{children}</table>
+      <div className="overflow-hidden rounded-card bg-surface ring-1 ring-hairline outline-focus-ring has-[>:focus-visible]:outline-2 has-[>:focus-visible]:outline-offset-2 has-[>:focus-visible]:outline-solid">
+        <div tabIndex={0} role="region" aria-label={label} className="fade-x overflow-x-auto outline-none">
+          <table className={cn("w-full border-collapse text-left leading-normal", minWidth)}>{children}</table>
+        </div>
       </div>
     </div>
   );

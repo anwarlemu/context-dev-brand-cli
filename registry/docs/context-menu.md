@@ -8,3 +8,5 @@ use_for: "Offer the actions of a row or an object where people already right-cli
 never: [Actions only found here, Long menus (more than about ten rows), Icons on some rows and not others in the same group]
 source: "context-dashboard c0ddf7a src/components/ui/menu.tsx"
 ---
+
+A long menu scrolls inside its panel, and the list carries `fade-y`, so rows fade at the edges instead of being cut off.

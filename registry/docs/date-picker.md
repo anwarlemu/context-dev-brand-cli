@@ -8,3 +8,5 @@ use_for: "Ask for a date or a range in a form or a toolbar (an API key's expiry,
 never: [Typing dates into a plain input without a calendar, Closing a range picker after the first day, Presets that are not dates]
 source: "context-dashboard c0ddf7a src/components/ui/menu.tsx (SelectMenu field) with dates as in src/lib/format-date.ts"
 ---
+
+The presets scroll with `fade-x` on phones and `fade-y` from 640px, so none is cut off.

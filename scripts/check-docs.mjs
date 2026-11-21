@@ -77,6 +77,32 @@ try {
     await page.screenshot({ path: join(screenshots, 'context-library-desktop.png') });
     pass('framed previews render the brand; the sidebar and current row keep the dashboard metrics');
 
+    // Scroll edges fade, never cut a row off: the rail's mask grows with the first and last 24px of scroll.
+    const fade = loc => loc.evaluate(el => { const s = getComputedStyle(el); return { mask: s.maskImage, start: s.getPropertyValue('--fade-start'), end: s.getPropertyValue('--fade-end') }; });
+    const settle = () => page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+    await nav.evaluate(el => { el.scrollTop = 0; });
+    await settle();
+    let edges = await fade(nav);
+    assert.match(edges.mask, /gradient/, 'rail has the fade mask');
+    assert.deepEqual([edges.start, edges.end], ['0px', '24px'], 'rail at rest: first row in full, bottom fades');
+    await nav.evaluate(el => { el.scrollTop = 200; });
+    await settle();
+    edges = await fade(nav);
+    assert.deepEqual([edges.start, edges.end], ['24px', '24px'], 'rail scrolled: both edges fade');
+    await nav.evaluate(el => { el.scrollTop = el.scrollHeight; });
+    await settle();
+    edges = await fade(nav);
+    assert.deepEqual([edges.start, edges.end], ['24px', '0px'], 'rail at the end: no bottom fade');
+    await nav.evaluate(el => { el.scrollTop = 0; });
+    await page.goto(base + '/preview/scroll-area/Product', { waitUntil: 'networkidle' });
+    const area = page.locator('[data-slot="scroll-area-viewport"]').first();
+    assert.deepEqual(Object.values(await fade(area)).slice(1), ['0px', '24px'], 'scroll area at rest');
+    await area.evaluate(el => { el.scrollTop = el.scrollHeight; });
+    await settle();
+    assert.deepEqual(Object.values(await fade(area)).slice(1), ['24px', '0px'], 'scroll area at the end');
+    pass('the rail and a scrolling library item fade at their scroll edges instead of cutting rows off');
+    await page.goto(base + '/components/button', { waitUntil: 'networkidle' });
+
     // Copy boxes copy, and say so; a refused clipboard does not break the page.
     await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async text => { window.__copied = text; } } }));
     await page.locator('[data-docs-head] [data-slot="install-command"] button').click();

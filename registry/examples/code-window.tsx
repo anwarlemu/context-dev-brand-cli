@@ -43,7 +43,7 @@ export function Site() {
   return (
     <div className="grid w-full max-w-3xl gap-10">
       <CodeWindow label="scrape.ts" actions={<WindowCopyButton value={SCRAPE} />}>
-        <div className="overflow-x-auto">
+        <div className="fade-x overflow-x-auto">
           <CodeBlock code={SCRAPE} language="typescript" />
         </div>
       </CodeWindow>

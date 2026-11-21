@@ -71,7 +71,7 @@ function SelectContent({ className, children, position = "popper", ...props }: R
         <SelectPrimitive.ScrollUpButton className="flex h-6 items-center justify-center text-fg-subtle">
           <ChevronUp className="size-3.5" />
         </SelectPrimitive.ScrollUpButton>
-        <SelectPrimitive.Viewport className="flex flex-col gap-0.5">{children}</SelectPrimitive.Viewport>
+        <SelectPrimitive.Viewport className="fade-y flex flex-col gap-0.5">{children}</SelectPrimitive.Viewport>
         <SelectPrimitive.ScrollDownButton className="flex h-6 items-center justify-center text-fg-subtle">
           <ChevronDown className="size-3.5" />
         </SelectPrimitive.ScrollDownButton>

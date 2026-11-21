@@ -46,7 +46,7 @@ function UseCaseInstallCommand({ sample, samples, defaultLanguage, className }: 
   }
   return (
     <div className={cn("flex w-fit max-w-full items-center gap-2 rounded-pill py-1 pr-1 pl-4 ring-1 ring-black/10 ring-inset", className)}>
-      <code className="min-w-0 overflow-x-auto font-mono text-body-sm leading-5 whitespace-nowrap text-fg-nav [scrollbar-width:none]">
+      <code className="fade-x min-w-0 overflow-x-auto font-mono text-body-sm leading-5 whitespace-nowrap text-fg-nav [scrollbar-width:none]">
         <span aria-hidden="true" className="text-black/35">
           ${" "}
         </span>
@@ -120,7 +120,7 @@ function UseCaseCodeTabs({
           </>
         }
       >
-        <div role="tablist" aria-label="Code language" className="flex min-w-0 gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 [scrollbar-width:none]">
+        <div role="tablist" aria-label="Code language" className="fade-x flex min-w-0 gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 [scrollbar-width:none]">
           {samples.map((sample) => {
             const selected = sample === active;
             return (
@@ -153,7 +153,7 @@ function UseCaseCodeTabs({
               aria-labelledby={`${baseId}-tab-${sample.language}`}
               tabIndex={0}
               hidden={sample !== active}
-              className="absolute inset-0 overflow-auto outline-none [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring"
+              className="fade-xy absolute inset-0 overflow-auto outline-none [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring"
             >
               <CodeBlock code={sample.code} language={sample.language} />
             </div>
@@ -163,7 +163,7 @@ function UseCaseCodeTabs({
           <div className="flex min-h-12 items-center gap-2 border-t border-white/10 px-4 py-2">
             {active.install ? (
               <>
-                <code className="min-w-0 flex-1 overflow-x-auto font-mono text-caption whitespace-nowrap text-white/80 [scrollbar-width:none]">{active.install}</code>
+                <code className="fade-x min-w-0 flex-1 overflow-x-auto font-mono text-caption whitespace-nowrap text-white/80 [scrollbar-width:none]">{active.install}</code>
                 <WindowCopyButton round value={active.install} label={`Copy ${active.label} install command`} />
               </>
             ) : (
@@ -264,14 +264,16 @@ function UseCaseStepCards({ steps, links, className }: { steps: readonly UseCase
                 <h3 className="text-h4 leading-snug font-normal tracking-normal text-fg">{step.title}</h3>
                 <p className="text-body leading-snug text-fg-secondary">{step.description}</p>
               </div>
-              <div
-                tabIndex={0}
-                role="region"
-                aria-label={`${step.title} code example`}
-                style={{ "--visible-code-lines": visibleLines } as React.CSSProperties}
-                className="overflow-x-auto rounded-card bg-code outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring lg:max-h-[calc(var(--visible-code-lines)*1.7em+2.5rem)] lg:overflow-y-auto"
-              >
-                <CodeBlock code={step.code} />
+              <div className="overflow-hidden rounded-card bg-code outline-focus-ring has-[>:focus-visible]:outline-2 has-[>:focus-visible]:outline-offset-2 has-[>:focus-visible]:outline-solid">
+                <div
+                  tabIndex={0}
+                  role="region"
+                  aria-label={`${step.title} code example`}
+                  style={{ "--visible-code-lines": visibleLines } as React.CSSProperties}
+                  className="fade-x overflow-x-auto outline-none lg:max-h-[calc(var(--visible-code-lines)*1.7em+2.5rem)] lg:fade-xy lg:overflow-y-auto"
+                >
+                  <CodeBlock code={step.code} />
+                </div>
               </div>
             </div>
           </li>

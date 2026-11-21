@@ -63,76 +63,78 @@ function ComparisonTable({
     <div data-slot="comparison-table" className={cn("flex flex-col gap-3", className)}>
       {/* The glass ring: a wrapper 8px wider than the card, so its outer edge shares the card's radius. */}
       <div className="-m-2 rounded-card bg-ring-tint p-2">
-        <div tabIndex={0} role="region" aria-label={caption} className="overflow-x-auto rounded-card bg-surface ring-1 ring-hairline outline-none focus-visible:ring-2 focus-visible:ring-focus-ring">
-          <table className={cn("w-full border-collapse text-left leading-snug", marks ? "min-w-136" : "min-w-160")}>
-            {caption && <caption className="sr-only">{caption}</caption>}
-            <thead>
-              {marks ? (
-                <tr className="text-body-sm">
-                  <th scope="col" className="px-5 py-4 font-normal text-fg-nav md:px-8">
-                    {firstHeader}
-                  </th>
-                  {columns.map((col) => (
-                    <th key={col.key} scope="col" className={cn("w-36 px-4 py-4 text-center md:w-44", col.highlight ? "bg-brand/4 font-normal text-fg-brand" : "font-normal text-fg")}>
-                      {col.header}
-                    </th>
-                  ))}
-                </tr>
-              ) : (
-                <tr className="align-bottom">
-                  {firstHeader ? (
-                    <th scope="col" className="w-[28%] px-5 py-5 text-body-sm font-normal text-fg-subtle md:px-8">
+        <div className="overflow-hidden rounded-card bg-surface ring-1 ring-hairline has-[>:focus-visible]:ring-2 has-[>:focus-visible]:ring-focus-ring">
+          <div tabIndex={0} role="region" aria-label={caption} className="fade-x overflow-x-auto outline-none">
+            <table className={cn("w-full border-collapse text-left leading-snug", marks ? "min-w-136" : "min-w-160")}>
+              {caption && <caption className="sr-only">{caption}</caption>}
+              <thead>
+                {marks ? (
+                  <tr className="text-body-sm">
+                    <th scope="col" className="px-5 py-4 font-normal text-fg-nav md:px-8">
                       {firstHeader}
                     </th>
-                  ) : (
-                    <td className="w-[28%] px-5 py-5 md:px-8" />
-                  )}
-                  {columns.map((col, i) => (
-                    <th key={col.key} scope="col" className={cn("px-5 py-5 font-normal", i === last && "md:px-8", col.highlight && "bg-brand/4")}>
-                      <span className={cn("block text-h5", col.highlight ? "text-fg-brand" : "text-fg")}>{col.header}</span>
-                      {col.caption && <span className="block text-body-sm text-fg-subtle">{col.caption}</span>}
-                    </th>
-                  ))}
-                </tr>
-              )}
-            </thead>
-            {groups.map((group) => (
-              <tbody key={group.category ?? "rows"}>
-                {group.category && (
-                  <tr className="border-t border-hairline">
-                    <th scope="colgroup" colSpan={columns.length + 1} className="px-5 pt-6 pb-2 text-body-sm font-normal text-fg md:px-8">
-                      {group.category}
-                    </th>
+                    {columns.map((col) => (
+                      <th key={col.key} scope="col" className={cn("w-36 px-4 py-4 text-center md:w-44", col.highlight ? "bg-brand/4 font-normal text-fg-brand" : "font-normal text-fg")}>
+                        {col.header}
+                      </th>
+                    ))}
+                  </tr>
+                ) : (
+                  <tr className="align-bottom">
+                    {firstHeader ? (
+                      <th scope="col" className="w-[28%] px-5 py-5 text-body-sm font-normal text-fg-subtle md:px-8">
+                        {firstHeader}
+                      </th>
+                    ) : (
+                      <td className="w-[28%] px-5 py-5 md:px-8" />
+                    )}
+                    {columns.map((col, i) => (
+                      <th key={col.key} scope="col" className={cn("px-5 py-5 font-normal", i === last && "md:px-8", col.highlight && "bg-brand/4")}>
+                        <span className={cn("block text-h5", col.highlight ? "text-fg-brand" : "text-fg")}>{col.header}</span>
+                        {col.caption && <span className="block text-body-sm text-fg-subtle">{col.caption}</span>}
+                      </th>
+                    ))}
                   </tr>
                 )}
-                {group.rows.map((row) =>
-                  marks ? (
-                    <tr key={row.feature} className="border-t border-wash-pill">
-                      <th scope="row" className="px-5 py-3.5 text-body font-normal text-fg-nav md:px-8">
-                        {row.feature}
+              </thead>
+              {groups.map((group) => (
+                <tbody key={group.category ?? "rows"}>
+                  {group.category && (
+                    <tr className="border-t border-hairline">
+                      <th scope="colgroup" colSpan={columns.length + 1} className="px-5 pt-6 pb-2 text-body-sm font-normal text-fg md:px-8">
+                        {group.category}
                       </th>
-                      {columns.map((col) => (
-                        <td key={col.key} className={cn("px-4 py-3.5 text-center", col.highlight && "bg-brand/4")}>
-                          <ComparisonMark value={row[col.key]} highlight={col.highlight} />
-                        </td>
-                      ))}
                     </tr>
-                  ) : (
-                    <tr key={row.feature} className="border-t border-hairline">
-                      <th scope="row" className="px-5 py-4 text-body font-normal text-fg md:px-8">
-                        {row.feature}
-                      </th>
-                      {columns.map((col, i) => (
-                        <td key={col.key} className={cn("px-5 py-4 text-body", i === last && "md:px-8", col.highlight ? "bg-brand/4 text-fg" : "text-fg-subtle")}>
-                          {typeof row[col.key] === "boolean" ? <ComparisonMark value={row[col.key]} highlight={col.highlight} /> : row[col.key]}
-                        </td>
-                      ))}
-                    </tr>
-                  ),
-                )}
-              </tbody>
-            ))}
-          </table>
+                  )}
+                  {group.rows.map((row) =>
+                    marks ? (
+                      <tr key={row.feature} className="border-t border-wash-pill">
+                        <th scope="row" className="px-5 py-3.5 text-body font-normal text-fg-nav md:px-8">
+                          {row.feature}
+                        </th>
+                        {columns.map((col) => (
+                          <td key={col.key} className={cn("px-4 py-3.5 text-center", col.highlight && "bg-brand/4")}>
+                            <ComparisonMark value={row[col.key]} highlight={col.highlight} />
+                          </td>
+                        ))}
+                      </tr>
+                    ) : (
+                      <tr key={row.feature} className="border-t border-hairline">
+                        <th scope="row" className="px-5 py-4 text-body font-normal text-fg md:px-8">
+                          {row.feature}
+                        </th>
+                        {columns.map((col, i) => (
+                          <td key={col.key} className={cn("px-5 py-4 text-body", i === last && "md:px-8", col.highlight ? "bg-brand/4 text-fg" : "text-fg-subtle")}>
+                            {typeof row[col.key] === "boolean" ? <ComparisonMark value={row[col.key]} highlight={col.highlight} /> : row[col.key]}
+                          </td>
+                        ))}
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              ))}
+            </table>
+          </div>
         </div>
       </div>
       {footnote && <p className="text-body-sm leading-relaxed text-fg-subtle">{footnote}</p>}

@@ -6,8 +6,10 @@ import { cn } from "@/lib/utils";
 // header band in sentence case; rows divided by a light line; numbers in tabular figures.
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div data-slot="table-container" className="relative w-full overflow-x-auto rounded-card bg-surface shadow-card">
-      <table data-slot="table" className={cn("w-full caption-bottom border-collapse text-left text-body-sm", className)} {...props} />
+    <div data-slot="table-container" className="relative w-full overflow-hidden rounded-card bg-surface shadow-card">
+      <div className="fade-x overflow-x-auto">
+        <table data-slot="table" className={cn("w-full caption-bottom border-collapse text-left text-body-sm", className)} {...props} />
+      </div>
     </div>
   );
 }

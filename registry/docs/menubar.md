@@ -8,3 +8,5 @@ use_for: "An editor or tool with many commands grouped by kind (the playground's
 never: [Navigation between pages, A single menu in a bar, Animating the move from one menu to the next]
 source: "context-dashboard c0ddf7a src/components/ui/menu.tsx (the menus); src/components/ui/tabs.tsx (the gray wash pill)"
 ---
+
+A long menu scrolls inside its panel, and the list carries `fade-y`, so rows fade at the edges instead of being cut off.

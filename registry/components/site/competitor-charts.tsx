@@ -443,7 +443,7 @@ function BenchmarkPanel({ providers, data, link, cycleMs = 6000, className }: { 
           <TabsList
             aria-label="Benchmark"
             pillClassName="rounded-none rounded-t-card border border-b-0 border-line bg-surface"
-            className="-mb-px min-w-0 flex-1 gap-0 overflow-x-auto [mask-image:linear-gradient(to_right,var(--ds-color-black)_calc(100%-var(--ds-space-10)),transparent)] [scrollbar-width:none] sm:[mask-image:none] [&::-webkit-scrollbar]:hidden"
+            className="-mb-px min-w-0 flex-1 gap-0 overflow-x-auto fade-x [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {TABS.map((t) => (
               <TabsTrigger

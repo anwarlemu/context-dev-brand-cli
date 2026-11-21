@@ -90,7 +90,7 @@ function AttachmentGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="attachment-group"
-      className={cn("ds-scrollbar flex min-w-0 snap-x snap-mandatory scroll-px-1 gap-3 overflow-x-auto overscroll-x-contain p-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start", className)}
+      className={cn("ds-scrollbar fade-x flex min-w-0 snap-x snap-mandatory scroll-px-1 gap-3 overflow-x-auto overscroll-x-contain p-1 *:data-[slot=attachment]:flex-none *:data-[slot=attachment]:snap-start", className)}
       {...props}
     />
   );

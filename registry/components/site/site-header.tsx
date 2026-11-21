@@ -836,7 +836,7 @@ function MobileNavigation({
       id={id}
       aria-label="Mobile navigation"
       className={cn(
-        "absolute inset-x-0 top-full flex h-[calc(100dvh-var(--mobile-nav-top))] flex-col overflow-y-auto overscroll-contain px-6 pt-4 pb-[max(var(--ds-space-6),env(safe-area-inset-bottom))] text-fg [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        "fade-y absolute inset-x-0 top-full flex h-[calc(100dvh-var(--mobile-nav-top))] flex-col overflow-y-auto overscroll-contain px-6 pt-4 pb-[max(var(--ds-space-6),env(safe-area-inset-bottom))] text-fg [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         MOBILE_RAILS,
       )}
     >

@@ -9,3 +9,5 @@ use_for: Quickstarts and request samples.
 never: [Dark code cards in the product]
 source: context-dashboard c0ddf7a src/components/playground/code-card.tsx
 ---
+
+The code scrolls with `fade-y`, so it fades at its edges instead of being cut off.

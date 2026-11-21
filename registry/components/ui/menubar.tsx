@@ -13,7 +13,9 @@ import { cn } from "@/lib/utils";
 // wash and darken when highlighted, 14px icons, caption labels and shortcuts, edge-to-edge separators, red destructive
 // rows. A menu grows from its trigger in a short pop; moving along the bar or down a menu is instant (both are done by
 // keyboard and many times a day, and a panel that lingered while closing would dismiss the next one).
-const PANEL = "ds-scrollbar z-50 flex max-h-(--radix-menubar-content-available-height) min-w-48 origin-(--radix-menubar-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0";
+const PANEL = "z-50 flex max-h-(--radix-menubar-content-available-height) min-w-48 origin-(--radix-menubar-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-hidden rounded-shell bg-surface shadow-floating outline-none";
+// The panel's list scrolls inside it, so the scroll edges fade (fade-y) without fading the panel's own shadow.
+const VIEWPORT = "ds-scrollbar fade-y flex min-h-0 flex-col gap-[inherit] overflow-y-auto p-(--ds-space-frame) [&>*]:shrink-0";
 const ROW = "relative flex w-full cursor-default items-center gap-2 rounded-control px-2.5 py-1.5 text-body-sm leading-5 text-fg-muted outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg data-[inset]:pl-8 [&_svg]:size-3.5 [&_svg]:shrink-0";
 const DESTRUCTIVE = "text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger";
 
@@ -50,10 +52,12 @@ function MenubarTrigger({ className, ...props }: React.ComponentProps<typeof Men
   );
 }
 
-function MenubarContent({ className, align = "start", alignOffset = -3, sideOffset = 6, ...props }: React.ComponentProps<typeof MenubarPrimitive.Content>) {
+function MenubarContent({ className, children, align = "start", alignOffset = -3, sideOffset = 6, ...props }: React.ComponentProps<typeof MenubarPrimitive.Content>) {
   return (
     <MenubarPortal>
-      <MenubarPrimitive.Content data-slot="menubar-content" align={align} alignOffset={alignOffset} sideOffset={sideOffset} collisionPadding={8} className={cn(PANEL, className)} {...props} />
+      <MenubarPrimitive.Content data-slot="menubar-content" align={align} alignOffset={alignOffset} sideOffset={sideOffset} collisionPadding={8} className={cn(PANEL, className)} {...props}>
+        <div data-slot="menubar-viewport" className={VIEWPORT}>{children}</div>
+      </MenubarPrimitive.Content>
     </MenubarPortal>
   );
 }
@@ -109,10 +113,12 @@ function MenubarSubTrigger({ className, inset, children, ...props }: React.Compo
   );
 }
 
-function MenubarSubContent({ className, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {
+function MenubarSubContent({ className, children, ...props }: React.ComponentProps<typeof MenubarPrimitive.SubContent>) {
   return (
     <MenubarPortal>
-      <MenubarPrimitive.SubContent data-slot="menubar-sub-content" collisionPadding={8} className={cn(PANEL, "min-w-40", className)} {...props} />
+      <MenubarPrimitive.SubContent data-slot="menubar-sub-content" collisionPadding={8} className={cn(PANEL, "min-w-40", className)} {...props}>
+        <div data-slot="menubar-sub-viewport" className={VIEWPORT}>{children}</div>
+      </MenubarPrimitive.SubContent>
     </MenubarPortal>
   );
 }

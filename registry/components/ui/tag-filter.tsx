@@ -57,7 +57,7 @@ function TagFilter({
             aria-label="Search tags"
             className="mb-1 h-8 w-full rounded-control bg-neutral-5 px-2.5 text-body-sm text-fg outline-none placeholder:text-fg-subtle"
           />
-          <ul className="max-h-64 overflow-y-auto">
+          <ul className="fade-y max-h-64 overflow-y-auto">
             {options.length === 0 && <li className="px-2.5 py-2 text-body-sm text-fg-subtle">{tagOptions.length === 0 ? "No tags yet" : "No matching tags"}</li>}
             {options.map((tag) => {
               const isSelected = selected.has(tag);

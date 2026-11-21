@@ -28,7 +28,7 @@ function DropdownMenuTrigger(props: React.ComponentProps<typeof DropdownMenuPrim
   return <DropdownMenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />;
 }
 
-function DropdownMenuContent({ className, sideOffset = 6, align = "end", ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
+function DropdownMenuContent({ className, children, sideOffset = 6, align = "end", ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Content>) {
   return (
     <DropdownMenuPrimitive.Portal container={usePortalContainer()}>
       <DropdownMenuPrimitive.Content
@@ -36,9 +36,11 @@ function DropdownMenuContent({ className, sideOffset = 6, align = "end", ...prop
         sideOffset={sideOffset}
         align={align}
         collisionPadding={8}
-        className={cn("ds-scrollbar z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0", className)}
+        className={cn("z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-48 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-hidden rounded-shell bg-surface shadow-floating outline-none", className)}
         {...props}
-      />
+      >
+        <div data-slot="dropdown-menu-viewport" className="ds-scrollbar fade-y flex min-h-0 flex-col gap-[inherit] overflow-y-auto p-(--ds-space-frame) [&>*]:shrink-0">{children}</div>
+      </DropdownMenuPrimitive.Content>
     </DropdownMenuPrimitive.Portal>
   );
 }
@@ -140,15 +142,17 @@ function DropdownMenuSubTrigger({ className, children, ...props }: React.Compone
   );
 }
 
-function DropdownMenuSubContent({ className, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
+function DropdownMenuSubContent({ className, children, ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.SubContent>) {
   return (
     <DropdownMenuPrimitive.Portal container={usePortalContainer()}>
       <DropdownMenuPrimitive.SubContent
         data-slot="dropdown-menu-sub-content"
         collisionPadding={8}
-        className={cn("ds-scrollbar z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating [&>*]:shrink-0", className)}
+        className={cn("z-50 flex max-h-(--radix-dropdown-menu-content-available-height) min-w-40 origin-(--radix-dropdown-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-hidden rounded-shell bg-surface shadow-floating", className)}
         {...props}
-      />
+      >
+        <div data-slot="dropdown-menu-sub-viewport" className="ds-scrollbar fade-y flex min-h-0 flex-col gap-[inherit] overflow-y-auto p-(--ds-space-frame) [&>*]:shrink-0">{children}</div>
+      </DropdownMenuPrimitive.SubContent>
     </DropdownMenuPrimitive.Portal>
   );
 }

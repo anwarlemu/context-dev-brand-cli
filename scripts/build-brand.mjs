@@ -192,6 +192,34 @@ const motion = `@theme {
 	}
 }
 `;
+// Scroll edges fade, never cut content off: an edge with more content past it fades over 24px. The fade grows with the
+// first and last 24px of scroll (tied to the scroll, not to time), so a list at rest shows its first row in full and a
+// list that does not scroll has no fade. Browsers without scroll timelines get a short fixed fade. The mask only reads
+// alpha, so any opaque brand color works. Put it on the element that scrolls (fade-y, fade-x, or fade-xy for a box that
+// scrolls both ways); that element's own shadow, ring or background fades with it, so a framed scroller keeps its frame
+// on a wrapper.
+const ramp = (dir, start, end) => `linear-gradient(to ${dir}, transparent, var(--ds-color-black) var(${start}), var(--ds-color-black) calc(100% - var(${end})), transparent)`;
+const fadeUtility = (name, axes) => `
+@utility ${name} {
+	mask-image: ${axes.map(([dir, , start, end]) => ramp(dir, start, end)).join(', ')};${axes.length > 1 ? '\n\tmask-composite: intersect;' : ''}
+	@supports (animation-timeline: scroll()) {
+		animation: ${axes.map(([, , start, end]) => `ds${start.slice(1)} linear both, ds${end.slice(1)} linear both`).join(', ')};
+		animation-range: ${axes.map(() => '0px 24px, calc(100% - 24px) 100%').join(', ')};
+		animation-timeline: ${axes.map(([, axis]) => `scroll(self ${axis}), scroll(self ${axis})`).join(', ')};
+	}
+	@supports not (animation-timeline: scroll()) {
+${axes.flatMap(([, , start, end]) => [`\t\t${start}: 8px;`, `\t\t${end}: 8px;`]).join('\n')}
+	}
+}`;
+const Y = ['bottom', 'block', '--fade-start', '--fade-end'], X = ['right', 'inline', '--fade-x-start', '--fade-x-end'];
+const fadeProps = ['--fade-start', '--fade-end', '--fade-x-start', '--fade-x-end'];
+const scrollFade = `
+${fadeProps.map((p) => `@property ${p} { syntax: "<length>"; inherits: false; initial-value: 0px; }`).join('\n')}
+${fadeProps.map((p) => p.endsWith('start') ? `@keyframes ds${p.slice(1)} { from { ${p}: 0px; } to { ${p}: 24px; } }` : `@keyframes ds${p.slice(1)} { from { ${p}: 24px; } to { ${p}: 0px; } }`).join('\n')}
+${fadeUtility('fade-y', [Y])}
+${fadeUtility('fade-x', [['right', 'inline', '--fade-start', '--fade-end']])}
+${fadeUtility('fade-xy', [Y, X])}
+`;
 const scrollbar = `
 .ds-scrollbar { scrollbar-width: thin; scrollbar-color: transparent transparent; }
 .ds-scrollbar[data-scrolling] { scrollbar-color: var(--ds-color-neutral-20) transparent; }
@@ -207,7 +235,7 @@ const sheetExit = Object.entries({ right: 'var(--ds-space-2) 0', left: 'calc(-1 
 @media (prefers-reduced-motion: reduce) {
   @keyframes ds-sheet-${side}-out { to { opacity: 0; } }
 }`).join('\n');
-const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}\n${sheetExit}\n${scrollbar}`;
+const themeCss = `${header}@theme inline {\n${theme.join('\n')}\n}\n\n${motion}\n${sheetExit}\n${scrollbar}${scrollFade}`;
 const fonts = `${header}@import url("https://fonts.googleapis.com/css2?family=Doto:wght@400..900&family=IBM+Plex+Mono:wght@400;500&family=Rethink+Sans:wght@400..500&display=swap");\n`;
 
 mkdirSync(new URL('../build', import.meta.url), { recursive: true });

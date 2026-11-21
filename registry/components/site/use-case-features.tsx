@@ -150,34 +150,36 @@ export type UseCaseComparisonRow = { feature: React.ReactNode } & Record<string,
 function UseCaseComparisonTable({ columns, rows, label = "Comparison", className }: { columns: readonly UseCaseComparisonColumn[]; rows: readonly UseCaseComparisonRow[]; label?: string; className?: string }) {
   return (
     <div data-slot="use-case-comparison-table" className={cn(RING, className)}>
-      <div tabIndex={0} role="region" aria-label={label} className={cn("overflow-x-auto rounded-card bg-surface ring-1 ring-hairline", FOCUS)}>
-        <table className="w-full min-w-xl border-collapse text-left">
-          <thead>
-            <tr className="border-b border-hairline align-bottom">
-              <td className="w-1/4 px-6 py-5 md:px-8" />
-              {columns.map((column) => (
-                <th key={column.key} scope="col" className="px-6 py-5 font-normal md:px-8">
-                  <span className={cn("block text-h5 leading-snug", column.highlight ? "text-fg-brand" : "text-fg")}>{column.header}</span>
-                  {column.caption && <span className="block text-body-sm leading-snug text-fg-subtle">{column.caption}</span>}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr key={i} className="border-b border-black/6 last:border-0">
-                <th scope="row" className="px-6 py-5 align-top text-body leading-snug font-normal text-fg md:px-8">
-                  {row.feature}
-                </th>
+      <div className="overflow-hidden rounded-card bg-surface ring-1 ring-hairline outline-focus-ring has-[>:focus-visible]:outline-2 has-[>:focus-visible]:outline-offset-2 has-[>:focus-visible]:outline-solid">
+        <div tabIndex={0} role="region" aria-label={label} className="fade-x overflow-x-auto outline-none">
+          <table className="w-full min-w-xl border-collapse text-left">
+            <thead>
+              <tr className="border-b border-hairline align-bottom">
+                <td className="w-1/4 px-6 py-5 md:px-8" />
                 {columns.map((column) => (
-                  <td key={column.key} className={cn("px-6 py-5 align-top text-body leading-snug md:px-8", column.highlight ? "bg-brand/4 text-fg" : "text-fg-secondary")}>
-                    {row[column.key]}
-                  </td>
+                  <th key={column.key} scope="col" className="px-6 py-5 font-normal md:px-8">
+                    <span className={cn("block text-h5 leading-snug", column.highlight ? "text-fg-brand" : "text-fg")}>{column.header}</span>
+                    {column.caption && <span className="block text-body-sm leading-snug text-fg-subtle">{column.caption}</span>}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i} className="border-b border-black/6 last:border-0">
+                  <th scope="row" className="px-6 py-5 align-top text-body leading-snug font-normal text-fg md:px-8">
+                    {row.feature}
+                  </th>
+                  {columns.map((column) => (
+                    <td key={column.key} className={cn("px-6 py-5 align-top text-body leading-snug md:px-8", column.highlight ? "bg-brand/4 text-fg" : "text-fg-secondary")}>
+                      {row[column.key]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
@@ -259,7 +261,7 @@ function UseCaseApiExample({
       className={cn("pt-10 md:pt-12", className)}
       code={
         <CodeWindow label={endpoint}>
-          <div tabIndex={0} role="region" aria-label={`${endpoint} example`} className="overflow-x-auto outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring">
+          <div tabIndex={0} role="region" aria-label={`${endpoint} example`} className="fade-x overflow-x-auto outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring">
             <CodeBlock code={code} />
           </div>
         </CodeWindow>

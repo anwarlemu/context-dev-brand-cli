@@ -117,7 +117,7 @@ function WorkspaceSwitcher({
           <ChevronsUpDown className="-ml-0.5 size-3.5 shrink-0 text-fg-subtle" strokeWidth={1.5} />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="max-h-[min(70vh,var(--radix-dropdown-menu-content-available-height))] w-54 max-w-[calc(100vw-2rem)] gap-0 overflow-y-auto">
+      <DropdownMenuContent align="start" className="max-h-[min(70vh,var(--radix-dropdown-menu-content-available-height))] w-54 max-w-[calc(100vw-2rem)] gap-0">
         <DropdownMenuLabel className="text-body-sm">Default organization</DropdownMenuLabel>
         {fallback && row(fallback, false)}
         {others.length > 0 && (

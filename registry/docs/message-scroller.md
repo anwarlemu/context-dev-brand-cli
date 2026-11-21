@@ -8,3 +8,5 @@ use_for: "Wrap a conversation in MessageScroller with MessageScrollerViewport, M
 never: [Auto-scrolling while someone reads older messages, A jump button that slides]
 source: "context-dashboard c0ddf7a src/components/shell/support-chat.tsx (its thread)"
 ---
+
+The scroller carries `fade-y`, so messages fade at its edges instead of being cut off.

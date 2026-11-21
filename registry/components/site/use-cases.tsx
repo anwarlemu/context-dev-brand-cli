@@ -201,7 +201,7 @@ function UseCases({ items, defaultValue, pattern = true, backdrop, className }: 
         <div
           ref={stripRef}
           onScroll={onStripScroll}
-          className="w-full shrink-0 snap-x snap-mandatory scroll-pl-2.5 overflow-x-auto border-b border-line-subtle bg-surface md:w-auto md:min-w-80 md:scroll-pl-0 md:overflow-visible md:border-r md:border-b-0"
+          className="fade-x w-full shrink-0 snap-x snap-mandatory scroll-pl-2.5 overflow-x-auto border-b border-line-subtle bg-surface md:w-auto md:min-w-80 md:scroll-pl-0 md:overflow-visible md:border-r md:border-b-0"
         >
           {/* The list's own pill, restyled as the pale brand-tint card, glides to the picked tab on a spring. */}
           <TabsList aria-label="Code examples" pillClassName="rounded-card bg-tint" className="w-max flex-row items-stretch gap-0.5 p-2.5 md:grid md:w-auto md:auto-rows-fr md:p-2">

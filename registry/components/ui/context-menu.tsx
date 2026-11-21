@@ -12,7 +12,9 @@ import { cn } from "@/lib/utils";
 // pointer, 14px icons at stroke 1.5, section labels in caption, separators edge to edge, shortcuts in caption at the
 // right, destructive rows red. The panel grows out of the pointer's corner in a short pop; moving the highlight is
 // instant (it is used by keyboard and many times a day).
-const PANEL = "ds-scrollbar z-50 flex max-h-(--radix-context-menu-content-available-height) min-w-48 origin-(--radix-context-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-y-auto rounded-shell bg-surface p-(--ds-space-frame) shadow-floating outline-none [&>*]:shrink-0";
+const PANEL = "z-50 flex max-h-(--radix-context-menu-content-available-height) min-w-48 origin-(--radix-context-menu-content-transform-origin) animate-pop-in flex-col gap-0.5 overflow-hidden rounded-shell bg-surface shadow-floating outline-none";
+// The panel's list scrolls inside it, so the scroll edges fade (fade-y) without fading the panel's own shadow.
+const VIEWPORT = "ds-scrollbar fade-y flex min-h-0 flex-col gap-[inherit] overflow-y-auto p-(--ds-space-frame) [&>*]:shrink-0";
 const ROW = "relative flex w-full cursor-default items-center gap-2 rounded-control px-2.5 py-1.5 text-body-sm leading-5 text-fg-muted outline-none select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-40 data-[highlighted]:bg-wash-hover data-[highlighted]:text-fg data-[inset]:pl-8 [&_svg]:size-3.5 [&_svg]:shrink-0";
 const DESTRUCTIVE = "text-danger data-[highlighted]:bg-danger/6 data-[highlighted]:text-danger";
 
@@ -40,10 +42,12 @@ function ContextMenuRadioGroup(props: React.ComponentProps<typeof ContextMenuPri
   return <ContextMenuPrimitive.RadioGroup data-slot="context-menu-radio-group" {...props} />;
 }
 
-function ContextMenuContent({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
+function ContextMenuContent({ className, children, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.Content>) {
   return (
     <ContextMenuPortal>
-      <ContextMenuPrimitive.Content data-slot="context-menu-content" collisionPadding={8} className={cn(PANEL, className)} {...props} />
+      <ContextMenuPrimitive.Content data-slot="context-menu-content" collisionPadding={8} className={cn(PANEL, className)} {...props}>
+        <div data-slot="context-menu-viewport" className={VIEWPORT}>{children}</div>
+      </ContextMenuPrimitive.Content>
     </ContextMenuPortal>
   );
 }
@@ -61,10 +65,12 @@ function ContextMenuSubTrigger({ className, inset, children, ...props }: React.C
   );
 }
 
-function ContextMenuSubContent({ className, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
+function ContextMenuSubContent({ className, children, ...props }: React.ComponentProps<typeof ContextMenuPrimitive.SubContent>) {
   return (
     <ContextMenuPortal>
-      <ContextMenuPrimitive.SubContent data-slot="context-menu-sub-content" collisionPadding={8} className={cn(PANEL, "min-w-40", className)} {...props} />
+      <ContextMenuPrimitive.SubContent data-slot="context-menu-sub-content" collisionPadding={8} className={cn(PANEL, "min-w-40", className)} {...props}>
+        <div data-slot="context-menu-sub-viewport" className={VIEWPORT}>{children}</div>
+      </ContextMenuPrimitive.SubContent>
     </ContextMenuPortal>
   );
 }

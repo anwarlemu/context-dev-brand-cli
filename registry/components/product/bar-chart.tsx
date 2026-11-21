@@ -255,7 +255,7 @@ export function BarChart<K extends string>({
       {/* One line at the switch's height whether or not a switch sits beside it, so the card's bottom never moves; a
           legend too long for the line scrolls sideways instead of wrapping. */}
       <div className="flex h-7 items-center gap-3">
-        <ul className="flex min-w-0 flex-1 items-center gap-x-2.5 overflow-x-auto pl-1 text-axis whitespace-nowrap text-fg-muted [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <ul className="fade-x flex min-w-0 flex-1 items-center gap-x-2.5 overflow-x-auto pl-1 text-axis whitespace-nowrap text-fg-muted [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {series.map((s) => {
             const faded = fadedKeys?.has(s.key) ?? false;
             const content = (

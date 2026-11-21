@@ -186,7 +186,7 @@ function CodeBlockContent({ code, language = "ts", lineNumbers, wrap, className,
       data-slot="code-block-content"
       tabIndex={0}
       className={cn(
-        "ds-scrollbar m-0 min-w-0 overflow-auto font-mono outline-none [tab-size:2] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid",
+        "ds-scrollbar m-0 min-w-0 overflow-auto font-mono", wraps ? "fade-y" : "fade-xy", "outline-none [tab-size:2] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid",
         terminal ? "p-5 text-body-sm leading-terminal text-code-text focus-visible:outline-white/60" : "py-3 text-caption leading-code-card text-fg focus-visible:outline-focus-ring",
         className,
       )}

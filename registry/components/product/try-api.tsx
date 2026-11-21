@@ -92,7 +92,7 @@ function TryApi<T extends string>({
       >
         <div className="flex items-center gap-3 pt-1.5 pr-3 pl-1.5">
           {/* Scrolls sideways rather than wrapping when the card is too narrow for every tab. */}
-          <div className="min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="fade-x min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <GlideTabs
               label="API"
               role="tab"

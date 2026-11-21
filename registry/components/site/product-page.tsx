@@ -239,7 +239,7 @@ function InstallCommand({ sample }: { sample: ProductCodeSample }) {
   }
   return (
     <div className="flex w-fit max-w-full items-center justify-between gap-3 rounded-control border border-rule bg-subtle py-1.5 pr-1.5 pl-4">
-      <code className="min-w-0 overflow-x-auto font-mono text-body leading-5.5 whitespace-nowrap text-fg [scrollbar-width:none]">
+      <code className="fade-x min-w-0 overflow-x-auto font-mono text-body leading-5.5 whitespace-nowrap text-fg [scrollbar-width:none]">
         <span aria-hidden="true" className="text-fg-faint">
           ${" "}
         </span>
@@ -342,7 +342,7 @@ function ProductCodeExplorer({
       <div className="min-w-0 overflow-hidden rounded-shell bg-code shadow-floating">
         <div className="flex items-center justify-between gap-3 border-b border-white/10 p-3.5 sm:px-5">
           {hasTabs ? (
-            <div role="tablist" aria-label="Code language" className="-my-0.5 flex min-w-0 items-center gap-1 overflow-x-auto py-0.5 [scrollbar-width:none]">
+            <div role="tablist" aria-label="Code language" className="fade-x -my-0.5 flex min-w-0 items-center gap-1 overflow-x-auto py-0.5 [scrollbar-width:none]">
               {samples.map((sample) => {
                 const selected = sample === active;
                 return (
@@ -391,7 +391,7 @@ function ProductCodeExplorer({
               aria-label={hasTabs ? undefined : `${sample.filename} code example`}
               tabIndex={0}
               hidden={sample !== active}
-              className="h-full overflow-auto outline-none [scrollbar-width:thin] focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset"
+              className="fade-xy h-full overflow-auto outline-none [scrollbar-width:thin] focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-inset"
             >
               <CodeLines sample={sample} />
             </div>
@@ -467,53 +467,55 @@ function ProductComparison({
     <ProductPageSection aria-labelledby={titleId} className={cn("pt-24 lg:pt-42", className)} containerClassName="flex flex-col gap-10 lg:gap-12">
       <ProductSectionHeader id={titleId} title={title} description={description} />
       <div className="flex flex-col gap-5">
-        <div tabIndex={0} role="region" aria-labelledby={titleId} className="overflow-x-auto rounded-shell border border-rule bg-surface outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2">
-          <table className="w-full min-w-160 table-fixed border-collapse text-left">
-            <colgroup>
-              <col className="w-40 lg:w-55" />
-              {columns.map((_, index) => (
-                <col key={index} />
-              ))}
-            </colgroup>
-            <thead>
-              <tr className="border-b border-rule">
-                <th scope="col" className="px-5 py-6 lg:px-7">
-                  <span className="sr-only">Compare</span>
-                </th>
-                {columns.map((column, index) => {
-                  const name = <span className={cn("text-h5 leading-snug tracking-normal", column.highlighted ? "text-fg-brand" : "text-fg")}>{column.name}</span>;
-                  return (
-                    <th key={index} scope="col" className={cn("px-5 pb-6 align-top font-normal lg:px-7", column.highlighted ? cn(tint, "border-t-2 border-brand pt-5.5") : "pt-6")}>
-                      <span className="flex flex-col gap-1.5">
-                        {column.href ? (
-                          <a href={column.href} className="w-fit rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring">
-                            {name}
-                          </a>
-                        ) : (
-                          name
-                        )}
-                        {column.caption && <span className="font-mono text-caption text-fg-faint">{column.caption}</span>}
-                      </span>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, rowIndex) => (
-                <tr key={rowIndex} className="border-b border-rule last:border-b-0">
-                  <th scope="row" className="p-5 align-top text-body font-normal leading-relaxed text-fg-muted lg:px-7">
-                    {row.label}
+        <div className="overflow-hidden rounded-shell border border-rule bg-surface has-[>:focus-visible]:ring-2 has-[>:focus-visible]:ring-focus-ring has-[>:focus-visible]:ring-offset-2">
+          <div tabIndex={0} role="region" aria-labelledby={titleId} className="fade-x overflow-x-auto outline-none">
+            <table className="w-full min-w-160 table-fixed border-collapse text-left">
+              <colgroup>
+                <col className="w-40 lg:w-55" />
+                {columns.map((_, index) => (
+                  <col key={index} />
+                ))}
+              </colgroup>
+              <thead>
+                <tr className="border-b border-rule">
+                  <th scope="col" className="px-5 py-6 lg:px-7">
+                    <span className="sr-only">Compare</span>
                   </th>
-                  {row.values.map((value, index) => (
-                    <td key={index} className={cn("p-5 align-top text-body leading-relaxed text-fg lg:px-7", columns[index]?.highlighted && tint)}>
-                      {value}
-                    </td>
-                  ))}
+                  {columns.map((column, index) => {
+                    const name = <span className={cn("text-h5 leading-snug tracking-normal", column.highlighted ? "text-fg-brand" : "text-fg")}>{column.name}</span>;
+                    return (
+                      <th key={index} scope="col" className={cn("px-5 pb-6 align-top font-normal lg:px-7", column.highlighted ? cn(tint, "border-t-2 border-brand pt-5.5") : "pt-6")}>
+                        <span className="flex flex-col gap-1.5">
+                          {column.href ? (
+                            <a href={column.href} className="w-fit rounded-sm outline-none hover:underline focus-visible:ring-2 focus-visible:ring-focus-ring">
+                              {name}
+                            </a>
+                          ) : (
+                            name
+                          )}
+                          {column.caption && <span className="font-mono text-caption text-fg-faint">{column.caption}</span>}
+                        </span>
+                      </th>
+                    );
+                  })}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {rows.map((row, rowIndex) => (
+                  <tr key={rowIndex} className="border-b border-rule last:border-b-0">
+                    <th scope="row" className="p-5 align-top text-body font-normal leading-relaxed text-fg-muted lg:px-7">
+                      {row.label}
+                    </th>
+                    {row.values.map((value, index) => (
+                      <td key={index} className={cn("p-5 align-top text-body leading-relaxed text-fg lg:px-7", columns[index]?.highlighted && tint)}>
+                        {value}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
         {note && <p className="text-body leading-relaxed text-fg-faint [&_a]:rounded-sm [&_a]:text-fg-muted [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-fg-brand">{note}</p>}
       </div>

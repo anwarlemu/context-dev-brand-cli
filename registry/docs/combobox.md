@@ -8,3 +8,5 @@ use_for: "Choose from a list too long to scan (organizations, domains, API keys,
 never: [A combobox for fewer than seven options (use Select), Losing the typed search on a pick in multiple mode, Animating the highlight between rows]
 source: "context-dashboard c0ddf7a src/components/ui/menu.tsx (SelectMenu) and the shell's command palette"
 ---
+
+The list carries `fade-y`, so options fade at its scroll edges instead of being cut off.

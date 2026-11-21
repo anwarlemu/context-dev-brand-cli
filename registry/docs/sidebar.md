@@ -8,3 +8,5 @@ use_for: "The main navigation of an app. Wrap the page in SidebarProvider, put S
 never: [A blue current row, Animating the current row as it changes, More than about ten top-level rows, Icons on some rows and not others]
 source: "context-dashboard c0ddf7a src/components/shell/sidebar.tsx; src/components/shell/workspace-card.tsx"
 ---
+
+`SidebarContent` carries `fade-y`, so links fade at its scroll edges instead of being cut off.

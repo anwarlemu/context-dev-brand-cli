@@ -236,7 +236,7 @@ function ComboboxInput({ className, placeholder = "Search", ...props }: Omit<Rea
 function ComboboxList({ className, children, ...props }: Omit<React.ComponentProps<typeof CommandPrimitive.List>, "children"> & { children?: React.ReactNode | ((item: Item) => React.ReactNode) }) {
   const { items } = useCombobox();
   return (
-    <CommandPrimitive.List data-slot="combobox-list" className={cn("ds-scrollbar max-h-72 scroll-py-1.5 overflow-x-hidden overflow-y-auto overscroll-contain p-(--ds-space-frame)", className)} {...props}>
+    <CommandPrimitive.List data-slot="combobox-list" className={cn("ds-scrollbar fade-y max-h-72 scroll-py-1.5 overflow-x-hidden overflow-y-auto overscroll-contain p-(--ds-space-frame)", className)} {...props}>
       {typeof children === "function" ? items?.map((item) => <React.Fragment key={item.value}>{children(item)}</React.Fragment>) : children}
     </CommandPrimitive.List>
   );

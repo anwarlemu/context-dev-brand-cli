@@ -8,3 +8,5 @@ use_for: "Use for a request, a response or a snippet someone will read or copy. 
 never: [A dark block in the product, Syntax colors outside the code tokens, Sideways scrolling in the product]
 source: "context-dashboard c0ddf7a src/components/playground/json-viewer.tsx; src/components/playground/code-card.tsx; website src/components/sections/shared/code-frame.tsx"
 ---
+
+The code scrolls with `fade-xy` (`fade-y` when lines wrap), so it fades at its scroll edges instead of being cut off.

@@ -8,3 +8,5 @@ use_for: "Short tasks and choices on phones, opened from the bottom: picking a p
 never: [Long forms, Drawers on top of drawers, Removing the handle on a bottom drawer]
 source: "context-dashboard c0ddf7a src/components/shell/sidebar.tsx (the phone drawer)"
 ---
+
+The body carries `fade-xy`, so long content fades at its scroll edges instead of being cut off.

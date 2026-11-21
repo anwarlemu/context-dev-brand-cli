@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-10-26T12:41:57.238Z",
+  "checkedAt": "2026-11-21T20:20:11.625Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -851,7 +851,7 @@
       "library": [
         {
           "path": "components/site/alternative-sections.tsx",
-          "sha256": "fd0458b734d59076ffcdf44ecff282604d86a3a05e158907ae0fb828c6a344b9"
+          "sha256": "bf48cf6ab3e10d93e99ebcc329d9675ec27063150729cbe270e4e4771c615b30"
         }
       ],
       "sources": [
@@ -1021,7 +1021,7 @@
       "library": [
         {
           "path": "components/blocks/app-shell.tsx",
-          "sha256": "1a0a2fa2e19987969281b216c28f0f598f7ca75c4c891ff2301e670c42ca6492"
+          "sha256": "7a3c62d6861ca03e9096cc1d603ae7ad12c7b6f39ae2a29f2c918a4b4d4d6bfd"
         }
       ],
       "sources": [
@@ -1059,7 +1059,7 @@
       "library": [
         {
           "path": "components/product/app-sidebar.tsx",
-          "sha256": "4a8cc5623e1829f5a691f6a65172be366c4ff78c14ba5bcfa572ef163bcfdd18"
+          "sha256": "b8c77d48bd3010f42a6bbef74e305c1db61520194944947ae2e448239dc27737"
         }
       ],
       "sources": [
@@ -1134,7 +1134,7 @@
       "library": [
         {
           "path": "components/ui/attachment.tsx",
-          "sha256": "d9897a4ebce390d6c8d18f7c0c81f94ee5547bf42e6aacb375231f148c4a7804"
+          "sha256": "aa7b287b34248035d56c178846375dbd04c870435766f0308a5d8ae48feb820a"
         }
       ],
       "sources": [
@@ -1283,7 +1283,7 @@
       "library": [
         {
           "path": "components/product/bar-chart.tsx",
-          "sha256": "a19e8924cc5132320a1775723e114b212eebfb623403f5a59227fbfa3884b8a6"
+          "sha256": "6157556d3de08e4722d683dca8312c14ea83d12bfa7ff8e235631c41020df145"
         }
       ],
       "sources": [
@@ -1844,7 +1844,7 @@
       "library": [
         {
           "path": "components/ui/code-block.tsx",
-          "sha256": "f5afe99347c0ded1cff956647d61c1a9b679b1d27c8014fb03b814ccaa0c47b4"
+          "sha256": "021e00e95c9d010e28befe2f71caf9e4b80a6a73be677307915a7913e4c9e071"
         }
       ],
       "sources": [
@@ -1892,7 +1892,7 @@
       "library": [
         {
           "path": "components/product/code-card.tsx",
-          "sha256": "1c70ff5b36cf8a96de612673543596b361ece5f4087e644da747988a57168045"
+          "sha256": "4d21357450fc84630fe5a5ad59ad6ad29eeaab9fae82e1825c34a8fe54023bc3"
         }
       ],
       "sources": [
@@ -1917,7 +1917,7 @@
       "library": [
         {
           "path": "components/site/code-window.tsx",
-          "sha256": "39d0052161aa410c33eb76aa4266eb29d2f6b1beabd4216a8625f0f5e9cc283d"
+          "sha256": "0e893938e55ff614656c20d1b179172ffe0e9ab3d085d90bde1911a14ea90c49"
         }
       ],
       "sources": [
@@ -2042,7 +2042,7 @@
       "library": [
         {
           "path": "components/ui/combobox.tsx",
-          "sha256": "630edaec6fd2e9c3bd7ae942c82401322078aab66ef7364c3156a75702610c3f"
+          "sha256": "b9535a30d5942ef16b20d2c16b6ff8c4aa6d3ad3dafee161a7a0b9bd519db8b8"
         }
       ],
       "sources": [
@@ -2075,7 +2075,7 @@
       "library": [
         {
           "path": "components/ui/command.tsx",
-          "sha256": "681b7df233cea61008509577482b8829a32eb8b985305a316131fccc9c2442ae"
+          "sha256": "19324f14917c4858893214ba4ea2709de2a95d056e37a8e69a11026e1be85b54"
         }
       ],
       "sources": [
@@ -2100,7 +2100,7 @@
       "library": [
         {
           "path": "components/site/comparison-table.tsx",
-          "sha256": "b957148e649163bca7d0260074577aa107f874745e4dec161a1a9dcd1ddc808a"
+          "sha256": "209d9e04456d7a421fb1874109e0126b3a6d6692afeaba6daf43b27340eaee8a"
         }
       ],
       "sources": [
@@ -2142,7 +2142,7 @@
       "library": [
         {
           "path": "components/site/competitor-charts.tsx",
-          "sha256": "4dd16fcd5ef8ad3452ddfd5722d9882dd27076d096440fbed84e1ac281db2f45"
+          "sha256": "6eb2eed079a48b0cd473781d811b8420335b2813074fd7aa4029bc00acbff894"
         }
       ],
       "sources": [
@@ -2200,7 +2200,7 @@
       "library": [
         {
           "path": "components/ui/context-menu.tsx",
-          "sha256": "59fc76446f560e0635c27ba4558ab0172f7d6985cc3ce70d5163027cdd9049f1"
+          "sha256": "b086ed8e6538c7cadcf0f13253bc7f21e6f4983f3fe1a8185c39c53152fd84ed"
         }
       ],
       "sources": [
@@ -2400,7 +2400,7 @@
       "library": [
         {
           "path": "components/site/customer-stories.tsx",
-          "sha256": "d8302ab9575010f0aa79a59b9953a4edec35de7db320a08d9886cc06fea8a4fa"
+          "sha256": "8785eb4dabbd78b981b6718fe5e95d4b71a18f7bf0dbe4d5cd6f43ac4dd9c326"
         }
       ],
       "sources": [
@@ -2525,7 +2525,7 @@
       "library": [
         {
           "path": "components/ui/date-picker.tsx",
-          "sha256": "4bcde1dc2ddd5423259541eee01552db6928a7828d02dbe22e14008688bfe3df"
+          "sha256": "a0abe4b9200f5fc915811874f44c6f4591ae294e949d54d8099ac679735f59d6"
         }
       ],
       "sources": [
@@ -2888,7 +2888,7 @@
       "library": [
         {
           "path": "components/ui/drawer.tsx",
-          "sha256": "b0148ac079e87039a0b92903d9c3dcdf514f83bb1c82c5e294615f0c8c25b027"
+          "sha256": "71881fdaf0224123472e7492508441b97b6b20bf42b9c6a3c7ca471499f32919"
         }
       ],
       "sources": [
@@ -2913,7 +2913,7 @@
       "library": [
         {
           "path": "components/ui/dropdown-menu.tsx",
-          "sha256": "4e3c4e5efbb3a6d941d50ef65f50af2ef409b2a33de2f0c43afe4f8ef7710e44"
+          "sha256": "54cfdd7abf525391a774187cc8c72450a70913f0d8ac803445989016cb3fa3f9"
         }
       ],
       "sources": [
@@ -3009,7 +3009,7 @@
       "library": [
         {
           "path": "components/site/faq.tsx",
-          "sha256": "daa7b772a7e900a86fbaafc46a2dd3d05cd78c88bcf5eb6bcda8a0dcff964b7c"
+          "sha256": "8880d0773c7360ee93add61651bc81af1f97b8e6d043e3cce98c3a9e071e45fc"
         }
       ],
       "sources": [
@@ -4231,7 +4231,7 @@
       "library": [
         {
           "path": "components/product/json-viewer.tsx",
-          "sha256": "c3a361b58997afe22e9ceb1c01f4e29101741600278c2c0f902a0f2e9ad787a4"
+          "sha256": "4d4c5963d34869e002143d67b2ff0737217cf206dbcb6f190cb657d6898447b7"
         }
       ],
       "sources": [
@@ -4415,7 +4415,7 @@
       "library": [
         {
           "path": "components/ui/menubar.tsx",
-          "sha256": "0ba581ac5792e01c332a455e4b55abd8eed115e9c23991b013e23173c215790f"
+          "sha256": "cb66002dcc61bcc13bff8c6dd4f7682476bbd0a20bbdedd815292bd9bac5786f"
         }
       ],
       "sources": [
@@ -4459,7 +4459,7 @@
       "library": [
         {
           "path": "components/ui/message-scroller.tsx",
-          "sha256": "6baf7313333d81fa941905372c755ca401e9c5c9334438ab9ac664fcfe87cf64"
+          "sha256": "e723421826ac83d01198cd970a59c784197b9b6221b49c123c866af98543a85b"
         }
       ],
       "sources": [
@@ -4925,7 +4925,7 @@
       "library": [
         {
           "path": "components/product/playground-parameters.tsx",
-          "sha256": "14fe5ffa01eee945f89aba9b81cd5689b97130f7d87fae68b48e5c9fab327d5a"
+          "sha256": "66ae966cbbf0b3cfc337c8da7d1075e5c5c147009df17f2cd886e0e343f74d5b"
         }
       ],
       "sources": [
@@ -4951,7 +4951,7 @@
       "library": [
         {
           "path": "components/product/playground-result-card.tsx",
-          "sha256": "327c5e51dc165bdab0540aa0df84f54ab42c4ebab9b101ac1f2f8d48681860ef"
+          "sha256": "792b5501d28c2888ebc9e319060a79d96336dc2903cacd8b677916fd67b9f479"
         }
       ],
       "sources": [
@@ -4976,7 +4976,7 @@
       "library": [
         {
           "path": "components/ui/popover.tsx",
-          "sha256": "b44bc3c4058c6519cb37b7bd8bf6afdd60dfb2ff88c55374b1f9880605930e82"
+          "sha256": "2577e27aaa6e3730758cf015b46487cb4d676918f26a5f843de08ef7a3da0700"
         }
       ],
       "sources": [
@@ -5095,7 +5095,7 @@
       "library": [
         {
           "path": "components/site/product-demo-card.tsx",
-          "sha256": "e89f3c753905257aba6d9dc3353bbc7f3b97da84346b737ee504fdf2e057259a"
+          "sha256": "4f322d979b845afeeb85d26bf08d278e298eeb109405ad27138ea6045738292e"
         }
       ],
       "sources": [
@@ -5126,7 +5126,7 @@
       "library": [
         {
           "path": "components/site/product-grid.tsx",
-          "sha256": "bf3e466a12db6fbc56de4542420c13a3606eee4edd35f5028b96e2be708f0b1a"
+          "sha256": "e30801eaa1a8280b96d10402e91b3c7acdcfe47b11136daa5ab3b12caf45964f"
         }
       ],
       "sources": [
@@ -5342,7 +5342,7 @@
       "library": [
         {
           "path": "components/site/product-page.tsx",
-          "sha256": "26d8207481e064db63ac56cf1b39892fe1a7a07282725f6e3ff67154ca8ee962"
+          "sha256": "54981843925e28604492b640b0c8c3a9fd9de1cc678415e0e45d1c0121c93e52"
         }
       ],
       "sources": [
@@ -5686,7 +5686,7 @@
       "library": [
         {
           "path": "components/ui/scroll-area.tsx",
-          "sha256": "5a7bfa55a492c0a9bfe5d6c44303589444f42e78390f8abf9047ccd8ea26cf1c"
+          "sha256": "89e218651de39a1dae6f7c569241934dc3588bbbc614f664c807fa0e2e8c0f11"
         }
       ],
       "sources": [
@@ -5828,7 +5828,7 @@
       "library": [
         {
           "path": "components/ui/select.tsx",
-          "sha256": "e63adae3551e1f4b9f75e374d90731e91a460a45b55e81e46ba3d8e4a147fde8"
+          "sha256": "b78f039508a2d483943f6abb32091601f2f6ee39867f23f16d1bcf15b422957b"
         }
       ],
       "sources": [
@@ -5954,7 +5954,7 @@
       "library": [
         {
           "path": "components/ui/sheet.tsx",
-          "sha256": "975ea43074d2b74ccd4aa71f751e78915ab7883b691afd459777472cc0999296"
+          "sha256": "3cc4ff0771aefe620860746966c23aaa099c29e0f85d467b71c4624da00ce732"
         }
       ],
       "sources": [
@@ -6042,7 +6042,7 @@
       "library": [
         {
           "path": "components/ui/sidebar.tsx",
-          "sha256": "2986457ad96bf8da1cd097b89ac79ab5e8bc1be3dd8df83828ce8f6e263acf86"
+          "sha256": "ec87ef566b98e095ccc3c5e0e1c2d7b20a5efee59e329ce4cd2f5567a1f0d218"
         }
       ],
       "sources": [
@@ -6143,7 +6143,7 @@
       "library": [
         {
           "path": "components/site/site-header.tsx",
-          "sha256": "f158f01f95a6b90f31f04e69b91e4e235d5e409bf85cca55eafa60433db4a219"
+          "sha256": "b510b1fc9c1c491f662950d0016e9d26ef9e0c23270992034e4c2d2885e9f982"
         }
       ],
       "sources": [
@@ -8374,7 +8374,7 @@
       "library": [
         {
           "path": "components/ui/table.tsx",
-          "sha256": "3b3e4b0b3aa42aa08a4e5a9fa92e78cb1928611e0b04247d11d3c9ef58083876"
+          "sha256": "715d30035ff0bc90df4404e0fef644d9d2d41d45a970ef1180f27b6dc602978f"
         }
       ],
       "sources": [
@@ -8457,7 +8457,7 @@
       "library": [
         {
           "path": "components/ui/tag-filter.tsx",
-          "sha256": "cb8c43d7b6fa086d675d7903e877151c540ea1cfa2fea91cece46b61af060559"
+          "sha256": "68c2787eea032836f009b4038d71b3557df4fec59f3dddafa52d5a6696e9866b"
         }
       ],
       "sources": [
@@ -8805,7 +8805,7 @@
       "library": [
         {
           "path": "components/product/try-api.tsx",
-          "sha256": "4f0de09d0e781700fbdb582a11701a7b4bb803ddda5f307790968d6c82788a83"
+          "sha256": "07ca175ea9760d03cf764270f09c277f4290081c4cba08402a30e7d2ceddcb21"
         }
       ],
       "sources": [
@@ -8830,7 +8830,7 @@
       "library": [
         {
           "path": "components/ui/typography.tsx",
-          "sha256": "60058f91ab7623a820eb7d74653676c64ae13b9679096c35b94cc2780049392d"
+          "sha256": "2bd021b5f9068bd0f51c1cb9e58b030abaae7f9588bafaea530a268c4c1b372d"
         }
       ],
       "sources": [
@@ -8928,7 +8928,7 @@
       "library": [
         {
           "path": "components/site/use-case-features.tsx",
-          "sha256": "b44dca790a7fe873dc3ca5244f1afe137515fbe349c77bccd521c1c0c33f1fbc"
+          "sha256": "c656d95448690a738b84fe888a66545f3d5333e71170f01b984179aac2b5ceac"
         }
       ],
       "sources": [
@@ -9003,7 +9003,7 @@
       "library": [
         {
           "path": "components/site/use-case-how-it-works.tsx",
-          "sha256": "e32c0d6227468d3bb52bef5988c28045d9de2bd59165a060a890d4b572bd69cc"
+          "sha256": "39e03391c2e907a2fa8a38cc89db6425badb081cc0bdf25a91c3f9a0c93f8c12"
         }
       ],
       "sources": [
@@ -9149,7 +9149,7 @@
       "library": [
         {
           "path": "components/site/use-cases.tsx",
-          "sha256": "91dab1ea763339f99db373b7551f50e292e9ef02b538c8dd1495bfc848b4eb5b"
+          "sha256": "9c6be527af793368683b3ca9958e51ed78e02d5a2bc4367ae28d8f24a101c0d8"
         }
       ],
       "sources": [
@@ -9436,7 +9436,7 @@
       "library": [
         {
           "path": "components/product/workspace-switcher.tsx",
-          "sha256": "d850ec280cf7c6612770c813982776161819363e4327284ec40a52cda5ce7ac7"
+          "sha256": "079e2152628a9eb4b7068253ff56a1f87a0d8816ebf7a4d192fd9fa250ca21a0"
         }
       ],
       "sources": [

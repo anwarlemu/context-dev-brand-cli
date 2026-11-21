@@ -8,3 +8,5 @@ use_for: "Use for files a person attaches (a sitemap to crawl, a CSV of URLs for
 never: [A progress bar inside the card, Bold file names, A card that grows on hover]
 source: "Extrapolated from context-dashboard c0ddf7a src/components/dots/glyph-tile.tsx and src/components/playground/code-card.tsx (cards)"
 ---
+
+A row of attachments scrolls sideways with `fade-x`, so cards fade at the edges instead of being cut off.

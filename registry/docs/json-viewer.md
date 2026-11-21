@@ -9,3 +9,5 @@ use_for: API responses in the playground.
 never: [Sideways scrolling code]
 source: context-dashboard c0ddf7a src/components/playground/json-viewer.tsx
 ---
+
+The body carries `fade-y`, so long documents fade at its scroll edges instead of being cut off.

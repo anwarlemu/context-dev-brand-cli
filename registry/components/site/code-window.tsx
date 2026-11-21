@@ -317,7 +317,7 @@ function CodeTabs({
       actions={<WindowCopyButton round value={active.code} label={`Copy ${active.label ?? active.language} code`} />}
     >
       {samples.length > 1 && (
-        <div role="tablist" aria-label="Code language" onKeyDown={onKeyDown} className="flex min-w-0 gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 [scrollbar-width:none]">
+        <div role="tablist" aria-label="Code language" onKeyDown={onKeyDown} className="fade-x flex min-w-0 gap-1 overflow-x-auto border-b border-white/10 px-3 py-2 [scrollbar-width:none]">
           {samples.map((sample) => {
             const selected = sample === active;
             return (
@@ -353,7 +353,7 @@ function CodeTabs({
             aria-labelledby={samples.length > 1 ? `${baseId}-tab-${sample.language}` : undefined}
             tabIndex={0}
             hidden={sample !== active}
-            className="absolute inset-0 overflow-auto outline-none [scrollbar-color:color-mix(in_srgb,var(--ds-color-white)_20%,transparent)_transparent] [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand [&_pre]:bg-transparent"
+            className="fade-xy absolute inset-0 overflow-auto outline-none [scrollbar-color:color-mix(in_srgb,var(--ds-color-white)_20%,transparent)_transparent] [scrollbar-width:thin] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand [&_pre]:bg-transparent"
           >
             {sample.content ? <div className="p-5 font-mono text-body-sm leading-terminal text-code-text">{sample.content}</div> : <CodeBlock code={sample.code} language={sample.language} />}
           </div>
@@ -374,7 +374,7 @@ function InstallCommand({ command, label = "install command", className }: { com
   }
   return (
     <div data-slot="install-command" className={cn("flex w-fit max-w-full items-center gap-2 rounded-pill py-1 pr-1 pl-4 ring-1 ring-black/10 ring-inset", className)}>
-      <code className="min-w-0 overflow-x-auto font-mono text-body-sm leading-5 whitespace-nowrap text-fg/70 [scrollbar-width:none]">
+      <code className="fade-x min-w-0 overflow-x-auto font-mono text-body-sm leading-5 whitespace-nowrap text-fg/70 [scrollbar-width:none]">
         <span aria-hidden="true" className="text-fg/35">
           ${" "}
         </span>

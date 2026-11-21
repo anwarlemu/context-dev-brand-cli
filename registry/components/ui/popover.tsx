@@ -16,7 +16,9 @@ function PopoverTrigger(props: React.ComponentProps<typeof PopoverPrimitive.Trig
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
-function PopoverContent({ className, align = "start", sideOffset = 6, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+// The content scrolls inside the panel (4px into its padding, so focus rings are not clipped), so its scroll edges fade
+// (fade-y) without fading the panel's own shadow.
+function PopoverContent({ className, children, align = "start", sideOffset = 6, ...props }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
   return (
     <PopoverPrimitive.Portal container={usePortalContainer()}>
       <PopoverPrimitive.Content
@@ -24,9 +26,11 @@ function PopoverContent({ className, align = "start", sideOffset = 6, ...props }
         align={align}
         sideOffset={sideOffset}
         collisionPadding={8}
-        className={cn("ds-scrollbar z-50 max-h-(--radix-popover-content-available-height) w-72 max-w-[calc(100vw-1rem)] origin-(--radix-popover-content-transform-origin) animate-pop-in overflow-y-auto rounded-shell bg-surface p-3 text-body-sm text-fg shadow-floating outline-none", className)}
+        className={cn("z-50 flex max-h-(--radix-popover-content-available-height) w-72 max-w-[calc(100vw-1rem)] origin-(--radix-popover-content-transform-origin) animate-pop-in flex-col overflow-hidden rounded-shell bg-surface p-3 text-body-sm text-fg shadow-floating outline-none", className)}
         {...props}
-      />
+      >
+        <div data-slot="popover-viewport" className="ds-scrollbar fade-y -m-1 min-h-0 overflow-y-auto p-1">{children}</div>
+      </PopoverPrimitive.Content>
     </PopoverPrimitive.Portal>
   );
 }

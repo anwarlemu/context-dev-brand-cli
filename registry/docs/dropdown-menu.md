@@ -9,3 +9,5 @@ use_for: Overflow actions at the end of a row, account menus.
 never: [Destructive actions without a hold or a confirm]
 source: context-dashboard c0ddf7a src/components/ui/menu.tsx
 ---
+
+A long menu scrolls inside its panel, and the list carries `fade-y`, so rows fade at the edges instead of being cut off.

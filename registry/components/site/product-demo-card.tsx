@@ -33,7 +33,7 @@ export function ProductDemoCard({ label, inputLabel, input, outputLabel, filenam
           <pre
             tabIndex={0}
             aria-label={`${filename} example`}
-            className="min-h-0 flex-1 overflow-x-auto p-5 font-mono text-demo-code leading-6 text-fg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:p-6 sm:text-demo-label"
+            className="fade-x min-h-0 flex-1 overflow-x-auto p-5 font-mono text-demo-code leading-6 text-fg focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus-ring sm:p-6 sm:text-demo-label"
           >
             <code>{output}</code>
           </pre>

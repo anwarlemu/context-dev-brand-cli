@@ -11,3 +11,5 @@ source: context-dashboard c0ddf7a src/components/monitors/monitor-panel.tsx
 ---
 
 Sheets are non-modal by default: the list stays clickable, and selecting another record can update the open panel. Control `open` and `onOpenChange` from the selected record. `SheetContent` stays within a `Surface` when one is present. Use `SheetClose` or Escape to dismiss it.
+
+`SheetBody` carries `fade-y`, so long content fades at its scroll edges instead of being cut off.

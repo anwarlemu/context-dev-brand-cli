@@ -105,7 +105,7 @@ function ParametersScroller({ fetching, children }: { fetching: boolean; childre
         onScroll={measure}
         inert={fetching || undefined}
         aria-busy={fetching}
-        className={cn("flex flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-4 pt-1 pb-4 transition-opacity duration-200 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", fetching && "opacity-50")}
+        className={cn("fade-y flex flex-1 flex-col gap-5 overflow-y-auto overscroll-contain px-4 pt-1 pb-4 transition-opacity duration-200 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", fetching && "opacity-50")}
       >
         {children}
       </div>

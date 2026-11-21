@@ -298,7 +298,7 @@ function useFaqSizing(ref: React.RefObject<HTMLElement | null>, sizing: FaqSizin
 // A fixed-height list scrolls, which would clip the cards' rings, so it is padded out by the ring's width; its scroll
 // padding matches the edge fade, so a card revealed after opening stops clear of it.
 const SCROLLING =
-  "-m-2 overflow-y-auto overscroll-contain p-2 scroll-py-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden " +
+  "fade-y -m-2 overflow-y-auto overscroll-contain p-2 scroll-py-12 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden " +
   "data-fade-top:[mask-image:linear-gradient(to_bottom,transparent,var(--ds-color-black)_var(--ds-space-12))] " +
   "data-fade-bottom:[mask-image:linear-gradient(to_top,transparent,var(--ds-color-black)_var(--ds-space-12))] " +
   "data-fade-top:data-fade-bottom:[mask-image:linear-gradient(to_bottom,transparent,var(--ds-color-black)_var(--ds-space-12),var(--ds-color-black)_calc(100%-var(--ds-space-12)),transparent)]";
@@ -466,7 +466,7 @@ function FaqSection({
       <div className="min-w-0">
         {categories.length > 1 && (
           // On phones the pills scroll sideways, the last one fading out to say so.
-          <div className="mb-5 overflow-x-auto px-1 pt-1 pb-3 [mask-image:linear-gradient(to_right,var(--ds-color-black)_calc(100%-var(--ds-space-10)),transparent)] sm:[mask-image:none] md:mb-7">
+          <div className="fade-x mb-5 overflow-x-auto px-1 pt-1 pb-3 md:mb-7">
             <TabsList variant="pill" aria-label="FAQ categories" className="mx-auto w-max gap-0.5 sm:gap-1">
               {categories.map((category) => (
                 <TabsTrigger key={category.value} value={category.value} className="px-2.5 py-1.5 text-caption sm:px-5 sm:py-2 sm:text-body">

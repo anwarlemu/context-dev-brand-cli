@@ -61,14 +61,16 @@ function TypographyInlineCode({ className, ...props }: React.ComponentProps<"cod
 /** A plain table in running text, as the product's table: a faint header band, light rules, tabular figures. */
 function TypographyTable({ className, ...props }: React.ComponentProps<"table">) {
   return (
-    <div data-slot="typography-table" className="my-4 w-full overflow-x-auto rounded-card bg-surface shadow-card">
-      <table
-        className={cn(
-          "w-full border-collapse text-left text-body-sm text-fg tabular-nums [&_td]:border-t [&_td]:border-line-subtle [&_td]:px-4 [&_td]:py-3 [&_th]:bg-neutral-10/40 [&_th]:px-4 [&_th]:py-2.5 [&_th]:font-normal [&_th]:text-fg-muted",
-          className,
-        )}
-        {...props}
-      />
+    <div data-slot="typography-table" className="my-4 w-full overflow-hidden rounded-card bg-surface shadow-card">
+      <div className="fade-x overflow-x-auto">
+        <table
+          className={cn(
+            "w-full border-collapse text-left text-body-sm text-fg tabular-nums [&_td]:border-t [&_td]:border-line-subtle [&_td]:px-4 [&_td]:py-3 [&_th]:bg-neutral-10/40 [&_th]:px-4 [&_th]:py-2.5 [&_th]:font-normal [&_th]:text-fg-muted",
+            className,
+          )}
+          {...props}
+        />
+      </div>
     </div>
   );
 }

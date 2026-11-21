@@ -133,7 +133,7 @@ function DrawerContent({ className, children, ...props }: React.ComponentProps<t
         {...props}
       >
         <div aria-hidden data-slot="drawer-handle" className={cn("shrink-0 rounded-pill bg-line", vertical ? "mx-auto my-2.5 h-1 w-10" : "mx-2.5 my-auto h-10 w-1")} />
-        <div className="ds-scrollbar flex min-h-0 min-w-0 flex-1 touch-auto flex-col overflow-auto">{children}</div>
+        <div className="ds-scrollbar fade-xy flex min-h-0 min-w-0 flex-1 touch-auto flex-col overflow-auto">{children}</div>
       </DrawerPrimitive.Content>
     </DrawerPortal>
   );

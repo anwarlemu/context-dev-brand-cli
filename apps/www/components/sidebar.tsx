@@ -164,7 +164,7 @@ export function LibraryShell({ groups, name, repo, site, children }: { groups: G
           <span className="mr-auto truncate text-body-sm text-fg-muted">{title ?? "Component library"}</span>
           <Link href="/" className="shrink-0 text-body-sm text-fg-muted outline-none hover:text-fg focus-visible:ring-2 focus-visible:ring-focus-ring">Design system</Link>
         </AppTopBar>
-        <div ref={content} data-docs-content="" className="ds-scrollbar relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        <div ref={content} data-docs-content="" className="ds-scrollbar fade-y relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
           {children}
         </div>
       </div>

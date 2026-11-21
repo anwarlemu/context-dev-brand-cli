@@ -8,3 +8,5 @@ use_for: "Use for long-form text: a changelog entry, a guide, an announcement. T
 never: [Bold or semibold headings, Headings in the brand blue, All-caps text]
 source: "context-dashboard c0ddf7a src/app/globals.css (the type scale), with the brand heading defaults"
 ---
+
+A wide `TypographyTable` scrolls sideways with `fade-x`, so columns fade at the edges instead of being cut off.
