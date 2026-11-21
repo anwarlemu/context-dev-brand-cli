@@ -8,3 +8,5 @@ use_for: "Choose one (type=\"single\") or several (type=\"multiple\") view optio
 never: [Mixing icon-only and labelled items without aria-labels, More than six items, A blue pressed item]
 source: "context-dashboard c0ddf7a src/components/ui/form.tsx (SegmentedControl, segmented); extended to several pressed items"
 ---
+
+In the default variant the choices scroll inside the track with `fade-x`, so on a narrow screen they fade at the edges instead of being cut off.

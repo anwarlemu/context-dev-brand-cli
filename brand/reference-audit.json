@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-11-21T20:20:11.625Z",
+  "checkedAt": "2026-11-21T20:33:33.910Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -8615,7 +8615,7 @@
       "library": [
         {
           "path": "components/ui/toggle-group.tsx",
-          "sha256": "8741a7f45931c22916beb2db898d38c12bdab3ff82d95cccf2b9f6db0f286571"
+          "sha256": "b7f2d7a3561d7197bd48dff97047fe6c0f5e3eaf78e505e517ad7f604b2f5651"
         }
       ],
       "sources": [

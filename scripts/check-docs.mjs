@@ -100,7 +100,20 @@ try {
     await area.evaluate(el => { el.scrollTop = el.scrollHeight; });
     await settle();
     assert.deepEqual(Object.values(await fade(area)).slice(1), ['24px', '0px'], 'scroll area at the end');
-    pass('the rail and a scrolling library item fade at their scroll edges instead of cutting rows off');
+    // A toggle group too narrow for its choices scrolls its track inside the pale wrapper and fades sideways.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(base + '/preview/toggle-group/Product', { waitUntil: 'networkidle' });
+    await page.locator('[data-slot="toggle-group"][data-variant="default"]').first().evaluate(el => { el.style.width = '160px'; });
+    const track = page.locator('[data-slot="toggle-group-track"]').first();
+    await settle();
+    let side = await track.evaluate(el => { const s = getComputedStyle(el); return [s.maskImage.includes('gradient'), s.getPropertyValue('--fade-start'), s.getPropertyValue('--fade-end'), el.scrollWidth > el.clientWidth]; });
+    assert.deepEqual(side, [true, '0px', '24px', true], 'toggle group track at rest');
+    await track.evaluate(el => { el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2; });
+    await settle();
+    side = await track.evaluate(el => { const s = getComputedStyle(el); return [s.getPropertyValue('--fade-start'), s.getPropertyValue('--fade-end')]; });
+    assert.deepEqual(side, ['24px', '24px'], 'toggle group track mid-scroll');
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    pass('the rail and scrolling library items fade at their scroll edges instead of cutting rows off');
     await page.goto(base + '/components/button', { waitUntil: 'networkidle' });
 
     // Copy boxes copy, and say so; a refused clipboard does not break the page.

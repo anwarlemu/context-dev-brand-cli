@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
 // gray track with control corners and a 2px inset; each choice is muted body-sm, and the pressed ones are white keys with
 // the segmented pill's soft drop. With `spacing={0}` the choices sit flush. `variant="outline"` drops the track: joined
 // outline keys with a shared edge. Choosing is instant (no gliding key): unlike the segmented control's single value,
-// several can be on at once.
+// several can be on at once. The track sits inside the pale wrapper and scrolls with fade-x, so a choice past the edge
+// fades instead of being cut off.
 const ToggleGroupContext = React.createContext<VariantProps<typeof toggleVariants> & { spacing?: number; orientation?: "horizontal" | "vertical" }>({
   size: "default",
   variant: "default",
@@ -42,12 +43,20 @@ function ToggleGroup({
       style={{ "--gap": gap } as React.CSSProperties}
       className={cn(
         "group/toggle-group flex w-fit max-w-full items-center gap-[calc(var(--spacing)*var(--gap))] data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch",
-        variant === "default" && "overflow-x-auto rounded-control bg-neutral-5 p-0.5 [scrollbar-width:none]",
+        variant === "default" && "overflow-hidden rounded-control bg-neutral-5",
         className,
       )}
       {...props}
     >
-      <ToggleGroupContext.Provider value={{ variant, size, spacing: gap, orientation }}>{children}</ToggleGroupContext.Provider>
+      <ToggleGroupContext.Provider value={{ variant, size, spacing: gap, orientation }}>
+        {variant === "default" ? (
+          <div data-slot="toggle-group-track" className="fade-x flex min-w-0 flex-1 items-center gap-[inherit] overflow-x-auto p-0.5 [scrollbar-width:none] group-data-[orientation=vertical]/toggle-group:flex-col group-data-[orientation=vertical]/toggle-group:items-stretch">
+            {children}
+          </div>
+        ) : (
+          children
+        )}
+      </ToggleGroupContext.Provider>
     </ToggleGroupPrimitive.Root>
   );
 }
