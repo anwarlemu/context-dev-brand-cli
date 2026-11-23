@@ -189,7 +189,7 @@ function clause(raw: string, quotes: string[], c: PhraseContext, v: Vocabulary, 
 	/* Theme. */
 	const themes = c.info.themes.map((x) => x.toLowerCase());
 	const T = themes.length ? `(${[...themes, ...Object.keys(c.adapter.aliases?.themes ?? {}).map((x) => x.toLowerCase())].sort((a, b) => b.length - a.length).map(esc).join('|')})` : '(\\b\\B)';
-	if ((m = new RegExp(`^(?:${VERB} )?(?:it )?(?:back )?(?:to |in |on |with )?(?:theme |palette )?${T}(?: theme| palette| version| background| ground| colou?rs)?$`).exec(t)) && (/(theme|palette|version|background|ground|colou?rs)/.test(t) || /^(?:make|switch|use|try|go|change|in|turn|set)\b/.test(t) || t === m[1])) return [{ op: 'theme', value: m[1]! }];
+	if ((m = new RegExp(`^(?:${VERB} )?(?:it )?(?:back )?(?:to |in |on |with )?(?:theme |palette )?${T}(?: theme| palette| version| background| ground| colou?rs)?$`).exec(t)) && (/(theme|palette|version|background|ground|colou?rs)/.test(t) || /^(?:make|switch|use|try|go|change|in|turn|set|back)\b/.test(t) || t === m[1])) return [{ op: 'theme', value: m[1]! }];
 	if ((m = /^(?:(?:make|set|use|switch|go|try|have|change|turn|want) )?(?:it )?(?:to |in )?(darker|lighter|brighter|dark|light|darkest|lightest)(?: (?:theme|palette|background|ground|version|mode|one|colou?rs))?$/.exec(t))) return [{ op: 'theme', value: shadeOf(m[1]!, c) }];
 	if (/^(?:(?:make|use|try|switch|show) )?(?:(?:to )?(?:next|another|different|other|new) (?:theme|palette|colou?rs))$/.test(t)) {
 		if (c.info.themes.length < 2) throw new DesignError(`The ${c.info.id} layout has one theme.`);
