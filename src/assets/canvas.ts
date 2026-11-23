@@ -66,6 +66,12 @@ export function toPng(s: Surface, opts: { dpi?: number; opaque?: boolean } = {})
 	return encodePng(rgb, px.width, px.height, 3, opts.dpi);
 }
 
+/** The surface as JPEG or WebP, on its own ground (JPEG has no transparency). */
+export function encoded(s: Surface, type: 'image/jpeg' | 'image/webp', quality = 92): Buffer {
+	if (s.svg) throw new Error('This surface records SVG; draw again on a raster surface.');
+	return type === 'image/jpeg' ? (s.canvas as Canvas).toBuffer('image/jpeg', quality) : (s.canvas as Canvas).toBuffer('image/webp', quality);
+}
+
 /** The surface as an SVG document. `physical` sets the root size in inches (print files). */
 export function toSvg(s: Surface, physical?: { widthIn: number; heightIn: number }): string {
 	if (!s.svg) throw new Error('This surface holds pixels; draw again with { svg: true } for SVG.');

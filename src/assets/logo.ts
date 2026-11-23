@@ -11,6 +11,8 @@ type LogoDoc = {
 	wordmark: { paths: string[]; origin: [number, number] };
 	width: number;
 	height: number;
+	clear: { ratio: number };
+	min: { shown: number };
 };
 
 let doc: LogoDoc | undefined;
@@ -18,6 +20,10 @@ const logoDoc = () => (doc ??= JSON.parse(readFileSync(pkgPath('brand', 'assets'
 
 /** Width over height of the whole logo (mark and wordmark). */
 export const logoRatio = () => logoDoc().width / logoDoc().height;
+/** Clear space around a logo `h` tall. */
+export const logoClear = (h: number) => h * logoDoc().clear.ratio;
+/** The least height of the logo on a canvas `width` wide that is shown `shown` CSS px wide. */
+export const logoMin = (width: number, shown: number) => (logoDoc().min.shown * width) / shown;
 /** Width over height of the mark alone. */
 export const markRatio = () => logoDoc().mark.width / logoDoc().mark.height;
 

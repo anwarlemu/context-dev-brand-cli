@@ -16,7 +16,7 @@ export { drawFitted, fit, setFont, wrap, type Fitted, type TextStyle } from './t
 export { drawLogo, drawMark, logoRatio, markRatio } from './logo.js';
 export { pictureFrom, pictureKind, pictureOf, readPicture, type Picture } from './picture.js';
 export { samplePicture, sampleNames } from './samples.js';
-export { designFor, drawDesign, frameOf, imageDoc, layoutFor, paletteOf, palettes, TEMPLATES, type Design, type Palette, type Template } from './og.js';
+export { designFor, drawDesign, frameOf, imageDoc, paletteOf, palettes, TEMPLATES, type Design, type Palette, type Template } from './og.js';
 export { designOf, imageCatalog, imageSizes, pictureFor, renderDesign, sizeId, type ImageRequest, type Rendered } from './image.js';
 export { deckCatalog, drawSlide, renderSlide, slideTypes, type Slide, type SlideType } from './deck.js';
 export { drawItem, findItem, merchCatalog, merchItems, renderItem, PX_PER_IN, type MerchItem } from './merch.js';

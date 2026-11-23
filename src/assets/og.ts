@@ -1,46 +1,28 @@
 import { readFileSync } from "node:fs";
 import { Path2D, type Canvas } from "@napi-rs/canvas";
+import { contrast, platformOf, SMALL_FLOOR, zonePx, type Anchor, type DrawnLayer, type LayerEdit } from "../design/index.js";
 import { pkgPath } from "../lib/paths.js";
 import { scratch, tokenColor, type AnyCanvas, type Ctx, type Fonts } from "./canvas.js";
-import {
-  cardsKeep,
-  drawCards,
-  layoutCards,
-  type CardsStyle,
-} from "./cards.js";
-import { drawLogo as drawBrandLogo, logoRatio } from "./logo.js";
+import { assertGlyphs } from "./glyphs.js";
+import { drawLogo as drawBrandLogo, drawMark, logoClear, logoMin, logoRatio, markRatio } from "./logo.js";
 import type { Picture } from "./picture.js";
-import {
-  grid,
-  hexLightness,
-  shade,
-  type Dither,
-  type Rect,
-  type Render,
-} from "./shader.js";
+import { cutout, grid, hexLightness, shade, type Dither, type Grid, type Rect, type Render } from "./shader.js";
 
 /*
- * Share images and social posts, ported from the share-image editor (agd-playground src/components/context-og/draw.ts)
- * to draw headless on a Skia canvas. The drawing code below the marked line is the editor's own, kept in its
- * formatting so the two diff cleanly; above it, the parts the editor kept inline now come from brand/assets/image.json
- * (sizes, palettes as tokens, each template's opening copy) and brand/assets/logo.json (the logo). A design is a field
- * of dots made from any picture by the dot shader, the logo, and the words. Everything is laid out in the image's own
- * pixels, then scaled to the canvas.
+ * Share images and social posts, from the share-image editor (agd-playground src/components/context-og/draw.ts), drawn
+ * headless on a Skia canvas. The dots, the burst, the dot letters and the palettes are the editor's; the layout is
+ * ours, because the editor was steered by hand and this has to hold any words at any size. It keeps to four rules:
+ * words are whole (they wrap, then shrink to a readable floor, then the command fails saying what to shorten), only
+ * what was passed is drawn, nothing overlaps, and nothing is cut off hard (pictures are placed whole or fade out).
+ * Every layer it draws is reported as it was drawn, and layer edits (src/design) are applied here, so words re-wrap and
+ * dots keep clear of them. Everything is laid out in the image's own pixels, then scaled to the canvas.
  */
 
 export type Size = string;
-export type Template = "banner" | "products" | "social" | "cards" | "customer";
-export const TEMPLATES: Template[] = ["banner", "products", "social", "cards", "customer"];
+export type Template = "banner" | "products" | "social" | "cards" | "customer" | "mark";
+export const TEMPLATES: Template[] = ["banner", "products", "social", "cards", "customer", "mark"];
 
-export type Layout = {
-  label: string;
-  w: number;
-  h: number;
-  /* Scale of the logo and margins against the 1500 × 500 banner. */
-  u: number;
-  text: { x: number; y: number; size: number; width: number };
-  image: { x: number; y: number; scale: number };
-};
+export type Layout = { label: string; w: number; h: number };
 
 export type Palette = {
   name: string;
@@ -64,10 +46,11 @@ export type Design = {
   h: number;
   palette: string;
   logo: boolean;
+  /* Copy: only what was passed. An empty slot is left out and the layout closes up. */
   headline: string;
-  /* Social only: the line under the headline. */
   body: string;
-  /* Cards only: blank-line-separated cards, heading first, and the footer's address. */
+  badge: string;
+  /* Cards only: blank-line-separated cards, heading first, and the footer's address (the brand's own by default). */
   cards: string;
   footer: string;
   /* Customer only: the big number in dots, their name when there's no logo, whether the logo is recolored to the
@@ -81,19 +64,19 @@ export type Design = {
   /* Products only: the button, and the lists as "# Group" then items. */
   cta: string;
   lists: string;
-  textSize: number;
-  /* Wrap width, as a share of the image's width. */
-  textWidth: number;
-  /* Top-left of the headline, as shares of the width and height. */
-  textX: number;
-  textY: number;
+  /* Left unset, the layout decides: the headline's starting size in the image's pixels, its wrap width as a share of
+     the width, and its top left as shares of the width and height. */
+  textSize?: number;
+  textWidth?: number;
+  textX?: number;
+  textY?: number;
   /* A picture path, "sample:<name>" for a built-in picture, or "none". */
   image: string;
-  /* Center of the picture, as shares of the width and height (of its area, when the template gives one). */
-  imgX: number;
-  imgY: number;
-  /* Percent of the size that just fits inside the frame. */
-  imgScale: number;
+  /* Left unset, the picture is placed whole in the room the words leave. Center as shares of the width and height, and
+     percent of the size that just fits inside the frame (of that room, when only the scale is given). */
+  imgX?: number;
+  imgY?: number;
+  imgScale?: number;
   dot: number;
   gap: number;
   render: Render;
@@ -104,63 +87,37 @@ export type Design = {
   cutout: "auto" | "whole";
   keyTol: number;
   field: Field;
+  /* Which built-in picture or burst, when nothing else says. */
+  seed: number;
 };
 
-type SizeDoc = { label: string; w: number; h: number; u?: number; text?: Layout["text"]; image?: Layout["image"] };
+export type SizeDoc = { label: string; w: number; h: number; u?: number };
 export type ImageDoc = {
   palettes: Palette[];
   notes: string[];
-  sizes: Record<string, Required<SizeDoc>>;
-  social: Record<string, SizeDoc>;
-  kinds: Record<"share" | "social", { label: string; templates: Template[]; sizes: "sizes" | "social"; custom: boolean }>;
+  sizes: Record<string, SizeDoc>;
+  aliases: Record<string, string>;
+  kinds: Record<"share" | "social", { label: string; templates: Template[]; sizes: string[]; custom: boolean }>;
   cards: { fill: string; radius: number; edge: string; shadow: { color: string; blur: number; y: number }; heading: string; body: string; badge: string; badgeInk: string };
   base: Partial<Design>;
-  templates: Record<Template, { label: string; description: string; size: string; set: Partial<Design> }>;
+  templates: Record<Template, { label: string; description: string; size: string; sizes: string[]; required: string[]; set: Partial<Design>; sample: Record<string, string> }>;
 };
 
 let doc: ImageDoc | undefined;
 export const imageDoc = (): ImageDoc => (doc ??= JSON.parse(readFileSync(pkgPath("brand", "assets", "image.json"), "utf8")) as ImageDoc);
 
-/* Banner-style defaults for a frame of any shape. */
-function layoutOf(label: string, w: number, h: number): Layout {
-  const wide = w / h >= 1.2;
-  return {
-    label,
-    w,
-    h,
-    u: Math.sqrt(w * h) / 900,
-    text: wide
-      ? { x: 0.04, y: 0.2, size: Math.round((64 * h) / 630), width: 0.45 }
-      : { x: 0.06, y: 0.12, size: Math.round((72 * w) / 1080), width: 0.8 },
-    image: wide ? { x: 0.72, y: 0.58, scale: 105 } : { x: 0.55, y: 0.66, scale: 75 },
-  };
-}
-
-/* The share sizes, laid out by hand. */
-export function shareSizes(): Record<string, Layout> {
-  return Object.fromEntries(Object.entries(imageDoc().sizes).map(([id, s]) => [id, { ...s, label: `${s.label} · ${s.w} × ${s.h}` }]));
-}
-
-/* Social posts: the common shapes, and "custom" for any other. */
-export function socialSizes(): Record<string, Layout> {
-  return Object.fromEntries(Object.entries(imageDoc().social).map(([id, s]) => [id, layoutOf(`${s.label} · ${s.w} × ${s.h}`, s.w, s.h)]));
-}
-
 export const clampDim = (n: number) =>
   Math.round(Math.min(4000, Math.max(200, n || 0)));
 
 /* The frame a design is drawn in: a named size, or its own width and height. */
-export function frameOf(d: Pick<Design, "size" | "w" | "h">): Layout {
-  return (
-    shareSizes()[d.size] ??
-    socialSizes()[d.size] ??
-    layoutOf("Custom", clampDim(d.w), clampDim(d.h))
-  );
+export function frameOf(d: Pick<Design, "size" | "w" | "h">): Layout & { u?: number } {
+  return imageDoc().sizes[d.size] ?? { label: "Custom", w: clampDim(d.w), h: clampDim(d.h) };
 }
 
 /* Palettes with their token names resolved to colors. */
+let resolved: Palette[] | undefined;
 export function palettes(): Palette[] {
-  return imageDoc().palettes.map((p) => ({
+  return (resolved ??= imageDoc().palettes.map((p) => ({
     ...p,
     bg: tokenColor(p.bg),
     fill: tokenColor(p.fill),
@@ -169,7 +126,7 @@ export function palettes(): Palette[] {
     text: tokenColor(p.text),
     ink: tokenColor(p.ink),
     mark: tokenColor(p.mark),
-  }));
+  })));
 }
 
 export const paletteOf = (d: Pick<Design, "palette">) => {
@@ -177,103 +134,133 @@ export const paletteOf = (d: Pick<Design, "palette">) => {
   return all.find((p) => p.name.toLowerCase() === d.palette.toLowerCase()) ?? all[0];
 };
 
-/* Where every size-dependent setting starts, for a size and template (the editor's layoutFor). */
-export function layoutFor(
-  size: Size,
-  template: Template,
-  dims: { w: number; h: number } = { w: 1200, h: 675 },
-) {
-  const L = frameOf({ size, ...dims });
-  const { w: W, h: H } = L;
-  const at = { size, w: dims.w, h: dims.h };
-  if (template === "cards")
-    return {
-      ...at,
-      textX: 0.5,
-      textY: 0.5,
-      textSize: Math.round(38 * Math.sqrt((W * H) / (1200 * 630))),
-      textWidth: 0.86,
-      imgX: 0.5,
-      imgY: 0.5,
-      imgScale: 100,
-    };
-  if (template === "customer") {
-    const wide = W / H >= 1.2;
-    return {
-      ...at,
-      textX: wide ? 0.035 : 0.06,
-      textY: wide ? 0.21 : 0.16,
-      textSize: Math.round(wide ? (94 * H) / 630 : (W / H < 0.7 ? 120 : 100) * (W / 1080)),
-      textWidth: wide ? 0.55 : 0.86,
-      imgX: wide ? 1.02 : 0.95,
-      imgY: wide ? 0.5 : 0.8,
-      imgScale: 100,
-    };
-  }
-  if (template === "social")
-    return {
-      ...at,
-      textX: 0.5,
-      textY: 0.085,
-      /* 110px on a 1200 × 675 post, growing with the post's area. */
-      textSize: Math.round((110 * Math.sqrt(W * H)) / 900),
-      textWidth: W / H >= 1.2 ? 0.72 : 0.86,
-      imgX: 0.5,
-      imgY: 0.5,
-      imgScale: 92,
-    };
-  /* Products sizes its headline against the panel, not the banner. */
-  const products = template === "products";
-  return {
-    ...at,
-    textX: L.text.x,
-    textY: L.text.y,
-    textSize: products
-      ? Math.round(W / H >= 1.4 ? (46 * H) / 630 : (54 * W) / 1080)
-      : L.text.size,
-    textWidth: L.text.width,
-    imgX: products ? 0.82 : L.image.x,
-    imgY: products ? 0.78 : L.image.y,
-    imgScale: products ? 70 : L.image.scale,
-  };
-}
+/* What words on the palette's fill (a panel, a button) are drawn in: the ground's color, or where that fails 4.5:1
+   on the fill, the nearest brand color that passes, white. */
+export const onFill = (p: Palette) => (contrast(p.bg, p.fill) >= 4.5 ? p.bg : tokenColor("white"));
 
-/* A template's opening design at a size: the brand's copy and settings, then the size's layout. */
-export function designFor(template: Template, size?: Size, dims?: { w: number; h: number }): Design {
+/* A template's opening design at a size: the brand's settings and no copy but the brand's own address. */
+export function designFor(template: Template, size?: Size, dims: { w: number; h: number } = { w: 1200, h: 675 }): Design {
   const t = imageDoc().templates[template];
-  const at = size ?? t.size;
-  return { template, ...imageDoc().base, ...t.set, ...layoutFor(at, template, dims) } as Design;
-}
-
-/* Where the picture lands: placed within an area, the whole frame unless a template gives it a stage of its own. */
-export function imageRect(d: Design, img: Picture, area?: Rect): Rect {
-  const { w: W, h: H } = frameOf(d);
-  const a = area ?? { x: 0, y: 0, w: W, h: H };
-  const iw = img.width;
-  const ih = img.height;
-  const sc = (Math.min(a.w / iw, a.h / ih) * d.imgScale) / 100;
-  const w = iw * sc;
-  const h = ih * sc;
-  return {
-    x: a.x + d.imgX * a.w - w / 2,
-    y: a.y + d.imgY * a.h - h / 2,
-    w,
-    h,
-  };
+  return { template, ...imageDoc().base, ...t.set, size: size ?? t.size, w: dims.w, h: dims.h } as Design;
 }
 
 export const RING = 1.2;
 
-/* The full logo, mark and wordmark, h tall with its top-left at (x, y). */
-const LOGO_W = logoRatio() * 32;
-function drawLogo(ctx: Ctx, x: number, y: number, h: number, p: Palette, mark = p.mark, ink = p.ink) {
-  drawBrandLogo(ctx, x, y, h, mark, ink);
-}
-
 /* A canvas for masks and cut-outs (the editor's document.createElement("canvas")). */
 const newCanvas = (w = 1, h = 1) => scratch(w, h).canvas;
 
-/* ---- The editor's drawing code (agd-playground src/components/context-og/draw.ts) ---- */
+/* ---- What can be edited, per template ---- */
+
+const CORNERS: Anchor[] = ["top-left", "top-right", "bottom-left", "bottom-right"];
+type Can = DrawnLayer["can"];
+const LOGO: Can = { anchors: CORNERS, scale: [0.75, 1.6], hide: true };
+const HEAD: Can = { move: true, scale: [0.5, 1.5], align: true };
+const BODY_CAN: Can = { move: true, scale: [0.7, 1.4] };
+const ART: Can = { move: true, scale: [0.4, 1.6], hide: true };
+const FIXED: Can = {};
+export const CAN: Record<Template, Record<string, Can>> = {
+  banner: { logo: LOGO, badge: FIXED, headline: HEAD, body: BODY_CAN, art: ART, field: FIXED },
+  products: { logo: { scale: [0.75, 1.6], hide: true }, headline: { scale: [0.5, 1.5], align: true }, cta: FIXED, panel: FIXED, lists: FIXED, art: ART, field: FIXED },
+  social: { logo: LOGO, badge: FIXED, headline: HEAD, body: BODY_CAN, art: ART, field: FIXED },
+  cards: { logo: { scale: [0.75, 1.3], hide: true }, headline: { scale: [0.6, 1.4], align: true }, cards: FIXED, numbers: FIXED, panels: FIXED, footer: { hide: true }, field: FIXED },
+  customer: { logo: { scale: [0.75, 1.6], hide: true }, partner: { scale: [0.6, 1.6] }, stat: { scale: [0.6, 1.3] }, headline: HEAD, art: { move: true, scale: [0.4, 1.6], hide: true }, field: FIXED },
+  mark: { logo: { scale: [0.5, 1.3] }, field: FIXED },
+};
+
+/* Where the headline landed, the area the picture is placed in, and every layer as drawn. */
+export type Drawn = { text: Rect; area?: Rect; layers: DrawnLayer[] };
+
+/* ---- The page a design is laid out on ---- */
+
+type Pen = {
+  ctx: Ctx;
+  d: Design;
+  W: number;
+  H: number;
+  /* Where words and the logo may go: the frame without what the platform covers or crops. */
+  S: Rect;
+  /* Corners inside S the platform covers (a profile picture). */
+  cuts: Rect[];
+  /* Scale of the logo and margins against the 1500 × 500 banner, and the margin. */
+  u: number;
+  m: number;
+  /* The smallest words that still read where the picture is shown. */
+  floor: number;
+  p: Palette;
+  fonts: Fonts;
+  edits: Record<string, LayerEdit>;
+  layers: DrawnLayer[];
+  /* Boxes no dot may touch. */
+  keep: Rect[];
+};
+
+const right = (r: Rect) => r.x + r.w;
+const bottom = (r: Rect) => r.y + r.h;
+const grow = (r: Rect, by: number): Rect => ({ x: r.x - by, y: r.y - by, w: r.w + by * 2, h: r.h + by * 2 });
+const hits = (a: Rect, b: Rect) => a.x < right(b) && right(a) > b.x && a.y < bottom(b) && bottom(a) > b.y;
+const union = (rs: Rect[]): Rect => {
+  const x = Math.min(...rs.map((r) => r.x));
+  const y = Math.min(...rs.map((r) => r.y));
+  return { x, y, w: Math.max(...rs.map(right)) - x, h: Math.max(...rs.map(bottom)) - y };
+};
+
+/* The part of a frame the platform leaves free, and the corners of it that it covers. */
+export function stageOf(size: string, W: number, H: number): { S: Rect; cuts: Rect[] } {
+  const pf = platformOf(size, W, H);
+  if (pf.safe) return { S: zonePx(pf.safe, W, H), cuts: [] };
+  let S: Rect = { x: 0, y: 0, w: W, h: H };
+  const cuts: Rect[] = [];
+  for (const z of pf.avoid) {
+    const r = zonePx(z, W, H);
+    if (r.w > W - 1) S = r.y < 1 ? { ...S, y: bottom(r), h: bottom(S) - bottom(r) } : { ...S, h: r.y - S.y };
+    else if (r.h > H - 1) S = r.x < 1 ? { ...S, x: right(r), w: right(S) - right(r) } : { ...S, w: r.x - S.x };
+    else cuts.push(r);
+  }
+  return { S, cuts: cuts.filter((c) => hits(c, S)) };
+}
+
+/* The palest a picture's shape is: what is left after its background is cut out, as shares of the picture. */
+const extents = new Map<string, Rect>();
+function contentOf(img: Picture, d: Design): Rect {
+  const key = [img.key, d.cutout, d.keyTol].join("|");
+  const hit = extents.get(key);
+  if (hit) return hit;
+  const c = cutout(img, d.cutout, d.keyTol);
+  const { width: w, height: h } = c;
+  const a = c.getContext("2d").getImageData(0, 0, w, h).data;
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++)
+    for (let x = 0; x < w; x++)
+      if (a[(y * w + x) * 4 + 3] > 60) {
+        if (x < x0) x0 = x;
+        if (x > x1) x1 = x;
+        if (y < y0) y0 = y;
+        if (y > y1) y1 = y;
+      }
+  const r = x1 < 0 ? { x: 0, y: 0, w: 1, h: 1 } : { x: x0 / w, y: y0 / h, w: (x1 - x0 + 1) / w, h: (y1 - y0 + 1) / h };
+  if (extents.size > 40) extents.clear();
+  extents.set(key, r);
+  return r;
+}
+
+/* Where the picture lands: whole inside `area` by its own shape, unless the design says otherwise. */
+function pictureRect(d: Design, img: Picture, area: Rect, W: number, H: number, e: LayerEdit): Rect {
+  const c = contentOf(img, d);
+  const cw = img.width * c.w;
+  const ch = img.height * c.h;
+  let sc = Math.min(area.w / cw, area.h / ch);
+  if (d.imgScale !== undefined) sc = d.imgX !== undefined || d.imgY !== undefined ? (Math.min(W / img.width, H / img.height) * d.imgScale) / 100 : (sc * d.imgScale) / 100;
+  sc *= e.scale ?? 1;
+  const cx = (d.imgX !== undefined ? d.imgX * W : area.x + area.w / 2) + (e.dx ?? 0) * W;
+  const cy = (d.imgY !== undefined ? d.imgY * H : area.y + area.h / 2) + (e.dy ?? 0) * H;
+  /* By the shape's own center, unless the center was given for the picture as a whole. */
+  const whole = d.imgX !== undefined || d.imgY !== undefined;
+  const ox = whole ? img.width / 2 : img.width * (c.x + c.w / 2);
+  const oy = whole ? img.height / 2 : img.height * (c.y + c.h / 2);
+  return { x: cx - ox * sc, y: cy - oy * sc, w: img.width * sc, h: img.height * sc };
+}
+
+/* ---- Words ---- */
 
 export function wrap(ctx: Ctx, text: string, max: number) {
   const out: string[] = [];
@@ -287,189 +274,548 @@ export function wrap(ctx: Ctx, text: string, max: number) {
         line = w;
       } else line = next;
     }
-    out.push(line);
+    if (line) out.push(line);
   }
   return out;
 }
 
-/* Where the headline landed, and the area the picture is placed in. */
-export type Drawn = { text: Rect; area?: Rect };
+export type Face = { family: string; weight: number; tracking: number; leading: number; caps?: boolean; data?: boolean };
+export type Block = { face: Face; size: number; lines: string[]; widths: number[]; w: number; h: number; asked: string };
 
-/*
- * Draws the design onto the canvas, at whatever multiple of the image's size
- * the canvas is. Returns where the headline landed, for dragging.
- */
-export function drawDesign(
-  canvas: AnyCanvas,
-  d: Design,
-  img: Picture | null,
-  fonts: Fonts,
-): Drawn {
-  const { w: W, h: H, u } = frameOf(d);
-  const p = paletteOf(d);
-  const ctx = canvas.getContext("2d");
-  const s = canvas.width / W;
-  ctx.setTransform(s, 0, 0, s, 0, 0);
-  ctx.fillStyle = p.bg;
-  ctx.fillRect(0, 0, W, H);
-  if (d.template === "products") return drawProducts(ctx, d, img, fonts);
-  if (d.template === "social") return drawSocial(ctx, d, img, fonts);
-  if (d.template === "cards") return drawContextCards(ctx, d, fonts);
-  if (d.template === "customer") return drawCustomer(ctx, d, img, fonts);
-  const sans = fonts.sans;
-
-  /* The headline's box first: the dots keep clear of it and the logo. */
-  ctx.font = `500 ${d.textSize}px ${sans}`;
-  ctx.letterSpacing = `${-0.02 * d.textSize}px`;
-  const lines = wrap(ctx, d.headline, d.textWidth * W);
-  const lh = d.textSize * 1.2;
-  const tx = d.textX * W;
-  const ty = d.textY * H;
-  const tw = Math.max(1, ...lines.map((l) => ctx.measureText(l).width));
-  const text: Rect = { x: tx, y: ty, w: tw, h: lines.length * lh };
-
-  const logoBox: Rect = { x: 32 * u, y: 36 * u, w: 190 * u, h: 32 * u };
-  const covered = (x: number, y: number, r: number) =>
-    [text, ...(d.logo ? [logoBox] : [])].some(
-      (b) =>
-        x + r > b.x - 12 &&
-        x - r < b.x + b.w + 12 &&
-        y + r > b.y - 12 &&
-        y - r < b.y + b.h + 12,
-    );
-
-  drawDots(ctx, d, p, img, covered);
-
-  ctx.textBaseline = "alphabetic";
-  if (d.logo) drawLogo(ctx, logoBox.x, logoBox.y, 32 * u, p);
-
-  ctx.font = `500 ${d.textSize}px ${sans}`;
-  ctx.letterSpacing = `${-0.02 * d.textSize}px`;
-  ctx.fillStyle = p.text;
-  lines.forEach((l, i) =>
-    ctx.fillText(l, tx, ty + i * lh + d.textSize * 0.92),
-  );
-  ctx.letterSpacing = "0px";
-  return { text };
+export function setFace(ctx: Ctx, f: Face, size: number) {
+  ctx.font = `${f.weight} ${size}px ${f.family}`;
+  ctx.letterSpacing = `${f.tracking * size}px`;
 }
 
-/* The dot field: the picture shaded into the grid, the grid behind it, and
-   no dot wherever `covered` says the words are. */
-function drawDots(
-  ctx: Ctx,
-  d: Design,
-  p: Palette,
-  img: Picture | null,
-  covered: (x: number, y: number, r: number) => boolean,
-  area?: Rect,
-) {
-  const { w: W, h: H } = frameOf(d);
-  const g = grid(W, H, d.dot, d.gap);
-  const st = img
-    ? shade(img, g, imageRect(d, img, area), shaderOpts(d, p.fill, p.bg))
+/* Text at one size, its lines evened out (the narrowest width that keeps the same number of lines). */
+function setBlock(ctx: Ctx, text: string, f: Face, size: number, max: number): Block {
+  setFace(ctx, f, size);
+  const value = f.caps ? text.toUpperCase() : text;
+  let lines = wrap(ctx, value, max);
+  if (lines.length > 1 && !value.includes("\n")) {
+    let lo = max * 0.5;
+    let hi = max;
+    for (let i = 0; i < 9; i++) {
+      const mid = (lo + hi) / 2;
+      const l = wrap(ctx, value, mid);
+      if (l.length <= lines.length && l.every((x) => ctx.measureText(x).width <= mid)) hi = mid;
+      else lo = mid;
+    }
+    lines = wrap(ctx, value, hi);
+  }
+  const widths = lines.map((l) => ctx.measureText(l).width);
+  ctx.letterSpacing = "0px";
+  return { face: f, size, lines, widths, w: Math.max(0, ...widths), h: lines.length * size * f.leading, asked: text };
+}
+
+/* The biggest size from `from` down to `least` at which the words fit the width and height, whole. Undefined when none does. */
+export function fitBlock(ctx: Ctx, text: string, f: Face, from: number, least: number, maxW: number, maxH: number): Block | undefined {
+  for (let size = from; ; size *= 0.965) {
+    const at = Math.max(size, least);
+    const b = setBlock(ctx, text, f, at, maxW);
+    if (b.w <= maxW + 0.5 && b.h <= maxH + 0.5) return b;
+    if (at <= least) return undefined;
+  }
+}
+
+export const tooLong = (what: string, size: string) => new Error(`The ${what} is too long for this layout at ${size}. Shorten it, or use a bigger size.`);
+
+/* Draws a block with its first line's top at `top` and reports what it drew. */
+export function drawBlock(ctx: Ctx, b: Block, x: number, top: number, align: "left" | "center" | "right", width: number, color: string): { box: Rect; ink: Rect[] } {
+  setFace(ctx, b.face, b.size);
+  ctx.fillStyle = color;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  const lh = b.size * b.face.leading;
+  const ink = b.lines.map((l, i) => {
+    const lx = align === "center" ? x + (width - b.widths[i]) / 2 : align === "right" ? x + width - b.widths[i] : x;
+    const base = top + i * lh + lh / 2 + b.size * 0.34;
+    const m = ctx.measureText(l);
+    ctx.fillText(l, lx, base);
+    return { x: lx, y: base - m.actualBoundingBoxAscent, w: b.widths[i], h: m.actualBoundingBoxAscent + m.actualBoundingBoxDescent };
+  });
+  ctx.letterSpacing = "0px";
+  const box = union(ink);
+  return { box: { x: box.x, y: top, w: box.w, h: b.h }, ink };
+}
+
+export const headFace = (fonts: Fonts): Face => ({ family: fonts.sans, weight: 500, tracking: -0.02, leading: 1.18 });
+export const bodyFace = (fonts: Fonts): Face => ({ family: fonts.sans, weight: 400, tracking: 0, leading: 1.42 });
+export const chipFace = (fonts: Fonts): Face => ({ family: fonts.data, weight: 900, tracking: 0.08, leading: 1, caps: true, data: true });
+
+/* ---- The logo ---- */
+
+/* Drawn unless the design or an edit leaves it out; an edit can also ask for it where the layout has none. */
+const logoOn = (q: Pen) => (q.edits.logo?.hidden === undefined ? q.d.logo : !q.edits.logo.hidden);
+
+/* The logo's box at a corner of the stage, moved past anything the platform covers there. */
+function logoBox(q: Pen, anchor: Anchor): Rect | undefined {
+  const e = q.edits.logo ?? {};
+  if (!logoOn(q)) return undefined;
+  const h = 32 * q.u * (e.scale ?? 1);
+  const w = logoRatio() * h;
+  const at = e.anchor ?? anchor;
+  const area = { x: q.S.x + q.m, y: q.S.y + q.m, w: q.S.w - q.m * 2, h: q.S.h - q.m * 2 };
+  const r: Rect = {
+    x: at.endsWith("left") ? area.x : at.endsWith("right") ? right(area) - w : area.x + (area.w - w) / 2,
+    y: at.startsWith("top") ? area.y : at.startsWith("bottom") ? bottom(area) - h : area.y + (area.h - h) / 2,
+    w,
+    h,
+  };
+  for (const c of q.cuts) if (hits(grow(r, logoClear(h)), c)) r.x = c.x < q.W / 2 ? right(c) + q.m * 0.5 : c.x - w - q.m * 0.5;
+  return r;
+}
+
+function putLogo(q: Pen, r: Rect | undefined, can: Can = CAN[q.d.template].logo, ink = q.p.ink) {
+  if (!r) return;
+  drawBrandLogo(q.ctx, r.x, r.y, r.h, q.p.mark, ink);
+  q.layers.push({ id: "logo", kind: "logo", box: r, logo: { clear: logoClear(r.h), min: logoMin(q.W, platformOf(q.d.size, q.W, q.H).shown) }, can });
+}
+
+/* ---- Dots ---- */
+
+/* Dots in a row that run on, as boxes: enough for the check to see where the art really is. */
+export class Runs {
+  readonly rects: Rect[] = [];
+  private cur: Rect | undefined;
+  constructor(private readonly pitch: number) {}
+  add(x: number, y: number, r: number) {
+    const c = this.cur;
+    if (c && Math.abs(c.y + c.h / 2 - y) < 0.01 && x - r - right(c) <= this.pitch) c.w = x + r - c.x;
+    else this.rects.push((this.cur = { x: x - r, y: y - r, w: r * 2, h: r * 2 }));
+  }
+}
+
+const covered = (keep: Rect[], x: number, y: number, r: number) => keep.some((b) => x + r > b.x && x - r < right(b) && y + r > b.y && y - r < bottom(b));
+
+/* How much of a dot is left where the picture runs off the frame: it fades out over the last stretch. */
+function fadeFor(box: Rect, W: number, H: number) {
+  const band = { x: Math.min(box.w, W) * 0.3, y: Math.min(box.h, H) * 0.3 };
+  const off = { l: box.x < -1, r: right(box) > W + 1, t: box.y < -1, b: bottom(box) > H + 1 };
+  if (!off.l && !off.r && !off.t && !off.b) return undefined;
+  const ease = (v: number) => {
+    const k = Math.min(1, Math.max(0, v));
+    return k * k * (3 - 2 * k);
+  };
+  return (x: number, y: number) => ease(off.l ? x / band.x : 1) * ease(off.r ? (W - x) / band.x : 1) * ease(off.t ? y / band.y : 1) * ease(off.b ? (H - y) / band.y : 1);
+}
+
+/* The dot field: the picture shaded into the grid, the grid behind it, and no dot wherever the words are. */
+function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { fill?: string; ring?: string; field?: string; fieldOp?: number; ground?: string; clip?: Rect; on?: string } = {}) {
+  const { ctx, d, p, W, H, keep } = q;
+  const e = q.edits.art ?? {};
+  const pic = e.hidden ? null : img;
+  if (!pic && d.field === "none") return;
+  const fill = over.fill ?? p.fill;
+  const g: Grid = grid(W, H, d.dot, d.gap);
+  const rect = pic && area ? pictureRect(d, pic, area, W, H, e) : undefined;
+  const st = pic && rect
+    ? shade(pic, g, rect, shaderOpts(d, fill, over.ground ?? p.bg))
     : new Uint8Array(g.cols * g.rows);
   const rad = d.dot / 2;
   const ringR = Math.max(0.1, rad - RING / 2);
-  const filled = new Path2D();
-  const hollow = new Path2D();
+  const content = pic && rect ? contentOf(pic, d) : undefined;
+  const box = content && rect ? { x: rect.x + content.x * rect.w, y: rect.y + content.y * rect.h, w: content.w * rect.w, h: content.h * rect.h } : undefined;
+  const frame = over.clip;
+  const local = box && frame ? { x: box.x - frame.x, y: box.y - frame.y, w: box.w, h: box.h } : box;
+  const fadeAt = local ? (frame ? fadeFor(local, frame.w, frame.h) : fadeFor(local, W, H)) : undefined;
+  const fade = fadeAt ? (x: number, y: number) => (frame ? fadeAt(x - frame.x, y - frame.y) : fadeAt(x, y)) : undefined;
+  /* One path per level of the fade (a single one when nothing fades). */
+  const LEVELS = fade ? 12 : 1;
+  const filled = Array.from({ length: LEVELS }, () => new Path2D());
+  const hollow = Array.from({ length: LEVELS }, () => new Path2D());
   const field = new Path2D();
+  const art = new Runs(g.pitch);
+  const ground = new Runs(g.pitch);
   for (let r = 0; r < g.rows; r++)
     for (let c = 0; c < g.cols; c++) {
       const v = st[r * g.cols + c];
       if (v === 3) continue;
       const x = g.ox + (c + 0.5) * g.pitch;
       const y = g.oy + (r + 0.5) * g.pitch;
+      if (frame && (x - rad < frame.x + 1 || x + rad > right(frame) - 1 || y - rad < frame.y + 1 || y + rad > bottom(frame) - 1)) continue;
       /* No dot ever sits under the words. */
-      if (covered(x, y, rad)) continue;
-      if (v === 2) {
-        filled.moveTo(x + rad, y);
-        filled.arc(x, y, rad, 0, Math.PI * 2);
-      } else if (v === 1 && d.field !== "faint") {
-        hollow.moveTo(x + ringR, y);
-        hollow.arc(x, y, ringR, 0, Math.PI * 2);
+      if (covered(keep, x, y, rad)) continue;
+      if (v === 2 || (v === 1 && d.field !== "faint")) {
+        const a = fade ? fade(x, y) : 1;
+        const level = Math.min(LEVELS - 1, Math.ceil(a * LEVELS) - 1);
+        if (fade && (level < 0 || a < 0.04)) continue;
+        const path = v === 2 ? filled[level] : hollow[level];
+        const rr = v === 2 ? rad : ringR;
+        path.moveTo(x + rr, y);
+        path.arc(x, y, rr, 0, Math.PI * 2);
+        art.add(x, y, rad);
       } else if (d.field !== "none") {
         /* The faint grid is two-level: the subject's rings join the field. */
         const fr = d.field === "rings" ? ringR : rad;
         field.moveTo(x + fr, y);
         field.arc(x, y, fr, 0, Math.PI * 2);
+        ground.add(x, y, rad);
       }
     }
-  ctx.globalAlpha = p.fieldOp;
+  ctx.globalAlpha = over.fieldOp ?? p.fieldOp;
   if (d.field === "rings") {
-    ctx.strokeStyle = p.field;
+    ctx.strokeStyle = over.field ?? p.field;
     ctx.lineWidth = RING;
     ctx.stroke(field);
   } else {
-    ctx.fillStyle = p.field;
+    ctx.fillStyle = over.field ?? p.field;
     ctx.fill(field);
   }
+  for (let i = 0; i < LEVELS; i++) {
+    ctx.globalAlpha = (i + 1) / LEVELS;
+    ctx.strokeStyle = over.ring ?? p.ring;
+    ctx.lineWidth = RING;
+    ctx.stroke(hollow[i]);
+    ctx.fillStyle = fill;
+    ctx.fill(filled[i]);
+  }
   ctx.globalAlpha = 1;
-  ctx.strokeStyle = p.ring;
-  ctx.lineWidth = RING;
-  ctx.stroke(hollow);
-  ctx.fillStyle = p.fill;
-  ctx.fill(filled);
+  const on = over.on ? { over: [over.on] } : {};
+  if (ground.rects.length) q.layers.push({ id: "field", kind: "art", box: frame ?? { x: 0, y: 0, w: W, h: H }, ink: ground.rects, bleeds: true, ...on, can: FIXED });
+  if (box && art.rects.length) q.layers.push({ id: "art", kind: "art", box, ink: art.rects, ...(fade ? { fades: true } : {}), ...on, can: CAN[d.template].art ?? FIXED });
+}
+
+function shaderOpts(d: Design, fill: string, bg: string) {
+  return {
+    dot: d.dot,
+    gap: d.gap,
+    render: d.render,
+    fillPct: d.fillPct,
+    hollowPct: d.hollowPct,
+    localContrast: 3,
+    edgeAmt: 0,
+    dither: d.dither,
+    invert: d.invert,
+    cutout: d.cutout,
+    keyTol: d.keyTol,
+    dotsLight: hexLightness(fill) > hexLightness(bg),
+  };
+}
+
+/* ---- Drawing ---- */
+
+/*
+ * Draws the design onto the canvas, at whatever multiple of the image's size the canvas is, with its layer edits.
+ * Returns where the headline landed and every layer as drawn.
+ */
+export function drawDesign(canvas: AnyCanvas, d: Design, img: Picture | null, fonts: Fonts, edits: Record<string, LayerEdit> = {}): Drawn {
+  const f = frameOf(d);
+  const { w: W, h: H } = f;
+  const { S, cuts } = stageOf(d.size, W, H);
+  const p = paletteOf(d);
+  const ctx = canvas.getContext("2d");
+  const s = canvas.width / W;
+  const u = f.u ?? (Math.sqrt(S.w * Math.min(S.h, S.w * 1.6)) / 900) * (S.w / S.h > 2.2 ? 1.05 : 1.2);
+  const floor = (SMALL_FLOOR * W) / platformOf(d.size, W, H).shown;
+  const q: Pen = { ctx, d, W, H, S, cuts, u, m: 32 * u, floor: Math.ceil(floor), p, fonts, edits, layers: [], keep: [] };
+  for (const [what, text] of Object.entries({ headline: d.headline, body: d.body, cards: d.cards, footer: d.footer, "partner name": d.partnerName, lists: d.lists, cta: d.cta, stat: d.stat })) if (text) assertGlyphs(what, text);
+  if (d.badge) assertGlyphs("badge", d.badge.toUpperCase(), "data");
+  ctx.setTransform(s, 0, 0, s, 0, 0);
+  ctx.fillStyle = p.bg;
+  ctx.fillRect(0, 0, W, H);
+  ctx.textBaseline = "alphabetic";
+  ctx.textAlign = "left";
+  const draw = { banner: drawBanner, products: drawProducts, social: drawSocial, cards: drawCardsPost, customer: drawCustomer, mark: drawMarkOnly }[d.template];
+  const out = draw(q, img);
+  ctx.globalAlpha = 1;
+  ctx.letterSpacing = "0px";
+  ctx.textAlign = "left";
+  return { ...out, layers: q.layers };
+}
+
+const sizeName = (q: Pen) => `${q.d.size === "custom" ? "" : `${q.d.size} `}${q.W}x${q.H}`;
+
+/* The words of a layout as one column: an optional chip, the headline, and the line under it. */
+type Column = { badge?: Block; head?: Block; body?: Block; h: number; w: number; gapA: number; gapB: number };
+
+function column(q: Pen, o: { size: number; body: number; maxW: number; maxH: number; least?: number; headFace?: Face }): Column | undefined {
+  const { ctx, d, fonts } = q;
+  const eh = q.edits.headline ?? {};
+  const eb = q.edits.body ?? {};
+  const hf = o.headFace ?? headFace(fonts);
+  const least = Math.max(q.floor, o.least ?? q.floor * 1.15);
+  const make = (size: number, k: number): Column | undefined => {
+    const badge = d.badge.trim() ? setBlock(ctx, d.badge.trim(), chipFace(fonts), Math.max(q.floor, size * 0.26), o.maxW) : undefined;
+    if (badge && (badge.lines.length > 1 || badge.w > o.maxW - badge.size * 1.8)) return undefined;
+    const head = d.headline.trim() ? setBlock(ctx, d.headline.trim(), hf, size * k, o.maxW) : undefined;
+    const bodySize = Math.max(q.floor, Math.min(o.body, size * 0.62)) * (eb.scale ?? 1);
+    const body = d.body.trim() ? setBlock(ctx, d.body.trim(), bodyFace(fonts), bodySize, o.maxW) : undefined;
+    if ((head && head.w > o.maxW + 0.5) || (body && body.w > o.maxW + 0.5)) return undefined;
+    if (body && body.size < q.floor - 0.01) return undefined;
+    const gapA = badge ? badge.size * 0.95 : 0;
+    const gapB = head && body ? Math.max(body.size * 0.45, size * 0.22) : 0;
+    return { badge, head, body, gapA, gapB, w: Math.max(head?.w ?? 0, body?.w ?? 0, badge ? badge.w + badge.size * 1.8 : 0), h: (badge ? badge.size * 1.9 + gapA : 0) + (head?.h ?? 0) + gapB + (body?.h ?? 0) };
+  };
+  /* The layout's own size first; an edit scales that, and has to fit as it is. */
+  for (let size = o.size; ; size *= 0.965) {
+    const at = Math.max(size, least);
+    const c = make(at, 1);
+    if (c && c.h <= o.maxH + 0.5) {
+      const k = eh.scale ?? 1;
+      if (k === 1) return c;
+      const scaled = make(at, k);
+      if (!scaled || scaled.h > o.maxH + 0.5 || (scaled.head && scaled.head.size < q.floor - 0.01)) return undefined;
+      return scaled;
+    }
+    if (at <= least) return undefined;
+  }
+}
+
+/* Draws a column and reports its layers. `x` and `w` are the column's, `top` its first line's top. */
+function putColumn(q: Pen, c: Column, x: number, top: number, w: number, align: "left" | "center" | "right") {
+  const { ctx, d, p } = q;
+  const eh = q.edits.headline ?? {};
+  const eb = q.edits.body ?? {};
+  const a = eh.align ?? align;
+  const dx = (eh.dx ?? 0) * q.W;
+  let y = top + (eh.dy ?? 0) * q.H;
+  if (c.badge) {
+    const b = c.badge;
+    const bw = b.w + b.size * 1.8;
+    const bh = b.size * 1.9;
+    const bx = (a === "center" ? x + (w - bw) / 2 : a === "right" ? x + w - bw : x) + dx;
+    const ink = onFill(p);
+    ctx.fillStyle = p.fill;
+    ctx.beginPath();
+    ctx.roundRect(bx, y, bw, bh, bh / 2);
+    ctx.fill();
+    const r = drawBlock(ctx, b, bx + b.size * 0.9 + b.size * 0.04, y + (bh - b.h) / 2, "left", b.w, ink);
+    q.layers.push({ id: "badge", kind: "text", box: { x: bx, y, w: bw, h: bh }, ink: [{ x: bx, y, w: bw, h: bh }], text: { asked: d.badge.trim(), drawn: b.lines.join("\n"), size: b.size, color: ink, ground: [p.fill] }, can: CAN[d.template].badge });
+    void r;
+    y += bh + c.gapA;
+  }
+  if (c.head) {
+    const r = drawBlock(ctx, c.head, x + dx, y, a, w, p.text);
+    q.layers.push({ id: "headline", kind: "text", box: r.box, ink: r.ink, text: { asked: d.headline.trim(), drawn: c.head.lines.join("\n"), size: c.head.size, color: p.text, ground: [p.bg] }, can: CAN[d.template].headline });
+    y += c.head.h + c.gapB;
+  }
+  if (c.body) {
+    const r = drawBlock(ctx, c.body, x + dx + (eb.dx ?? 0) * q.W, y + (eb.dy ?? 0) * q.H, a, w, p.ink);
+    q.layers.push({ id: "body", kind: "text", box: r.box, ink: r.ink, text: { asked: d.body.trim(), drawn: c.body.lines.join("\n"), size: c.body.size, color: p.ink, ground: [p.bg] }, can: CAN[d.template].body });
+  }
+}
+
+/* The boxes a column's words take, before it is drawn, so the dots can keep clear. */
+function columnBoxes(q: Pen, c: Column, x: number, top: number, w: number, align: "left" | "center" | "right"): Rect[] {
+  const eh = q.edits.headline ?? {};
+  const eb = q.edits.body ?? {};
+  const a = eh.align ?? align;
+  const at = (bw: number) => (a === "center" ? x + (w - bw) / 2 : a === "right" ? x + w - bw : x) + (eh.dx ?? 0) * q.W;
+  let y = top + (eh.dy ?? 0) * q.H;
+  const out: Rect[] = [];
+  if (c.badge) {
+    const bw = c.badge.w + c.badge.size * 1.8;
+    out.push({ x: at(bw), y, w: bw, h: c.badge.size * 1.9 });
+    y += c.badge.size * 1.9 + c.gapA;
+  }
+  if (c.head) {
+    out.push({ x: at(c.head.w), y, w: c.head.w, h: c.head.h });
+    y += c.head.h + c.gapB;
+  }
+  if (c.body) out.push({ x: at(c.body.w) + (eb.dx ?? 0) * q.W, y: y + (eb.dy ?? 0) * q.H, w: c.body.w, h: c.body.h });
+  return out;
+}
+
+/* Two ways to place words beside something the platform covers: above it, or clear of it to the side. */
+function regions(q: Pen, area: Rect): Rect[] {
+  const cut = q.cuts.find((c) => hits(area, c));
+  if (!cut) return [area];
+  const gap = q.m * 0.5;
+  const out: Rect[] = [];
+  const above = { ...area, h: cut.y - gap * 0.5 - area.y };
+  if (above.h > q.floor * 1.3) out.push(above);
+  const side = cut.x < q.W / 2 ? { ...area, x: right(cut) + gap, w: right(area) - right(cut) - gap } : { ...area, w: cut.x - gap - area.x };
+  if (side.w > q.W * 0.15) out.push(side);
+  return out.length ? out : [area];
+}
+
+/* The area left when the logo takes its corner. */
+function clearOfLogo(q: Pen, area: Rect, logo: Rect | undefined): Rect {
+  if (!logo) return area;
+  const l = grow(logo, logoClear(logo.h) + q.m * 0.3);
+  if (!hits(area, l)) return area;
+  const mid = logo.y + logo.h / 2 < area.y + area.h / 2;
+  return mid ? { ...area, y: bottom(l), h: bottom(area) - bottom(l) } : { ...area, h: l.y - area.y };
 }
 
 /*
- * The numbered cards on Context's ground: the palette's colour with its dot
- * grid kept clear of the words, white cards with the blue number, and the
- * logo and address along the bottom.
+ * Banner: the logo in a corner, the headline in the brand color beside or above the picture in dots.
  */
-function drawContextCards(
-  ctx: Ctx,
-  d: Design,
-  fonts: Fonts,
-): Drawn {
-  const { w: W, h: H } = frameOf(d);
-  const p = paletteOf(d);
-  const k = Math.sqrt((W * H) / (1200 * 630));
-  const light = hexLightness(p.bg) > 0.9;
-  const cs = imageDoc().cards;
-  const st: CardsStyle = {
-    display: fonts.sans,
-    text: fonts.sans,
-    title: p.text,
-    titleWeight: 500,
-    titleTrack: -0.02,
-    footer: p.text,
-    card: {
-      fill: tokenColor(cs.fill),
-      radius: cs.radius,
-      edge: light ? tokenColor(cs.edge) : undefined,
-      shadow: cs.shadow,
-    },
-    heading: tokenColor(cs.heading),
-    headingTrack: -0.01,
-    body: tokenColor(cs.body),
-    badge: { fill: tokenColor(cs.badge), ink: tokenColor(cs.badgeInk) },
-    logo: (c, x, cy, h) => {
-      drawLogo(c, x, cy - h / 2, h, p);
-      return (LOGO_W / 32) * h;
-    },
-    logoW: (_c, h) => (LOGO_W / 32) * h,
-  };
-  const content = {
-    title: d.headline,
-    cards: d.cards,
-    footer: d.footer,
-    logo: d.logo,
-    titleSize: d.textSize,
-  };
-  const L = layoutCards(ctx, W, H, k, content, st);
-  const keep = cardsKeep(L);
-  const pad = 10 * k;
-  drawDots(ctx, d, p, null, (x, y, r) =>
-    keep.some(
-      (b) =>
-        x + r > b.x - pad &&
-        x - r < b.x + b.w + pad &&
-        y + r > b.y - pad &&
-        y - r < b.y + b.h + pad,
-    ),
-  );
-  drawCards(ctx, L, content, st);
+function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
+  const { d, S, W, H, m } = q;
+  const ratio = S.w / S.h;
+  const wide = ratio >= 1.2;
+  const strip = ratio >= 2.2;
+  const hasArt = !!img && !q.edits.art?.hidden;
+  const size = d.textSize ?? (strip ? Math.max(0.15 * S.h, q.floor * 1.6) : wide ? (64 * S.h) / 630 : (80 * W) / 1080);
+  const share = d.textWidth ?? (wide ? (hasArt ? (strip ? 0.5 : 0.45) : 0.8) : 1);
+  let logo = logoBox(q, "top-left");
+  const area: Rect = { x: S.x + m, y: S.y + m, w: Math.min(S.w - m * 2, wide ? S.w * share : (S.w - m * 2) * share), h: S.h - m * 2 };
+  if (d.textX !== undefined) area.x = d.textX * W;
+  const tall = !wide && hasArt;
+  const body = size * 0.42;
+  type Pick = { c: Column; r: Rect };
+  let best: Pick | undefined;
+  const aside = logo ? regions(q, { ...area, y: area.y }) : regions(q, area);
+  for (const raw of aside) {
+    /* Shifted clear of a covered corner, the logo goes with the words. */
+    const shifted = raw.x > area.x + 1;
+    const l = shifted && logo && !q.edits.logo?.anchor ? { ...logo, x: raw.x } : logo;
+    const r = clearOfLogo(q, raw, l);
+    /* Above a picture, the words take at most three fifths of the room. */
+    const c = column(q, { size, body, maxW: r.w, maxH: tall ? Math.min(r.h, S.h * 0.5) : r.h });
+    if (!c) continue;
+    const s = c.head?.size ?? c.body?.size ?? 1;
+    const was = best && (best.c.head?.size ?? best.c.body?.size ?? 1);
+    if (!best || s > was! * 1.12) {
+      best = { c, r };
+      if (l !== logo) best.r = { ...r, x: raw.x };
+    }
+  }
+  if (!best) throw tooLong(d.headline.length >= d.body.length ? "headline" : "body", sizeName(q));
+  const { c, r } = best;
+  if (logo && r.x > area.x + 1 && !q.edits.logo?.anchor) logo = { ...logo, x: r.x };
+  /* A third of the way down where there is room, as on the editor's link preview. */
+  const pref = d.textY !== undefined ? d.textY * H : tall || strip ? r.y + (strip ? Math.max(0, (r.h - c.h) * 0.3) : 0) : S.y + S.h * 0.3;
+  const top = d.textY !== undefined ? pref : Math.max(r.y, Math.min(pref, bottom(r) - c.h));
+  const boxes = columnBoxes(q, c, r.x, top, r.w, "left");
+  const words = boxes.length ? union(boxes) : { x: r.x, y: r.y, w: 0, h: 0 };
+  q.keep = [...boxes.map((b) => grow(b, 12)), ...(logo ? [grow(logo, Math.max(12, logoClear(logo.h)))] : [])];
+  const gap = m * 0.9;
+  const room: Rect = wide
+    ? { x: Math.max(right(words) + gap, S.x + S.w * 0.46), y: S.y + m * 0.55, w: 0, h: S.h - m * 1.1 }
+    : { x: S.x + m, y: bottom(words) + gap, w: S.w - m * 2, h: bottom(S) - m - bottom(words) - gap };
+  if (wide) room.w = right(S) - m * 0.8 - room.x;
+  if (logo && hits(grow(logo, logoClear(logo.h)), room)) {
+    const l = grow(logo, logoClear(logo.h) + 6);
+    if (logo.y > q.H / 2) room.h = l.y - room.y;
+    else if (wide) {
+      room.h -= bottom(l) - room.y;
+      room.y = bottom(l);
+    }
+  }
+  drawDots(q, img, room.w > 40 && room.h > 40 ? room : { x: S.x + m, y: S.y + m, w: S.w - m * 2, h: S.h - m * 2 });
+  putLogo(q, logo);
+  putColumn(q, c, r.x, top, r.w, "left");
+  return { text: words, area: room };
+}
+
+/*
+ * The social post: a big headline and a line under it, centred, and the picture in dots in the room left (below, or
+ * beside on a wide strip).
+ */
+export const BODY = 0.33;
+function drawSocial(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
+  const { d, S, W, H, m, fonts } = q;
+  const ratio = S.w / S.h;
+  const strip = ratio >= 2.2;
+  const hasArt = !!img && !q.edits.art?.hidden;
+  const size = d.textSize ?? (110 * Math.sqrt(S.w * Math.min(S.h, S.w * 1.4))) / 900;
+  const head: Face = { family: fonts.sans, weight: 400, tracking: -0.01, leading: 1.1 };
+  const logo = logoBox(q, "top-left");
+  const share = d.textWidth ?? (strip ? (hasArt ? 0.58 : 0.8) : ratio >= 1.2 ? 0.8 : 0.88);
+  let area: Rect = { x: S.x + (S.w * (1 - share)) / 2, y: S.y + m, w: S.w * share, h: S.h - m * 2 };
+  if (strip) area = { x: S.x + m, y: S.y + m, w: S.w * share, h: S.h - m * 2 };
+  if (d.textX !== undefined) area.x = d.textX * W - area.w / 2;
+  /* The area is trimmed for the logo only where they meet. */
+  area = clearOfLogo(q, area, logo);
+  let best: { c: Column; r: Rect } | undefined;
+  for (const r of regions(q, area)) {
+    const maxH = hasArt && !strip ? Math.min(r.h, S.h * (ratio >= 1.2 ? 0.56 : 0.6)) : r.h;
+    const c = column(q, { size, body: size * BODY * 1.1, maxW: r.w, maxH, headFace: head });
+    if (c && (!best || (c.head?.size ?? 0) > (best.c.head?.size ?? 0) * 1.12)) best = { c, r };
+  }
+  if (!best) throw tooLong(d.headline.length >= d.body.length ? "headline" : "body", sizeName(q));
+  const { c, r } = best;
+  const below = !strip && hasArt;
+  const top = d.textY !== undefined ? d.textY * H : below ? Math.max(r.y, S.y + S.h * 0.075) : Math.max(r.y, r.y + (r.h - c.h) / 2);
+  const boxes = columnBoxes(q, c, r.x, top, r.w, "center");
+  const words = boxes.length ? union(boxes) : { x: r.x, y: r.y, w: 0, h: 0 };
+  const pad = Math.max(12, 0.13 * size);
+  q.keep = [...boxes.map((b) => grow(b, pad)), ...(logo ? [grow(logo, Math.max(12, logoClear(logo.h)))] : [])];
+  const gap = Math.max(pad, 0.035 * S.h);
+  let room: Rect = strip
+    ? { x: Math.max(right(words) + gap * 2, S.x + S.w * 0.6), y: S.y + m * 0.6, w: 0, h: S.h - m * 1.2 }
+    : { x: S.x + 0.06 * S.w, y: bottom(words) + gap, w: 0.88 * S.w, h: bottom(S) - Math.max(m * 0.8, 0.04 * S.h) - bottom(words) - gap };
+  if (strip) room.w = right(S) - m * 0.8 - room.x;
+  if (logo && hits(grow(logo, logoClear(logo.h)), room)) {
+    const l = grow(logo, logoClear(logo.h) + 6);
+    room = logo.y > S.y + S.h / 2 ? { ...room, h: l.y - room.y } : { ...room, y: bottom(l), h: bottom(room) - bottom(l) };
+  }
+  drawDots(q, img, room.w > 40 && room.h > 40 ? room : undefined);
+  putLogo(q, logo);
+  putColumn(q, c, r.x, top, r.w, "center");
+  return { text: words, area: room };
+}
+
+/* The mark alone on the palette's ground: a profile picture. */
+function drawMarkOnly(q: Pen): Omit<Drawn, "layers"> {
+  const { ctx, S, p } = q;
+  const e = q.edits.logo ?? {};
+  const side = Math.min(S.w, S.h);
+  const w = side * 0.62 * (e.scale ?? 1);
+  const h = w / markRatio();
+  const r = { x: S.x + (S.w - w) / 2, y: S.y + (S.h - h) / 2, w, h };
+  q.keep = [grow(r, logoClear(h))];
+  drawDots(q, null, undefined);
+  drawMark(ctx, r.x, r.y, h, p.mark === p.bg ? p.ink : p.mark);
+  q.layers.push({ id: "logo", kind: "logo", box: r, logo: { clear: logoClear(h), min: logoMin(q.W, platformOf(q.d.size, q.W, q.H).shown) }, can: CAN.mark.logo });
   return { text: { x: 0, y: 0, w: 0, h: 0 } };
+}
+
+/*
+ * The burst: rays of dots spreading from a point, small rings near it and up top, growing into solid dots further out
+ * and lower down, like light catching a sphere. It runs off the frame on purpose.
+ */
+function drawBurst(q: Pen) {
+  const { ctx, d, p, W, H, S, keep } = q;
+  const e = q.edits.art ?? {};
+  if (!d.burst || e.hidden) return;
+  const wide = S.w / S.h >= 1.2;
+  const cx = (d.imgX ?? (wide ? 1.02 : 0.95)) * W + (e.dx ?? 0) * W;
+  const cy = (d.imgY !== undefined ? d.imgY * H : wide ? S.y + S.h * 0.5 : S.y + S.h * 0.8) + (e.dy ?? 0) * H;
+  const R = ((Math.sqrt(W * S.h) * (d.imgScale ?? 100)) / 100) * (e.scale ?? 1);
+  const rays = 44;
+  const step = (Math.PI * 2) / rays;
+  /* Another seed turns it. */
+  const turn = (((d.seed || 1) - 1) * step * 0.618) % step;
+  /* It ends in a round edge, so it reads as one shape. */
+  const far = R * 0.78;
+  const filled = new Path2D();
+  const hollow = new Path2D();
+  const ink: Rect[] = [];
+  let ring = 0;
+  for (let r = R * 0.12; r < far; r *= 1.14, ring++) {
+    const off = ring % 2 ? step / 2 : 0;
+    for (let i = 0; i < rays; i++) {
+      const a = i * step + off + turn;
+      const x = cx + Math.cos(a) * r;
+      const y = cy + Math.sin(a) * r;
+      /* Lower down is lit: 0 straight up, 1 straight down. */
+      const lit = (1 + Math.sin(a)) / 2;
+      const lift = Math.min(1, r / (R * 0.7));
+      const rad = Math.min(r * step * 0.4, R * 0.036) * (0.35 + 0.65 * lit) * (0.45 + 0.55 * lift);
+      if (rad < 1.2) continue;
+      if (x + rad < 0 || x - rad > W || y + rad < 0 || y - rad > H) continue;
+      if (covered(keep, x, y, rad)) continue;
+      ink.push({ x: x - rad, y: y - rad, w: rad * 2, h: rad * 2 });
+      if (lit < 0.3 || lift < 0.35) {
+        const rr = Math.max(0.5, rad - RING);
+        hollow.moveTo(x + rr, y);
+        hollow.arc(x, y, rr, 0, Math.PI * 2);
+      } else {
+        filled.moveTo(x + rad, y);
+        filled.arc(x, y, rad, 0, Math.PI * 2);
+      }
+    }
+  }
+  ctx.strokeStyle = p.ring;
+  ctx.lineWidth = RING * 1.6;
+  ctx.stroke(hollow);
+  ctx.fillStyle = p.fill;
+  ctx.fill(filled);
+  if (ink.length) q.layers.push({ id: "art", kind: "art", box: { x: cx - far, y: cy - far, w: far * 2, h: far * 2 }, ink, bleeds: true, can: CAN[d.template].art ?? FIXED });
 }
 
 /*
@@ -540,58 +886,6 @@ function logoCut(img: Picture, ink: string | null) {
 }
 
 /*
- * The burst: rays of dots spreading from a point, small rings near it and
- * up top, growing into solid dots further out and lower down, like light
- * catching a sphere.
- */
-function drawBurst(
-  ctx: Ctx,
-  d: Design,
-  p: Palette,
-  covered: (x: number, y: number, r: number) => boolean,
-) {
-  const { w: W, h: H } = frameOf(d);
-  const cx = d.imgX * W;
-  const cy = d.imgY * H;
-  const R = (Math.sqrt(W * H) * d.imgScale) / 100;
-  const rays = 44;
-  const step = (Math.PI * 2) / rays;
-  /* It ends in a round edge, so it reads as one shape. */
-  const far = R * 0.78;
-  const filled = new Path2D();
-  const hollow = new Path2D();
-  let ring = 0;
-  for (let r = R * 0.12; r < far; r *= 1.14, ring++) {
-    const off = ring % 2 ? step / 2 : 0;
-    for (let i = 0; i < rays; i++) {
-      const a = i * step + off;
-      const x = cx + Math.cos(a) * r;
-      const y = cy + Math.sin(a) * r;
-      /* Lower down is lit: 0 straight up, 1 straight down. */
-      const lit = (1 + Math.sin(a)) / 2;
-      const grow = Math.min(1, r / (R * 0.7));
-      const rad = Math.min(r * step * 0.4, R * 0.036) * (0.35 + 0.65 * lit) * (0.45 + 0.55 * grow);
-      if (rad < 1.2) continue;
-      if (x + rad < 0 || x - rad > W || y + rad < 0 || y - rad > H) continue;
-      if (covered(x, y, rad)) continue;
-      if (lit < 0.3 || grow < 0.35) {
-        const rr = Math.max(0.5, rad - RING);
-        hollow.moveTo(x + rr, y);
-        hollow.arc(x, y, rr, 0, Math.PI * 2);
-      } else {
-        filled.moveTo(x + rad, y);
-        filled.arc(x, y, rad, 0, Math.PI * 2);
-      }
-    }
-  }
-  ctx.strokeStyle = p.ring;
-  ctx.lineWidth = RING * 1.6;
-  ctx.stroke(hollow);
-  ctx.fillStyle = p.fill;
-  ctx.fill(filled);
-}
-
-/*
  * Words set in round dots: the letters drawn bold into a mask, then a dot
  * wherever a cell of the grid is mostly ink. Drawn in the current fill.
  */
@@ -640,195 +934,485 @@ export function dotText(
   ctx.fill(dots);
 }
 
-/*
- * A customer story: the brand logo top left, the customer's logo top
- * right, a big number in dots with a line or two under it, and a burst of
- * dots behind. The words drag together; elsewhere drags the burst.
- */
-function drawCustomer(
-  ctx: Ctx,
-  d: Design,
-  img: Picture | null,
-  fonts: Fonts,
-): Drawn {
-  const { w: W, h: H, u } = frameOf(d);
-  const p = paletteOf(d);
-  const m = 32 * u;
-  ctx.textBaseline = "alphabetic";
 
-  /* The words, measured first so the dots keep clear of them. */
-  const big = d.textSize;
-  const statSize = big * 2;
-  const max = d.textWidth * W;
-  ctx.font = `700 ${statSize}px ${fonts.sans}`;
-  ctx.letterSpacing = `${0.03 * statSize}px`;
-  const stat = d.stat.trim() ? wrap(ctx, d.stat, Math.max(max, W - 2 * m)) : [];
-  const statW = stat.map((l) => ctx.measureText(l).width);
-  ctx.font = `500 ${big}px ${fonts.sans}`;
-  ctx.letterSpacing = `${-0.03 * big}px`;
-  const head = d.headline.trim() ? wrap(ctx, d.headline, max) : [];
-  const headW = head.map((l) => ctx.measureText(l).width);
-  const statLh = statSize * 0.86;
-  const headLh = big * 1.04;
-  const gap = stat.length && head.length ? big * 0.12 : 0;
-  const tx = d.textX * W;
-  const ty = d.textY * H;
-  const text: Rect = {
-    x: tx,
-    y: ty,
-    w: Math.max(1, ...statW, ...headW),
-    h: stat.length * statLh + gap + head.length * headLh,
-  };
+/*
+ * A customer story: the brand logo top left, the customer's logo top right, a big number in dots with a line or two
+ * under it, and a burst of dots behind.
+ */
+function drawCustomer(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
+  const { ctx, d, S, W, H, m, u, p, fonts } = q;
+  const eh = q.edits.headline ?? {};
+  const ep = q.edits.partner ?? {};
+  const es = q.edits.stat ?? {};
+  let logo = logoBox(q, "top-left");
+  const wide = S.w / S.h >= 1.2;
 
   /* The customer's logo, or their name, top right. */
-  const ph = d.partnerSize * u;
+  const ph = d.partnerSize * u * (ep.scale ?? 1);
   const cut = img ? logoCut(img, d.partnerWhite ? p.ink : null) : null;
-  let partnerBox: Rect | null = null;
   const name = d.partnerName.trim();
+  let partner: Rect | null = null;
+  let nameBlock: Block | undefined;
+  const roomRight = S.w - m * 2 - (logo ? logo.w + m * 2 : 0);
   if (cut) {
-    const pw = Math.min((cut.width / cut.height) * ph, W * 0.4);
+    const pw = Math.min((cut.width / cut.height) * ph, S.w * 0.4, roomRight);
     const h = (pw / cut.width) * cut.height;
-    partnerBox = { x: W - m - pw, y: m + (ph - h) / 2, w: pw, h };
+    partner = { x: right(S) - m - pw, y: S.y + m + ((logo?.h ?? ph) - h) / 2, w: pw, h };
+    if (partner.y < S.y + m * 0.4) partner.y = S.y + m * 0.4;
   } else if (name) {
-    ctx.font = `600 ${ph}px ${fonts.sans}`;
-    ctx.letterSpacing = `${-0.02 * ph}px`;
-    const nw = ctx.measureText(name).width;
-    partnerBox = { x: W - m - nw, y: m, w: nw, h: ph };
+    nameBlock = fitBlock(ctx, name, { family: fonts.sans, weight: 600, tracking: -0.02, leading: 1.1 }, ph, q.floor, roomRight, ph * 1.2);
+    if (!nameBlock) throw tooLong("partner name", sizeName(q));
+    partner = { x: right(S) - m - nameBlock.w, y: S.y + m + ((logo?.h ?? nameBlock.h) - nameBlock.h) / 2, w: nameBlock.w, h: nameBlock.h };
   }
-  const logoBox: Rect = { x: m, y: m, w: (LOGO_W / 32) * 32 * u, h: 32 * u };
-  const keep = [text, ...(d.logo ? [logoBox] : []), ...(partnerBox ? [partnerBox] : [])];
+
+  /* The words, measured first so the dots keep clear of them. */
+  const statText = d.stat.trim();
+  const headText = d.headline.trim();
+  const headTop = Math.max(S.y + m, logo ? bottom(logo) + logoClear(logo.h) + m * 0.4 : 0, partner ? bottom(partner) + m * 0.4 : 0);
+  const start = d.textSize ?? (wide ? (94 * S.h) / 630 : (S.w / S.h < 0.7 ? 120 : 100) * (S.w / 1080));
+  const area: Rect = { x: S.x + (wide ? m : Math.max(m, 0.06 * S.w)), y: headTop, w: S.w * (d.textWidth ?? (wide ? 0.58 : 0.86)), h: bottom(S) - m - headTop };
+  if (d.textX !== undefined) area.x = d.textX * W;
+  const hf: Face = { family: fonts.sans, weight: 500, tracking: -0.03, leading: 1.06 };
+  type Words = { big: number; statSize: number; stat: string[]; head?: Block; h: number; w: number; gap: number; statLh: number };
+  const measure = (big: number, r: Rect, hk: number, sk: number): Words | undefined => {
+    const statSize = big * 2 * sk;
+    setFace(ctx, { family: fonts.sans, weight: 700, tracking: 0.03, leading: 1 }, statSize);
+    const stat = statText ? wrap(ctx, statText, Math.max(r.w, right(S) - m - r.x)) : [];
+    const statW = stat.map((l) => ctx.measureText(l).width);
+    ctx.letterSpacing = "0px";
+    if (statW.some((w) => w > right(S) - m - r.x)) return undefined;
+    const head = headText ? setBlock(ctx, headText, hf, big * hk, r.w) : undefined;
+    if (head && head.w > r.w + 0.5) return undefined;
+    const statLh = statSize * 0.86;
+    const gap = stat.length && head ? big * 0.12 : 0;
+    return { big, statSize, stat, head, statLh, gap, h: stat.length * statLh + gap + (head?.h ?? 0), w: Math.max(0, ...statW, head?.w ?? 0) };
+  };
+  let best: { w: Words; r: Rect } | undefined;
+  for (const r of regions(q, area)) {
+    for (let big = start; ; big *= 0.965) {
+      const at = Math.max(big, q.floor * 1.15);
+      const w = measure(at, r, 1, 1);
+      if (w && w.h <= r.h + 0.5) {
+        if (!best || at > best.w.big * 1.12) {
+          const edited = (eh.scale ?? 1) !== 1 || (es.scale ?? 1) !== 1 ? measure(at, r, eh.scale ?? 1, es.scale ?? 1) : w;
+          if (edited && edited.h <= r.h + 0.5 && (!edited.head || edited.head.size >= q.floor - 0.01)) best = { w: edited, r };
+        }
+        break;
+      }
+      if (at <= q.floor * 1.15) break;
+    }
+  }
+  if (!best) throw tooLong(headText ? "headline" : "stat", sizeName(q));
+  const { w, r } = best;
+  if (logo && r.x > area.x + 1) logo = { ...logo, x: r.x };
+  const pref = d.textY !== undefined ? d.textY * H : S.y + S.h * (wide ? 0.21 : 0.16);
+  const ty = (d.textY !== undefined ? pref : Math.max(r.y, Math.min(pref, bottom(r) - w.h))) + (eh.dy ?? 0) * H;
+  const tx = r.x + (eh.dx ?? 0) * W;
+  const statH = w.stat.length * w.statLh;
+  const statBox: Rect | undefined = w.stat.length ? { x: tx, y: ty, w: w.w, h: statH } : undefined;
+  const headAt = ty + statH + w.gap;
+  const text: Rect = { x: tx, y: ty, w: Math.max(1, w.w), h: w.h };
   const pad = 16 * u;
-  const covered = (x: number, y: number, r: number) =>
-    keep.some(
-      (b) =>
-        x + r > b.x - pad &&
-        x - r < b.x + b.w + pad &&
-        y + r > b.y - pad &&
-        y - r < b.y + b.h + pad,
-    );
-  if (d.field !== "none") drawDots(ctx, d, p, null, covered);
-  if (d.burst) drawBurst(ctx, d, p, covered);
+  q.keep = [grow(text, pad), ...(logo ? [grow(logo, Math.max(pad, logoClear(logo.h)))] : []), ...(partner ? [grow(partner, pad)] : [])];
+  if (d.field !== "none") drawDots(q, null, undefined);
+  drawBurst(q);
 
-  if (d.logo) drawLogo(ctx, logoBox.x, logoBox.y, logoBox.h, p, p.ink);
-  if (cut && partnerBox)
-    ctx.drawImage(cut, partnerBox.x, partnerBox.y, partnerBox.w, partnerBox.h);
-  else if (partnerBox) {
-    ctx.fillStyle = p.ink;
-    ctx.font = `600 ${ph}px ${fonts.sans}`;
-    ctx.letterSpacing = `${-0.02 * ph}px`;
-    ctx.fillText(name, partnerBox.x, partnerBox.y + ph * 0.84);
+  putLogo(q, logo);
+  if (cut && partner) {
+    ctx.drawImage(cut, partner.x, partner.y, partner.w, partner.h);
+    q.layers.push({ id: "partner", kind: "key", box: partner, can: CAN.customer.partner });
+  } else if (partner && nameBlock) {
+    const out = drawBlock(ctx, nameBlock, partner.x, partner.y, "left", nameBlock.w, p.ink);
+    q.layers.push({ id: "partner", kind: "text", box: out.box, ink: out.ink, text: { asked: name, drawn: nameBlock.lines.join("\n"), size: nameBlock.size, color: p.ink, ground: [p.bg] }, can: CAN.customer.partner });
   }
-
-  ctx.fillStyle = p.text;
-  stat.forEach((l, i) =>
-    dotText(ctx, l, tx, ty + i * statLh, statSize, statLh, fonts.sans),
-  );
-  const headTop = ty + stat.length * statLh + gap;
-  ctx.font = `500 ${big}px ${fonts.sans}`;
-  ctx.letterSpacing = `${-0.03 * big}px`;
-  head.forEach((l, i) => ctx.fillText(l, tx, headTop + big * 0.9 + i * headLh));
-  ctx.letterSpacing = "0px";
+  if (statBox) {
+    ctx.fillStyle = p.text;
+    w.stat.forEach((l, i) => dotText(ctx, l, tx, ty + i * w.statLh, w.statSize, w.statLh, fonts.sans));
+    q.layers.push({ id: "stat", kind: "text", box: statBox, ink: w.stat.map((_, i) => ({ x: tx, y: ty + i * w.statLh + w.statSize * 0.06, w: w.w, h: w.statSize * 0.78 })), text: { asked: statText, drawn: w.stat.join("\n"), size: w.statSize, color: p.text, ground: [p.bg] }, can: CAN.customer.stat });
+  }
+  if (w.head) {
+    const out = drawBlock(ctx, w.head, tx, headAt, eh.align ?? "left", r.w, p.text);
+    q.layers.push({ id: "headline", kind: "text", box: out.box, ink: out.ink, text: { asked: headText, drawn: w.head.lines.join("\n"), size: w.head.size, color: p.text, ground: [p.bg] }, can: CAN.customer.headline });
+  }
   return { text };
 }
 
-/* The social headline's second voice: this share of the headline's size. */
-export const BODY = 0.33;
-
 /*
- * The social post: a big headline and a line under it, centred at the top,
- * and the picture in dots filling the room left below. The picture is placed
- * within that room, so it stays put whatever the post's shape.
+ * The products template: logo, headline and a button on one side; on the other, a panel in the brand colour with a ring
+ * grid, the product lists under Doto labels, and the picture (if any) shaded into the panel's grid.
  */
-function drawSocial(
-  ctx: Ctx,
-  d: Design,
-  img: Picture | null,
-  fonts: Fonts,
-): Drawn {
-  const { w: W, h: H, u } = frameOf(d);
-  const p = paletteOf(d);
-  const max = d.textWidth * W;
-  const cx = d.textX * W;
-  const top = d.textY * H;
-  const big = d.textSize;
-  const small = big * BODY;
-  ctx.textBaseline = "alphabetic";
-  ctx.textAlign = "center";
+function drawProducts(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
+  const { ctx, d, S, W, H, p, fonts } = q;
+  const across = S.w / S.h >= 1.4;
+  /* One unit: the 1200 × 630 link preview's pixel. */
+  const k = across ? Math.max(S.h / 630, 0.72) : S.w / 1000;
+  const m = Math.min(24 * k, S.h * 0.06);
+  const cut = q.cuts[0];
+  const left = across && cut && cut.x < W / 2 ? right(cut) - S.x : 0;
+  const split = left ? Math.max(0.6, (left + S.w * 0.28) / S.w) : 0.49;
+  const full = across && left ? { y: 0, h: H } : { y: S.y, h: S.h };
+  const panel: Rect = across
+    ? { x: S.x + S.w * split, y: full.y + m, w: S.w * (1 - split) - m, h: full.h - 2 * m }
+    : { x: S.x + m, y: S.y + S.h * 0.4, w: S.w - 2 * m, h: S.h * 0.6 - m };
+  const side: Rect = across
+    ? { x: S.x + left, y: S.y, w: panel.x - S.x - left, h: S.h }
+    : { x: S.x, y: S.y, w: S.w, h: panel.y - S.y };
+  const panelBg = p.fill;
+  const panelInk = onFill(p);
+  const eh = q.edits.headline ?? {};
+  const el = q.edits.logo ?? {};
 
-  ctx.font = `400 ${big}px ${fonts.sans}`;
-  ctx.letterSpacing = `${-0.01 * big}px`;
-  const head = d.headline.trim() ? wrap(ctx, d.headline, max) : [];
-  const headW = head.map((l) => ctx.measureText(l).width);
-  ctx.font = `400 ${small}px ${fonts.sans}`;
-  ctx.letterSpacing = "0px";
-  const body = d.body.trim() ? wrap(ctx, d.body, max) : [];
-  const bodyW = body.map((l) => ctx.measureText(l).width);
+  /* The panel's contents first, as big as they fit: columns, then size. */
+  const groups = parseLists(d.lists);
+  const inner = grow(panel, -Math.max(22 * k, q.floor * 0.9));
+  /* Words inside the panel stay where the platform shows it. */
+  const safe: Rect = { x: Math.max(inner.x, S.x), y: Math.max(inner.y, S.y + 4), w: Math.min(right(inner), right(S)) - Math.max(inner.x, S.x), h: Math.min(bottom(inner), bottom(S) - 4) - Math.max(inner.y, S.y + 4) };
+  const lists = fitLists(q, groups, safe, 18 * k);
+  if (!lists) throw tooLong("list", sizeName(q));
 
-  const headLh = big * 1.08;
-  const bodyLh = small * 1.45;
-  const gap = head.length && body.length ? small * 1.1 : 0;
-  const headBase = (i: number) => top + big * 0.92 + i * headLh;
-  const bodyTop = top + head.length * headLh + gap;
-  const bodyBase = (i: number) => bodyTop + small * 0.92 + i * bodyLh;
-  const h = head.length * headLh + gap + body.length * bodyLh;
-  const w = Math.max(1, ...headW, ...bodyW);
-  const text: Rect = { x: cx - w / 2, y: top, w, h };
+  /* The other side, centred as one block. */
+  const maxW = side.w * (across ? 0.82 : 0.84);
+  const withLogo = logoOn(q);
+  const logoH0 = Math.max(30 * k * (el.scale ?? 1), logoMin(W, platformOf(d.size, W, H).shown));
+  const lw0 = logoRatio() * logoH0;
+  const logoH = lw0 > side.w - m * 2 ? (logoH0 * (side.w - m * 2)) / lw0 : logoH0;
+  const gapLogo = Math.max(38 * k, logoClear(logoH) * 1.4) * (side.h < 300 ? 0.6 : 1);
+  const ctaText = d.cta.trim();
+  const fs = Math.max(17 * k, q.floor);
+  const cta = ctaText ? fitBlock(ctx, ctaText, { family: fonts.sans, weight: 500, tracking: 0, leading: 1.2 }, fs, q.floor, maxW - fs * 2.6, fs * 1.3) : undefined;
+  if (ctaText && !cta) throw tooLong("button", sizeName(q));
+  const ctaH = cta ? cta.size * 2.6 : 0;
+  const gapCta = cta ? 28 * k : 0;
+  const start = d.textSize ?? (across ? (46 * S.h) / 630 : (58 * S.w) / 1080);
+  const left0 = side.h - m * 2 - (withLogo ? logoH + gapLogo : 0) - gapCta - ctaH;
+  const least = q.floor * 1.15;
+  const base = d.headline.trim() ? fitBlock(ctx, d.headline.trim(), headFace(fonts), Math.max(start, least), least, maxW, left0) : undefined;
+  if (d.headline.trim() && !base) throw tooLong("headline", sizeName(q));
+  const head = base && (eh.scale ?? 1) !== 1 ? setBlock(ctx, d.headline.trim(), headFace(fonts), base.size * eh.scale!, maxW) : base;
+  if (head && (head.w > maxW + 0.5 || head.h > left0 + 0.5 || head.size < q.floor - 0.01)) throw tooLong("headline", `${sizeName(q)} at that size`);
+  const blockH = (withLogo ? logoH + (head || cta ? gapLogo : 0) : 0) + (head?.h ?? 0) + gapCta + ctaH;
+  let y = side.y + (side.h - blockH) / 2;
+  const cx = side.x + side.w / 2;
 
-  /* The room below the words, where the picture is placed. */
-  const below = top + h + 0.04 * H;
-  const area: Rect = {
-    x: 0.06 * W,
-    y: Math.min(below, H * 0.8),
-    w: 0.88 * W,
-    h: Math.max(H * 0.94 - below, H * 0.14),
-  };
+  /* The panel and its grid: rings across it, the picture shaded into it in solid dots and rings, nothing under the words. */
+  ctx.fillStyle = panelBg;
+  ctx.beginPath();
+  ctx.roundRect(panel.x, panel.y, panel.w, panel.h, 16 * k);
+  ctx.fill();
+  q.layers.push({ id: "panel", kind: "panel", box: panel, can: FIXED });
+  const pad = 6 * k;
+  q.keep = lists.boxes.map((b) => grow(b, pad));
+  const free: Rect = { x: panel.x + panel.w * 0.45, y: panel.y + panel.h * 0.5, w: panel.w * 0.5, h: panel.h * 0.45 };
+  drawDots(q, img, free, { fill: panelInk, ring: panelInk, field: panelInk, fieldOp: d.field === "rings" ? 0.3 : 0.16, ground: panelBg, clip: grow(panel, -8 * k), on: "panel" });
+  for (const t of lists.inks) {
+    if (t.kind === "chip") {
+      ctx.fillStyle = panelInk;
+      ctx.beginPath();
+      ctx.roundRect(t.x, t.y, t.w, lists.chipH, lists.chipH / 2);
+      ctx.fill();
+      drawBlock(ctx, { face: chipFace(fonts), size: lists.chipFs, lines: [t.text.toUpperCase()], widths: [t.tw], w: t.tw, h: lists.chipH, asked: t.text }, t.x + lists.chipFs * 0.85, t.y + (lists.chipH - lists.chipFs) / 2, "left", t.tw, panelBg);
+    } else {
+      const mid = t.y + lists.itemLh / 2;
+      dotIcon(ctx, t.text, t.x + lists.fs * 0.06, mid, lists.fs * 0.84, panelInk);
+      ctx.font = `400 ${lists.fs}px ${fonts.sans}`;
+      ctx.letterSpacing = "0px";
+      ctx.fillStyle = panelInk;
+      ctx.fillText(t.text, t.x + lists.fs * 1.65, mid + lists.fs * 0.36);
+    }
+  }
+  if (lists.inks.length) {
+    const asked = groups.map((g) => [g.title, ...g.items].filter(Boolean).join("\n")).join("\n");
+    q.layers.push({ id: "lists", kind: "text", box: union(lists.boxes), ink: lists.boxes, over: ["panel"], text: { asked, drawn: lists.inks.map((t) => t.text).join("\n"), size: Math.min(lists.fs, lists.chipFs), color: panelInk, ground: [panelBg] }, can: FIXED });
+  }
 
-  const logoBox: Rect = { x: 32 * u, y: 32 * u, w: 190 * u, h: 32 * u };
-  const keep = [text, ...(d.logo ? [logoBox] : [])];
-  const pad = 0.4 * small;
-  drawDots(
-    ctx,
-    d,
-    p,
-    img,
-    (x, y, r) =>
-      keep.some(
-        (b) =>
-          x + r > b.x - pad &&
-          x - r < b.x + b.w + pad &&
-          y + r > b.y - pad &&
-          y - r < b.y + b.h + pad,
-      ),
-    area,
-  );
-
-  if (d.logo) drawLogo(ctx, logoBox.x, logoBox.y, 32 * u, p);
-  ctx.fillStyle = p.text;
-  ctx.font = `400 ${big}px ${fonts.sans}`;
-  ctx.letterSpacing = `${-0.01 * big}px`;
-  head.forEach((l, i) => ctx.fillText(l, cx, headBase(i)));
-  ctx.font = `400 ${small}px ${fonts.sans}`;
-  ctx.letterSpacing = "0px";
-  body.forEach((l, i) => ctx.fillText(l, cx, bodyBase(i)));
-  ctx.textAlign = "left";
-  return { text, area };
+  if (withLogo) {
+    const lw = logoRatio() * logoH;
+    putLogo(q, { x: cx - lw / 2, y, w: lw, h: logoH });
+    y += logoH + (head || cta ? gapLogo : 0);
+  }
+  let text: Rect = { x: cx, y, w: 0, h: 0 };
+  if (head) {
+    const r = drawBlock(ctx, head, cx - maxW / 2, y, eh.align ?? "center", maxW, p.ink);
+    text = r.box;
+    q.layers.push({ id: "headline", kind: "text", box: r.box, ink: r.ink, text: { asked: d.headline.trim(), drawn: head.lines.join("\n"), size: head.size, color: p.ink, ground: [p.bg] }, can: CAN.products.headline });
+    y += head.h;
+  }
+  if (cta) {
+    y += gapCta;
+    const bw = cta.w + cta.size * 2.6;
+    const bx = (eh.align === "left" ? cx - maxW / 2 : eh.align === "right" ? cx + maxW / 2 - bw : cx - bw / 2);
+    ctx.fillStyle = p.fill;
+    ctx.beginPath();
+    ctx.roundRect(bx, y, bw, ctaH, ctaH / 2);
+    ctx.fill();
+    drawBlock(ctx, cta, bx + cta.size * 1.3, y + (ctaH - cta.h) / 2, "left", cta.w, panelInk);
+    const box = { x: bx, y, w: bw, h: ctaH };
+    q.layers.push({ id: "cta", kind: "text", box, ink: [box], text: { asked: ctaText, drawn: cta.lines.join(" "), size: cta.size, color: panelInk, ground: [p.fill] }, can: FIXED });
+  }
+  return { text, area: panel };
 }
 
-function shaderOpts(d: Design, fill: string, bg: string) {
-  return {
-    dot: d.dot,
-    gap: d.gap,
-    render: d.render,
-    fillPct: d.fillPct,
-    hollowPct: d.hollowPct,
-    localContrast: 3,
-    edgeAmt: 0,
-    dither: d.dither,
-    invert: d.invert,
-    cutout: d.cutout,
-    keyTol: d.keyTol,
-    dotsLight: hexLightness(fill) > hexLightness(bg),
-  };
+type ListInk = { kind: "chip" | "item"; x: number; y: number; text: string; w: number; tw: number };
+type FittedLists = { inks: ListInk[]; boxes: Rect[]; fs: number; chipFs: number; chipH: number; itemLh: number };
+
+/* The lists in as many columns as fit best, groups kept in order, at the biggest size that holds every item whole. */
+function fitLists(q: Pen, groups: ReturnType<typeof parseLists>, area: Rect, want: number): FittedLists | undefined {
+  const { ctx, fonts } = q;
+  if (!groups.length) return { inks: [], boxes: [], fs: want, chipFs: want, chipH: 0, itemLh: 0 };
+  for (let fs = Math.max(want * 1.35, q.floor); ; fs *= 0.96) {
+    const at = Math.max(fs, q.floor);
+    const chipFs = Math.max(at * 0.89, q.floor);
+    const chipH = chipFs * 1.85;
+    const itemLh = at * 1.9;
+    const groupGap = at * 1.2;
+    const tall = (g: (typeof groups)[number]) => (g.title ? chipH + at * 0.6 : 0) + g.items.length * itemLh;
+    for (let cols = 1; cols <= Math.min(4, groups.reduce((n, g) => n + g.items.length + 1, 0)); cols++) {
+      /* Groups fill a column until it is full; one that is too tall runs on into the next. */
+      const rows: ListInk[][] = [[]];
+      const hs = [0];
+      let ok = true;
+      const total = groups.reduce((n, g) => n + tall(g), 0) + groupGap * (groups.length - 1);
+      const target = Math.min(area.h, Math.max(total / cols, 0) * 1.12 + itemLh);
+      for (const g of groups) {
+        let lines: ListInk[] = [];
+        const put = (t: ListInk, h: number, before: number) => {
+          let c = rows.length - 1;
+          const gap = hs[c] ? before : 0;
+          if (hs[c] + gap + h > area.h + 0.5) {
+            rows.push([]);
+            hs.push(0);
+            c++;
+          }
+          const y = hs[c] + (hs[c] ? before : 0);
+          rows[c].push({ ...t, y });
+          hs[c] = y + h;
+        };
+        /* Start a new column when this group would not fit in what is left of the balanced height. */
+        const c = rows.length - 1;
+        if (hs[c] && hs[c] + groupGap + tall(g) > target && rows.length < cols) {
+          rows.push([]);
+          hs.push(0);
+        }
+        if (g.title) {
+          setFace(ctx, chipFace(fonts), chipFs);
+          const tw = ctx.measureText(g.title.toUpperCase()).width;
+          lines.push({ kind: "chip", x: 0, y: 0, text: g.title, tw, w: tw + chipFs * 1.7 });
+        }
+        ctx.font = `400 ${at}px ${fonts.sans}`;
+        ctx.letterSpacing = "0px";
+        for (const it of g.items) {
+          const tw = ctx.measureText(it).width;
+          lines.push({ kind: "item", x: 0, y: 0, text: it, tw, w: at * 1.65 + tw });
+        }
+        lines.forEach((t, i) => put(t, t.kind === "chip" ? chipH : itemLh, i === 0 ? groupGap : t.kind === "item" && lines[i - 1].kind === "chip" ? at * 0.6 : 0));
+      }
+      if (rows.length > cols) ok = false;
+      const widths = rows.map((r) => Math.max(0, ...r.map((t) => t.w)));
+      const gapX = at * 2.2;
+      const w = widths.reduce((a, b) => a + b, 0) + gapX * (rows.length - 1);
+      const h = Math.max(...hs);
+      if (!ok || w > area.w + 0.5 || h > area.h + 0.5) continue;
+      const inks: ListInk[] = [];
+      let x = area.x + (area.w - w) / 2;
+      const y0 = area.y + (area.h - h) / 2;
+      rows.forEach((r, i) => {
+        for (const t of r) inks.push({ ...t, x, y: y0 + t.y });
+        x += widths[i] + gapX;
+      });
+      return { inks, boxes: inks.map((t) => ({ x: t.x, y: t.y, w: t.w, h: t.kind === "chip" ? chipH : itemLh })), fs: at, chipFs, chipH, itemLh };
+    }
+    if (at <= q.floor) return undefined;
+  }
+}
+
+/*
+ * The numbered cards on Context's ground: the palette's colour with its dot grid kept clear of the words, white cards
+ * with the blue number, and the logo and address along the bottom.
+ */
+function drawCardsPost(q: Pen): Omit<Drawn, "layers"> {
+  const { ctx, d, S, W, p, fonts } = q;
+  const cs = imageDoc().cards;
+  const list = parseCards(d.cards);
+  const strip = S.w / S.h >= 2.2;
+  const k = Math.sqrt((S.w * S.h) / (1200 * 630));
+  const eh = q.edits.headline ?? {};
+  const ef = q.edits.footer ?? {};
+  const el = q.edits.logo ?? {};
+  const cut = q.cuts[0];
+  let area: Rect = { x: S.x + Math.max(S.w * 0.05, 24 * k), y: S.y + Math.max(S.h * 0.06, 18 * k), w: 0, h: 0 };
+  area.w = S.w - (area.x - S.x) * 2;
+  area.h = S.h - (area.y - S.y) * 2;
+  if (cut && hits(area, cut)) area = cut.x < W / 2 ? { ...area, x: right(cut) + 24 * k, w: right(area) - right(cut) - 24 * k } : { ...area, w: cut.x - area.x - 24 * k };
+
+  /* The title, whole, in at most a third of the room. */
+  const tf = headFace(fonts);
+  const least = q.floor * 1.15;
+  const start = Math.max(least, d.textSize ?? 40 * k * (strip ? 0.9 : 1));
+  const title0 = d.headline.trim() ? fitBlock(ctx, d.headline.trim(), tf, start, least, area.w, area.h * 0.34) : undefined;
+  if (d.headline.trim() && !title0) throw tooLong("headline", sizeName(q));
+  const title = title0 && (eh.scale ?? 1) !== 1 ? setBlock(ctx, d.headline.trim(), tf, title0.size * eh.scale!, area.w) : title0;
+  if (title && (title.w > area.w + 0.5 || title.h > area.h * 0.45 || title.size < q.floor - 0.01)) throw tooLong("headline", `${sizeName(q)} at that size`);
+  const titleH = title?.h ?? 0;
+
+  /* The footer: the logo on the left, the address on the right. */
+  const withLogo = logoOn(q);
+  const address = ef.hidden ? "" : d.footer.trim();
+  const fh = Math.max(30 * k * (strip ? 0.85 : 1), logoMin(W, platformOf(d.size, W, q.H).shown)) * (el.scale ?? 1);
+  const addressBlock = address ? fitBlock(ctx, address, { family: fonts.sans, weight: 500, tracking: 0, leading: 1.2 }, Math.max(21 * k, q.floor), q.floor, area.w - (withLogo ? logoRatio() * fh + fh * 2 : 0), fh * 1.6) : undefined;
+  if (address && !addressBlock) throw tooLong("footer", sizeName(q));
+  const footH = withLogo ? fh : (addressBlock?.h ?? 0);
+  const clear = withLogo ? logoClear(fh) : 0;
+  const gapT = titleH ? S.h * (strip ? 0.05 : 0.05) : 0;
+  const gapF = footH ? Math.max(S.h * 0.045, clear + 8 * k) : 0;
+  const top = area.y + titleH + gapT;
+  const room: Rect = { x: area.x, y: top, w: area.w, h: bottom(area) - footH - gapF - top };
+
+  const n = list.length;
+  const cardSet = n ? fitCards(q, list, room, k, strip) : { cards: [], s: 1, h: 0, bs: 0, hs: 0, badge: 0, pad: 0 };
+  if (!cardSet) throw tooLong("card text", sizeName(q));
+  const footY = bottom(area) - footH;
+  /* Tall posts: the title and cards as one group in the middle, rather than a title far above. */
+  const lift = Math.max(0, (room.h - cardSet.h) / 2);
+  const titleY = area.y + (cardSet.h && S.h / S.w > 1.15 ? lift * 0.75 : 0);
+  const shift = S.h / S.w > 1.15 ? lift * 0.75 : lift;
+  for (const c of cardSet.cards) c.rect.y += shift - 0;
+  const a = eh.align ?? "center";
+  const tx = (w: number) => (a === "left" ? area.x : a === "right" ? right(area) - w : area.x + (area.w - w) / 2);
+  const logo: Rect | undefined = withLogo ? { x: area.x, y: footY, w: logoRatio() * fh, h: fh } : undefined;
+  const addressAt = addressBlock ? { x: right(area) - addressBlock.w, y: footY + (footH - addressBlock.h) / 2, w: addressBlock.w, h: addressBlock.h } : undefined;
+  const pad = 10 * k;
+  q.keep = [
+    ...(title ? [grow({ x: tx(title.w), y: titleY, w: title.w, h: title.h }, pad)] : []),
+    ...cardSet.cards.map((c) => grow(c.rect, pad)),
+    ...(logo ? [grow(logo, Math.max(pad, logoClear(fh)))] : []),
+    ...(addressAt ? [grow(addressAt, pad)] : []),
+  ];
+  drawDots(q, null, undefined);
+  let text: Rect = { x: 0, y: 0, w: 0, h: 0 };
+  if (title) {
+    const r = drawBlock(ctx, title, area.x, titleY, a, area.w, p.text);
+    text = r.box;
+    q.layers.push({ id: "headline", kind: "text", box: r.box, ink: r.ink, text: { asked: d.headline.trim(), drawn: title.lines.join("\n"), size: title.size, color: p.text, ground: [p.bg] }, can: CAN.cards.headline });
+  }
+  const light = hexLightness(p.bg) > 0.9;
+  const fill = tokenColor(cs.fill);
+  const inkRects: Rect[] = [];
+  const drawnWords: string[] = [];
+  const numbers: Rect[] = [];
+  const badgeFill = tokenColor(cs.badge);
+  const badgeInk = tokenColor(cs.badgeInk);
+  const { hs, bs, badge } = cardSet;
+  const rad = Math.min(cs.radius * k, 28 * k);
+  for (const [i, cd] of cardSet.cards.entries()) {
+    const r = cd.rect;
+    ctx.save();
+    ctx.shadowColor = cs.shadow.color;
+    ctx.shadowBlur = cs.shadow.blur * k;
+    ctx.shadowOffsetY = cs.shadow.y * k;
+    ctx.fillStyle = fill;
+    ctx.beginPath();
+    ctx.roundRect(r.x, r.y, r.w, r.h, rad);
+    ctx.fill();
+    ctx.restore();
+    if (light) {
+      ctx.strokeStyle = tokenColor(cs.edge);
+      ctx.lineWidth = k;
+      ctx.beginPath();
+      ctx.roundRect(r.x + k / 2, r.y + k / 2, r.w - k, r.h - k, rad);
+      ctx.stroke();
+    }
+    /* The number in its circle, the heading beside it, the lines below. */
+    const hTop = r.y + cardSet.pad;
+    const headH = Math.max(badge * 2, cd.heading.h);
+    const bcx = r.x + cardSet.pad + badge;
+    const bcy = hTop + (cd.heading.lines.length > 1 ? Math.max(badge, (hs * cd.heading.face.leading) / 2) : headH / 2);
+    ctx.fillStyle = badgeFill;
+    ctx.beginPath();
+    ctx.arc(bcx, bcy, badge, 0, Math.PI * 2);
+    ctx.fill();
+    const num = String(i + 1);
+    const nb = setBlock(ctx, num, { family: fonts.sans, weight: 500, tracking: 0, leading: 1 }, badge * 1.2, badge * 2);
+    drawBlock(ctx, nb, bcx - nb.w / 2, bcy - nb.size / 2, "left", nb.w, badgeInk);
+    numbers.push({ x: bcx - badge, y: bcy - badge, w: badge * 2, h: badge * 2 });
+    const hx = r.x + cardSet.pad + badge * 2 + 14 * k * cardSet.s;
+    const h = drawBlock(ctx, cd.heading, hx, cd.heading.lines.length > 1 ? hTop : hTop + (headH - cd.heading.h) / 2, "left", cd.heading.w, tokenColor(cs.heading));
+    inkRects.push(...h.ink);
+    drawnWords.push(...cd.heading.lines);
+    if (cd.body) {
+      const b = drawBlock(ctx, cd.body, r.x + cardSet.pad, hTop + headH + 12 * k * cardSet.s, "left", cd.body.w, tokenColor(cs.body));
+      inkRects.push(...b.ink);
+      drawnWords.push(...cd.body.lines);
+    }
+  }
+  if (cardSet.cards.length) {
+    /* One layer for the cards' faces (each stays whole), one for their words. */
+    q.layers.push({ id: "panels", kind: "panel", box: union(cardSet.cards.map((c) => c.rect)), ink: cardSet.cards.map((c) => c.rect), can: FIXED });
+    q.layers.push({ id: "cards", kind: "text", box: union(inkRects), ink: inkRects, over: ["panels"], text: { asked: list.map((c) => `${c.title}\n${c.body}`).join("\n"), drawn: drawnWords.join("\n"), size: Math.min(hs, bs), color: tokenColor(cs.body), ground: [fill] }, can: FIXED });
+    q.layers.push({ id: "numbers", kind: "key", box: union(numbers), ink: numbers, over: ["panels"], can: FIXED });
+  }
+  putLogo(q, logo);
+  if (addressBlock && addressAt) {
+    const r = drawBlock(ctx, addressBlock, addressAt.x, addressAt.y, "left", addressBlock.w, p.text);
+    q.layers.push({ id: "footer", kind: "text", box: r.box, ink: r.ink, text: { asked: address, drawn: address, size: addressBlock.size, color: p.text, ground: [p.bg], own: d.footer === imageDoc().base.footer }, can: CAN.cards.footer });
+  }
+  return { text };
+}
+
+type Card = { title: string; body: string };
+/* Blank lines separate cards; each card's first line is its heading. */
+export function parseCards(src: string): Card[] {
+  return src
+    .split(/\n\s*\n/)
+    .map((b) => b.trim())
+    .filter(Boolean)
+    .map((b) => {
+      const [title, ...rest] = b.split("\n");
+      return { title: title.trim(), body: rest.join(" ").replace(/\s+/g, " ").trim() };
+    });
+}
+
+type CardSet = { cards: { rect: Rect; heading: Block; body?: Block }[]; s: number; h: number; hs: number; bs: number; badge: number; pad: number };
+
+/* One scale for every card, the biggest at which the tallest holds its words; every column count that makes sense is tried. */
+function fitCards(q: Pen, list: Card[], room: Rect, k: number, strip: boolean): CardSet | undefined {
+  const { ctx, fonts } = q;
+  const n = list.length;
+  const hf: Face = { family: fonts.sans, weight: 500, tracking: -0.01, leading: 1.2 };
+  const bf: Face = { family: fonts.sans, weight: 400, tracking: 0, leading: 1.4 };
+  const counts = n === 1 ? [1] : strip ? [Math.min(n, 4), Math.min(n, 3), 2] : room.w / room.h < 0.75 ? [1, 2] : [2, 1, Math.min(n, 3)];
+  for (let s = 1; s > 0.3; s *= 0.95)
+    for (const cols of [...new Set(counts)]) {
+      const rows = Math.ceil(n / cols);
+      const gapX = 24 * k * s;
+      const gapY = 18 * k * s;
+      const cw = (room.w - gapX * (cols - 1)) / cols;
+      const ch = (room.h - gapY * (rows - 1)) / rows;
+      const pad = Math.max(12, 28 * k * s);
+      const badge = Math.max(13 * k * s, q.floor * 0.72);
+      const hs = Math.max(25 * k * s, q.floor);
+      const bs = Math.max(19 * k * s, q.floor);
+      let tallest = 0;
+      let fits = true;
+      const blocks = list.map((c) => {
+        const maxH = cw - pad * 2 - badge * 2 - 14 * k * s;
+        const heading = setBlock(ctx, c.title, hf, hs, maxH);
+        const body = c.body ? setBlock(ctx, c.body, bf, bs, cw - pad * 2) : undefined;
+        if (heading.w > maxH + 0.5 || (body && body.w > cw - pad * 2 + 0.5)) fits = false;
+        tallest = Math.max(tallest, pad * 2 + Math.max(badge * 2, heading.h) + (body ? 12 * k * s + body.h : 0));
+        return { heading, body };
+      });
+      if (!fits || tallest > ch + 0.5) continue;
+      const h = Math.min(ch, tallest * 1.12);
+      const cards = blocks.map((b, i) => {
+        const r = Math.floor(i / cols);
+        const inRow = Math.min(cols, n - r * cols);
+        /* A short last row sits in the middle. */
+        const rowW = inRow * cw + (inRow - 1) * gapX;
+        return { ...b, rect: { x: room.x + (room.w - rowW) / 2 + (i % cols) * (cw + gapX), y: room.y + r * (h + gapY), w: cw, h } };
+      });
+      return { cards, s, h: rows * h + (rows - 1) * gapY, hs, bs, badge, pad };
+    }
+  return undefined;
 }
 
 /* "# Group" starts a group; every other line is an item in it. */
@@ -885,215 +1469,3 @@ export function dotIcon(
   ctx.fill(lit);
 }
 
-/*
- * The products template: logo, headline and a button on one side; on the
- * other, a panel in the brand colour with a ring grid, the product lists under
- * Doto labels, and the picture (if any) shaded into the panel's grid.
- */
-function drawProducts(
-  ctx: Ctx,
-  d: Design,
-  img: Picture | null,
-  fonts: Fonts,
-): Drawn {
-  const { w: W, h: H } = frameOf(d);
-  const p = paletteOf(d);
-  const across = W / H >= 1.4;
-  /* One unit: the 1200 × 630 link preview's pixel. */
-  const k = across ? H / 630 : W / 1000;
-  const m = 24 * k;
-  const panel: Rect = across
-    ? { x: W * 0.49, y: m, w: W - W * 0.49 - m, h: H - 2 * m }
-    : { x: m, y: H * 0.42, w: W - 2 * m, h: H - H * 0.42 - m };
-  const side: Rect = across
-    ? { x: 0, y: 0, w: panel.x, h: H }
-    : { x: 0, y: 0, w: W, h: panel.y };
-  const panelBg = p.fill;
-  const panelInk = p.bg;
-
-  /* The left side, measured first so it can sit centred as one block. */
-  ctx.textBaseline = "alphabetic";
-  ctx.font = `500 ${d.textSize}px ${fonts.sans}`;
-  ctx.letterSpacing = `${-0.02 * d.textSize}px`;
-  const lines = wrap(ctx, d.headline, side.w * (across ? 0.7 : 0.78));
-  const lh = d.textSize * 1.18;
-  const logoH = 30 * k;
-  const ctaH = d.cta ? 44 * k : 0;
-  const blockH =
-    (d.logo ? logoH + 38 * k : 0) +
-    lines.length * lh +
-    (d.cta ? 30 * k + ctaH : 0);
-  let y = side.y + (side.h - blockH) / 2;
-  const cx = side.x + side.w / 2;
-  if (d.logo) {
-    const lw = (LOGO_W / 32) * logoH;
-    drawLogo(ctx, cx - lw / 2, y, logoH, p);
-    y += logoH + 38 * k;
-  }
-  ctx.font = `500 ${d.textSize}px ${fonts.sans}`;
-  ctx.letterSpacing = `${-0.02 * d.textSize}px`;
-  ctx.fillStyle = p.ink;
-  ctx.textAlign = "center";
-  lines.forEach((l, i) => ctx.fillText(l, cx, y + i * lh + d.textSize * 0.92));
-  y += lines.length * lh;
-  if (d.cta) {
-    y += 30 * k;
-    const fs = 17 * k;
-    ctx.font = `500 ${fs}px ${fonts.sans}`;
-    ctx.letterSpacing = "0px";
-    const bw = ctx.measureText(d.cta).width + 44 * k;
-    ctx.fillStyle = p.fill;
-    ctx.beginPath();
-    ctx.roundRect(cx - bw / 2, y, bw, ctaH, ctaH / 2);
-    ctx.fill();
-    ctx.fillStyle = p.bg;
-    ctx.fillText(d.cta, cx, y + ctaH / 2 + fs * 0.36);
-  }
-  ctx.textAlign = "left";
-
-  /* The panel's contents, laid out before the dots so the dots avoid them. */
-  const groups = parseLists(d.lists);
-  const total = groups.reduce((n, g) => n + g.items.length + 1, 0);
-  const cols: (typeof groups)[] = [[], []];
-  let run = 0;
-  for (const g of groups) {
-    (run < total / 2 || !cols[0].length ? cols[0] : cols[1]).push(g);
-    run += g.items.length + 1;
-  }
-  const chipH = 30 * k;
-  const chipFs = 16 * k;
-  const itemFs = 18 * k;
-  const itemLh = 37 * k;
-  const groupGap = 26 * k;
-  const colH = (c: typeof groups) =>
-    c.reduce(
-      (h, g, i) =>
-        h + (g.title ? chipH + 12 * k : 0) + g.items.length * itemLh + (i ? groupGap : 0),
-      0,
-    );
-  const contentH = Math.max(colH(cols[0]), colH(cols[1]));
-  const colW = Math.min(250 * k, (panel.w - 80 * k) / 2);
-  const gapX = 40 * k;
-  const contentW = cols[1].length ? colW * 2 + gapX : colW;
-  const ox = panel.x + (panel.w - contentW) / 2;
-  const oy = panel.y + (panel.h - contentH) / 2;
-
-  type Ink = { kind: "chip" | "item"; x: number; y: number; text: string; w: number };
-  const inks: Ink[] = [];
-  const boxes: Rect[] = [];
-  cols.forEach((c, ci) => {
-    let cy = oy;
-    const x = ox + ci * (colW + gapX);
-    c.forEach((g, gi) => {
-      if (gi) cy += groupGap;
-      if (g.title) {
-        ctx.font = `900 ${chipFs}px ${fonts.data}`;
-        ctx.letterSpacing = `${0.08 * chipFs}px`;
-        const label = g.title.toUpperCase();
-        const w = ctx.measureText(label).width + 26 * k;
-        inks.push({ kind: "chip", x, y: cy, text: label, w });
-        boxes.push({ x, y: cy, w, h: chipH });
-        cy += chipH + 12 * k;
-      }
-      ctx.font = `400 ${itemFs}px ${fonts.sans}`;
-      ctx.letterSpacing = "0px";
-      for (const it of g.items) {
-        const w = 30 * k + ctx.measureText(it).width;
-        inks.push({ kind: "item", x, y: cy, text: it, w });
-        boxes.push({ x, y: cy, w, h: itemLh });
-        cy += itemLh;
-      }
-    });
-  });
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.roundRect(panel.x, panel.y, panel.w, panel.h, 16 * k);
-  ctx.fillStyle = panelBg;
-  ctx.fill();
-  ctx.clip();
-
-  /* Grid: rings across the panel, the picture shaded into it in solid dots
-     and rings, and nothing under the words. */
-  const g = grid(W, H, d.dot, d.gap);
-  const st = img
-    ? shade(img, g, imageRect(d, img), shaderOpts(d, panelInk, panelBg))
-    : new Uint8Array(g.cols * g.rows);
-  const rad = d.dot / 2;
-  const ringR = Math.max(0.1, rad - RING / 2);
-  const pad = 6 * k;
-  const under = (x: number, y: number) =>
-    boxes.some(
-      (b) =>
-        x + rad > b.x - pad &&
-        x - rad < b.x + b.w + pad &&
-        y + rad > b.y - pad &&
-        y - rad < b.y + b.h + pad,
-    );
-  const filled = new Path2D();
-  const hollow = new Path2D();
-  const field = new Path2D();
-  for (let r = 0; r < g.rows; r++)
-    for (let c = 0; c < g.cols; c++) {
-      const x = g.ox + (c + 0.5) * g.pitch;
-      const yy = g.oy + (r + 0.5) * g.pitch;
-      if (
-        x - rad < panel.x + 8 * k ||
-        x + rad > panel.x + panel.w - 8 * k ||
-        yy - rad < panel.y + 8 * k ||
-        yy + rad > panel.y + panel.h - 8 * k ||
-        under(x, yy)
-      )
-        continue;
-      const v = st[r * g.cols + c];
-      if (v === 2) {
-        filled.moveTo(x + rad, yy);
-        filled.arc(x, yy, rad, 0, Math.PI * 2);
-      } else if (v === 1) {
-        hollow.moveTo(x + ringR, yy);
-        hollow.arc(x, yy, ringR, 0, Math.PI * 2);
-      } else if (d.field !== "none") {
-        const fr = d.field === "rings" ? ringR : rad;
-        field.moveTo(x + fr, yy);
-        field.arc(x, yy, fr, 0, Math.PI * 2);
-      }
-    }
-  ctx.globalAlpha = d.field === "rings" ? 0.3 : 0.16;
-  if (d.field === "rings") {
-    ctx.strokeStyle = panelInk;
-    ctx.lineWidth = RING;
-    ctx.stroke(field);
-  } else {
-    ctx.fillStyle = panelInk;
-    ctx.fill(field);
-  }
-  ctx.globalAlpha = 1;
-  ctx.strokeStyle = panelInk;
-  ctx.lineWidth = RING;
-  ctx.stroke(hollow);
-  ctx.fillStyle = panelInk;
-  ctx.fill(filled);
-
-  for (const t of inks) {
-    if (t.kind === "chip") {
-      ctx.fillStyle = panelInk;
-      ctx.beginPath();
-      ctx.roundRect(t.x, t.y, t.w, chipH, chipH / 2);
-      ctx.fill();
-      ctx.font = `900 ${chipFs}px ${fonts.data}`;
-      ctx.letterSpacing = `${0.08 * chipFs}px`;
-      ctx.fillStyle = panelBg;
-      ctx.fillText(t.text, t.x + 13 * k, t.y + chipH / 2 + chipFs * 0.36);
-    } else {
-      const mid = t.y + itemLh / 2;
-      dotIcon(ctx, t.text, t.x + 1 * k, mid, 15 * k, panelInk);
-      ctx.font = `400 ${itemFs}px ${fonts.sans}`;
-      ctx.letterSpacing = "0px";
-      ctx.fillStyle = panelInk;
-      ctx.fillText(t.text, t.x + 30 * k, mid + itemFs * 0.36);
-    }
-  }
-  ctx.restore();
-  ctx.letterSpacing = "0px";
-  return { text: { x: 0, y: 0, w: 0, h: 0 } };
-}

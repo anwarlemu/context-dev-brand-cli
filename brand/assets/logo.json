@@ -30,5 +30,7 @@
 		]
 	},
 	"width": 182.67,
-	"height": 32
+	"height": 32,
+	"clear": { "ratio": 0.375, "source": "The share-image editor keeps every dot 12 px from a 32 px logo (agd-playground src/components/context-og/draw.ts, covered()). The brand publishes no other figure." },
+	"min": { "shown": 10, "source": "Our own floor, in CSS px where the picture is shown: the mark still reads at that height. The brand publishes no figure." }
 }
