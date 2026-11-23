@@ -82,6 +82,8 @@ export function adapter(): Adapter {
 			return Object.fromEntries(Object.entries(s).map(([k, v]) => [k === 'partnerName' ? 'partner-name' : k, v]));
 		},
 		colors: designColors,
+		// The reel's tagline marks words for the brand color with *stars*.
+		words: (t) => t.replace(/\*/g, ''),
 		aliases: { sizes: { ...imageDoc().aliases, story: 'vertical' }, themes: {}, copy: { partnername: 'partner-name' } },
 	};
 }

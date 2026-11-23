@@ -1,8 +1,9 @@
-import { join, resolve } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import type { Command } from 'commander';
-import { checkImage, designOf, imageCatalog, pictureFor, renderDesign, sizeId, type Kind } from '../assets/image.js';
+import { checkImage, designOf, imageCatalog, pictureFor, renderDesign, sizeId, slotKey, slotsOf, type Kind } from '../assets/image.js';
 import { display, num, pick, unknown, write, type OutFile } from '../assets/io.js';
-import { imageDoc, TEMPLATES, type Design } from '../assets/og.js';
+import { imageDoc, TEMPLATES, type Design, type Template } from '../assets/og.js';
 import { checkText, errorsOf, NEVER_ALLOWED, RULES } from '../design/index.js';
 import { cli } from '../lib/brand.js';
 import { emit } from '../lib/output.js';
@@ -63,6 +64,8 @@ export function imageCommand(program: Command) {
 		.option('-f, --format <formats>', 'png, svg, jpg, webp, or several with commas (default: png and svg, or the format an --out file name ends in)')
 		.option('--scale <n>', 'pixel multiple, 1 to 4', '1')
 		.option('-o, --out <path>', 'a directory (default assets/), or one .png, .svg, .jpg or .webp file')
+		.option('--input <file>', 'a carousel: carousel.json with "slides" (each its own copy and picture), one template, size and theme, numbered')
+		.option('--no-number', 'carousel: leave the page numbers out')
 		.option('--all', 'every template at every size of the kind, with sample copy')
 		.option('--list', 'templates, sizes, palettes and samples')
 		.option('--json', 'JSON output')
@@ -79,6 +82,7 @@ export function imageHelp(): string {
 		`  ${b} image banner --headline "The web data APIs for agents" --size og,x-banner,story`,
 		`  ${b} image social --size portrait --headline "NEW!" --body "..." --theme Ink`,
 		`  ${b} image customer --stat "42%" --headline "less time on setup" --partner acme.svg`,
+		`  ${b} image --input carousel.json --size portrait        (numbered posts, one look)`,
 		`  ${b} image banner --size custom --width 1600 --height 900 --headline "..." -o post.webp`,
 		'',
 		'Only the copy you pass is drawn, whole: it wraps and shrinks to a readable floor, and what still does not fit is an',
@@ -128,6 +132,7 @@ async function runImage(positional: string | undefined, o: Opts) {
 		].join('\n'));
 		return;
 	}
+	if (typeof o.input === 'string') return runCarousel(o.input, cwd, o);
 	if (positional && o.template && positional.toLowerCase() !== String(o.template).toLowerCase()) throw new Error(`Pass the template once (got ${positional} and --template ${o.template}).`);
 	for (const [a, b] of [['title', 'headline'], ['theme', 'palette']]) if (o[a!] !== undefined && o[b!] !== undefined && o[a!] !== o[b!]) throw new Error(`--${a} and --${b} are the same thing; pass one.`);
 	const named = positional ?? (o.template as string | undefined);
@@ -198,4 +203,77 @@ type ImageFormat = (typeof FORMATS)[number];
 export function formatsOf(typed: string): ImageFormat[] {
 	if (typed.trim().toLowerCase() === 'both') return ['png', 'svg'];
 	return [...new Set(typed.split(',').map((f) => pick('format', f.trim().replace(/^jpeg$/i, 'jpg'), FORMATS)))];
+}
+
+type CarouselDoc = { template?: string; size?: string; theme?: string; palette?: string; number?: boolean; slides?: Record<string, unknown>[] };
+
+/** A carousel: the same template, size and theme for every slide, each with its own words and picture, numbered. Every
+ * slide is drawn and checked before any is written. */
+async function runCarousel(input: string, cwd: string, o: Opts) {
+	const path = resolve(cwd, input);
+	let doc: CarouselDoc;
+	try {
+		doc = JSON.parse(readFileSync(path, 'utf8')) as CarouselDoc;
+	} catch (err) {
+		throw new Error(`Could not read ${input} as JSON (${(err as Error).message}).`);
+	}
+	const slides = doc.slides;
+	if (!Array.isArray(slides) || slides.length < 2 || slides.length > 20) throw new Error(`${input} needs "slides": 2 to 20 of them, each with its own copy.`);
+	const extra = Object.keys(doc).filter((k) => !['template', 'size', 'theme', 'palette', 'number', 'slides', '$comment'].includes(k));
+	if (extra.length) throw new Error(`${input} holds ${extra.map((k) => `"${k}"`).join(', ')}; a carousel takes template, size, theme, number and slides.`);
+	const template = pick('template', String(o.template ?? doc.template ?? 'social'), TEMPLATES) as Template;
+	const size = sizeId(String(o.size ?? doc.size ?? 'portrait'));
+	if (!['square', 'portrait', 'tall', 'story'].includes(size)) throw new Error(`A carousel is square, portrait, tall or story, not ${size}.`);
+	const theme = (o.palette ?? o.theme ?? doc.theme ?? doc.palette) as string | undefined;
+	const numbered = o.number !== false && doc.number !== false;
+	const base = dirname(path);
+	const out = resolve(cwd, typeof o.out === 'string' ? o.out : 'carousel');
+	const formats = formatsOf(String(o.format ?? 'png'));
+	const ready: { path: string; data: Buffer | string; file: OutFile }[] = [];
+	const designs: Design[] = [];
+	for (const [i, s] of slides.entries()) {
+		const set: Partial<Design> = { ...(theme ? { palette: theme } : {}), ...(numbered ? { page: `${i + 1} / ${slides.length}` } : {}) };
+		for (const [k, v] of Object.entries(s)) {
+			if (k === 'image') continue;
+			const slot = k === 'title' ? 'headline' : k;
+			if (!slotsOf(template).includes(slot)) throw new Error(`Slide ${i + 1}: the ${template} layout does not draw "${k}". It draws ${slotsOf(template).join(', ')}.`);
+			if (typeof v !== 'string') throw new Error(`Slide ${i + 1}: "${k}" takes text.`);
+			(set as Record<string, unknown>)[slotKey(slot)] = v;
+		}
+		if (typeof s.image === 'string') set.image = s.image.startsWith('sample:') || s.image === 'none' ? s.image : resolve(base, s.image);
+		try {
+			designs.push(designOf({ template, size, set, sample: !!o.sample }));
+		} catch (err) {
+			throw new Error(`Slide ${i + 1}: ${(err as Error).message}`);
+		}
+	}
+	// One headline size for every slide: the size the longest one fits at.
+	const sizes: number[] = [];
+	for (const [i, d] of designs.entries()) {
+		try {
+			const r = renderDesign(d, await pictureFor(d, base), { png: false });
+			const h = r.layers.find((l) => l.id === 'headline')?.text?.size;
+			if (h) sizes.push(h);
+		} catch (err) {
+			throw new Error(`Slide ${i + 1}: ${(err as Error).message}`);
+		}
+	}
+	const one = sizes.length ? Math.min(...sizes) : undefined;
+	for (const [i, d0] of designs.entries()) {
+		const d = one && d0.textSize === undefined ? { ...d0, textSize: one } : d0;
+		try {
+			const r = renderDesign(d, await pictureFor(d, base), { png: true, svg: formats.includes('svg'), jpg: formats.includes('jpg'), webp: formats.includes('webp') });
+			const f = checkImage(d, r.layers, r.png);
+			if (errorsOf(f).length) throw new Error(checkText(errorsOf(f)));
+			for (const fmt of formats) {
+				const file = join(out, `${String(i + 1).padStart(2, '0')}-${template}-${size}.${fmt}`);
+				ready.push({ path: file, data: r[fmt]!, file: { path: display(cwd, file), format: fmt, slide: i + 1, width: r.width, height: r.height } });
+			}
+		} catch (err) {
+			throw new Error(`Slide ${i + 1}: ${(err as Error).message}`);
+		}
+	}
+	for (const r of ready) write(r.path, r.data);
+	const files = ready.map((r) => r.file);
+	emit(o, { files }, () => files.map((f) => `${f.path}  ${f.width}x${f.height}`).join('\n'));
 }

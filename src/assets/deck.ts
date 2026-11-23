@@ -226,7 +226,8 @@ export function drawSlide(ctx: Ctx, slide: Slide, fonts: Fonts = brandFonts(), e
 			// The grid on the right starts under any words that reach into it, so it keeps one straight edge.
 			const reach = [...words, ...(t ? [boxOf(q, 'title', t, x, top, W - x * 2, 'left')] : [])].filter((r) => r.x + r.w > right.x - 60);
 			const from = pic ? 0 : Math.max(0, ...reach.map((r) => r.y + r.h + 48));
-			field('rings', 6, 10, { mask: (px, py) => px > right.x && py > from }, pic, pic ? { x: W * 0.64, y: H * 0.3, w: W * 0.36 - M, h: H * 0.7 - M } : undefined);
+			// Too little room left for the grid to read as one: none.
+			field(from > H * 0.62 ? 'none' : 'rings', 6, 10, { mask: (px, py) => px > right.x && py > from }, pic, pic ? { x: W * 0.64, y: H * 0.3, w: W * 0.36 - M, h: H * 0.7 - M } : undefined);
 			putLogo(q, logo);
 			if (t) put(q, 'title', t, x, top, W - x * 2, 'left', p.text);
 			const ink: Rect[] = [];

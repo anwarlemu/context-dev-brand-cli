@@ -89,6 +89,8 @@ export type Design = {
   field: Field;
   /* Which built-in picture or burst, when nothing else says. */
   seed: number;
+  /* A carousel's page number ("2 / 5"), set along the foot. */
+  page?: string;
 };
 
 export type SizeDoc = { label: string; w: number; h: number; u?: number };
@@ -194,6 +196,8 @@ export type Pen = {
   can: Record<string, Can>;
   /* Boxes no dot may touch. */
   keep: Rect[];
+  /* Boxes no dot may touch whatever the layout keeps (a page number). */
+  hold?: Rect[];
 };
 
 const right = (r: Rect) => r.x + r.w;
@@ -404,7 +408,8 @@ function fadeFor(box: Rect, W: number, H: number) {
 
 /* The dot field: the picture shaded into the grid, the grid behind it, and no dot wherever the words are. */
 export function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { fill?: string; ring?: string; field?: string; fieldOp?: number; ground?: string; clip?: Rect; on?: string; mask?: (x: number, y: number) => boolean } = {}) {
-  const { ctx, d, p, W, H, keep } = q;
+  const { ctx, d, p, W, H } = q;
+  const keep = [...q.keep, ...(q.hold ?? [])];
   const e = q.edits.art ?? {};
   const pic = e.hidden ? null : img;
   if (!pic && d.field === "none") return;
@@ -519,8 +524,21 @@ export function drawDesign(canvas: AnyCanvas, d: Design, img: Picture | null, fo
   ctx.fillRect(0, 0, W, H);
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "left";
+  /* A carousel's page number takes a strip along the foot, so nothing else goes there. */
+  let page: { block: Block; x: number; y: number } | undefined;
+  if (d.page) {
+    const block = setBlock(ctx, d.page, chipFace(fonts), Math.max(q.floor, 13 * u), S.w);
+    const y = bottom(S) - q.m * 0.8 - block.h;
+    page = { block, x: right(S) - q.m - block.w, y };
+    q.S = { ...S, h: y - q.m * 0.4 - S.y };
+    q.hold = [grow({ x: page.x, y, w: block.w, h: block.h }, 12)];
+  }
   const draw = { banner: drawBanner, products: drawProducts, social: drawSocial, cards: drawCardsPost, customer: drawCustomer, mark: drawMarkOnly }[d.template];
   const out = draw(q, img);
+  if (page) {
+    const r = drawBlock(ctx, page.block, page.x, page.y, "left", page.block.w, p.ink);
+    q.layers.push({ id: "page", kind: "text", box: r.box, ink: r.ink, text: { asked: d.page!, drawn: page.block.lines.join(" "), size: page.block.size, color: p.ink, ground: [p.bg], own: true }, can: FIXED });
+  }
   ctx.globalAlpha = 1;
   ctx.letterSpacing = "0px";
   ctx.textAlign = "left";
@@ -781,7 +799,8 @@ function drawMarkOnly(q: Pen): Omit<Drawn, "layers"> {
  * and lower down, like light catching a sphere. It runs off the frame on purpose.
  */
 export function drawBurst(q: Pen) {
-  const { ctx, d, p, W, H, S, keep } = q;
+  const { ctx, d, p, W, H, S } = q;
+  const keep = [...q.keep, ...(q.hold ?? [])];
   const e = q.edits.art ?? {};
   if (!d.burst || e.hidden) return;
   const wide = S.w / S.h >= 1.2;
