@@ -18,13 +18,14 @@
 			"cardBlue": "Context.dev gives your agent the web data it needs to finish a task",
 			"cardTop": ["Built for", "agents"],
 			"cardBottom": ["Web", "context API"],
-			"pills": ["Web", "Scrape", "Markdown"]
+			"pills": ["Web", "Scrape", "Markdown"],
+			"bench": ["Context.dev 90", "Acme 61", "Acme Labs 50"]
 		},
 		"colors": { "brand": "brand", "brandRing": "rgba(37, 99, 235, 0.22)", "blue10": "blue-10", "blue20": "blue-20", "white": "white", "black": "black", "neutral10": "neutral-10", "neutral80": "neutral-80", "neutral90": "neutral-90", "textMuted": "text-muted", "ground": "bg-frame" },
 		"notes": [
 			"Type: the reel set Switzer and Geist Mono; tokens.css sets Rethink Sans for the sans and the site's mono, so the reel does too.",
 			"Colors: the stage ground #eceef2 is bg-frame (#F2F2F2); the dark pills #15161a and #2a2c33 are neutral-90 and neutral-80; the benchmark's #1e1e1e and #e3e6ec are neutral-90 and neutral-10; #111 is black; the attribution's #6b7280 is text-muted (#666666); the card's lit dots #e8eaf0 are blue-10.",
-			"Names: the benchmark's two named providers are Acme placeholders and the testimonial's person is a role at Acme."
+			"This copy is the sample --sample fills in: the benchmark's rows are Acme placeholders and the testimonial's person is a role at Acme. Only the name and address are drawn without being passed."
 		]
 	},
 	"loops": {

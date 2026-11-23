@@ -152,7 +152,7 @@ const newCanvas = (w = 1, h = 1) => scratch(w, h).canvas;
 /* ---- What can be edited, per template ---- */
 
 const CORNERS: Anchor[] = ["top-left", "top-right", "bottom-left", "bottom-right"];
-type Can = DrawnLayer["can"];
+export type Can = DrawnLayer["can"];
 const LOGO: Can = { anchors: CORNERS, scale: [0.75, 1.6], hide: true };
 const HEAD: Can = { move: true, scale: [0.5, 1.5], align: true };
 const BODY_CAN: Can = { move: true, scale: [0.7, 1.4] };
@@ -172,7 +172,7 @@ export type Drawn = { text: Rect; area?: Rect; layers: DrawnLayer[] };
 
 /* ---- The page a design is laid out on ---- */
 
-type Pen = {
+export type Pen = {
   ctx: Ctx;
   d: Design;
   W: number;
@@ -190,15 +190,17 @@ type Pen = {
   fonts: Fonts;
   edits: Record<string, LayerEdit>;
   layers: DrawnLayer[];
+  /* What each layer can do here, as reported with it. */
+  can: Record<string, Can>;
   /* Boxes no dot may touch. */
   keep: Rect[];
 };
 
 const right = (r: Rect) => r.x + r.w;
 const bottom = (r: Rect) => r.y + r.h;
-const grow = (r: Rect, by: number): Rect => ({ x: r.x - by, y: r.y - by, w: r.w + by * 2, h: r.h + by * 2 });
+export const grow = (r: Rect, by: number): Rect => ({ x: r.x - by, y: r.y - by, w: r.w + by * 2, h: r.h + by * 2 });
 const hits = (a: Rect, b: Rect) => a.x < right(b) && right(a) > b.x && a.y < bottom(b) && bottom(a) > b.y;
-const union = (rs: Rect[]): Rect => {
+export const union = (rs: Rect[]): Rect => {
   const x = Math.min(...rs.map((r) => r.x));
   const y = Math.min(...rs.map((r) => r.y));
   return { x, y, w: Math.max(...rs.map(right)) - x, h: Math.max(...rs.map(bottom)) - y };
@@ -288,7 +290,7 @@ export function setFace(ctx: Ctx, f: Face, size: number) {
 }
 
 /* Text at one size, its lines evened out (the narrowest width that keeps the same number of lines). */
-function setBlock(ctx: Ctx, text: string, f: Face, size: number, max: number): Block {
+export function setBlock(ctx: Ctx, text: string, f: Face, size: number, max: number): Block {
   setFace(ctx, f, size);
   const value = f.caps ? text.toUpperCase() : text;
   let lines = wrap(ctx, value, max);
@@ -349,7 +351,7 @@ export const chipFace = (fonts: Fonts): Face => ({ family: fonts.data, weight: 9
 const logoOn = (q: Pen) => (q.edits.logo?.hidden === undefined ? q.d.logo : !q.edits.logo.hidden);
 
 /* The logo's box at a corner of the stage, moved past anything the platform covers there. */
-function logoBox(q: Pen, anchor: Anchor): Rect | undefined {
+export function logoBox(q: Pen, anchor: Anchor): Rect | undefined {
   const e = q.edits.logo ?? {};
   if (!logoOn(q)) return undefined;
   const h = 32 * q.u * (e.scale ?? 1);
@@ -366,7 +368,7 @@ function logoBox(q: Pen, anchor: Anchor): Rect | undefined {
   return r;
 }
 
-function putLogo(q: Pen, r: Rect | undefined, can: Can = CAN[q.d.template].logo, ink = q.p.ink) {
+export function putLogo(q: Pen, r: Rect | undefined, can: Can = q.can.logo ?? FIXED, ink = q.p.ink) {
   if (!r) return;
   drawBrandLogo(q.ctx, r.x, r.y, r.h, q.p.mark, ink);
   q.layers.push({ id: "logo", kind: "logo", box: r, logo: { clear: logoClear(r.h), min: logoMin(q.W, platformOf(q.d.size, q.W, q.H).shown) }, can });
@@ -401,7 +403,7 @@ function fadeFor(box: Rect, W: number, H: number) {
 }
 
 /* The dot field: the picture shaded into the grid, the grid behind it, and no dot wherever the words are. */
-function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { fill?: string; ring?: string; field?: string; fieldOp?: number; ground?: string; clip?: Rect; on?: string } = {}) {
+export function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { fill?: string; ring?: string; field?: string; fieldOp?: number; ground?: string; clip?: Rect; on?: string; mask?: (x: number, y: number) => boolean } = {}) {
   const { ctx, d, p, W, H, keep } = q;
   const e = q.edits.art ?? {};
   const pic = e.hidden ? null : img;
@@ -436,6 +438,7 @@ function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { f
       if (frame && (x - rad < frame.x + 1 || x + rad > right(frame) - 1 || y - rad < frame.y + 1 || y + rad > bottom(frame) - 1)) continue;
       /* No dot ever sits under the words. */
       if (covered(keep, x, y, rad)) continue;
+      if (over.mask && !over.mask(x, y)) continue;
       if (v === 2 || (v === 1 && d.field !== "faint")) {
         const a = fade ? fade(x, y) : 1;
         const level = Math.min(LEVELS - 1, Math.ceil(a * LEVELS) - 1);
@@ -473,7 +476,7 @@ function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { f
   ctx.globalAlpha = 1;
   const on = over.on ? { over: [over.on] } : {};
   if (ground.rects.length) q.layers.push({ id: "field", kind: "art", box: frame ?? { x: 0, y: 0, w: W, h: H }, ink: ground.rects, bleeds: true, ...on, can: FIXED });
-  if (box && art.rects.length) q.layers.push({ id: "art", kind: "art", box, ink: art.rects, ...(fade ? { fades: true } : {}), ...on, can: CAN[d.template].art ?? FIXED });
+  if (box && art.rects.length) q.layers.push({ id: "art", kind: "art", box, ink: art.rects, ...(fade ? { fades: true } : {}), ...on, can: q.can.art ?? FIXED });
 }
 
 function shaderOpts(d: Design, fill: string, bg: string) {
@@ -508,7 +511,7 @@ export function drawDesign(canvas: AnyCanvas, d: Design, img: Picture | null, fo
   const s = canvas.width / W;
   const u = f.u ?? (Math.sqrt(S.w * Math.min(S.h, S.w * 1.6)) / 900) * (S.w / S.h > 2.2 ? 1.05 : 1.2);
   const floor = (SMALL_FLOOR * W) / platformOf(d.size, W, H).shown;
-  const q: Pen = { ctx, d, W, H, S, cuts, u, m: 32 * u, floor: Math.ceil(floor), p, fonts, edits, layers: [], keep: [] };
+  const q: Pen = { ctx, d, W, H, S, cuts, u, m: 32 * u, floor: Math.ceil(floor), p, fonts, edits, layers: [], can: CAN[d.template], keep: [] };
   for (const [what, text] of Object.entries({ headline: d.headline, body: d.body, cards: d.cards, footer: d.footer, "partner name": d.partnerName, lists: d.lists, cta: d.cta, stat: d.stat })) if (text) assertGlyphs(what, text);
   if (d.badge) assertGlyphs("badge", d.badge.toUpperCase(), "data");
   ctx.setTransform(s, 0, 0, s, 0, 0);
@@ -581,18 +584,18 @@ function putColumn(q: Pen, c: Column, x: number, top: number, w: number, align: 
     ctx.roundRect(bx, y, bw, bh, bh / 2);
     ctx.fill();
     const r = drawBlock(ctx, b, bx + b.size * 0.9 + b.size * 0.04, y + (bh - b.h) / 2, "left", b.w, ink);
-    q.layers.push({ id: "badge", kind: "text", box: { x: bx, y, w: bw, h: bh }, ink: [{ x: bx, y, w: bw, h: bh }], text: { asked: d.badge.trim(), drawn: b.lines.join("\n"), size: b.size, color: ink, ground: [p.fill] }, can: CAN[d.template].badge });
+    q.layers.push({ id: "badge", kind: "text", box: { x: bx, y, w: bw, h: bh }, ink: [{ x: bx, y, w: bw, h: bh }], text: { asked: d.badge.trim(), drawn: b.lines.join("\n"), size: b.size, color: ink, ground: [p.fill] }, can: q.can.badge ?? FIXED });
     void r;
     y += bh + c.gapA;
   }
   if (c.head) {
     const r = drawBlock(ctx, c.head, x + dx, y, a, w, p.text);
-    q.layers.push({ id: "headline", kind: "text", box: r.box, ink: r.ink, text: { asked: d.headline.trim(), drawn: c.head.lines.join("\n"), size: c.head.size, color: p.text, ground: [p.bg] }, can: CAN[d.template].headline });
+    q.layers.push({ id: "headline", kind: "text", box: r.box, ink: r.ink, text: { asked: d.headline.trim(), drawn: c.head.lines.join("\n"), size: c.head.size, color: p.text, ground: [p.bg] }, can: q.can.headline ?? FIXED });
     y += c.head.h + c.gapB;
   }
   if (c.body) {
     const r = drawBlock(ctx, c.body, x + dx + (eb.dx ?? 0) * q.W, y + (eb.dy ?? 0) * q.H, a, w, p.ink);
-    q.layers.push({ id: "body", kind: "text", box: r.box, ink: r.ink, text: { asked: d.body.trim(), drawn: c.body.lines.join("\n"), size: c.body.size, color: p.ink, ground: [p.bg] }, can: CAN[d.template].body });
+    q.layers.push({ id: "body", kind: "text", box: r.box, ink: r.ink, text: { asked: d.body.trim(), drawn: c.body.lines.join("\n"), size: c.body.size, color: p.ink, ground: [p.bg] }, can: q.can.body ?? FIXED });
   }
 }
 
@@ -777,7 +780,7 @@ function drawMarkOnly(q: Pen): Omit<Drawn, "layers"> {
  * The burst: rays of dots spreading from a point, small rings near it and up top, growing into solid dots further out
  * and lower down, like light catching a sphere. It runs off the frame on purpose.
  */
-function drawBurst(q: Pen) {
+export function drawBurst(q: Pen) {
   const { ctx, d, p, W, H, S, keep } = q;
   const e = q.edits.art ?? {};
   if (!d.burst || e.hidden) return;
@@ -824,7 +827,7 @@ function drawBurst(q: Pen) {
   ctx.stroke(hollow);
   ctx.fillStyle = p.fill;
   ctx.fill(filled);
-  if (ink.length) q.layers.push({ id: "art", kind: "art", box: { x: cx - far, y: cy - far, w: far * 2, h: far * 2 }, ink, bleeds: true, can: CAN[d.template].art ?? FIXED });
+  if (ink.length) q.layers.push({ id: "art", kind: "art", box: { x: cx - far, y: cy - far, w: far * 2, h: far * 2 }, ink, bleeds: true, can: q.can.art ?? FIXED });
 }
 
 /*

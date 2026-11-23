@@ -5,8 +5,10 @@ import { Path2D } from '@napi-rs/canvas';
 import { pkgPath } from '../lib/paths.js';
 import { launch } from '../review/capture.js';
 import { brandFonts, pixelsOf, surface, tokenColor, toPng, type Ctx } from './canvas.js';
+import type { DrawnLayer } from '../design/index.js';
+import { assertGlyphs } from './glyphs.js';
 import { pick, write } from './io.js';
-import { drawLogo, logoRatio } from './logo.js';
+import { drawLogo, logoClear, logoRatio } from './logo.js';
 import { paletteOf, palettes } from './og.js';
 import { fit, drawFitted } from './text.js';
 
@@ -16,7 +18,7 @@ import { fit, drawFitted } from './text.js';
 // it, the frames are written as PNG.
 
 type ReelDoc = { seconds: number; width: number; height: number; fps: number; copy: ReelCopy; colors: Record<string, string>; notes: string[] };
-export type ReelCopy = { name: string; headline: string; url: string; tagline: string; markdown: string; quote: string; attribution: string; statValue: number; statLabel: string; cardBlue: string; cardTop: [string, string]; cardBottom: [string, string]; pills: string[] };
+export type ReelCopy = { name: string; headline: string; url: string; tagline: string; markdown: string; quote: string; attribution: string; statValue: number; statLabel: string; cardBlue: string; cardTop: [string, string]; cardBottom: [string, string]; pills: string[]; bench: string[] };
 export type LoopTemplate = 'edges' | 'twinkle' | 'ripple' | 'logo';
 type LoopDoc = { seconds: number; fps: number; sizes: Record<string, [number, number]>; templates: Record<LoopTemplate, { name: string; description: string; palette: string }> };
 type VideoDoc = { reel: ReelDoc; loops: LoopDoc };
@@ -159,6 +161,20 @@ export function* loopFrames(o: LoopOptions & { fps: number }): Generator<{ index
 	}
 }
 
+/** What a loop holds still: the logo and the line under it. The dots run off the frame by design. */
+export function loopLayers(o: LoopOptions): DrawnLayer[] {
+	const t = pick('template', o.template, loopTemplates());
+	const pal = paletteOf({ palette: o.palette ?? videoDoc().loops.templates[t].palette });
+	const layers: DrawnLayer[] = [{ id: 'art', kind: 'art', box: { x: 0, y: 0, w: o.width, h: o.height }, ink: [{ x: 0, y: 0, w: 1, h: 1 }], bleeds: true, can: {} }];
+	if (t !== 'logo') return layers;
+	const s = surface(o.width, o.height);
+	const b = logoBox(o.width, o.height, o.headline, s.ctx);
+	const k = Math.min(o.width, o.height) / 1080;
+	layers.push({ id: 'logo', kind: 'logo', box: { x: b.logo.x, y: b.logo.y, w: logoRatio() * b.logo.h, h: b.logo.h }, logo: { clear: logoClear(b.logo.h), min: 24 * k }, can: {} });
+	if (b.line) layers.push({ id: 'headline', kind: 'text', box: { x: (o.width - b.line.width) / 2, y: b.logo.y + b.logo.h + 44 * k, w: b.line.width, h: b.line.height }, text: { asked: o.headline!, drawn: b.line.lines.join('\n'), size: b.line.size, color: pal.ink, ground: [pal.bg] }, can: {} });
+	return layers;
+}
+
 // ----- Encoding -----
 
 export type Encoded = { path: string; format: string };
@@ -192,6 +208,66 @@ export async function encode(frames: AsyncIterable<Buffer> | Iterable<Buffer>, o
 }
 
 // ----- The reel -----
+
+export type ReelSlot = { id: string; key: keyof ReelCopy; flag: string; own?: boolean; description: string };
+/** The reel's words. The name and address are the brand's own; every other one has to be passed (or --sample). */
+export function reelCopySlots(): ReelSlot[] {
+	return [
+		{ id: 'headline', key: 'headline', flag: 'headline', description: 'the end card line' },
+		{ id: 'tagline', key: 'tagline', flag: 'tagline', description: 'the tagline tile (*word* sets a word in the brand color)' },
+		{ id: 'markdown', key: 'markdown', flag: 'markdown', description: 'the Markdown tile\'s sentence' },
+		{ id: 'quote', key: 'quote', flag: 'quote', description: 'the testimonial' },
+		{ id: 'attribution', key: 'attribution', flag: 'attribution', description: 'who said it (a role and a company)' },
+		{ id: 'stat', key: 'statValue', flag: 'stat', description: 'the stat tile\'s percentage, 0 to 100' },
+		{ id: 'stat-label', key: 'statLabel', flag: 'statLabel', description: 'the line beside it' },
+		{ id: 'card', key: 'cardBlue', flag: 'card', description: 'the blue card\'s sentence' },
+		{ id: 'card-top', key: 'cardTop', flag: 'cardTop', description: 'the white card\'s two lines, with | between' },
+		{ id: 'card-bottom', key: 'cardBottom', flag: 'cardBottom', description: 'the black card\'s two lines, with | between' },
+		{ id: 'pills', key: 'pills', flag: 'pills', description: 'three short words, with | between' },
+		{ id: 'bench', key: 'bench', flag: 'bench', description: 'the comparison, "name share" rows with | between, yours first (share 0 to 100)' },
+		{ id: 'url', key: 'url', flag: 'url', own: true, description: 'the address on the end card (the brand\'s own by default)' },
+	];
+}
+
+/** The reel's copy from slots, whole: a missing one is an error, because nothing is made up for it. */
+export function checkReel(given: Record<string, string | undefined>): Partial<ReelCopy> {
+	const out: Record<string, unknown> = {};
+	const missing: string[] = [];
+	for (const s of reelCopySlots()) {
+		const v = given[s.id];
+		if (v === undefined || !v.trim()) {
+			if (!s.own) missing.push(s.id);
+			continue;
+		}
+		const def = videoDoc().reel.copy[s.key];
+		if (Array.isArray(def)) {
+			const parts = v.split('|').map((x) => x.trim()).filter(Boolean);
+			if (parts.length !== def.length) throw new Error(`The reel's ${s.id} takes ${def.length} parts with | between, not ${parts.length}.`);
+			if (s.id === 'bench') for (const r of parts) if (!/\S\s+(100|\d{1,2})$/.test(r)) throw new Error(`The reel's bench rows are "name share", share 0 to 100; "${r}" is not.`);
+			out[s.key] = parts;
+		} else if (typeof def === 'number') {
+			const n = Number(v);
+			if (!Number.isInteger(n) || n < 0 || n > 100) throw new Error(`The reel's ${s.id} takes a whole number from 0 to 100, not ${v}.`);
+			out[s.key] = n;
+		} else out[s.key] = v;
+		for (const text of [out[s.key]].flat()) assertGlyphs(`reel's ${s.id}`, String(text).replace(/\*/g, ''));
+		if (v.length > LIMIT[s.id]!) throw new Error(`The reel's ${s.id} is too long for its tile (${v.length} characters; up to ${LIMIT[s.id]}). Shorten it.`);
+	}
+	if (missing.length) throw new Error(`The reel needs ${missing.map((m) => `--${m}`).join(', ')}. Nothing is made up for it; --sample fills in sample copy.`);
+	return out;
+}
+/** How many characters each tile holds at its fixed size (measured on the tiles). */
+const LIMIT: Record<string, number> = { headline: 40, tagline: 44, markdown: 70, quote: 130, attribution: 40, stat: 3, 'stat-label': 60, card: 90, 'card-top': 26, 'card-bottom': 26, pills: 32, bench: 60, url: 24 };
+
+/** The reel's words as layers, for the check that they are whole and nobody else's. */
+export function reelLayers(copy: Partial<ReelCopy>, asked: Record<string, string>): DrawnLayer[] {
+	const c = videoDoc().reel.colors;
+	return reelCopySlots().filter((s) => asked[s.id]?.trim()).map((s) => {
+		const words = [copy[s.key]].flat().join('\n').replace(/\*/g, '');
+		return { id: s.id, kind: 'text' as const, box: { x: 0, y: 0, w: 1, h: 1 }, text: { asked: asked[s.id]!.replace(/\*/g, ''), drawn: words, size: 40, color: tokenColor(c.black!), ground: [tokenColor(c.white!)] }, can: {} };
+	});
+}
+
 
 /** The reel's page: tokens and copy first, then the bundle (build/assets/reel.js), with the faces embedded. */
 export function reelHtml(copy: Partial<ReelCopy> = {}): string {

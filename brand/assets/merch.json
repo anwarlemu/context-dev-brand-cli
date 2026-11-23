@@ -1,9 +1,11 @@
 {
 	"$comment": "Merch print files only (no mockups). Item list, trim sizes, bleed, safe areas and sources follow the spyglass-ds engine (common vendor print areas; confirm with the vendor template). Layouts are in inches from the trim; colors come from the variant: blue, paper and ink print the palette ground to the bleed (image.json palettes), color, white and black are the logo and dots alone on a transparent ground (color: the mark in brand blue, the wordmark in black). Only the approved logo (logo.json) and the brand colors are used.",
 	"dpi": 300,
-	"slots": {
-		"headline": "Web data API for AI Agents",
+	"own": {
 		"url": "context.dev"
+	},
+	"sample": {
+		"headline": "Web data API for AI Agents"
 	},
 	"variants": {
 		"blue": {

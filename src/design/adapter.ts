@@ -1,13 +1,19 @@
 import { createCanvas, loadImage } from '@napi-rs/canvas';
-import { brandFonts } from '../assets/canvas.js';
+import { brandFonts, tokenColor } from '../assets/canvas.js';
+import { deckDoc, renderSlide, slideInfo, slideOf, slideTypes, type SlideType } from '../assets/deck.js';
+import { imagesToPdf } from '../assets/pdf.js';
 import { designOf, infoOf, pictureFor, renderDesign, slotKey, slotsOf, wordColors } from '../assets/image.js';
 import { frameOf, imageDoc, TEMPLATES, type Design, type Template } from '../assets/og.js';
 import { brand } from '../lib/brand.js';
+import { mediaKinds } from './media.js';
 import { sheetCanvas, type Adapter, type DesignDoc, type Painter } from './index.js';
 
 // This brand's side of the design core: what can be made and how a document becomes the engine's own request.
 
+const isSlide = (id: string): id is SlideType => (slideTypes() as string[]).includes(id);
 const isImage = (id: string): id is Template => (TEMPLATES as string[]).includes(id);
+
+const mediaOf = (id: string) => mediaKinds.find((m) => m.infos().some((t) => t.id === id));
 
 /** The engine's request a document stands for. */
 function imageDesign(doc: DesignDoc): Design {
@@ -30,16 +36,33 @@ const imageOptions = (t: Template): DesignDoc['options'] => {
 /** Templates where a seed changes something. */
 const seeded = (t: Template) => t === 'banner' || t === 'social' || t === 'customer';
 
+/** The words' colors everywhere: images and slides, merch's one-color variants and the film's. */
+const designColors = () => [...new Set([...wordColors(), ...['black', 'white', 'brand'].map((t) => tokenColor(t))])];
+
 export function adapter(): Adapter {
 	return {
 		brand: brand().bin,
-		templates: () => TEMPLATES.map(infoOf),
+		templates: () => [...TEMPLATES.map(infoOf), ...slideTypes().map(slideInfo), ...mediaKinds.flatMap((m) => m.infos())],
 		defaults(template, size) {
+			const media = mediaOf(template);
+			if (media) return media.defaults(template, size);
+			if (isSlide(template)) return { size: { id: 'slide', width: 1920, height: 1080 }, theme: deckDoc().slides[template].palette, seed: undefined, options: {} };
 			const t = template as Template;
 			const f = frameOf({ size, w: 1200, h: 675 });
 			return { size: { id: size, width: f.w, height: f.h }, theme: { ...imageDoc().base, ...imageDoc().templates[t].set }.palette!, seed: seeded(t) ? 1 : undefined, options: imageOptions(t) };
 		},
 		async render(doc, dir, out) {
+			const media = mediaOf(doc.template);
+			if (media) return media.render(doc, dir, out);
+			if (isSlide(doc.template)) {
+				const r = renderSlide(await slideOf(doc, dir), { png: out.formats.includes('png'), svg: out.formats.includes('svg'), jpg: out.formats.includes('jpg'), webp: out.formats.includes('webp'), rgb: out.formats.includes('pdf'), scale: out.scale }, doc.layers);
+				const files: Record<string, Uint8Array> = {};
+				for (const f of out.formats) {
+					if (f === 'pdf') files.pdf = imagesToPdf([{ rgb: r.rgb!, width: r.width, height: r.height }], 960);
+					else if (r[f as 'png'] !== undefined) files[f] = Buffer.from(r[f as 'png'] as Uint8Array);
+				}
+				return { files, layers: r.layers };
+			}
 			if (!isImage(doc.template)) throw new Error(`Unknown template ${doc.template}.`);
 			const d = imageDesign(doc);
 			const picture = await pictureFor(d, dir, doc.images.partner);
@@ -52,11 +75,14 @@ export function adapter(): Adapter {
 			return { files, layers: r.layers };
 		},
 		sample: (template) => {
+			const media = mediaOf(template);
+			if (media) return media.sample(template);
+			if (isSlide(template)) return deckDoc().slides[template].sample;
 			const s = imageDoc().templates[template as Template].sample;
 			return Object.fromEntries(Object.entries(s).map(([k, v]) => [k === 'partnerName' ? 'partner-name' : k, v]));
 		},
-		colors: wordColors,
-		aliases: { sizes: imageDoc().aliases, themes: {}, copy: { partnername: 'partner-name' } },
+		colors: designColors,
+		aliases: { sizes: { ...imageDoc().aliases, story: 'vertical' }, themes: {}, copy: { partnername: 'partner-name' } },
 	};
 }
 

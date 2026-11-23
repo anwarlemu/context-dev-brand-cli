@@ -1,21 +1,26 @@
 import { join, resolve } from 'node:path';
 import type { Command } from 'commander';
 import { display, num, pick, write, type OutFile } from '../assets/io.js';
-import { encode, hasFfmpeg, loopFrames, loopTemplates, reelFrames, videoCatalog, videoDoc, writeFrame, type LoopTemplate, type ReelCopy } from '../assets/video.js';
+import { checkReel, encode, hasFfmpeg, loopFrames, loopLayers, loopTemplates, reelCopySlots, reelFrames, videoCatalog, videoDoc, writeFrame, type LoopTemplate } from '../assets/video.js';
 import { cli } from '../lib/brand.js';
 import { emit } from '../lib/output.js';
 
 // `video`: the reel (10 s, 1920 by 1080) and short dot-field loops, as MP4 and WebM through ffmpeg or PNG frames.
 
 type Opts = Record<string, string | boolean | undefined> & { json?: boolean };
-const COPY_FLAGS: [string, keyof ReelCopy][] = [['headline', 'headline'], ['url', 'url'], ['tagline', 'tagline'], ['markdown', 'markdown'], ['quote', 'quote'], ['attribution', 'attribution'], ['statLabel', 'statLabel'], ['card', 'cardBlue']];
-
 export function videoCommand(program: Command) {
 	program
 		.command('video [template]')
 		.description('The reel (10 s, 1920 by 1080, with its copy as flags) and dot-field loops (edges, twinkle, ripple, logo) at square, vertical and landscape: MP4 and WebM through ffmpeg, else PNG frames')
 		.option('-s, --size <size>', 'loops: square, vertical or landscape (the reel is 1920 by 1080)')
 		.option('-p, --palette <name>', 'loops: Paper, Blue, Ink, Mist, Night or Graphite')
+		.option('--theme <name>', 'the same as --palette')
+		.option('--title <text>', 'the same as --headline')
+		.option('--sample', 'reel: fill the words you did not pass with sample copy')
+		.option('--card-top <text>', 'reel: the white card\'s two lines, with | between')
+		.option('--card-bottom <text>', 'reel: the black card\'s two lines, with | between')
+		.option('--pills <text>', 'reel: three short words, with | between')
+		.option('--bench <text>', 'reel: the comparison, "name share" rows with | between, yours first (share 0 to 100)')
 		.option('--headline <text>', 'reel: the end card line; logo loop: the line under the logo')
 		.option('--url <text>', 'reel: the address on the end card')
 		.option('--tagline <text>', 'reel: the tagline tile (*word* sets a word in the brand blue)')
@@ -37,10 +42,11 @@ export function videoCommand(program: Command) {
 		.addHelpText('after', () => [
 			'',
 			'Examples:',
-			`  ${cli()} video reel --headline "Web data API for AI Agents"`,
+			`  ${cli()} video reel --headline "Web data API for AI Agents" --tagline ... --quote ...   (every word; --list names them)`,
+			`  ${cli()} video reel --sample              (the sample film)`,
 			`  ${cli()} video twinkle --size vertical --palette Blue`,
 			`  ${cli()} video logo --size square --headline "Web data API for AI Agents"`,
-			`  ${cli()} video reel --still 9.5           (the end card as a PNG)`,
+			`  ${cli()} video reel --sample --still 9.5  (the end card as a PNG)`,
 			'',
 			'Frames are a pure function of time: the same flags give the same frames. The reel needs Chromium, as review does.',
 		].join('\n'));
@@ -51,7 +57,7 @@ async function runVideo(positional: string | undefined, o: Opts) {
 	if (o.list) {
 		const cat = videoCatalog();
 		emit(o, cat, () => [
-			`reel        ${cat.reel.seconds} s at ${cat.reel.width}x${cat.reel.height}. Copy flags: --headline, --url, --tagline, --markdown, --quote, --attribution, --stat, --stat-label, --card.`,
+			`reel        ${cat.reel.seconds} s at ${cat.reel.width}x${cat.reel.height}. Every word is passed (or --sample): ${reelCopySlots().map((x) => `--${x.id}${x.own ? ' (the brand\'s own by default)' : ''}`).join(', ')}.`,
 			...cat.loops.templates.map((t) => `${t.id.padEnd(11)} ${t.description} (${t.palette})`),
 			'',
 			`Loop sizes: ${cat.loops.sizes.map((s) => `${s.id} ${s.width}x${s.height}`).join(', ')}; ${cat.loops.seconds} s at ${cat.loops.fps} fps by default.`,
@@ -59,6 +65,9 @@ async function runVideo(positional: string | undefined, o: Opts) {
 		].join('\n'));
 		return;
 	}
+	for (const [a, b] of [['title', 'headline'], ['theme', 'palette']]) if (o[a!] !== undefined && o[b!] !== undefined && o[a!] !== o[b!]) throw new Error(`--${a} and --${b} are the same thing; pass one.`);
+	o.headline ??= o.title;
+	o.palette ??= o.theme;
 	const id = pick('video template', positional ?? 'reel', ['reel', ...loopTemplates()]);
 	const ff = hasFfmpeg();
 	const format = pick('format', String(o.format ?? (ff ? 'all' : 'frames')), ['mp4', 'webm', 'frames', 'all'] as const);
@@ -73,10 +82,9 @@ async function runVideo(positional: string | undefined, o: Opts) {
 
 	if (id === 'reel') {
 		if (o.size || o.palette || o.seconds || o.seed !== '0') throw new Error('--size, --palette, --seconds and --seed go with the loops; the reel is 10 s at 1920 by 1080.');
-		const copy: Partial<ReelCopy> = {};
-		for (const [flag, key] of COPY_FLAGS) if (typeof o[flag] === 'string') (copy as Record<string, unknown>)[key] = o[flag];
-		const stat = num('stat', o.stat, 0, 100, { integer: true });
-		if (stat !== undefined) copy.statValue = stat;
+		const sample = videoDoc().reel.copy as unknown as Record<string, unknown>;
+		const given = Object.fromEntries(reelCopySlots().map((x) => [x.id, typeof o[x.flag] === 'string' ? (o[x.flag] as string) : o.sample && !x.own ? [sample[x.key]].flat().join(' | ') : undefined]));
+		const copy = checkReel(given);
 		const { width, height, seconds } = videoDoc().reel;
 		if (still !== undefined) {
 			if (still > seconds) throw new Error(`--still takes 0 to ${seconds} for the reel.`);
@@ -107,7 +115,7 @@ async function runVideo(positional: string | undefined, o: Opts) {
 			for (const e of await encoding) files.push({ path: display(cwd, e.path), format: e.format, seconds, fps, width, height });
 		}
 	} else {
-		for (const flag of ['url', 'tagline', 'markdown', 'quote', 'attribution', 'stat', 'statLabel', 'card']) if (o[flag] !== undefined) throw new Error(`--${flag.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)} goes with the reel.`);
+		for (const flag of reelCopySlots().map((x) => x.flag).filter((f) => f !== 'headline')) if (o[flag] !== undefined) throw new Error(`--${flag.replace(/[A-Z]/g, (m) => `-${m.toLowerCase()}`)} goes with the reel.`);
 		if (o.headline !== undefined && id !== 'logo') throw new Error('--headline goes with the reel and the logo loop.');
 		const sizes = videoDoc().loops.sizes;
 		const sizeId = pick('size', String(o.size ?? 'square'), Object.keys(sizes));

@@ -3,6 +3,7 @@ import { deckCatalog } from '../assets/deck.js';
 import { imageCatalog } from '../assets/image.js';
 import { merchCatalog } from '../assets/merch.js';
 import { videoCatalog } from '../assets/video.js';
+import { designEntry } from './design.js';
 import { brand, cli } from '../lib/brand.js';
 import { emit } from '../lib/output.js';
 import { loadIndex } from '../library/registry.js';
@@ -34,7 +35,9 @@ export async function manifest(program: Command) {
 	const b = brand();
 	// Commands that keep their entry as data (brand/manifest.d: illustrate, figma) add their subcommands and names.
 	const parts = manifestParts();
+	const entry = designEntry();
 	const commands = commandsOf(program).map((c) => {
+		if (c.name === 'design') return { ...c, usage: entry.usage, summary: entry.summary, flags: entry.flags, commands: entry.commands };
 		const own = parts.filter((p) => p.name === c.name || p.name.startsWith(`${c.name} `));
 		return own.length ? { ...c, entries: own } : c;
 	});
@@ -55,6 +58,7 @@ export async function manifest(program: Command) {
 			merch: merchCatalog(),
 			module: 'The renderer is importable from the package: dist/assets/index.js (dot shader, dot field, text layout, logo, PNG, SVG and PDF output).',
 		},
+		design: entry,
 		components,
 		resources: { guide: `${cli()} guide`, docs: b.registryUrl, index: `${b.registryUrl}/r/index.json` },
 	};
@@ -80,6 +84,7 @@ export function manifestCommand(program: Command) {
 				`Palettes: ${doc.assets.image.palettes.map((p) => p.name).join(', ')}`,
 				`Deck slides: ${doc.assets.deck.slides.map((s) => s.id).join(', ')}`,
 				`Video: reel (${doc.assets.video.reel.seconds} s, ${doc.assets.video.reel.width}x${doc.assets.video.reel.height}); loops ${doc.assets.video.loops.templates.map((t) => t.id).join(', ')} at ${doc.assets.video.loops.sizes.map((s) => s.id).join(', ')}`,
+				`Designs: ${doc.design.templates.map((t) => t.id).join(', ')}`,
 				`Merch: ${doc.assets.merch.items.map((i) => `${i.id} ${i.trim.width}x${i.trim.height} in`).join(', ')}`,
 				'',
 				`Components: ${doc.components.length} (${doc.run} search, ${doc.run} view <name>)`,

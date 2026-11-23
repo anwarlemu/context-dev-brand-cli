@@ -447,12 +447,11 @@ export function MarkdownTile({ lt }: TileProps) {
 
 /* ------------------------------------------------------------- benchmark -- */
 
-/* The original compared named providers; here the others are Acme placeholders. */
-const BENCH = [
-  { name: COPY.name, fill: 56, color: BLUE, logo: true },
-  { name: "Acme", fill: 38, color: C.neutral90 },
-  { name: "Acme Labs", fill: 31, color: C.neutral90 },
-];
+/* Rows as passed ("name share"), each share 0 to 100 of the row's dots; the first is the brand's own. */
+const BENCH = COPY.bench.map((row, i) => {
+  const m = /^(.*\S)\s+(\d+)$/.exec(row)!;
+  return { name: m[1], share: Number(m[2]), color: i ? C.neutral90 : BLUE, logo: i === 0 };
+});
 
 export function Bench({ lt }: TileProps) {
   const t = loop(lt, 4.4);
@@ -472,7 +471,7 @@ export function Bench({ lt }: TileProps) {
         }}
       >
         {BENCH.map((row, ri) => {
-          const target = row.fill;
+          const target = Math.round((total * row.share) / 100);
           const n = Math.round(
             target * easeOutCubic(span(t, 0.2 + ri * 0.18, 1.8 + ri * 0.18)),
           );

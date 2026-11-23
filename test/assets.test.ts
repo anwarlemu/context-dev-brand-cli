@@ -6,7 +6,9 @@ import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { compactSvg, surface, toPng, tokenColor } from '../src/assets/canvas.js';
 import { deckCatalog, renderSlide, slideTypes } from '../src/assets/deck.js';
-import { designOf, imageCatalog, imageSizes, renderDesign } from '../src/assets/image.js';
+import { checkImage, designOf, imageCatalog, imageSizes, renderDesign } from '../src/assets/image.js';
+import { pictureFrom } from '../src/assets/picture.js';
+import { errorsOf } from '../src/design/index.js';
 import { merchItems, renderItem } from '../src/assets/merch.js';
 import { imageDoc, palettes, TEMPLATES } from '../src/assets/og.js';
 import { samplePicture } from '../src/assets/samples.js';
@@ -25,9 +27,9 @@ describe('asset brand data', () => {
 		for (const k of ['fill', 'edge', 'heading', 'body', 'badge', 'badgeInk'] as const) expect(tokens().site[`--ds-color-${imageDoc().cards[k]}`], k).toBeTruthy();
 		expect(palettes().every((p) => /^#[0-9A-F]{6}$/.test(p.bg))).toBe(true);
 	});
-	it('every template draws at every size with its opening copy', () => {
-		for (const t of TEMPLATES) for (const s of imageSizes()) {
-			const r = renderDesign(designOf({ template: t, size: s.id }), t === 'customer' ? null : samplePicture('Globe')!, { png: true });
+	it('every template draws at every size it comes in with its sample copy', () => {
+		for (const t of TEMPLATES) for (const s of imageSizes().filter((x) => imageDoc().templates[t].sizes.includes(x.id))) {
+			const r = renderDesign(designOf({ template: t, size: s.id, sample: true }), t === 'banner' || t === 'social' ? samplePicture('Globe')! : null, { png: true });
 			expect(r.width, `${t} ${s.id}`).toBe(s.width);
 			expect(r.png!.subarray(1, 4).toString()).toBe('PNG');
 		}
@@ -38,20 +40,22 @@ describe('asset brand data', () => {
 		expect(() => designOf({ template: 'banner', set: { palette: 'Inc' } })).toThrow(/Did you mean `Ink`/);
 		expect(() => renderSlide({ type: 'covr' })).toThrow(/Did you mean `cover`/);
 		expect(() => renderItem(merchItems()[0]!, { variant: 'green' })).toThrow(/Unknown variant/);
-		expect(() => renderSlide({ type: 'bullets', headline: 'x' })).toThrow(/does not take "headline"/);
+		expect(() => renderSlide({ type: 'bullets', stat: 'x' })).toThrow(/does not take "stat"/);
 	});
 	it('ratios and custom sizes resolve', () => {
-		expect(designOf({ template: 'social', size: '4:5' }).size).toBe('s-4x5');
+		expect(designOf({ template: 'social', size: '4:5', sample: true }).size).toBe('portrait');
+		expect(designOf({ template: 'social', size: 's-9x16', sample: true }).size).toBe('story');
+		expect(designOf({ template: 'social', size: 'Twitter header', sample: true }).size).toBe('x-banner');
 		expect(() => designOf({ template: 'banner', size: 'custom' })).toThrow(/--width and --height/);
-		expect(designOf({ template: 'banner', size: 'custom', width: 1600, height: 900 }).w).toBe(1600);
+		expect(designOf({ template: 'banner', size: 'custom', width: 1600, height: 900, sample: true }).w).toBe(1600);
 	});
 });
 
 describe('asset determinism', () => {
 	it('the same inputs give the same bytes; another picture or seed gives others', () => {
-		const a = renderDesign(designOf({ template: 'banner' }), samplePicture('Globe')!, { png: true, svg: true });
-		const b = renderDesign(designOf({ template: 'banner' }), samplePicture('Globe')!, { png: true, svg: true });
-		const c = renderDesign(designOf({ template: 'banner' }), samplePicture('Sphere')!, { png: true });
+		const a = renderDesign(designOf({ template: 'banner', sample: true }), samplePicture('Globe')!, { png: true, svg: true });
+		const b = renderDesign(designOf({ template: 'banner', sample: true }), samplePicture('Globe')!, { png: true, svg: true });
+		const c = renderDesign(designOf({ template: 'banner', sample: true }), samplePicture('Sphere')!, { png: true });
 		expect(sha(a.png!)).toBe(sha(b.png!));
 		expect(sha(a.svg!)).toBe(sha(b.svg!));
 		expect(sha(a.png!)).not.toBe(sha(c.png!));
@@ -68,10 +72,10 @@ describe('asset determinism', () => {
 	it('two separate runs of the command write identical files', () => {
 		const run = () => {
 			const dir = mkdtempSync(join(tmpdir(), 'ds-assets-'));
-			execFileSync(process.execPath, [BIN, 'image', 'customer', '--kind', 'social', '--size', '4:5', '--stat', '42%', '--format', 'both'], { cwd: dir });
-			execFileSync(process.execPath, [BIN, 'deck', 'quote', '--format', 'both'], { cwd: dir });
+			execFileSync(process.execPath, [BIN, 'image', 'customer', '--kind', 'social', '--size', '4:5', '--stat', '42%', '--headline', 'less time on setup', '--format', 'both'], { cwd: dir });
+			execFileSync(process.execPath, [BIN, 'deck', 'quote', '--quote', 'It just works.', '--format', 'both'], { cwd: dir });
 			execFileSync(process.execPath, [BIN, 'merch', 'sticker', '--variant', 'ink', '--dpi', '100'], { cwd: dir });
-			const files = ['assets/customer-s-4x5.png', 'assets/customer-s-4x5.svg', 'deck/slide-01-quote.png', 'deck/deck.pdf', 'merch/sticker-ink.png', 'merch/sticker-ink.svg'];
+			const files = ['assets/customer-portrait.png', 'assets/customer-portrait.svg', 'deck/slide-01-quote.png', 'deck/deck.pdf', 'merch/sticker-ink.png', 'merch/sticker-ink.svg'];
 			return files.map((f) => sha(readFileSync(join(dir, f))));
 		};
 		expect(run()).toEqual(run());
@@ -83,7 +87,7 @@ describe('asset outputs', () => {
 		const d = 'M15 10Q15 12.07 13.54 13.54Q12.07 15 10 15Q7.93 15 6.46 13.54Q5 12.07 5 10Q5 7.93 6.46 6.46Q7.93 5 10 5Q12.07 5 13.54 6.46Q15 7.93 15 10';
 		const out = compactSvg(`<path d="${d}"/>`);
 		expect(out).toContain('A5 5 0 1');
-		const svg = renderDesign(designOf({ template: 'banner', set: { field: 'faint' } }), samplePicture('Globe')!, { png: false, svg: true }).svg!;
+		const svg = renderDesign(designOf({ template: 'banner', sample: true, set: { field: 'faint' } }), samplePicture('Globe')!, { png: false, svg: true }).svg!;
 		expect(svg.length).toBeLessThan(1_500_000);
 		expect(svg).toMatch(/^<\?xml/);
 	});
@@ -98,7 +102,7 @@ describe('asset outputs', () => {
 	});
 	it('every slide type draws at 1920 by 1080', () => {
 		expect(slideTypes()).toEqual(['cover', 'section', 'statement', 'bullets', 'stat', 'quote', 'image', 'closing']);
-		for (const t of slideTypes()) expect(renderSlide({ type: t }).width).toBe(1920);
+		for (const t of slideTypes()) expect(renderSlide({ type: t, sample: true }).width).toBe(1920);
 		expect(deckCatalog().slides).toHaveLength(8);
 	});
 	it('the reel page carries tokens and copy, and loops name their templates', () => {
@@ -129,7 +133,8 @@ describe('asset commands', () => {
 	it('manifest lists every command with its flags and every asset', () => {
 		const doc = JSON.parse(cli(dir, 'manifest', '--json').stdout);
 		const names = doc.commands.map((c: { name: string }) => c.name);
-		for (const n of ['image', 'deck', 'video', 'merch', 'manifest', 'add', 'review']) expect(names).toContain(n);
+		expect(doc.design.templates.length).toBeGreaterThan(20);
+		for (const n of ['image', 'design', 'deck', 'video', 'merch', 'manifest', 'add', 'review']) expect(names).toContain(n);
 		expect(doc.commands.find((c: { name: string }) => c.name === 'image').flags).toContain('image-x');
 		expect(doc.assets.image.templates.map((t: { id: string }) => t.id)).toEqual(TEMPLATES);
 		expect(doc.assets.image.sizes.length).toBe(imageCatalog().sizes.length);
@@ -146,7 +151,7 @@ describe('--out names a file', () => {
 	const bin = join(__dirname, '..', 'bin.js');
 	it('takes the image format from the file name', () => {
 		const cwd = mkdtempSync(join(tmpdir(), 'ds-out-'));
-		const r = spawnSync(process.execPath, [bin, 'image', 'social', '--kind', 'social', '--size', '4:5', '--out', 'post.png'], { cwd, encoding: 'utf8' });
+		const r = spawnSync(process.execPath, [bin, 'image', 'social', '--kind', 'social', '--size', '4:5', '--headline', 'NEW!', '--out', 'post.png'], { cwd, encoding: 'utf8' });
 		expect(r.status, r.stderr).toBe(0);
 		expect(readdirSync(cwd)).toEqual(['post.png']);
 	});
@@ -156,5 +161,55 @@ describe('--out names a file', () => {
 		expect(r.status, r.stderr).toBe(0);
 		expect(readdirSync(cwd)).toEqual(['still.png']);
 		expect(readFileSync(join(cwd, 'still.png')).subarray(1, 4).toString()).toBe('PNG');
+	});
+});
+
+describe('copy is drawn whole or refused, and only what was passed', () => {
+	const pic = samplePicture('Globe')!;
+	const draw = (template: string, size: string, set: object, picture: typeof pic | null = template === 'banner' || template === 'social' ? pic : null) => renderDesign(designOf({ template, size, set }), picture, { png: true });
+	const said = (r: ReturnType<typeof draw>) => r.layers.filter((l) => l.text && !l.text.own).map((l) => l.text!.drawn.replace(/\s+/g, ' ')).join(' ');
+	it('long headlines, one very long word, quotes and ampersands', () => {
+		for (const headline of ['Everything your agents need to search, buy and reply in one place', 'Donaudampfschifffahrtselektrizitätenhauptbetriebswerkbauunterbeamtengesellschaft', '"Ship & scale" <fast>, it\'s R&D’s job', 'A\nB\nC']) for (const t of ['banner', 'social', 'customer']) for (const s of imageDoc().templates[t as 'banner'].sizes.filter((x) => x !== 'custom')) {
+			let r;
+			try {
+				r = draw(t, s, { headline });
+			} catch (err) {
+				expect((err as Error).message).toMatch(/too long/);
+				continue;
+			}
+			expect(said(r), `${t} ${s}`).toBe(headline.replace(/\s+/g, ' '));
+			expect(errorsOf(checkImage(designOf({ template: t, size: s, set: { headline } }), r.layers, r.png)).map((f) => f.message), `${t} ${s}`).toEqual([]);
+		}
+	});
+	it('letters the brand face does not have are named, not drawn in another face', () => {
+		expect(() => draw('banner', 'og', { headline: 'Hello 你好' })).toThrow(/no letters for "你", "好"/);
+		expect(() => draw('banner', 'og', { headline: 'Ship it 🚀' })).toThrow(/emoji/);
+		expect(() => draw('banner', 'og', { headline: 'Crème brûlée, Łódź, ñandú' })).not.toThrow();
+	});
+	it('a slot a template cannot draw is an error, and a needed one is asked for', () => {
+		expect(() => designOf({ template: 'mark', set: { headline: 'x' } })).toThrow(/does not draw headline/);
+		expect(() => designOf({ template: 'banner', set: { headline: 'x', cta: 'y' } })).toThrow(/does not draw cta/);
+		expect(() => designOf({ template: 'products', set: { headline: 'x' } })).toThrow(/needs --lists/);
+		expect(() => designOf({ template: 'banner', set: { headline: '   ' } })).toThrow(/needs --headline/);
+	});
+	it('with only the needed copy, nothing else is written', () => {
+		for (const [t, set] of [['banner', { headline: 'One' }], ['social', { headline: 'One' }], ['customer', { headline: 'One' }], ['products', { headline: 'One', lists: 'Two' }], ['cards', { cards: 'One\ntwo' }]] as [string, object][]) expect(said(draw(t, imageDoc().templates[t as 'banner'].size, set)).toLowerCase()).toMatch(/^(one|two)( (one|two))*$/);
+	});
+	it('a picture pushed past the edge fades out in the pixels', () => {
+		const d = designOf({ template: 'banner', size: 'og', set: { headline: 'Hello', imgX: 0.9, imgY: 0.5, imgScale: 160 } });
+		const r = renderDesign(d, pic, { png: true, svg: true });
+		expect(r.layers.find((l) => l.id === 'art')!.fades).toBe(true);
+		expect(errorsOf(checkImage(d, r.layers, r.png)).filter((f) => f.rule === 'cut')).toEqual([]);
+		expect(r.svg).toMatch(/opacity/);
+	});
+	it('pictures: transparent, portrait, huge and corrupt', async () => {
+		const p = surface(400, 1600);
+		p.ctx.fillStyle = tokenColor('brand');
+		p.ctx.fillRect(100, 100, 200, 1400);
+		const tall = await pictureFrom(toPng(p));
+		await expect(pictureFrom(toPng(surface(300, 300)))).rejects.toThrow(/nothing in it/);
+		for (const picture of [tall]) for (const size of ['og', 'story', 'x-banner']) expect(draw('banner', size, { headline: 'Hello there' }, picture).png).toBeTruthy();
+		await expect(pictureFrom(Buffer.from('not a picture'))).rejects.toThrow(/PNG, JPEG/);
+		await expect(pictureFrom(toPng(p).subarray(0, 200))).rejects.toThrow(/cut short/);
 	});
 });

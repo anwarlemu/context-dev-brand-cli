@@ -10,6 +10,7 @@ import { grid, hexLightness, shade, type Grid, type Rect, type ShaderOpts } from
 
 export { grid, shade, type Grid, type Rect, type ShaderOpts };
 export { dotIcon, dotText } from './og.js';
+import { Runs } from './og.js';
 
 export const RING = 1.2;
 
@@ -37,6 +38,8 @@ export type DotFieldOptions = {
 	clip?: Rect;
 	/** Scales each dot's radius by its position (for motion); 1 keeps the size. */
 	size?: (x: number, y: number) => number;
+	/** Collects the box of every dot drawn (runs of them along a row), for the check. */
+	ink?: Rect[];
 };
 
 export const SHADER_DEFAULTS: Omit<ShaderOpts, 'dot' | 'gap' | 'dotsLight'> = { render: 'toneEdges', fillPct: 40, hollowPct: 40, localContrast: 3, edgeAmt: 0, dither: 'none', invert: false, cutout: 'auto', keyTol: 2 };
@@ -71,6 +74,7 @@ export function drawDotField(ctx: Ctx, o: DotFieldOptions): Grid {
 	const filled = new Path2D();
 	const hollow = new Path2D();
 	const faint = new Path2D();
+	const runs = o.ink ? new Runs(g.pitch) : undefined;
 	for (let r = 0; r < g.rows; r++)
 		for (let q = 0; q < g.cols; q++) {
 			const v = st[r * g.cols + q];
@@ -82,6 +86,7 @@ export function drawDotField(ctx: Ctx, o: DotFieldOptions): Grid {
 			if (o.mask && o.mask(x, y) < 0.5) continue;
 			const k = o.size ? Math.max(0, o.size(x, y)) : 1;
 			if (k <= 0.02) continue;
+			if (v === 2 || (v === 1 && field !== 'faint') || field !== 'none') runs?.add(x, y, rad * k);
 			if (v === 2) {
 				filled.moveTo(x + rad * k, y);
 				filled.arc(x, y, rad * k, 0, Math.PI * 2);
@@ -94,6 +99,7 @@ export function drawDotField(ctx: Ctx, o: DotFieldOptions): Grid {
 				faint.arc(x, y, fr, 0, Math.PI * 2);
 			}
 		}
+	if (runs) o.ink!.push(...runs.rects);
 	ctx.save();
 	ctx.globalAlpha = c.fieldOp;
 	if (field === 'rings') {
@@ -116,7 +122,7 @@ export function drawDotField(ctx: Ctx, o: DotFieldOptions): Grid {
 
 /** The burst (the customer story's): rays of dots spreading from (cx, cy), rings near it and up top, solid dots further
  * out and lower down, like light catching a sphere. `R` is its size. */
-export function drawBurst(ctx: Ctx, o: { width: number; height: number; cx: number; cy: number; R: number; fill: string; ring: string; keep?: Rect[]; pad?: number; grow?: number }) {
+export function drawBurst(ctx: Ctx, o: { width: number; height: number; cx: number; cy: number; R: number; fill: string; ring: string; keep?: Rect[]; pad?: number; grow?: number; ink?: Rect[]; turn?: number }) {
 	const rays = 44;
 	const step = (Math.PI * 2) / rays;
 	const far = o.R * 0.78 * (o.grow ?? 1);
@@ -129,7 +135,7 @@ export function drawBurst(ctx: Ctx, o: { width: number; height: number; cx: numb
 	for (let r = o.R * 0.12; r < far; r *= 1.14, ring++) {
 		const off = ring % 2 ? step / 2 : 0;
 		for (let i = 0; i < rays; i++) {
-			const a = i * step + off;
+			const a = i * step + off + (o.turn ?? 0) * step;
 			const x = o.cx + Math.cos(a) * r;
 			const y = o.cy + Math.sin(a) * r;
 			const lit = (1 + Math.sin(a)) / 2;
@@ -138,6 +144,7 @@ export function drawBurst(ctx: Ctx, o: { width: number; height: number; cx: numb
 			if (rad < 1.2) continue;
 			if (x + rad < 0 || x - rad > o.width || y + rad < 0 || y - rad > o.height) continue;
 			if (covered(x, y, rad)) continue;
+			o.ink?.push({ x: x - rad, y: y - rad, w: rad * 2, h: rad * 2 });
 			if (lit < 0.3 || grow < 0.35) {
 				const rr = Math.max(0.5, rad - RING);
 				hollow.moveTo(x + rr, y);

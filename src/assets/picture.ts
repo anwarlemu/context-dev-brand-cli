@@ -22,11 +22,25 @@ export function pictureKind(data: Buffer): string | undefined {
 	return KINDS.find(([, test]) => test(data))?.[0];
 }
 
+/** A file whose end is missing decodes to blank pixels, so it is refused instead. */
+function cutShort(b: Buffer, kind: string): boolean {
+	if (kind === 'png') return b.indexOf('IEND', Math.max(0, b.length - 4096), 'latin1') < 0;
+	if (kind === 'jpeg') return b.lastIndexOf(Buffer.from([0xff, 0xd9])) < 0;
+	if (kind === 'webp') return b.readUInt32LE(4) + 8 > b.length + 1;
+	return false;
+}
+
 /** Decodes picture bytes. `max` is the long side kept (the editor's 1000 by default). */
 export async function pictureFrom(data: Buffer, max = 1000): Promise<Picture> {
 	const kind = pictureKind(data);
 	if (!kind) throw new Error('Use a PNG, JPEG, WebP, GIF or SVG picture.');
-	const img = await loadImage(data);
+	if (cutShort(data, kind)) throw new Error('That picture is cut short: the end of the file is missing.');
+	let img;
+	try {
+		img = await loadImage(data);
+	} catch {
+		throw new Error(`That ${kind.toUpperCase()} picture could not be read.`);
+	}
 	const iw = img.width || max;
 	const ih = img.height || (img.width ? max : iw);
 	const k = Math.min(1, max / Math.max(iw, ih));
@@ -35,6 +49,10 @@ export async function pictureFrom(data: Buffer, max = 1000): Promise<Picture> {
 	const { canvas, ctx } = scratch(w, h);
 	ctx.imageSmoothingQuality = 'high';
 	ctx.drawImage(img, 0, 0, w, h);
+	const px = ctx.getImageData(0, 0, w, h).data;
+	let seen = false;
+	for (let i = 3; i < px.length && !seen; i += 4) seen = px[i]! > 8;
+	if (!seen) throw new Error('That picture has nothing in it: every pixel is transparent.');
 	return { canvas, width: w, height: h, key: createHash('sha1').update(data).update(String(max)).digest('hex') };
 }
 
@@ -48,7 +66,11 @@ export async function readPicture(cwd: string, path: string, max = 1000): Promis
 		throw new Error(`No picture at ${path}.`);
 	}
 	if (!pictureKind(data)) throw new Error(`${path} is not a PNG, JPEG, WebP, GIF or SVG picture.`);
-	return pictureFrom(data, max);
+	try {
+		return await pictureFrom(data, max);
+	} catch (err) {
+		throw new Error(`${path}: ${(err as Error).message}`);
+	}
 }
 
 /** A picture drawn by code (a built-in sample) at its own size. */

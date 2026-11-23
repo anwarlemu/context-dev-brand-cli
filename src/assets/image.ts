@@ -93,9 +93,9 @@ export function designOf(req: ImageRequest): Design {
 	const takes = slotsOf(template);
 	const sample = req.sample ? Object.fromEntries(Object.entries(spec.sample).filter(([k]) => !set[k as keyof Design])) : {};
 	const d: Design = { ...designFor(template, size, dims), ...sample, ...set };
+	if (d.palette) d.palette = pick('theme', d.palette, palettes().map((p) => p.name));
 	for (const slot of SLOTS) if (!takes.includes(slot) && set[slotKey(slot)]) throw new Error(`The ${template} layout does not draw ${slot}, so "${String(set[slotKey(slot)])}" would be lost. It draws ${takes.join(', ') || 'no copy'}.`);
 	for (const slot of spec.required) if (!String(d[slotKey(slot)] ?? '').trim()) throw new Error(`The ${template} layout needs --${slot}. Nothing is made up for it; --sample fills in sample copy.`);
-	if (d.palette) d.palette = pick('theme', d.palette, palettes().map((p) => p.name));
 	d.render = pick('render', d.render, RENDERS);
 	d.dither = pick('dither', d.dither, DITHERS);
 	d.field = pick('field', d.field, FIELDS);

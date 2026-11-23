@@ -8,6 +8,7 @@ import { registerIllustrate } from './commands/illustrate.js';
 import { registerFigma } from './commands/figma.js';
 import { guide } from './commands/guide.js';
 import { assets } from './commands/assets.js';
+import { design } from './commands/design.js';
 import { approve, check, done, look, skip, tokensCommand } from './commands/small.js';
 import { type HookResult, cursorPreToolUse, cursorStop, preToolUse, sessionStart, stop, userPromptSubmit } from './hooks/handlers.js';
 import { readHookInput } from './hooks/payload.js';
@@ -75,7 +76,10 @@ registerFigma(program);
 // Last: it also rejects a mistyped command, so every command must be registered first.
 assets(program);
 
-program.parseAsync().catch((error: Error & { exitCode?: number; code?: string }) => {
+// `design` reads its own arguments: the options above would swallow its --theme and --json.
+const asked = process.argv.slice(2).findIndex((a) => !a.startsWith('-'));
+const running: Promise<unknown> = process.argv[2 + asked] === 'design' && asked >= 0 ? design([...process.argv.slice(3 + asked), ...process.argv.slice(2, 2 + asked)]) : program.parseAsync();
+running.catch((error: Error & { exitCode?: number; code?: string }) => {
 	if (error.exitCode === 0) return;
 	if (process.argv.includes('--json')) process.stdout.write(`${JSON.stringify({ error: { message: error.message } })}\n`);
 	// Commander has already written its own errors (unknown option or command, with its suggestion).

@@ -155,7 +155,7 @@
 			"sizes": ["og", "x-banner", "square", "portrait", "tall", "story", "landscape", "linkedin", "youtube-thumbnail", "email", "custom"],
 			"required": ["headline", "lists"],
 			"set": { "image": "none", "dot": 6, "gap": 10, "field": "rings" },
-			"sample": { "headline": "Every piece of web context your agent needs.", "cta": "Build Magical Products", "lists": "# Web extraction\nExtract\nCrawl Website\nWeb Search\nScrape Markdown\nScrape HTML\nScrape Images\n# Brand intelligence\nRetrieve Brand\nGet Styleguide\nGet Fonts\n# Identification\nNAICS Lookup\nSIC Lookup" }
+			"sample": { "headline": "Every piece of web context your agent needs.", "cta": "Build Magical Products", "lists": "# Web extraction\nExtract\nCrawl Website\nWeb Search\nScrape Markdown\n# Brand intelligence\nRetrieve Brand\nGet Styleguide\nGet Fonts" }
 		},
 		"social": {
 			"label": "Announcement",

@@ -17,6 +17,7 @@ type Reel = {
     cardTop: [string, string];
     cardBottom: [string, string];
     pills: string[];
+    bench: string[];
   };
 };
 

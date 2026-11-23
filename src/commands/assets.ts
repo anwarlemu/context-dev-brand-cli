@@ -1,12 +1,13 @@
 import type { Command } from 'commander';
 import { unknown } from '../assets/io.js';
+import { designCommand } from './design.js';
 import { deckCommand } from './deck.js';
 import { imageCommand } from './image.js';
 import { manifestCommand } from './manifest.js';
 import { merchCommand } from './merch.js';
 import { videoCommand } from './video.js';
 
-// The asset commands: image (share images and social posts), video, deck and merch, and manifest (describe), the one
+// The asset commands: image (share images and social posts), video, deck and merch, design (revising any of them), and manifest (describe), the one
 // document that lists them all for agents.
 
 export function assets(program: Command) {
@@ -14,6 +15,7 @@ export function assets(program: Command) {
 	deckCommand(program);
 	videoCommand(program);
 	merchCommand(program);
+	designCommand(program);
 	manifestCommand(program);
 	rejectUnknownCommand(program, process.argv.slice(2));
 }
