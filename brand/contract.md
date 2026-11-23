@@ -8,4 +8,5 @@
 - Validate controlled inputs, every visible action, keyboard focus, overlays, scrolling, and loading/error/empty states. Example data and callbacks are not backend implementations.
 - Run `{{cli}} check --changed --json`, the app's own checks, and browser tests at desktop and phone sizes. A clean token check alone does not prove the interface works.
 - Review the rendered page against its stated reference with `{{cli}} review <url> --any --json`; follow the review packet if no separate reviewer is available and disclose self-scoring.
+- Graphics: `{{cli}} design new`, then `design revise`/`edit` until the person is happy; never hand-edit the PNG or SVG.
 - A `ds-override: <reason>` comment only counts after the user approves it with `{{cli}} approve`.

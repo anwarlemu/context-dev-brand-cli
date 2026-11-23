@@ -1466,8 +1466,15 @@ export function dotIcon(
   let bits = hashOf(label) & 511;
   /* Never empty, never solid: three to seven lit. */
   const count = (n: number) => n.toString(2).replace(/0/g, "").length;
-  while (count(bits) < 3) bits |= 1 << (hashOf(label + bits) % 9);
-  while (count(bits) > 7) bits &= ~(1 << (hashOf(label + bits) % 9));
+  /* From the hashed spot, the next dot that changes anything (the same spot again would never end). */
+  for (let n = 0; count(bits) < 3; n++) {
+    const h = hashOf(label + bits + n) % 9;
+    for (let k = 0; k < 9; k++) if (!(bits & (1 << ((h + k) % 9)))) { bits |= 1 << ((h + k) % 9); break; }
+  }
+  for (let n = 0; count(bits) > 7; n++) {
+    const h = hashOf(label + bits + n) % 9;
+    for (let k = 0; k < 9; k++) if (bits & (1 << ((h + k) % 9))) { bits &= ~(1 << ((h + k) % 9)); break; }
+  }
   const step = size / 3;
   const r = step * 0.34;
   const lit = new Path2D();

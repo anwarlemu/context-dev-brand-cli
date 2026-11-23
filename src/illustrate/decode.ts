@@ -2,13 +2,22 @@ import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { extname, join } from 'node:path';
+import { cutShort, pictureKind } from '../assets/picture.js';
 import { decodePng, isPng, type Pixels } from './png.js';
 
 const MIME: Record<string, string> = { '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.avif': 'image/avif', '.bmp': 'image/bmp', '.png': 'image/png' };
 
 /** Reads any picture into straight RGBA: PNG in-process, anything else through Chromium (or macOS sips for photos). */
 export async function readPicture(path: string): Promise<Pixels> {
-	const bytes = readFileSync(path);
+	let bytes: Buffer;
+	try {
+		bytes = readFileSync(path);
+	} catch {
+		throw new Error(`No picture at ${path}.`);
+	}
+	const kind = pictureKind(bytes);
+	if (!kind) throw new Error(`${path} is not a PNG, JPEG, WebP, GIF or SVG picture.`);
+	if (cutShort(bytes, kind)) throw new Error(`${path} is cut short: the end of the file is missing.`);
 	if (isPng(bytes)) {
 		try {
 			return decodePng(bytes);

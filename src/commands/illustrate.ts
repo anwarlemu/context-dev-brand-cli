@@ -5,6 +5,8 @@ import { buildIllustration, ENUMS, illustrateData, type Settings } from '../illu
 import { readPicture } from '../illustrate/decode.js';
 import { encodePng } from '../illustrate/png.js';
 import { countDots, toPixels, toSvg } from '../illustrate/render.js';
+import { imageDoc } from '../assets/og.js';
+import { sizeId } from '../assets/image.js';
 import { brand } from '../lib/brand.js';
 import { unknownName } from '../lib/names.js';
 import { emit } from '../lib/output.js';
@@ -53,9 +55,21 @@ function settingsFrom(flags: Flags): Partial<Settings> {
 	}
 	if (typeof flags.size === 'string') {
 		const m = /^(\d+)\s*[x×]\s*(\d+)$/i.exec(flags.size);
-		if (!m) throw new Error(`--size takes WIDTHxHEIGHT, such as 1200x630; got \`${flags.size}\``);
-		out.width = Number(m[1]);
-		out.height = Number(m[2]);
+		if (m) {
+			out.width = Number(m[1]);
+			out.height = Number(m[2]);
+		} else {
+			// Or one of the shared sizes (og, story, x-banner...).
+			const id = sizeId(flags.size);
+			const s = id === 'custom' ? undefined : imageDoc().sizes[id];
+			if (!s) throw new Error(`--size takes a size (og, square, story, x-banner...) or WIDTHxHEIGHT, such as 1200x630; got \`${flags.size}\``);
+			out.width = s.w;
+			out.height = s.h;
+		}
+	}
+	if (typeof flags.theme === 'string') {
+		if (typeof flags.palette === 'string' && flags.palette !== flags.theme) throw new Error('--theme and --palette are the same thing; pass one.');
+		out.palette = flags.theme;
 	}
 	for (const key of ['render', 'dither', 'cutout', 'empty', 'field', 'palette', 'shader'] as const) if (typeof flags[key] === 'string') (out as Record<string, string>)[key] = flags[key] as string;
 	if (flags.invert) out.invert = true;
@@ -86,6 +100,7 @@ export async function illustrate(subject: string | undefined, flags: Flags) {
 	const picture = typeof flags.image === 'string' ? await readPicture(resolve(String(flags.image))) : undefined;
 	const pictureName = typeof flags.image === 'string' ? basename(String(flags.image), extname(String(flags.image))) : undefined;
 	const built = buildIllustration({ subject, picture, pictureName, preset: flags.preset as string | undefined, settings: settingsFrom(flags) });
+	if (!built.illustration.layers.some((l) => l.id !== 'field' && l.circles.length)) throw new Error('Nothing was drawn: the picture has no shape the dots can show (it may be empty, or all background). Try --cutout whole.');
 	const name = subject ?? pictureName ?? 'picture';
 	const outArg = typeof flags.out === 'string' ? resolve(flags.out) : resolve(`illustration-${name}`);
 	const base = /\.(svg|png)$/i.test(outArg) ? outArg.slice(0, -4) : outArg;
@@ -120,7 +135,8 @@ export function registerIllustrate(program: Command) {
 		.option('--image <file>', 'any picture (PNG best; JPEG, WebP and SVG through a browser)')
 		.option('--preset <name>', 'shader settings from the brand (see --list)')
 		.option('--palette <name>', 'colors from brand tokens (see --list)')
-		.option('--size <WxH>', 'frame size, such as 1200x630')
+		.option('--theme <name>', 'the same as --palette')
+		.option('--size <size>', 'frame size: a shared size (og, square, story, x-banner...) or WxH, such as 1200x630')
 		.option('--render <mode>', 'toneEdges, tone, edges or silhouette')
 		.option('--dither <mode>', 'none, diffuse or pattern')
 		.option('--cutout <mode>', 'auto (remove the background) or whole')

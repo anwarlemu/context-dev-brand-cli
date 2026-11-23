@@ -362,7 +362,6 @@ export function Stat({ lt }: TileProps) {
             fontSize: 36,
             lineHeight: 1.25,
             maxWidth: 520,
-            opacity: 0.9,
           }}
         >
           {COPY.statLabel}
@@ -888,7 +887,7 @@ export function EndCard({ lt }: TileProps) {
           textAlign: "center",
           fontSize: 28,
           letterSpacing: "0.08em",
-          color: "rgba(255,255,255,0.78)",
+          color: C.white,
           opacity: url,
         }}
       >

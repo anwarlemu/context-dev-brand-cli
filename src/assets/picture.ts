@@ -23,7 +23,7 @@ export function pictureKind(data: Buffer): string | undefined {
 }
 
 /** A file whose end is missing decodes to blank pixels, so it is refused instead. */
-function cutShort(b: Buffer, kind: string): boolean {
+export function cutShort(b: Buffer, kind: string): boolean {
 	if (kind === 'png') return b.indexOf('IEND', Math.max(0, b.length - 4096), 'latin1') < 0;
 	if (kind === 'jpeg') return b.lastIndexOf(Buffer.from([0xff, 0xd9])) < 0;
 	if (kind === 'webp') return b.readUInt32LE(4) + 8 > b.length + 1;

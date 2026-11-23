@@ -118,7 +118,8 @@ Product documents use a 15px root and `ds-product` (or `<Surface kind="product">
 | `npx context-ds done <screen>` | Marks a native screen restyled (web screens are checked by `review`). |
 | `npx context-ds skip <screen> --reason "..."` | Leaves a screen as it is when it cannot pass without changing words or elements; the final summary lists each skip and why. |
 | `npx context-ds manifest --json` | Every command, flag, asset template, size, palette, slide, loop and merch item (`describe` is the same). Unknown names exit 1 with the closest match. |
-| `npx context-ds image <template>` | Share images and social posts (`banner`, `products`, `social`, `cards`, `customer`; `--kind social` for every post shape) as PNG and SVG; `--image` turns any picture into dots. |
+| `npx context-ds image <template>` | Share images and social posts (`banner`, `products`, `social`, `cards`, `customer`, `mark`) at every shared size (`og`, `x-banner`, `story`, `linkedin-banner`, `youtube`, ...; `--size a,b` or `all`) as PNG, SVG, JPEG and WebP; only the copy you pass is drawn, whole, and every image is checked before it is written. |
+| `npx context-ds design <new\|revise\|edit\|undo\|variants\|sizes\|compare\|render\|check>` | A design you can keep changing: a small JSON file, revised in plain words or exact edits, checked on every write, with undo, variants, other sizes and side-by-side comparisons. See "Revising a design" below. |
 | `npx context-ds deck` | 1920 by 1080 slides from `--input deck.json` or flags: a PNG per slide and one PDF. |
 | `npx context-ds video reel\|edges\|twinkle\|ripple\|logo` | The 10 s reel with its copy as flags, and seamless dot loops; MP4 and WebM through ffmpeg, PNG frames without. |
 | `npx context-ds merch <item>` | Print files only: SVG at physical size and 300 dpi PNG with bleed (cap, tee, hoodie, tote, mug, sticker with die line, poster, socks). |
@@ -133,6 +134,21 @@ and the agent scores them itself; the final summary says which screens were scor
 The asset commands draw on a Skia canvas (`@napi-rs/canvas`) with the brand's fonts in `brand/fonts`; their layouts and
 copy live in `brand/assets/`, the renderer in `src/assets/` (importable as `dist/assets/index.js`). Compare them with the
 share-image editor: `PLAYGROUND=<agd-playground> CHROMIUM=<chrome> npx tsx scripts/assets/compare-playground.ts <dir>`.
+
+## Revising a design
+
+```sh
+npx context-ds design new banner --size x-banner --headline "The web data APIs for agents" -o banner.design.json
+npx context-ds design revise banner.design.json "bigger headline, logo top right, darker theme"
+npx context-ds design edit banner.design.json --layer headline.dx=0.02 --theme Ink
+npx context-ds design undo banner.design.json
+npx context-ds design variants banner.design.json --by theme      # one labeled sheet to choose from
+npx context-ds design sizes banner.design.json --to og,story,linkedin-banner
+```
+
+Look at the PNG after every step. A request the brand does not allow ("make it neon green", "use Comic Sans") or one the
+words do not cover changes nothing and says why. The core of `design` (`src/design/`, all but `adapter.ts` and `media.ts`)
+is shared with the other brand CLIs, byte for byte.
 
 ## What it brings
 
