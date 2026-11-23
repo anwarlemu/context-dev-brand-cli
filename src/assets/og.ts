@@ -658,7 +658,9 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   type Pick = { c: Column; r: Rect };
   let best: Pick | undefined;
   const aside = logo ? regions(q, { ...area, y: area.y }) : regions(q, area);
-  for (const raw of aside) {
+  for (let raw of aside) {
+    /* Beside a covered corner the words may go on further: the picture needs only its own square. */
+    if (raw.x > area.x + 1 && strip && hasArt && d.textWidth === undefined) raw = { ...raw, w: S.x + S.w * 0.68 - raw.x };
     /* Shifted clear of a covered corner, the logo goes with the words. */
     const shifted = raw.x > area.x + 1;
     const l = shifted && logo && !q.edits.logo?.anchor ? { ...logo, x: raw.x } : logo;
@@ -701,6 +703,13 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   return { text: words, area: room };
 }
 
+/* Whether the words leave the picture a third of the height under them; otherwise it goes beside them. */
+function socialStacks(q: Pen, size: number) {
+  const { S, m, fonts } = q;
+  const c = column(q, { size, body: size * BODY * 1.1, maxW: S.w * 0.8, maxH: S.h * 0.56, headFace: { family: fonts.sans, weight: 400, tracking: -0.01, leading: 1.1 } });
+  return !!c && S.h - m - Math.max(m, S.h * 0.075) - c.h > S.h * 0.4;
+}
+
 /*
  * The social post: a big headline and a line under it, centred, and the picture in dots in the room left (below, or
  * beside on a wide strip).
@@ -709,9 +718,9 @@ export const BODY = 0.33;
 function drawSocial(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   const { d, S, W, H, m, fonts } = q;
   const ratio = S.w / S.h;
-  const strip = ratio >= 2.2;
   const hasArt = !!img && !q.edits.art?.hidden;
   const size = d.textSize ?? (110 * Math.sqrt(S.w * Math.min(S.h, S.w * 1.4))) / 900;
+  const strip = ratio >= 2.2 || (ratio >= 1.2 && hasArt && d.textX === undefined && !socialStacks(q, size));
   const head: Face = { family: fonts.sans, weight: 400, tracking: -0.01, leading: 1.1 };
   const logo = logoBox(q, "top-left");
   const share = d.textWidth ?? (strip ? (hasArt ? 0.58 : 0.8) : ratio >= 1.2 ? 0.8 : 0.88);
@@ -1049,26 +1058,31 @@ function drawProducts(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   const m = Math.min(24 * k, S.h * 0.06);
   const cut = q.cuts[0];
   const left = across && cut && cut.x < W / 2 ? right(cut) - S.x : 0;
-  const split = left ? Math.max(0.6, (left + S.w * 0.28) / S.w) : 0.49;
+  const fullest = left ? [Math.max(0.6, (left + S.w * 0.28) / S.w)] : [0.49, 0.42, 0.36];
   const full = across && left ? { y: 0, h: H } : { y: S.y, h: S.h };
-  const panel: Rect = across
-    ? { x: S.x + S.w * split, y: full.y + m, w: S.w * (1 - split) - m, h: full.h - 2 * m }
-    : { x: S.x + m, y: S.y + S.h * 0.4, w: S.w - 2 * m, h: S.h * 0.6 - m };
-  const side: Rect = across
-    ? { x: S.x + left, y: S.y, w: panel.x - S.x - left, h: S.h }
-    : { x: S.x, y: S.y, w: S.w, h: panel.y - S.y };
   const panelBg = p.fill;
   const panelInk = onFill(p);
   const eh = q.edits.headline ?? {};
   const el = q.edits.logo ?? {};
 
-  /* The panel's contents first, as big as they fit: columns, then size. */
+  /* The panel's contents first, as big as they fit: columns, then size, then a wider panel. */
   const groups = parseLists(d.lists);
-  const inner = grow(panel, -Math.max(22 * k, q.floor * 0.9));
-  /* Words inside the panel stay where the platform shows it. */
-  const safe: Rect = { x: Math.max(inner.x, S.x), y: Math.max(inner.y, S.y + 4), w: Math.min(right(inner), right(S)) - Math.max(inner.x, S.x), h: Math.min(bottom(inner), bottom(S) - 4) - Math.max(inner.y, S.y + 4) };
-  const lists = fitLists(q, groups, safe, 18 * k);
-  if (!lists) throw tooLong("list", sizeName(q));
+  let panel: Rect | undefined;
+  let lists: FittedLists | undefined;
+  for (const split of fullest) {
+    panel = across
+      ? { x: S.x + S.w * split, y: full.y + m, w: S.w * (1 - split) - m, h: full.h - 2 * m }
+      : { x: S.x + m, y: S.y + S.h * 0.4, w: S.w - 2 * m, h: S.h * 0.6 - m };
+    const inner = grow(panel, -Math.max(22 * k, q.floor * 0.9));
+    /* Words inside the panel stay where the platform shows it. */
+    const safe: Rect = { x: Math.max(inner.x, S.x), y: Math.max(inner.y, S.y + 4), w: Math.min(right(inner), right(S)) - Math.max(inner.x, S.x), h: Math.min(bottom(inner), bottom(S) - 4) - Math.max(inner.y, S.y + 4) };
+    lists = fitLists(q, groups, safe, 18 * k);
+    if (lists) break;
+  }
+  if (!lists || !panel) throw tooLong("list", sizeName(q));
+  const side: Rect = across
+    ? { x: S.x + left, y: S.y, w: panel.x - S.x - left, h: S.h }
+    : { x: S.x, y: S.y, w: S.w, h: panel.y - S.y };
 
   /* The other side, centred as one block. */
   const maxW = side.w * (across ? 0.82 : 0.84);
