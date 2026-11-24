@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-11-24T00:50:19.126Z",
+  "checkedAt": "2026-11-24T00:50:38.570Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -4441,6 +4441,52 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "legal-page",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/legal-page.tsx",
+          "sha256": "58f27e3f91e248c6334f0792ad0e1f8b8430e37720c241c3dff87c2e373e06ac"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(marketing)/privacy/page.tsx",
+          "sha256": "f3c0c4b7c521ad6281db98d8f9c3b6da27d93233a8098b5d1646af9a22c7c450",
+          "retained": false,
+          "exports": [
+            "metadata",
+            "PrivacyPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/legal/legal-page.tsx",
+          "sha256": "48b51e0e0bb184711b78d1b34886872e1b97003d04874e4c868e0538535eb83b",
+          "retained": false,
+          "exports": [
+            "LegalPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/legal/legal-page-body.tsx",
+          "sha256": "9ca7c6dff275a4c61eda8d526aadb35fc1ceed5c07adb2850344e830d92017c1",
+          "retained": false,
+          "exports": [
+            "LegalPageBody"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "line-chart",
       "surface": "product",
       "kind": "dashboard",
@@ -4781,6 +4827,72 @@
             "brandSearchLandingContent",
             "peopleEnrichmentLandingContent",
             "newsLandingContent"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "not-found-page",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/not-found-page.tsx",
+          "sha256": "23235b9001862b81ad166c45342965da94c3d29dcc32402dfef5a854f0da7f62"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/not-found.tsx",
+          "sha256": "e14417782152179e76f8077fb139e4bec06f58877d8807a713e5a707bdb5eee3",
+          "retained": false,
+          "exports": [
+            "metadata",
+            "NotFound"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/errors/not-found-view.tsx",
+          "sha256": "cd1f9fdeb03706fcf1b1a336bebdd2b4e0222e87c2c239dbac2e9a6a31305d37",
+          "retained": false,
+          "exports": [
+            "NotFoundView"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/errors/did-you-mean.tsx",
+          "sha256": "a99713ee7cc7bcd8eee8df5403b84d77359ce3ef61e928c06dfe714b8ed78396",
+          "retained": false,
+          "exports": [
+            "DidYouMean"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/lib/closest-path.ts",
+          "sha256": "e8ddf0b851d57185ac720557eef9217e00b86922b6908d810a1a1d9f7c9a8dcd",
+          "retained": false,
+          "exports": [
+            "findClosestPath"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/usecases/step-dot-number.tsx",
+          "sha256": "a3fdb24190c095e22153961fa0809c26c85f0ad591b7f2ff1d2560bfece122d1",
+          "retained": false,
+          "exports": [
+            "StepDotNumber"
           ]
         }
       ],
