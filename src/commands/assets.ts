@@ -3,6 +3,7 @@ import { unknown } from '../assets/io.js';
 import { designCommand } from './design.js';
 import { iconsCommand } from './icons.js';
 import { emailCommand } from './email.js';
+import { motionCommand } from './motion.js';
 import { deckCommand } from './deck.js';
 import { imageCommand } from './image.js';
 import { manifestCommand } from './manifest.js';
@@ -19,6 +20,7 @@ export function assets(program: Command) {
 	merchCommand(program);
 	iconsCommand(program);
 	emailCommand(program);
+	motionCommand(program);
 	designCommand(program);
 	manifestCommand(program);
 	rejectUnknownCommand(program, process.argv.slice(2));

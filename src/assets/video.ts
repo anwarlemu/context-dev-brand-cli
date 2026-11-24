@@ -180,7 +180,7 @@ export function loopLayers(o: LoopOptions): DrawnLayer[] {
 export type Encoded = { path: string; format: string };
 
 /** Pipes raw RGBA frames (or PNGs) into one ffmpeg run that writes each asked format. */
-export async function encode(frames: AsyncIterable<Buffer> | Iterable<Buffer>, o: { width: number; height: number; fps: number; input: 'rgba' | 'png'; outputs: { path: string; format: 'mp4' | 'webm' }[] }): Promise<Encoded[]> {
+export async function encode(frames: AsyncIterable<Buffer> | Iterable<Buffer>, o: { width: number; height: number; fps: number; input: 'rgba' | 'png'; outputs: { path: string; format: 'mp4' | 'webm'; alpha?: boolean }[] }): Promise<Encoded[]> {
 	for (const out of o.outputs) mkdirSync(dirname(out.path), { recursive: true });
 	const args = ['-y', '-loglevel', 'error'];
 	if (o.input === 'rgba') args.push('-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${o.width}x${o.height}`, '-r', String(o.fps), '-i', '-');
@@ -188,7 +188,7 @@ export async function encode(frames: AsyncIterable<Buffer> | Iterable<Buffer>, o
 	for (const out of o.outputs) {
 		args.push('-map_metadata', '-1', '-fflags', '+bitexact', '-flags:v', '+bitexact');
 		if (out.format === 'mp4') args.push('-c:v', 'libx264', '-preset', 'slow', '-crf', '16', '-pix_fmt', 'yuv420p', '-threads', '1', '-movflags', '+faststart', out.path);
-		else args.push('-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '28', '-pix_fmt', 'yuv420p', '-row-mt', '0', '-threads', '1', out.path);
+		else args.push('-c:v', 'libvpx-vp9', '-b:v', '0', '-crf', '28', '-pix_fmt', out.alpha ? 'yuva420p' : 'yuv420p', ...(out.alpha ? ['-auto-alt-ref', '0'] : []), '-row-mt', '0', '-threads', '1', out.path);
 	}
 	const ff = spawn('ffmpeg', args, { stdio: ['pipe', 'ignore', 'pipe'] });
 	let err = '';
