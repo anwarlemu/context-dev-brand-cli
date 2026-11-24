@@ -175,6 +175,17 @@ export function checkImage(d: Design, layers: DrawnLayer[], png: Uint8Array | un
 
 export { errorsOf };
 
+/** What gives way when a layer changes: the words under a headline follow it, the art makes room for the words and the
+ * logo, and the words take the room the art leaves. Nothing else moves. */
+const REFLOWS: Record<Template, Record<string, string[]>> = {
+	banner: { headline: ['body'], logo: ['art'], art: ['headline', 'body', 'badge'] },
+	social: { headline: ['badge', 'body', 'art'], logo: ['art', 'headline', 'body', 'badge'], art: ['headline', 'body', 'badge'] },
+	products: { headline: ['logo', 'cta'], logo: ['headline', 'cta'] },
+	cards: { headline: ['cards', 'numbers', 'panels', 'field'] },
+	customer: { headline: ['stat', 'art'], stat: ['headline', 'art'] },
+	mark: {},
+};
+
 /** What a template takes, as the design core reads it. */
 export function infoOf(id: Template): TemplateInfo {
 	const t = imageDoc().templates[id];
@@ -194,6 +205,7 @@ export function infoOf(id: Template): TemplateInfo {
 			...(id === 'customer' ? [{ id: 'burst', values: ['true', 'false'] }, { id: 'partner-color', values: ['true', 'false'], description: 'keep the logo\'s own colors' }] : []),
 		],
 		layers: Object.entries(CAN[id]).map(([layer, can]) => ({ id: layer, can })),
+		reflows: REFLOWS[id],
 		grounds: Object.fromEntries(palettes().map((p) => [p.name, p.bg])),
 		formats: ['png', 'svg', 'jpg', 'webp'],
 		layouts: [t.label.toLowerCase()],

@@ -670,7 +670,7 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   const strip = ratio >= 2.2;
   const hasArt = !!img && !q.edits.art?.hidden;
   const size = d.textSize ?? (strip ? Math.max(0.15 * S.h, q.floor * 1.6) : wide ? (64 * S.h) / 630 : (80 * W) / 1080);
-  const share = d.textWidth ?? (wide ? (hasArt ? (strip ? 0.5 : 0.45) : 0.8) : 1);
+  const share = d.textWidth ?? (wide ? (hasArt ? (strip ? 0.6 : 0.45) : 0.8) : 1);
   let logo = logoBox(q, "top-left");
   const area: Rect = { x: S.x + m, y: S.y + m, w: Math.min(S.w - m * 2, wide ? S.w * share : (S.w - m * 2) * share), h: S.h - m * 2 };
   if (d.textX !== undefined) area.x = d.textX * W;
@@ -727,7 +727,8 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
 /* Whether the words leave the picture a third of the height under them; otherwise it goes beside them. */
 function socialStacks(q: Pen, size: number) {
   const { S, m, fonts } = q;
-  const c = column(q, { size, body: size * BODY * 1.1, maxW: S.w * 0.8, maxH: S.h * 0.56, headFace: { family: fonts.sans, weight: 400, tracking: -0.01, leading: 1.1 } });
+  // Decided on the words as the layout sets them, so an edit to their size never flips the layout.
+  const c = column({ ...q, edits: {} }, { size, body: size * BODY * 1.1, maxW: S.w * 0.8, maxH: S.h * 0.56, headFace: { family: fonts.sans, weight: 400, tracking: -0.01, leading: 1.1 } });
   return !!c && S.h - m - Math.max(m, S.h * 0.075) - c.h > S.h * 0.4;
 }
 
@@ -1004,7 +1005,7 @@ function drawCustomer(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   const area: Rect = { x: S.x + (wide ? m : Math.max(m, 0.06 * S.w)), y: headTop, w: S.w * (d.textWidth ?? (wide ? 0.58 : 0.86)), h: bottom(S) - m - headTop };
   if (d.textX !== undefined) area.x = d.textX * W;
   const hf: Face = { family: fonts.sans, weight: 500, tracking: -0.03, leading: 1.06 };
-  type Words = { big: number; statSize: number; stat: string[]; head?: Block; h: number; w: number; gap: number; statLh: number };
+  type Words = { big: number; statSize: number; stat: string[]; head?: Block; h: number; w: number; statW: number; gap: number; statLh: number };
   const measure = (big: number, r: Rect, hk: number, sk: number): Words | undefined => {
     const statSize = big * 2 * sk;
     setFace(ctx, { family: fonts.sans, weight: 700, tracking: 0.03, leading: 1 }, statSize);
@@ -1016,7 +1017,7 @@ function drawCustomer(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
     if (head && head.w > r.w + 0.5) return undefined;
     const statLh = statSize * 0.86;
     const gap = stat.length && head ? big * 0.12 : 0;
-    return { big, statSize, stat, head, statLh, gap, h: stat.length * statLh + gap + (head?.h ?? 0), w: Math.max(0, ...statW, head?.w ?? 0) };
+    return { big, statSize, stat, head, statLh, gap, h: stat.length * statLh + gap + (head?.h ?? 0), w: Math.max(0, ...statW, head?.w ?? 0), statW: Math.max(0, ...statW) };
   };
   let best: { w: Words; r: Rect } | undefined;
   for (const r of regions(q, area)) {
@@ -1040,7 +1041,7 @@ function drawCustomer(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   const ty = (d.textY !== undefined ? pref : Math.max(r.y, Math.min(pref, bottom(r) - w.h))) + (eh.dy ?? 0) * H;
   const tx = r.x + (eh.dx ?? 0) * W;
   const statH = w.stat.length * w.statLh;
-  const statBox: Rect | undefined = w.stat.length ? { x: tx, y: ty, w: w.w, h: statH } : undefined;
+  const statBox: Rect | undefined = w.stat.length ? { x: tx, y: ty, w: w.statW, h: statH } : undefined;
   const headAt = ty + statH + w.gap;
   const text: Rect = { x: tx, y: ty, w: Math.max(1, w.w), h: w.h };
   const pad = 16 * u;
@@ -1059,7 +1060,7 @@ function drawCustomer(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   if (statBox) {
     ctx.fillStyle = p.text;
     w.stat.forEach((l, i) => dotText(ctx, l, tx, ty + i * w.statLh, w.statSize, w.statLh, fonts.sans));
-    q.layers.push({ id: "stat", kind: "text", box: statBox, ink: w.stat.map((_, i) => ({ x: tx, y: ty + i * w.statLh + w.statSize * 0.06, w: w.w, h: w.statSize * 0.78 })), text: { asked: statText, drawn: w.stat.join("\n"), size: w.statSize, color: p.text, ground: [p.bg] }, can: CAN.customer.stat });
+    q.layers.push({ id: "stat", kind: "text", box: statBox, ink: w.stat.map((_, i) => ({ x: tx, y: ty + i * w.statLh + w.statSize * 0.06, w: w.statW, h: w.statSize * 0.78 })), text: { asked: statText, drawn: w.stat.join("\n"), size: w.statSize, color: p.text, ground: [p.bg], bold: true }, can: CAN.customer.stat });
   }
   if (w.head) {
     const out = drawBlock(ctx, w.head, tx, headAt, eh.align ?? "left", r.w, p.text);

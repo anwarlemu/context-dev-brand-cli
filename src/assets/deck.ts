@@ -42,6 +42,18 @@ export const SLIDE_CAN: Record<SlideType, Record<string, Can>> = {
 	closing: { logo: { scale: [0.6, 1.5] }, title: TITLE, url: { scale: [0.7, 1.4], hide: true }, field: { hide: true } },
 };
 
+/** Slides are set as one block in the middle, so the parts of the block follow each other. */
+const SLIDE_REFLOWS: Record<SlideType, Record<string, string[]>> = {
+	cover: { title: ['body', 'art'], art: ['title', 'body'] },
+	section: { title: ['number'], number: ['title'] },
+	statement: {},
+	bullets: { title: ['items', 'icons', 'field'], items: ['icons', 'field'] },
+	stat: { title: ['stat'], stat: ['title'] },
+	quote: { quote: ['mark', 'attribution'], mark: ['quote', 'attribution'], attribution: ['quote', 'mark'] },
+	image: { title: ['body', 'art'], body: ['title', 'art'], art: ['title', 'body'] },
+	closing: { title: ['logo'], logo: ['title'] },
+};
+
 export function deckCatalog() {
 	const d = deckDoc();
 	return {
@@ -395,6 +407,7 @@ export function slideInfo(id: SlideType): TemplateInfo {
 		images: s.picture ? [{ id: 'picture', values: ['none', ...sampleNames().map((n) => `sample:${n}`)] }] : [],
 		options: [],
 		layers: Object.entries(SLIDE_CAN[id]).map(([layer, can]) => ({ id: layer, can })),
+		reflows: SLIDE_REFLOWS[id],
 		grounds: Object.fromEntries(palettes().map((p) => [p.name, p.bg])),
 		formats: ['png', 'svg', 'jpg', 'webp', 'pdf'],
 		layouts: [s.name.toLowerCase(), `${id} slide`],
