@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-11-24T00:50:38.570Z",
+  "checkedAt": "2026-11-24T09:13:51.701Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -1164,6 +1164,106 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "auth-shell",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/auth-shell.tsx",
+          "sha256": "399703266710bf60e922605933935ec9b0e548711d87e0f280838bfd74dd7b92"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/AuthScaffold.tsx",
+          "sha256": "c99d5e9c9520f5279c5fa4ea29f217010f7a46c5c43add0159872fad8155050f",
+          "retained": false,
+          "exports": [
+            "AuthPageShell",
+            "AuthCard",
+            "AuthHeader",
+            "AuthSocialButton"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/auth-styles.ts",
+          "sha256": "0b5afcdc754b6bc4bad25632e7219b3fbb8e865b1d8be7c84d514a1e20086055",
+          "retained": false,
+          "exports": [
+            "authFocusRingClass",
+            "authInputClass",
+            "authInputErrorClass",
+            "authPrimaryButtonClass",
+            "authSecondaryButtonClass",
+            "authNoticeClass",
+            "authLabelClass",
+            "authLinkClass",
+            "authMutedLinkClass",
+            "authHelperTextClass"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/SocialAuthSection.tsx",
+          "sha256": "aec9332f5e04b0d47cf273b5f8482800742a394e71f0f8d340fbb2595fb1ed43",
+          "retained": false,
+          "exports": [
+            "SocialAuthSection"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/layout.tsx",
+          "sha256": "34ff003a7f230bbf5ed0aabd31befaa66108c361f492eb7bfef539e8239dd02d",
+          "retained": false,
+          "exports": [
+            "metadata",
+            "AuthLayout"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/ui/password-input.tsx",
+          "sha256": "fb607db5355d45b57ef73725a3f39d7ab2d5aad965634a60b738e03b61ff4f6a",
+          "retained": false,
+          "exports": [
+            "PasswordInput"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/ui/visibility-icon.tsx",
+          "sha256": "4b41d3dadf89cd5de470e7a706b44f5405868edf353c5e4a087923f19d48bf4b",
+          "retained": false,
+          "exports": [
+            "VisibilityIcon"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/brand-outline-pill.ts",
+          "sha256": "b78b3e57bc75cc7dd5c90c6d04063507112e7d2fa354bb5e463475d10bc71c5c",
+          "retained": false,
+          "exports": [
+            "BRAND_OUTLINE_PILL_CLASS",
+            "BRAND_OUTLINE_PILL_ON_BLUE_CLASS",
+            "BRAND_BLACK_PILL_CLASS"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "avatar",
       "surface": "product",
       "kind": "dashboard",
@@ -1824,6 +1924,27 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "careers-page",
+      "surface": "site",
+      "kind": "derived",
+      "library": [
+        {
+          "path": "components/site/careers-page.tsx",
+          "sha256": "ce61e4dc0dda6de8ce413442e61e558b1e8cb9b309be9fe4560b7498356f0cb6"
+        }
+      ],
+      "derivedFrom": [
+        "hero",
+        "section",
+        "product-grid",
+        "badge",
+        "button"
+      ],
+      "sources": [],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Derived, not ported: the brand has no counterpart. Composed from library items hero, section, product-grid, badge, button."
     },
     {
       "name": "carousel",
@@ -3138,6 +3259,23 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "error-page",
+      "surface": "site",
+      "kind": "derived",
+      "library": [
+        {
+          "path": "components/site/error-page.tsx",
+          "sha256": "a75a6f7c788bf371d210fb00b473ffc98410d2498c1d2f511199c45e30914c48"
+        }
+      ],
+      "derivedFrom": [
+        "not-found-page"
+      ],
+      "sources": [],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Derived, not ported: the brand has no counterpart. Composed from library items not-found-page."
     },
     {
       "name": "faq",
@@ -4516,6 +4654,65 @@
       "scope": "Source reference; dashboard behavior cannot be verified on the public marketing site."
     },
     {
+      "name": "login-page",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/login-page.tsx",
+          "sha256": "bfd99e097c1d79ab8a199059c9ccf59760b03b85f1bc36f77d795641fcf411f1"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/login/page.tsx",
+          "sha256": "733a05c8c29dcf83cf824c4f8096648e997c2fd68820abb4538ad39415dc5811",
+          "retained": false,
+          "exports": [
+            "instant",
+            "metadata",
+            "LoginPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/login/LoginClient.tsx",
+          "sha256": "3fc1403d1fc589a864d93b03be60eedd26aa6bc096cc82b3c0854eafaf9d1bf9",
+          "retained": false,
+          "exports": [
+            "LoginClient"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/login/LoginFormPanel.tsx",
+          "sha256": "46e358711b39361a7760aad8058c115c2db788d999a7a6cd726934c138fdd15c",
+          "retained": false,
+          "exports": [
+            "LoginFormPanel"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/login/login-types.ts",
+          "sha256": "f7681212fa073ed2744322126e44c7f96ef1d3987021bd9b5f9827bd5017b35e",
+          "retained": false,
+          "exports": [
+            "FieldErrors",
+            "LoginStep",
+            "credentialMismatchErrorMessage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "logo-dot-sampling",
       "surface": "site",
       "kind": "website",
@@ -4832,6 +5029,27 @@
       ],
       "unresolvedHistoricalPaths": [],
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "newsletter-section",
+      "surface": "site",
+      "kind": "derived",
+      "library": [
+        {
+          "path": "components/site/newsletter-section.tsx",
+          "sha256": "343a81e2c1b905c3772828cfc1469064bb952964b7a91c01f564ec36cee29db1"
+        }
+      ],
+      "derivedFrom": [
+        "section",
+        "contact-page",
+        "field",
+        "input",
+        "button"
+      ],
+      "sources": [],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Derived, not ported: the brand has no counterpart. Composed from library items section, contact-page, field, input, button."
     },
     {
       "name": "not-found-page",
@@ -6313,6 +6531,65 @@
           "retained": false,
           "exports": [
             "WorkspaceCard"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "signup-page",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/signup-page.tsx",
+          "sha256": "cf87d5a24b25ee38161c8870a2c823a60b9dd469d472de0729e75d5f4a943f27"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/signup/page.tsx",
+          "sha256": "617d447e4e780ecdc4965ba1e0d7fbbf32c5f397db4e205f16bcf3a31890982b",
+          "retained": false,
+          "exports": [
+            "instant",
+            "metadata",
+            "SignupPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/signup/SignupClient.tsx",
+          "sha256": "1e1c5bc244f45e33ba3eec1207bec7a329a9bd07dfe413905ccb2af083ecdead",
+          "retained": false,
+          "exports": [
+            "SignupClient"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/signup/SignupFormPanel.tsx",
+          "sha256": "85fe6e81565fa54c0bad45af0e0d66d35dff53059c9363f1597a62d6bb5dbcfb",
+          "retained": false,
+          "exports": [
+            "SignupFormPanel"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(auth)/signup/signup-types.ts",
+          "sha256": "030e09f486dbfeead3d76bd76ecabe474ec72c4bf11fb69076eb7390209e25b9",
+          "retained": false,
+          "exports": [
+            "FieldErrors",
+            "SignupStep",
+            "emailExistsErrorMessage"
           ]
         }
       ],
@@ -9633,6 +9910,91 @@
           "exports": [
             "cn",
             "formatDate"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "verify-email-page",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/verify-email-page.tsx",
+          "sha256": "305ce998ed28e96f9ca992edfdbe15972c2c5e6445d339d92e94da233c085952"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(dashboard)/verify-email/page.tsx",
+          "sha256": "ea2388a065273529dbbbe6116a1c48ba8a0c0756b607add7190e14a063405ca6",
+          "retained": false,
+          "exports": [
+            "instant",
+            "metadata",
+            "VerifyEmailPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(dashboard)/verify-email/VerifyEmailClient.tsx",
+          "sha256": "1a0cd02c994d8fb29ac702441b9fcfbc8170096aa946b14a6dcb370ccd86ba48",
+          "retained": false,
+          "exports": [
+            "VerifyEmailErrorReason",
+            "VerifyEmailClient"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(dashboard)/verify-email/VerifyEmailConfirmation.tsx",
+          "sha256": "941d4d67748da16b67fd5e8b241ac8c6069818937ec974de196662b64a32aa0b",
+          "retained": false,
+          "exports": [
+            "VerifyEmailConfirmation"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/onboarding/OnboardingAuthStepScaffold.tsx",
+          "sha256": "3263c322ffc91cbc8b44500d81303f53b04df8f02e4239819ff35700e82fcfc1",
+          "retained": false,
+          "exports": [
+            "OnboardingAuthStepScaffold",
+            "OnboardingAuthStepHeader"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/onboarding/OnboardingBrandStage.tsx",
+          "sha256": "9f529980dbfcee0ff023e937ba5a76bb0f903f73be9b10cc69c43f304609dd81",
+          "retained": false,
+          "exports": [
+            "OnboardingBrandStage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/onboarding/onboarding-flow-styles.ts",
+          "sha256": "7fd96cf9b75c8ec5031b09b16a5cbc363a1d282a9de010afdb092213bf391036",
+          "retained": false,
+          "exports": [
+            "onboardingFlowCardClass",
+            "onboardingFlowPrimaryButtonClass",
+            "onboardingFlowSecondaryButtonClass",
+            "onboardingFlowInputClass",
+            "onboardingFlowInputErrorClass",
+            "onboardingFlowCardMaxWidthClass",
+            "onboardingFlowStepCardClass"
           ]
         }
       ],
