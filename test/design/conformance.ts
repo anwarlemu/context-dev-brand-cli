@@ -2,7 +2,7 @@ import { mkdtempSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { applyEdits, checkDesign, composeInfo, create, errorsOf, parseDoc, parsePhrases, runDesign, stateOf, type Adapter, type DesignDoc, type DesignIO, type Edit, type Finding, type TemplateInfo } from '../../src/design/index.js';
+import { applyEdits, checkDesign, composeInfo, create, wordsOf, errorsOf, parseDoc, parsePhrases, runDesign, stateOf, type Adapter, type DesignDoc, type DesignIO, type Edit, type Finding, type TemplateInfo } from '../../src/design/index.js';
 
 // What every brand's adapter has to do, run by each repo against its own: `designConformance(adapter, opts)`.
 
@@ -222,7 +222,7 @@ export function designConformance(adapter: Adapter, opts: ConformanceOptions) {
 				const problems: string[] = [];
 				const sizes = (adapter.compose!.sizes ?? ['og', 'square', 'story']).filter((s) => s !== 'custom').slice(0, 4);
 				for (const b of adapter.compose!.blocks()) for (const size of sizes) {
-					const copy = Object.fromEntries(b.copy.map((c) => [c.id, c.id === 'number' || c.id === 'value' ? '42%' : 'Ship faster']));
+					const copy = b.sample ?? Object.fromEntries(b.copy.map((c) => [c.id, c.id === 'number' || c.id === 'value' ? '42%' : 'Ship faster']));
 					const base = create(adapter, 'compose', size, []).doc;
 					const d = applyEdits(base, [{ op: 'block-add', type: b.type, copy }, ...(b.image?.required ? [{ op: 'image', slot: b.type, value: b.image.values?.[0] ?? opts.picture! } as Edit] : [])], adapter).doc;
 					const r = await tryDraw(d);
@@ -233,7 +233,7 @@ export function designConformance(adapter: Adapter, opts: ConformanceOptions) {
 				expect(problems.join('\n')).toBe('');
 				const info = composeInfo(adapter);
 				const first = adapter.compose!.blocks()[0]!;
-				const d = applyEdits(create(adapter, 'compose', info.sizes[0], []).doc, parsePhrases(`add a ${first.type}${first.copy.length ? ' "Ship faster"' : ''} top left`, { adapter, doc: create(adapter, 'compose', info.sizes[0], []).doc, info }).edits, adapter).doc;
+				const d = applyEdits(create(adapter, 'compose', info.sizes[0], []).doc, parsePhrases(`add a ${first.type}${first.copy.length ? ` "${first.sample?.[first.copy[0]!.id] ?? 'Ship faster'}"` : ''} top left`, { adapter, doc: create(adapter, 'compose', info.sizes[0], []).doc, info }).edits, adapter).doc;
 				expect(d.blocks!.map((x) => x.type)).toEqual([first.type]);
 			});
 			it('compose: every template can be recreated as blocks, whole and clean', { timeout }, async () => {
@@ -251,7 +251,8 @@ export function designConformance(adapter: Adapter, opts: ConformanceOptions) {
 					const r = await draw(d);
 					made++;
 					problems.push(...errorsOf(r.findings).map((f) => `${t.id}: ${f.rule}: ${f.message}`));
-					for (const [k, v] of Object.entries(copy)) if (!Object.values(d.copy).includes(v)) problems.push(`${t.id}: the recipe leaves out ${k}`);
+					const kept = Object.values(d.copy).flatMap(wordsOf);
+					for (const [k, v] of Object.entries(copy)) if (wordsOf(v).some((w) => !kept.includes(w))) problems.push(`${t.id}: the recipe leaves out words of ${k}`);
 				}
 				expect(problems.join('\n')).toBe('');
 				expect(made).toBeGreaterThan(0);

@@ -392,7 +392,7 @@ export class Runs {
   }
 }
 
-const covered = (keep: Rect[], x: number, y: number, r: number) => keep.some((b) => x + r > b.x && x - r < right(b) && y + r > b.y && y - r < bottom(b));
+export const covered = (keep: Rect[], x: number, y: number, r: number) => keep.some((b) => x + r > b.x && x - r < right(b) && y + r > b.y && y - r < bottom(b));
 
 /* How much of a dot is left where the picture runs off the frame: it fades out over the last stretch. */
 function fadeFor(box: Rect, W: number, H: number) {
@@ -407,10 +407,11 @@ function fadeFor(box: Rect, W: number, H: number) {
 }
 
 /* The dot field: the picture shaded into the grid, the grid behind it, and no dot wherever the words are. */
-export function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { fill?: string; ring?: string; field?: string; fieldOp?: number; ground?: string; clip?: Rect; on?: string; mask?: (x: number, y: number) => boolean } = {}) {
+export function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, over: { fill?: string; ring?: string; field?: string; fieldOp?: number; ground?: string; clip?: Rect; on?: string; mask?: (x: number, y: number) => boolean; id?: string } = {}) {
   const { ctx, d, p, W, H } = q;
   const keep = [...q.keep, ...(q.hold ?? [])];
-  const e = q.edits.art ?? {};
+  const id = over.id ?? "art";
+  const e = q.edits[id] ?? {};
   const pic = e.hidden ? null : img;
   if (!pic && d.field === "none") return;
   const fill = over.fill ?? p.fill;
@@ -480,11 +481,11 @@ export function drawDots(q: Pen, img: Picture | null, area: Rect | undefined, ov
   }
   ctx.globalAlpha = 1;
   const on = over.on ? { over: [over.on] } : {};
-  if (ground.rects.length) q.layers.push({ id: "field", kind: "art", box: frame ?? { x: 0, y: 0, w: W, h: H }, ink: ground.rects, bleeds: true, ...on, can: FIXED });
-  if (box && art.rects.length) q.layers.push({ id: "art", kind: "art", box, ink: art.rects, ...(fade ? { fades: true } : {}), ...on, can: q.can.art ?? FIXED });
+  if (ground.rects.length) q.layers.push({ id: over.id ? `${id}-field` : "field", kind: "art", box: frame ?? { x: 0, y: 0, w: W, h: H }, ink: ground.rects, bleeds: true, ...on, can: FIXED });
+  if (box && art.rects.length) q.layers.push({ id, kind: "art", box, ink: art.rects, ...(fade ? { fades: true } : {}), ...on, can: q.can[id] ?? FIXED });
 }
 
-function shaderOpts(d: Design, fill: string, bg: string) {
+export function shaderOpts(d: Design, fill: string, bg: string) {
   return {
     dot: d.dot,
     gap: d.gap,

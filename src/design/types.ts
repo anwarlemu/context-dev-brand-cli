@@ -54,6 +54,7 @@ export type BlockInfo = {
 	span: { cols: number; rows: number };                // the cells it takes when added without a place
 	place?: Anchor;                                      // where it goes when added without a place
 	under?: boolean;                                     // it may sit under other blocks (a panel, art, a pattern)
+	sample?: Record<string, string>;                     // words that fit it, for tests and --sample
 };
 
 /** A section a page can be built from. */
@@ -104,7 +105,7 @@ export type Adapter = {
 		sizes?: string[];
 		formats?: Format[];
 		/** A template's design as blocks, to show any template can be recreated (conformance). */
-		recipe?(template: string, size: string, copy: Record<string, string>): Pick<DesignState, 'blocks' | 'grid' | 'copy' | 'theme'> | undefined;
+		recipe?(template: string, size: string, copy: Record<string, string>): (Pick<DesignState, 'blocks' | 'copy'> & Partial<Pick<DesignState, 'grid' | 'theme' | 'layers'>>) | undefined;
 	};
 	/** Pages from sections: the outline is checked by the core, then written in each flavor the brand ships. */
 	page?: {

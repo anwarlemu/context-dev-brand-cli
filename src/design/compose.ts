@@ -71,6 +71,29 @@ export function blockRects(doc: Pick<DesignDoc, 'size' | 'grid' | 'blocks'>, mar
 	return (doc.blocks ?? []).map((block) => ({ block, rect: g.cell(block.at) }));
 }
 
+/** Moves a block's cells clear of what the platform covers in a corner (X's profile picture), when it can. */
+export function clearOfCuts(doc: Pick<DesignDoc, 'size' | 'grid'>, at: ComposeBlock['at']): ComposeBlock['at'] {
+	const { width: W, height: H } = doc.size;
+	const grid = doc.grid ?? GRID;
+	const cuts = platformOf(doc.size.id, W, H).avoid.map((z) => zonePx(z, W, H)).filter((r) => r.w < W - 1 && r.h < H - 1);
+	if (!cuts.length) return at;
+	const g = gridOf(doc);
+	const hits = (a: ComposeBlock['at']) => {
+		const r = g.cell(a);
+		return cuts.some((c) => r.x < c.x + c.w && r.x + r.w > c.x && r.y < c.y + c.h && r.y + r.h > c.y);
+	};
+	if (!hits(at)) return at;
+	for (let d = 1; d < grid.cols; d++) for (const col of [at.col + d, at.col - d]) {
+		const next = { ...at, col };
+		if (col >= 0 && col + at.cols <= grid.cols && !hits(next)) return next;
+	}
+	for (let d = 1; d < grid.rows; d++) for (const row of [at.row - d, at.row + d]) {
+		const next = { ...at, row };
+		if (row >= 0 && row + at.rows <= grid.rows && !hits(next)) return next;
+	}
+	return at;
+}
+
 /** A place in words as cells for a block of a span. */
 export function placeAt(place: Anchor, span: { cols: number; rows: number }, grid = GRID): ComposeBlock['at'] {
 	const cols = Math.min(span.cols, grid.cols);
@@ -147,7 +170,7 @@ export function applyCompose(adapter: Adapter, s: DesignState, e: ComposeEdit): 
 			const info = blockInfo(adapter, e.type);
 			const id = e.id ?? newId(blocks, info.type);
 			if (blocks.some((b) => b.id === id)) throw new DesignError(`There is already a block "${id}".`);
-			const at = e.at ?? placeAt(e.place ?? info.place ?? 'center', info.span, grid);
+			const at = e.at ?? clearOfCuts(s, placeAt(e.place ?? info.place ?? 'center', info.span, grid));
 			checkAt(at, grid, id);
 			blocks.push({ id, type: info.type, at });
 			for (const [k, v] of Object.entries(e.copy ?? {})) {
@@ -160,7 +183,7 @@ export function applyCompose(adapter: Adapter, s: DesignState, e: ComposeEdit): 
 		}
 		case 'block-move': {
 			const b = blockOf(s, e.id, adapter);
-			const at = e.at ?? placeAt(e.place!, { cols: b.at.cols, rows: b.at.rows }, grid);
+			const at = e.at ?? clearOfCuts(s, placeAt(e.place!, { cols: b.at.cols, rows: b.at.rows }, grid));
 			checkAt(at, grid, b.id);
 			s.blocks = blocks.map((x) => (x.id === b.id ? { ...x, at } : x));
 			return `${b.id} ${e.place ? `to the ${e.place.replace('-', ' ')}` : `at ${at.col},${at.row}`}`;
