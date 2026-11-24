@@ -440,6 +440,332 @@
 					"part": "mark"
 				}
 			]
+		},
+		{
+			"id": "poster-11x17",
+			"name": "Poster, 11 by 17 in",
+			"size": [
+				11,
+				17
+			],
+			"bleed": 0.125,
+			"safe": 0.5,
+			"method": "digital or offset print",
+			"source": "Standard 11 by 17 in poster with 0.125 in bleed and a 0.5 in safe margin; the 18 by 24 layout scaled to it. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"paper",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.6111111111111112,
+						0.6111111111111112,
+						2.8111111111111113,
+						0.48888888888888893
+					],
+					"align": "left"
+				},
+				{
+					"type": "text",
+					"slot": "headline",
+					"box": [
+						0.6111111111111112,
+						1.7111111111111112,
+						7.944444444444445,
+						4.250000000000001
+					],
+					"size": 1.3444444444444446,
+					"align": "left",
+					"maxLines": 3
+				},
+				{
+					"type": "dots",
+					"mode": "picture",
+					"box": [
+						0,
+						6.018,
+						11,
+						10.982000000000001
+					],
+					"dot": 0.09777777777777778,
+					"gap": 0.04888888888888889
+				},
+				{
+					"type": "text",
+					"slot": "url",
+					"box": [
+						0.6111111111111112,
+						16.022222222222222,
+						9.777777777777779,
+						0.3666666666666667
+					],
+					"size": 0.25666666666666665,
+					"face": "data",
+					"align": "left",
+					"maxLines": 1
+				}
+			]
+		},
+		{
+			"id": "poster-24x36",
+			"name": "Poster, 24 by 36 in",
+			"size": [
+				24,
+				36
+			],
+			"bleed": 0.125,
+			"safe": 0.5,
+			"method": "digital or offset print",
+			"source": "Standard 24 by 36 in poster with 0.125 in bleed and a 0.5 in safe margin; the 18 by 24 layout scaled to it. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"paper",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						1.3333333333333333,
+						1.3333333333333333,
+						6.133333333333333,
+						1.0666666666666667
+					],
+					"align": "left"
+				},
+				{
+					"type": "text",
+					"slot": "headline",
+					"box": [
+						1.3333333333333333,
+						3.733333333333333,
+						17.333333333333336,
+						9.0
+					],
+					"size": 2.9333333333333336,
+					"align": "left",
+					"maxLines": 3
+				},
+				{
+					"type": "dots",
+					"mode": "picture",
+					"box": [
+						0,
+						12.744,
+						24,
+						23.256
+					],
+					"dot": 0.21333333333333332,
+					"gap": 0.10666666666666666
+				},
+				{
+					"type": "text",
+					"slot": "url",
+					"box": [
+						1.3333333333333333,
+						33.86666666666667,
+						21.333333333333332,
+						0.7999999999999999
+					],
+					"size": 0.5599999999999999,
+					"face": "data",
+					"align": "left",
+					"maxLines": 1
+				}
+			]
+		},
+		{
+			"id": "sticker-sheet",
+			"name": "Sticker sheet, letter",
+			"size": [
+				8.5,
+				11
+			],
+			"bleed": 0.125,
+			"safe": 0.25,
+			"method": "kiss-cut vinyl sheet",
+			"source": "A letter-size kiss-cut sheet with six stickers (the logo and the mark), 0.125 in bleed. The cut lines come from the vendor’s template; this file is the art. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"paper",
+				"blue",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.75,
+						1.75,
+						3.25,
+						0.8
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						5.4,
+						0.95,
+						1.45,
+						2.2
+					],
+					"part": "mark"
+				},
+				{
+					"type": "logo",
+					"box": [
+						1.65,
+						4.25,
+						1.45,
+						2.2
+					],
+					"part": "mark"
+				},
+				{
+					"type": "logo",
+					"box": [
+						4.5,
+						5.05,
+						3.25,
+						0.8
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.75,
+						8.35,
+						3.25,
+						0.8
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						5.4,
+						7.55,
+						1.45,
+						2.2
+					],
+					"part": "mark"
+				}
+			]
+		},
+		{
+			"id": "notebook-cover",
+			"name": "Notebook cover, A5",
+			"size": [
+				5.83,
+				8.27
+			],
+			"bleed": 0.125,
+			"safe": 0.25,
+			"method": "digital print",
+			"source": "A5 notebook cover (5.83 by 8.27 in) with 0.125 in bleed; the field fades down, the logo sits low. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"ink",
+				"paper"
+			],
+			"layers": [
+				{
+					"type": "dots",
+					"mode": "field",
+					"box": [
+						0,
+						0,
+						5.83,
+						5.6
+					],
+					"dot": 0.08,
+					"gap": 0.06,
+					"mask": "fade-down"
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.6,
+						6.6,
+						4.6,
+						0.7
+					]
+				}
+			]
+		},
+		{
+			"id": "lanyard",
+			"name": "Lanyard strap",
+			"size": [
+				36,
+				0.75
+			],
+			"bleed": 0.0625,
+			"safe": 0.06,
+			"method": "dye sublimation",
+			"source": "A 36 by 0.75 in sublimated lanyard strap (3/4 in wide), the logo repeated every 6 in, 1/16 in bleed. Vendors fold and stitch the ends, so keep 1 in clear at each end. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"ink",
+				"paper"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						6.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						12.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						18.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						24.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						30.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				}
+			]
 		}
 	]
 }

@@ -98,7 +98,7 @@ describe('asset outputs', () => {
 		expect(r.svg).toContain('id="CutContour"');
 		expect([r.width, r.height]).toEqual([975, 600]);
 		expect(r.png!.includes(Buffer.from('pHYs'))).toBe(true);
-		expect(merchItems().map((i) => i.id)).toEqual(['cap-front', 'tee-front', 'tee-back', 'hoodie-front', 'tote', 'mug-wrap', 'sticker', 'poster', 'socks']);
+		expect(merchItems().map((i) => i.id)).toEqual(['cap-front', 'tee-front', 'tee-back', 'hoodie-front', 'tote', 'mug-wrap', 'sticker', 'poster', 'socks', 'poster-11x17', 'poster-24x36', 'sticker-sheet', 'notebook-cover', 'lanyard']);
 	});
 	it('every slide type draws at 1920 by 1080', () => {
 		expect(slideTypes()).toEqual(['cover', 'section', 'statement', 'bullets', 'stat', 'quote', 'image', 'closing', 'agenda', 'team', 'timeline', 'chart', 'comparison', 'image-grid', 'qa']);
