@@ -2,7 +2,7 @@ import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { brandFonts, tokenColor } from '../assets/canvas.js';
 import { deckDoc, renderSlide, slideInfo, slideOf, slideTypes, type SlideType } from '../assets/deck.js';
 import { imagesToPdf } from '../assets/pdf.js';
-import { designOf, infoOf, pictureFor, renderDesign, seededSample, slotKey, slotsOf, wordColors } from '../assets/image.js';
+import { designOf, infoOf, pictureFor, plainWords, renderDesign, seededSample, slotKey, slotsOf, wordColors } from '../assets/image.js';
 import { frameOf, imageDoc, palettes, TEMPLATES, type Design, type Template } from '../assets/og.js';
 import type { Picture } from '../assets/picture.js';
 import { brand } from '../lib/brand.js';
@@ -125,7 +125,7 @@ export function adapter(): Adapter {
 		colors: designColors,
 		// The reel's tagline marks words for the brand color with *stars*; a comma that only separates a name from a role
 		// ("Alex Doe, Engineering") is where a card splits them.
-		words: (t) => t.replace(/\*/g, '').replace(/,(?=\s|$)/g, ''),
+		words: plainWords,
 		aliases: { sizes: { ...imageDoc().aliases, story: 'vertical' }, themes: {}, copy: { partnername: 'partner-name' } },
 	};
 }

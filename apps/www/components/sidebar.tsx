@@ -23,6 +23,7 @@ export const PAGES = [
   { href: "/cli", label: "CLI" },
   { href: "/assets", label: "Assets" },
   { href: "/designs", label: "Designs" },
+  { href: "/gallery", label: "Gallery" },
   { href: "/illustrations", label: "Illustrations" },
   { href: "/figma", label: "Figma" },
 ];

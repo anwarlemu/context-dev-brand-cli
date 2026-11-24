@@ -129,6 +129,11 @@ When a person wants a graphic and then changes to it ("bigger headline", "darker
 | Print files for merch | `merch <item> --variant ...` |
 | A dot illustration of a picture | `illustrate --image file.png` |
 | Favicons and app icons | `icons` |
+| A quote, stat, launch, feature, comparison, pricing, event or hiring card; an ad; a call background or wallpaper | `image <card> --set word=...` (`image --list` names them and their words) |
+| A one-pager, report cover, letterhead, certificate, business card or name tag | `image one-pager --size a4 --set ... -f pdf` (and the others the same way) |
+| An email (newsletter, announcement, receipt, password reset) | `email <kind> --set ...` |
+| A video from a graphic, an intro or outro, a lower third, a screenshot walkthrough | `motion reveal file.design.json`, `motion intro`, `motion lower-third`, `motion walkthrough a.png b.png` |
+| An agenda, team, timeline, chart, comparison, image grid or questions slide | `deck <type>` |
 | A whole web page | `design page compose outline.json` |
 | A component or section in code | `list`, `inspect`, `add` |
 

@@ -7,7 +7,7 @@ import { pick, unknown } from './io.js';
 import { assertGlyphs } from './glyphs.js';
 import { drawLogo, logoClear, logoMin, logoRatio } from './logo.js';
 import { designFor, dotIcon, dotText, drawBlock, drawBurst, drawDots, fitBlock, grow, logoBox, paletteOf, palettes, putLogo, setBlock, setFace, union, type Block, type Can, type Design, type Face, type Palette, type Pen } from './og.js';
-import { seededSample } from './image.js';
+import { plainWords, seededSample } from './image.js';
 import { drawCompose } from './compose.js';
 import { BLOCK_SLIDES } from './slide-blocks.js';
 import { readPicture, type Picture } from './picture.js';
@@ -455,7 +455,7 @@ export function checkSlide(slide: Slide, layers: DrawnLayer[], colors: () => str
 	const own = deckDoc().slides[type].own ?? {};
 	const copy = Object.fromEntries(Object.entries(slotsFor(type, slide, slide.sample === true)).filter(([k, v]) => v.trim() && own[k] !== v));
 	const d = { version: 1, brand: brand().bin, kind: 'slide', template: type, size: { id: 'slide', width: W, height: H }, copy, images: {}, options: {}, layers: {}, allow, history: [], future: [] } as DesignDoc;
-	return checkDesign({ doc: d, info: slideInfo(type), layers, adapter: { colors } });
+	return checkDesign({ doc: d, info: slideInfo(type), layers, adapter: { colors, words: plainWords } });
 }
 
 export type { Palette };

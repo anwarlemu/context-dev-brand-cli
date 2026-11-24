@@ -169,12 +169,15 @@ export function wordColors(): string[] {
 	return [...new Set([...palettes().flatMap((p) => [p.bg, p.fill, p.text, p.ink, onFill(p)]), ...[c.fill, c.heading, c.body, c.badge, c.badgeInk, 'white', 'text-muted'].map(tokenHex)])];
 }
 
+/** Words as drawn, for comparing: the reel's *accent* stars and the comma that splits a name from a role on a card go. */
+export const plainWords = (t: string) => t.replace(/\*/g, '').replace(/,(?=\s|$)/g, '');
+
 /** Everything wrong with a drawn design, as `design check` finds it. */
 export function checkImage(d: Design, layers: DrawnLayer[], png: Uint8Array | undefined, allow: string[] = []): Finding[] {
 	const copy = Object.fromEntries(slotsOf(d.template).map((s) => [s, String(d[slotKey(s)] ?? '')] as const).filter(([s, v]) => v.trim() && !(s === 'footer' && v === imageDoc().base.footer)));
 	const f = frameOf(d);
 	const doc = { version: 1, brand: brand().bin, kind: 'image', template: d.template, size: { id: d.size, width: f.w, height: f.h }, theme: paletteOf(d).name, copy, images: {}, options: {}, layers: {}, allow, history: [], future: [] } as DesignDoc;
-	return checkDesign({ doc, info: infoOf(d.template), layers, adapter: { colors: wordColors }, png });
+	return checkDesign({ doc, info: infoOf(d.template), layers, adapter: { colors: wordColors, words: plainWords }, png });
 }
 
 export { errorsOf };

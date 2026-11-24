@@ -1,0 +1,325 @@
+{
+	"groups": [
+		{
+			"title": "Social and share images",
+			"description": "The share-image templates at the platforms' sizes, clear of what each covers.",
+			"items": [
+				{
+					"label": "X header",
+					"command": "image banner --size x-banner --headline \"The web data APIs for agents\" -f png -o a.png",
+					"src": "/gallery/g-001.jpg",
+					"width": 640,
+					"height": 213
+				},
+				{
+					"label": "LinkedIn cover",
+					"command": "image social --size linkedin-banner --headline \"Browser profiles are here\" --theme Ink -f png -o b.png",
+					"src": "/gallery/g-002.jpg",
+					"width": 640,
+					"height": 160
+				},
+				{
+					"label": "YouTube channel art",
+					"command": "image customer --size youtube --sample -f png -o c.png",
+					"src": "/gallery/g-003.jpg",
+					"width": 640,
+					"height": 360
+				},
+				{
+					"label": "Story",
+					"command": "image social --size story --headline NEW! --body \"Log in once, reuse the session.\" -f png -o d.png",
+					"src": "/gallery/g-004.jpg",
+					"width": 320,
+					"height": 569
+				},
+				{
+					"label": "Pinterest pin",
+					"command": "image banner --size pinterest --headline \"Turn any page into Markdown\" -f png -o e.png",
+					"src": "/gallery/g-005.jpg",
+					"width": 320,
+					"height": 480
+				},
+				{
+					"label": "Profile picture",
+					"command": "image mark --theme Blue -f png -o f.png",
+					"src": "/gallery/g-006.jpg",
+					"width": 320,
+					"height": 320
+				}
+			]
+		},
+		{
+			"title": "Cards, ads and backgrounds",
+			"description": "Made of the brand's blocks; each takes its words with --set.",
+			"items": [
+				{
+					"label": "quote-card square",
+					"command": "image quote-card --sample --size square -f png -o r0.png",
+					"src": "/gallery/g-007.jpg",
+					"width": 480,
+					"height": 480
+				},
+				{
+					"label": "stat-card og",
+					"command": "image stat-card --sample --size og -f png -o r1.png",
+					"src": "/gallery/g-008.jpg",
+					"width": 480,
+					"height": 252
+				},
+				{
+					"label": "launch-card square",
+					"command": "image launch-card --sample --size square -f png -o r2.png",
+					"src": "/gallery/g-009.jpg",
+					"width": 480,
+					"height": 480
+				},
+				{
+					"label": "feature-card og",
+					"command": "image feature-card --sample --size og -f png -o r3.png",
+					"src": "/gallery/g-010.jpg",
+					"width": 480,
+					"height": 252
+				},
+				{
+					"label": "comparison-card square",
+					"command": "image comparison-card --sample --size square -f png -o r4.png",
+					"src": "/gallery/g-011.jpg",
+					"width": 480,
+					"height": 480
+				},
+				{
+					"label": "pricing-card portrait",
+					"command": "image pricing-card --sample --size portrait -f png -o r5.png",
+					"src": "/gallery/g-012.jpg",
+					"width": 480,
+					"height": 600
+				},
+				{
+					"label": "event-card og",
+					"command": "image event-card --sample --size og -f png -o r6.png",
+					"src": "/gallery/g-013.jpg",
+					"width": 480,
+					"height": 252
+				},
+				{
+					"label": "hiring-card square",
+					"command": "image hiring-card --sample --size square -f png -o r7.png",
+					"src": "/gallery/g-014.jpg",
+					"width": 480,
+					"height": 480
+				},
+				{
+					"label": "screenshot og",
+					"command": "image screenshot --sample --size og --image screenshot=/var/folders/m3/3d5zg63x0d17twwfhdcyqn9c0000gn/T/ds-docs-gallery-zmN0h7/shot/slide-01-chart.png -f png -o r9.png",
+					"src": "/gallery/g-015.jpg",
+					"width": 480,
+					"height": 252
+				},
+				{
+					"label": "ad ad-300x250",
+					"command": "image ad --sample --size ad-300x250 -f png -o r10.png",
+					"src": "/gallery/g-016.jpg",
+					"width": 300,
+					"height": 250
+				},
+				{
+					"label": "ad ad-728x90",
+					"command": "image ad --sample --size ad-728x90 -f png -o r11.png",
+					"src": "/gallery/g-017.jpg",
+					"width": 728,
+					"height": 90
+				},
+				{
+					"label": "background meeting",
+					"command": "image background --sample --size meeting -f png -o r12.png",
+					"src": "/gallery/g-018.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "email-header email",
+					"command": "image email-header --sample --size email -f png -o r13.png",
+					"src": "/gallery/g-019.jpg",
+					"width": 480,
+					"height": 160
+				}
+			]
+		},
+		{
+			"title": "Documents and print",
+			"description": "Pages and print files at their real sizes; PDF with --format pdf.",
+			"items": [
+				{
+					"label": "One-pager, A4",
+					"command": "image one-pager --sample --size a4 -f png -o p1.png",
+					"src": "/gallery/g-020.jpg",
+					"width": 360,
+					"height": 509
+				},
+				{
+					"label": "Report cover",
+					"command": "image report-cover --sample --size letter -f png -o p2.png",
+					"src": "/gallery/g-021.jpg",
+					"width": 360,
+					"height": 466
+				},
+				{
+					"label": "Letterhead",
+					"command": "image letterhead --sample --size a4 -f png -o p3.png",
+					"src": "/gallery/g-022.jpg",
+					"width": 360,
+					"height": 509
+				},
+				{
+					"label": "Certificate",
+					"command": "image certificate --sample --size landscape -f png -o p4.png",
+					"src": "/gallery/g-023.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "Business card",
+					"command": "image business-card --sample -f png -o p5.png",
+					"src": "/gallery/g-024.jpg",
+					"width": 420,
+					"height": 240
+				},
+				{
+					"label": "Name tag",
+					"command": "image name-tag --sample --size event-badge -f png -o p6.png",
+					"src": "/gallery/g-025.jpg",
+					"width": 360,
+					"height": 270
+				},
+				{
+					"label": "Email signature",
+					"command": "image email-signature --sample -f png -o p7.png",
+					"src": "/gallery/g-026.jpg",
+					"width": 480,
+					"height": 120
+				}
+			]
+		},
+		{
+			"title": "Slides",
+			"description": "The newer slide types; deck --input deck.json makes a whole deck and one PDF.",
+			"items": [
+				{
+					"label": "agenda",
+					"command": "deck agenda --sample --format png --out deck-agenda",
+					"src": "/gallery/g-027.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "team",
+					"command": "deck team --sample --format png --out deck-team",
+					"src": "/gallery/g-028.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "timeline",
+					"command": "deck timeline --sample --format png --out deck-timeline",
+					"src": "/gallery/g-029.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "chart",
+					"command": "deck chart --sample --format png --out deck-chart",
+					"src": "/gallery/g-030.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "comparison",
+					"command": "deck comparison --sample --format png --out deck-comparison",
+					"src": "/gallery/g-031.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "image-grid",
+					"command": "deck image-grid --sample --format png --out deck-image-grid",
+					"src": "/gallery/g-032.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "qa",
+					"command": "deck qa --sample --format png --out deck-qa",
+					"src": "/gallery/g-033.jpg",
+					"width": 480,
+					"height": 270
+				}
+			]
+		},
+		{
+			"title": "Merch",
+			"description": "Print files with bleed; confirm sizes with the vendor's template.",
+			"items": [
+				{
+					"label": "poster-24x36",
+					"command": "merch poster-24x36 --variant blue --dpi 72 --sample -f png --out merch",
+					"src": "/gallery/g-034.jpg",
+					"width": 360,
+					"height": 538
+				},
+				{
+					"label": "sticker-sheet",
+					"command": "merch sticker-sheet --variant paper --dpi 72 --sample -f png --out merch",
+					"src": "/gallery/g-035.jpg",
+					"width": 360,
+					"height": 463
+				},
+				{
+					"label": "notebook-cover",
+					"command": "merch notebook-cover --variant blue --dpi 72 --sample -f png --out merch",
+					"src": "/gallery/g-036.jpg",
+					"width": 360,
+					"height": 504
+				},
+				{
+					"label": "lanyard",
+					"command": "merch lanyard --variant blue --dpi 72 --sample -f png --out merch",
+					"src": "/gallery/g-037.jpg",
+					"width": 900,
+					"height": 22
+				}
+			]
+		},
+		{
+			"title": "Motion stills",
+			"description": "Each is a video (motion <kind>, MP4, WebM or GIF); these are their finished frames, which --still writes.",
+			"items": [
+				{
+					"label": "Intro sting",
+					"command": "motion intro --headline \"Web data for your agents\" --still --out m1",
+					"src": "/gallery/g-038.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "Lower third",
+					"command": "motion lower-third --name \"Alex Doe\" --role \"Engineer, Acme\" --theme Blue --still --out m2",
+					"src": "/gallery/g-039.jpg",
+					"width": 480,
+					"height": 270
+				},
+				{
+					"label": "Walkthrough",
+					"command": "motion walkthrough /var/folders/m3/3d5zg63x0d17twwfhdcyqn9c0000gn/T/ds-docs-gallery-zmN0h7/shot/slide-01-chart.png --captions \"Calls by kind\" --still --out m3",
+					"src": "/gallery/g-040.jpg",
+					"width": 480,
+					"height": 270
+				}
+			]
+		}
+	],
+	"video": {
+		"src": "/gallery/reveal.mp4",
+		"still": "/gallery/g-041.jpg",
+		"command": "motion reveal stat-card.design.json"
+	}
+}
