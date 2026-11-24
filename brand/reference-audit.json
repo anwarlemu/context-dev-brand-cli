@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "checkedAt": "2026-11-21T20:33:33.910Z",
+  "checkedAt": "2026-11-24T00:50:19.126Z",
   "method": "Resolved every documented source against pinned read-only git commits, recorded source and library hashes, extracted reference exports, and checked shared styles in a browser. Component source is adapted to tokens and reusable props. Source coverage does not certify every variant as visually or behaviorally identical.",
   "references": {
     "website": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
@@ -1377,6 +1377,96 @@
       "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
     },
     {
+      "name": "blog-index",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/blog-index.tsx",
+          "sha256": "e108b3e834561f7b70c0741a3a729ef423f1710ac684386a533e3f31bb0231ef"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(marketing)/blog/page.tsx",
+          "sha256": "5ddbb722e912c017b255722ddf896db2af663c57665ada1212ad5c5121832447",
+          "retained": false,
+          "exports": [
+            "metadata",
+            "Blog"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(marketing)/blog/layout.tsx",
+          "sha256": "dc6bc695a5dea63fe4cd9187f95b87f9c9c7e7433f35c92a3f93af66b495de20",
+          "retained": false,
+          "exports": [
+            "metadata",
+            "BlogLayout"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/marketing-filter-pills.tsx",
+          "sha256": "a1bda86343cace601810918e897ef7801572e42f3a9dfbf6528c737fdf0e3501",
+          "retained": false,
+          "exports": [
+            "MarketingFilterOption",
+            "MarketingFilterPills"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/blog-card.tsx",
+          "sha256": "63f62e522214c3bacd5cb3ef17507e4f6b20f35e61b1cc2af07166b2663ae7b1",
+          "retained": false,
+          "exports": [
+            "BlogCardPost",
+            "BlogCard"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/home/blog-card-palettes.ts",
+          "sha256": "08940fcedd6585fb3c225f41e33ad0ca989d5e292158c7524a71d1478e76d0cd",
+          "retained": false,
+          "exports": [
+            "BlogCardSurface",
+            "BLOG_CARD_PALETTES",
+            "blogCardSurface",
+            "BACKDROP_RING_OPACITY",
+            "backdropTile"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/products/product-landing-page.tsx",
+          "sha256": "b9eea159d7f9a850c9a884c71d84af4ff2fd41ba96abcfe965e16ce3d59f4110",
+          "retained": false,
+          "exports": [
+            "SECTION_CLASS",
+            "INTRO_SECTION_CLASS",
+            "CARD_CLASS",
+            "SectionIntro",
+            "LandingIntegration",
+            "LandingFaq",
+            "LandingSteps",
+            "ProductLandingPage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
       "name": "blog-post",
       "surface": "site",
       "kind": "website",
@@ -2187,6 +2277,53 @@
           "exports": [
             "metadata",
             "CompetitorComparisonPage"
+          ]
+        }
+      ],
+      "unresolvedHistoricalPaths": [],
+      "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity."
+    },
+    {
+      "name": "contact-page",
+      "surface": "site",
+      "kind": "website",
+      "library": [
+        {
+          "path": "components/site/contact-page.tsx",
+          "sha256": "70352c758383053ea38eb52186af1b155d2923d72279e29a0d8344a3748af25d"
+        }
+      ],
+      "sources": [
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(marketing)/contact/page.tsx",
+          "sha256": "975abac13b36a2c8f090ac3d64e5845f780fd4f5b005445c3a32ac00f9d1b7aa",
+          "retained": false,
+          "exports": [
+            "ContactPage"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/app/(marketing)/contact/ContactForm.tsx",
+          "sha256": "0bd45849258c817cd2f40721463a0775bb6cf8782a3036d3f15fb49e8a824b75",
+          "retained": false,
+          "exports": [
+            "ContactForm"
+          ]
+        },
+        {
+          "repository": "brand-dev-webapp",
+          "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+          "path": "src/components/sections/shared/brand-outline-pill.ts",
+          "sha256": "b78b3e57bc75cc7dd5c90c6d04063507112e7d2fa354bb5e463475d10bc71c5c",
+          "retained": false,
+          "exports": [
+            "BRAND_OUTLINE_PILL_CLASS",
+            "BRAND_OUTLINE_PILL_ON_BLUE_CLASS",
+            "BRAND_BLACK_PILL_CLASS"
           ]
         }
       ],
