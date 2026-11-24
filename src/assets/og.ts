@@ -639,7 +639,8 @@ function columnBoxes(q: Pen, c: Column, x: number, top: number, w: number, align
   return out;
 }
 
-/* Two ways to place words beside something the platform covers: above it, or clear of it to the side. */
+/* Two ways to place words beside something the platform covers: above it, or clear of it to the side. Above is kept
+   unless the side holds type a quarter bigger, so adding a line does not send the words across the canvas. */
 function regions(q: Pen, area: Rect): Rect[] {
   const cut = q.cuts.find((c) => hits(area, c));
   if (!cut) return [area];
@@ -692,7 +693,7 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
     if (!c) continue;
     const s = c.head?.size ?? c.body?.size ?? 1;
     const was = best && (best.c.head?.size ?? best.c.body?.size ?? 1);
-    if (!best || s > was! * 1.12) {
+    if (!best || s > was! * 1.25) {
       best = { c, r };
       if (l !== logo) best.r = { ...r, x: raw.x };
     }
@@ -756,7 +757,7 @@ function drawSocial(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   for (const r of regions(q, area)) {
     const maxH = hasArt && !strip ? Math.min(r.h, S.h * (ratio >= 1.2 ? 0.56 : 0.6)) : r.h;
     const c = column(q, { size, body: size * BODY * 1.1, maxW: r.w, maxH, headFace: head });
-    if (c && (!best || (c.head?.size ?? 0) > (best.c.head?.size ?? 0) * 1.12)) best = { c, r };
+    if (c && (!best || (c.head?.size ?? 0) > (best.c.head?.size ?? 0) * 1.25)) best = { c, r };
   }
   if (!best) throw tooLong(d.headline.length >= d.body.length ? "headline" : "body", sizeName(q));
   const { c, r } = best;
@@ -1026,7 +1027,7 @@ function drawCustomer(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
       const at = Math.max(big, q.floor * 1.15);
       const w = measure(at, r, 1, 1);
       if (w && w.h <= r.h + 0.5) {
-        if (!best || at > best.w.big * 1.12) {
+        if (!best || at > best.w.big * 1.25) {
           const edited = (eh.scale ?? 1) !== 1 || (es.scale ?? 1) !== 1 ? measure(at, r, eh.scale ?? 1, es.scale ?? 1) : w;
           if (edited && edited.h <= r.h + 0.5 && (!edited.head || edited.head.size >= q.floor - 0.01)) best = { w: edited, r };
         }

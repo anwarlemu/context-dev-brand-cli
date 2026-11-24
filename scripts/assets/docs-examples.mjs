@@ -30,28 +30,29 @@ async function jpeg(src, name, width) {
 
 const examples = { image: [], social: [], deck: [], merch: [], video: [] };
 const commands = {};
-for (const [t, extra] of [['banner', []], ['products', []], ['customer', []]]) {
-	const cmd = ['image', t, '--size', 'og', '--format', 'png', '--out', `img/${t}.png`, ...extra];
-	run(...cmd);
-	examples.image.push({ id: t, command: `image ${t}`, ...(await jpeg(`img/${t}.png`, `image-${t}.jpg`, 800)) });
+// Every example passes its own words (the CLI draws nothing it is not given); --sample uses the templates' sample copy.
+for (const [t, size, extra] of [['banner', 'og', ['--headline', 'The web data APIs for agents']], ['products', 'og', ['--sample']], ['customer', 'og', ['--sample']], ['banner', 'x-banner', ['--headline', 'The web data APIs for agents', '--body', 'Search, scrape and crawl the live web']], ['social', 'linkedin-banner', ['--headline', 'Browser profiles are here', '--theme', 'Ink']], ['mark', 'avatar', []]]) {
+	const name = `${t}-${size}`;
+	run('image', t, '--size', size, '--format', 'png', '--out', `img/${name}.png`, ...extra);
+	examples.image.push({ id: name, command: `image ${t} --size ${size} ${extra.map((x) => (/\s/.test(x) ? JSON.stringify(x) : x)).join(' ')}`.trim(), ...(await jpeg(`img/${name}.png`, `image-${name}.jpg`, 800)) });
 }
-for (const [t, size] of [['social', '4:5'], ['cards', '16:9'], ['customer', '9:16'], ['banner', '1:1']]) {
-	run('image', t, '--kind', 'social', '--size', size, '--format', 'png', '--out', `soc/${t}.png`, ...(t === 'banner' ? ['--palette', 'Ink', '--image', 'sample:Sphere', '--field', 'faint'] : []));
-	examples.social.push({ id: `${t}-${size}`, command: `image ${t} --kind social --size ${size}${t === 'banner' ? ' --palette Ink --image sample:Sphere --field faint' : ''}`, ...(await jpeg(`soc/${t}.png`, `social-${t}.jpg`, 520)) });
+for (const [t, size, extra] of [['social', 'portrait', ['--headline', 'NEW!', '--body', 'Browser profiles: log in once, reuse the session.']], ['cards', 'landscape', ['--sample']], ['customer', 'story', ['--sample']], ['banner', 'square', ['--headline', 'Search the live web', '--theme', 'Ink', '--image', 'sample:Sphere', '--field', 'faint']]]) {
+	run('image', t, '--size', size, '--format', 'png', '--out', `soc/${t}.png`, ...extra);
+	examples.social.push({ id: `${t}-${size}`, command: `image ${t} --size ${size} ${extra.map((x) => (/\s/.test(x) ? JSON.stringify(x) : x)).join(' ')}`, ...(await jpeg(`soc/${t}.png`, `social-${t}.jpg`, 520)) });
 }
 for (const t of ['cover', 'section', 'statement', 'bullets', 'stat', 'quote', 'image', 'closing']) {
-	run('deck', t, '--format', 'png', '--out', 'deck');
-	examples.deck.push({ id: t, command: `deck ${t}`, ...(await jpeg(`deck/slide-01-${t}.png`, `deck-${t}.jpg`, 640)) });
+	run('deck', t, '--sample', '--format', 'png', '--out', 'deck');
+	examples.deck.push({ id: t, command: `deck ${t} --sample`, ...(await jpeg(`deck/slide-01-${t}.png`, `deck-${t}.jpg`, 640)) });
 }
 for (const [item, variant] of [['tee-front', 'color'], ['tee-back', 'blue'], ['poster', 'paper'], ['mug-wrap', 'blue'], ['sticker', 'ink'], ['socks', 'blue'], ['tote', 'black'], ['cap-front', 'brand'], ['hoodie-front', 'color']]) {
-	run('merch', item, '--variant', variant, '--dpi', '72', '--format', 'png', '--guides', '--out', 'merch');
+	run('merch', item, '--variant', variant, '--dpi', '72', '--format', 'png', '--guides', '--sample', '--out', 'merch');
 	examples.merch.push({ id: `${item}-${variant}`, command: `merch ${item} --variant ${variant}`, ...(await jpeg(`merch/${item}-${variant}.png`, `merch-${item}.jpg`, 420)) });
 }
 // Video: the reel's end card and a still of each loop; the twinkle loop as a short MP4 when ffmpeg is here.
-run('video', 'reel', '--still', '9.6', '--out', 'video');
-examples.video.push({ id: 'reel', command: 'video reel', ...(await jpeg('video/reel-9.6s.png', 'video-reel.jpg', 800)) });
+run('video', 'reel', '--sample', '--still', '9.6', '--out', 'video');
+examples.video.push({ id: 'reel', command: 'video reel --sample', ...(await jpeg('video/reel-9.6s.png', 'video-reel.jpg', 800)) });
 for (const t of ['edges', 'twinkle', 'ripple', 'logo']) {
-	run('video', t, '--size', 'square', '--still', '1', '--out', 'video');
+	run('video', t, '--size', 'square', '--still', '1', '--out', 'video', ...(t === 'logo' ? ['--headline', 'Web data API for AI Agents'] : []));
 	examples.video.push({ id: t, command: `video ${t} --size square`, ...(await jpeg(`video/${t}-square-1s.png`, `video-${t}.jpg`, 360)) });
 }
 if (spawnSync('ffmpeg', ['-version'], { stdio: 'ignore' }).status === 0) {

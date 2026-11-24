@@ -1,0 +1,67 @@
+{
+	"steps": [
+		{
+			"command": "design new banner --size x-banner --headline \"The web data APIs for agents\" -o banner.design.json",
+			"note": "A new X header: the words fit the space X shows, clear of the profile picture.",
+			"ok": true,
+			"output": "banner.design.json  banner, x-banner 1500x500 (X header), Paper\nbanner.png\nCheck: no errors",
+			"src": "/designs/step-01.jpg",
+			"width": 900,
+			"height": 300
+		},
+		{
+			"command": "design revise banner.design.json \"bigger headline, logo top right\"",
+			"note": "Plain words, read by rules: larger type that re-wraps, and the logo in another corner.",
+			"ok": true,
+			"output": "banner.design.json  banner, x-banner 1500x500 (X header), Paper\n  headline 20% bigger\n  logo top right\nbanner.png",
+			"src": "/designs/step-02.jpg",
+			"width": 900,
+			"height": 300
+		},
+		{
+			"command": "design revise banner.design.json \"darker theme, add a badge \\\"New\\\"\"",
+			"note": "The next darker theme of the brand, and a label in its own chip.",
+			"ok": true,
+			"output": "banner.design.json  banner, x-banner 1500x500 (X header), Blue\n  theme Blue\n  badge \"New\"\nbanner.png",
+			"src": "/designs/step-03.jpg",
+			"width": 900,
+			"height": 300
+		},
+		{
+			"command": "design revise banner.design.json \"make the logo neon green\"",
+			"note": "Off brand: refused, nothing changes, and it says why.",
+			"ok": false,
+			"output": "Nothing was changed.\n\"make the logo neon green\": Colors outside the brand palette are refused. The palette: #FFFFFF, #2563EB, #000000, #F2F2F2, #07142F, #D3E0FB, #191919, #595959, #666666, in the themes Paper, Blue, Ink, Mist, Night, Graphite.\nThings you can say here: hide the logo; show the logo; reset the logo. Copy goes in quotes. For exact edits use `design edit`."
+		},
+		{
+			"command": "design revise banner.design.json \"body \\\"Search, scrape and crawl the live web from one API\\\"\"",
+			"note": "A line under the headline; the layout makes room.",
+			"ok": true,
+			"output": "banner.design.json  banner, x-banner 1500x500 (X header), Blue\n  body \"Search, scrape and crawl the live web from one API\"\nbanner.png\nCheck: no errors",
+			"src": "/designs/step-05.jpg",
+			"width": 900,
+			"height": 300
+		},
+		{
+			"command": "design undo banner.design.json",
+			"note": "Undo takes back the last change exactly.",
+			"ok": true,
+			"output": "banner.design.json  banner, x-banner 1500x500 (X header), Blue\n  undid: body \"Search, scrape and crawl the live web from one API\"\nbanner.png\nCheck: no errors",
+			"src": "/designs/step-06.jpg",
+			"width": 900,
+			"height": 300
+		}
+	],
+	"variants": {
+		"command": "design variants banner.design.json --by theme",
+		"src": "/designs/variants.jpg",
+		"width": 1200,
+		"height": 725
+	},
+	"sizes": {
+		"command": "design sizes banner.design.json --to og,square,story,linkedin-banner",
+		"src": "/designs/sizes.jpg",
+		"width": 1200,
+		"height": 763
+	}
+}

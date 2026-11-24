@@ -1,52 +1,73 @@
 {
 	"image": [
 		{
-			"id": "banner",
-			"command": "image banner",
-			"src": "/assets-examples/image-banner.jpg",
+			"id": "banner-og",
+			"command": "image banner --size og --headline \"The web data APIs for agents\"",
+			"src": "/assets-examples/image-banner-og.jpg",
 			"width": 800,
 			"height": 420
 		},
 		{
-			"id": "products",
-			"command": "image products",
-			"src": "/assets-examples/image-products.jpg",
+			"id": "products-og",
+			"command": "image products --size og --sample",
+			"src": "/assets-examples/image-products-og.jpg",
 			"width": 800,
 			"height": 420
 		},
 		{
-			"id": "customer",
-			"command": "image customer",
-			"src": "/assets-examples/image-customer.jpg",
+			"id": "customer-og",
+			"command": "image customer --size og --sample",
+			"src": "/assets-examples/image-customer-og.jpg",
 			"width": 800,
 			"height": 420
+		},
+		{
+			"id": "banner-x-banner",
+			"command": "image banner --size x-banner --headline \"The web data APIs for agents\" --body \"Search, scrape and crawl the live web\"",
+			"src": "/assets-examples/image-banner-x-banner.jpg",
+			"width": 800,
+			"height": 267
+		},
+		{
+			"id": "social-linkedin-banner",
+			"command": "image social --size linkedin-banner --headline \"Browser profiles are here\" --theme Ink",
+			"src": "/assets-examples/image-social-linkedin-banner.jpg",
+			"width": 800,
+			"height": 200
+		},
+		{
+			"id": "mark-avatar",
+			"command": "image mark --size avatar",
+			"src": "/assets-examples/image-mark-avatar.jpg",
+			"width": 800,
+			"height": 800
 		}
 	],
 	"social": [
 		{
-			"id": "social-4:5",
-			"command": "image social --kind social --size 4:5",
+			"id": "social-portrait",
+			"command": "image social --size portrait --headline NEW! --body \"Browser profiles: log in once, reuse the session.\"",
 			"src": "/assets-examples/social-social.jpg",
 			"width": 520,
 			"height": 650
 		},
 		{
-			"id": "cards-16:9",
-			"command": "image cards --kind social --size 16:9",
+			"id": "cards-landscape",
+			"command": "image cards --size landscape --sample",
 			"src": "/assets-examples/social-cards.jpg",
 			"width": 520,
 			"height": 293
 		},
 		{
-			"id": "customer-9:16",
-			"command": "image customer --kind social --size 9:16",
+			"id": "customer-story",
+			"command": "image customer --size story --sample",
 			"src": "/assets-examples/social-customer.jpg",
 			"width": 520,
 			"height": 924
 		},
 		{
-			"id": "banner-1:1",
-			"command": "image banner --kind social --size 1:1 --palette Ink --image sample:Sphere --field faint",
+			"id": "banner-square",
+			"command": "image banner --size square --headline \"Search the live web\" --theme Ink --image sample:Sphere --field faint",
 			"src": "/assets-examples/social-banner.jpg",
 			"width": 520,
 			"height": 520
@@ -55,56 +76,56 @@
 	"deck": [
 		{
 			"id": "cover",
-			"command": "deck cover",
+			"command": "deck cover --sample",
 			"src": "/assets-examples/deck-cover.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "section",
-			"command": "deck section",
+			"command": "deck section --sample",
 			"src": "/assets-examples/deck-section.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "statement",
-			"command": "deck statement",
+			"command": "deck statement --sample",
 			"src": "/assets-examples/deck-statement.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "bullets",
-			"command": "deck bullets",
+			"command": "deck bullets --sample",
 			"src": "/assets-examples/deck-bullets.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "stat",
-			"command": "deck stat",
+			"command": "deck stat --sample",
 			"src": "/assets-examples/deck-stat.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "quote",
-			"command": "deck quote",
+			"command": "deck quote --sample",
 			"src": "/assets-examples/deck-quote.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "image",
-			"command": "deck image",
+			"command": "deck image --sample",
 			"src": "/assets-examples/deck-image.jpg",
 			"width": 640,
 			"height": 360
 		},
 		{
 			"id": "closing",
-			"command": "deck closing",
+			"command": "deck closing --sample",
 			"src": "/assets-examples/deck-closing.jpg",
 			"width": 640,
 			"height": 360
@@ -178,7 +199,7 @@
 	"video": [
 		{
 			"id": "reel",
-			"command": "video reel",
+			"command": "video reel --sample",
 			"src": "/assets-examples/video-reel.jpg",
 			"width": 800,
 			"height": 450

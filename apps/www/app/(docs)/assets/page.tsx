@@ -27,7 +27,9 @@ function Gallery({ items, columns }: { items: Example[]; columns: string }) {
 
 const COMMANDS = [
   ["manifest --json", "Every command, flag, template, size, palette, slide, loop and merch item. Start here; unknown names exit 1 with the closest match."],
-  ["image <template>", "Share images and social posts: banner, products, social, cards, customer. PNG and SVG; any picture becomes dots."],
+  ["image <template>", "Share images and social posts: banner, products, social, cards, customer, mark, at every shared size. PNG, SVG, JPEG and WebP; any picture becomes dots. Only the words you pass are drawn."],
+  ["image --input carousel.json", "A carousel: numbered posts with one look and one headline size."],
+  ["design ...", "A graphic you keep changing: see Designs."],
   ["deck", "Slides at 1920 by 1080 from a JSON file or flags: a PNG per slide and one PDF."],
   ["video reel | edges | twinkle | ripple | logo", "The 10 second reel with its copy as flags, and seamless dot loops at square, vertical and landscape. MP4 and WebM through ffmpeg, PNG frames without it."],
   ["merch <item>", "Print files only: SVG at physical size and 300 dpi PNG with bleed, safe area and the sticker's die line."],
@@ -51,15 +53,15 @@ export default function AssetsPage() {
         </dl>
       </DocsSection>
 
-      <DocsSection title="Share images" description="Link previews and banners at 1500 by 500, 1200 by 630 and 1080 by 1080, in six palettes. --image takes any picture and turns it into the brand's dots; the customer story shows a customer's logo only when --partner is passed.">
+      <DocsSection title="Share images" description="Link previews, headers and covers for every platform, in six themes. The words stay clear of what each platform covers (the X profile picture, story bars, YouTube's crop). --image takes any picture and turns it into the brand's dots.">
         <Gallery items={examples.image} columns="sm:grid-cols-2 lg:grid-cols-3" />
       </DocsSection>
 
-      <DocsSection title="Social posts" description="--kind social: 16:9, 1.91:1, 1:1, 4:5, 3:4, 9:16, 3:1 or --size custom with --width and --height.">
+      <DocsSection title="Social posts" description="square, portrait, tall, story, landscape, linkedin, or --size custom with --width and --height; several with --size a,b,c.">
         <Gallery items={examples.social} columns="grid-cols-2 lg:grid-cols-4" />
       </DocsSection>
 
-      <DocsSection title="Deck" description={'--input deck.json takes { "slides": [ { "type": "cover", "title": "..." } ] }; each type takes its own slots, a palette and an image.'}>
+      <DocsSection title="Deck" description={'--input deck.json takes { "slides": [ { "type": "cover", "title": "..." } ] }; each type takes its own words, a theme and an image. Only the words given are drawn.'}>
         <Gallery items={examples.deck} columns="sm:grid-cols-2 lg:grid-cols-4" />
         <div className="mt-6"><Code title="deck.json" code={`{\n  "slides": [\n    { "type": "cover", "title": "The web data APIs for agents" },\n    { "type": "bullets", "title": "What your agent can do", "items": ["Scrape any page as Markdown", "Crawl a whole website"] },\n    { "type": "closing" }\n  ]\n}`} /></div>
       </DocsSection>
