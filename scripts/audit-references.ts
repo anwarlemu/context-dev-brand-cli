@@ -62,6 +62,9 @@ const records = readdirSync(join(root, 'registry/docs')).filter(f => f.endsWith(
 		const candidate = `src/components/dots/${basename(path)}`;
 		if (trees.dashboard.includes(candidate)) refs.set(candidate, source('dashboard', candidate));
 	}
+	// A derived item has no brand counterpart; its provenance is the library items it is composed from.
+	const derivedFrom: string[] | undefined = !docs.source && Array.isArray(docs.derived_from) && docs.derived_from.length ? docs.derived_from : undefined;
+	if (derivedFrom) return { name, surface: docs.surface, kind: 'derived', library, derivedFrom, sources: [], unresolvedHistoricalPaths: missing, scope: `Derived, not ported: the brand has no counterpart. Composed from library items ${derivedFrom.join(', ')}.` };
 	if (!refs.size && !knownInfrastructure.has(name)) throw new Error(`No reference found for ${name}: ${docs.source}`);
 	return { name, surface: docs.surface, kind: knownInfrastructure.has(name) ? 'library-infrastructure' : docs.surface === 'product' ? 'dashboard' : 'website', library, sources: [...refs.values()], unresolvedHistoricalPaths: missing, scope: knownInfrastructure.has(name) ? 'Integration helper; no public website counterpart.' : docs.surface === 'product' ? 'Source reference; dashboard behavior cannot be verified on the public marketing site.' : 'Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.' };
 });

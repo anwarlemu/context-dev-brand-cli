@@ -29,6 +29,8 @@ const docsSchema = z.object({
 	never: z.array(z.string()).default([]),
 	source: z.string().optional(),
 	files: z.array(z.string()).optional(),
+	// An item the brand has no counterpart for, composed from these library items instead of ported.
+	derived_from: z.array(z.string()).optional(),
 	dependencies: z.array(z.string()).default([]),
 });
 type Docs = z.infer<typeof docsSchema>;
@@ -124,6 +126,7 @@ const items = [
 			if (coverage?.library.find(file => file.path === path)?.sha256 !== hash) problems.push(`${d.name}: source changed since reference audit; run npm run audit:references`);
 		}
 
+		for (const base of d.derived_from ?? []) if (!docs.some((x) => x.name === base)) problems.push(`${d.name}: derived from unknown item ${base}`);
 		for (const dep of d.dependencies) if (!docs.some((x) => x.name === dep)) problems.push(`${d.name}: unknown dependency ${dep}`);
 		const deps = [...new Set([...internal, ...d.dependencies])];
 		const example = join(REG, 'examples', `${d.name}.tsx`);
@@ -148,7 +151,7 @@ const items = [
 			documentation: `${brand.registryUrl}/components/${d.name}.md`,
 			install: `npx -y ${brand.source} add ${d.name}${surfaceFlag}`,
 			requirements: { react: '>=19.2', tailwindcss: '>=4', alias: '@/* resolves to the source directory' },
-			reference: { source: d.source, audit: `${brand.registryUrl}/reference-audit.json`, scope: coverage?.scope, sources: coverage?.sources },
+			reference: { source: d.source, derivedFrom: d.derived_from, audit: `${brand.registryUrl}/reference-audit.json`, scope: coverage?.scope, sources: coverage?.sources },
 			api: d.paths.filter(p => api.has(p)).map(p => ({ path: p.replace(/\.tsx?$/, '.d.ts'), content: api.get(p)! })),
 			examples: [...exampleText.matchAll(/export function (\w+)/g)].map(m => ({ name: m[1], url: `${brand.registryUrl}/preview/${d.name}/${m[1]}` })),
 			exampleFiles: helperFiles,
