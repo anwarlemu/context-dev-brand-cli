@@ -247,7 +247,9 @@ export function designConformance(adapter: Adapter, opts: ConformanceOptions) {
 						continue;
 					}
 					const base = create(adapter, 'compose', t.sizes.includes(composeInfo(adapter).sizes[0]!) ? t.sizes[0] : composeInfo(adapter).sizes[0], []).doc;
-					const d = { ...base, ...r0, theme: r0.theme ?? base.theme } as DesignDoc;
+					// Blocks that need a picture of their own get the test's picture.
+					const images = Object.fromEntries((r0.blocks ?? []).filter((x) => adapter.compose!.blocks().find((k) => k.type === x.type)?.image?.required).map((x) => [x.id, opts.picture!]));
+					const d = { ...base, ...r0, theme: r0.theme ?? base.theme, images: { ...base.images, ...images } } as DesignDoc;
 					const r = await draw(d);
 					made++;
 					problems.push(...errorsOf(r.findings).map((f) => `${t.id}: ${f.rule}: ${f.message}`));

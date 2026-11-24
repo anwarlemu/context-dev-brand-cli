@@ -9,6 +9,7 @@ import { brand } from '../lib/brand.js';
 import { mediaKinds } from './media.js';
 import { BLOCKS, drawCompose, recipeFor } from '../assets/compose.js';
 import { SECTIONS, writePage } from '../assets/page.js';
+import { RECIPE_SIZES, RECIPES, recipeInfo, recipeOf, shapeOf } from '../assets/recipes.js';
 import { encoded, pixelsOf, surface, toPng, toSvg } from '../assets/canvas.js';
 import { rgbOf } from '../assets/png.js';
 import { readPicture } from '../assets/picture.js';
@@ -20,6 +21,9 @@ import { sheetCanvas, type Adapter, type DesignDoc, type DrawnLayer, type Painte
 
 const isSlide = (id: string): id is SlideType => (slideTypes() as string[]).includes(id);
 const isImage = (id: string): id is Template => (TEMPLATES as string[]).includes(id);
+
+let recipeInfos: ReturnType<typeof recipeInfo>[] | undefined;
+const RECIPE_INFOS = () => (recipeInfos ??= RECIPES.map((r) => recipeInfo(r)));
 
 const mediaOf = (id: string) => mediaKinds.find((m) => m.infos().some((t) => t.id === id));
 
@@ -50,12 +54,14 @@ const designColors = () => [...new Set([...wordColors(), ...['black', 'white', '
 export function adapter(): Adapter {
 	return {
 		brand: brand().bin,
-		templates: () => [...TEMPLATES.map(infoOf), ...slideTypes().map(slideInfo), ...mediaKinds.flatMap((m) => m.infos())],
+		templates: () => [...TEMPLATES.map(infoOf), ...RECIPE_INFOS(), ...slideTypes().map(slideInfo), ...mediaKinds.flatMap((m) => m.infos())],
 		defaults(template, size) {
-			if (template === 'compose') {
+			const recipe = recipeOf(template);
+			if (template === 'compose' || recipe) {
 				const pf = PLATFORMS.find((p) => p.id === size);
-				const f = imageDoc().sizes[size] ? frameOf({ size, w: 1200, h: 675 }) : pf ? { w: pf.width, h: pf.height } : { w: 1200, h: 675 };
-				return { size: { id: size, width: f.w, height: f.h }, theme: 'Paper', seed: 1, options: {} };
+				const own = RECIPE_SIZES[size];
+				const f = imageDoc().sizes[size] ? frameOf({ size, w: 1200, h: 675 }) : pf ? { w: pf.width, h: pf.height } : own ? own : { w: 1200, h: 675 };
+				return { size: { id: size, width: f.w, height: f.h }, theme: recipe?.theme ?? 'Paper', seed: 1, options: {} };
 			}
 			const media = mediaOf(template);
 			if (media) return media.defaults(template, size);
@@ -66,6 +72,11 @@ export function adapter(): Adapter {
 		},
 		async render(doc, dir, out) {
 			if (doc.template === 'compose') return renderCompose(doc, dir, out);
+			const recipe = recipeOf(doc.template);
+			if (recipe) {
+				const built = recipe.build(doc.copy, shapeOf(doc.size.width, doc.size.height));
+				return renderCompose({ ...doc, blocks: built.blocks, grid: built.grid, copy: built.copy, layers: { ...built.layers, ...doc.layers } }, dir, out);
+			}
 			const media = mediaOf(doc.template);
 			if (media) return media.render(doc, dir, out);
 			if (isSlide(doc.template)) {
@@ -94,10 +105,17 @@ export function adapter(): Adapter {
 			grounds: Object.fromEntries(palettes().map((p) => [p.name, p.bg])),
 			sizes: [...new Set([...Object.keys(imageDoc().sizes), ...PLATFORMS.map((p) => p.id)]), 'custom'],
 			formats: ['png', 'svg', 'jpg', 'webp', 'pdf'],
-			recipe: (template, size, copy) => recipeFor(template, size, copy),
+			recipe: (template, size, copy) => {
+				const r = recipeOf(template);
+				if (!r) return recipeFor(template, size, copy);
+				const f = PLATFORMS.find((p) => p.id === size) ?? { width: imageDoc().sizes[size]?.w ?? 1200, height: imageDoc().sizes[size]?.h ?? 675 };
+				return { ...r.build(copy, shapeOf(f.width, f.height)), theme: r.theme };
+			},
 		},
 		page: { sections: () => SECTIONS, flavors: ['react', 'html'], write: writePage },
 		sample: (template) => {
+			const r = recipeOf(template);
+			if (r) return r.sample;
 			const media = mediaOf(template);
 			if (media) return media.sample(template);
 			if (isSlide(template)) return deckDoc().slides[template].sample;
@@ -114,9 +132,9 @@ export function adapter(): Adapter {
 async function renderCompose(doc: DesignDoc, dir: string, out: { formats: string[]; scale: number }) {
 	const pictures: Record<string, Picture | null> = {};
 	for (const { block } of blockRects(doc)) {
-		if (block.type !== 'picture') continue;
+		if (block.type !== 'picture' && block.type !== 'screenshot') continue;
 		const v = doc.images[block.id];
-		pictures[block.id] = !v ? (samplePicture(seededSample(doc.seed ?? 1)) ?? null) : v === 'none' ? null : v.startsWith('sample:') ? (samplePicture(v) ?? null) : await readPicture(dir, v);
+		pictures[block.id] = !v ? (block.type === 'screenshot' ? null : (samplePicture(seededSample(doc.seed ?? 1)) ?? null)) : v === 'none' ? null : v.startsWith('sample:') ? (samplePicture(v) ?? null) : await readPicture(dir, v);
 	}
 	const { width: W, height: H } = doc.size;
 	const files: Record<string, Uint8Array> = {};

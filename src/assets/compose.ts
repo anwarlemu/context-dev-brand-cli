@@ -22,6 +22,7 @@ export const BLOCKS: BlockInfo[] = [
 	{ type: 'logo', names: ['wordmark', 'lockup'], kind: 'logo', description: 'The logo, mark and wordmark.', copy: [], span: { cols: 4, rows: 1 }, place: 'top-left' },
 	{ type: 'mark', names: ['logomark', 'symbol'], kind: 'logo', description: 'The mark alone.', copy: [], span: { cols: 3, rows: 3 }, place: 'center' },
 	{ type: 'picture', names: ['image', 'photo', 'globe', 'art'], kind: 'art', description: 'Any picture through the dot shader (a built-in one when none is given), placed whole.', copy: [], image: { values: ['sample:Globe', 'sample:Sphere', 'sample:Cursor', 'sample:Layers', 'sample:Key'] }, span: { cols: 6, rows: 8 }, place: 'right' },
+	{ type: 'screenshot', names: ['window', 'browser', 'frame'], kind: 'key', description: 'A picture shown as it is (not in dots) in the site\'s window: three window dots on the code bar, set in the soft blue ring.', copy: [], image: { required: true }, span: { cols: 8, rows: 7 }, place: 'center' },
 	{ type: 'burst', names: ['rays'], kind: 'art', description: 'The customer story\'s burst of dots.', copy: [], span: { cols: 6, rows: 6 }, place: 'bottom-right', under: true },
 	{ type: 'field', names: ['dots', 'pattern', 'grid'], kind: 'art', description: 'The faint dot grid.', copy: [], options: [{ id: 'style', values: ['faint', 'rings'] }], span: { cols: 12, rows: 12 }, place: 'center', under: true },
 	{ type: 'card', names: ['feature'], kind: 'panel', description: 'A white card with a numbered heading and a few lines, as on the cards post.', copy: [{ id: 'heading', required: true }, { id: 'text' }, { id: 'number' }], sample: { heading: 'Web extraction', text: 'Any page as markdown.', number: '1' }, span: { cols: 6, rows: 3 } },
@@ -103,8 +104,46 @@ export function drawCompose(canvas: AnyCanvas, doc: DesignDoc, pictures: Record<
 				drawDots(q, pic, r, { id });
 				break;
 			}
+			case 'screenshot': {
+				const pic = pictures[id] ?? null;
+				if (!pic) throw new Error(`The ${id} needs a picture: --image ${id}=screen.png.`);
+				// The code window's chrome and ring (registry/components/site/code-window.tsx), around the picture whole.
+				const ring = Math.max(4, 8 * u);
+				const bar = Math.max(18, 44 * u * 0.7);
+				const k = e(id).scale ?? 1;
+				const maxW = (r.w - ring * 2) * k;
+				const maxH = (r.h - ring * 2 - bar) * k;
+				const sc = Math.min(maxW / pic.width, maxH / pic.height);
+				const pw = pic.width * sc;
+				const ph = pic.height * sc;
+				const box = { x: r.x + (r.w - pw - ring * 2) / 2, y: r.y + (r.h - ph - bar - ring * 2) / 2, w: pw + ring * 2, h: ph + bar + ring * 2 };
+				const rad = Math.min(16 * u, box.w / 10);
+				ctx.fillStyle = tokenColor('ring-tint');
+				ctx.beginPath();
+				ctx.roundRect(box.x, box.y, box.w, box.h, rad + ring);
+				ctx.fill();
+				const win = grow(box, -ring);
+				ctx.save();
+				ctx.beginPath();
+				ctx.roundRect(win.x, win.y, win.w, win.h, rad);
+				ctx.clip();
+				ctx.fillStyle = tokenColor('bg-code');
+				ctx.fillRect(win.x, win.y, win.w, bar);
+				const dot = bar * 0.27;
+				['window-close', 'window-minimize', 'window-zoom'].forEach((t, i) => {
+					ctx.fillStyle = tokenColor(t);
+					ctx.beginPath();
+					ctx.arc(win.x + bar * 0.55 + i * dot * 2.6, win.y + bar / 2, dot / 2 + 0.5, 0, Math.PI * 2);
+					ctx.fill();
+				});
+				ctx.imageSmoothingQuality = 'high';
+				ctx.drawImage(pic.canvas, win.x, win.y + bar, pw, ph);
+				ctx.restore();
+				layers.push({ id, kind: 'key', box, can: PART });
+				break;
+			}
 			case 'divider': {
-				const h = Math.max(1, u);
+				const h = Math.max(1, u) * (e(id).scale ?? 1);
 				const y = r.y + r.h / 2 - h / 2;
 				ctx.fillStyle = p.field;
 				ctx.globalAlpha = 0.5;
@@ -207,13 +246,14 @@ export function drawCompose(canvas: AnyCanvas, doc: DesignDoc, pictures: Record<
 				const label = words(id, 'label');
 				assertGlyphs(id, value);
 				const k = e(id).scale ?? 1;
-				const size0 = Math.min(r.h * (label ? 0.62 : 0.95), 240 * u) * k;
+				const size0 = Math.min(r.h * (label ? 0.62 : 0.95), 240 * u);
 				setFace(ctx, { ...headFace(fonts), weight: 700, tracking: 0.03 }, size0);
 				const vw0 = ctx.measureText(value).width;
 				ctx.letterSpacing = '0px';
-				const size = vw0 > r.w ? (size0 * r.w) / vw0 : size0;
+				// The size that fits the cells, then the edit's scale on it, which has to fit as well.
+				const size = (vw0 > r.w ? (size0 * r.w) / vw0 : size0) * k;
 				const vw = (vw0 * size) / size0;
-				if (size < floor * 1.5) throw tooLong(id);
+				if (size < floor * 1.5 || vw > r.w + 0.5) throw tooLong(k > 1 ? `${id} at that size` : id);
 				const vh = size * 0.86;
 				const lb = label ? fit(`${id}-label`, label, bodyFace(fonts), Math.max(floor, size * 0.24), { ...r, h: r.h - vh - size * 0.1 }) : undefined;
 				const top = r.y + (r.h - vh - (lb ? size * 0.1 + lb.h : 0)) / 2;

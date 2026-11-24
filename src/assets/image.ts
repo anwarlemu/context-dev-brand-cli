@@ -1,4 +1,5 @@
 import { checkDesign, errorsOf, sizeAlias, type DesignDoc, type DrawnLayer, type Finding, type LayerEdit, type TemplateInfo } from '../design/index.js';
+import { RECIPES } from './recipes.js';
 import { brand, colorHex } from '../lib/brand.js';
 import { brandFonts, encoded, surface, toPng, toSvg } from './canvas.js';
 import { pick, unknown } from './io.js';
@@ -231,6 +232,7 @@ export function imageCatalog() {
 		dithers: DITHERS,
 		fields: FIELDS,
 		formats: ['png', 'svg', 'jpg', 'webp'],
+		made: RECIPES.map((r) => ({ id: r.id, name: r.label, description: r.description, sizes: r.sizes, words: r.copy.map((c) => `${c.id}${c.required ? ' (needed)' : ''}`), pictures: (r.images ?? []).map((i) => i.id) })),
 		notes: doc.notes,
 	};
 }

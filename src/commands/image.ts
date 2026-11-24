@@ -4,7 +4,9 @@ import type { Command } from 'commander';
 import { checkImage, designOf, imageCatalog, pictureFor, renderDesign, sizeId, slotKey, slotsOf, type Kind } from '../assets/image.js';
 import { display, num, pick, unknown, write, type OutFile } from '../assets/io.js';
 import { imageDoc, TEMPLATES, type Design, type Template } from '../assets/og.js';
-import { checkText, errorsOf, NEVER_ALLOWED, RULES } from '../design/index.js';
+import { allTemplates, checkDesign, checkText, create, errorsOf, NEVER_ALLOWED, RULES, type Edit } from '../design/index.js';
+import { adapter } from '../design/adapter.js';
+import { recipeOf, RECIPES } from '../assets/recipes.js';
 import { cli } from '../lib/brand.js';
 import { emit } from '../lib/output.js';
 
@@ -64,6 +66,7 @@ export function imageCommand(program: Command) {
 		.option('-f, --format <formats>', 'png, svg, jpg, webp, or several with commas (default: png and svg, or the format an --out file name ends in)')
 		.option('--scale <n>', 'pixel multiple, 1 to 4', '1')
 		.option('-o, --out <path>', 'a directory (default assets/), or one .png, .svg, .jpg or .webp file')
+		.option('--set <slot=value>', 'the words of a made-up template (quote-card, pricing-card, ...): --set quote="..."; repeat it', (v: string, all: string[] = []) => [...all, v])
 		.option('--input <file>', 'a carousel: carousel.json with "slides" (each its own copy and picture), one template, size and theme, numbered')
 		.option('--no-number', 'carousel: leave the page numbers out')
 		.option('--all', 'every template at every size of the kind, with sample copy')
@@ -129,10 +132,14 @@ async function runImage(positional: string | undefined, o: Opts) {
 			`Sizes: ${cat.sizes.filter((s) => s.width).map((s) => `${s.id} ${s.width}x${s.height}`).join(', ')}, custom`,
 			`Palettes: ${cat.palettes.map((p) => p.name).join(', ')}`,
 			`Samples: ${cat.samples.join(', ')}`,
+			'',
+			...cat.made.map((r) => `${r.id.padEnd(16)} ${r.description} Words (--set): ${r.words.join(', ')}.${r.pictures.length ? ` Pictures (--image slot=file): ${r.pictures.join(', ')}.` : ''} Sizes: ${r.sizes.join(', ')}.`),
 		].join('\n'));
 		return;
 	}
 	if (typeof o.input === 'string') return runCarousel(o.input, cwd, o);
+	const asked = positional ?? (o.template as string | undefined);
+	if (asked && recipeOf(asked.toLowerCase())) return runRecipe(asked.toLowerCase(), cwd, o);
 	if (positional && o.template && positional.toLowerCase() !== String(o.template).toLowerCase()) throw new Error(`Pass the template once (got ${positional} and --template ${o.template}).`);
 	for (const [a, b] of [['title', 'headline'], ['theme', 'palette']]) if (o[a!] !== undefined && o[b!] !== undefined && o[a!] !== o[b!]) throw new Error(`--${a} and --${b} are the same thing; pass one.`);
 	const named = positional ?? (o.template as string | undefined);
@@ -157,7 +164,7 @@ async function runImage(positional: string | undefined, o: Opts) {
 		const k = imageDoc().kinds[kind ?? 'share'];
 		for (const t of k.templates) for (const size of k.sizes) if (imageDoc().templates[t].sizes.includes(size)) jobs.push({ template: t, size });
 	} else {
-		if (!named) throw new Error(`Name a template: ${cli()} image banner (one of ${TEMPLATES.join(', ')}; --list shows them).`);
+		if (!named) throw new Error(`Name a template: ${cli()} image banner (one of ${[...TEMPLATES, ...RECIPES.map((r) => r.id)].join(', ')}; --list shows them).`);
 		const t = pick('template', named, TEMPLATES);
 		const typed = typeof o.size === 'string' ? o.size.split(',').map((x) => x.trim()).filter(Boolean) : [];
 		if (typed.length === 1 && typed[0]!.toLowerCase() === 'all') for (const s of imageDoc().templates[t].sizes.filter((x) => x !== 'custom' && (!kind || imageDoc().kinds[kind].sizes.includes(x)))) jobs.push({ template: t, size: s });
@@ -275,5 +282,43 @@ async function runCarousel(input: string, cwd: string, o: Opts) {
 	}
 	for (const r of ready) write(r.path, r.data);
 	const files = ready.map((r) => r.file);
+	emit(o, { files }, () => files.map((f) => `${f.path}  ${f.width}x${f.height}`).join('\n'));
+}
+
+/** A template made of the brand's blocks (src/assets/recipes.ts), drawn through the design engine and checked the same. */
+async function runRecipe(id: string, cwd: string, o: Opts) {
+	const r = recipeOf(id)!;
+	const a = adapter();
+	const edits: Edit[] = [];
+	for (const s of ((o.set as unknown as string[] | undefined) ?? [])) {
+		const at = s.indexOf('=');
+		if (at < 1) throw new Error(`--set takes slot=value, not "${s}".`);
+		edits.push({ op: 'copy', slot: s.slice(0, at), value: s.slice(at + 1).replace(/\\n/g, '\n') });
+	}
+	for (const [flag, slot] of [['headline', 'headline'], ['title', 'headline'], ['body', 'body'], ['badge', 'badge'], ['cta', 'cta'], ['stat', 'stat']] as const) if (typeof o[flag] === 'string' && r.copy.some((c) => c.id === slot)) edits.push({ op: 'copy', slot, value: o[flag] as string });
+	if (o.sample) for (const [slot, value] of Object.entries(r.sample)) if (!edits.some((e) => e.op === 'copy' && e.slot === slot)) edits.push({ op: 'copy', slot, value });
+	if (typeof o.image === 'string') {
+		const m = /^([\w-]+)=(.+)$/.exec(o.image);
+		edits.push({ op: 'image', slot: m?.[1] ?? r.images?.[0]?.id, value: resolve(cwd, m ? m[2]! : o.image) });
+	}
+	if (typeof o.palette === 'string' || typeof o.theme === 'string') edits.push({ op: 'theme', value: String(o.palette ?? o.theme) });
+	const sizes = typeof o.size === 'string' ? (o.size === 'all' ? r.sizes : o.size.split(',').map((x) => x.trim())) : [r.sizes[0]!];
+	const formats = [...new Set(String(o.format ?? 'png').split(',').map((f) => pick('format', f.trim().replace(/^jpeg$/i, 'jpg'), ['png', 'svg', 'jpg', 'webp', 'pdf'] as const)))];
+	const dir = resolve(cwd, typeof o.out === 'string' && !/\.\w+$/.test(o.out) ? o.out : 'assets');
+	const files: OutFile[] = [];
+	for (const size of sizes) {
+		const width = num('width', o.width, 200, 4000, { integer: true });
+		const height = num('height', o.height, 200, 4000, { integer: true });
+		const doc = create(a, id, size, edits, { width, height }).doc;
+		const res = await a.render(doc, cwd, { formats, scale: num('scale', o.scale, 1, 4) ?? 1 });
+		const info = allTemplates(a).find((t) => t.id === id)!;
+		const f = checkDesign({ doc, info, layers: res.layers, adapter: a, png: res.files.png });
+		if (errorsOf(f).length) throw new Error(`${id} ${size}: ${checkText(errorsOf(f))}`);
+		for (const fmt of formats) {
+			const path = typeof o.out === 'string' && /\.\w+$/.test(o.out) && sizes.length === 1 && formats.length === 1 ? resolve(cwd, o.out) : join(dir, `${id}-${doc.size.id === 'custom' ? `${doc.size.width}x${doc.size.height}` : doc.size.id}.${fmt}`);
+			write(path, Buffer.from(res.files[fmt]!));
+			files.push({ path: display(cwd, path), format: fmt, template: id, size: doc.size.id, width: doc.size.width, height: doc.size.height });
+		}
+	}
 	emit(o, { files }, () => files.map((f) => `${f.path}  ${f.width}x${f.height}`).join('\n'));
 }
