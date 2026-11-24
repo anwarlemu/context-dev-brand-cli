@@ -117,7 +117,8 @@ async function runDeck(positional: string | undefined, o: Opts) {
 			} else {
 				const type = pick('slide type', s.type, slideTypes());
 				id = type;
-				const one: Slide = { ...s, type, ...(o.sample || s.sample ? { sample: true } : {}), picture: await slidePicture(base, type, s.image) };
+				const imgs = Array.isArray(s.images) ? (s.images as string[]) : typeof s.images === 'string' ? s.images.split('|').map((x) => x.trim()).filter(Boolean) : [];
+				const one: Slide = { ...s, type, ...(o.sample || s.sample ? { sample: true } : {}), picture: await slidePicture(base, type, s.image), ...(imgs.length ? { pictures: await Promise.all(imgs.map((x) => slidePicture(base, type, x))) } : {}) };
 				r = renderSlide(one, { png: formats.includes('png'), svg: formats.includes('svg'), jpg: formats.includes('jpg'), webp: formats.includes('webp'), rgb: formats.includes('pdf') });
 				const f = checkSlide(one, r.layers, wordColors);
 				if (errorsOf(f).length) throw new Error(checkText(errorsOf(f)));

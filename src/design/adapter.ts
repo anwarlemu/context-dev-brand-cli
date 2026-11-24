@@ -123,8 +123,9 @@ export function adapter(): Adapter {
 			return Object.fromEntries(Object.entries(s).map(([k, v]) => [k === 'partnerName' ? 'partner-name' : k, v]));
 		},
 		colors: designColors,
-		// The reel's tagline marks words for the brand color with *stars*.
-		words: (t) => t.replace(/\*/g, ''),
+		// The reel's tagline marks words for the brand color with *stars*; a comma that only separates a name from a role
+		// ("Alex Doe, Engineering") is where a card splits them.
+		words: (t) => t.replace(/\*/g, '').replace(/,(?=\s|$)/g, ''),
 		aliases: { sizes: { ...imageDoc().aliases, story: 'vertical' }, themes: {}, copy: { partnername: 'partner-name' } },
 	};
 }

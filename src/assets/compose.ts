@@ -327,7 +327,7 @@ export function drawCompose(canvas: AnyCanvas, doc: DesignDoc, pictures: Record<
 					ctx.fill();
 					const nb = setBlock(ctx, n, { family: fonts.sans, weight: 500, tracking: 0, leading: 1 }, badge * 1.2, badge * 2);
 					drawBlock(ctx, nb, inner.x + badge - nb.w / 2, inner.y + (heading.size * heading.face.leading) / 2 - nb.size / 2, 'left', nb.w, tokenColor(cs.badgeInk));
-					layers.push({ id: `${id}-number`, kind: 'text', box: { x: inner.x, y: inner.y, w: badge * 2, h: badge * 2 }, over: [id], text: { asked: n, drawn: n, size: nb.size, color: tokenColor(cs.badgeInk), ground: [tokenColor(cs.badge)] }, can: {} });
+					layers.push({ id: `${id}-number`, kind: 'text', box: { x: inner.x, y: inner.y, w: badge * 2, h: badge * 2 }, over: [id], text: { asked: n, drawn: n, size: nb.size, color: tokenColor(cs.badgeInk), ground: [tokenColor(cs.badge)], own: true }, can: {} });
 				}
 				const hb = drawBlock(ctx, heading, tx, inner.y, 'left', heading.w, tokenColor(cs.heading));
 				layers.push({ id: `${id}-heading`, kind: 'text', box: hb.box, ink: hb.ink, over: [id], text: { asked: heading.asked, drawn: heading.lines.join('\n'), size: heading.size, color: tokenColor(cs.heading), ground: [fill] }, can: {} });

@@ -8,6 +8,8 @@ import { assertGlyphs } from './glyphs.js';
 import { drawLogo, logoClear, logoMin, logoRatio } from './logo.js';
 import { designFor, dotIcon, dotText, drawBlock, drawBurst, drawDots, fitBlock, grow, logoBox, paletteOf, palettes, putLogo, setBlock, setFace, union, type Block, type Can, type Design, type Face, type Palette, type Pen } from './og.js';
 import { seededSample } from './image.js';
+import { drawCompose } from './compose.js';
+import { BLOCK_SLIDES } from './slide-blocks.js';
 import { readPicture, type Picture } from './picture.js';
 import { samplePicture, sampleNames } from './samples.js';
 
@@ -17,7 +19,7 @@ import { samplePicture, sampleNames } from './samples.js';
 // shader. Only the words a slide is given are drawn, whole; slots left out are left out and the slide closes up. Every
 // layer is reported as drawn, and layer edits (src/design) apply here.
 
-export type SlideType = 'cover' | 'section' | 'statement' | 'bullets' | 'stat' | 'quote' | 'image' | 'closing';
+export type SlideType = 'cover' | 'section' | 'statement' | 'bullets' | 'stat' | 'quote' | 'image' | 'closing' | 'agenda' | 'team' | 'timeline' | 'chart' | 'comparison' | 'image-grid' | 'qa';
 type SlideDoc = { name: string; description: string; palette: string; slots: string[]; required: string[]; picture?: boolean; own?: Record<string, string>; sample: Record<string, string> };
 type DeckDoc = { width: number; height: number; slides: Record<SlideType, SlideDoc> };
 
@@ -25,12 +27,26 @@ let doc: DeckDoc | undefined;
 export const deckDoc = (): DeckDoc => (doc ??= JSON.parse(readFileSync(pkgPath('brand', 'assets', 'deck.json'), 'utf8')) as DeckDoc);
 export const slideTypes = () => Object.keys(deckDoc().slides) as SlideType[];
 
-export type Slide = { type: string; palette?: string; picture?: Picture | null } & Record<string, unknown>;
+export type Slide = { type: string; palette?: string; picture?: Picture | null; pictures?: (Picture | null)[] } & Record<string, unknown>;
 
 const LOGO: Can = { anchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'], scale: [0.6, 1.8], hide: true };
 const TITLE: Can = { move: true, scale: [0.5, 1.5], align: true };
 const TEXT: Can = { move: true, scale: [0.6, 1.5] };
 const ART: Can = { move: true, scale: [0.4, 1.6], hide: true };
+/* Block slides: words can be scaled, aligned or hidden, pictures scaled or hidden; a card's parts go with it. */
+const BT: Can = { scale: [0.5, 1.6], hide: true, align: true };
+const BP: Can = { scale: [0.5, 1.6], hide: true };
+const cards = (prefix: string, n: number) => Object.fromEntries(Array.from({ length: n }, (_, i) => [[`${prefix}-${i + 1}`, { hide: true }], [`${prefix}-${i + 1}-heading`, {}], [`${prefix}-${i + 1}-text`, {}], [`${prefix}-${i + 1}-number`, {}]]).flat());
+const BLOCK_CAN = {
+	agenda: { logo: BP, title: BT, items: BP },
+	team: { logo: BP, title: BT, ...cards('person', 8) },
+	timeline: { logo: BP, title: BT, line: { hide: true }, ...cards('step', 6) },
+	chart: { logo: BP, title: BT, chart: { hide: true }, 'chart-title': {}, body: BT },
+	comparison: { logo: BP, title: BT, 'left-title': BT, left: BP, 'right-title': BT, right: BP },
+	'image-grid': { logo: BP, title: BT, ...Object.fromEntries(Array.from({ length: 4 }, (_, i) => [[`picture-${i + 1}`, BP], [`picture-${i + 1}-field`, {}]]).flat()) },
+	qa: { field: { hide: true }, logo: BP, title: BT, body: BT },
+} satisfies Record<string, Record<string, Can>>;
+
 export const SLIDE_CAN: Record<SlideType, Record<string, Can>> = {
 	cover: { logo: LOGO, title: TITLE, body: TEXT, art: ART, field: {} },
 	section: { logo: LOGO, number: { scale: [0.5, 1.3] }, title: TITLE, field: { hide: true } },
@@ -40,6 +56,7 @@ export const SLIDE_CAN: Record<SlideType, Record<string, Can>> = {
 	quote: { logo: LOGO, mark: { hide: true }, quote: TITLE, attribution: { scale: [0.7, 1.4] }, field: { hide: true } },
 	image: { logo: LOGO, title: TITLE, body: TEXT, art: ART, field: {} },
 	closing: { logo: { scale: [0.6, 1.5] }, title: TITLE, url: { scale: [0.7, 1.4], hide: true }, field: { hide: true } },
+	...BLOCK_CAN,
 };
 
 /** Slides are set as one block in the middle, so the parts of the block follow each other. */
@@ -52,6 +69,13 @@ const SLIDE_REFLOWS: Record<SlideType, Record<string, string[]>> = {
 	quote: { quote: ['mark', 'attribution'], mark: ['quote', 'attribution'], attribution: ['quote', 'mark'] },
 	image: { title: ['body', 'art'], body: ['title', 'art'], art: ['title', 'body'] },
 	closing: { title: ['logo'], logo: ['title'] },
+	agenda: { title: ['items'] },
+	team: { title: Object.keys(BLOCK_CAN.team) },
+	timeline: { title: Object.keys(BLOCK_CAN.timeline) },
+	chart: { title: ['chart', 'chart-title', 'body'], body: ['chart', 'chart-title'] },
+	comparison: {},
+	'image-grid': {},
+	qa: { title: ['body'], body: ['title'] },
 };
 
 export function deckCatalog() {
@@ -68,7 +92,7 @@ export function slotsFor(type: SlideType, given: Record<string, unknown>, sample
 	const def = deckDoc().slides[type];
 	const out: Record<string, string> = { ...def.own, ...(sample ? def.sample : {}) };
 	for (const [k, v] of Object.entries(given)) {
-		if (['type', 'palette', 'theme', 'picture', 'sample', ...(def.picture ? ['image'] : [])].includes(k) || v === undefined) continue;
+		if (['type', 'palette', 'theme', 'picture', 'pictures', 'images', 'count', 'sample', ...(def.picture ? ['image'] : [])].includes(k) || v === undefined) continue;
 		const slot = k === 'headline' && def.slots.includes('title') ? 'title' : k;
 		if (!def.slots.includes(slot)) throw new Error(`A ${type} slide does not take "${k}". It takes ${[...def.slots, ...(def.picture ? ['image'] : [])].map((s) => `"${s}"`).join(', ')}.`);
 		if (Array.isArray(v) && v.every((x) => typeof x === 'string')) out[slot] = v.join(' | ');
@@ -124,6 +148,16 @@ export function drawSlide(ctx: Ctx, slide: Slide, fonts: Fonts = brandFonts(), e
 	for (const [k, v] of Object.entries(slots)) {
 		const doto = k === 'attribution' || k === 'url';
 		assertGlyphs(k, doto ? v.toUpperCase() : v, doto ? 'data' : 'sans');
+	}
+	const blocks = BLOCK_SLIDES[type];
+	if (blocks) {
+		// Made of the brand's blocks: drawn by the compose engine on this context, at this scale.
+		const built = blocks({ ...slots, count: String(slide.count ?? slide.pictures?.length ?? 3) }) as ReturnType<typeof blocks> & { layers?: Record<string, LayerEdit> };
+		const pics: Record<string, Picture | null> = {};
+		(built.blocks ?? []).filter((x) => x.type === 'picture').forEach((x, i) => (pics[x.id] = slide.pictures?.[i] ?? samplePicture(sampleNames()[i % sampleNames().length]!) ?? null));
+		const k = ctx.getTransform().a;
+		const doc = { size: { id: 'slide', width: W, height: H }, theme: p.name, copy: built.copy, blocks: built.blocks, grid: built.grid, layers: { ...built.layers, ...edits }, images: {}, options: {}, seed: 1 } as unknown as DesignDoc;
+		return drawCompose({ width: W * k, height: H * k, getContext: () => ctx } as never, doc, pics, fonts);
 	}
 	const d: Design = { ...designFor('banner', 'custom', { w: W, h: H }), palette: p.name };
 	const can = SLIDE_CAN[type];
@@ -391,7 +425,8 @@ export async function slidePicture(base: string, type: string, value: unknown) {
 
 /** The slide a document stands for. */
 export async function slideOf(doc: DesignDoc, dir: string): Promise<Slide> {
-	return { type: doc.template, ...doc.copy, palette: doc.theme, picture: await slidePicture(dir, doc.template, doc.images.picture) };
+	const grid = await Promise.all([1, 2, 3, 4].map((i) => (doc.images[`picture-${i}`] ? slidePicture(dir, doc.template, doc.images[`picture-${i}`]) : Promise.resolve(undefined))));
+	return { type: doc.template, ...doc.copy, ...(doc.options.count !== undefined ? { count: doc.options.count } : {}), palette: doc.theme, picture: await slidePicture(dir, doc.template, doc.images.picture), ...(grid.some(Boolean) ? { pictures: grid.map((x) => x ?? null) } : {}) };
 }
 
 /** What a slide takes, as the design core reads it. */
@@ -404,8 +439,8 @@ export function slideInfo(id: SlideType): TemplateInfo {
 		sizes: ['slide'],
 		themes: palettes().map((p) => p.name),
 		copy: s.slots.map((c) => ({ id: c, ...(s.required.includes(c) ? { required: true } : {}) })),
-		images: s.picture ? [{ id: 'picture', values: ['none', ...sampleNames().map((n) => `sample:${n}`)] }] : [],
-		options: [],
+		images: id === 'image-grid' ? [1, 2, 3, 4].map((i) => ({ id: `picture-${i}`, values: sampleNames().map((n) => `sample:${n}`) })) : s.picture ? [{ id: 'picture', values: ['none', ...sampleNames().map((n) => `sample:${n}`)] }] : [],
+		options: id === 'image-grid' ? [{ id: 'count', range: [2, 4] as [number, number], description: 'how many pictures' }] : [],
 		layers: Object.entries(SLIDE_CAN[id]).map(([layer, can]) => ({ id: layer, can })),
 		reflows: SLIDE_REFLOWS[id],
 		grounds: Object.fromEntries(palettes().map((p) => [p.name, p.bg])),

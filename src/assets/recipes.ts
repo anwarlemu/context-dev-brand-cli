@@ -66,7 +66,7 @@ export const RECIPES: Recipe[] = [
 		}),
 	},
 	{
-		id: 'comparison', label: 'Comparison', description: 'Two sides with a heading and points each: before and after, us and the old way.', sizes: SOCIAL, theme: 'Paper',
+		id: 'comparison-card', label: 'Comparison card', description: 'Two sides with a heading and points each: before and after, us and the old way.', sizes: SOCIAL, theme: 'Paper',
 		copy: [{ id: 'headline' }, { id: 'left-title', required: true }, { id: 'left-items', required: true }, { id: 'right-title', required: true }, { id: 'right-items', required: true }],
 		sample: { headline: 'Two ways to get web data', 'left-title': 'Your own crawlers', 'left-items': 'Proxies to run | Breaks on layout changes | Weeks to build', 'right-title': 'One API', 'right-items': 'No proxies | Clean Markdown | Minutes to start' },
 		build: (c, s) => {

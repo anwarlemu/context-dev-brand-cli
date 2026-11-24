@@ -101,9 +101,9 @@ describe('asset outputs', () => {
 		expect(merchItems().map((i) => i.id)).toEqual(['cap-front', 'tee-front', 'tee-back', 'hoodie-front', 'tote', 'mug-wrap', 'sticker', 'poster', 'socks']);
 	});
 	it('every slide type draws at 1920 by 1080', () => {
-		expect(slideTypes()).toEqual(['cover', 'section', 'statement', 'bullets', 'stat', 'quote', 'image', 'closing']);
+		expect(slideTypes()).toEqual(['cover', 'section', 'statement', 'bullets', 'stat', 'quote', 'image', 'closing', 'agenda', 'team', 'timeline', 'chart', 'comparison', 'image-grid', 'qa']);
 		for (const t of slideTypes()) expect(renderSlide({ type: t, sample: true }).width).toBe(1920);
-		expect(deckCatalog().slides).toHaveLength(8);
+		expect(deckCatalog().slides).toHaveLength(15);
 	});
 	it('the reel page carries tokens and copy, and loops name their templates', () => {
 		const html = reelHtml({ headline: 'Hello <there>' });
