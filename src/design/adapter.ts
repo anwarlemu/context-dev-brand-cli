@@ -9,10 +9,11 @@ import { brand } from '../lib/brand.js';
 import { mediaKinds } from './media.js';
 import { BLOCKS, drawCompose, recipeFor } from '../assets/compose.js';
 import { SECTIONS, writePage } from '../assets/page.js';
-import { encoded, surface, toPng, toSvg } from '../assets/canvas.js';
+import { encoded, pixelsOf, surface, toPng, toSvg } from '../assets/canvas.js';
+import { rgbOf } from '../assets/png.js';
 import { readPicture } from '../assets/picture.js';
 import { samplePicture } from '../assets/samples.js';
-import { blockRects } from './index.js';
+import { blockRects, PLATFORMS } from './index.js';
 import { sheetCanvas, type Adapter, type DesignDoc, type DrawnLayer, type Painter } from './index.js';
 
 // This brand's side of the design core: what can be made and how a document becomes the engine's own request.
@@ -52,7 +53,8 @@ export function adapter(): Adapter {
 		templates: () => [...TEMPLATES.map(infoOf), ...slideTypes().map(slideInfo), ...mediaKinds.flatMap((m) => m.infos())],
 		defaults(template, size) {
 			if (template === 'compose') {
-				const f = frameOf({ size, w: 1200, h: 675 });
+				const pf = PLATFORMS.find((p) => p.id === size);
+				const f = imageDoc().sizes[size] ? frameOf({ size, w: 1200, h: 675 }) : pf ? { w: pf.width, h: pf.height } : { w: 1200, h: 675 };
 				return { size: { id: size, width: f.w, height: f.h }, theme: 'Paper', seed: 1, options: {} };
 			}
 			const media = mediaOf(template);
@@ -90,8 +92,8 @@ export function adapter(): Adapter {
 			blocks: () => BLOCKS,
 			themes: palettes().map((p) => p.name),
 			grounds: Object.fromEntries(palettes().map((p) => [p.name, p.bg])),
-			sizes: [...Object.keys(imageDoc().sizes), 'custom'],
-			formats: ['png', 'svg', 'jpg', 'webp'],
+			sizes: [...new Set([...Object.keys(imageDoc().sizes), ...PLATFORMS.map((p) => p.id)]), 'custom'],
+			formats: ['png', 'svg', 'jpg', 'webp', 'pdf'],
 			recipe: (template, size, copy) => recipeFor(template, size, copy),
 		},
 		page: { sections: () => SECTIONS, flavors: ['react', 'html'], write: writePage },
@@ -126,6 +128,12 @@ async function renderCompose(doc: DesignDoc, dir: string, out: { formats: string
 		if (out.formats.includes('png')) files.png = toPng(s);
 		if (out.formats.includes('jpg')) files.jpg = encoded(s, 'image/jpeg');
 		if (out.formats.includes('webp')) files.webp = encoded(s, 'image/webp');
+		if (out.formats.includes('pdf')) {
+			// Print sizes are 300 dpi; anything else is a screen picture at 96 dpi.
+			const print = ['a4', 'letter', 'business-card'].includes(doc.size.id);
+			const px = pixelsOf(s);
+			files.pdf = imagesToPdf([{ rgb: rgbOf(px.data), width: px.width, height: px.height }], (W / (print ? 300 : 96)) * 72);
+		}
 	}
 	if (out.formats.includes('svg')) {
 		const s = surface(W, H, { svg: true });

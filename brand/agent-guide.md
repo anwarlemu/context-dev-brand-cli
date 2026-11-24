@@ -110,6 +110,28 @@ When a person wants a graphic and then changes to it ("bigger headline", "darker
 4. `design undo`, `redo` and `history` step through the changes. `design variants --by theme|seed|template`, `design sizes --to og,story,x-banner` and `design compare a b` write a labeled contact sheet to choose from.
 5. Repeat until the person is happy, then `design render --format png,svg,jpg,webp` (pdf for slides and merch). Never edit the PNG or SVG by hand.
 
+### Your own layout, and pages
+
+- `design new compose --size <any size>` then `design compose add <file> <block> "words" --place top-left` (or `--at col,row,cols,rows` on the 12 by 12 grid), `compose move|remove|order|span|grid`, or plain words ("add a stat \"42%\" top right", "make the quote wider"). Blocks: headline, body, badge, logo, mark, picture, burst, field, card, stat, quote, list, button, search, chart (bar, line or donut from "label value | label value"), divider, icon. Every template can be rebuilt as blocks, and sizes include documents (a4, letter, business-card), ads (ad-300x250 and the other IAB sizes), video-call backgrounds (meeting), wallpapers (desktop, phone-wallpaper), Pinterest, Facebook and email signatures; `design render --format pdf` for print.
+- `design page compose outline.json` writes a page from the library's sections (header, hero, text, features, stats, testimonials, faq, blog, cta, footer) as `page.tsx` (it imports the installed components: `add` them first) and plain `index.html`. Only the outline's words go on the page.
+- `icons` writes the favicon set, app icons and the manifest entry from the mark.
+
+### I need ...
+
+| I need | Run |
+|---|---|
+| A link preview, header, cover or post | `image <template> --size <id>` (several: `--size og,x-banner,story`) |
+| A graphic the person will keep changing | `design new ...`, then `design revise` or `design edit` |
+| A layout no template has (a one-pager, an ad, a chart card) | `design new compose --size ...` and `design compose add ...` |
+| Numbered carousel posts | `image --input carousel.json` |
+| Slides or a deck PDF | `deck --input deck.json` (a slide can be a revised design file) |
+| A loop, a still frame or the brand film | `video <loop> --size ...`, `video reel ...` |
+| Print files for merch | `merch <item> --variant ...` |
+| A dot illustration of a picture | `illustrate --image file.png` |
+| Favicons and app icons | `icons` |
+| A whole web page | `design page compose outline.json` |
+| A component or section in code | `list`, `inspect`, `add` |
+
 Write copy in sentence case. Use Acme for example companies, never real people's names or third-party logos. The renderer is importable for scripts: `dist/assets/index.js` (dot shader, dot field, text layout, logo, PNG, SVG and PDF output).
 
 ## Make illustrations
