@@ -86,7 +86,7 @@ export function adapter(): Adapter {
 				const v = r[f as 'png'];
 				if (v !== undefined) files[f] = typeof v === 'string' ? Buffer.from(v) : v;
 			}
-			return { files, layers: r.layers };
+			return { files, layers: r.layers, ...(r.notes ? { notes: r.notes } : {}) };
 		},
 		compose: {
 			blocks: () => BLOCKS,

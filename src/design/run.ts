@@ -159,12 +159,12 @@ function formatsOf(a: Args, info: TemplateInfo, fallback: Format[] = ['png']): F
 	}))];
 }
 
-type Drawn = { files: Record<string, Uint8Array>; layers: DrawnLayer[]; findings: Finding[] };
+type Drawn = { files: Record<string, Uint8Array>; layers: DrawnLayer[]; findings: Finding[]; notes: string[] };
 async function draw(adapter: Adapter, doc: DesignDoc, dir: string, formats: Format[], scale = 1): Promise<Drawn> {
 	const info = infoFor(adapter, doc);
 	const r = await adapter.render(doc, dir, { formats, scale });
 	const findings = checkDesign({ doc, info, layers: r.layers, adapter, png: r.files.png });
-	return { files: r.files, layers: r.layers, findings };
+	return { files: r.files, layers: r.layers, findings, notes: r.notes ?? [] };
 }
 
 /** A failed check: the findings are the message, and nothing was written. */
@@ -186,6 +186,8 @@ async function write(adapter: Adapter, io: DesignIO, a: Args, path: string, r: A
 	const absent = (r.touched ?? []).filter((id) => !d.layers.some((l) => l.id === id));
 	if (absent.length) throw new DesignError(`There is no ${absent.join(' or ')} in this design to change. It draws ${d.layers.map((l) => l.id).join(', ')}.${absent.some((id) => info.copy.some((c) => c.id === id)) ? ` Add words for it first: --set ${absent[0]}="...".` : ''}`);
 	if (errorsOf(d.findings).length) throw new CheckFailed(d.findings, `${command === 'new' ? 'The design breaks a rule, so nothing was written.' : 'That breaks a rule, so nothing was changed.'}`);
+	// What the drawing did differently from what was asked is said beside the change, never hidden.
+	r = { ...r, notes: [...r.notes, ...d.notes] };
 	const files: string[] = [];
 	if (!a.flags.has('dry-run')) {
 		save(path, docText(r.doc));
@@ -503,7 +505,7 @@ async function many(a: Args, adapter: Adapter, io: DesignIO, path: string, doc: 
 			}
 			save(file, docText(placed));
 			save(`${base}-${name}.png`, d.files.png!);
-			made.push({ name: p.name, file: shown(io.cwd, file), png: shown(io.cwd, `${base}-${name}.png`), design: summary(placed), notes: r.notes, findings: d.findings });
+			made.push({ name: p.name, file: shown(io.cwd, file), png: shown(io.cwd, `${base}-${name}.png`), design: summary(placed), notes: [...r.notes, ...d.notes], findings: d.findings });
 			sheet.push({ label: `${p.name}${by === 'size' ? ` ${placed.size.width}x${placed.size.height}` : ''}${by !== 'size' && isNow(p, doc) ? ' (as it is)' : ''}`, png: d.files.png! });
 		} catch (err) {
 			blocked.push({ name: p.name, reason: (err as Error).message });

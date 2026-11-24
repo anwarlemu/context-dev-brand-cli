@@ -433,6 +433,15 @@ describe('design command', () => {
 		expect((await run('new')).code).toBe(1);
 		expect((await run('check', 'nothing.design.json')).text).toMatch(/no file/);
 	});
+	it('prints what the drawing did differently from the edit', async () => {
+		const noted: Adapter = { ...adapter, render: async (d, dir, out) => ({ ...(await adapter.render(d, dir, out)), notes: d.layers.headline?.scale ? ['the headline grew 10%, the most that fits here, not 20%'] : [] }) };
+		const cwd = mkdtempSync(join(tmpdir(), 'design-notes-'));
+		const out: string[] = [];
+		const run = (...argv: string[]) => runDesign(argv, noted, { cwd, bin: 'acme', out: (s) => out.push(s), err: (s) => out.push(s), paint });
+		await run('new', 'plain', '--headline', 'Ship it', '-o', 'a.design.json');
+		await run('revise', 'a.design.json', 'bigger headline', '--json');
+		expect(JSON.parse(out.at(-1)!).notes).toEqual(['the headline grew 10%, the most that fits here, not 20%']);
+	});
 	it('refuses to change a part that is not drawn', async () => {
 		const { run } = session();
 		await run('new', 'plain', '--headline', 'Ship it', '-o', 'a.design.json');

@@ -170,7 +170,7 @@ export const CAN: Record<Template, Record<string, Can>> = {
 };
 
 /* Where the headline landed, the area the picture is placed in, and every layer as drawn. */
-export type Drawn = { text: Rect; area?: Rect; layers: DrawnLayer[] };
+export type Drawn = { text: Rect; area?: Rect; layers: DrawnLayer[]; notes?: string[] };
 
 /* ---- The page a design is laid out on ---- */
 
@@ -198,6 +198,8 @@ export type Pen = {
   keep: Rect[];
   /* Boxes no dot may touch whatever the layout keeps (a page number). */
   hold?: Rect[];
+  /* Where the drawing did less than an edit asked, in words. */
+  notes?: string[];
 };
 
 const right = (r: Rect) => r.x + r.w;
@@ -396,14 +398,18 @@ export const covered = (keep: Rect[], x: number, y: number, r: number) => keep.s
 
 /* How much of a dot is left where the picture runs off the frame: it fades out over the last stretch. */
 function fadeFor(box: Rect, W: number, H: number) {
-  const band = { x: Math.min(box.w, W) * 0.3, y: Math.min(box.h, H) * 0.3 };
-  const off = { l: box.x < -1, r: right(box) > W + 1, t: box.y < -1, b: bottom(box) > H + 1 };
+  /* Over three times what runs off, at least a few dots' worth, at most a third of the picture. */
+  const band = (over: number, dim: number) => Math.min(dim * 0.3, Math.max(24, over * 3));
+  const o = { l: -box.x, r: right(box) - W, t: -box.y, b: bottom(box) - H };
+  const off = { l: o.l > 1, r: o.r > 1, t: o.t > 1, b: o.b > 1 };
   if (!off.l && !off.r && !off.t && !off.b) return undefined;
+  const bw = Math.min(box.w, W);
+  const bh = Math.min(box.h, H);
   const ease = (v: number) => {
     const k = Math.min(1, Math.max(0, v));
     return k * k * (3 - 2 * k);
   };
-  return (x: number, y: number) => ease(off.l ? x / band.x : 1) * ease(off.r ? (W - x) / band.x : 1) * ease(off.t ? y / band.y : 1) * ease(off.b ? (H - y) / band.y : 1);
+  return (x: number, y: number) => ease(off.l ? x / band(o.l, bw) : 1) * ease(off.r ? (W - x) / band(o.r, bw) : 1) * ease(off.t ? y / band(o.t, bh) : 1) * ease(off.b ? (H - y) / band(o.b, bh) : 1);
 }
 
 /* The dot field: the picture shaded into the grid, the grid behind it, and no dot wherever the words are. */
@@ -543,7 +549,7 @@ export function drawDesign(canvas: AnyCanvas, d: Design, img: Picture | null, fo
   ctx.globalAlpha = 1;
   ctx.letterSpacing = "0px";
   ctx.textAlign = "left";
-  return { ...out, layers: q.layers };
+  return { ...out, layers: q.layers, ...(q.notes?.length ? { notes: q.notes } : {}) };
 }
 
 const sizeName = (q: Pen) => `${q.d.size === "custom" ? "" : `${q.d.size} `}${q.W}x${q.H}`;
@@ -576,9 +582,20 @@ function column(q: Pen, o: { size: number; body: number; maxW: number; maxH: num
     if (c && c.h <= o.maxH + 0.5) {
       const k = eh.scale ?? 1;
       if (k === 1) return c;
+      const fits = (x: Column | undefined) => !!x && x.h <= o.maxH + 0.5 && (!x.head || x.head.size >= q.floor - 0.01);
       const scaled = make(at, k);
-      if (!scaled || scaled.h > o.maxH + 0.5 || (scaled.head && scaled.head.size < q.floor - 0.01)) return undefined;
-      return scaled;
+      if (fits(scaled)) return scaled;
+      /* As close to the asked size as fits, and said so. */
+      for (let j = 1; j <= 40; j++) {
+        const kk = k + ((1 - k) * j) / 40;
+        const near = make(at, kk);
+        if (fits(near)) {
+          const pct = (n: number) => `${Math.round(Math.abs(n - 1) * 100)}%`;
+          (q.notes ??= []).push(k > 1 ? `the headline grew ${pct(kk)}, the most that fits here, not ${pct(k)}` : `the headline shrank ${pct(kk)}, the least it reads at here, not ${pct(k)}`);
+          return near!;
+        }
+      }
+      return undefined;
     }
     if (at <= least) return undefined;
   }
@@ -672,18 +689,18 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   const strip = ratio >= 2.2;
   const hasArt = !!img && !q.edits.art?.hidden;
   const size = d.textSize ?? (strip ? Math.max(0.15 * S.h, q.floor * 1.6) : wide ? (64 * S.h) / 630 : (80 * W) / 1080);
-  const share = d.textWidth ?? (wide ? (hasArt ? (strip ? 0.6 : 0.45) : 0.8) : 1);
+  const share = d.textWidth ?? (wide ? (hasArt ? (strip ? 0.42 : 0.45) : 0.8) : 1);
   let logo = logoBox(q, "top-left");
   const area: Rect = { x: S.x + m, y: S.y + m, w: Math.min(S.w - m * 2, wide ? S.w * share : (S.w - m * 2) * share), h: S.h - m * 2 };
   if (d.textX !== undefined) area.x = d.textX * W;
   const tall = !wide && hasArt;
   const body = size * 0.42;
-  type Pick = { c: Column; r: Rect };
-  let best: Pick | undefined;
+  type Pick = { c: Column; r: Rect; s: number };
+  const picks: Pick[] = [];
   const aside = logo ? regions(q, { ...area, y: area.y }) : regions(q, area);
-  for (let raw of aside) {
-    /* Beside a covered corner the words may go on further: the picture needs only its own square. */
-    if (raw.x > area.x + 1 && strip && hasArt && d.textWidth === undefined) raw = { ...raw, w: S.x + S.w * 0.68 - raw.x };
+  /* On a header the words may also run wider above the covered corner; the picture takes what is left. */
+  const tries = strip && hasArt && d.textWidth === undefined ? aside.flatMap((r) => (r.x > area.x + 1 ? [{ ...r, w: S.x + S.w * 0.68 - r.x }] : [r, { ...r, w: S.w * 0.58 }])) : aside;
+  for (const raw of tries) {
     /* Shifted clear of a covered corner, the logo goes with the words. */
     const shifted = raw.x > area.x + 1;
     const l = shifted && logo && !q.edits.logo?.anchor ? { ...logo, x: raw.x } : logo;
@@ -691,13 +708,12 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
     /* Above a picture, the words take at most three fifths of the room. */
     const c = column(q, { size, body, maxW: r.w, maxH: tall ? Math.min(r.h, S.h * 0.5) : r.h });
     if (!c) continue;
-    const s = c.head?.size ?? c.body?.size ?? 1;
-    const was = best && (best.c.head?.size ?? best.c.body?.size ?? 1);
-    if (!best || s > was! * 1.25) {
-      best = { c, r };
-      if (l !== logo) best.r = { ...r, x: raw.x };
-    }
+    picks.push({ c, r: shifted ? { ...r, x: raw.x } : r, s: c.head?.size ?? c.body?.size ?? 1 });
   }
+  /* The first that sets the words within a quarter of the biggest size any of them can: the narrow column above the
+     corner, then a wider one, then clear of the corner to the side, so a line more does not send the words across. */
+  const most = Math.max(0, ...picks.map((x) => x.s));
+  const best = picks.find((x) => x.s * 1.25 >= most);
   if (!best) throw tooLong(d.headline.length >= d.body.length ? "headline" : "body", sizeName(q));
   const { c, r } = best;
   if (logo && r.x > area.x + 1 && !q.edits.logo?.anchor) logo = { ...logo, x: r.x };
@@ -709,9 +725,13 @@ function drawBanner(q: Pen, img: Picture | null): Omit<Drawn, "layers"> {
   q.keep = [...boxes.map((b) => grow(b, 12)), ...(logo ? [grow(logo, Math.max(12, logoClear(logo.h)))] : [])];
   const gap = m * 0.9;
   const room: Rect = wide
-    ? { x: Math.max(right(words) + gap, S.x + S.w * 0.46), y: S.y + m * 0.55, w: 0, h: S.h - m * 1.1 }
+    ? strip
+      /* A header's picture fills its height, as the share-image editor's does (centered at two thirds across where the
+         words leave room), and fades where it runs past the edge. */
+      ? { x: Math.max(right(words) + gap, W * 0.66 - H * 0.54), y: -H * 0.04, w: 0, h: H * 1.08 }
+      : { x: Math.max(right(words) + gap, S.x + S.w * 0.46), y: S.y + m * 0.55, w: 0, h: S.h - m * 1.1 }
     : { x: S.x + m, y: bottom(words) + gap, w: S.w - m * 2, h: bottom(S) - m - bottom(words) - gap };
-  if (wide) room.w = right(S) - m * 0.8 - room.x;
+  if (wide) room.w = strip ? Math.min(H * 1.08, right(S) - m * 0.8 - room.x) : right(S) - m * 0.8 - room.x;
   if (logo && hits(grow(logo, logoClear(logo.h)), room)) {
     const l = grow(logo, logoClear(logo.h) + 6);
     if (logo.y > q.H / 2) room.h = l.y - room.y;

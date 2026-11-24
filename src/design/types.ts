@@ -90,8 +90,9 @@ export type Adapter = {
 	templates(): TemplateInfo[];
 	defaults(template: string, size: string): Pick<DesignDoc, 'size' | 'theme' | 'seed' | 'options'>;
 	/** Draws the document with its layer edits applied inside the real drawing code (text re-wraps, art re-flows).
-	 * Throws an Error saying what to shorten when the words cannot be drawn whole. */
-	render(doc: DesignDoc, dir: string, out: { formats: Format[]; scale: number }): Promise<{ files: Record<string, Uint8Array>; layers: DrawnLayer[] }>;
+	 * Throws an Error saying what to shorten when the words cannot be drawn whole. `notes` say where it did less than an
+	 * edit asked ("the headline grew 12%, the most that fits, not 20%"); they are printed with the change. */
+	render(doc: DesignDoc, dir: string, out: { formats: Format[]; scale: number }): Promise<{ files: Record<string, Uint8Array>; layers: DrawnLayer[]; notes?: string[] }>;
 	/** The words of copy as they are drawn, for comparing: takes out the brand's own markup ("*accent*" marks). */
 	words?(text: string): string;
 	/** Sample copy for a template, only ever used when the person passes --sample. */

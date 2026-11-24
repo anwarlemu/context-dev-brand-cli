@@ -132,7 +132,7 @@ export async function pictureFor(d: Design, cwd: string, partner?: string): Prom
 	return readPicture(cwd, d.image);
 }
 
-export type Rendered = { png?: Buffer; svg?: string; jpg?: Buffer; webp?: Buffer; layers: DrawnLayer[]; width: number; height: number };
+export type Rendered = { png?: Buffer; svg?: string; jpg?: Buffer; webp?: Buffer; layers: DrawnLayer[]; notes?: string[]; width: number; height: number };
 export type RenderOptions = { png?: boolean; svg?: boolean; jpg?: boolean; webp?: boolean; scale?: number };
 
 /** Draws a design with its layer edits. `scale` multiplies the pixels (the SVG is at the frame size). */
@@ -143,7 +143,9 @@ export function renderDesign(d: Design, picture: Picture | null, opts: RenderOpt
 	const raster = opts.png !== false || opts.jpg || opts.webp;
 	if (raster || !opts.svg) {
 		const s = surface(L.w, L.h, { scale });
-		out.layers = drawDesign(s.canvas, d, picture, brandFonts(), edits).layers;
+		const drawn = drawDesign(s.canvas, d, picture, brandFonts(), edits);
+		out.layers = drawn.layers;
+		if (drawn.notes) out.notes = drawn.notes;
 		if (opts.png !== false) out.png = toPng(s);
 		if (opts.jpg) out.jpg = encoded(s, 'image/jpeg');
 		if (opts.webp) out.webp = encoded(s, 'image/webp');
@@ -152,6 +154,7 @@ export function renderDesign(d: Design, picture: Picture | null, opts: RenderOpt
 		const s = surface(L.w, L.h, { svg: true });
 		const r = drawDesign(s.canvas, d, picture, brandFonts(), edits);
 		if (!out.layers.length) out.layers = r.layers;
+		if (r.notes && !out.notes) out.notes = r.notes;
 		out.svg = toSvg(s);
 	}
 	return out;
