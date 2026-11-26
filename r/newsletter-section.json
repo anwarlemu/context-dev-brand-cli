@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "newsletter-section",
+  "type": "site",
+  "title": "Newsletter section",
+  "description": "Newsletter band: a section heading beside a ringed card with an email field, a black pill, and a confirmation state.",
+  "surface": "site",
+  "kinds": [
+    "section",
+    "section-heading",
+    "card-ring",
+    "input",
+    "button-primary"
+  ],
+  "usage": "A newsletter or updates sign up near the foot of a page. `onSubmit` receives the trimmed address once it is valid (Field shows \"Enter your email.\" or the invalid message under the input); resolve to swap in the confirmation, or throw an Error to show its message. `privacy` is the line under the form.",
+  "avoid": [
+    "More than one field",
+    "A popup or modal sign up",
+    "Toasts for validation errors"
+  ],
+  "notes": "Derived, not ported: the brand's site has no newsletter form. It is composed from library items only: a SiteSection\nwith SectionHeading, the contact page's ringed card, and Field, Input and the `pill` Button.",
+  "documentation": "https://context-ds.vercel.app/components/newsletter-section.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add newsletter-section --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "derivedFrom": [
+      "section",
+      "contact-page",
+      "field",
+      "input",
+      "button"
+    ],
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Derived, not ported: the brand has no counterpart. Composed from library items section, contact-page, field, input, button.",
+    "sources": []
+  },
+  "api": [
+    {
+      "path": "components/site/newsletter-section.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * The newsletter band. `onSubmit` gets the trimmed address once it is valid; resolve to show `successTitle` and\n * `successDescription`, or throw an Error to show its message under the field. `privacy` is the line under the form.\n */\ndeclare function NewsletterSection({ title, accent, description, onSubmit, label, placeholder, submitLabel, sendingLabel, emptyMessage, invalidMessage, failedMessage, successTitle, successDescription, privacy, className, }: {\n    title: React.ReactNode;\n    /** The heading's closing words, in brand blue. */\n    accent?: React.ReactNode;\n    description?: React.ReactNode;\n    onSubmit: (email: string) => void | Promise<void>;\n    label?: React.ReactNode;\n    placeholder?: string;\n    submitLabel?: React.ReactNode;\n    sendingLabel?: React.ReactNode;\n    emptyMessage?: React.ReactNode;\n    invalidMessage?: React.ReactNode;\n    failedMessage?: React.ReactNode;\n    successTitle?: React.ReactNode;\n    /** The confirmation's text, from the address; by default it names the address. */\n    successDescription?: (email: string) => React.ReactNode;\n    privacy?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\nexport { NewsletterSection };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/newsletter-section/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/newsletter-section.tsx",
+      "content": "\"use client\";\n\nimport { NewsletterSection } from \"@/components/site/newsletter-section\";\n\nexport function Site() {\n  return (\n    <NewsletterSection\n      title=\"Product updates,\"\n      accent=\"once a month.\"\n      description=\"New endpoints, changelog highlights and guides from the Acme team. No spam, unsubscribe any time.\"\n      onSubmit={() => new Promise((resolve) => setTimeout(resolve, 800))}\n      privacy={\n        <>\n          By subscribing you agree to our <a href=\"#privacy\">privacy policy</a>.\n        </>\n      }\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "section",
+    "button",
+    "field",
+    "input",
+    "spinner"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/newsletter-section.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { CircleCheck } from \"lucide-react\";\n\nimport { SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { Button } from \"@/components/ui/button\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\nimport { Spinner } from \"@/components/ui/spinner\";\n\n// A newsletter sign up band. The site has none, so it is built from library items only: a SiteSection with the\n// SectionHeading on the left and, from lg, the form on the right in the contact page's card (white in a hairline ring,\n// set in the soft blue ring): a Field with an Input and the black pill. Signing up swaps the form for a confirmation.\n\nconst EMAIL_PATTERN = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\nconst FIELD = \"h-auto min-h-11 rounded-card px-3 text-body\";\n\n/**\n * The newsletter band. `onSubmit` gets the trimmed address once it is valid; resolve to show `successTitle` and\n * `successDescription`, or throw an Error to show its message under the field. `privacy` is the line under the form.\n */\nfunction NewsletterSection({\n  title,\n  accent,\n  description,\n  onSubmit,\n  label = \"Email\",\n  placeholder = \"you@company.com\",\n  submitLabel = \"Subscribe\",\n  sendingLabel = \"Subscribing…\",\n  emptyMessage = \"Enter your email.\",\n  invalidMessage = \"Enter a valid email, like you@company.com.\",\n  failedMessage = \"You could not be subscribed. Please try again.\",\n  successTitle = \"You're subscribed.\",\n  successDescription,\n  privacy,\n  className,\n}: {\n  title: React.ReactNode;\n  /** The heading's closing words, in brand blue. */\n  accent?: React.ReactNode;\n  description?: React.ReactNode;\n  onSubmit: (email: string) => void | Promise<void>;\n  label?: React.ReactNode;\n  placeholder?: string;\n  submitLabel?: React.ReactNode;\n  sendingLabel?: React.ReactNode;\n  emptyMessage?: React.ReactNode;\n  invalidMessage?: React.ReactNode;\n  failedMessage?: React.ReactNode;\n  successTitle?: React.ReactNode;\n  /** The confirmation's text, from the address; by default it names the address. */\n  successDescription?: (email: string) => React.ReactNode;\n  privacy?: React.ReactNode;\n  className?: string;\n}) {\n  const headingId = React.useId();\n  const inputId = React.useId();\n  const [email, setEmail] = React.useState(\"\");\n  const [error, setError] = React.useState<React.ReactNode>();\n  const [sending, setSending] = React.useState(false);\n  const [sent, setSent] = React.useState<string | null>(null);\n  const inFlight = React.useRef(false);\n\n  const submit = async (event: React.FormEvent<HTMLFormElement>) => {\n    event.preventDefault();\n    if (inFlight.current) return;\n    const address = email.trim();\n    const problem = !address ? emptyMessage : !EMAIL_PATTERN.test(address) ? invalidMessage : undefined;\n    setError(problem);\n    if (problem) {\n      document.getElementById(inputId)?.focus();\n      return;\n    }\n    inFlight.current = true;\n    setSending(true);\n    try {\n      await onSubmit(address);\n      setSent(address);\n    } catch (failure) {\n      setError(failure instanceof Error && failure.message ? failure.message : failedMessage);\n    } finally {\n      inFlight.current = false;\n      setSending(false);\n    }\n  };\n\n  return (\n    <SiteSection aria-labelledby={headingId} data-slot=\"newsletter-section\" className={className}>\n      <div className=\"grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12\">\n        <SectionHeading title={<span id={headingId}>{title}</span>} accent={accent} description={description} />\n        <div className=\"-m-2 rounded-card bg-ring-tint p-2\">\n          <div className=\"rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\">\n            {sent ? (\n              <div role=\"status\" className=\"flex items-start gap-4\">\n                <CircleCheck aria-hidden=\"true\" className=\"size-6 shrink-0 text-fg-brand\" />\n                <div className=\"flex min-w-0 flex-col gap-1\">\n                  <p className=\"text-h5 leading-snug text-fg\">{successTitle}</p>\n                  <p className=\"text-body leading-snug break-words text-fg-nav\">\n                    {successDescription ? (\n                      successDescription(sent)\n                    ) : (\n                      <>\n                        We will send the next issue to <strong className=\"font-normal text-fg\">{sent}</strong>.\n                      </>\n                    )}\n                  </p>\n                </div>\n              </div>\n            ) : (\n              <form onSubmit={submit} noValidate aria-busy={sending} aria-label=\"Newsletter sign up\" className=\"flex flex-col gap-4\">\n                <div className=\"flex flex-col gap-3 sm:flex-row sm:items-start\">\n                  <Field label={label} error={error} className=\"min-w-0 flex-1\">\n                    <Input\n                      id={inputId}\n                      name=\"email\"\n                      type=\"email\"\n                      inputMode=\"email\"\n                      autoComplete=\"email\"\n                      placeholder={placeholder}\n                      value={email}\n                      onChange={(event) => {\n                        setEmail(event.target.value);\n                        if (error) setError(undefined);\n                      }}\n                      className={FIELD}\n                    />\n                  </Field>\n                  {/* Level with the input and as tall: the label's line and gap sit above the button on wide screens. */}\n                  <Button\n                    type=\"submit\"\n                    variant=\"pill\"\n                    disabled={sending}\n                    className=\"w-full gap-2 disabled:cursor-wait disabled:opacity-60 sm:mt-[calc(var(--ds-text-body-sm)*var(--ds-leading-snug)+var(--ds-space-2))] sm:h-11 sm:w-auto sm:py-0\"\n                  >\n                    {sending && <Spinner aria-hidden=\"true\" role={undefined} aria-label={undefined} className=\"size-4\" />}\n                    {sending ? sendingLabel : submitLabel}\n                  </Button>\n                </div>\n                {privacy && <p className=\"text-body-sm leading-snug text-fg-nav [&_a]:text-fg-brand [&_a]:underline-offset-4 [&_a:hover]:underline\">{privacy}</p>}\n              </form>\n            )}\n          </div>\n        </div>\n      </div>\n    </SiteSection>\n  );\n}\n\nexport { NewsletterSection };\n"
+    }
+  ]
+}

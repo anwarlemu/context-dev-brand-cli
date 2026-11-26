@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "not-found-page",
+  "type": "site",
+  "title": "Not found page",
+  "description": "Black 404 page with a dotted status code, title, a did you mean suggestion, two outline pills, and index links.",
+  "surface": "site",
+  "kinds": [
+    "page",
+    "button-on-brand",
+    "link"
+  ],
+  "usage": "The site's 404. Pass the site's pages as `knownPaths` (most important first) and the closest one to the requested path is offered as \"Did you mean\" (findClosestPath catches typos and shorthands; the path is read from the address after mount unless `pathname` is given). Two `pill-on-brand` buttons as `actions` (the second with `border-white/40`), the index links as `note`, the white logo as `logo`. `overlay` covers the window above the site's header and footer, as the site does. DotNumber draws any number in the round dots.",
+  "avoid": [
+    "The header and footer around it",
+    "A blue page background",
+    "More than two pills",
+    "A suggestion that pushes the page down when it appears"
+  ],
+  "notes": "",
+  "documentation": "https://context-ds.vercel.app/components/not-found-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add not-found-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/not-found.tsx; src/components/errors/not-found-view.tsx; src/components/errors/did-you-mean.tsx; src/lib/closest-path.ts; src/components/sections/usecases/step-dot-number.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/not-found.tsx",
+        "sha256": "e14417782152179e76f8077fb139e4bec06f58877d8807a713e5a707bdb5eee3",
+        "retained": false,
+        "exports": [
+          "metadata",
+          "NotFound"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/errors/not-found-view.tsx",
+        "sha256": "cd1f9fdeb03706fcf1b1a336bebdd2b4e0222e87c2c239dbac2e9a6a31305d37",
+        "retained": false,
+        "exports": [
+          "NotFoundView"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/errors/did-you-mean.tsx",
+        "sha256": "a99713ee7cc7bcd8eee8df5403b84d77359ce3ef61e928c06dfe714b8ed78396",
+        "retained": false,
+        "exports": [
+          "DidYouMean"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/lib/closest-path.ts",
+        "sha256": "e8ddf0b851d57185ac720557eef9217e00b86922b6908d810a1a1d9f7c9a8dcd",
+        "retained": false,
+        "exports": [
+          "findClosestPath"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/usecases/step-dot-number.tsx",
+        "sha256": "a3fdb24190c095e22153961fa0809c26c85f0ad591b7f2ff1d2560bfece122d1",
+        "retained": false,
+        "exports": [
+          "StepDotNumber"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/not-found-page.d.ts",
+      "content": "import * as React from \"react\";\n/** A number in round dots (digits only), in the current color. It fills its width; size it with a class. */\ndeclare function DotNumber({ value, className }: {\n    value: string;\n    className?: string;\n}): React.JSX.Element;\n/**\n * The known page a mistyped path most likely meant, or null when nothing is close enough. Catches swapped, missing,\n * extra and wrong letters (/pricng, /prcing, /priceing) and shorthands (/wk for /work); on a tie the earlier path in\n * `knownPaths` wins, so list the more important pages first.\n */\ndeclare function findClosestPath(requested: string, knownPaths: readonly string[]): string | null;\n/**\n * The 404 page. `knownPaths` are the site's pages, most important first; the closest one to the requested path\n * (`pathname`, or the browser's address once mounted) is offered as \"Did you mean\". The suggestion's line keeps its\n * height either way, so nothing shifts when one appears. Pass two `pill-on-brand` buttons as `actions`, the second with\n * `border-white/40`.\n */\ndeclare function NotFoundPage({ code, title, description, knownPaths, pathname, suggestionLabel, actions, note, logo, homeHref, homeLabel, overlay, className, }: {\n    code?: string;\n    title: React.ReactNode;\n    description?: React.ReactNode;\n    knownPaths?: readonly string[];\n    /** The requested path; read from the address bar after mount when left out. */\n    pathname?: string;\n    suggestionLabel?: React.ReactNode;\n    actions?: React.ReactNode;\n    /** The quiet line at the foot (links to the sitemap and indexes); its links are underlined. */\n    note?: React.ReactNode;\n    /** The logo mark, in white (it inherits the text color). */\n    logo?: React.ReactNode;\n    homeHref?: string;\n    homeLabel?: string;\n    /** Covers the window, above any layout chrome. */\n    overlay?: boolean;\n    className?: string;\n}): React.JSX.Element;\nexport { NotFoundPage, DotNumber, findClosestPath };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/not-found-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/not-found-page.tsx",
+      "content": "import { NotFoundPage } from \"@/components/site/not-found-page\";\nimport { Button } from \"@/components/ui/button\";\n\nfunction AcmeMark() {\n  return (\n    <svg viewBox=\"0 0 48 33\" aria-hidden=\"true\">\n      <rect x=\"16\" width=\"32\" height=\"32\" rx=\"2\" fill=\"currentColor\" />\n      <circle cx=\"10\" cy=\"23\" r=\"10\" fill=\"currentColor\" />\n    </svg>\n  );\n}\n\nexport function Site() {\n  return (\n    <NotFoundPage\n      title=\"This page isn't on the web anymore.\"\n      description=\"It may have been moved, renamed, or removed. Here are a few ways back in.\"\n      pathname=\"/pricng\"\n      knownPaths={[\"/\", \"/pricing\", \"/blog\", \"/contact\", \"/docs\"]}\n      logo={<AcmeMark />}\n      homeHref=\"#home\"\n      homeLabel=\"Acme home\"\n      actions={\n        <>\n          <Button asChild variant=\"pill-on-brand\">\n            <a href=\"#home\">Take me home</a>\n          </Button>\n          <Button asChild variant=\"pill-on-brand\" className=\"border-white/40\">\n            <a href=\"#docs\">View documentation</a>\n          </Button>\n        </>\n      }\n      note={\n        <>\n          Looking for something specific? Try the <a href=\"#sitemap\">sitemap</a>, the <a href=\"#llms\">llms.txt index</a>, or the <a href=\"#docs\">docs index</a>.\n        </>\n      }\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/not-found-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The site's 404: a black page with the logo in its corner and, centered, the status code in large blue dots, a white\n// title, a muted line, a \"Did you mean\" suggestion for a mistyped address, two white outline pills and a quiet line of\n// index links. `overlay` covers the whole window above any layout chrome, as the site's does.\n\n// Doto's own digit grids, read from the font and drawn as round dots (the brand's dots are round).\nconst DIGITS: Record<string, string[]> = {\n  \"0\": [\"..#..\", \".#.#.\", \"#...#\", \"#...#\", \"#...#\", \".#.#.\", \"..#..\"],\n  \"1\": [\"..#..\", \".##..\", \"#.#..\", \"..#..\", \"..#..\", \"..#..\", \"#####\"],\n  \"2\": [\".###.\", \"#...#\", \"....#\", \"..##.\", \".#...\", \"#....\", \"#####\"],\n  \"3\": [\"#####\", \"....#\", \"...#.\", \"..##.\", \"....#\", \"#...#\", \".###.\"],\n  \"4\": [\"...#.\", \"..##.\", \".#.#.\", \"#..#.\", \"#####\", \"...#.\", \"...#.\"],\n  \"5\": [\"#####\", \"#....\", \"#.##.\", \"##..#\", \"....#\", \"#...#\", \".###.\"],\n  \"6\": [\"..##.\", \".#...\", \"#....\", \"#.##.\", \"##..#\", \"#...#\", \".###.\"],\n  \"7\": [\"#####\", \"....#\", \"...#.\", \"...#.\", \"..#..\", \".#...\", \".#...\"],\n  \"8\": [\".###.\", \"#...#\", \"#...#\", \".###.\", \"#...#\", \"#...#\", \".###.\"],\n  \"9\": [\".###.\", \"#...#\", \"#..##\", \".##.#\", \"....#\", \"...#.\", \".##..\"],\n};\nconst COLUMNS = 5;\nconst ROWS = 7;\nconst ADVANCE = COLUMNS + 1;\nconst DOT_RADIUS = 0.4;\n\n/** A number in round dots (digits only), in the current color. It fills its width; size it with a class. */\nfunction DotNumber({ value, className }: { value: string; className?: string }) {\n  const characters = [...value].filter((character) => Object.hasOwn(DIGITS, character));\n  const columns = Math.max(1, characters.length * ADVANCE - 1);\n  return (\n    <svg role=\"img\" aria-label={value} viewBox={`0 0 ${columns} ${ROWS}`} className={cn(\"h-auto shrink-0\", className)}>\n      <g fill=\"currentColor\">\n        {characters.flatMap((character, index) =>\n          DIGITS[character].flatMap((line, row) =>\n            [...line].flatMap((mark, column) => (mark === \"#\" ? [<circle key={`${index}-${row}-${column}`} cx={index * ADVANCE + column + 0.5} cy={row + 0.5} r={DOT_RADIUS} />] : [])),\n          ),\n        )}\n      </g>\n    </svg>\n  );\n}\n\n// Long paths are capped so a slug a few words off (another article) is never offered as the page that was meant.\nconst MAX_EDITS = 3;\n// A shorthand like \"wk\" for \"work\" drops letters rather than changing them; it must keep enough of the word.\nconst MIN_ABBREVIATION_SHARE = 0.4;\n\nfunction normalizePath(path: string) {\n  let decoded = path;\n  try {\n    decoded = decodeURIComponent(path);\n  } catch {\n    // A malformed escape is matched as typed.\n  }\n  return decoded.toLowerCase().replace(/\\/{2,}/g, \"/\").replace(/^\\/|\\/$/g, \"\");\n}\n\n/** Edits to turn one string into the other, counting a swap of two neighboring letters as one edit. */\nfunction editDistance(from: string, to: string) {\n  const rows = Array.from({ length: from.length + 1 }, (_, row) => [row, ...Array<number>(to.length).fill(0)]);\n  for (let column = 1; column <= to.length; column++) rows[0][column] = column;\n  for (let row = 1; row <= from.length; row++) {\n    for (let column = 1; column <= to.length; column++) {\n      const substitution = from[row - 1] === to[column - 1] ? 0 : 1;\n      rows[row][column] = Math.min(rows[row - 1][column] + 1, rows[row][column - 1] + 1, rows[row - 1][column - 1] + substitution);\n      if (row > 1 && column > 1 && from[row - 1] === to[column - 2] && from[row - 2] === to[column - 1]) rows[row][column] = Math.min(rows[row][column], rows[row - 2][column - 2] + 1);\n    }\n  }\n  return rows[from.length][to.length];\n}\n\nfunction isAbbreviationOf(typed: string, target: string) {\n  if (typed.length < 2 || typed.length < target.length * MIN_ABBREVIATION_SHARE || typed[0] !== target[0]) return false;\n  let position = 0;\n  for (const letter of target) if (letter === typed[position]) position++;\n  return position === typed.length;\n}\n\n/**\n * The known page a mistyped path most likely meant, or null when nothing is close enough. Catches swapped, missing,\n * extra and wrong letters (/pricng, /prcing, /priceing) and shorthands (/wk for /work); on a tie the earlier path in\n * `knownPaths` wins, so list the more important pages first.\n */\nfunction findClosestPath(requested: string, knownPaths: readonly string[]): string | null {\n  const typed = normalizePath(requested);\n  if (!typed) return null;\n  let best: { path: string; edits: number } | null = null;\n  for (const path of knownPaths) {\n    const target = normalizePath(path);\n    if (!target) continue;\n    if (target === typed) return path;\n    const allowed = Math.min(MAX_EDITS, Math.max(1, Math.floor(target.length / 3)));\n    const edits = editDistance(typed, target);\n    if ((edits <= allowed || isAbbreviationOf(typed, target)) && (!best || edits < best.edits)) best = { path, edits };\n  }\n  return best?.path ?? null;\n}\n\nconst INDEX_LINKS = \"[&_a]:text-white/70 [&_a]:underline [&_a]:decoration-white/30 [&_a]:underline-offset-4 [&_a]:transition-[color,text-decoration-color] [&_a]:duration-150 [&_a]:ease-out [&_a:hover]:text-white [&_a:hover]:decoration-white motion-reduce:[&_a]:transition-none\";\n\n/**\n * The 404 page. `knownPaths` are the site's pages, most important first; the closest one to the requested path\n * (`pathname`, or the browser's address once mounted) is offered as \"Did you mean\". The suggestion's line keeps its\n * height either way, so nothing shifts when one appears. Pass two `pill-on-brand` buttons as `actions`, the second with\n * `border-white/40`.\n */\nfunction NotFoundPage({\n  code = \"404\",\n  title,\n  description,\n  knownPaths = [],\n  pathname,\n  suggestionLabel = \"Did you mean\",\n  actions,\n  note,\n  logo,\n  homeHref = \"/\",\n  homeLabel = \"Home\",\n  overlay = false,\n  className,\n}: {\n  code?: string;\n  title: React.ReactNode;\n  description?: React.ReactNode;\n  knownPaths?: readonly string[];\n  /** The requested path; read from the address bar after mount when left out. */\n  pathname?: string;\n  suggestionLabel?: React.ReactNode;\n  actions?: React.ReactNode;\n  /** The quiet line at the foot (links to the sitemap and indexes); its links are underlined. */\n  note?: React.ReactNode;\n  /** The logo mark, in white (it inherits the text color). */\n  logo?: React.ReactNode;\n  homeHref?: string;\n  homeLabel?: string;\n  /** Covers the window, above any layout chrome. */\n  overlay?: boolean;\n  className?: string;\n}) {\n  const [suggestion, setSuggestion] = React.useState<string | null>(null);\n  React.useEffect(() => {\n    setSuggestion(findClosestPath(pathname ?? window.location.pathname, knownPaths));\n  }, [pathname, knownPaths]);\n\n  return (\n    <div\n      data-slot=\"not-found-page\"\n      className={cn(\"isolate flex flex-col bg-inverse text-white\", overlay ? \"fixed inset-0 z-2000 overflow-y-auto\" : \"relative min-h-svh w-full\", className)}\n    >\n      {logo && (\n        <a\n          href={homeHref}\n          aria-label={homeLabel}\n          className=\"absolute top-6 left-6 rounded-card text-white outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white md:top-16 md:left-18 [&>img]:h-[calc(var(--spacing)*9.2)] [&>img]:w-auto [&>svg]:h-[calc(var(--spacing)*9.2)] [&>svg]:w-auto\"\n        >\n          {logo}\n        </a>\n      )}\n      <div className=\"flex flex-1 flex-col items-center justify-center gap-7 px-6 py-24 text-center\">\n        <DotNumber value={code} className=\"my-3 w-[min(calc(var(--spacing)*123),80vw)] text-fg-brand\" />\n        <h1 className=\"text-[calc(var(--ds-text-h4)+var(--ds-space-1))] leading-heading font-normal tracking-snug text-balance text-white md:text-[calc(var(--ds-text-h3)+var(--ds-space-1))]\">{title}</h1>\n        <div className=\"flex flex-col items-center gap-2\">\n          {description && <p className=\"max-w-(--ds-layout-text) text-body-lg leading-normal text-pretty text-white/70 md:text-h5\">{description}</p>}\n          <p aria-live=\"polite\" className=\"h-6 text-body leading-6 text-white/70\">\n            {suggestion && (\n              <>\n                {suggestionLabel}{\" \"}\n                <a href={suggestion} className=\"text-white underline decoration-white/40 underline-offset-4 transition-[text-decoration-color] duration-150 ease-out hover:decoration-white motion-reduce:transition-none\">\n                  {suggestion}\n                </a>\n                ?\n              </>\n            )}\n          </p>\n        </div>\n        {actions && <div className=\"flex flex-col items-center justify-center gap-3 sm:flex-row\">{actions}</div>}\n        {note && <p className={cn(\"max-w-176 pt-4 text-body leading-normal text-pretty text-white/50\", INDEX_LINKS)}>{note}</p>}\n      </div>\n    </div>\n  );\n}\n\nexport { NotFoundPage, DotNumber, findClosestPath };\n"
+    }
+  ]
+}

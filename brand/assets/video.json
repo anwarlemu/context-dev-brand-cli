@@ -1,0 +1,42 @@
+{
+	"$comment": "Video: the reel (agd-playground src/components/context-reel, a pure function of t, 10 s at 1920 by 1080) with its copy as flags, and short dot-field loops in the style of the brand film's DotField (context-dev-video src/DotField.tsx: one still grid of same-sized dots, thinning by noise; here each loop moves on a sine, so the last frame meets the first).",
+	"reel": {
+		"seconds": 10,
+		"width": 1920,
+		"height": 1080,
+		"fps": 30,
+		"copy": {
+			"name": "Context.dev",
+			"headline": "Web data API for AI Agents",
+			"url": "context.dev",
+			"tagline": "Web data *API* for *AI* *Agents*",
+			"markdown": "Turn any webpage into clean Markdown for your agent",
+			"quote": "We’re seeing much higher activation rates for our free trials and sign-ups because of it.",
+			"attribution": "Head of growth · Acme",
+			"statValue": 94,
+			"statLabel": "of pages returned as clean, usable content",
+			"cardBlue": "Context.dev gives your agent the web data it needs to finish a task",
+			"cardTop": ["Built for", "agents"],
+			"cardBottom": ["Web", "context API"],
+			"pills": ["Web", "Scrape", "Markdown"],
+			"bench": ["Context.dev 90", "Acme 61", "Acme Labs 50"]
+		},
+		"colors": { "brand": "brand", "brandRing": "rgba(37, 99, 235, 0.22)", "blue10": "blue-10", "blue20": "blue-20", "white": "white", "black": "black", "neutral10": "neutral-10", "neutral80": "neutral-80", "neutral90": "neutral-90", "textMuted": "text-muted", "ground": "bg-frame" },
+		"notes": [
+			"Type: the reel set Switzer and Geist Mono; tokens.css sets Rethink Sans for the sans and the site's mono, so the reel does too.",
+			"Colors: the stage ground #eceef2 is bg-frame (#F2F2F2); the dark pills #15161a and #2a2c33 are neutral-90 and neutral-80; the benchmark's #1e1e1e and #e3e6ec are neutral-90 and neutral-10; #111 is black; the attribution's #6b7280 is text-muted (#666666); the card's lit dots #e8eaf0 are blue-10.",
+			"This copy is the sample --sample fills in: the benchmark's rows are Acme placeholders and the testimonial's person is a role at Acme. Only the name and address are drawn without being passed."
+		]
+	},
+	"loops": {
+		"seconds": 6,
+		"fps": 30,
+		"sizes": { "square": [1080, 1080], "vertical": [1080, 1920], "landscape": [1920, 1080] },
+		"templates": {
+			"edges": { "name": "Edge dots", "description": "The site's hero texture: dots near the left and right edges fraying toward the middle, the fray breathing in and out.", "palette": "Paper" },
+			"twinkle": { "name": "Twinkle", "description": "The reel's cover field: a faint grid on the palette ground with some dots slowly pulsing.", "palette": "Blue" },
+			"ripple": { "name": "Ripple", "description": "Rings of larger dots spreading from the center across the grid, like the end card's arrival.", "palette": "Ink" },
+			"logo": { "name": "Logo", "description": "The twinkling field with the logo (and an optional line) held in the middle.", "palette": "Blue" }
+		}
+	}
+}

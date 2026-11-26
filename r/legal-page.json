@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "legal-page",
+  "type": "site",
+  "title": "Legal page",
+  "description": "Legal page with a back link, title, last updated date, and a styled prose body with an on this page list.",
+  "surface": "site",
+  "kinds": [
+    "page",
+    "body-text",
+    "link"
+  ],
+  "usage": "Privacy policies, terms and data processing pages. Put the text in as children (sections with an `h2` each, `h3` and `h4` inside, paragraphs, lists, `strong` lead-ins and links); the page styles them and builds the \"On this page\" list (from lg) from the `h2`s, marking the section being read and scrolling to one when clicked. Set `--header-offset` to the sticky header's height. LegalPageBody is the text and list alone.",
+  "avoid": [
+    "Bold headings or bold lead-ins",
+    "A centered title",
+    "The site's full policy text in examples",
+    "A dark or gray page background"
+  ],
+  "notes": "The list scrolls on its own when it is taller than the window and fades at its edges (`fade-y`). A click scrolls\nsmoothly to the section, or jumps under reduced motion.",
+  "documentation": "https://context-ds.vercel.app/components/legal-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add legal-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/(marketing)/privacy/page.tsx; src/components/legal/legal-page.tsx; src/components/legal/legal-page-body.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(marketing)/privacy/page.tsx",
+        "sha256": "f3c0c4b7c521ad6281db98d8f9c3b6da27d93233a8098b5d1646af9a22c7c450",
+        "retained": false,
+        "exports": [
+          "metadata",
+          "PrivacyPage"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/legal/legal-page.tsx",
+        "sha256": "48b51e0e0bb184711b78d1b34886872e1b97003d04874e4c868e0538535eb83b",
+        "retained": false,
+        "exports": [
+          "LegalPage"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/legal/legal-page-body.tsx",
+        "sha256": "9ca7c6dff275a4c61eda8d526aadb35fc1ceed5c07adb2850344e830d92017c1",
+        "retained": false,
+        "exports": [
+          "LegalPageBody"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/legal-page.d.ts",
+      "content": "import * as React from \"react\";\n/** The text and its \"On this page\" list. LegalPage uses it; use it alone under another header. */\ndeclare function LegalPageBody({ tocLabel, className, children }: {\n    tocLabel?: string;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/**\n * A legal page. The text goes in as children: plain `section`s, `h2` for each section (the list is built from them),\n * `h3` and `h4` inside, paragraphs, lists, `strong` for a lead-in and links; the page styles them all.\n */\ndeclare function LegalPage({ title, lastUpdated, lastUpdatedLabel, backHref, backLabel, tocLabel, className, children, }: {\n    title: React.ReactNode;\n    /** The date as shown, e.g. \"October 1, 2026\". */\n    lastUpdated?: React.ReactNode;\n    lastUpdatedLabel?: React.ReactNode;\n    backHref?: string;\n    backLabel?: React.ReactNode;\n    tocLabel?: string;\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\nexport { LegalPage, LegalPageBody };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/legal-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/legal-page.tsx",
+      "content": "import { LegalPage } from \"@/components/site/legal-page\";\n\nexport function Site() {\n  return (\n    <LegalPage title=\"Privacy policy\" lastUpdated=\"October 1, 2026\" backHref=\"#home\" backLabel=\"Back to home\">\n      <p>This placeholder policy shows how a legal page is laid out. Acme Inc. (&quot;Acme,&quot; &quot;we&quot;) explains here what it collects and why.</p>\n      <section>\n        <h2>Summary</h2>\n        <ul>\n          <li>We collect account details and how you use the service.</li>\n          <li>We never sell your personal information.</li>\n          <li>You can ask us to export or delete your data at any time.</li>\n        </ul>\n      </section>\n      <section>\n        <h2>1. Information we collect</h2>\n        <h3>Information you give us</h3>\n        <p>\n          <strong>In short:</strong> the details you enter when you sign up or contact us.\n        </p>\n        <p>This includes your name, email address, and anything you write to us.</p>\n        <h3>Information collected automatically</h3>\n        <p>Like most services, we log basic device and usage information to keep the service secure and reliable.</p>\n      </section>\n      <section>\n        <h2>2. How we use information</h2>\n        <p>We use it to provide and improve the service, to answer you, and to meet our legal obligations.</p>\n      </section>\n      <section>\n        <h2>3. Contact us</h2>\n        <p>\n          Questions about this policy? Write to <a href=\"mailto:privacy@acme.dev\">privacy@acme.dev</a>.\n        </p>\n      </section>\n    </LegalPage>\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/legal-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowLeft } from \"lucide-react\";\n\nimport { cn } from \"@/lib/utils\";\n\n// The site's legal pages (privacy, terms, the DPA): a back link, the title at h1 size and the date it was last updated,\n// over a hairline; then the text, with an \"On this page\" list of its sections beside it from lg. The list is built from\n// the text's h2s, follows the reading position and scrolls to a section when clicked. Set `--header-offset` to the\n// sticky header's height so the list and the jumped-to headings clear it.\n\ntype LegalHeading = { id: string; title: string; element: HTMLHeadingElement };\n\nconst OFFSET = \"var(--header-offset,calc(var(--spacing)*26))\";\n\n// The text's own styles, as the site sets them: regular-weight headings, muted body copy at body-lg on a 1.6 line,\n// bold words in full black at the regular weight, and links in brand blue.\nconst PROSE = cn(\n  \"min-w-0 flex-1 text-fg\",\n  \"[&_h2]:mb-4 [&_h2]:scroll-mt-[calc(var(--header-offset,calc(var(--spacing)*26))+var(--ds-space-6))] [&_h2]:pt-3 [&_h2]:text-[calc(var(--ds-text-h4)+var(--ds-space-1))] [&_h2]:leading-heading [&_h2]:font-normal [&_h2]:tracking-snug [&_h2]:text-fg\",\n  \"[&_h3]:mb-3 [&_h3]:text-h5 [&_h3]:leading-snug [&_h3]:font-normal [&_h3]:text-fg\",\n  \"[&_h4]:mb-2 [&_h4]:text-body-lg [&_h4]:leading-snug [&_h4]:font-normal [&_h4]:text-fg\",\n  \"[&_p]:mb-4 [&_p]:text-body-lg [&_p]:leading-snippet [&_p]:text-fg-nav\",\n  \"[&_ul]:mb-4 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ol]:mb-4 [&_ol]:list-decimal [&_ol]:space-y-2 [&_ol]:pl-6\",\n  \"[&_li]:text-body-lg [&_li]:leading-snippet [&_li]:text-fg-nav\",\n  \"[&_strong]:font-normal [&_strong]:text-fg\",\n  \"[&_a]:text-fg-brand [&_a]:underline-offset-4 [&_a:hover]:underline\",\n  \"[&_section]:mb-8\",\n);\n\nfunction slugify(title: string) {\n  return title\n    .toLowerCase()\n    .replace(/[^a-z0-9]+/g, \"-\")\n    .replace(/^-+|-+$/g, \"\");\n}\n\nfunction collectHeadings(content: HTMLElement): LegalHeading[] {\n  const taken = new Set<string>();\n  return Array.from(content.querySelectorAll(\"h2\"), (element) => {\n    const title = element.textContent?.trim() ?? \"\";\n    let id = element.id || slugify(title) || \"section\";\n    for (let suffix = 2; taken.has(id); suffix += 1) id = `${slugify(title) || \"section\"}-${suffix}`;\n    taken.add(id);\n    element.id = id;\n    return { id, title, element };\n  });\n}\n\n/** The text and its \"On this page\" list. LegalPage uses it; use it alone under another header. */\nfunction LegalPageBody({ tocLabel = \"On this page\", className, children }: { tocLabel?: string; className?: string; children: React.ReactNode }) {\n  const contentRef = React.useRef<HTMLDivElement>(null);\n  const [headings, setHeadings] = React.useState<LegalHeading[]>([]);\n  const [activeId, setActiveId] = React.useState<string>();\n\n  React.useEffect(() => {\n    const content = contentRef.current;\n    if (!content) return;\n    const found = collectHeadings(content);\n    setHeadings(found);\n    let frame = 0;\n    // The section whose heading has passed a line a quarter of the way down the window is the one being read.\n    const update = () => {\n      frame = 0;\n      const line = window.innerHeight * 0.25;\n      let current = found[0]?.id;\n      for (const heading of found) {\n        if (heading.element.getBoundingClientRect().top > line) break;\n        current = heading.id;\n      }\n      setActiveId(current);\n    };\n    const schedule = () => {\n      if (!frame) frame = requestAnimationFrame(update);\n    };\n    update();\n    window.addEventListener(\"scroll\", schedule, { passive: true });\n    return () => {\n      window.removeEventListener(\"scroll\", schedule);\n      cancelAnimationFrame(frame);\n    };\n  }, [children]);\n\n  const jump = (event: React.MouseEvent<HTMLAnchorElement>, heading: LegalHeading) => {\n    event.preventDefault();\n    const reduced = window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches;\n    heading.element.scrollIntoView({ behavior: reduced ? \"auto\" : \"smooth\", block: \"start\" });\n    window.history.replaceState(window.history.state, \"\", `#${heading.id}`);\n    setActiveId(heading.id);\n  };\n\n  return (\n    <div data-slot=\"legal-page-body\" className={cn(\"flex gap-16 pt-10\", className)}>\n      <nav\n        aria-label={tocLabel}\n        style={{ top: `calc(${OFFSET} + var(--ds-space-8))`, maxHeight: `calc(100vh - ${OFFSET} - var(--ds-space-16))` }}\n        className=\"ds-scrollbar fade-y sticky hidden w-60 shrink-0 self-start overflow-y-auto lg:block\"\n      >\n        {headings.length > 0 && (\n          <>\n            <p className=\"text-body-sm leading-snug text-fg\">{tocLabel}</p>\n            <ul className=\"mt-3 flex flex-col gap-3\">\n              {headings.map((heading) => {\n                const active = heading.id === activeId;\n                return (\n                  <li key={heading.id}>\n                    <a\n                      href={`#${heading.id}`}\n                      onClick={(event) => jump(event, heading)}\n                      aria-current={active ? \"location\" : undefined}\n                      className={cn(\n                        \"block rounded-sm text-body-sm leading-snug outline-none transition-[color] duration-150 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none\",\n                        active ? \"text-fg-brand\" : \"text-fg-muted hover:text-fg\",\n                      )}\n                    >\n                      {heading.title}\n                    </a>\n                  </li>\n                );\n              })}\n            </ul>\n          </>\n        )}\n      </nav>\n      <div ref={contentRef} className={PROSE}>\n        {children}\n      </div>\n    </div>\n  );\n}\n\n/**\n * A legal page. The text goes in as children: plain `section`s, `h2` for each section (the list is built from them),\n * `h3` and `h4` inside, paragraphs, lists, `strong` for a lead-in and links; the page styles them all.\n */\nfunction LegalPage({\n  title,\n  lastUpdated,\n  lastUpdatedLabel = \"Last updated\",\n  backHref = \"/\",\n  backLabel = \"Back to home\",\n  tocLabel,\n  className,\n  children,\n}: {\n  title: React.ReactNode;\n  /** The date as shown, e.g. \"October 1, 2026\". */\n  lastUpdated?: React.ReactNode;\n  lastUpdatedLabel?: React.ReactNode;\n  backHref?: string;\n  backLabel?: React.ReactNode;\n  tocLabel?: string;\n  className?: string;\n  children: React.ReactNode;\n}) {\n  return (\n    <section data-slot=\"legal-page\" className={cn(\"relative w-full bg-surface text-fg\", className)}>\n      <div className=\"relative mx-auto max-w-[100vw] px-4 pb-12 md:max-w-[90vw] md:pb-16 lg:max-w-[85vw] xl:max-w-(--ds-layout-column)\">\n        <header className=\"flex flex-col items-start gap-5 border-b border-line pt-12 pb-10 md:pt-16\">\n          {/* The arrow stays put on hover; only the link's color answers the pointer. */}\n          <a\n            href={backHref}\n            className=\"inline-flex items-center gap-2 rounded-sm text-body-md leading-snug text-fg-muted outline-none transition-[color] duration-150 ease-out hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring motion-reduce:transition-none\"\n          >\n            <ArrowLeft aria-hidden=\"true\" className=\"size-4\" />\n            {backLabel}\n          </a>\n          <h1 className=\"text-hero leading-tight font-normal tracking-tight text-balance text-fg sm:text-h1 sm:leading-tight\">{title}</h1>\n          {lastUpdated && (\n            <p className=\"text-body leading-snug text-fg/50\">\n              {lastUpdatedLabel} {lastUpdated}\n            </p>\n          )}\n        </header>\n        <LegalPageBody tocLabel={tocLabel}>{children}</LegalPageBody>\n      </div>\n    </section>\n  );\n}\n\nexport { LegalPage, LegalPageBody };\n"
+    }
+  ]
+}

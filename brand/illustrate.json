@@ -1,0 +1,138 @@
+{
+	"$comment": "What `illustrate` draws and with what. Read with brand/illustration.md, which states each rule and its source. Colors are token names (resolved from brand/tokens.css); subject pictures keep their own colors because the shader only reads their light. Sources: P = agd-playground public/context-image-shader/shader.js (the dot shader tool), O = agd-playground src/components/context-og/draw.ts and Playground.tsx (the share-image editor), V = context-dev-video src/mark.tsx and DotField.tsx, K = the website's image dot shader (registry/components/visuals/image-dot-shader.ts, itself the brand kit's scripts/blog-cover-art/dot-shader.mjs).",
+	"defaults": {
+		"$source": "P: DEF, the 'dither good' preset the tool opens on",
+		"width": 1000,
+		"height": 1000,
+		"pad": 19,
+		"dot": 6,
+		"gap": 3,
+		"ring": 1.2,
+		"fit": 77,
+		"offsetX": 0,
+		"offsetY": 0,
+		"cutout": "auto",
+		"keyTol": 2,
+		"render": "toneEdges",
+		"fill": 49,
+		"hollow": 34,
+		"contrast": 3,
+		"edges": 0,
+		"dither": "pattern",
+		"invert": false,
+		"empty": "hidden",
+		"field": "none",
+		"palette": "blue"
+	},
+	"palettes": {
+		"blue": { "bg": "brand", "fill": "white", "ring": "white", "field": "white", "fieldOpacity": 0.3, "$source": "O: Blue (P: Blue at 0.35)" },
+		"paper": { "bg": "white", "fill": "brand", "ring": "brand", "field": "brand", "fieldOpacity": 0.35, "$source": "O: Paper" },
+		"faint": { "bg": "white", "fill": "brand", "ring": "brand", "field": "brand", "fieldOpacity": 0.4, "$source": "P: Faint" },
+		"tint": { "bg": "white", "fill": "brand", "ring": "brand", "field": "blue-30", "fieldOpacity": 1, "$source": "P: Paper (field #bccbf7, nearest token blue-30)" },
+		"ink": { "bg": "black", "fill": "brand", "ring": "brand", "field": "neutral-80", "fieldOpacity": 1, "$source": "O: Ink (field #2e2e2e, nearest token neutral-80)" },
+		"mono": { "bg": "black", "fill": "white", "ring": "white", "field": "neutral-80", "fieldOpacity": 1, "$source": "P: Mono (field #3a3a3a, nearest token neutral-80)" },
+		"mist": { "bg": "bg-frame", "fill": "brand", "ring": "brand", "field": "neutral-20", "fieldOpacity": 1, "$source": "O and P: Mist (ground #eeeeee and field #cfd0d6, nearest tokens bg-frame and neutral-20)" }
+	},
+	"presets": {
+		"dither": { "$source": "P: DEF ('dither good')" },
+		"share": { "$source": "O: START, the share image's dot settings", "dot": 7.6, "gap": 3.8, "pad": 0, "fill": 40, "hollow": 40, "dither": "none", "palette": "paper" },
+		"banner": { "$source": "P: 'Banner · faint grid'", "width": 1500, "height": 500, "pad": 0, "dot": 15, "gap": 5, "fit": 88, "offsetX": 0.22, "render": "silhouette", "fill": 30, "hollow": 30, "dither": "none", "field": "faint", "empty": "field", "palette": "faint" },
+		"card": { "$source": "P: 'Card · faint grid'", "pad": 0, "dot": 15, "gap": 5, "fit": 70, "fill": 45, "hollow": 0, "dither": "none", "field": "faint", "empty": "field", "palette": "faint" },
+		"hero": { "$source": "P: 'Hero · blue field'", "width": 1600, "height": 900, "pad": 40, "dot": 10, "gap": 3, "fit": 84, "fill": 30, "hollow": 30, "dither": "none", "palette": "blue" },
+		"card-paper": { "$source": "P: 'Card · paper' (its palette is the tool's Faint)", "width": 1000, "height": 1250, "pad": 40, "dot": 10, "gap": 3, "fit": 80, "fill": 32, "hollow": 30, "dither": "none", "palette": "faint" },
+		"card-ink": { "$source": "P: 'Card · ink' (its palette is the tool's Paper)", "pad": 40, "dot": 10, "gap": 3, "fit": 82, "fill": 28, "hollow": 32, "dither": "none", "palette": "tint" },
+		"contours": { "$source": "P: 'Contours'", "pad": 40, "dot": 10, "gap": 3, "fit": 82, "render": "edges", "fill": 18, "hollow": 22, "dither": "none", "palette": "ink" },
+		"floating": { "$source": "P: 'Floating subject'", "pad": 40, "dot": 10, "gap": 3, "fit": 86, "render": "tone", "fill": 35, "hollow": 35, "dither": "none", "palette": "mist" }
+	},
+	"subjects": {
+		"globe": {
+			"$source": "O: SAMPLES.Globe (the share image's default picture)",
+			"kind": "picture",
+			"size": [600, 600],
+			"ops": [
+				{ "fill": { "radial": [210, 200, 20, 300, 300, 250], "stops": [[0, "#c9d3ea"], [0.5, "#46557a"], [1, "#0c1220"]] }, "path": [["arc", 300, 300, 250, 0, 7]] },
+				{ "stroke": "#eef2fb", "width": 8, "path": [["ellipse", 300, 300, 87.5, 250]] },
+				{ "stroke": "#eef2fb", "width": 8, "path": [["ellipse", 300, 300, 175, 250]] },
+				{ "stroke": "#eef2fb", "width": 8, "path": [["M", 83.494, 175], ["L", 516.506, 175]] },
+				{ "stroke": "#eef2fb", "width": 8, "path": [["M", 50, 300], ["L", 550, 300]] },
+				{ "stroke": "#eef2fb", "width": 8, "path": [["M", 83.494, 425], ["L", 516.506, 425]] }
+			]
+		},
+		"sphere": {
+			"$source": "O: SAMPLES.Sphere",
+			"kind": "picture",
+			"size": [600, 600],
+			"ops": [{ "fill": { "radial": [230, 210, 10, 290, 280, 230], "stops": [[0, "#ffffff"], [0.18, "#9aa7c4"], [0.7, "#2a3350"], [1, "#0d1222"]] }, "path": [["arc", 290, 290, 210, 0, 7]] }]
+		},
+		"cursor": {
+			"$source": "O and P: SAMPLES.Cursor",
+			"kind": "picture",
+			"size": [600, 600],
+			"ops": [
+				{ "fill": "#0c1220", "path": [["M", 170, 70], ["L", 170, 500], ["L", 275, 395], ["L", 345, 540], ["L", 410, 510], ["L", 340, 368], ["L", 485, 368], ["Z"]] },
+				{ "fill": "#7d8fb5", "path": [["M", 205, 160], ["L", 205, 400], ["L", 270, 335], ["Z"]] }
+			]
+		},
+		"layers": {
+			"$source": "O and P: SAMPLES.Layers",
+			"kind": "picture",
+			"size": [600, 600],
+			"ops": [
+				{ "fill": "#8a9abb", "path": [["M", 300, 300], ["L", 530, 410], ["L", 300, 520], ["L", 70, 410], ["Z"]] },
+				{ "fill": "#3f4f73", "path": [["M", 300, 210], ["L", 530, 320], ["L", 300, 430], ["L", 70, 320], ["Z"]] },
+				{ "fill": "#0c1220", "path": [["M", 300, 120], ["L", 530, 230], ["L", 300, 340], ["L", 70, 230], ["Z"]] }
+			]
+		},
+		"key": {
+			"$source": "O: SAMPLES.Key (the social post's default picture)",
+			"kind": "picture",
+			"size": [900, 300],
+			"ops": [
+				{
+					"fill": { "linear": [0, 40, 0, 270], "stops": [[0, "#5d6c90"], [1, "#0c1220"]] },
+					"rule": "evenodd",
+					"path": [["arc", 150, 150, 130, 0, 6.283185307179586], ["M", 205, 150], ["arc", 150, 150, 55, 0, 6.283185307179586], ["rect", 262, 124, 600, 48], ["rect", 638, 172, 44, 64], ["rect", 718, 172, 44, 46], ["rect", 800, 172, 62, 84]]
+				},
+				{ "stroke": "#a9b6d4", "width": 14, "path": [["arc", 150, 150, 92, 2.827433388230814, 5.497787143782138]] }
+			]
+		},
+		"mark": {
+			"$source": "V: mark.tsx markKindAt (from context-dashboard hero-dot-logo-shape.ts) and scenes/Identity.tsx: the logomark on its own dot grid, solid parts lit, the hole in rings",
+			"kind": "mark",
+			"size": [772.32, 531.2],
+			"square": { "left": 260.5, "top": 0, "right": 772.32, "bottom": 511.83 },
+			"hole": { "cx": 414.05, "cy": 358.28, "r": 153.55 },
+			"disc": { "cx": 153.55, "cy": 377.64, "r": 153.55 },
+			"settings": { "width": 1440, "height": 1080, "pad": 0, "dot": 15.36, "gap": 8.64, "ring": 2, "fit": 38.9, "field": "faint", "palette": "ink" },
+			"colors": { "field": "white", "fieldOpacity": 0.12, "ringOpacity": 0.7, "$source": "V: Identity, unlit cells white at 0.12, rings at 0.7, on black" }
+		},
+		"burst": {
+			"$source": "O: drawBurst, the customer story's burst of dots (44 rays, rings growing by 1.14, lit from below)",
+			"kind": "burst",
+			"rays": 44,
+			"grow": 1.14,
+			"inner": 0.12,
+			"far": 0.78,
+			"settings": { "width": 1080, "height": 1080, "fit": 62, "palette": "paper" },
+			"$fit": "The customer post sizes the burst at 100 and lets it run off the frame; a spot keeps it whole (far edge at 0.78 of the size)"
+		},
+		"extract": { "$source": "K: the website brand page's dot shader sample 'Extract' (apps/www/public/dot-shader)", "kind": "kit", "file": "illustrations/extract.svg" },
+		"integration": { "$source": "K: sample 'Integration'", "kind": "kit", "file": "illustrations/integration.svg" },
+		"logomark": { "$source": "K: sample 'Logomark'", "kind": "kit", "file": "illustrations/logomark.svg" },
+		"orbit": { "$source": "K: sample 'Orbit'", "kind": "kit", "file": "illustrations/orbit.svg" },
+		"pages": { "$source": "K: sample 'Pages'", "kind": "kit", "file": "illustrations/pages.svg" }
+	},
+	"kit": {
+		"$source": "K: the fixed kit grid and ring backdrop",
+		"width": 800,
+		"height": 600,
+		"pitch": 10,
+		"dot": 6.8,
+		"ring": 1.6,
+		"backdropPitch": 30,
+		"backdropRadius": 7.5,
+		"backdropStroke": 2,
+		"halo": 16,
+		"ringOpacity": { "white": 0.14, "other": 0.22 }
+	}
+}

@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "blog-index",
+  "type": "site",
+  "title": "Blog index",
+  "description": "Blog index page with a hero, category pills, a grid of post cards, links to more writing, and the closing call to action.",
+  "surface": "site",
+  "kinds": [
+    "section",
+    "section-heading",
+    "chip",
+    "card"
+  ],
+  "usage": "The blog's index (or a category page of it). The hero takes the site Hero's props (`size=\"large\"`, a `HeroFrame` unless `heroBackground` passes the dot field with streams, the post count's monitor as `media`, one `pill` as `actions`); `logos` (a LogoStrip) sits under it. Then the ruled section with its heading, `categories` as pills (links with `href`, a page per category as the site does, or in-place filters with `onCategoryChange` and each post's `category`), the posts as BlogCard (white and blue in turn, `tone=\"light\"`), `links` as outline pills to guides and the archive, and `cta` (a ClosingCta) last. BlogCategoryPills is the pill row alone.",
+  "avoid": [
+    "Tags on the index cards",
+    "A dark band behind the posts (that is the home page's BlogSection)",
+    "More than one row of outline pills",
+    "A selected pill in blue (it is black)"
+  ],
+  "notes": "The selected pill is one black surface that glides between options with the library's spring (useTabGlide); with\nreduced motion it jumps. The other pills change only their fill on hover, in 200ms. Posts that do not match the selected\ncategory are left out; a category with none shows `emptyMessage`.",
+  "documentation": "https://context-ds.vercel.app/components/blog-index.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add blog-index --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/(marketing)/blog/page.tsx; src/app/(marketing)/blog/layout.tsx; src/components/marketing-filter-pills.tsx; src/components/blog-card.tsx; src/components/sections/home/blog-card-palettes.ts; src/components/sections/products/product-landing-page.tsx",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(marketing)/blog/page.tsx",
+        "sha256": "5ddbb722e912c017b255722ddf896db2af663c57665ada1212ad5c5121832447",
+        "retained": false,
+        "exports": [
+          "metadata",
+          "Blog"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(marketing)/blog/layout.tsx",
+        "sha256": "dc6bc695a5dea63fe4cd9187f95b87f9c9c7e7433f35c92a3f93af66b495de20",
+        "retained": false,
+        "exports": [
+          "metadata",
+          "BlogLayout"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/marketing-filter-pills.tsx",
+        "sha256": "a1bda86343cace601810918e897ef7801572e42f3a9dfbf6528c737fdf0e3501",
+        "retained": false,
+        "exports": [
+          "MarketingFilterOption",
+          "MarketingFilterPills"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/blog-card.tsx",
+        "sha256": "63f62e522214c3bacd5cb3ef17507e4f6b20f35e61b1cc2af07166b2663ae7b1",
+        "retained": false,
+        "exports": [
+          "BlogCardPost",
+          "BlogCard"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/home/blog-card-palettes.ts",
+        "sha256": "08940fcedd6585fb3c225f41e33ad0ca989d5e292158c7524a71d1478e76d0cd",
+        "retained": false,
+        "exports": [
+          "BlogCardSurface",
+          "BLOG_CARD_PALETTES",
+          "blogCardSurface",
+          "BACKDROP_RING_OPACITY",
+          "backdropTile"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/products/product-landing-page.tsx",
+        "sha256": "b9eea159d7f9a850c9a884c71d84af4ff2fd41ba96abcfe965e16ce3d59f4110",
+        "retained": false,
+        "exports": [
+          "SECTION_CLASS",
+          "INTRO_SECTION_CLASS",
+          "CARD_CLASS",
+          "SectionIntro",
+          "LandingIntegration",
+          "LandingFaq",
+          "LandingSteps",
+          "ProductLandingPage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/blog-index.d.ts",
+      "content": "import * as React from \"react\";\nimport { type BlogPost } from \"@/components/site/blog-cards\";\ntype BlogCategory = {\n    value: string;\n    label: React.ReactNode;\n    /** Each category's own page. Left out (with `onCategoryChange`), the pills filter in place. */\n    href?: string;\n};\ntype BlogIndexPost = BlogPost & {\n    /** The category's `value`, for filtering in place. */\n    category?: string;\n};\n/**\n * The category pills over a post list: outlined white pills, the selected one white on black. Links when each option\n * has an `href` (a page per category, as the site does); buttons that call `onValueChange` otherwise.\n */\ndeclare function BlogCategoryPills({ options, value, onValueChange, label, className, }: {\n    options: readonly BlogCategory[];\n    value: string;\n    onValueChange?: (value: string) => void;\n    label?: string;\n    className?: string;\n}): React.JSX.Element;\n/**\n * The whole blog index. The hero takes the site Hero's props (`size=\"large\"` and a `HeroFrame` by default; pass the dot\n * field as `heroBackground` and the monitor as `media`). `logos` goes right under the hero, `cta` (a ClosingCta) last.\n * With `onCategoryChange`, posts whose `category` differs from the selected one are left out; `allValue` shows them all.\n */\ndeclare function BlogIndex({ title, accent, description, actions, media, heroBackground, logos, heading, headingAccent, headingDescription, categories, category, allValue, onCategoryChange, categoriesLabel, posts, emptyMessage, links, linksLabel, cta, className, }: {\n    title: string;\n    accent?: string | string[];\n    description?: React.ReactNode;\n    actions?: React.ReactNode;\n    media?: React.ReactNode;\n    heroBackground?: React.ReactNode;\n    logos?: React.ReactNode;\n    heading: React.ReactNode;\n    headingAccent?: React.ReactNode;\n    headingDescription?: React.ReactNode;\n    categories?: readonly BlogCategory[];\n    category?: string;\n    allValue?: string;\n    onCategoryChange?: (value: string) => void;\n    categoriesLabel?: string;\n    posts: readonly BlogIndexPost[];\n    emptyMessage?: React.ReactNode;\n    /** Outline pills under the posts (guides, the archive, customer stories). */\n    links?: readonly {\n        label: React.ReactNode;\n        href: string;\n    }[];\n    linksLabel?: string;\n    cta?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\nexport { BlogIndex, BlogCategoryPills, type BlogCategory, type BlogIndexPost };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/blog-index/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/blog-index.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowRight } from \"lucide-react\";\n\nimport { BlogIndex, type BlogIndexPost } from \"@/components/site/blog-index\";\nimport { ClosingCta, CtaTextLink } from \"@/components/site/cta\";\nimport { HeroAction } from \"@/components/site/hero\";\nimport { Button } from \"@/components/ui/button\";\nimport { HeroDotField } from \"@/components/visuals/hero-dot-field\";\nimport { HeroMonitor } from \"@/components/visuals/hero-monitor\";\nimport { BatchesStory } from \"@/components/visuals/stories/batches-story\";\n\nconst POSTS: BlogIndexPost[] = [\n  { title: \"Acme raises a seed round to build for agents\", excerpt: \"A note from the team on what comes next, and who is joining us.\", date: \"October 19, 2026\", dateTime: \"2026-10-19\", href: \"#seed\", category: \"company\" },\n  { title: \"Introducing page monitors\", excerpt: \"Watch any page for changes and get a webhook the moment it moves.\", date: \"October 17, 2026\", dateTime: \"2026-10-17\", href: \"#monitors\", category: \"product\" },\n  { title: \"How we cut parse times in half\", excerpt: \"Porting the HTML parser to Rust, and what we measured along the way.\", date: \"September 28, 2026\", dateTime: \"2026-09-28\", href: \"#parser\", category: \"engineering\" },\n  { title: \"Our free tier is back\", excerpt: \"Start building with 1,000 free credits every month, no card required.\", date: \"September 6, 2026\", dateTime: \"2026-09-06\", href: \"#free-tier\", category: \"product\" },\n  { title: \"Retries that never double charge\", excerpt: \"Idempotency keys across the whole API, and the bugs they caught.\", date: \"August 19, 2026\", dateTime: \"2026-08-19\", href: \"#retries\", category: \"engineering\" },\n  { title: \"Acme is now SOC 2 Type 1 compliant\", excerpt: \"What the audit covered and how to request the report.\", date: \"May 18, 2026\", dateTime: \"2026-05-18\", href: \"#soc2\", category: \"company\" },\n];\n\nconst CATEGORIES = [\n  { value: \"all\", label: \"All\" },\n  { value: \"product\", label: \"Product\" },\n  { value: \"engineering\", label: \"Engineering\" },\n  { value: \"company\", label: \"Company\" },\n];\n\nexport function Site() {\n  const [category, setCategory] = React.useState(\"all\");\n  return (\n    <BlogIndex\n      title=\"The Acme Blog\"\n      accent=\"Blog\"\n      description=\"Product announcements, research, and engineering from Acme.\"\n      heroBackground={<HeroDotField fine lively streams />}\n      actions={\n        <HeroAction>\n          <Button asChild variant=\"pill\">\n            <a href=\"#signup\">Start for free</a>\n          </Button>\n        </HeroAction>\n      }\n      media={\n        <div className=\"mx-auto w-full max-w-md\">\n          <HeroMonitor>\n            <BatchesStory />\n          </HeroMonitor>\n        </div>\n      }\n      heading=\"Latest from\"\n      headingAccent=\"the team.\"\n      headingDescription=\"Product news, research, and engineering notes. Browse guides or the full archive for everything else.\"\n      categories={CATEGORIES}\n      category={category}\n      onCategoryChange={setCategory}\n      categoriesLabel=\"Filter blog posts by category\"\n      posts={POSTS}\n      links={[\n        { label: \"Guides\", href: \"#guides\" },\n        { label: \"Browse all articles\", href: \"#archive\" },\n        { label: \"Customer stories\", href: \"#customers\" },\n      ]}\n      cta={\n        <ClosingCta\n          title=\"Start building with live web context.\"\n          description=\"Scrape, search, and research the web with one API. Bring the results straight into your product.\"\n          figure={<span className=\"font-data text-h1 tabular-nums\">1,000</span>}\n          figureLabel=\"free credits\"\n          note=\"Every month. No credit card required.\"\n          primaryAction={\n            <Button asChild variant=\"pill-outline\">\n              <a href=\"#signup\">Start for free</a>\n            </Button>\n          }\n          secondaryAction={\n            <CtaTextLink href=\"#docs\">\n              Read the docs <ArrowRight aria-hidden=\"true\" />\n            </CtaTextLink>\n          }\n        />\n      }\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "cta",
+    "hero",
+    "button",
+    "hero-dot-field",
+    "hero-monitor",
+    "story-batches"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "blog-cards",
+    "hero",
+    "section",
+    "button",
+    "use-tab-glide",
+    "utils"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/blog-index.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { BlogCard, type BlogPost } from \"@/components/site/blog-cards\";\nimport { Hero, HeroFrame } from \"@/components/site/hero\";\nimport { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { buttonVariants } from \"@/components/ui/button\";\nimport { useTabGlide } from \"@/hooks/use-tab-glide\";\nimport { cn } from \"@/lib/utils\";\n\n// The blog's index page: the white hero, an optional logo strip, then a ruled section with its heading, a row of\n// category pills, the posts as the home page's blog cards (white and blue in turn, each in a hairline ring on the white\n// page) and a row of outline pills to the rest of the writing. The closing call to action follows.\n\ntype BlogCategory = {\n  value: string;\n  label: React.ReactNode;\n  /** Each category's own page. Left out (with `onCategoryChange`), the pills filter in place. */\n  href?: string;\n};\n\ntype BlogIndexPost = BlogPost & {\n  /** The category's `value`, for filtering in place. */\n  category?: string;\n};\n\n// The selected pill is a black surface that glides between options (useTabGlide); until it is placed, the selected\n// option draws its own, so the first paint matches the server render.\nconst SELECTED_SURFACE = \"bg-black shadow-xs\";\nconst PILL =\n  \"rounded-pill border px-5 py-2 text-pill-sm leading-snug font-medium tracking-[calc(var(--ds-space-0-5)/10)] whitespace-nowrap outline-none transition-[color,background-color,border-color] duration-200 ease-out focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 motion-reduce:transition-none\";\n\n/**\n * The category pills over a post list: outlined white pills, the selected one white on black. Links when each option\n * has an `href` (a page per category, as the site does); buttons that call `onValueChange` otherwise.\n */\nfunction BlogCategoryPills({\n  options,\n  value,\n  onValueChange,\n  label = \"Filter posts by category\",\n  className,\n}: {\n  options: readonly BlogCategory[];\n  value: string;\n  onValueChange?: (value: string) => void;\n  label?: string;\n  className?: string;\n}) {\n  const pillRef = React.useRef<HTMLSpanElement>(null);\n  const isPlaced = useTabGlide(pillRef, value);\n  const links = !onValueChange;\n  const Root = links ? \"nav\" : \"div\";\n  return (\n    <Root\n      aria-label={label}\n      role={links ? undefined : \"group\"}\n      data-slot=\"blog-category-pills\"\n      className={cn(\"relative isolate flex flex-wrap justify-start gap-2\", className)}\n    >\n      <span ref={pillRef} aria-hidden className={cn(\"pointer-events-none absolute top-0 left-0 -z-10 rounded-pill\", SELECTED_SURFACE, !isPlaced && \"invisible\")} />\n      {options.map((option) => {\n        const selected = option.value === value;\n        const classes = cn(PILL, selected ? cn(\"border-transparent text-white\", !isPlaced && SELECTED_SURFACE) : \"border-fg/12 bg-surface text-fg hover:bg-neutral-5\");\n        if (links)\n          return (\n            <a key={option.value} data-tab-id={option.value} href={option.href} aria-current={selected ? \"page\" : undefined} className={classes}>\n              {option.label}\n            </a>\n          );\n        return (\n          <button key={option.value} type=\"button\" data-tab-id={option.value} aria-pressed={selected} onClick={() => onValueChange(option.value)} className={cn(classes, \"cursor-pointer\")}>\n            {option.label}\n          </button>\n        );\n      })}\n    </Root>\n  );\n}\n\n/**\n * The whole blog index. The hero takes the site Hero's props (`size=\"large\"` and a `HeroFrame` by default; pass the dot\n * field as `heroBackground` and the monitor as `media`). `logos` goes right under the hero, `cta` (a ClosingCta) last.\n * With `onCategoryChange`, posts whose `category` differs from the selected one are left out; `allValue` shows them all.\n */\nfunction BlogIndex({\n  title,\n  accent,\n  description,\n  actions,\n  media,\n  heroBackground,\n  logos,\n  heading,\n  headingAccent,\n  headingDescription,\n  categories,\n  category,\n  allValue = \"all\",\n  onCategoryChange,\n  categoriesLabel,\n  posts,\n  emptyMessage = \"No posts in this category yet.\",\n  links,\n  linksLabel = \"More from the blog\",\n  cta,\n  className,\n}: {\n  title: string;\n  accent?: string | string[];\n  description?: React.ReactNode;\n  actions?: React.ReactNode;\n  media?: React.ReactNode;\n  heroBackground?: React.ReactNode;\n  logos?: React.ReactNode;\n  heading: React.ReactNode;\n  headingAccent?: React.ReactNode;\n  headingDescription?: React.ReactNode;\n  categories?: readonly BlogCategory[];\n  category?: string;\n  allValue?: string;\n  onCategoryChange?: (value: string) => void;\n  categoriesLabel?: string;\n  posts: readonly BlogIndexPost[];\n  emptyMessage?: React.ReactNode;\n  /** Outline pills under the posts (guides, the archive, customer stories). */\n  links?: readonly { label: React.ReactNode; href: string }[];\n  linksLabel?: string;\n  cta?: React.ReactNode;\n  className?: string;\n}) {\n  const headingId = React.useId();\n  const selected = category ?? allValue;\n  const shown = selected === allValue ? posts : posts.filter((post) => !post.category || post.category === selected);\n  return (\n    <div data-slot=\"blog-index\" className={cn(\"w-full\", className)}>\n      <Hero size=\"large\" title={title} accent={accent} description={description} actions={actions} media={media} background={heroBackground ?? <HeroFrame />} />\n      {logos}\n      <SiteSection lines aria-labelledby={headingId}>\n        <SectionHeading\n          title={\n            <span id={headingId}>\n              {heading}\n              {headingAccent && (\n                <>\n                  {\" \"}\n                  <span className=\"text-fg-brand\">{headingAccent}</span>\n                </>\n              )}\n            </span>\n          }\n          description={headingDescription}\n        />\n        <SectionHeaderRule />\n        {categories && categories.length > 1 && (\n          <BlogCategoryPills options={categories} value={selected} onValueChange={onCategoryChange} label={categoriesLabel} className=\"mb-8\" />\n        )}\n        {shown.length > 0 ? (\n          <ul aria-label=\"Blog posts\" className=\"grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3\">\n            {shown.map((post, index) => (\n              <li key={post.href}>\n                <BlogCard post={post} tone=\"light\" surface={index % 2 === 0 ? \"paper\" : \"blue\"} />\n              </li>\n            ))}\n          </ul>\n        ) : (\n          <p className=\"py-16 text-center text-body-lg leading-relaxed text-fg-muted\">{emptyMessage}</p>\n        )}\n        {links && links.length > 0 && (\n          <nav aria-label={linksLabel} className=\"mt-12 flex flex-wrap items-center justify-center gap-2\">\n            {links.map((link) => (\n              <a key={link.href} href={link.href} className={buttonVariants({ variant: \"pill-outline\" })}>\n                {link.label}\n              </a>\n            ))}\n          </nav>\n        )}\n      </SiteSection>\n      {cta}\n    </div>\n  );\n}\n\nexport { BlogIndex, BlogCategoryPills, type BlogCategory, type BlogIndexPost };\n"
+    }
+  ]
+}

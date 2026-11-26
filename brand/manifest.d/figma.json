@@ -1,0 +1,32 @@
+{
+	"$comment": "Manifest entries for `figma`, read by src/lib/manifest-parts.ts. The CLI never calls Figma: each action writes files and prints the Figma MCP tool calls to make, in order.",
+	"commands": [
+		{
+			"name": "figma tokens",
+			"usage": "figma tokens [--out <dir>] [--file <key>] [--json]",
+			"summary": "The brand tokens as Figma variables (one collection, modes Site, Product light, Product dark; one collection per mode on a one-mode plan) and shadows as effect styles: tokens.json plus use_figma scripts, safe to rerun.",
+			"flags": ["out", "file", "json"]
+		},
+		{
+			"name": "figma push",
+			"usage": "figma push <illustration|asset|slide|component|page> [target] [--out <dir>] [--json]",
+			"summary": "Figma-ready output: an illustration as a use_figma script of real ellipses bound to the color variables (plus SVG for upload_assets); an SVG or picture for upload_assets (small SVGs also as a createNodeFromSvg script); a component preview or page as self-contained HTML for html_to_figma.",
+			"flags": ["out", "file", "image", "preset", "palette", "size", "seed", "example", "url", "width", "json"],
+			"names": { "kind": ["illustration", "asset", "slide", "component", "page"], "subject": "brand/illustrate.json#subjects", "component": "registry index" }
+		},
+		{
+			"name": "figma pull",
+			"usage": "figma pull <figma url with node-id> [--json]",
+			"summary": "The read steps for a Figma node (create_session, get_variable_defs, get_design_context) and where to save each result for figma check.",
+			"flags": ["out", "json"]
+		},
+		{
+			"name": "figma check",
+			"usage": "figma check <saved responses...> [--json]",
+			"summary": "Checks saved get_variable_defs JSON and get_design_context code against the brand tokens: colors, fonts, text sizes, radii and spacing. Off-brand values are listed with the nearest token; exits 1 when there are any.",
+			"flags": ["json"]
+		}
+	],
+	"unknownName": "exits 1 and names the nearest choices",
+	"workflow": "brand/agent-guide.md#work-in-figma"
+}

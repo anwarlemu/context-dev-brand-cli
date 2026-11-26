@@ -1,0 +1,771 @@
+{
+	"$comment": "Merch print files only (no mockups). Item list, trim sizes, bleed, safe areas and sources follow the spyglass-ds engine (common vendor print areas; confirm with the vendor template). Layouts are in inches from the trim; colors come from the variant: blue, paper and ink print the palette ground to the bleed (image.json palettes), color, white and black are the logo and dots alone on a transparent ground (color: the mark in brand blue, the wordmark in black). Only the approved logo (logo.json) and the brand colors are used.",
+	"dpi": 300,
+	"own": {
+		"url": "context.dev"
+	},
+	"sample": {
+		"headline": "Web data API for AI Agents"
+	},
+	"variants": {
+		"blue": {
+			"palette": "Blue",
+			"ground": true
+		},
+		"paper": {
+			"palette": "Paper",
+			"ground": true
+		},
+		"ink": {
+			"palette": "Ink",
+			"ground": true
+		},
+		"color": {
+			"palette": "Paper",
+			"ground": false
+		},
+		"white": {
+			"one": "white",
+			"ground": false
+		},
+		"black": {
+			"one": "black",
+			"ground": false
+		},
+		"brand": {
+			"one": "brand",
+			"ground": false
+		}
+	},
+	"items": [
+		{
+			"id": "cap-front",
+			"name": "Cap front panel",
+			"size": [
+				4,
+				1.75
+			],
+			"bleed": 0,
+			"safe": 0.125,
+			"method": "embroidery",
+			"source": "Common front embroidery area on a structured six-panel cap: 4 by 1.75 in. Embroidery is thread, so one color per file and no bleed. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"white",
+				"black",
+				"brand"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.25,
+						0.45,
+						3.5,
+						0.85
+					]
+				}
+			]
+		},
+		{
+			"id": "tee-front",
+			"name": "T-shirt front",
+			"size": [
+				12,
+				16
+			],
+			"bleed": 0,
+			"safe": 0.5,
+			"method": "DTG or screen print",
+			"source": "Common adult tee front print area: 12 by 16 in (DTG standard). Garment prints are not trimmed, so no bleed; keep art inside the safe area. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"color",
+				"white",
+				"black",
+				"blue"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						2,
+						1.5,
+						8,
+						1.6
+					]
+				},
+				{
+					"type": "dots",
+					"mode": "burst",
+					"box": [
+						0,
+						4,
+						12,
+						12
+					],
+					"center": [
+						0.5,
+						0.62
+					],
+					"size": 1
+				}
+			]
+		},
+		{
+			"id": "tee-back",
+			"name": "T-shirt back",
+			"size": [
+				12,
+				16
+			],
+			"bleed": 0,
+			"safe": 0.5,
+			"method": "DTG or screen print",
+			"source": "Common adult tee back print area: 12 by 16 in (DTG standard). No bleed. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"color",
+				"white",
+				"black",
+				"blue"
+			],
+			"layers": [
+				{
+					"type": "dots",
+					"mode": "field",
+					"box": [
+						0,
+						0,
+						12,
+						10.4
+					],
+					"dot": 0.11,
+					"gap": 0.09,
+					"mask": "fade-down"
+				},
+				{
+					"type": "text",
+					"slot": "headline",
+					"box": [
+						0.75,
+						10.8,
+						10.5,
+						2.6
+					],
+					"size": 1.05,
+					"align": "center",
+					"maxLines": 2
+				},
+				{
+					"type": "logo",
+					"box": [
+						3.5,
+						13.9,
+						5,
+						0.95
+					]
+				}
+			]
+		},
+		{
+			"id": "hoodie-front",
+			"name": "Hoodie front",
+			"size": [
+				12,
+				10
+			],
+			"bleed": 0,
+			"safe": 0.5,
+			"method": "DTG or screen print",
+			"source": "Pullover hoodie front, above the pouch pocket: 12 by 10 in is a common area (vendors range from 11.5 by 11.5 to 12 by 12 in). No bleed. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"color",
+				"white",
+				"black"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						1.25,
+						3.6,
+						9.5,
+						2.2
+					]
+				}
+			]
+		},
+		{
+			"id": "tote",
+			"name": "Tote bag",
+			"size": [
+				12,
+				14
+			],
+			"bleed": 0,
+			"safe": 0.5,
+			"method": "screen print or DTG",
+			"source": "Print area on a standard 15 by 16 in canvas tote: 12 by 14 in is common. No bleed. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"color",
+				"white",
+				"black",
+				"blue"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						2,
+						1.6,
+						8,
+						1.6
+					]
+				},
+				{
+					"type": "dots",
+					"mode": "burst",
+					"box": [
+						0,
+						4,
+						12,
+						10
+					],
+					"center": [
+						0.5,
+						0.6
+					],
+					"size": 0.95
+				}
+			]
+		},
+		{
+			"id": "mug-wrap",
+			"name": "Mug wrap, 11 oz",
+			"size": [
+				9,
+				3.5
+			],
+			"bleed": 0.125,
+			"safe": 0.25,
+			"method": "sublimation",
+			"source": "11 oz mug wrap: 9 by 3.5 in is a common print area (vendors range from 8.5 to 9.5 in wide), with 0.125 in bleed for the full wrap. The lockup sits on each side of the handle. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"paper",
+				"ink",
+				"color"
+			],
+			"layers": [
+				{
+					"type": "dots",
+					"mode": "field",
+					"box": [
+						0,
+						0,
+						9,
+						3.5
+					],
+					"dot": 0.07,
+					"gap": 0.06,
+					"mask": "edges"
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.55,
+						1.25,
+						3.2,
+						1
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						5.25,
+						1.25,
+						3.2,
+						1
+					]
+				}
+			]
+		},
+		{
+			"id": "sticker",
+			"name": "Sticker, die-cut",
+			"size": [
+				3,
+				1.75
+			],
+			"bleed": 0.125,
+			"safe": 0.125,
+			"method": "die-cut vinyl",
+			"source": "Die-cut sticker 3 by 1.75 in, cut along the rounded rectangle (CutContour path in the SVG, a spot line the cutter reads; it is not printed), 0.125 in bleed past the cut and 0.125 in safe inside it. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"cut": {
+				"radius": 0.3
+			},
+			"variants": [
+				"blue",
+				"paper",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "dots",
+					"mode": "field",
+					"box": [
+						0,
+						0,
+						3,
+						1.75
+					],
+					"dot": 0.045,
+					"gap": 0.035,
+					"mask": "edges"
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.35,
+						0.55,
+						2.3,
+						0.65
+					]
+				}
+			]
+		},
+		{
+			"id": "poster",
+			"name": "Poster, 18 by 24 in",
+			"size": [
+				18,
+				24
+			],
+			"bleed": 0.125,
+			"safe": 0.5,
+			"method": "digital or offset print",
+			"source": "Standard 18 by 24 in poster with 0.125 in bleed on every side and a 0.5 in safe margin. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"paper",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						1,
+						1,
+						4.6,
+						0.8
+					],
+					"align": "left"
+				},
+				{
+					"type": "text",
+					"slot": "headline",
+					"box": [
+						1,
+						2.8,
+						13,
+						6
+					],
+					"size": 2.2,
+					"align": "left",
+					"maxLines": 3
+				},
+				{
+					"type": "dots",
+					"mode": "picture",
+					"box": [
+						0,
+						8.5,
+						18,
+						15.5
+					],
+					"dot": 0.16,
+					"gap": 0.08
+				},
+				{
+					"type": "text",
+					"slot": "url",
+					"box": [
+						1,
+						22.4,
+						16,
+						0.6
+					],
+					"size": 0.42,
+					"face": "data",
+					"align": "left",
+					"maxLines": 1
+				}
+			]
+		},
+		{
+			"id": "socks",
+			"name": "Socks, leg panel",
+			"size": [
+				3.5,
+				7
+			],
+			"bleed": 0.125,
+			"safe": 0.25,
+			"method": "sublimation",
+			"source": "Crew sock leg panel, one side: 3.5 by 7 in is a common sublimation area (print twice for a pair, or mirror for the outside faces); 0.125 in bleed. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "dots",
+					"mode": "field",
+					"box": [
+						0,
+						0,
+						3.5,
+						7
+					],
+					"dot": 0.1,
+					"gap": 0.08,
+					"mask": "band"
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.6,
+						2.9,
+						2.3,
+						1.2
+					],
+					"part": "mark"
+				}
+			]
+		},
+		{
+			"id": "poster-11x17",
+			"name": "Poster, 11 by 17 in",
+			"size": [
+				11,
+				17
+			],
+			"bleed": 0.125,
+			"safe": 0.5,
+			"method": "digital or offset print",
+			"source": "Standard 11 by 17 in poster with 0.125 in bleed and a 0.5 in safe margin; the 18 by 24 layout scaled to it. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"paper",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.6111111111111112,
+						0.6111111111111112,
+						2.8111111111111113,
+						0.48888888888888893
+					],
+					"align": "left"
+				},
+				{
+					"type": "text",
+					"slot": "headline",
+					"box": [
+						0.6111111111111112,
+						1.7111111111111112,
+						7.944444444444445,
+						4.250000000000001
+					],
+					"size": 1.3444444444444446,
+					"align": "left",
+					"maxLines": 3
+				},
+				{
+					"type": "dots",
+					"mode": "picture",
+					"box": [
+						0,
+						6.018,
+						11,
+						10.982000000000001
+					],
+					"dot": 0.09777777777777778,
+					"gap": 0.04888888888888889
+				},
+				{
+					"type": "text",
+					"slot": "url",
+					"box": [
+						0.6111111111111112,
+						16.022222222222222,
+						9.777777777777779,
+						0.3666666666666667
+					],
+					"size": 0.25666666666666665,
+					"face": "data",
+					"align": "left",
+					"maxLines": 1
+				}
+			]
+		},
+		{
+			"id": "poster-24x36",
+			"name": "Poster, 24 by 36 in",
+			"size": [
+				24,
+				36
+			],
+			"bleed": 0.125,
+			"safe": 0.5,
+			"method": "digital or offset print",
+			"source": "Standard 24 by 36 in poster with 0.125 in bleed and a 0.5 in safe margin; the 18 by 24 layout scaled to it. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"paper",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						1.3333333333333333,
+						1.3333333333333333,
+						6.133333333333333,
+						1.0666666666666667
+					],
+					"align": "left"
+				},
+				{
+					"type": "text",
+					"slot": "headline",
+					"box": [
+						1.3333333333333333,
+						3.733333333333333,
+						17.333333333333336,
+						9.0
+					],
+					"size": 2.9333333333333336,
+					"align": "left",
+					"maxLines": 3
+				},
+				{
+					"type": "dots",
+					"mode": "picture",
+					"box": [
+						0,
+						12.744,
+						24,
+						23.256
+					],
+					"dot": 0.21333333333333332,
+					"gap": 0.10666666666666666
+				},
+				{
+					"type": "text",
+					"slot": "url",
+					"box": [
+						1.3333333333333333,
+						33.86666666666667,
+						21.333333333333332,
+						0.7999999999999999
+					],
+					"size": 0.5599999999999999,
+					"face": "data",
+					"align": "left",
+					"maxLines": 1
+				}
+			]
+		},
+		{
+			"id": "sticker-sheet",
+			"name": "Sticker sheet, letter",
+			"size": [
+				8.5,
+				11
+			],
+			"bleed": 0.125,
+			"safe": 0.25,
+			"method": "kiss-cut vinyl sheet",
+			"source": "A letter-size kiss-cut sheet with six stickers (the logo and the mark), 0.125 in bleed. The cut lines come from the vendor’s template; this file is the art. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"paper",
+				"blue",
+				"ink"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.75,
+						1.75,
+						3.25,
+						0.8
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						5.4,
+						0.95,
+						1.45,
+						2.2
+					],
+					"part": "mark"
+				},
+				{
+					"type": "logo",
+					"box": [
+						1.65,
+						4.25,
+						1.45,
+						2.2
+					],
+					"part": "mark"
+				},
+				{
+					"type": "logo",
+					"box": [
+						4.5,
+						5.05,
+						3.25,
+						0.8
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.75,
+						8.35,
+						3.25,
+						0.8
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						5.4,
+						7.55,
+						1.45,
+						2.2
+					],
+					"part": "mark"
+				}
+			]
+		},
+		{
+			"id": "notebook-cover",
+			"name": "Notebook cover, A5",
+			"size": [
+				5.83,
+				8.27
+			],
+			"bleed": 0.125,
+			"safe": 0.25,
+			"method": "digital print",
+			"source": "A5 notebook cover (5.83 by 8.27 in) with 0.125 in bleed; the field fades down, the logo sits low. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"ink",
+				"paper"
+			],
+			"layers": [
+				{
+					"type": "dots",
+					"mode": "field",
+					"box": [
+						0,
+						0,
+						5.83,
+						5.6
+					],
+					"dot": 0.08,
+					"gap": 0.06,
+					"mask": "fade-down"
+				},
+				{
+					"type": "logo",
+					"box": [
+						0.6,
+						6.6,
+						4.6,
+						0.7
+					]
+				}
+			]
+		},
+		{
+			"id": "lanyard",
+			"name": "Lanyard strap",
+			"size": [
+				36,
+				0.75
+			],
+			"bleed": 0.0625,
+			"safe": 0.06,
+			"method": "dye sublimation",
+			"source": "A 36 by 0.75 in sublimated lanyard strap (3/4 in wide), the logo repeated every 6 in, 1/16 in bleed. Vendors fold and stitch the ends, so keep 1 in clear at each end. Confirm against the print vendor’s template for the exact blank before ordering.",
+			"variants": [
+				"blue",
+				"ink",
+				"paper"
+			],
+			"layers": [
+				{
+					"type": "logo",
+					"box": [
+						0.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						6.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						12.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						18.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						24.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				},
+				{
+					"type": "logo",
+					"box": [
+						30.5,
+						0.14,
+						4.4,
+						0.47
+					]
+				}
+			]
+		}
+	]
+}

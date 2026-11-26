@@ -1,0 +1,199 @@
+{
+	"$comment": "The share images and social posts, from the agd-playground share-image editor (src/components/context-og: draw.ts, Playground.tsx; routes /context-og-image-playground and /context-social-post). Layout rules are the engine's (src/assets/og.ts); this file holds the brand's part: palettes as token names, sizes (ids and pixels shared by every brand, src/design/platforms.ts), each template's settings, the sample copy --sample fills in, and the card colors. Where the editor's hex had no token, the nearest token is used (see notes).",
+	"palettes": [
+		{ "name": "Paper", "bg": "white", "fill": "brand", "ring": "brand", "field": "brand", "fieldOp": 0.35, "text": "brand", "ink": "black", "mark": "brand" },
+		{ "name": "Blue", "bg": "brand", "fill": "white", "ring": "white", "field": "white", "fieldOp": 0.3, "text": "white", "ink": "white", "mark": "white" },
+		{ "name": "Ink", "bg": "black", "fill": "brand", "ring": "brand", "field": "neutral-80", "fieldOp": 1, "text": "white", "ink": "white", "mark": "brand" },
+		{ "name": "Mist", "bg": "bg-frame", "fill": "brand", "ring": "brand", "field": "neutral-20", "fieldOp": 1, "text": "brand", "ink": "black", "mark": "brand" },
+		{ "name": "Night", "bg": "navy-20", "fill": "blue-20", "ring": "blue-60", "field": "navy-30", "fieldOp": 1, "text": "blue-20", "ink": "blue-20", "mark": "blue-60" },
+		{ "name": "Graphite", "bg": "neutral-90", "fill": "brand", "ring": "white", "field": "neutral-80", "fieldOp": 1, "text": "white", "ink": "white", "mark": "brand" }
+	],
+	"notes": [
+		"Paper and Mist ink: the editor's #0a0a0a is black (text-default).",
+		"Ink field: #2e2e2e is neutral-80 (#333333).",
+		"Mist ground: #eeeeee is bg-frame (#F2F2F2); its field #cfd0d6 is neutral-20 (#CCCCCC).",
+		"Night: ground #0b1220 is navy-20 (#07142F), dots #dbe6ff are blue-20 (#D3E0FB), rings and mark #7f9fe8 are blue-60 (#7CA1F3), field #1f2b47 is navy-30 (#0B1E46).",
+		"Graphite: ground #161616 is neutral-90 (#191919), dots and mark #0a6cff are brand (#2563EB), field #2a2a2a is neutral-80.",
+		"Cards: heading #0a0a0a is text-default, body #52525b is text-secondary (#595959), the card edge is border-hairline (8% black, the editor drew 10%), the card shadow is shadow-floating's drop (8px down, 24px blur, 12% black; the editor drew 16% navy).",
+		"On a fill (the products panel, buttons, chips) words take the ground's color; on Ink and Graphite that is under 4.5:1 on the brand blue (black 4.1, neutral-90 3.4), so they are white (5.2)."
+	],
+	"sizes": {
+		"og": {
+			"label": "Link preview",
+			"w": 1200,
+			"h": 630,
+			"u": 1.3
+		},
+		"x-banner": {
+			"label": "X header",
+			"w": 1500,
+			"h": 500,
+			"u": 1
+		},
+		"square": {
+			"label": "Square post",
+			"w": 1080,
+			"h": 1080,
+			"u": 1.4
+		},
+		"portrait": {
+			"label": "Portrait post, 4:5",
+			"w": 1080,
+			"h": 1350
+		},
+		"tall": {
+			"label": "Tall post, 3:4",
+			"w": 1080,
+			"h": 1440
+		},
+		"story": {
+			"label": "Story, 9:16",
+			"w": 1080,
+			"h": 1920
+		},
+		"landscape": {
+			"label": "Landscape post, 16:9",
+			"w": 1200,
+			"h": 675
+		},
+		"linkedin": {
+			"label": "LinkedIn post, 1.91:1",
+			"w": 1200,
+			"h": 627,
+			"u": 1.3
+		},
+		"linkedin-banner": {
+			"label": "LinkedIn profile cover",
+			"w": 1584,
+			"h": 396
+		},
+		"linkedin-page": {
+			"label": "LinkedIn page cover",
+			"w": 1512,
+			"h": 256
+		},
+		"youtube": {
+			"label": "YouTube channel art",
+			"w": 2560,
+			"h": 1440
+		},
+		"youtube-thumbnail": {
+			"label": "YouTube thumbnail",
+			"w": 1280,
+			"h": 720,
+			"u": 1.5
+		},
+		"email": {
+			"label": "Email header",
+			"w": 1200,
+			"h": 400
+		},
+		"avatar": {
+			"label": "Profile picture",
+			"w": 800,
+			"h": 800
+		},
+		"pinterest": { "label": "Pinterest pin, 2:3", "w": 1000, "h": 1500 },
+		"facebook-cover": { "label": "Facebook page cover", "w": 1702, "h": 630 }
+	},
+	"aliases": { "facebook": "portrait", "threads": "portrait", "banner": "x-banner", "s-3x1": "x-banner", "s-16x9": "landscape", "s-191": "linkedin", "s-1x1": "square", "s-4x5": "portrait", "s-3x4": "tall", "3:4": "tall", "s-9x16": "story", "link": "og" },
+	"kinds": {
+		"share": {
+			"label": "Share images (link previews, banners and covers)",
+			"templates": ["banner", "products", "customer"],
+			"sizes": ["og", "x-banner", "square", "linkedin-banner", "linkedin-page", "youtube", "youtube-thumbnail", "email"],
+			"custom": true
+		},
+		"social": {
+			"label": "Social posts in any shape",
+			"templates": ["social", "cards", "customer", "banner", "products"],
+			"sizes": ["landscape", "linkedin", "square", "portrait", "tall", "story", "x-banner"],
+			"custom": true
+		}
+	},
+	"cards": { "fill": "white", "radius": 16, "edge": "border-hairline", "shadow": { "color": "rgba(0, 0, 0, 0.12)", "blur": 24, "y": 8, "token": "--ds-shadow-floating" }, "heading": "text-default", "body": "text-secondary", "badge": "brand", "badgeInk": "white" },
+	"base": {
+		"palette": "Paper",
+		"logo": true,
+		"headline": "",
+		"body": "",
+		"badge": "",
+		"cta": "",
+		"lists": "",
+		"cards": "",
+		"footer": "context.dev",
+		"stat": "",
+		"partnerName": "",
+		"partnerWhite": true,
+		"partnerSize": 40,
+		"burst": true,
+		"image": "",
+		"dot": 7.6,
+		"gap": 3.8,
+		"render": "toneEdges",
+		"fillPct": 40,
+		"hollowPct": 40,
+		"dither": "none",
+		"invert": false,
+		"cutout": "auto",
+		"keyTol": 2,
+		"field": "none",
+		"seed": 1
+	},
+	"templates": {
+		"banner": {
+			"label": "Banner, picture in dots",
+			"description": "The logo in a corner, the headline in the brand color, and any picture turned into dots by the dot shader.",
+			"size": "og",
+			"sizes": ["og", "x-banner", "square", "portrait", "tall", "story", "landscape", "linkedin", "linkedin-banner", "linkedin-page", "youtube", "youtube-thumbnail", "email", "pinterest", "facebook-cover", "custom"],
+			"required": ["headline"],
+			"set": {},
+			"sample": { "headline": "The web data APIs for agents" }
+		},
+		"products": {
+			"label": "Products",
+			"description": "Logo, headline and a button on one side; a brand-colored panel with a ring grid and your lists under Doto labels on the other.",
+			"size": "og",
+			"sizes": ["og", "x-banner", "square", "portrait", "tall", "story", "landscape", "linkedin", "youtube-thumbnail", "email", "custom"],
+			"required": ["headline", "lists"],
+			"set": { "image": "none", "dot": 6, "gap": 10, "field": "rings" },
+			"sample": { "headline": "Every piece of web context your agent needs.", "cta": "Build Magical Products", "lists": "# Web extraction\nExtract\nCrawl Website\nWeb Search\nScrape Markdown\n# Brand intelligence\nRetrieve Brand\nGet Styleguide\nGet Fonts" }
+		},
+		"social": {
+			"label": "Announcement",
+			"description": "A big headline and a line under it, centered, and the picture in dots in the room left.",
+			"size": "landscape",
+			"sizes": ["landscape", "og", "x-banner", "square", "portrait", "tall", "story", "linkedin", "linkedin-banner", "linkedin-page", "youtube", "youtube-thumbnail", "email", "pinterest", "facebook-cover", "custom"],
+			"required": ["headline"],
+			"set": { "palette": "Blue", "logo": false },
+			"sample": { "headline": "NEW!", "body": "Browser Profiles: log in once,\nreuse the session on every scrape." }
+		},
+		"cards": {
+			"label": "Numbered cards",
+			"description": "A title across the top, numbered white cards (heading and a few lines), the logo and address along the bottom, on a faint dot grid.",
+			"size": "landscape",
+			"sizes": ["landscape", "og", "x-banner", "square", "portrait", "tall", "story", "linkedin", "youtube-thumbnail", "email", "custom"],
+			"required": ["cards"],
+			"set": { "palette": "Blue", "image": "none", "dot": 6, "gap": 8, "field": "faint" },
+			"sample": { "headline": "Every piece of web context your agent needs", "cards": "Web extraction\nExtract, crawl, search and scrape any page as markdown, HTML, images or screenshots.\n\nBrand intelligence\nRetrieve a brand, its styleguide and its fonts.\n\nIdentification\nNAICS and SIC lookups, and transaction IDs." }
+		},
+		"customer": {
+			"label": "Customer story",
+			"description": "The logo top left, the customer's logo (or name) top right, a big number set in dots with a line or two under it, and a burst of dots.",
+			"size": "og",
+			"sizes": ["og", "x-banner", "square", "portrait", "tall", "story", "landscape", "linkedin", "linkedin-banner", "linkedin-page", "youtube", "youtube-thumbnail", "email", "pinterest", "facebook-cover", "custom"],
+			"required": ["headline"],
+			"set": { "palette": "Blue", "image": "none" },
+			"sample": { "headline": "companies.\nKept fresh.", "stat": "20M+", "partnerName": "Acme" }
+		},
+		"mark": {
+			"label": "Profile picture",
+			"description": "The mark alone on a palette's ground, inside the circle profiles are cropped to.",
+			"size": "avatar",
+			"sizes": ["avatar", "square"],
+			"required": [],
+			"set": { "image": "none" },
+			"sample": {}
+		}
+	}
+}

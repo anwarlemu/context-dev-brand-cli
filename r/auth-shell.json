@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "auth-shell",
+  "type": "site",
+  "title": "Auth shell",
+  "description": "Sign in frame: a white form card on a blue ring panel over ruler hairlines, a legal line, and a rotating customer quote from lg.",
+  "surface": "site",
+  "kinds": [
+    "page",
+    "card-ring",
+    "input",
+    "button-primary",
+    "link"
+  ],
+  "usage": "The frame of the sign in, sign up and reset password pages (LoginPage and SignupPage are built on it). Put an AuthCard with an AuthHeader in AuthPageShell; set `imageHeight` (px) so the panel fits the card, and `imageMinHeight` to let it shrink on short windows. Pass the privacy and terms links as `legal` and an AuthProofPanel as `aside`. Style inputs with `AUTH_INPUT` in a Field (label in AuthLabel), the submit with `variant=\"pill\"` and `AUTH_SUBMIT`, links with `AUTH_LINK` or `AUTH_MUTED_LINK`, a blue note with `AUTH_NOTICE`. PasswordInput adds the show and hide button; AuthSocialButtons the round provider buttons with the \"Last used\" tag.",
+  "avoid": [
+    "The site header or footer around it",
+    "A second colored panel",
+    "Provider buttons with text labels",
+    "Icons that move on hover"
+  ],
+  "notes": "The proof panel's quote moves every ten seconds while the active avatar's ring fills (a linear progress, drawn with the\nWeb Animations API); picking an avatar restarts it, and under reduced motion the ring stays empty. The password eyes\ncross-fade in place (opacity and a slight scale, 150ms ease-out); provider buttons and links change only color or fill\non hover. The site shows customer photos in the avatars; without an `avatar`, initials stand in.",
+  "documentation": "https://context-ds.vercel.app/components/auth-shell.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add auth-shell --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/(auth)/AuthScaffold.tsx; src/app/(auth)/auth-styles.ts; src/app/(auth)/SocialAuthSection.tsx; src/app/(auth)/layout.tsx; src/components/ui/password-input.tsx; src/components/ui/visibility-icon.tsx; src/components/sections/shared/brand-outline-pill.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/AuthScaffold.tsx",
+        "sha256": "c99d5e9c9520f5279c5fa4ea29f217010f7a46c5c43add0159872fad8155050f",
+        "retained": false,
+        "exports": [
+          "AuthPageShell",
+          "AuthCard",
+          "AuthHeader",
+          "AuthSocialButton"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/auth-styles.ts",
+        "sha256": "0b5afcdc754b6bc4bad25632e7219b3fbb8e865b1d8be7c84d514a1e20086055",
+        "retained": false,
+        "exports": [
+          "authFocusRingClass",
+          "authInputClass",
+          "authInputErrorClass",
+          "authPrimaryButtonClass",
+          "authSecondaryButtonClass",
+          "authNoticeClass",
+          "authLabelClass",
+          "authLinkClass",
+          "authMutedLinkClass",
+          "authHelperTextClass"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/SocialAuthSection.tsx",
+        "sha256": "aec9332f5e04b0d47cf273b5f8482800742a394e71f0f8d340fbb2595fb1ed43",
+        "retained": false,
+        "exports": [
+          "SocialAuthSection"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/layout.tsx",
+        "sha256": "34ff003a7f230bbf5ed0aabd31befaa66108c361f492eb7bfef539e8239dd02d",
+        "retained": false,
+        "exports": [
+          "metadata",
+          "AuthLayout"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/password-input.tsx",
+        "sha256": "fb607db5355d45b57ef73725a3f39d7ab2d5aad965634a60b738e03b61ff4f6a",
+        "retained": false,
+        "exports": [
+          "PasswordInput"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/ui/visibility-icon.tsx",
+        "sha256": "4b41d3dadf89cd5de470e7a706b44f5405868edf353c5e4a087923f19d48bf4b",
+        "retained": false,
+        "exports": [
+          "VisibilityIcon"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/components/sections/shared/brand-outline-pill.ts",
+        "sha256": "b78b3e57bc75cc7dd5c90c6d04063507112e7d2fa354bb5e463475d10bc71c5c",
+        "retained": false,
+        "exports": [
+          "BRAND_OUTLINE_PILL_CLASS",
+          "BRAND_OUTLINE_PILL_ON_BLUE_CLASS",
+          "BRAND_BLACK_PILL_CLASS"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/auth-shell.d.ts",
+      "content": "import * as React from \"react\";\n/** The form's controls, shared by every page in the frame. */\ndeclare const AUTH_INPUT = \"h-11 rounded-card border-0 bg-surface px-4 text-body text-fg shadow-none ring-1 ring-hairline transition-[box-shadow] placeholder:text-fg/40 hover:border-0 focus:border-0 focus-visible:ring-2 focus-visible:ring-brand/40 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:ring-danger/55 aria-invalid:focus-visible:ring-danger/40 sm:h-12\";\ndeclare const AUTH_SUBMIT = \"min-h-11 w-full gap-2 py-2.5 text-center leading-snug whitespace-normal disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-black sm:min-h-12\";\ndeclare const AUTH_LINK: string;\ndeclare const AUTH_MUTED_LINK: string;\ndeclare const AUTH_NOTICE = \"rounded-card bg-blue-10 px-4 py-3 text-body-sm leading-snug text-fg-brand\";\n/** A field's label: the dashboard label, a step larger and medium from sm, as on the sign in card. */\ndeclare function AuthLabel({ children }: {\n    children: React.ReactNode;\n}): React.JSX.Element;\n/**\n * The whole frame. `imageHeight` (px) sets the panel's height from sm, so it fits the card it holds; `imageMinHeight`\n * lets it shrink on short windows down to that height, keeping the legal line on screen. `aside` is the right column\n * from lg (an AuthProofPanel); `legal` the line under the panel.\n */\ndeclare function AuthPageShell({ children, legal, aside, imageHeight, imageMinHeight, className, style, }: {\n    children: React.ReactNode;\n    legal?: React.ReactNode;\n    aside?: React.ReactNode;\n    imageHeight?: number;\n    imageMinHeight?: number;\n    className?: string;\n    style?: React.CSSProperties;\n}): React.JSX.Element;\n/** The white card on the panel. */\ndeclare function AuthCard({ className, children }: {\n    className?: string;\n    children: React.ReactNode;\n}): React.JSX.Element;\n/** The logo mark in brand blue beside the product's name: the card's title on the sign in and sign up pages. */\ndeclare function AuthBrandMark({ logo, children, as: Tag, className }: {\n    logo?: React.ReactNode;\n    children: React.ReactNode;\n    as?: \"div\" | \"h1\";\n    className?: string;\n}): React.JSX.Element;\n/** The card's heading: the brand mark when a `logo` is given (the plain sign in), otherwise a title (an invitation). */\ndeclare function AuthHeader({ title, subtitle, logo, className }: {\n    title: React.ReactNode;\n    subtitle?: React.ReactNode;\n    logo?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element;\ntype AuthProvider = {\n    id: string;\n    /** The provider's name, read as \"Continue with {label}\". */\n    label: string;\n    /** The provider's mark, about 18px. */\n    icon: React.ReactNode;\n    onClick: () => void;\n    /** Tags the button \"Last used\". */\n    lastUsed?: boolean;\n};\n/** One round provider button, with the \"Last used\" tag above it (its space is kept when hidden, so rows line up). */\ndeclare function AuthSocialButton({ provider, disabled }: {\n    provider: AuthProvider;\n    disabled?: boolean;\n}): React.JSX.Element;\n/** \"or continue with\" over the provider buttons. */\ndeclare function AuthSocialButtons({ providers, disabled, label, className }: {\n    providers: readonly AuthProvider[];\n    disabled?: boolean;\n    label?: React.ReactNode;\n    className?: string;\n}): React.JSX.Element | null;\n/** A password input with a show and hide button at its end; the eye icons cross-fade in place. */\ndeclare function PasswordInput({ className, disabled, ...props }: Omit<React.ComponentProps<\"input\">, \"type\">): React.JSX.Element;\ntype AuthTestimonial = {\n    name: string;\n    company: React.ReactNode;\n    quote: string;\n    avatar?: string;\n};\n/**\n * The right column from lg: a customer quote in a white card, with a row of avatars to pick another. The quote moves on\n * every `interval` ms while the active avatar's ring fills.\n */\ndeclare function AuthProofPanel({ testimonials, interval, label, className }: {\n    testimonials: readonly AuthTestimonial[];\n    interval?: number;\n    label?: string;\n    className?: string;\n}): React.JSX.Element | null;\nexport { AuthPageShell, AuthCard, AuthHeader, AuthBrandMark, AuthLabel, AuthSocialButtons, AuthSocialButton, AuthProofPanel, PasswordInput, AUTH_INPUT, AUTH_SUBMIT, AUTH_LINK, AUTH_MUTED_LINK, AUTH_NOTICE, type AuthProvider, type AuthTestimonial, };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/auth-shell/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/auth-shell.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { AUTH_INPUT, AUTH_LINK, AUTH_SUBMIT, AuthCard, AuthHeader, AuthLabel, AuthPageShell, AuthProofPanel } from \"@/components/site/auth-shell\";\nimport { Button } from \"@/components/ui/button\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\n\nimport { ACME_TESTIMONIALS } from \"./auth-samples\";\n\n// A reset password page in the same frame as sign in and sign up.\nexport function Site() {\n  const [email, setEmail] = React.useState(\"\");\n  return (\n    <AuthPageShell\n      imageHeight={480}\n      legal={\n        <>\n          By continuing you agree to our <a href=\"#privacy\">Privacy Policy</a> and <a href=\"#terms\">Terms of Service</a>\n        </>\n      }\n      aside={<AuthProofPanel testimonials={ACME_TESTIMONIALS} />}\n    >\n      <AuthCard>\n        <AuthHeader title=\"Reset your password\" subtitle=\"We will email you a link to choose a new one.\" />\n        <form onSubmit={(event) => event.preventDefault()} noValidate className=\"mx-auto grid w-full max-w-112 gap-4 sm:gap-5\">\n          <Field label={<AuthLabel>Email</AuthLabel>}>\n            <Input type=\"email\" autoComplete=\"email\" placeholder=\"you@company.com\" value={email} onChange={(event) => setEmail(event.target.value)} className={AUTH_INPUT} />\n          </Field>\n          <Button type=\"submit\" variant=\"pill\" className={AUTH_SUBMIT}>\n            Send reset link\n          </Button>\n          <p className=\"text-center text-body-sm text-fg-nav sm:text-body\">\n            Remembered it? <a href=\"#login\" className={AUTH_LINK}>Sign in</a>\n          </p>\n        </form>\n      </AuthCard>\n    </AuthPageShell>\n  );\n}\n"
+    },
+    {
+      "path": "examples/auth-samples.ts",
+      "content": "// Shared by the sign in, sign up and auth shell examples: made-up Acme customers (initials stand in for photos) and the\n// generic sign in options an app might offer. Apps pass their own provider marks.\nimport type { AuthTestimonial } from \"@/components/site/auth-shell\";\n\nexport const ACME_TESTIMONIALS: AuthTestimonial[] = [\n  { name: \"Riley Park\", company: \"Founder @ Northwind\", quote: \"We had Acme wired into our onboarding in an afternoon. The docs answered every question before we had to ask it.\" },\n  { name: \"Sam Ortega\", company: \"Engineering lead @ Fernhill\", quote: \"Switching took less than a day. The API is clean, and the dashboard makes it easy to see what each request did.\" },\n  { name: \"Jordan Lee\", company: \"CTO @ Brightline\", quote: \"Our agents finally get clean data from every page. Acme removed a whole service we used to maintain.\" },\n  { name: \"Avery Chen\", company: \"Staff engineer @ Lumen\", quote: \"Self serve sign up, a key right away and great examples. We were testing with real traffic within the hour.\" },\n];\n"
+    }
+  ],
+  "exampleRequires": [
+    "button",
+    "field",
+    "input"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "input",
+    "ring-backdrop",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/auth-shell.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Eye, EyeOff } from \"lucide-react\";\n\nimport { Input } from \"@/components/ui/input\";\nimport { RingBackdrop } from \"@/components/visuals/ring-backdrop\";\nimport { cn } from \"@/lib/utils\";\n\n// The site's sign in and sign up frame. On the left, centered on ruler hairlines that meet at grey nodes, a blue panel\n// of faint rings in the soft blue ring holds the white form card; the legal line sits just under the panel. From lg, a\n// rotating customer quote fills the right column. Under sm the rulers drop and the panel hugs the card.\n\n/** The form's controls, shared by every page in the frame. */\nconst AUTH_INPUT =\n  \"h-11 rounded-card border-0 bg-surface px-4 text-body text-fg shadow-none ring-1 ring-hairline transition-[box-shadow] placeholder:text-fg/40 hover:border-0 focus:border-0 focus-visible:ring-2 focus-visible:ring-brand/40 disabled:pointer-events-auto disabled:cursor-not-allowed disabled:opacity-60 aria-invalid:ring-danger/55 aria-invalid:focus-visible:ring-danger/40 sm:h-12\";\nconst FOCUS = \"outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring\";\nconst AUTH_SUBMIT = \"min-h-11 w-full gap-2 py-2.5 text-center leading-snug whitespace-normal disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-black sm:min-h-12\";\nconst AUTH_LINK = cn(\"rounded-sm text-fg-brand underline-offset-2 transition-[text-decoration-color] duration-150 ease-out hover:underline motion-reduce:transition-none\", FOCUS);\nconst AUTH_MUTED_LINK = cn(\"cursor-pointer rounded-sm text-fg-nav transition-[color] duration-150 ease-out hover:text-fg disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none\", FOCUS);\nconst AUTH_NOTICE = \"rounded-card bg-blue-10 px-4 py-3 text-body-sm leading-snug text-fg-brand\";\nconst GLASS_RING = \"rounded-card bg-ring-tint p-2\";\nconst HAIRLINE = \"absolute bg-rule\";\nconst NODE = \"absolute z-50 size-2 rounded-pill bg-node\";\n\n/** A field's label: the dashboard label, a step larger and medium from sm, as on the sign in card. */\nfunction AuthLabel({ children }: { children: React.ReactNode }) {\n  return <span className=\"font-medium sm:text-body\">{children}</span>;\n}\n\n/**\n * The whole frame. `imageHeight` (px) sets the panel's height from sm, so it fits the card it holds; `imageMinHeight`\n * lets it shrink on short windows down to that height, keeping the legal line on screen. `aside` is the right column\n * from lg (an AuthProofPanel); `legal` the line under the panel.\n */\nfunction AuthPageShell({\n  children,\n  legal,\n  aside,\n  imageHeight,\n  imageMinHeight,\n  className,\n  style,\n}: {\n  children: React.ReactNode;\n  legal?: React.ReactNode;\n  aside?: React.ReactNode;\n  imageHeight?: number;\n  imageMinHeight?: number;\n  className?: string;\n  style?: React.CSSProperties;\n}) {\n  const height = imageHeight ? (imageMinHeight ? `clamp(${imageMinHeight}px, calc(100svh - 136px), ${imageHeight}px)` : `${imageHeight}px`) : undefined;\n  const vars = height ? ({ \"--auth-image-height\": height, \"--auth-image-half-height\": `calc(${height} / 2)` } as React.CSSProperties) : undefined;\n  return (\n    <main\n      data-slot=\"auth-page\"\n      style={{ ...vars, ...style }}\n      className={cn(\n        \"relative min-h-svh w-full overflow-x-clip bg-surface text-fg [--auth-frame-width:calc(var(--auth-image-width)+var(--auth-side-strip-width)*2)] [--auth-image-half-height:calc(var(--auth-image-height)/2)] [--auth-image-height:41.125rem] [--auth-image-width:38rem] [--auth-side-strip-width:5rem]\",\n        className,\n      )}\n    >\n      <div className={cn(\"relative z-10 grid min-h-svh grid-cols-1\", aside && \"lg:grid-cols-[minmax(0,3fr)_minmax(26.25rem,2fr)]\")}>\n        {/* The extra bottom padding on phones keeps room for the legal line when the card outgrows the window. */}\n        <section className=\"relative flex min-h-svh items-center justify-center px-4 pt-8 pb-24 sm:px-8 sm:py-10 lg:px-12\">\n          <AuthBackdrop />\n          <div className=\"relative z-10 flex w-full justify-center\">{children}</div>\n          {legal && (\n            <p className=\"absolute bottom-7 left-1/2 z-20 w-[min(92vw,33.75rem)] -translate-x-1/2 text-center text-caption text-[var(--ds-color-neutral-50)] sm:top-[calc(50%+var(--auth-image-half-height)+var(--ds-space-4))] sm:bottom-auto sm:text-body-sm [&_a]:rounded-sm [&_a]:text-fg-nav [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-[color] [&_a]:duration-150 [&_a]:ease-out [&_a:hover]:text-fg motion-reduce:[&_a]:transition-none\">\n              {legal}\n            </p>\n          )}\n        </section>\n        {aside}\n      </div>\n    </main>\n  );\n}\n\n/** The blue panel behind the card, on its rulers. */\nfunction AuthBackdrop() {\n  return (\n    <div aria-hidden=\"true\" className=\"pointer-events-none absolute inset-0 z-0 flex items-center justify-center\">\n      <div className=\"absolute inset-y-0 left-1/2 z-10 hidden w-(--auth-frame-width) -translate-x-1/2 sm:block\">\n        <div className={cn(HAIRLINE, \"inset-y-0 left-(--auth-side-strip-width) w-px -translate-x-1/2\")} />\n        <div className={cn(HAIRLINE, \"inset-y-0 right-(--auth-side-strip-width) w-px translate-x-1/2\")} />\n      </div>\n      <div className=\"relative flex h-[min(42rem,calc(100svh-7rem))] w-[min(26.25rem,calc(100vw-2rem))] items-center justify-center sm:h-(--auth-image-height) sm:w-(--auth-frame-width)\">\n        <div className=\"relative h-full w-full sm:w-(--auth-image-width)\">\n          <div className={cn(GLASS_RING, \"size-full\")}>\n            <div className=\"relative size-full overflow-hidden rounded-card bg-brand\">\n              <RingBackdrop className=\"inset-2 rounded-card text-white md:inset-3\" />\n            </div>\n          </div>\n          <div className=\"absolute inset-0 hidden sm:block\">\n            <div className={cn(HAIRLINE, \"top-0 left-1/2 h-px w-[200vw] -translate-x-1/2 -translate-y-1/2\")} />\n            <div className={cn(HAIRLINE, \"bottom-0 left-1/2 h-px w-[200vw] -translate-x-1/2 translate-y-1/2\")} />\n            <span className={cn(NODE, \"top-0 left-0 -translate-x-1/2 -translate-y-1/2\")} />\n            <span className={cn(NODE, \"top-0 right-0 translate-x-1/2 -translate-y-1/2\")} />\n            <span className={cn(NODE, \"bottom-0 left-0 -translate-x-1/2 translate-y-1/2\")} />\n            <span className={cn(NODE, \"right-0 bottom-0 translate-x-1/2 translate-y-1/2\")} />\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n}\n\n/** The white card on the panel. */\nfunction AuthCard({ className, children }: { className?: string; children: React.ReactNode }) {\n  return <div data-slot=\"auth-card\" className={cn(\"w-[calc(100%-var(--ds-space-5))] max-w-128 rounded-card bg-surface px-5 py-6 ring-1 ring-hairline sm:w-full sm:px-8 sm:py-8\", className)}>{children}</div>;\n}\n\n/** The logo mark in brand blue beside the product's name: the card's title on the sign in and sign up pages. */\nfunction AuthBrandMark({ logo, children, as: Tag = \"div\", className }: { logo?: React.ReactNode; children: React.ReactNode; as?: \"div\" | \"h1\"; className?: string }) {\n  return (\n    <Tag className={cn(\"inline-flex items-center justify-center gap-2.5 text-[calc(var(--ds-text-h4)-var(--ds-space-0-5))] leading-normal font-normal tracking-title text-fg sm:text-h4 sm:leading-normal\", className)}>\n      {logo && <span className=\"inline-flex text-fg-brand [&>img]:h-6 [&>img]:w-auto [&>svg]:h-6 [&>svg]:w-auto sm:[&>img]:h-7 sm:[&>svg]:h-7\">{logo}</span>}\n      {children}\n    </Tag>\n  );\n}\n\n/** The card's heading: the brand mark when a `logo` is given (the plain sign in), otherwise a title (an invitation). */\nfunction AuthHeader({ title, subtitle, logo, className }: { title: React.ReactNode; subtitle?: React.ReactNode; logo?: React.ReactNode; className?: string }) {\n  return (\n    <div className={cn(\"mb-5 text-center sm:mb-8\", className)}>\n      {logo ? (\n        <AuthBrandMark as=\"h1\" logo={logo}>\n          {title}\n        </AuthBrandMark>\n      ) : (\n        <h1 className=\"text-h4 font-normal tracking-tight text-balance text-fg sm:text-h3\">{title}</h1>\n      )}\n      {subtitle && <p className=\"mt-2 text-body-sm text-fg-nav sm:mt-3 sm:text-body\">{subtitle}</p>}\n    </div>\n  );\n}\n\ntype AuthProvider = {\n  id: string;\n  /** The provider's name, read as \"Continue with {label}\". */\n  label: string;\n  /** The provider's mark, about 18px. */\n  icon: React.ReactNode;\n  onClick: () => void;\n  /** Tags the button \"Last used\". */\n  lastUsed?: boolean;\n};\n\n/** One round provider button, with the \"Last used\" tag above it (its space is kept when hidden, so rows line up). */\nfunction AuthSocialButton({ provider, disabled }: { provider: AuthProvider; disabled?: boolean }) {\n  const label = `Continue with ${provider.label}${provider.lastUsed ? \" (last used)\" : \"\"}`;\n  return (\n    <div className=\"relative flex flex-col items-center pt-2.5\">\n      <span className={cn(\"absolute top-0 left-1/2 z-10 h-5 -translate-x-1/2 rounded-pill bg-blue-10 px-2 text-caption leading-5 font-medium whitespace-nowrap text-fg-brand\", !provider.lastUsed && \"invisible\")}>Last used</span>\n      <button\n        type=\"button\"\n        onClick={provider.onClick}\n        disabled={disabled}\n        aria-label={label}\n        title={label}\n        className={cn(\n          \"flex size-11 cursor-pointer items-center justify-center rounded-pill bg-surface text-fg ring-1 ring-hairline transition-[background-color] duration-150 ease-out hover:bg-neutral-5 disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:size-12 [&_img]:size-4.5 [&_svg]:size-4.5\",\n          FOCUS,\n        )}\n      >\n        {provider.icon}\n      </button>\n    </div>\n  );\n}\n\n/** \"or continue with\" over the provider buttons. */\nfunction AuthSocialButtons({ providers, disabled, label = \"or continue with\", className }: { providers: readonly AuthProvider[]; disabled?: boolean; label?: React.ReactNode; className?: string }) {\n  if (!providers.length) return null;\n  return (\n    <div className={className}>\n      <p className=\"text-center text-body-sm text-fg-nav\">{label}</p>\n      <div className=\"mt-3 flex justify-center gap-2 sm:mt-4\">\n        {providers.map((provider) => (\n          <AuthSocialButton key={provider.id} provider={provider} disabled={disabled} />\n        ))}\n      </div>\n    </div>\n  );\n}\n\n/** A password input with a show and hide button at its end; the eye icons cross-fade in place. */\nfunction PasswordInput({ className, disabled, ...props }: Omit<React.ComponentProps<\"input\">, \"type\">) {\n  const [visible, setVisible] = React.useState(false);\n  const icon = \"absolute size-4 transition-[opacity,scale] duration-150 ease-out motion-reduce:transition-[opacity]\";\n  return (\n    <div className=\"relative\">\n      <Input {...props} type={visible ? \"text\" : \"password\"} autoCapitalize=\"none\" autoCorrect=\"off\" spellCheck={false} disabled={disabled} className={cn(className, \"pr-12\")} />\n      <button\n        type=\"button\"\n        aria-label={visible ? \"Hide password\" : \"Show password\"}\n        aria-controls={props.id}\n        disabled={disabled}\n        onClick={() => setVisible((current) => !current)}\n        className=\"absolute inset-y-0 right-0 flex w-11 cursor-pointer items-center justify-center rounded-card text-fg/55 outline-none transition-[color] duration-150 ease-out hover:text-fg focus-visible:ring-2 focus-visible:ring-brand/40 disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none\"\n      >\n        <Eye aria-hidden=\"true\" className={cn(icon, visible ? \"scale-90 opacity-0\" : \"scale-100 opacity-100\")} />\n        <EyeOff aria-hidden=\"true\" className={cn(icon, visible ? \"scale-100 opacity-100\" : \"scale-90 opacity-0\")} />\n      </button>\n    </div>\n  );\n}\n\ntype AuthTestimonial = { name: string; company: React.ReactNode; quote: string; avatar?: string };\n\nfunction initials(name: string) {\n  return name\n    .split(/\\s+/)\n    .filter(Boolean)\n    .slice(0, 2)\n    .map((part) => part[0]?.toUpperCase())\n    .join(\"\");\n}\n\n/** The ring that fills while a quote is showing; it starts over with each quote and stays empty under reduced motion. */\nfunction ProofTimer({ duration }: { duration: number }) {\n  const ref = React.useRef<SVGCircleElement>(null);\n  React.useEffect(() => {\n    const circle = ref.current;\n    if (!circle || window.matchMedia(\"(prefers-reduced-motion: reduce)\").matches) return;\n    const animation = circle.animate([{ strokeDashoffset: 100 }, { strokeDashoffset: 0 }], { duration, easing: \"linear\", fill: \"forwards\" });\n    return () => animation.cancel();\n  }, [duration]);\n  return (\n    <svg aria-hidden=\"true\" viewBox=\"0 0 44 44\" className=\"pointer-events-none absolute inset-0 size-11\">\n      <circle cx=\"22\" cy=\"22\" r=\"21\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\" className=\"text-rule\" />\n      <circle ref={ref} cx=\"22\" cy=\"22\" r=\"21\" fill=\"none\" stroke=\"currentColor\" strokeWidth=\"1.5\" strokeLinecap=\"round\" pathLength=\"100\" strokeDasharray=\"100\" strokeDashoffset=\"100\" className=\"origin-center -rotate-90 text-fg-brand\" />\n    </svg>\n  );\n}\n\n/**\n * The right column from lg: a customer quote in a white card, with a row of avatars to pick another. The quote moves on\n * every `interval` ms while the active avatar's ring fills.\n */\nfunction AuthProofPanel({ testimonials, interval = 10000, label = \"Customer testimonial\", className }: { testimonials: readonly AuthTestimonial[]; interval?: number; label?: string; className?: string }) {\n  const [active, setActive] = React.useState(0);\n  const count = testimonials.length;\n  React.useEffect(() => {\n    if (count <= 1) return;\n    const timer = window.setInterval(() => setActive((current) => (current + 1) % count), interval);\n    return () => window.clearInterval(timer);\n  }, [count, interval, active]);\n  const current = testimonials[active] ?? testimonials[0];\n  if (!current) return null;\n  return (\n    <aside aria-label={label} className={cn(\"relative hidden min-h-svh items-center justify-center overflow-hidden px-12 lg:ml-[calc(24rem-30vw)] lg:flex\", className)}>\n      <div className={cn(GLASS_RING, \"relative -m-2 w-full max-w-120\")}>\n        <div className=\"min-h-62.5 rounded-card bg-surface p-8 ring-1 ring-hairline\">\n          {count > 1 && (\n            <div className=\"mb-7 flex items-center gap-3\">\n              {testimonials.map((testimonial, index) => (\n                <button\n                  key={`${testimonial.name}-${index}`}\n                  type=\"button\"\n                  onClick={() => setActive(index)}\n                  aria-label={`Show testimonial from ${testimonial.name}`}\n                  aria-current={index === active ? \"true\" : undefined}\n                  className={cn(\"relative flex size-11 cursor-pointer items-center justify-center rounded-pill transition-[opacity] duration-150 ease-out hover:opacity-80 motion-reduce:transition-none\", FOCUS, index === active ? \"opacity-100\" : \"opacity-55\")}\n                >\n                  <span className=\"relative flex size-9 items-center justify-center overflow-hidden rounded-pill bg-blue-10 text-caption font-medium text-fg-brand ring-1 ring-hairline\">\n                    {testimonial.avatar ? <img src={testimonial.avatar} alt=\"\" width={36} height={36} className=\"size-full object-cover\" /> : initials(testimonial.name)}\n                  </span>\n                  {index === active && <ProofTimer key={active} duration={interval} />}\n                </button>\n              ))}\n            </div>\n          )}\n          <blockquote className=\"text-body-lg text-fg\">&ldquo;{current.quote}&rdquo;</blockquote>\n          <div className=\"mt-6\">\n            <p className=\"text-body font-medium text-fg\">{current.name}</p>\n            <p className=\"mt-1 text-body-sm text-fg-nav\">{current.company}</p>\n          </div>\n        </div>\n      </div>\n    </aside>\n  );\n}\n\nexport {\n  AuthPageShell,\n  AuthCard,\n  AuthHeader,\n  AuthBrandMark,\n  AuthLabel,\n  AuthSocialButtons,\n  AuthSocialButton,\n  AuthProofPanel,\n  PasswordInput,\n  AUTH_INPUT,\n  AUTH_SUBMIT,\n  AUTH_LINK,\n  AUTH_MUTED_LINK,\n  AUTH_NOTICE,\n  type AuthProvider,\n  type AuthTestimonial,\n};\n"
+    }
+  ]
+}

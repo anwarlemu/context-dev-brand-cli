@@ -1,0 +1,29 @@
+{
+  "name": "context-ds",
+  "version": "2.1.0",
+  "description": "Context.dev components, tokens, and checks for agents building pages and interfaces.",
+  "type": "module",
+  "bin": {
+    "context-ds": "./bin.js"
+  },
+  "files": [
+    "bin.js",
+    "dist",
+    "brand",
+    "build",
+    "r"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {},
+  "dependencies": {
+    "@napi-rs/canvas": "1.1.0"
+  },
+  "optionalDependencies": {
+    "playwright-core": "^1.63.0"
+  },
+  "workspaces": [
+    "apps/www"
+  ]
+}

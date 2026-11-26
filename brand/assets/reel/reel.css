@@ -1,0 +1,8 @@
+/* The reel's stage (agd-playground src/app/context-reel/context-reel.css, render mode only): a 1920 by 1080 frame,
+   the faces from the tokens. */
+html, body { margin: 0; background: var(--cx-ground); }
+body { font-family: "Rethink Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+#cx-stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; background: var(--cx-ground); }
+.cx-tile { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; }
+.cx-abs { position: absolute; }
+.cx-mono { font-family: "Rethink Sans", system-ui, sans-serif; }

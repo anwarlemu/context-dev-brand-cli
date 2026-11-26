@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "signup-page",
+  "type": "site",
+  "title": "Signup page",
+  "description": "Two step sign up page: a free plan note, email with provider buttons, then name and password, on the auth shell.",
+  "surface": "site",
+  "kinds": [
+    "page",
+    "card-ring",
+    "input",
+    "button-primary",
+    "link"
+  ],
+  "usage": "The site's sign up page. Inputs are controlled (`email`, `name`, `password`) and `step` is the app's (\"email\", then \"credentials\" once it has checked the address has no account). The button stays disabled until the step's fields are filled; `onSubmit` receives the trimmed values, and empty fields get their message through Field. Show the app's errors (an address already in use, a weak password) with `errors`. `notice` is the blue note on what the free plan includes, `footnote` the smaller line under the sign in link. No auth runs in the page.",
+  "avoid": [
+    "Asking for the name before the email",
+    "Toasts for empty fields",
+    "Provider buttons on the credentials step",
+    "Third-party logos in examples"
+  ],
+  "notes": "Ported from the website's sign up (production pin 2f4c4559). The panel is taller than the sign in's (696px, shrinking\nto 648px on short windows) and the quotes on the right are its own set.",
+  "documentation": "https://context-ds.vercel.app/components/signup-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add signup-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/(auth)/signup/page.tsx; src/app/(auth)/signup/SignupClient.tsx; src/app/(auth)/signup/SignupFormPanel.tsx; src/app/(auth)/signup/signup-types.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/signup/page.tsx",
+        "sha256": "617d447e4e780ecdc4965ba1e0d7fbbf32c5f397db4e205f16bcf3a31890982b",
+        "retained": false,
+        "exports": [
+          "instant",
+          "metadata",
+          "SignupPage"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/signup/SignupClient.tsx",
+        "sha256": "1e1c5bc244f45e33ba3eec1207bec7a329a9bd07dfe413905ccb2af083ecdead",
+        "retained": false,
+        "exports": [
+          "SignupClient"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/signup/SignupFormPanel.tsx",
+        "sha256": "85fe6e81565fa54c0bad45af0e0d66d35dff53059c9363f1597a62d6bb5dbcfb",
+        "retained": false,
+        "exports": [
+          "SignupFormPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/signup/signup-types.ts",
+        "sha256": "030e09f486dbfeead3d76bd76ecabe474ec72c4bf11fb69076eb7390209e25b9",
+        "retained": false,
+        "exports": [
+          "FieldErrors",
+          "SignupStep",
+          "emailExistsErrorMessage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/signup-page.d.ts",
+      "content": "import * as React from \"react\";\nimport { type AuthProvider, type AuthTestimonial } from \"@/components/site/auth-shell\";\ntype SignupStep = \"email\" | \"credentials\";\ntype SignupValues = {\n    email: string;\n    name: string;\n    password: string;\n    step: SignupStep;\n};\ntype SignupErrors = {\n    email?: React.ReactNode;\n    name?: React.ReactNode;\n    password?: React.ReactNode;\n};\n/**\n * The whole sign up page. Inputs are controlled; `onSubmit` gets the trimmed values once the step's fields are filled,\n * and the app moves to the `credentials` step (after checking the address has no account yet). `errors` from the app\n * show under their fields; clear them in the change handlers.\n */\ndeclare function SignupPage({ logo, title, subtitle, notice, email, onEmailChange, name, onNameChange, password, onPasswordChange, step, onBack, onSubmit, errors, pending, disabled, providers, socialLabel, loginHref, loginPrompt, loginLabel, footnote, continueLabel, submitLabel, pendingLabel, backLabel, emailPlaceholder, namePlaceholder, passwordPlaceholder, emptyEmailMessage, emptyNameMessage, emptyPasswordMessage, legal, testimonials, className, }: {\n    /** The logo mark; with it the title shows as the brand mark. */\n    logo?: React.ReactNode;\n    title: React.ReactNode;\n    subtitle?: React.ReactNode;\n    /** The blue note over the form (what the free plan includes). */\n    notice?: React.ReactNode;\n    email: string;\n    onEmailChange: (value: string) => void;\n    name: string;\n    onNameChange: (value: string) => void;\n    password: string;\n    onPasswordChange: (value: string) => void;\n    step?: SignupStep;\n    /** Back from the credentials step to the email step. */\n    onBack?: () => void;\n    onSubmit: (values: SignupValues) => void | Promise<void>;\n    errors?: SignupErrors;\n    pending?: boolean;\n    disabled?: boolean;\n    providers?: readonly AuthProvider[];\n    socialLabel?: React.ReactNode;\n    loginHref?: string;\n    loginPrompt?: React.ReactNode;\n    loginLabel?: React.ReactNode;\n    /** A smaller line under the sign in link (the site points agents to its auth guide). */\n    footnote?: React.ReactNode;\n    continueLabel?: React.ReactNode;\n    submitLabel?: React.ReactNode;\n    pendingLabel?: React.ReactNode;\n    backLabel?: React.ReactNode;\n    emailPlaceholder?: string;\n    namePlaceholder?: string;\n    passwordPlaceholder?: string;\n    emptyEmailMessage?: React.ReactNode;\n    emptyNameMessage?: React.ReactNode;\n    emptyPasswordMessage?: React.ReactNode;\n    legal?: React.ReactNode;\n    testimonials?: readonly AuthTestimonial[];\n    className?: string;\n}): React.JSX.Element;\nexport { SignupPage, type SignupValues, type SignupErrors, type SignupStep };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/signup-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/signup-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Building2, KeyRound } from \"lucide-react\";\n\nimport { SignupPage, type SignupStep } from \"@/components/site/signup-page\";\n\nimport { ACME_TESTIMONIALS } from \"./auth-samples\";\n\nfunction AcmeMark() {\n  return (\n    <svg viewBox=\"0 0 48 33\" aria-hidden=\"true\">\n      <rect x=\"16\" width=\"32\" height=\"32\" rx=\"2\" fill=\"currentColor\" />\n      <circle cx=\"10\" cy=\"23\" r=\"10\" fill=\"currentColor\" />\n    </svg>\n  );\n}\n\nexport function Site() {\n  const [email, setEmail] = React.useState(\"\");\n  const [name, setName] = React.useState(\"\");\n  const [password, setPassword] = React.useState(\"\");\n  const [step, setStep] = React.useState<SignupStep>(\"email\");\n  const [pending, setPending] = React.useState(false);\n\n  return (\n    <SignupPage\n      logo={<AcmeMark />}\n      title=\"Acme\"\n      subtitle=\"Integrate in 5 minutes\"\n      notice={\n        <>\n          Sign up free for <span className=\"tabular-nums\">1,000 credits</span> a month.\n        </>\n      }\n      email={email}\n      onEmailChange={setEmail}\n      name={name}\n      onNameChange={setName}\n      password={password}\n      onPasswordChange={setPassword}\n      step={step}\n      onBack={() => setStep(\"email\")}\n      pending={pending}\n      onSubmit={async ({ step: current }) => {\n        if (current === \"email\") return setStep(\"credentials\");\n        setPending(true);\n        await new Promise((resolve) => setTimeout(resolve, 900));\n        setPending(false);\n      }}\n      providers={[\n        { id: \"sso\", label: \"single sign-on\", icon: <Building2 strokeWidth={1.5} />, onClick: () => {} },\n        { id: \"passkey\", label: \"a passkey\", icon: <KeyRound strokeWidth={1.5} />, onClick: () => {} },\n      ]}\n      loginHref=\"#login\"\n      footnote={\n        <>\n          Are you an AI agent? Use <a href=\"#auth-guide\">the auth guide</a>\n        </>\n      }\n      legal={\n        <>\n          By continuing you agree to our <a href=\"#privacy\">Privacy Policy</a> and <a href=\"#terms\">Terms of Service</a>\n        </>\n      }\n      testimonials={ACME_TESTIMONIALS}\n    />\n  );\n}\n"
+    },
+    {
+      "path": "examples/auth-samples.ts",
+      "content": "// Shared by the sign in, sign up and auth shell examples: made-up Acme customers (initials stand in for photos) and the\n// generic sign in options an app might offer. Apps pass their own provider marks.\nimport type { AuthTestimonial } from \"@/components/site/auth-shell\";\n\nexport const ACME_TESTIMONIALS: AuthTestimonial[] = [\n  { name: \"Riley Park\", company: \"Founder @ Northwind\", quote: \"We had Acme wired into our onboarding in an afternoon. The docs answered every question before we had to ask it.\" },\n  { name: \"Sam Ortega\", company: \"Engineering lead @ Fernhill\", quote: \"Switching took less than a day. The API is clean, and the dashboard makes it easy to see what each request did.\" },\n  { name: \"Jordan Lee\", company: \"CTO @ Brightline\", quote: \"Our agents finally get clean data from every page. Acme removed a whole service we used to maintain.\" },\n  { name: \"Avery Chen\", company: \"Staff engineer @ Lumen\", quote: \"Self serve sign up, a key right away and great examples. We were testing with real traffic within the hour.\" },\n];\n"
+    }
+  ],
+  "exampleRequires": [
+    "auth-shell"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "auth-shell",
+    "button",
+    "field",
+    "input",
+    "spinner",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/signup-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowLeft } from \"lucide-react\";\n\nimport {\n  AUTH_INPUT,\n  AUTH_LINK,\n  AUTH_MUTED_LINK,\n  AUTH_NOTICE,\n  AUTH_SUBMIT,\n  AuthCard,\n  AuthHeader,\n  AuthLabel,\n  AuthPageShell,\n  AuthProofPanel,\n  AuthSocialButtons,\n  PasswordInput,\n  type AuthProvider,\n  type AuthTestimonial,\n} from \"@/components/site/auth-shell\";\nimport { Button } from \"@/components/ui/button\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\nimport { Spinner } from \"@/components/ui/spinner\";\nimport { cn } from \"@/lib/utils\";\n\n// The site's sign up page, in two steps: the email (with the providers under it), then the name and a password. A blue\n// note over the form says what the free plan includes. The button stays disabled until the step's fields are filled.\n\ntype SignupStep = \"email\" | \"credentials\";\ntype SignupValues = { email: string; name: string; password: string; step: SignupStep };\ntype SignupErrors = { email?: React.ReactNode; name?: React.ReactNode; password?: React.ReactNode };\n\n/**\n * The whole sign up page. Inputs are controlled; `onSubmit` gets the trimmed values once the step's fields are filled,\n * and the app moves to the `credentials` step (after checking the address has no account yet). `errors` from the app\n * show under their fields; clear them in the change handlers.\n */\nfunction SignupPage({\n  logo,\n  title,\n  subtitle,\n  notice,\n  email,\n  onEmailChange,\n  name,\n  onNameChange,\n  password,\n  onPasswordChange,\n  step = \"email\",\n  onBack,\n  onSubmit,\n  errors,\n  pending = false,\n  disabled = false,\n  providers = [],\n  socialLabel,\n  loginHref,\n  loginPrompt = \"Already have an account?\",\n  loginLabel = \"Sign in\",\n  footnote,\n  continueLabel = \"Continue\",\n  submitLabel = \"Create account\",\n  pendingLabel = \"Creating account...\",\n  backLabel = \"Go back\",\n  emailPlaceholder = \"jane@company.com\",\n  namePlaceholder = \"Jane Doe\",\n  passwordPlaceholder = \"••••••••••\",\n  emptyEmailMessage = \"Enter your email address.\",\n  emptyNameMessage = \"Enter your name.\",\n  emptyPasswordMessage = \"Enter a password.\",\n  legal,\n  testimonials = [],\n  className,\n}: {\n  /** The logo mark; with it the title shows as the brand mark. */\n  logo?: React.ReactNode;\n  title: React.ReactNode;\n  subtitle?: React.ReactNode;\n  /** The blue note over the form (what the free plan includes). */\n  notice?: React.ReactNode;\n  email: string;\n  onEmailChange: (value: string) => void;\n  name: string;\n  onNameChange: (value: string) => void;\n  password: string;\n  onPasswordChange: (value: string) => void;\n  step?: SignupStep;\n  /** Back from the credentials step to the email step. */\n  onBack?: () => void;\n  onSubmit: (values: SignupValues) => void | Promise<void>;\n  errors?: SignupErrors;\n  pending?: boolean;\n  disabled?: boolean;\n  providers?: readonly AuthProvider[];\n  socialLabel?: React.ReactNode;\n  loginHref?: string;\n  loginPrompt?: React.ReactNode;\n  loginLabel?: React.ReactNode;\n  /** A smaller line under the sign in link (the site points agents to its auth guide). */\n  footnote?: React.ReactNode;\n  continueLabel?: React.ReactNode;\n  submitLabel?: React.ReactNode;\n  pendingLabel?: React.ReactNode;\n  backLabel?: React.ReactNode;\n  emailPlaceholder?: string;\n  namePlaceholder?: string;\n  passwordPlaceholder?: string;\n  emptyEmailMessage?: React.ReactNode;\n  emptyNameMessage?: React.ReactNode;\n  emptyPasswordMessage?: React.ReactNode;\n  legal?: React.ReactNode;\n  testimonials?: readonly AuthTestimonial[];\n  className?: string;\n}) {\n  const fieldId = React.useId();\n  const nameRef = React.useRef<HTMLInputElement>(null);\n  const [checks, setChecks] = React.useState<SignupErrors>({});\n  const isCredentialsStep = step === \"credentials\";\n  const busy = pending || disabled;\n  const incomplete = isCredentialsStep ? !email.trim() || !name.trim() || !password : !email.trim();\n\n  React.useEffect(() => {\n    if (isCredentialsStep) requestAnimationFrame(() => nameRef.current?.focus());\n  }, [isCredentialsStep]);\n\n  const errorFor = (key: keyof SignupErrors) => checks[key] ?? errors?.[key];\n  const clear = (key: keyof SignupErrors) => setChecks((current) => (current[key] ? { ...current, [key]: undefined } : current));\n\n  const submit = async (event: React.FormEvent<HTMLFormElement>) => {\n    event.preventDefault();\n    if (busy) return;\n    const trimmedEmail = email.trim();\n    const trimmedName = name.trim();\n    const next: SignupErrors = {};\n    if (!trimmedEmail) next.email = emptyEmailMessage;\n    if (isCredentialsStep && !trimmedName) next.name = emptyNameMessage;\n    if (isCredentialsStep && !password) next.password = emptyPasswordMessage;\n    setChecks(next);\n    const first = ([\"email\", \"name\", \"password\"] as const).find((key) => next[key]);\n    if (first) {\n      document.getElementById(`${fieldId}-${first}`)?.focus();\n      return;\n    }\n    await onSubmit({ email: trimmedEmail, name: trimmedName, password, step });\n  };\n\n  return (\n    <AuthPageShell imageHeight={696} imageMinHeight={648} legal={legal} aside={testimonials.length > 0 ? <AuthProofPanel testimonials={testimonials} /> : undefined} className={className}>\n      <AuthCard>\n        <AuthHeader logo={logo} title={title} subtitle={subtitle} />\n        <div data-slot=\"signup-page\" className=\"mx-auto w-full max-w-112\">\n          {notice && <div className={cn(AUTH_NOTICE, \"mb-4 font-medium sm:mb-6\")}>{notice}</div>}\n          <form onSubmit={submit} noValidate aria-busy={pending}>\n            <div className=\"grid gap-3 sm:gap-5\">\n              <Field label={<AuthLabel>Email</AuthLabel>} error={errorFor(\"email\")}>\n                <Input\n                  id={`${fieldId}-email`}\n                  type=\"email\"\n                  autoComplete=\"email\"\n                  inputMode=\"email\"\n                  placeholder={emailPlaceholder}\n                  value={email}\n                  onChange={(event) => {\n                    onEmailChange(event.target.value);\n                    clear(\"email\");\n                  }}\n                  disabled={busy}\n                  required\n                  className={AUTH_INPUT}\n                />\n              </Field>\n              {isCredentialsStep && (\n                <>\n                  <Field label={<AuthLabel>Name</AuthLabel>} error={errorFor(\"name\")}>\n                    <Input\n                      ref={nameRef}\n                      id={`${fieldId}-name`}\n                      type=\"text\"\n                      autoComplete=\"name\"\n                      placeholder={namePlaceholder}\n                      value={name}\n                      onChange={(event) => {\n                        onNameChange(event.target.value);\n                        clear(\"name\");\n                      }}\n                      disabled={busy}\n                      required\n                      className={AUTH_INPUT}\n                    />\n                  </Field>\n                  <Field label={<AuthLabel>Password</AuthLabel>} error={errorFor(\"password\")}>\n                    <PasswordInput\n                      id={`${fieldId}-password`}\n                      autoComplete=\"new-password\"\n                      placeholder={passwordPlaceholder}\n                      value={password}\n                      onChange={(event) => {\n                        onPasswordChange(event.target.value);\n                        clear(\"password\");\n                      }}\n                      disabled={busy}\n                      required\n                      className={AUTH_INPUT}\n                    />\n                  </Field>\n                </>\n              )}\n              <Button type=\"submit\" variant=\"pill\" disabled={busy || incomplete} className={cn(AUTH_SUBMIT, \"sm:mt-1\")}>\n                {pending && <Spinner aria-hidden=\"true\" role={undefined} aria-label={undefined} className=\"size-4\" />}\n                {isCredentialsStep ? (pending ? pendingLabel : submitLabel) : continueLabel}\n              </Button>\n              {!isCredentialsStep && <AuthSocialButtons providers={providers} disabled={busy} label={socialLabel} className=\"pt-1\" />}\n            </div>\n          </form>\n\n          {isCredentialsStep ? (\n            onBack && (\n              <button type=\"button\" onClick={onBack} disabled={busy} className={cn(AUTH_MUTED_LINK, \"mx-auto mt-3 flex items-center gap-2 text-body-sm sm:mt-4 sm:text-body\")}>\n                <ArrowLeft aria-hidden=\"true\" className=\"size-4\" />\n                {backLabel}\n              </button>\n            )\n          ) : (\n            (loginHref || footnote) && (\n              <div className=\"mt-6 space-y-2 text-center text-body-sm text-fg-nav sm:mt-8 sm:text-body\">\n                {loginHref && (\n                  <p>\n                    <span className=\"text-fg\">{loginPrompt}</span>{\" \"}\n                    <a href={loginHref} className={AUTH_LINK}>\n                      {loginLabel}\n                    </a>\n                  </p>\n                )}\n                {footnote && <p className=\"text-body-sm [&_a]:rounded-sm [&_a]:text-fg-brand [&_a]:underline-offset-2 [&_a:hover]:underline\">{footnote}</p>}\n              </div>\n            )\n          )}\n        </div>\n      </AuthCard>\n    </AuthPageShell>\n  );\n}\n\nexport { SignupPage, type SignupValues, type SignupErrors, type SignupStep };\n"
+    }
+  ]
+}

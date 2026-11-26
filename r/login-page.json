@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "login-page",
+  "type": "site",
+  "title": "Login page",
+  "description": "Two step sign in page: email with provider buttons, then password with a reset link, on the auth shell.",
+  "surface": "site",
+  "kinds": [
+    "page",
+    "card-ring",
+    "input",
+    "button-primary",
+    "link"
+  ],
+  "usage": "The site's sign in page. Inputs are controlled (`email`, `password` and their change handlers) and `step` is the app's (\"email\", then \"password\" once it knows the account signs in with one). `onSubmit` receives the trimmed email, the password and the step once the step's field is filled; the page shows \"Enter your email address.\" or \"Enter your password.\" through Field itself. Show the app's errors (a wrong password) with `errors`, cleared in the change handlers. `providers` are the round buttons on the email step, each with its own `onClick`; `pending` spins the button. `logo` with `title` makes the brand mark heading; `notice` and `emailLocked` serve an invitation. No auth runs in the page.",
+  "avoid": [
+    "Both steps' fields at once",
+    "Toasts for empty fields",
+    "Provider buttons on the password step",
+    "Third-party logos in examples"
+  ],
+  "notes": "Ported from the website's sign in (production pin 2f4c4559). The live page has since added a \"Trouble signing in?\"\nline and a reCAPTCHA note; pass extra lines through `legal` if you need them. The site's Google and GitHub marks are\nthe app's to pass as provider icons.",
+  "documentation": "https://context-ds.vercel.app/components/login-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add login-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "source": "src/app/(auth)/login/page.tsx; src/app/(auth)/login/LoginClient.tsx; src/app/(auth)/login/LoginFormPanel.tsx; src/app/(auth)/login/login-types.ts",
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Tokenized, framework-independent adaptation. Public measurements cover shared styles; retained variants are not a claim of current public-page parity.",
+    "sources": [
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/login/page.tsx",
+        "sha256": "733a05c8c29dcf83cf824c4f8096648e997c2fd68820abb4538ad39415dc5811",
+        "retained": false,
+        "exports": [
+          "instant",
+          "metadata",
+          "LoginPage"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/login/LoginClient.tsx",
+        "sha256": "3fc1403d1fc589a864d93b03be60eedd26aa6bc096cc82b3c0854eafaf9d1bf9",
+        "retained": false,
+        "exports": [
+          "LoginClient"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/login/LoginFormPanel.tsx",
+        "sha256": "46e358711b39361a7760aad8058c115c2db788d999a7a6cd726934c138fdd15c",
+        "retained": false,
+        "exports": [
+          "LoginFormPanel"
+        ]
+      },
+      {
+        "repository": "brand-dev-webapp",
+        "commit": "2f4c455931709f29a2e6aa489de44a9f75ffab6b",
+        "path": "src/app/(auth)/login/login-types.ts",
+        "sha256": "f7681212fa073ed2744322126e44c7f96ef1d3987021bd9b5f9827bd5017b35e",
+        "retained": false,
+        "exports": [
+          "FieldErrors",
+          "LoginStep",
+          "credentialMismatchErrorMessage"
+        ]
+      }
+    ]
+  },
+  "api": [
+    {
+      "path": "components/site/login-page.d.ts",
+      "content": "import * as React from \"react\";\nimport { type AuthProvider, type AuthTestimonial } from \"@/components/site/auth-shell\";\ntype LoginStep = \"email\" | \"password\";\ntype LoginValues = {\n    email: string;\n    password: string;\n    step: LoginStep;\n};\ntype LoginErrors = {\n    email?: React.ReactNode;\n    password?: React.ReactNode;\n};\n/**\n * The whole sign in page. Inputs are controlled (`email`, `password` and their change handlers); `onSubmit` gets the\n * trimmed values once the current step's field is filled. `errors` from the app (a wrong password) show under their\n * fields; clear them in the change handlers, as the site does. `providers` are the round buttons under \"or continue with\" on the email step.\n */\ndeclare function LoginPage({ logo, title, subtitle, notice, email, onEmailChange, password, onPasswordChange, step, onBack, onSubmit, errors, pending, disabled, emailLocked, federatedNotice, providers, socialLabel, forgotPasswordHref, forgotPasswordLabel, signupHref, signupPrompt, signupLabel, continueLabel, submitLabel, pendingLabel, backLabel, emailPlaceholder, passwordPlaceholder, emptyEmailMessage, emptyPasswordMessage, legal, testimonials, className, }: {\n    /** The logo mark; with it the title shows as the brand mark (the plain sign in). */\n    logo?: React.ReactNode;\n    title: React.ReactNode;\n    subtitle?: React.ReactNode;\n    /** A blue note under the heading (an invitation's address). */\n    notice?: React.ReactNode;\n    email: string;\n    onEmailChange: (value: string) => void;\n    password: string;\n    onPasswordChange: (value: string) => void;\n    step?: LoginStep;\n    /** Back from the password step to the email step. */\n    onBack?: () => void;\n    onSubmit: (values: LoginValues) => void | Promise<void>;\n    errors?: LoginErrors;\n    /** The submit is in flight: the button spins and reads `pendingLabel` on the password step. */\n    pending?: boolean;\n    /** Disables the form (a provider sign in is running). */\n    disabled?: boolean;\n    /** Locks the email (an invitation's). */\n    emailLocked?: boolean;\n    /** On the email step, a blue note under the email (an account that signs in only with a provider). */\n    federatedNotice?: React.ReactNode;\n    providers?: readonly AuthProvider[];\n    socialLabel?: React.ReactNode;\n    forgotPasswordHref?: string;\n    forgotPasswordLabel?: React.ReactNode;\n    signupHref?: string;\n    signupPrompt?: React.ReactNode;\n    signupLabel?: React.ReactNode;\n    continueLabel?: React.ReactNode;\n    submitLabel?: React.ReactNode;\n    pendingLabel?: React.ReactNode;\n    backLabel?: React.ReactNode;\n    emailPlaceholder?: string;\n    passwordPlaceholder?: string;\n    emptyEmailMessage?: React.ReactNode;\n    emptyPasswordMessage?: React.ReactNode;\n    /** The line under the panel (the privacy policy and terms links). */\n    legal?: React.ReactNode;\n    /** Quotes for the right column from lg; none leaves the form alone in the page. */\n    testimonials?: readonly AuthTestimonial[];\n    className?: string;\n}): React.JSX.Element;\nexport { LoginPage, type LoginValues, type LoginErrors, type LoginStep };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/login-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/login-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { Building2, KeyRound } from \"lucide-react\";\n\nimport { LoginPage, type LoginErrors, type LoginStep } from \"@/components/site/login-page\";\n\nimport { ACME_TESTIMONIALS } from \"./auth-samples\";\n\nfunction AcmeMark() {\n  return (\n    <svg viewBox=\"0 0 48 33\" aria-hidden=\"true\">\n      <rect x=\"16\" width=\"32\" height=\"32\" rx=\"2\" fill=\"currentColor\" />\n      <circle cx=\"10\" cy=\"23\" r=\"10\" fill=\"currentColor\" />\n    </svg>\n  );\n}\n\nexport function Site() {\n  const [email, setEmail] = React.useState(\"\");\n  const [password, setPassword] = React.useState(\"\");\n  const [step, setStep] = React.useState<LoginStep>(\"email\");\n  const [errors, setErrors] = React.useState<LoginErrors>({});\n  const [pending, setPending] = React.useState(false);\n\n  return (\n    <LoginPage\n      logo={<AcmeMark />}\n      title=\"Acme\"\n      subtitle=\"Welcome back, dev.\"\n      email={email}\n      onEmailChange={(value) => {\n        setEmail(value);\n        setErrors((current) => ({ ...current, email: undefined }));\n      }}\n      password={password}\n      onPasswordChange={(value) => {\n        setPassword(value);\n        setErrors((current) => ({ ...current, password: undefined }));\n      }}\n      step={step}\n      onBack={() => setStep(\"email\")}\n      errors={errors}\n      pending={pending}\n      onSubmit={async ({ step: current }) => {\n        setPending(true);\n        await new Promise((resolve) => setTimeout(resolve, 700));\n        setPending(false);\n        if (current === \"email\") setStep(\"password\");\n        else setErrors({ password: \"That password does not match this account. Try again or reset it.\" });\n      }}\n      providers={[\n        { id: \"sso\", label: \"single sign-on\", icon: <Building2 strokeWidth={1.5} />, onClick: () => {} },\n        { id: \"passkey\", label: \"a passkey\", icon: <KeyRound strokeWidth={1.5} />, onClick: () => {}, lastUsed: true },\n      ]}\n      forgotPasswordHref=\"#reset-password\"\n      signupHref=\"#signup\"\n      legal={\n        <>\n          By continuing you agree to our <a href=\"#privacy\">Privacy Policy</a> and <a href=\"#terms\">Terms of Service</a>\n        </>\n      }\n      testimonials={ACME_TESTIMONIALS}\n    />\n  );\n}\n"
+    },
+    {
+      "path": "examples/auth-samples.ts",
+      "content": "// Shared by the sign in, sign up and auth shell examples: made-up Acme customers (initials stand in for photos) and the\n// generic sign in options an app might offer. Apps pass their own provider marks.\nimport type { AuthTestimonial } from \"@/components/site/auth-shell\";\n\nexport const ACME_TESTIMONIALS: AuthTestimonial[] = [\n  { name: \"Riley Park\", company: \"Founder @ Northwind\", quote: \"We had Acme wired into our onboarding in an afternoon. The docs answered every question before we had to ask it.\" },\n  { name: \"Sam Ortega\", company: \"Engineering lead @ Fernhill\", quote: \"Switching took less than a day. The API is clean, and the dashboard makes it easy to see what each request did.\" },\n  { name: \"Jordan Lee\", company: \"CTO @ Brightline\", quote: \"Our agents finally get clean data from every page. Acme removed a whole service we used to maintain.\" },\n  { name: \"Avery Chen\", company: \"Staff engineer @ Lumen\", quote: \"Self serve sign up, a key right away and great examples. We were testing with real traffic within the hour.\" },\n];\n"
+    }
+  ],
+  "exampleRequires": [
+    "auth-shell"
+  ],
+  "examplePackages": [
+    "lucide-react"
+  ],
+  "requires": [
+    "theme",
+    "auth-shell",
+    "button",
+    "field",
+    "input",
+    "spinner",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/login-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowLeft } from \"lucide-react\";\n\nimport {\n  AUTH_INPUT,\n  AUTH_LINK,\n  AUTH_MUTED_LINK,\n  AUTH_NOTICE,\n  AUTH_SUBMIT,\n  AuthCard,\n  AuthHeader,\n  AuthLabel,\n  AuthPageShell,\n  AuthProofPanel,\n  AuthSocialButtons,\n  PasswordInput,\n  type AuthProvider,\n  type AuthTestimonial,\n} from \"@/components/site/auth-shell\";\nimport { Button } from \"@/components/ui/button\";\nimport { Field } from \"@/components/ui/field\";\nimport { Input } from \"@/components/ui/input\";\nimport { Spinner } from \"@/components/ui/spinner\";\nimport { cn } from \"@/lib/utils\";\n\n// The site's sign in page, in two steps: the email first (with the providers under it), then the password, with a link\n// to reset it and a way back. The app decides when to move to the password step (after looking up how the account\n// signs in); the page checks that each field is filled and shows the app's errors under their fields.\n\ntype LoginStep = \"email\" | \"password\";\ntype LoginValues = { email: string; password: string; step: LoginStep };\ntype LoginErrors = { email?: React.ReactNode; password?: React.ReactNode };\n\n/**\n * The whole sign in page. Inputs are controlled (`email`, `password` and their change handlers); `onSubmit` gets the\n * trimmed values once the current step's field is filled. `errors` from the app (a wrong password) show under their\n * fields; clear them in the change handlers, as the site does. `providers` are the round buttons under \"or continue with\" on the email step.\n */\nfunction LoginPage({\n  logo,\n  title,\n  subtitle,\n  notice,\n  email,\n  onEmailChange,\n  password,\n  onPasswordChange,\n  step = \"email\",\n  onBack,\n  onSubmit,\n  errors,\n  pending = false,\n  disabled = false,\n  emailLocked = false,\n  federatedNotice,\n  providers = [],\n  socialLabel,\n  forgotPasswordHref,\n  forgotPasswordLabel = \"Forgot your password?\",\n  signupHref,\n  signupPrompt = \"Don't have an account?\",\n  signupLabel = \"Sign up\",\n  continueLabel = \"Continue\",\n  submitLabel = \"Sign in\",\n  pendingLabel = \"Signing in...\",\n  backLabel = \"Go back\",\n  emailPlaceholder = \"you@company.com\",\n  passwordPlaceholder = \"Your password\",\n  emptyEmailMessage = \"Enter your email address.\",\n  emptyPasswordMessage = \"Enter your password.\",\n  legal,\n  testimonials = [],\n  className,\n}: {\n  /** The logo mark; with it the title shows as the brand mark (the plain sign in). */\n  logo?: React.ReactNode;\n  title: React.ReactNode;\n  subtitle?: React.ReactNode;\n  /** A blue note under the heading (an invitation's address). */\n  notice?: React.ReactNode;\n  email: string;\n  onEmailChange: (value: string) => void;\n  password: string;\n  onPasswordChange: (value: string) => void;\n  step?: LoginStep;\n  /** Back from the password step to the email step. */\n  onBack?: () => void;\n  onSubmit: (values: LoginValues) => void | Promise<void>;\n  errors?: LoginErrors;\n  /** The submit is in flight: the button spins and reads `pendingLabel` on the password step. */\n  pending?: boolean;\n  /** Disables the form (a provider sign in is running). */\n  disabled?: boolean;\n  /** Locks the email (an invitation's). */\n  emailLocked?: boolean;\n  /** On the email step, a blue note under the email (an account that signs in only with a provider). */\n  federatedNotice?: React.ReactNode;\n  providers?: readonly AuthProvider[];\n  socialLabel?: React.ReactNode;\n  forgotPasswordHref?: string;\n  forgotPasswordLabel?: React.ReactNode;\n  signupHref?: string;\n  signupPrompt?: React.ReactNode;\n  signupLabel?: React.ReactNode;\n  continueLabel?: React.ReactNode;\n  submitLabel?: React.ReactNode;\n  pendingLabel?: React.ReactNode;\n  backLabel?: React.ReactNode;\n  emailPlaceholder?: string;\n  passwordPlaceholder?: string;\n  emptyEmailMessage?: React.ReactNode;\n  emptyPasswordMessage?: React.ReactNode;\n  /** The line under the panel (the privacy policy and terms links). */\n  legal?: React.ReactNode;\n  /** Quotes for the right column from lg; none leaves the form alone in the page. */\n  testimonials?: readonly AuthTestimonial[];\n  className?: string;\n}) {\n  const fieldId = React.useId();\n  const passwordRef = React.useRef<HTMLInputElement>(null);\n  const [checks, setChecks] = React.useState<LoginErrors>({});\n  const isPasswordStep = step === \"password\";\n  const busy = pending || disabled;\n\n  React.useEffect(() => {\n    if (isPasswordStep) requestAnimationFrame(() => passwordRef.current?.focus());\n  }, [isPasswordStep]);\n\n  const errorFor = (key: keyof LoginErrors) => checks[key] ?? errors?.[key];\n  const clear = (key: keyof LoginErrors) => setChecks((current) => (current[key] ? { ...current, [key]: undefined } : current));\n\n  const submit = async (event: React.FormEvent<HTMLFormElement>) => {\n    event.preventDefault();\n    if (busy) return;\n    const trimmed = email.trim();\n    const next: LoginErrors = {};\n    if (!trimmed) next.email = emptyEmailMessage;\n    if (isPasswordStep && !password) next.password = emptyPasswordMessage;\n    setChecks(next);\n    if (next.email || next.password) {\n      document.getElementById(`${fieldId}-${next.email ? \"email\" : \"password\"}`)?.focus();\n      return;\n    }\n    if (trimmed !== email) onEmailChange(trimmed);\n    await onSubmit({ email: trimmed, password, step });\n  };\n\n  return (\n    <AuthPageShell imageHeight={560} legal={legal} aside={testimonials.length > 0 ? <AuthProofPanel testimonials={testimonials} /> : undefined} className={className}>\n      <AuthCard>\n        <AuthHeader logo={logo} title={title} subtitle={subtitle} />\n        {notice && <p className={cn(AUTH_NOTICE, \"mx-auto mb-4 max-w-112\")}>{notice}</p>}\n        <div data-slot=\"login-page\" className=\"mx-auto w-full max-w-112\">\n          <form onSubmit={submit} noValidate aria-busy={pending}>\n            <div className=\"grid gap-4 sm:gap-5\">\n              <Field label={<AuthLabel>Email</AuthLabel>} error={errorFor(\"email\")}>\n                <Input\n                  id={`${fieldId}-email`}\n                  type=\"email\"\n                  autoComplete=\"email\"\n                  inputMode=\"email\"\n                  placeholder={emailPlaceholder}\n                  value={email}\n                  onChange={(event) => {\n                    onEmailChange(event.target.value);\n                    clear(\"email\");\n                  }}\n                  disabled={busy || emailLocked}\n                  readOnly={emailLocked}\n                  required\n                  className={AUTH_INPUT}\n                />\n              </Field>\n              {!isPasswordStep && federatedNotice && (\n                <p role=\"status\" className={AUTH_NOTICE}>\n                  {federatedNotice}\n                </p>\n              )}\n              {isPasswordStep && (\n                // The reset link sits outside the Field (which wires up each of its children), level with the label.\n                <div className=\"relative\">\n                  <Field label={<AuthLabel>Password</AuthLabel>} error={errorFor(\"password\")}>\n                    <PasswordInput\n                      ref={passwordRef}\n                      id={`${fieldId}-password`}\n                      autoComplete=\"current-password\"\n                      placeholder={passwordPlaceholder}\n                      value={password}\n                      onChange={(event) => {\n                        onPasswordChange(event.target.value);\n                        clear(\"password\");\n                      }}\n                      disabled={busy}\n                      required\n                      className={AUTH_INPUT}\n                    />\n                  </Field>\n                  {forgotPasswordHref && (\n                    <a href={forgotPasswordHref} className={cn(AUTH_MUTED_LINK, \"absolute top-0 right-0 text-caption leading-snug sm:text-body-sm\")}>\n                      {forgotPasswordLabel}\n                    </a>\n                  )}\n                </div>\n              )}\n              <Button type=\"submit\" variant=\"pill\" disabled={busy} className={cn(AUTH_SUBMIT, \"sm:mt-1\")}>\n                {pending && <Spinner aria-hidden=\"true\" role={undefined} aria-label={undefined} className=\"size-4\" />}\n                {/* The email step can be pending too (the app looks up how the account signs in); it keeps reading \"Continue\". */}\n                {isPasswordStep ? (pending ? pendingLabel : submitLabel) : continueLabel}\n              </Button>\n            </div>\n          </form>\n\n          {isPasswordStep ? (\n            onBack && (\n              <button type=\"button\" onClick={onBack} disabled={busy} className={cn(AUTH_MUTED_LINK, \"mx-auto mt-3 flex items-center gap-2 text-body-sm sm:mt-4 sm:text-body\")}>\n                <ArrowLeft aria-hidden=\"true\" className=\"size-4\" />\n                {backLabel}\n              </button>\n            )\n          ) : (\n            <AuthSocialButtons providers={providers} disabled={busy} label={socialLabel} className=\"mt-3 sm:mt-4\" />\n          )}\n\n          {!isPasswordStep && signupHref && (\n            <p className=\"mt-6 text-center text-body-sm text-fg-nav sm:mt-8 sm:text-body\">\n              <span className=\"text-fg\">{signupPrompt}</span>{\" \"}\n              <a href={signupHref} className={AUTH_LINK}>\n                {signupLabel}\n              </a>\n            </p>\n          )}\n        </div>\n      </AuthCard>\n    </AuthPageShell>\n  );\n}\n\nexport { LoginPage, type LoginValues, type LoginErrors, type LoginStep };\n"
+    }
+  ]
+}

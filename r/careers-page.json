@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "careers-page",
+  "type": "site",
+  "title": "Careers page",
+  "description": "Careers page: the white hero, then open roles grouped by team as ringed cards with chips and an apply pill.",
+  "surface": "site",
+  "kinds": [
+    "hero",
+    "section",
+    "section-heading",
+    "card-ring",
+    "chip",
+    "button-secondary"
+  ],
+  "usage": "A careers or jobs page. `title`, `accent`, `description` and `actions` go to the hero (link a pill to `#roles`); `roles` (title, team, location, type, description, href) are grouped by team in the order given, two cards a row from md. `emptyMessage` shows when there are none; `note` is a line under the roles (an open application).",
+  "avoid": [
+    "Salary tables",
+    "Photos of people in examples",
+    "Moving cards or arrows on hover",
+    "A blue hero for this page"
+  ],
+  "notes": "Derived, not ported: the brand's site has no careers page. It is composed from library items only: Hero (white), a\nSiteSection with SectionHeading and SectionHeaderRule, and role cards drawn like the product grid's cards (a white card\nin the soft blue ring, the title beside an outline pill, Badge chips for location and type).",
+  "documentation": "https://context-ds.vercel.app/components/careers-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add careers-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "derivedFrom": [
+      "hero",
+      "section",
+      "product-grid",
+      "badge",
+      "button"
+    ],
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Derived, not ported: the brand has no counterpart. Composed from library items hero, section, product-grid, badge, button.",
+    "sources": []
+  },
+  "api": [
+    {
+      "path": "components/site/careers-page.d.ts",
+      "content": "import * as React from \"react\";\nexport type CareersRole = {\n    title: string;\n    team: string;\n    location: string;\n    /** Full time, contract... */\n    type?: string;\n    description?: string;\n    href: string;\n};\n/**\n * The careers page: a hero (`title`, its blue `accent` phrases, `description`, `actions`), then the open roles grouped\n * by `team` in the order they first appear. With no roles, `emptyMessage` shows in their place. `note` is a line under\n * the roles (an open application).\n */\ndeclare function CareersPage({ title, accent, description, actions, rolesTitle, rolesAccent, rolesDescription, roles, applyLabel, emptyMessage, note, rolesId, className, }: {\n    title: string;\n    accent?: string | string[];\n    description?: React.ReactNode;\n    /** Pills under the hero text; link one to `#roles`. */\n    actions?: React.ReactNode;\n    rolesTitle?: React.ReactNode;\n    rolesAccent?: React.ReactNode;\n    rolesDescription?: React.ReactNode;\n    roles: readonly CareersRole[];\n    applyLabel?: React.ReactNode;\n    emptyMessage?: React.ReactNode;\n    note?: React.ReactNode;\n    /** The roles section's id, for the hero's link. */\n    rolesId?: string;\n    className?: string;\n}): React.JSX.Element;\nexport { CareersPage };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/careers-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/careers-page.tsx",
+      "content": "import { CareersPage } from \"@/components/site/careers-page\";\nimport { Button } from \"@/components/ui/button\";\n\nexport function Site() {\n  return (\n    <CareersPage\n      title={\"Build the web layer\\nfor AI agents\"}\n      accent={[\"AI agents\"]}\n      description=\"Acme is a small, remote team shipping APIs that thousands of developers rely on. Come help.\"\n      actions={\n        <>\n          <Button asChild variant=\"pill\">\n            <a href=\"#roles\">See open roles</a>\n          </Button>\n          <Button asChild variant=\"pill-outline\">\n            <a href=\"#about\">How we work</a>\n          </Button>\n        </>\n      }\n      rolesDescription=\"Every role is remote, with a few weeks a year together in person.\"\n      roles={[\n        { title: \"Senior backend engineer\", team: \"Engineering\", location: \"Remote, Americas\", type: \"Full time\", description: \"Own the crawl and extract pipeline end to end, from queues to storage.\", href: \"#backend\" },\n        { title: \"Product engineer\", team: \"Engineering\", location: \"Remote, Europe\", type: \"Full time\", description: \"Ship the dashboard and the docs, from first sketch to production.\", href: \"#product\" },\n        { title: \"Developer advocate\", team: \"Growth\", location: \"Remote\", type: \"Full time\", description: \"Write guides, build examples and help developers get to their first request.\", href: \"#advocate\" },\n      ]}\n      note={\n        <>\n          Don't see your role? <a href=\"#apply\">Send us a note</a> about what you would like to work on.\n        </>\n      }\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "hero",
+    "section",
+    "badge",
+    "button",
+    "utils"
+  ],
+  "packages": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "components/site/careers-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\nimport { ArrowUpRight } from \"lucide-react\";\n\nimport { Hero } from \"@/components/site/hero\";\nimport { SectionHeaderRule, SectionHeading, SiteSection } from \"@/components/site/section\";\nimport { Badge } from \"@/components/ui/badge\";\nimport { Button } from \"@/components/ui/button\";\nimport { cn } from \"@/lib/utils\";\n\n// A careers page. The site has none, so it is built from library items only: the white Hero, then a SiteSection with a\n// SectionHeading over the rule and the open roles as cards in the product grid's style (a white card in the soft blue\n// ring, the title beside an outline pill, a line of description and hairline chips), grouped by team.\n\nexport type CareersRole = {\n  title: string;\n  team: string;\n  location: string;\n  /** Full time, contract... */\n  type?: string;\n  description?: string;\n  href: string;\n};\n\nfunction RoleCard({ role, applyLabel }: { role: CareersRole; applyLabel: React.ReactNode }) {\n  const details = [role.location, role.type].filter(Boolean) as string[];\n  return (\n    <li data-slot=\"careers-role\" className=\"flex rounded-card bg-ring-tint p-2\">\n      <article className=\"flex flex-1 flex-col gap-4 rounded-card bg-surface p-6 ring-1 ring-hairline md:p-8\">\n        <div className=\"flex items-start justify-between gap-4\">\n          <h4 className=\"min-w-0 text-h5 leading-snug font-normal text-fg\">{role.title}</h4>\n          <Button asChild variant=\"pill-outline\" size=\"sm\" className=\"shrink-0\">\n            <a href={role.href}>\n              {applyLabel}\n              <span className=\"sr-only\"> for {role.title}</span>\n              {/* The arrow stays where it is on hover; only the pill's fill changes. */}\n              <ArrowUpRight aria-hidden=\"true\" />\n            </a>\n          </Button>\n        </div>\n        {role.description && <p className=\"text-body leading-snug text-fg-secondary\">{role.description}</p>}\n        {details.length > 0 && (\n          <ul aria-label=\"Details\" className=\"mt-auto flex flex-wrap gap-1.5 leading-snug\">\n            {details.map((detail) => (\n              <li key={detail}>\n                <Badge variant=\"chip\">{detail}</Badge>\n              </li>\n            ))}\n          </ul>\n        )}\n      </article>\n    </li>\n  );\n}\n\n/**\n * The careers page: a hero (`title`, its blue `accent` phrases, `description`, `actions`), then the open roles grouped\n * by `team` in the order they first appear. With no roles, `emptyMessage` shows in their place. `note` is a line under\n * the roles (an open application).\n */\nfunction CareersPage({\n  title,\n  accent,\n  description,\n  actions,\n  rolesTitle = \"Open roles\",\n  rolesAccent,\n  rolesDescription,\n  roles,\n  applyLabel = \"Apply\",\n  emptyMessage = \"There are no open roles right now. Check back soon.\",\n  note,\n  rolesId = \"roles\",\n  className,\n}: {\n  title: string;\n  accent?: string | string[];\n  description?: React.ReactNode;\n  /** Pills under the hero text; link one to `#roles`. */\n  actions?: React.ReactNode;\n  rolesTitle?: React.ReactNode;\n  rolesAccent?: React.ReactNode;\n  rolesDescription?: React.ReactNode;\n  roles: readonly CareersRole[];\n  applyLabel?: React.ReactNode;\n  emptyMessage?: React.ReactNode;\n  note?: React.ReactNode;\n  /** The roles section's id, for the hero's link. */\n  rolesId?: string;\n  className?: string;\n}) {\n  const headingId = React.useId();\n  const teams = React.useMemo(() => {\n    const groups = new Map<string, CareersRole[]>();\n    for (const role of roles) groups.set(role.team, [...(groups.get(role.team) ?? []), role]);\n    return [...groups];\n  }, [roles]);\n\n  return (\n    <div data-slot=\"careers-page\" className={cn(\"w-full\", className)}>\n      {/* A shorter first screen than a product page's: the roles are what people came for. */}\n      <Hero title={title} accent={accent ?? []} description={description} actions={actions} contentClassName=\"min-h-0 py-16 sm:py-20 lg:py-24\" />\n      <SiteSection id={rolesId} aria-labelledby={headingId} className=\"scroll-mt-(--header-offset,0px)\">\n        <SectionHeading title={<span id={headingId}>{rolesTitle}</span>} accent={rolesAccent} description={rolesDescription} />\n        <SectionHeaderRule />\n        {teams.length === 0 ? (\n          <p className=\"text-body-lg leading-snug text-fg-muted\">{emptyMessage}</p>\n        ) : (\n          <div className=\"flex flex-col gap-12\">\n            {teams.map(([team, list]) => (\n              <section key={team} aria-label={team} className=\"flex flex-col gap-6\">\n                <h3 className=\"flex items-baseline gap-3 text-h4 leading-heading font-normal tracking-snug text-fg\">\n                  {team}\n                  <span className=\"text-body text-fg-subtle tabular-nums\">{list.length}</span>\n                </h3>\n                <ul className=\"grid grid-cols-1 gap-6 md:grid-cols-2\">\n                  {list.map((role) => (\n                    <RoleCard key={role.href} role={role} applyLabel={applyLabel} />\n                  ))}\n                </ul>\n              </section>\n            ))}\n          </div>\n        )}\n        {note && <p className=\"mt-12 text-body leading-relaxed text-fg-muted [&_a]:text-fg-brand [&_a]:underline-offset-4 [&_a:hover]:underline\">{note}</p>}\n      </SiteSection>\n    </div>\n  );\n}\n\nexport { CareersPage };\n"
+    }
+  ]
+}

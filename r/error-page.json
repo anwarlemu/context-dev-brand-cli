@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "revision": "113bb324bace5ec95ab4621c835f1f4f82fb361d",
+  "name": "error-page",
+  "type": "site",
+  "title": "Error page",
+  "description": "Black 500 page with a dotted status code, title, a retry pill, a second pill, and a quiet line with the error reference.",
+  "surface": "site",
+  "kinds": [
+    "page",
+    "button-on-brand",
+    "link"
+  ],
+  "usage": "A server error page or an error boundary's fallback. `onRetry` is the first pill (reset the boundary, or reload) and spins while a returned promise runs; `secondaryAction` is the second pill (a `pill-on-brand` with `border-white/40`). `reference` puts the error's id in the quiet line, followed by `note`. `overlay` covers the window above the site's chrome.",
+  "avoid": [
+    "A stack trace or raw error message",
+    "A blue page background",
+    "More than two pills"
+  ],
+  "notes": "Derived, not ported: the brand's site has no error page. This is the not found page item (not-found-page) rendered\nwith a 500 in its dots, a retry pill and no known paths, so the \"Did you mean\" line stays empty; everything it draws\ncomes from that item.",
+  "documentation": "https://context-ds.vercel.app/components/error-page.md",
+  "install": "npx -y github:anwarlemu/context-dev-brand-cli#release add error-page --surface site",
+  "requirements": {
+    "react": ">=19.2",
+    "tailwindcss": ">=4",
+    "alias": "@/* resolves to the source directory"
+  },
+  "reference": {
+    "derivedFrom": [
+      "not-found-page"
+    ],
+    "audit": "https://context-ds.vercel.app/reference-audit.json",
+    "scope": "Derived, not ported: the brand has no counterpart. Composed from library items not-found-page.",
+    "sources": []
+  },
+  "api": [
+    {
+      "path": "components/site/error-page.d.ts",
+      "content": "import * as React from \"react\";\n/**\n * The 500 page. `onRetry` runs from the first pill (reset an error boundary, or reload); while a returned promise is\n * pending the pill spins and reads `retryingLabel`. `secondaryAction` is the second pill (home, or the status page);\n * give it `border-white/40` as on the 404. `reference` is the error's id, shown in the quiet line for support.\n */\ndeclare function ErrorPage({ code, title, description, onRetry, retryLabel, retryingLabel, secondaryAction, reference, referenceLabel, note, logo, homeHref, homeLabel, overlay, className, }: {\n    code?: string;\n    title?: React.ReactNode;\n    description?: React.ReactNode;\n    onRetry?: () => void | Promise<void>;\n    retryLabel?: React.ReactNode;\n    retryingLabel?: React.ReactNode;\n    secondaryAction?: React.ReactNode;\n    reference?: string;\n    referenceLabel?: React.ReactNode;\n    /** The quiet line at the foot; its links are underlined. Follows the reference when both are given. */\n    note?: React.ReactNode;\n    logo?: React.ReactNode;\n    homeHref?: string;\n    homeLabel?: string;\n    overlay?: boolean;\n    className?: string;\n}): React.JSX.Element;\nexport { ErrorPage };\n"
+    }
+  ],
+  "examples": [
+    {
+      "name": "Site",
+      "url": "https://context-ds.vercel.app/preview/error-page/Site"
+    }
+  ],
+  "exampleFiles": [
+    {
+      "path": "examples/error-page.tsx",
+      "content": "\"use client\";\n\nimport { ErrorPage } from \"@/components/site/error-page\";\nimport { Button } from \"@/components/ui/button\";\n\nfunction AcmeMark() {\n  return (\n    <svg viewBox=\"0 0 48 33\" aria-hidden=\"true\">\n      <rect x=\"16\" width=\"32\" height=\"32\" rx=\"2\" fill=\"currentColor\" />\n      <circle cx=\"10\" cy=\"23\" r=\"10\" fill=\"currentColor\" />\n    </svg>\n  );\n}\n\nexport function Site() {\n  return (\n    <ErrorPage\n      logo={<AcmeMark />}\n      homeHref=\"#home\"\n      homeLabel=\"Acme home\"\n      onRetry={() => new Promise((resolve) => setTimeout(resolve, 900))}\n      secondaryAction={\n        <Button asChild variant=\"pill-on-brand\" className=\"border-white/40\">\n          <a href=\"#status\">Check service status</a>\n        </Button>\n      }\n      reference=\"7f3a9c21\"\n      note={\n        <>\n          If it keeps happening, <a href=\"#contact\">contact support</a> with the reference.\n        </>\n      }\n    />\n  );\n}\n"
+    }
+  ],
+  "exampleRequires": [
+    "button"
+  ],
+  "examplePackages": [],
+  "requires": [
+    "theme",
+    "not-found-page",
+    "button",
+    "spinner"
+  ],
+  "packages": [],
+  "files": [
+    {
+      "path": "components/site/error-page.tsx",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nimport { NotFoundPage } from \"@/components/site/not-found-page\";\nimport { Button } from \"@/components/ui/button\";\nimport { Spinner } from \"@/components/ui/spinner\";\n\n// A server error page. The site has none, so this is the 404 page (not-found-page) with a 500 in its dots: the same\n// black page, logo, title and quiet line of links, with a retry pill first and no \"Did you mean\" suggestion.\n\n/**\n * The 500 page. `onRetry` runs from the first pill (reset an error boundary, or reload); while a returned promise is\n * pending the pill spins and reads `retryingLabel`. `secondaryAction` is the second pill (home, or the status page);\n * give it `border-white/40` as on the 404. `reference` is the error's id, shown in the quiet line for support.\n */\nfunction ErrorPage({\n  code = \"500\",\n  title = \"Something went wrong on our side.\",\n  description = \"The page could not be loaded. Try again, and if it keeps happening, let us know.\",\n  onRetry,\n  retryLabel = \"Try again\",\n  retryingLabel = \"Trying again…\",\n  secondaryAction,\n  reference,\n  referenceLabel = \"Error reference\",\n  note,\n  logo,\n  homeHref,\n  homeLabel,\n  overlay = false,\n  className,\n}: {\n  code?: string;\n  title?: React.ReactNode;\n  description?: React.ReactNode;\n  onRetry?: () => void | Promise<void>;\n  retryLabel?: React.ReactNode;\n  retryingLabel?: React.ReactNode;\n  secondaryAction?: React.ReactNode;\n  reference?: string;\n  referenceLabel?: React.ReactNode;\n  /** The quiet line at the foot; its links are underlined. Follows the reference when both are given. */\n  note?: React.ReactNode;\n  logo?: React.ReactNode;\n  homeHref?: string;\n  homeLabel?: string;\n  overlay?: boolean;\n  className?: string;\n}) {\n  const [retrying, setRetrying] = React.useState(false);\n  const retry = async () => {\n    if (!onRetry || retrying) return;\n    setRetrying(true);\n    try {\n      await onRetry();\n    } finally {\n      setRetrying(false);\n    }\n  };\n\n  const footer =\n    reference || note ? (\n      <>\n        {reference && (\n          <>\n            {referenceLabel} <code className=\"font-mono text-white/70\">{reference}</code>.\n          </>\n        )}\n        {reference && note && \" \"}\n        {note}\n      </>\n    ) : undefined;\n\n  return (\n    <NotFoundPage\n      code={code}\n      title={title}\n      description={description}\n      knownPaths={[]}\n      pathname=\"\"\n      logo={logo}\n      homeHref={homeHref}\n      homeLabel={homeLabel}\n      overlay={overlay}\n      className={className}\n      note={footer}\n      actions={\n        onRetry || secondaryAction ? (\n          <>\n            {onRetry && (\n              <Button variant=\"pill-on-brand\" onClick={retry} disabled={retrying} aria-busy={retrying} className=\"gap-2 disabled:cursor-wait disabled:opacity-70\">\n                {retrying && <Spinner aria-hidden=\"true\" role={undefined} aria-label={undefined} className=\"size-4\" />}\n                {retrying ? retryingLabel : retryLabel}\n              </Button>\n            )}\n            {secondaryAction}\n          </>\n        ) : undefined\n      }\n    />\n  );\n}\n\nexport { ErrorPage };\n"
+    }
+  ]
+}
