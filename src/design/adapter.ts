@@ -105,6 +105,8 @@ export function adapter(): Adapter {
 			grounds: Object.fromEntries(palettes().map((p) => [p.name, p.bg])),
 			sizes: [...new Set([...Object.keys(imageDoc().sizes), ...PLATFORMS.map((p) => p.id)]), 'custom'],
 			formats: ['png', 'svg', 'jpg', 'webp', 'pdf'],
+			// A layout made from scratch stands on the brand's faint dot grid, as its posts do.
+			ground: ({ grid }) => ({ blocks: [{ id: 'field', type: 'field', at: { col: 0, row: 0, cols: grid.cols, rows: grid.rows } }] }),
 			recipe: (template, size, copy) => {
 				const r = recipeOf(template);
 				if (!r) return recipeFor(template, size, copy);

@@ -100,7 +100,27 @@ Start with `{{cli}} manifest --json` (alias `describe`): every command and flag,
 - `video reel`: the 10 s brand reel at 1920x1080. Every word in it is a flag and has to be passed (`--headline`, `--tagline`, `--markdown`, `--quote`, `--attribution`, `--stat`, `--stat-label`, `--card`, `--card-top`, `--card-bottom`, `--pills`, `--bench`), or `--sample` for the sample film; needs Chromium, as `review` does. `video edges|twinkle|ripple|logo --size square|vertical|landscape`: seamless dot-field loops. MP4 and WebM through ffmpeg, else PNG frames; `--still <seconds>` writes one frame.
 - `merch <item>`: print files only (a line is printed only when you pass it), never mockups: `cap-front`, `tee-front`, `tee-back`, `hoodie-front`, `tote`, `mug-wrap`, `sticker` (with a CutContour die line in the SVG), `poster`, `socks`. SVG at physical size and 300 dpi PNG with bleed; `--guides` draws trim and safe lines. Only the approved logo and brand colors; confirm sizes with the vendor template.
 
-### Revising a design
+### Any layout, never only the templates
+
+The templates are starting points, not limits. When a person asks for an arrangement no template has, make it:
+
+- **Ads and posts from a brief:** `{{cli}} design ad brief.md` lays the brief's parts (headline, supporting line, label,
+  stat, quote, search prompt, plan, offer, features, pictures, button) out on the brand's grid in its own blocks. A
+  `## Layout` section says how in plain words, one row per line from the top, parts side by side split by commas:
+  `headline top left`, `stat left, quote right`, `three photos in a row`, `button bottom right`. Without one it makes
+  stacked, centered and two-column arrangements of every part. Each result passes the brand check and is a design file.
+- **Any graphic at any size:** `{{cli}} design new compose --size <size>`, then
+  `{{cli}} design compose add|move|span|remove|order <file> ...` puts any of the brand's blocks (`{{cli}} design --help`
+  lists them) on any cells. `{{cli}} design revise <file> "stat on the right, bigger headline"` takes plain words.
+- **A template, rearranged:** start from a template and revise or move its parts; nothing stays in the template's
+  arrangement unless the person wants it.
+- **Pages and sections:** `{{cli}} design page compose outline.json` builds a page from the brand's sections in any
+  order, and the library's components combine freely in code.
+
+Only the brand's rules are fixed (its colors, type, logo, contrast and clear space); the arrangement is whatever the
+person asks for.
+
+## Revising a design
 
 When a person wants a graphic and then changes to it ("bigger headline", "darker", "logo top right"), work on a design file instead of re-running `image`:
 
